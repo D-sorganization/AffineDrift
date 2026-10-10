@@ -1,0 +1,279 @@
+```python
+"""Independent mathematical validation checks for inference policy analysis.
+
+Validates physics and mathematical invariants across 100 randomized cases each:
+1. Rod parameter recovery
+2. Damped pendulum scaling invariance
+3. WLS coordinate-scaling invariance
+4. Ellipsoid / box support functions and orthogonal rotation invariance
+5. Planar two-link manipulator kinetic energy equivalence
+6. Joint power representation equivalence
+7. Analytic potential energy gradient verification
+"""
+
+import json
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+
+
+def check_rod_parameter_recovery(
+    rng: np.random.Generator, n_cases: int = 100
+) -> dict[str, Any]:
+    """Verify recovery of uniform rod mass and length from J and c."""
+    m = rng.uniform(0.5, 10.0, size=n_cases)
+    length = rng.uniform(0.2, 3.0, size=n_cases)
+    g = rng.uniform(9.0, 10.5, size=n_cases)
+
+    j_val = (m * length**2) / 3.0
+    c_val = (m * g * length) / 2.0
+
+    length_rec = (3.0 * g * j_val) / (2.0 * c_val)
+    m_rec = (4.0 * c_val**2) / (3.0 * (g**2) * j_val)
+
+    err_l = np.max(np.abs(length_rec - length))
+    err_m = np.max(np.abs(m_rec - m))
+    max_err = float(max(err_l, err_m))
+    return {
+        "check": "rod_parameter_recovery",
+        "max_error": max_err,
+        "passed": max_err < 1e-7,
+    }
+
+
+def check_damped_pendulum_scaling(
+    rng: np.random.Generator, n_cases: int = 100
+) -> dict[str, Any]:
+    """Verify scaling invariance of unforced damped pendulum acceleration."""
+    j_base = rng.uniform(0.1, 5.0, size=n_cases)
+    b_base = rng.uniform(0.05, 2.0, size=n_cases)
+    c_base = rng.uniform(0.5, 10.0, size=n_cases)
+    q = rng.uniform(-np.pi, np.pi, size=n_cases)
+    v = rng.uniform(-5.0, 5.0, size=n_cases)
+    scale = rng.uniform(0.1, 10.0, size=n_cases)
+
+    acc_orig = -(b_base * v + c_base * np.sin(q)) / j_base
+    acc_scaled = -(scale * b_base * v + scale * c_base * np.sin(q)) / (
+        scale * j_base
+    )
+
+    max_err = float(np.max(np.abs(acc_orig - acc_scaled)))
+    return {
+        "check": "damped_pendulum_scaling_invariance",
+        "max_error": max_err,
+        "passed": max_err < 1e-7,
+    }
+
+
+def check_wls_coordinate_scaling(
+    rng: np.random.Generator, n_cases: int = 100
+) -> dict[str, Any]:
+    """Verify coordinate-scaling invariance of weighted least squares."""
+    n_pts, n_feats = 25, 3
+    y_mat = rng.normal(size=(n_cases, n_pts, n_feats))
+    target = rng.normal(size=(n_cases, n_pts, 1))
+    sigma = rng.uniform(0.2, 3.0, size=(n_cases, n_pts, 1))
+    scale_diag = rng.uniform(0.1, 5.0, size=(n_cases, 1, n_feats))
+
+    weights = 1.0 / sigma
+    y_w = y_mat * weights
+    t_w = target * weights
+    beta_direct = np.linalg.lstsq(y_w, t_w, rcond=None)[0]
+
+    y_scaled = y_mat * scale_diag
+    y_scaled_w = y_scaled * weights
+    beta_scaled = np.linalg.lstsq(y_scaled_w, t_w, rcond=None)[0]
+    beta_unscaled = beta_scaled / scale_diag.swapaxes(1, 2)
+
+    max_err = float(np.max(np.abs(beta_direct - beta_unscaled)))
+    return {
+        "check": "wls_coordinate_scaling_invariance",
+        "max_error": max_err,
+        "passed": max_err < 1e-7,
+    }
+
+
+def check_ellipsoid_support(
+    rng: np.random.Generator, n_cases: int = 100
+) -> dict[str, Any]:
+    """Verify ellipsoid and rate-box support functions under rotations."""
+    a_mat = rng.normal(size=(n_cases, 2, 3))
+    w_vec = rng.normal(size=(n_cases, 2, 1))
+    w_vec /= np.linalg.norm(w_vec, axis=1, keepdims=True)
+
+    at_w = np.matmul(a_mat.swapaxes(1, 2), w_vec)
+    norm_at_w = np.linalg.norm(at_w, axis=1, keepdims=True)
+    z_star = at_w / norm_at_w
+
+    val_opt = np.matmul(w_vec.swapaxes(1, 2), np.matmul(a_mat, z_star))
+    err_opt = np.max(np.abs(val_opt.squeeze() - norm_at_w.squeeze()))
+
+    box_support = np.sum(np.abs(at_w), axis=1, keepdims=True)
+    box_geq_ball = np.all(box_support >= norm_at_w - 1e-12)
+
+    angles = rng.uniform(0, 2 * np.pi, size=n_cases)
+    cos_t, sin_t = np.cos(angles), np.sin(angles)
+    rot = np.zeros((n_cases, 2, 2))
+    rot[:, 0, 0], rot[:, 0, 1] = cos_t, -sin_t
+    rot[:, 1, 0], rot[:, 1, 1] = sin_t, cos_t
+
+    a_rot = np.matmul(rot, a_mat)
+    w_rot = np.matmul(rot, w_vec)
+    norm_rot = np.linalg.norm(
+        np.matmul(a_rot.swapaxes(1, 2), w_rot), axis=1, keepdims=True
+    )
+    err_rot = np.max(np.abs(norm_at_w - norm_rot))
+
+    max_err = float(max(err_opt, err_rot))
+    return {
+        "check": "ellipsoid_and_box_support",
+        "max_error": max_err,
+        "box_bound_satisfied": bool(box_geq_ball),
+        "passed": max_err < 1e-7 and bool(box_geq_ball),
+    }
+
+
+def check_two_rod_kinetic_energy(
+    rng: np.random.Generator, n_cases: int = 100
+) -> dict[str, Any]:
+    """Verify kinetic energy via rigid COM geometry against mass matrix."""
+    m1 = rng.uniform(0.5, 3.0, size=n_cases)
+    m2 = rng.uniform(0.5, 3.0, size=n_cases)
+    l1 = rng.uniform(0.5, 2.0, size=n_cases)
+    l2 = rng.uniform(0.5, 2.0, size=n_cases)
+    r1, r2 = 0.5 * l1, 0.5 * l2
+    icm1, icm2 = (m1 * l1**2) / 12.0, (m2 * l2**2) / 12.0
+
+    q1 = rng.uniform(-np.pi, np.pi, size=n_cases)
+    q2 = rng.uniform(-np.pi, np.pi, size=n_cases)
+    qd1 = rng.uniform(-4.0, 4.0, size=n_cases)
+    qd2 = rng.uniform(-4.0, 4.0, size=n_cases)
+
+    om1, om2 = qd1, qd1 + qd2
+    vx1, vy1 = -r1 * np.sin(q1) * om1, r1 * np.cos(q1) * om1
+    vx2 = -l1 * np.sin(q1) * om1 - r2 * np.sin(q1 + q2) * om2
+    vy2 = l1 * np.cos(q1) * om1 + r2 * np.cos(q1 + q2) * om2
+
+    ke_geom = (
+        0.5 * m1 * (vx1**2 + vy1**2)
+        + 0.5 * icm1 * (om1**2)
+        + 0.5 * m2 * (vx2**2 + vy2**2)
+        + 0.5 * icm2 * (om2**2)
+    )
+
+    i1, i2 = (m1 * l1**2) / 3.0, (m2 * l2**2) / 3.0
+    m11 = (
+        i1
+        + i2
+        + m1 * (r1**2)
+        + m2 * (l1**2 + r2**2 + 2.0 * l1 * r2 * np.cos(q2))
+    )
+    m12 = i2 + m2 * (r2**2 + l1 * r2 * np.cos(q2))
+    m22 = i2 + m2 * (r2**2)
+    ke_mat = 0.5 * (m11 * (qd1**2) + 2.0 * m12 * qd1 * qd2 + m22 * (qd2**2))
+
+    max_err = float(np.max(np.abs(ke_geom - ke_mat)))
+    return {
+        "check": "two_rod_kinetic_energy_matrix",
+        "max_error": max_err,
+        "passed": max_err < 1e-7,
+    }
+
+
+def check_internal_joint_power(
+    rng: np.random.Generator, n_cases: int = 100
+) -> dict[str, Any]:
+    """Verify internal joint power equivalence with body-frame moments."""
+    tau1 = rng.uniform(-10.0, 10.0, size=n_cases)
+    tau2 = rng.uniform(-10.0, 10.0, size=n_cases)
+    v1 = rng.uniform(-5.0, 5.0, size=n_cases)
+    v2 = rng.uniform(-5.0, 5.0, size=n_cases)
+
+    omega_abs1, omega_abs2 = v1, v1 + v2
+    moment_abs1, moment_abs2 = tau1 - tau2, tau2
+
+    p_joint = tau1 * v1 + tau2 * v2
+    p_body = moment_abs1 * omega_abs1 + moment_abs2 * omega_abs2
+
+    max_err = float(np.max(np.abs(p_joint - p_body)))
+    return {
+        "check": "internal_joint_power_equivalence",
+        "max_error": max_err,
+        "passed": max_err < 1e-7,
+    }
+
+
+def check_potential_energy_gradient(
+    rng: np.random.Generator, n_cases: int = 100
+) -> dict[str, Any]:
+    """Verify analytic potential energy gradient using central differences."""
+    m1 = rng.uniform(0.5, 3.0, size=n_cases)
+    m2 = rng.uniform(0.5, 3.0, size=n_cases)
+    l1 = rng.uniform(0.5, 2.0, size=n_cases)
+    l2 = rng.uniform(0.5, 2.0, size=n_cases)
+    g = rng.uniform(9.0, 10.0, size=n_cases)
+    r1, r2 = 0.5 * l1, 0.5 * l2
+
+    q1 = rng.uniform(-np.pi, np.pi, size=n_cases)
+    q2 = rng.uniform(-np.pi, np.pi, size=n_cases)
+    v1 = rng.uniform(-2.0, 2.0, size=n_cases)
+    v2 = rng.uniform(-2.0, 2.0, size=n_cases)
+
+    g1 = (m1 * r1 + m2 * l1) * g * np.cos(q1) + m2 * g * r2 * np.cos(q1 + q2)
+    g2 = m2 * g * r2 * np.cos(q1 + q2)
+    work_rate = g1 * v1 + g2 * v2
+
+    h = 1e-6
+    q1_p, q2_p = q1 + h * v1, q2 + h * v2
+    q1_m, q2_m = q1 - h * v1, q2 - h * v2
+
+    u_p = m1 * g * r1 * np.sin(q1_p) + m2 * g * (
+        l1 * np.sin(q1_p) + r2 * np.sin(q1_p + q2_p)
+    )
+    u_m = m1 * g * r1 * np.sin(q1_m) + m2 * g * (
+        l1 * np.sin(q1_m) + r2 * np.sin(q1_m + q2_m)
+    )
+    cdiff_work_rate = (u_p - u_m) / (2.0 * h)
+
+    max_err = float(np.max(np.abs(work_rate - cdiff_work_rate)))
+    return {
+        "check": "analytic_potential_energy_gradient",
+        "max_error": max_err,
+        "passed": max_err < 1e-7,
+    }
+
+
+def run_all_checks() -> dict[str, Any]:
+    """Execute all independent validation checks and compile summary."""
+    rng = np.random.default_rng(4931)
+    results = [
+        check_rod_parameter_recovery(rng),
+        check_damped_pendulum_scaling(rng),
+        check_wls_coordinate_scaling(rng),
+        check_ellipsoid_support(rng),
+        check_two_rod_kinetic_energy(rng),
+        check_internal_joint_power(rng),
+        check_potential_energy_gradient(rng),
+    ]
+
+    all_passed = all(item["passed"] for item in results)
+    summary = {
+        "all_passed": all_passed,
+        "random_seed": 4931,
+        "num_cases": 100,
+        "threshold": 1e-7,
+        "checks": results,
+    }
+
+    out_path = Path(
+        "reports/technical-review/inference-policy-analysis-independent-checks.json"
+    )
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    return summary
+
+
+if __name__ == "__main__":
+    run_all_checks()
+```

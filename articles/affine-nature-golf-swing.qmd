@@ -28,68 +28,18 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
 
 {{< include ../_includes/control-affine-attribution-boundary.qmd >}}
 
+::: {.laymans-terms}
 ```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        A plain-language overview for readers without a technical background in control theory or biomechanics.
-      </p>
+<p class="laymans-terms-intro">This article splits the swing model into two parts at one instant. One part is the model's own motion. The other is the input the model declares.</p>
+<div class="laymans-item"><h3>What the Split Shows</h3><p>At a given state, the equations assign one term to the <a href="../pages/glossary.html#drift">drift</a> and one to the declared input channel. The split does not separate muscle force, intent, or effort from "physics."</p></div>
+<div class="laymans-item"><h3>Drift Is a What-If</h3><p>Drift is what the model predicts if the driving torques were switched off at that state. The club keeps moving from momentum and gravity. It is a model-based what-if, not a claim that a real golfer goes limp. Think of a bike model with the drive input set to zero. The analogy breaks down because it says nothing about a rider's muscles.</p></div>
+<div class="laymans-item"><h3>Why It Matters</h3><p><a href="../pages/glossary.html#inverse-dynamics">Inverse dynamics</a> estimates net loads that fit a model and measurements. The split adds repeatable bookkeeping for each term. Linking a term to physiology still needs separate evidence.</p></div>
+<div class="laymans-item"><h3>Timing Matters</h3><p>Earlier input changes posture, speed, and shaft bend. Those changes affect later drift. A late correction must be judged by its feasible effect on the contact output, including timing and uncertainty.</p></div>
+<div class="key-takeaway"><strong>Key Takeaway:</strong> A large drift term alone does not measure effort, skill, or a passive share of speed.</div>
+```
+:::
 
-      <div class="laymans-item">
-        <h3>What This Article Is About</h3>
-        <p>
-          At a specified state, this article separates the model's autonomous dynamics from its declared input channel. It does not directly separate muscle forces, intent, or biological effort from "physics."
-        </p>
-        <div class="analogy">
-          Think of a playground-swing model with gravity and a declared push input. At the same state, its equations can report the term assigned to each channel. Those terms may align or oppose, and they do not reveal who intended the push.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Why Does This Matter?</h3>
-        <p>
-          Inverse dynamics estimates net generalized loads consistent with a model and measurements. The affine form adds reproducible bookkeeping for autonomous and declared-input terms, while physiological interpretation still needs separate evidence.
-        </p>
-        <div class="key-takeaway">
-          By separating drift from the declared input channel, we get a clearer picture of what the chosen equations assign to each term—not a measurement of intent or effort.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The Two Key Concepts</h3>
-        <p>
-          <strong>Drift (f(x)):</strong> This is what the model predicts would happen if the driving torques were turned off while the current state was left unchanged. The club would keep moving due to momentum, gravity would pull things down, and the flexible shaft would spring around. It is a model-based counterfactual, not a literal claim that a real golfer instantly goes limp.
-        </p>
-        <p style="margin-top: 0.75rem;">
-          <strong>Input term (G(x)u):</strong> This is the contribution of the declared generalized-torque input channel at the current state. The label does not establish deliberateness or physiological origin.
-        </p>
-        <div class="analogy">
-          Drift is like evaluating a bicycle model with its declared drive input set to zero while gravity, drag, and momentum remain. The analogy is about the model boundary, not the rider's muscles.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The Practical Insight</h3>
-        <p>
-          Earlier input changes posture, velocity and shaft deformation. Those states affect subsequent drift and input effectiveness. A late correction must be evaluated by its feasible effect on the chosen contact output, including timing and uncertainty.
-        </p>
-        <div class="key-takeaway">
-          The testable question is how input history, coupled motion and current correction jointly affect delivery. A large drift term alone does not measure effort, a player's skill, or a passive percentage of speed.
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
+```{=html}
 <!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
 <section class="critics-comments">
   <h2>
@@ -1250,8 +1200,10 @@ The [numerical consistency article](theory-part5.html) describes a reproducible 
 
 {{< include ../_includes/mechanics-counterfactual-algorithm.qmd >}}
 
-## See Also
+## Related Articles
 
-- **[Applications Appendix](appendix-applications.html)** — The applications companion to this monograph: simulation, equipment comparison, and ML use of the same framework
-- **[Part 2: Counterfactual Diagnostics](theory-part2.html)** — Defines the ZTCF and ZVCF operations developed in detail here
-- **[Part 3: Drift Invariance and Force Taxonomy](theory-part3.html)** — The same-state decomposition and its interpretation in compact form
+- [Applications of the Control-Affine Framework in Golf Swing Biomechanics](appendix-applications.html) — the applications companion: simulation, equipment comparison and machine-learning use of the same framework
+- [Theory Series, Part 1: Control-Affine Foundations](theory-part1.html) — the compact control-affine foundations behind this monograph
+- [Theory Series, Part 2: Counterfactual Diagnostics](theory-part2.html) — defines the ZTCF and ZVCF operations developed in detail here
+- [Theory Series, Part 3: Drift Invariance and Force Taxonomy](theory-part3.html) — the same-state decomposition and its interpretation in compact form
+- [Zero-Torque Counterfactual (ZTCF) Family](zero-torque-counterfactual.html) — the counterfactual family used throughout the consolidated edition

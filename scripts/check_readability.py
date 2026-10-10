@@ -38,11 +38,13 @@ from src.tools.utils.frontmatter import split_frontmatter
 DEFAULT_GRADE_THRESHOLD: Final = 10.0
 
 # WEB-12.4's rewrite scope: home page, Overview, About, Tools, Technology,
-# the Resources hub and Learning Paths index, and the Books hub. Pages not
-# yet created (e.g. a future "Start Here") are simply absent from the scan;
-# override with --hub-page once they exist.
+# the Resources hub and Learning Paths index, the Books hub, Start Here
+# (WEB-01.1) and The Big Idea in Five Minutes (WEB-01.4). Pages not yet created are simply absent from the scan; override
+# with --hub-page once they exist.
 DEFAULT_HUB_PAGES: Final[tuple[str, ...]] = (
     "index.qmd",
+    "pages/start-here.qmd",
+    "pages/big-idea.qmd",
     "pages/overview.qmd",
     "pages/about.qmd",
     "pages/tools.qmd",
@@ -67,6 +69,10 @@ DEFAULT_QMD_GLOBS: Final[tuple[str, ...]] = (
 
 _LAY_SECTION_RE = re.compile(r'<section class="laymans-terms">(.*?)</section>', re.DOTALL)
 _LAY_CONTENT_MARKER: Final = 'laymans-terms-content"'
+# Shared component form (#4494), rendered by scripts/filters/laymans-terms.lua.
+_LAY_COMPONENT_RE = re.compile(
+    r"^::: \{\.laymans-terms\}\n```\{=html\}\n(.*?)\n```\n:::$", re.DOTALL | re.MULTILINE
+)
 
 _SHORTCODE_RE = re.compile(r"\{\{<.*?>\}\}", re.DOTALL)
 _FENCED_CODE_RE = re.compile(r"```.*?```", re.DOTALL)
@@ -151,11 +157,16 @@ def score_prose(raw_text: str) -> ReadabilityScore | None:
 
 # ─── Layer extraction ────────────────────────────────────────────────────
 def extract_lay_blocks(content: str) -> list[str]:
-    """Return the raw HTML of each "In Layman's Terms" section in ``content``."""
+    """Return the raw HTML of each "In Layman's Terms" block in ``content``.
+
+    Recognises both the legacy inline ``<section>`` and the shared
+    ``::: {.laymans-terms}`` component, whose raw-HTML fence lines are dropped.
+    """
     blocks = []
     for section in _LAY_SECTION_RE.findall(content):
         marker = section.find(_LAY_CONTENT_MARKER)
         blocks.append(section[marker:] if marker != -1 else section)
+    blocks.extend(_LAY_COMPONENT_RE.findall(content))
     return blocks
 
 

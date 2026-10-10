@@ -1,0 +1,188 @@
+Here is an independent, read-only technical inventory and critical assessment of the draft chapter on **Inverse Problems in Biomechanics**, organized by the key focus areas requested.
+
+---
+
+### 1. Net Generalized Loads and Constrained / Floating Systems
+
+#### Precise Defects
+* **Incomplete Equation of Motion for Floating/Unconstrained Bases:**
+  Equation \eqref{eq:ch6:inverse-dynamics} writes:
+  $$\bm{\tau}(t) = M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + g(\bm{q}) - J_c^T(\bm{q})\bm{F}_{\text{ext}}$$
+  and describes $\bm{\tau}$ as "net joint torques." For whole-body biomechanics (e.g., gait, running), the skeletal system is a **floating-base system** with $6$ unactuated degrees of freedom (pelvis translation and rotation). For those unactuated coordinates, $\bm{\tau}_{\text{base}} \equiv \bm{0}$.
+  If experimental external forces $\bm{F}_{\text{ext}}$ and measured accelerations $\ddot{\bm{q}}$ are simply substituted, the top 6 rows of the residual vector $\bm{\tau}_{\text{base}}$ are nonzero. These are the classic **"residual forces and moments"** (or "hand-of-God" forces) that quantify dynamic inconsistency between motion capture and force plate data. The text conflates generalized net loads with pure internal joint moments.
+* **Closed-Loop / Kinematic Contact Constraints:**
+  When multiple contact points occur (e.g., double support in gait), $J_c^T \bm{F}_{\text{ext}}$ does not uniquely determine internal joint loads without explicit modeling of contact distribution or loop-closure constraints $\Phi(\bm{q}) = \bm{0}$.
+* **Sign Convention and Definition of $J_c^T$:**
+  In standard variational/Lagrangian derivations, generalized contact forces enter as $+ \sum_k J_{c,k}^T \bm{F}_{\text{ext},k}$ when $\bm{F}_{\text{ext}}$ denotes forces exerted **by the environment on the body**. Writing $- J_c^T \bm{F}_{\text{ext}}$ implies $\bm{F}_{\text{ext}}$ is the force exerted *on the environment* or an inconsistent convention.
+
+#### Independently Derived Corrections
+Partition generalized coordinates into unactuated floating-base coordinates $\bm{q}_u \in \mathbb{R}^6$ and actuated internal joint coordinates $\bm{q}_a \in \mathbb{R}^{n-6}$:
+$$\begin{bmatrix} M_{uu}(\bm{q}) & M_{ua}(\bm{q}) \\ M_{au}(\bm{q}) & M_{aa}(\bm{q}) \end{bmatrix} \begin{bmatrix} \ddot{\bm{q}}_u \\ \ddot{\bm{q}}_a \end{bmatrix} + \begin{bmatrix} \bm{h}_u(\bm{q}, \dot{\bm{q}}) \\ \bm{h}_a(\bm{q}, \dot{\bm{q}}) \end{bmatrix} = \begin{bmatrix} \bm{0}_{6\times 1} \\ \bm{\tau}_a \end{bmatrix} + \begin{bmatrix} J_{c,u}^T(\bm{q}) \\ J_{c,a}^T(\bm{q}) \end{bmatrix} \bm{F}_{\text{ext}}$$
+where $\bm{h}(\bm{q}, \dot{\bm{q}}) = C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q})$.
+Define the dynamic residual:
+$$\bm{\tau}_{\text{residual}} = M_{uu}\ddot{\bm{q}}_u + M_{ua}\ddot{\bm{q}}_a + \bm{h}_u - J_{c,u}^T \bm{F}_{\text{ext}}$$
+Highlight that inverse dynamics only yields physically consistent internal joint torques $\bm{\tau}_a$ if $\bm{\tau}_{\text{residual}}$ is driven near zero (e.g., via Residual Reduction Algorithm [RRA] or kinematics adjustment).
+
+---
+
+### 2. Nonnegative Force Feasibility versus Nullspace
+
+#### Precise Defects
+* **Oversimplified Linear Algebra View:**
+  The text states: *"At a fixed configuration, the reachable torque set is the image of $R(\bm{q})$ intersected with the nonnegative muscle-force constraints. When $p > n$, multiple muscle-force vectors can produce the same joint torque history..."*
+  This is incomplete and potentially false: $p > n$ does **not** guarantee the existence of a feasible non-negative solution.
+* **Unilateral Constraint and Nullspace Feasibility:**
+  Muscles are unilateral actuators ($F_i \ge 0$). An affine subspace solution $\bm{F} = \bm{F}_{\text{particular}} + \operatorname{null}(R)\bm{z}$ can intersect the positive orthant $\mathbb{R}^p_+$ as an empty set ($\emptyset$) if the joint torque $\bm{\tau}$ demands action from an antagonistic group that is absent, saturated, or geometrically incapable of producing that torque direction (Farkas' Lemma / convex conical hull limitation).
+* **Sign of Moment Arm Matrix:**
+  Equation \eqref{eq:ch6:redundancy} gives $R(\bm{q})\bm{F} = \bm{\tau}$. If $R(\bm{q})$ is defined via the tendon excursion principle $R_{ij}(\bm{q}) = \frac{\partial \ell_{m,j}}{\partial q_i}$, then shortening ($\delta \ell < 0$) produces positive work, meaning $\bm{\tau}_{\text{muscle}} = - R(\bm{q})\bm{F}$ or $+ R(\bm{q})\bm{F}$ depending on the sign convention of muscle path length changes. The sign convention must be explicitly defined.
+
+#### Independently Derived Corrections
+State feasibility via convex polyhedra and conical spans:
+1. Feasible generalized torque set $\mathcal{T}(\bm{q})$ is the convex polyhedral cone (or polytope under force limits $\bm{F}_{\max}$):
+   $$\mathcal{T}(\bm{q}) = \left\{ \bm{\tau} \in \mathbb{R}^n \;\middle|\; \bm{\tau} = R(\bm{q})\bm{F},\quad \bm{0} \le \bm{F} \le \bm{F}_{\max}(\bm{q}, \dot{\bm{q}}) \right\}$$
+2. Existence of a non-negative muscle-force vector requires $\bm{\tau} \in \operatorname{cone}(R(\bm{q}))$. By Farkas' Lemma / Stiemke's Theorem, if $\bm{\tau} \notin \mathcal{T}(\bm{q})$, no solution exists regardless of $p > n$.
+3. When feasible, the solution set is a bounded convex polytope:
+   $$\mathcal{F}(\bm{\tau}, \bm{q}) = \left\{ \bm{F} \in \mathbb{R}^p \;\middle|\; R(\bm{q})\bm{F} = \bm{\tau} \right\} \cap \left[ \bm{0}, \bm{F}_{\max} \right]$$
+
+---
+
+### 3. Static Optimization: Force versus Activation Assumptions
+
+#### Precise Defects
+* **Inconsistent Definition of Optimization Variable in \eqref{eq:ch6:static-opt}:**
+  The text states:
+  $$\min_{\bm{F}} \sum_{i=1}^p \left(\frac{F_i}{F_{0,i}}\right)^\alpha \quad \text{s.t.} \quad R(\bm{q})\bm{F} = \bm{\tau},\quad 0 \le F_i \le a_i \cdot f_L(\tilde{\ell}_i) \cdot F_{0,i}$$
+  * $a_i$ (muscle activation) appears on the right-hand side of an inequality constraint on $F_i$, while the objective is written purely over $F_i$. Here $a_i$ is treated as an exogenous parameter rather than the decision variable!
+  * If $\alpha = 2$ is claimed to "minimize sum of squared activations," the decision variables must be the activations $\bm{a} \in [0, 1]^p$, with $F_i = a_i F_{\max,i}(\ell_i, v_i)$.
+* **Neglect of Force-Velocity and Activation Dynamics:**
+  Standard static optimization (SO) is instantaneous (frame-by-frame). It evaluates $f_L(\ell_i)$ and $f_V(v_i)$ at measured kinematics $\bm{q}, \dot{\bm{q}}$, but completely ignores activation dynamics (calcium twitch dynamics, time constant $\tau_{\text{act}} \sim 15\text{--}20\text{ ms}$, $\tau_{\text{deact}} \sim 40\text{--}50\text{ ms}$). Consequently, SO solutions can exhibit unphysiological, discontinuous jumps in activation across frames.
+* **Infeasible Frames (Need for Reserve Actuators):**
+  If $\bm{\tau}(t) \notin \mathcal{T}(\bm{q}(t))$, standard SO solver fails (returns infeasible). Standard formulations require slack/reserve torques $\bm{\tau}_{\text{reserve}}$ with a high quadratic penalty to guarantee solvability.
+
+#### Independently Derived Corrections
+Formulate Static Optimization directly over activation $\bm{a} = [a_1, \ldots, a_p]^T$:
+$$\min_{\bm{a} \in [0, 1]^p, \;\bm{\epsilon} \in \mathbb{R}^n} \sum_{i=1}^p a_i^\alpha + \bm{w}_{\text{reserve}}^T \bm{\epsilon}^2$$
+subject to:
+$$R(\bm{q})\bm{F}(\bm{a}, \bm{q}, \dot{\bm{q}}) + \bm{\epsilon} = \bm{\tau}$$
+where:
+$$F_i(a_i, q, \dot{q}) = \left[ a_i f_L(\tilde{\ell}_{m,i}) f_V(\tilde{v}_{m,i}) + f_{\text{passive}}(\tilde{\ell}_{m,i}) \right] F_{0,i}^{\max} \cos \alpha_{\text{penn},i}$$
+and $\bm{\epsilon}$ represents reserve torque actuators that absorb model discrepancy or acceleration noise.
+
+---
+
+### 4. Computed Muscle Control (CMC): Acceleration versus Excitation
+
+#### Precise Defects
+* **Erroneous Controller Mapping:**
+  The text states: *"It uses a PD controller to track the measured kinematics, with the controller output being the desired muscle excitations: $\ddot{\bm{q}}_{\text{des}} = \dots$"*
+  * **Defect:** Equation \eqref{eq:ch6:cmc} outputs **desired generalized accelerations $\ddot{\bm{q}}_{\text{des}}$**, *not* muscle excitations $\bm{u}$.
+  * The actual CMC algorithm consists of three distinct cascaded steps over a finite look-ahead window $\Delta t \approx 10\text{--}30\text{ ms}$:
+    1. **Kinematic Tracking Law:** Compute desired acceleration $\ddot{\bm{q}}_{\text{des}}$ at $t + \Delta t$ via PD tracking error feedback.
+    2. **Static Optimization / Actuator Allocation:** Solve a quadratic program for muscle excitations $\bm{u}(t)$ such that the induced forward-dynamic accelerations match $\ddot{\bm{q}}_{\text{des}}$ while minimizing $\sum u_i^2$.
+    3. **Forward Integration:** Integrate activation dynamics ($\dot{a}_i = f(u_i, a_i)$) and musculoskeletal contraction dynamics forward by $\Delta t$.
+
+#### Independently Derived Corrections
+Rewrite the CMC section to accurately present the multi-stage loop:
+1. **Desired Coordinate Acceleration:**
+   $$\ddot{\bm{q}}^* (t + \Delta t) = \ddot{\bm{q}}_{\text{exp}}(t + \Delta t) + K_v (\dot{\bm{q}}_{\text{exp}} - \dot{\bm{q}}) + K_p (\bm{q}_{\text{exp}} - \bm{q})$$
+2. **Linearized Dynamic Mapping to Excitation:**
+   Through forward dynamics and a first-order Taylor expansion over the look-ahead interval $\Delta t$, relate muscle excitation $\bm{u}$ to coordinate acceleration:
+   $$\ddot{\bm{q}}(t + \Delta t) \approx \ddot{\bm{q}}_0 + \mathcal{A} \bm{u}(t)$$
+3. **Constrained Optimization for Excitation:**
+   $$\min_{\bm{u} \in [0, 1]^p} \sum_{i=1}^p u_i^2 \quad \text{s.t.} \quad M(\bm{q})\ddot{\bm{q}}^* + \bm{h} - J_c^T \bm{F}_{\text{ext}} = R(\bm{q})\bm{F}(\bm{a}(\bm{u}))$$
+
+---
+
+### 5. Inverse Kinematics: Failed Optimizer Handling and Numerical Robustness
+
+#### Precise Defects in Code Listing
+* **Silent Failure / Ignored Convergence:**
+  In `inverse_kinematics_frame`:
+  ```python
+  result = minimize(objective, q_initial, method='L-BFGS-B')
+  return result.x
+  ```
+  The function directly returns `result.x` without checking `result.success`. If L-BFGS-B terminates due to maximum iterations, line-search failure, or local minima, the corrupted joint coordinates are propagated forward without warning or recovery mechanism.
+* **Inefficient Non-linear Least Squares Formulation:**
+  `minimize(..., method='L-BFGS-B')` treats the sum-of-squares as an arbitrary scalar function, losing the explicit Gauss-Newton / Levenberg-Marquardt structure where the Jacobian $J = \partial \bm{m}^{\text{model}}/\partial \bm{q}$ can be directly exploited via `scipy.optimize.least_squares`.
+* **Marker Dropouts / Occlusion:**
+  The implementation expects `marker_positions_measured` of fixed shape $(N_m, 3)$. It fails when markers are occluded (contain `NaN`s).
+* **Frame-to-Frame Continuity & Multi-Modal Trapping:**
+  Frame-by-frame optimization with L-BFGS-B without joint angle limits or joint center regularization can experience coordinate flipping (e.g., $\pm \pi$ jumps at gimbal singularities).
+
+#### Independently Derived Corrections
+Provide a robust implementation using `least_squares` with convergence checks and occlusion handling:
+```python
+import numpy as np
+from scipy.optimize import least_squares
+
+
+def inverse_kinematics_frame(
+    marker_positions_measured: np.ndarray,
+    marker_positions_model_func,
+    q_initial: np.ndarray,
+    weights: np.ndarray | None = None,
+    bounds: tuple[np.ndarray, np.ndarray] | None = None,
+) -> tuple[np.ndarray, bool, float]:
+    """Solve inverse kinematics with occlusion masking and convergence checking.
+
+    Returns (q_opt, success, final_cost).
+    """
+    # 1. Mask missing markers (NaNs)
+    valid_mask = ~np.isnan(marker_positions_measured).any(axis=1)
+    if not np.any(valid_mask):
+        return q_initial, False, np.nan
+
+    meas_valid = marker_positions_measured[valid_mask]
+    n_valid = meas_valid.shape[0]
+
+    w = np.ones(n_valid) if weights is None else weights[valid_mask]
+    w_sqrt = np.sqrt(w)[:, None]
+
+    def residual(q: np.ndarray) -> np.ndarray:
+        m_model = marker_positions_model_func(q)[valid_mask]
+        return ((m_model - meas_valid) * w_sqrt).ravel()
+
+    b = (
+        (-np.inf, np.inf)
+        if bounds is None
+        else (bounds[0], bounds[1])
+    )
+    res = least_squares(
+        residual, q_initial, bounds=b, method="trf", ftol=1e-6, xtol=1e-6
+    )
+
+    if not res.success:
+        # Caller must handle fallback (e.g., kalman filter, keep prior frame)
+        return res.x, False, float(res.cost)
+
+    return res.x, True, float(res.cost)
+```
+
+---
+
+### 6. Measurements versus Model Assumptions
+
+#### Precise Defects
+* **Differentiation of Experimental Kinematics:**
+  The chapter states: *"given measured kinematics $\bm{q}(t), \dot{\bm{q}}(t), \ddot{\bm{q}}(t)$..."*
+  Kinematics $\dot{\bm{q}}$ and $\ddot{\bm{q}}$ are **not measured**; they are obtained by numerical differentiation of raw position data, which severely amplifies high-frequency noise. Direct double differentiation without Butterworth/spline filtering yields unusable $\ddot{\bm{q}}$ accelerations.
+* **Skin Motion Artifacts (Soft-Tissue Artifact, STA):**
+  The IK formulation implicitly assumes markers are rigidly affixed to underlying bone. In reality, STA introduces non-rigid skin displacement of up to $10\text{--}30\text{ mm}$, which often exceeds joint center displacement error.
+* **Inertial Parameter Mismatch:**
+  Segment masses, centers of mass, and inertia tensors in $M(\bm{q})$ and $C(\bm{q}, \dot{\bm{q}})$ are estimated via regression tables (e.g., Dempster/de Leva) or geometric scaling, introducing up to $10\text{--}20\%$ error in inertial loads.
+* **Center of Pressure / Contact Point Synchronization:**
+  Force plate data is typically sampled at $1000\text{--}2000\text{ Hz}$, whereas optical mocap is sampled at $100\text{--}250\text{ Hz}$. Low-pass filtering and temporal synchronization misalignment between contact loads $\bm{F}_{\text{ext}}$ and marker coordinates cause fictitious torque spikes at impact/foot-strike.
+
+---
+
+### Summary Table of Actionable Refactors
+
+| Section / Topic | Existing Text Defect | Correct Mathematical / Algorithmic Form |
+| :--- | :--- | :--- |
+| **Pipeline & Eq \eqref{eq:ch6:inverse-dynamics}** | Omits unactuated floating base ($6$ DOFs) and residual loads $\bm{\tau}_{\text{residual}}$. Sign on $J_c^T \bm{F}_{\text{ext}}$ ambiguous. | Partition into unactuated base and actuated joints; explicitly define residual forces/moments. |
+| **Redundancy & Eq \eqref{eq:ch6:redundancy}** | Equates $p > n$ to existence of non-negative solutions; ignores cone constraints. | Frame as convex polyhedral conic feasibility ($\bm{\tau} \in \operatorname{cone}(R(\bm{q}))$); apply Farkas' Lemma. |
+| **Static Optimization & Eq \eqref{eq:ch6:static-opt}** | Activations $a_i$ appear as fixed bounds while minimizing forces $F_i$; ignores reserve torques. | Define optimization over activation vector $\bm{a} \in [0, 1]^p$ with reserve actuators $\bm{\epsilon}$. |
+| **CMC & Eq \eqref{eq:ch6:cmc}** | Claims PD controller output is "desired muscle excitations." | PD controller outputs desired accelerations $\ddot{\bm{q}}_{\text{des}}$; intermediate QP maps to excitations $\bm{u}$. |
+| **IK Listing** | Unchecked L-BFGS-B optimizer output; generic scalar minimization; crashes on NaNs. | Use non-linear least squares (`least_squares`), handle occlusions, return success flags and bounds. |
+| **Data Assumptions** | Treats $\dot{\bm{q}}, \ddot{\bm{q}}$ as direct measurements; ignores STA and sampling rate differences. | Explicitly address numerical differentiation, filtering cutoffs, and soft tissue artifact boundaries. |

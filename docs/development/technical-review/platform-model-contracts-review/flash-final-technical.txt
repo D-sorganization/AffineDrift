@@ -1,0 +1,161 @@
+Based on a rigorous technical review of the supplied chapters (`The Companion Platform`, `Physics Engine Comparison`, and `Building a Multibody Model`), here are the prioritized concrete findings, errors, and validations.
+
+---
+
+### Priority 1: Mathematical, Kinematic & Dynamic Errors
+
+1. **Seven-Segment Model Degree-of-Freedom & Quaternion Configuration Count Mismatch**
+   * **Quote:** 
+     > *"For pelvis and trunk hinges, a three-DOF shoulder, elbow and wrist hinges, and fixed grip and head joints, the unconstrained mechanism has $1+1+3+1+1=7$ velocity degrees of freedom. A native quaternion shoulder gives eight stored configuration components with a unit-norm constraint; it does not create an eighth physical degree of freedom."*
+   * **Error:** 
+     The joints enumerated are:
+     - Pelvis hinge: 1 DOF ($q_1 \in \mathbb{R}^1$)
+     - Trunk hinge: 1 DOF ($q_2 \in \mathbb{R}^1$)
+     - Shoulder: 3 DOFs
+     - Elbow hinge: 1 DOF ($q_3 \in \mathbb{R}^1$)
+     - Wrist hinge: 1 DOF ($q_4 \in \mathbb{R}^1$)
+     - Grip: Fixed (0 DOF)
+     - Club head: Fixed (0 DOF)
+     
+     Sum of velocity DOFs: $1 + 1 + 3 + 1 + 1 = 7$.
+     However, when switching the 3-DOF shoulder to a **unit quaternion** ($q_{\mathrm{quat}} \in \mathbb{S}^3$, having 4 stored configuration components), the total number of stored configuration coordinates is:
+     $$1 (\text{pelvis}) + 1 (\text{trunk}) + 4 (\text{shoulder quaternion}) + 1 (\text{elbow}) + 1 (\text{wrist}) = \mathbf{8}\text{ coordinates}.$$
+     Wait, is this an error? Let's check: $1+1+4+1+1 = 8$. But what if the pelvis is floating or fixed? The text states: *"A native quaternion shoulder gives eight stored configuration components with a unit-norm constraint"*. With 1 hinge (1) + 1 hinge (1) + quaternion (4) + 1 hinge (1) + 1 hinge (1) = 8.
+     Wait! How is the pelvis attached to the declared world reference? 
+     Let's check the body count:
+     *"A possible reduced tree is a declared world reference, then pelvis, trunk, upper arm, forearm, hand, club shaft and club head."*
+     Counting links:
+     1. Pelvis
+     2. Trunk
+     3. Upper arm
+     4. Forearm
+     5. Hand
+     6. Club shaft
+     7. Club head
+     That is exactly 7 moving bodies (plus the declared world reference link = 8 links in URDF/MJCF tree).
+     Wait! What about the joint between world reference and pelvis? 
+     The text states: *"For pelvis and trunk hinges..."* — implying a hinge between world and pelvis, a hinge between pelvis and trunk.
+     Let's check the configuration count if the shoulder is 3 angles: $1+1+3+1+1 = 7$ coordinates. With a quaternion shoulder, it replaces 3 angles with 4 quaternion components, so $7 - 3 + 4 = 8$ configuration coordinates.
+     Wait, why would this be an issue? Let's look closer at the kinematics of $p_C$:
+     In Chapter 3:
+     * **Quote:**
+       > *"At angle $q$ and rate $v$, the expected COM position and scalar dynamic terms are*
+       > \begin{align}
+       > p_C&=(-\tfrac12\sin q,\ 0,\ -\tfrac12\cos q),\\
+       > M&=\tfrac13+\tfrac{0.02^2}{4},\qquad
+       > g_q=4.905\sin q,\qquad \tau_{\rm pass}=-0.05v.
+       > \end{align}
+       > *Here $g_q$ is on the left in $M\dot v+g_q=\tau_{\rm pass}$."*
+
+2. **Sign of COM Kinematics in the URDF Frame vs. Equation of Motion**
+   * **Quote:**
+     > *"<origin xyz=\"0 0 -0.5\" rpy=\"0 0 0\"/>"*
+     > *"<axis xyz=\"0 1 0\"/>"*
+     > *"At angle $q$ and rate $v$, the expected COM position and scalar dynamic terms are*
+     > \begin{equation}
+     > p_C=(-\tfrac12\sin q,\ 0,\ -\tfrac12\cos q)
+     > \end{equation}"*
+   * **Error:** 
+     Under the right-hand rule about the axis $\hat{y} = (0, 1, 0)$, a positive rotation by angle $q$ transforms a vector initially pointing along $-\hat{z} = (0, 0, -0.5)$ into:
+     $$R_y(q) \begin{pmatrix} 0 \\ 0 \\ -0.5 \end{pmatrix} = \begin{pmatrix} \cos q & 0 & \sin q \\ 0 & 1 & 0 \\ -\sin q & 0 & \cos q \end{pmatrix} \begin{pmatrix} 0 \\ 0 \\ -0.5 \end{pmatrix} = \begin{pmatrix} \mathbf{-0.5 \sin q} \\ 0 \\ \mathbf{-0.5 \cos q} \end{pmatrix}.$$
+     This matches $p_C = (-\frac{1}{2}\sin q, 0, -\frac{1}{2}\cos q)$.
+     Now let's check the potential energy and gravitational torque sign:
+     With gravity $g = (0, 0, -g) = (0, 0, -9.81)$, the potential energy is:
+     $$V(q) = - m \mathbf{g} \cdot \mathbf{p}_C = - (1.0) (-g) (-0.5 \cos q) = -0.5 m g \cos q = 0.5 m g (1 - \cos q) + \text{const}.$$
+     The generalized gravitational force $Q_g = -\frac{\partial V}{\partial q} = -0.5 m g \sin q = -4.905 \sin q$.
+     In the equation of motion written as:
+     $$M(q)\dot v + c(q,v) = \tau,$$
+     where gravity is placed on the left side: $M \dot v + g_q = \tau_{\rm pass}$, we have:
+     $$M \ddot q - Q_g = \tau_{\rm pass} \implies M \ddot q + 0.5 m g \sin q = \tau_{\rm pass} \implies g_q = 0.5 m g \sin q = 4.905 \sin q.$$
+     This matches.
+     
+     Wait! Now check Chapter 1:
+     * **Quote:**
+       > \begin{equation}
+       > \dot E = -b \dot q^2
+       > \end{equation}
+       > \begin{equation}
+       > I_P\ddot q+b\dot q+mg(L/2)\sin q=0,
+       > \end{equation}
+       > \begin{equation}
+       > E=\tfrac12 I_P\dot q^2+mg(L/2)(1-\cos q),
+       > \end{equation}
+       This sign is consistent with $\dot E = \dot q (I_P \ddot q + mg(L/2)\sin q) = \dot q (-b \dot q) = -b \dot q^2$.
+
+3. **Trapezoidal Quadrature Scaling and Endpoint Consistency**
+   * **Quote:**
+     > *"For $t=(0,1,3)$ and scalar normalized errors $(0,1,3)$, the trapezoidal integral of squared error is $10.5$, giving $\sqrt{3.5}$. The unweighted node RMS is $\sqrt{10/3}$; neither equals the exact continuous RMS $\sqrt{3}$ for $e(t)=t$ on this coarse grid."*
+   * **Verification:**
+     Let $t_0=0, t_1=1, t_2=3$, with errors $e_0=0, e_1=1, e_2=3$.
+     Squared errors: $y_0 = 0^2 = 0$, $y_1 = 1^2 = 1$, $y_2 = 3^2 = 9$.
+     Trapezoidal rule over intervals $[0, 1]$ and $[1, 3]$:
+     - Interval 1 ($h_1 = 1 - 0 = 1$): $\frac{0 + 1}{2} \times 1 = 0.5$.
+     - Interval 2 ($h_2 = 3 - 1 = 2$): $\frac{1 + 9}{2} \times 2 = 10.0$.
+     Total integral $= 0.5 + 10.0 = 10.5$.
+     Duration $T = 3 - 0 = 3$.
+     Mean square $= 10.5 / 3 = 3.5$.
+     RMS $= \sqrt{3.5}$.
+     Unweighted node RMS: $\sqrt{(0^2 + 1^2 + 3^2) / 3} = \sqrt{10/3}$.
+     Continuous function $e(t) = t$: $\frac{1}{3}\int_0^3 t^2 dt = \frac{1}{3} [\frac{t^3}{3}]_0^3 = \frac{1}{3} \cdot 9 = 3 \implies \text{RMS} = \sqrt{3}$.
+     This calculation is mathematically exact and correctly illustrates grid-spacing bias.
+
+---
+
+### Priority 2: Model vs. Numerical Validation Distinctions
+
+4. **Conflating Solver Accuracy / Agreement with Model Validity**
+   * **Quote:**
+     > *"Two simulations' difference is an agreement metric; calling it accuracy requires an independently justified reference, such as an analytic limit or a documented convergence study."*
+     > *"Repository tests parse the actual listing and, when MuJoCo is installed, load it to check mass, coordinates, COM, inertia, gravity and damping. That single-engine test does not certify import by Drake or Pinocchio, or a time-integrated comparison."*
+   * **Analysis:**
+     The text carefully and explicitly distinguishes:
+     - **Model verification/equivalence:** Confirming that the parsed physical properties ($M, I_P, p_C, g_q, \tau_{\rm pass}$) match the intended physical parameters before integration.
+     - **Numerical validation/solver accuracy:** Measuring integration truncation error, step refinement, and energy-work residual ($r_E(t) = E(t) - E(0) + \int b \dot{q}^2 dt$) against an independent reference.
+     - **Cross-engine agreement:** Cross-engine comparison without an analytic ground truth only assesses whether two engines make the same assumptions, not physical ground-truth correctness.
+
+---
+
+### Priority 3: Exact Specification Checks
+
+5. **URDF Cylinder Inertia vs. Analytic Solid Cylinder Formulas**
+   * **Quote (Chapter 1):**
+     > \begin{equation}
+     > I_C=\frac{m(L^2+3r^2)}{12},\qquad
+     > I_P=I_C+m(L/2)^2=m\left(\frac{L^2}{3}+\frac{r^2}{4}\right).
+     > \end{equation}
+   * **Quote (Chapter 3 URDF):**
+     > *`mass value="1.0"`*
+     > *`length="1.0" radius="0.02"`*
+     > *`ixx="0.0834333333333333"`*
+     > *`iyy="0.0834333333333333"`*
+     > *`izz="0.0002"`*
+   * **Check:**
+     With cylinder axis aligned along $z$:
+     - Transverse moments:
+       $$I_{xx} = I_{yy} = \frac{m(L^2 + 3r^2)}{12} = \frac{1.0 \times (1.0 + 3 \times 0.0004)}{12} = \frac{1.0012}{12} = 0.08343333333333333\dots\text{ kg}\cdot\text{m}^2.$$
+     - Axial moment:
+       $$I_{zz} = \frac{1}{2} m r^2 = \frac{1}{2} \times 1.0 \times 0.02^2 = 0.0002\text{ kg}\cdot\text{m}^2.$$
+     - Off-diagonal terms: $0$.
+     The URDF tensor values and analytic formula match to full double precision.
+
+6. **Seven-Body Count Consistency**
+   * **Quote:**
+     > *"A possible reduced tree is a declared world reference, then pelvis, trunk, upper arm, forearm, hand, club shaft and club head. Connect the head to the shaft with a fixed joint..."*
+   * **Check:**
+     Counting the moving segments:
+     1. Pelvis
+     2. Trunk
+     3. Upper arm
+     4. Forearm
+     5. Hand
+     6. Club shaft
+     7. Club head
+     Total = 7 bodies (excluding the stationary reference link `world`). This is consistent and unambiguous.
+
+---
+
+### Summary of Review Findings
+
+* **No invented or spurious bugs found:** All derivations (cylinder inertia tensor, parallel axis theorem, signs of damping and gravity moments, energy-work residual definition, non-dimensionalized RMS quadrature, quaternion DOF vs. coordinate size, and URDF inertial tags) are mechanically sound and free of sign or coordinate errors.
+* **Model vs. Numerical Validation:** The text maintains a strict separation between verifying model parameter equivalence at API boundaries and quantifying numerical solver convergence/quadrature error.
+* **Absence of Empirical Claims:** The text adheres to the directive to avoid unverified performance rankings, benchmarking claims, or imagined engine timings.

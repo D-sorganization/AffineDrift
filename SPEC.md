@@ -145,7 +145,7 @@ AffineDrift/
 ### Input & Output Data
 
 - **Input**: Swing trajectories (YAML/JSON), Quarto Markdown (.qmd), LaTeX book sources (.tex), configuration parameters (`_quarto.yml`).
-- **Output**: Optimized swing trajectories (NumPy/JSON), static website (HTML/CSS/JS in `docs/`), test and coverage reports (`coverage.xml`), claim-audit reports.
+- **Output**: Optimized swing trajectories (NumPy/JSON), static website (HTML/CSS/JS in the git-ignored `_site/` build output), test and coverage reports (`coverage.xml`), claim-audit reports.
 
 ### Configuration
 
@@ -208,7 +208,7 @@ quarto render
 
 ### Build Artifacts
 
-Static website in `docs/`, public site manifest (`docs/public-site-manifest.json`), coverage report (`coverage.xml`), and claim-audit inventory reports.
+Static website in `_site/`, public site manifest (`_site/public-site-manifest.json`), coverage report (`coverage.xml`), and claim-audit inventory reports.
 
 ## 11. Roadmap & Open Issues
 
@@ -224,6 +224,24 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-07 | #4995 | Move the Quarto output-dir from docs/ to the git-ignored _site/ so docs/ holds only tracked internal documentation; untrack the committed CSS/JS/PDF build mirrors, drop the markdown-pruning half of prune_internal_docs_from_deploy.py, and pin the separation in tests/test_site_output_dir.py. Supersedes draft #4683. |
+| 2026-10-07 | #4991 | Archive HANDOFF.md (129 old sections) and shipped DEVELOPMENT_LOG.md entries (17) verbatim into docs/development/archive/ and the yearly DL archive (RM#1893). |
+| 2026-10-06 | #4956 | Refresh requirements-docker.lock to match the python-minor-patch bump (hypothesis, markdown, mypy, ruff) |
+| 2026-10-06 | #4988 | e2e touch-targets spec waits for fonts and finite animations/transitions before measuring, fixing sub-pixel (43.9998px) intermittent failures |
+| 2026-10-06 | #4979 | WEB-01.1: Start Here entry page (what the site is, Drift Plus Control picture, persona cards, evidence labels, what the site is not), first navbar item and home primary CTA; grade 6.8; WEB-01.4: add The Big Idea in Five Minutes, an equation-free explainer of drift versus control, ZTCF and DCR with where-each-analogy-breaks notes, linked from Start Here, the home hero and Theory Part 1; share entry-page test contracts in tests/helpers/entry_pages.py; WEB-01.9: lay blocks on 18 core pages rewritten to grade <=10 and <=250 words with glossary links; tangent LAYMAN variants linked; content gate test added; Scientific falsifier, named measurement modality and honest power statement for all 8 research protocols (backward-compatible schema extension); WEB-06.3 Drift vs Control double-pendulum sandbox on theory Part 1: src/affine_control/double_pendulum_affine.py split, checked JS mirror, widget-parity v1 generator and fixture, Jest/pytest/Playwright class A checks; WEB-06.4: ZTCF counterfactual explorer on the ZTCF page; branches replayed through execute_ztcf_intervention; JS mirror parity-pinned to golf_model, dynamics, ztcf_contract and the v2 fixture; fixture SHA-256 and ledger critiques shown; Planar swing viewer on the model-ladder page: precomputed golf_model.py frames with drift vs input colouring; Phase 2 blocked on #4973; WEB-08.2: Drift Plus Control signature graphic, an inline theme-aware SVG generated from the SimplePendulum control-affine split, on the home page and theory Part 1 header; WEB-08.4: two captioned, data-generated animated explainers (drift vs control, ZTCF) with a reproducible encoder, manifest and --check gate; WEB-11.6 symbol hover references: NOTATION.md symbol table generates data/symbol_references.json; symbol-hover.lua marks \symref symbols on opted-in pages with MathJax class hooks plus a native details symbol list; js/symbol-hover.js adds pointer tooltips; theory Part 1 opts in.; Related Articles sections on 11 article pages; link-gate related-coverage baseline 31 to 20 (#3896 batch 3) |
+| 2026-10-06 | #4984 | Close technical-review publication acceptance and preserve final evidence |
+| 2026-10-05 | #4980 | Vendor automerge_guard and requeue_stalled_merges (stalled-merge requeue tooling) from Repository_Management, byte-identical to RM#2029; the vendored scripts/automerge_guard.py gets an explicit 801-line module-size limit (owner decision) because trimming it locally would fork the fleet copy |
+| 2026-10-05 | #4977 | Clarify evidence terminology and preserve the final technical-review handoff |
+| 2026-10-05 | #4953 | Prepare bounded corrections for experimental measurement, filtering and timing; Correct biological coupling, stiffness, inverse dynamics and force allocation; Correct joint screw-axis conventions, constraint mobility and soft-tissue stiffness; Establish checked inference, flexible-beam and control-model arguments; Separate neural evidence from dimensional and controller assumptions; Separate prediction, passive mechanics and stochastic-control assumptions; Distinguish action effects, rhythmic generators and motor-learning processes; Correct golf capstone acceleration attribution and synthetic dynamics; Correct platform, engine comparison and model construction contracts; Correct simulation, local optimization and feedback guarantees; Correct identification, RL benchmark and motion-analysis claims; Correct workbench capability, intervention and energy-diagnostic claims; Correct putting contact, slope, calibration and pendulum mechanics; Correct tangent-space, optimization, contraction and hybrid application claims; Annotate technical errors in fifteen historical tangent and integral drafts; Consolidate reviewed mechanics, control and historical corrections for main delivery; Correct publication introductions and complete generated-content review; Repair inherited development-log metadata and archive completed records without losing evidence; Complete impact and inverse-dynamics source review with book reconciliation; Route book readers to the corrected reviewed manuscript editions |
+| 2026-10-05 | #4971 | Rename critiques/DEFENSE_STRATEGY to the neutral adjudication-summary with a Quarto alias and redirect-ledger entry |
+| 2026-10-05 | #4970 | Evidence ladder: six rungs in config/maturity.yml, measured-record rule enforced for every page, How to Read lists the rungs |
+| 2026-10-05 | #4962 | ci(security): re-vendor fail-closed fork_pr_runner_guard.py and fork_pr_guard_analysis.py from Repository_Management #2000; any step that reads the PR head fails unless the job is same-repo gated. |
+| 2026-10-05 | #4942 | Related Articles coverage batch 2: 14 article and model pages leave the link-gate baseline |
+| 2026-10-05 | #4958 | anti-phantom-merge rule 3 lists PR files via paginated REST API and fails closed above the 3000-file API cap |
+| 2026-10-05 | #4944 | use a synthetic issue in the change-fragment round-trip test so real collations cannot collide with it |
+| 2026-10-05 | #4891 | Preserve verified and unverified publication-date presentation while integrating parent delivery repairs; Integrate parent CI repairs without changing the accepted implementation appendix; Correct the connected flight, accuracy and design chapters with explicit uncertainty and validation limits; Prepare the camera geometry and commercial survey corrections with primary-source evidence |
+| 2026-10-05 | #4889 | Clarify dimension types and bind educational integration claims to qualified provider evidence |
+| 2026-10-05 | #4918 | Vendor RM-5 Change Fragment Tooling |
 | 2026-10-04 | #4883 | Un-nest See Also callout headings on 17 pages, add series-navigation links to five tangent-hyperplane parts, prune 25 related-coverage baseline entries and guard against stale baseline entries. |
 | 2026-10-04 | #4907 | Record Board decision D3(d) as accepted ADR 0002 (interactive technology stack: OJS plus self-hosted Pyodide, per-widget budgets, parity fixtures) and add an ADR index contract test. |
 | 2026-10-03 | #4836 | Bound passive/distributed-control attribution and stability claims; reconcile the standalone series-spring example with a tested massless junction, segmented force input and complete mechanical energy accounting. |
@@ -588,11 +606,19 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4879 | Correct hardware sampling, timing, integration and conditional inference claims (#4876); correct Bosch attribution, stability, control, intrinsic mechanics, power and transfer claims (#4877). Preserve both reviews and fixed-commit validation. |
 
 | 2026-10-04 | #4886 | Correct launch-monitor timing, reference-point, spin and inference conventions; preserve primary-source and mathematical evidence with rebuilt book PDF. |
+| 2026-10-04 | #4880 | Correct Control Is Motion landing page: orbital stability, transverse coordinates, and passivity (#4878). |
 | 2026-10-04 | #4885 | Distinguish geometric, statistical and computational dimensions; bind the educational simulation guide to provider provenance and qualified engine documentation. |
 | 2026-10-04 | #4888 | Preserve unverified publication dates as readable uncertainty in rendered title and metadata cards without inventing date metadata. |
 | 2026-10-04 | #4890 | Connect launch-monitor implementation to identifiable sensor observations, timing uncertainty, conditional inversion and independently validated optical and radar budgets. |
 | 2026-10-04 | #4894 | Prepare coordinated flight, accuracy and design review with primary-reading limits, mathematical contracts and bounded Flash inventories. |
 | 2026-10-04 | #4882 | Emit page-relative route links in the companion freshness dashboard; drop 12 path-style baseline entries. |
+| 2026-10-04 | #4558 | Add animated WebP fish derivative and serve it through a reduced-motion-aware picture element. |
+| 2026-10-05 | #4902 | Correct experimental-methods filtering, force-plate wrench-frame, IMU specific-force and timing explanations with an executable marker-processing example (#4898). |
+| 2026-10-04 | #4909 | Render "In Layman's Terms" blocks through one open-by-default Lua-filter component; migrate the 14 existing inline blocks with unchanged wording. |
 | 2026-10-05 | #4913 | Benchmark workflow compares only against a baseline for the runner's platform (15% gate unchanged); otherwise saves one as an artifact and reports no baseline instead of failure. |
 | 2026-10-05 | #4911 | Install pytest-timeout in the benchmark venv (requirements-benchmarks.txt) so the 45 benchmarks run instead of failing on the unknown timeout option (#4911). |
+| 2026-10-05 | #4929 | Keep fork PRs off the self-hosted fleet: job-level fork guard and hosted fork route in workflows, vendored `scripts/fork_pr_runner_guard.py` with a self-scan test (RM#1989). |
 | 2026-10-05 | #4925 | Public-site verifier prints each failed route, viewport/theme and reason plus a capped `::error` annotation after the summary, via `scripts/public-site-failures.js`, so red Deploy Website runs are diagnosable from the job log (#4924). |
+| 2026-10-05 | #4904 | Correct biological multibody power, geometric stiffness, compliant-versus-kinematic coupling and inverse-dynamics load accounting across the multibody and inverse-problem chapters (#4900). |
+| 2026-10-05 | #4906 | Define the spatial-twist convention for screw-axis extraction, handle degenerate axes, and correct constraint-rank and ligament-stiffness reasoning in the joint-kinematics chapter (#4901). |
+| 2026-10-05 | #4910 | Verify covariance-dependent likelihood, beam boundary-condition and biological control claims in the inference, flexible-mechanics and control chapters with checked Gaussian MAP, Euler-Bernoulli tip-mass and control examples (#4905). |

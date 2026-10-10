@@ -1,3 +1,54 @@
+# Final Technical Review Handoff — 5 October 2026
+
+The accepted technical review and final guide are delivered to protected main.
+**Final public acceptance has passed.** The
+[closing review](docs/development/technical-review/final-delivery/closing-review.md)
+and [public receipt](docs/development/technical-review/final-delivery/final-public-acceptance.json)
+are the final evidence map. [Epic #4009](https://github.com/D-sorganization/AffineDrift/issues/4009)
+records the closing documentation PR's protected merge and administrative release.
+
+Regular PR #4953 merged at `76815ab5e86807ab78d02a98fc69d832b6ab2feb`;
+regular PR #4977 merged at `f3b9fe8eb1ab7cd3ae7f020c3d4f9ca0fb209c04`.
+Protected-tree comparisons preserve all 145 original artifacts, 50 linked
+manuscript/PDF targets, four amended book pages and the final guide/config.
+Retain reviewed edition pin `fbee4da94fd699e9710f4c29b42a73a5113f08d4`.
+
+The 407 heterogeneous rows, 27 supplementary sources and eight books' 131 input
+occurrences are reconciled; all 45 originally named workstreams are closed.
+Preserve 38 immutable upstream publication rows and all empirical/reading limits.
+Neither counts nor closed issues establish scientific validity.
+
+Public revision `43ae945891cee0015c53fac03f4066afec5a5375` passed the independent
+live scan: 251 routes, 1,004 unique viewport/theme cells, zero failures and zero
+reported serious/critical axe violations. The manifest was unchanged throughout.
+The final guide wording/link and all five advertised PDF hashes also pass.
+The published build separately passed 1,004 route cells and 158 representative
+checks. Full raw live evidence is retained with the final receipt.
+
+## Protected Closeout
+
+The closing branch is `docs/technical-review-public-acceptance`; `SELF`
+identifies this handoff's commit. This branch contains only acceptance records
+and internal turnover updates. Open a regular PR, run the central pre-PR gates
+and normal hooks, and use the protected merge queue. Verify the actual merge
+and epic closure, then release session `technical-review-20261005-final-handoff`.
+The #4976 source lease is already released. Preserve other agents' PRs and the
+owned untracked `.playwright-cli/` and `output/` QA artifacts.
+
+Read the closing review and source-bound adjudications before future changes.
+Delegate mechanical inventory checks to Flash and independently review its
+conceptual suggestions. Empirical studies, notebook execution, instrument
+qualification and upstream publications retain their separately governed
+boundaries. Tests and algebra do not establish human causal mechanisms or
+coaching prescriptions. No additional scientific rewrite is part of this closeout.
+
+# Historical Checkpoints
+
+The entries below retain their original evidence and dates; their pending-work
+instructions do not override the current handoff above.
+
+---
+
 # Two-Article PR #4889 — Parent Delivered
 
 Parameter PR #4886 merged to remote main at d33e635d5f7aab7d983117955db08650df1acb8d on 2026-10-04 19:47 UTC. All eight accepted parameter paths match; receipt saved in reports/technical-review/parameter-remote-main-receipt.json and its lease/presence released. Main is merged into this article branch without changing its four accepted source/evidence hashes. Metadata conflicts retain the newer article acceptance and all main SPEC rows; no scientific source conflict occurred. Next: publish this merge, retarget #4889 to main and arm only through the central guard. Current article lease expires 21:50 UTC. Date PR #4891 follows this PR; implementation PR #4895 follows the date PR and has completed its own source/PDF/full-regression acceptance. Never merge a child into its topic-branch parent. Earlier entries are historical. Goal active.

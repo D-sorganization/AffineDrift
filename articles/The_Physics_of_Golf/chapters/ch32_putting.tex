@@ -1,58 +1,119 @@
 \chapter{The Physics of Putting}
 \label{ch:putting}
 
-\begin{laymansbox}{Why Putting Looks Simple but Isn't}{lay:putting}
-Putting accounts for roughly 40\% of strokes played in a typical round, yet the physics differs fundamentally from the full swing. The ball barely leaves the surface, aerodynamic forces are negligible, and the dominant dynamics involve rolling friction, surface slope, and a stroke whose timing constants are measured in hundreds of milliseconds rather than tens. This chapter develops a minimal mathematical model of the putt: how the ball transitions from sliding to rolling, how gravity and slope steer it, and why the metronome-like tempo of elite putters emerges naturally from a pendulum treatment of the stroke.
+\begin{laymansbox}{Connect the Stroke, Impact, and Green}{lay:putting}
+A putting model has three connected stages: the golfer moves the putter, impact establishes the ball's velocity and spin, and contact with the green changes both. A reproducible stroke does not guarantee a reproducible putt if the impact or surface changes. Conversely, the same rollout can result from different strokes and launch conditions. We derive simple models for each stage, state their limits, and keep calculated examples separate from measurements of golfers.
 \end{laymansbox}
 
 \section{Rolling Versus Sliding Dynamics}
 \label{sec:putting_roll_slide}
 
-Immediately after impact the ball possesses linear velocity $v_0$ but essentially no spin---the putter face imparts very little angular momentum compared with that needed for pure rolling ($\omega = v/r$). The ball therefore \emph{skids} over the first few centimeters of its journey. During the skid phase, kinetic friction acts backward on the bottom of the ball, simultaneously decelerating its translation and accelerating its rotation:
-\begin{align}
-m \dot{v} &= -\mu_k m g, \\
-I \dot{\omega} &= \mu_k m g r,
-\end{align}
-where $I = \tfrac{2}{5} m r^2$ for a uniform sphere. Pure rolling is reached when $v = \omega r$; setting $\omega(t_r) r = v(t_r)$ yields a skid duration $t_r = 2 v_0 / (7 \mu_k g)$ after which the ball rolls without slipping and only rolling friction remains \cite{penner2002putting}. For a typical green with $\mu_k \approx 0.25$ the skid phase lasts roughly 0.1~s and covers about 20\% of the putt length.
+Initial spin is an outcome of impact, not universally zero. Loft, impact location and contact conditions can also produce a short airborne or bouncing phase. Penner explicitly distinguishes those possibilities before adopting pure rolling as an approximation for his path calculations \cite{penner2002putting}. The following contact model begins after any flight: a rigid spherical ball remains on a stationary, level plane, with constant kinetic friction and no rolling-resistance moment during the sliding interval.
 
-\section{Putt Path on Slopes}
+Let $R$ be ball radius, $I=\kappa mR^2$ its central inertia, and choose the positive angular rate so forward rolling satisfies $v=R\omega$. A uniform solid sphere has $\kappa=2/5$; a layered golf ball need not have exactly that value. The signed slip speed is $s=v-R\omega$. For $s\ne0$,
+\begin{align}
+\dot v&=-\mu_k g\,\operatorname{sgn}(s),&
+\dot\omega&=\frac{\mu_k g}{\kappa R}\operatorname{sgn}(s).
+\end{align}
+Friction opposes \emph{slip}, not necessarily translation: an overspinning ball can accelerate forward while losing total kinetic energy. The slip sign stays fixed until it reaches zero. Integrating gives
+\begin{align}
+t_r&=\frac{\kappa|v_0-R\omega_0|}{(1+\kappa)\mu_k g},&
+v_r&=\frac{v_0+\kappa R\omega_0}{1+\kappa},\\
+x_r&=v_0t_r-\frac12\mu_k g\,\operatorname{sgn}(s_0)t_r^2,&
+E_0-E_r&=\frac{m\kappa}{2(1+\kappa)}s_0^2.
+\end{align}
+Here $x_r$ is signed displacement, not path length if translation reverses. Pure rolling initially gives $t_r=0$. These formulas require $\mu_k>0$ and do not cover a bouncing, deforming or intermittently contacting ball. The combined rotational and translational energy is
+$E=\tfrac12mv^2+\tfrac12I\omega^2$; during slip, $\dot E=-\mu_kmg|s|$.
+
+For the illustrative values $v_0=2.0$~m/s, $\omega_0=0$, $\mu_k=0.25$ and $g=9.81$~m/s$^2$, the uniform-sphere model gives
+\[
+t_r=0.2330~\mathrm{s},\qquad x_r=0.3994~\mathrm{m},\qquad
+v_r=1.4286~\mathrm{m/s}.
+\]
+It dissipates $2/7$ of the initial kinetic energy. This example already contradicts treating every skid as a few centimeters or a fixed $0.1$~s. Its fraction of the \emph{whole putt} also depends on the subsequent rolling resistance and target distance; no universal 20\% follows from the equations.
+
+\section{Putt Paths on Slopes}
 \label{sec:putting_slopes}
 
-On a green with slope angle $\alpha$, the component of gravity along the surface is $g_\parallel = g \sin \alpha$, directed down the fall line. Treating the ball as a rolling point mass, the equation of motion in the green-plane coordinates is
-\begin{equation}
-\ddot{\mathbf{r}} = -\mu_r g\, \hat{\mathbf{v}} + g \sin \alpha\, \hat{\mathbf{s}},
-\end{equation}
-where $\hat{\mathbf{s}}$ is the unit vector along the steepest descent and $\mu_r$ is the effective rolling friction coefficient. The gravitational term curves the trajectory: a putt rolled perpendicular to the fall line follows a parabola toward the low side, and the apex of that parabola is the ``apex point'' experienced putters visualize when reading greens.
+After rolling begins, model the green locally as a fixed plane with slope angle $\alpha$, downslope unit vector $\hat{\mathbf s}$ and sufficient static traction to maintain rolling. Represent resistance by a moment of magnitude $c_rNR$ opposing the rolling angular velocity, where $N=mg\cos\alpha$ and $c_r\ge0$ is dimensionless. This is a declared effective contact law, not a kinetic-sliding coefficient. Neglect aerodynamic forces and spin about the plane normal.
 
-\section{The Stimpmeter and Friction Coefficients}
+Eliminating the tangential contact force between Newton's and Euler's equations, using the no-slip relation, gives
+\begin{equation}
+\ddot{\mathbf r}
+=\frac{g\sin\alpha}{1+\kappa}\hat{\mathbf s}
+-a_0\cos\alpha\,\frac{\dot{\mathbf r}}{\|\dot{\mathbf r}\|},
+\qquad
+a_0=\frac{c_rg}{1+\kappa},
+\quad \|\dot{\mathbf r}\|>0.
+\label{eq:putting_rolling}
+\end{equation}
+Here $a_0$ is the level-green deceleration in this model. The factor $1/(1+\kappa)$ accounts for rotational inertia. With $\kappa=2/5$ and no resistance, downslope acceleration is $(5/7)g\sin\alpha$, not $g\sin\alpha$. Static friction still supplies the torque needed to spin up the ball; \emph{zero rolling resistance does not mean zero tangential contact force}. The Newton--Euler derivation of no-slip rolling is reviewed in \citet{OpenStaxRollingReview}.
+
+At rest the velocity direction is undefined. Equation~\eqref{eq:putting_rolling} must end at a stopping event or be completed by a static contact/resistance law; assigning an arbitrary direction at zero speed does not determine whether the ball stays at rest on a slope. The rolling assumption must also be rejected when the required tangential force exceeds available traction. Real turf introduces anisotropy, speed dependence, local slope changes and stochastic deviations.
+
+For initial motion across the fall line, set $\mathbf r(0)=0$ and $\dot{\mathbf r}(0)=(V,0)$, with $y$ downslope. Locally,
+\begin{align}
+x(t)&=Vt-\frac12a_0\cos\alpha\,t^2+O(t^3),\\
+y(t)&=\frac{g\sin\alpha}{2(1+\kappa)}t^2+O(t^3).
+\end{align}
+Thus the leading small-time relation is approximately parabolic,
+$y\simeq g\sin\alpha\,x^2/[2(1+\kappa)V^2]$.
+It is not an exact finite-putt parabola when resistance changes the velocity direction and speed. Do not extrapolate this expansion to the stopping time to predict the aim point of a long putt. Hole capture additionally depends on arrival speed and offset; crossing the hole's location is not a capture model.
+
+\section{The Stimpmeter and Effective Deceleration}
 \label{sec:putting_stimp}
 
-The \emph{Stimpmeter}, standardized by the USGA, releases a ball from a fixed height down an inclined ramp and measures the roll-out distance $L$ on a level green. Because the ramp delivers a known release velocity $v_r \approx 1.83$~m/s, the rolling friction coefficient follows from energy conservation:
-\begin{equation}
-\mu_r = \frac{v_r^2}{2 g L}.
-\end{equation}
-Stimp readings (in feet) typically range from 8 (slow municipal green) to 13 (major championship), corresponding to $\mu_r$ values between 0.07 and 0.04. Tournament greens are therefore effectively twice as slick as everyday putting surfaces \cite{karlsen2008putting}.
+A Stimpmeter reading is a rollout \emph{distance}, conventionally reported in feet, rather than a velocity. The USGA procedure uses repeated rolls in opposite directions on a sufficiently level area and averages the distances; its instructions also distinguish the standard and alternate notches \cite{USGAStimpmeterReview}. It is a surface-comparison procedure, not a direct measurement of a microscopic friction coefficient.
 
-\section{Pendulum Model of the Putting Stroke}
+If the established-rolling entry speed $v_s$ is known and the subsequent level deceleration is constant, elementary kinematics gives
+\begin{equation}
+a_0=\frac{v_s^2}{2L_s},\qquad
+\mu_{\mathrm{eff}}=\frac{a_0}{g},\qquad
+c_r=(1+\kappa)\mu_{\mathrm{eff}}.
+\end{equation}
+The last equality belongs to the resistance-moment model above. $\mu_{\mathrm{eff}}$ is a deceleration ratio; it is neither $\mu_k$ nor a universal static-friction coefficient. Energy is dissipated during rollout, so this is not an assertion of mechanical-energy conservation.
+
+Penner uses a historical entry-speed estimate of $1.83$~m/s \cite{penner2002putting}. Using that value as an \emph{illustrative calibration}, an 8-foot rollout gives $a_0=0.687$~m/s$^2$, whereas 13 feet gives $0.423$~m/s$^2$. Their ratio is $13/8=1.625$, not two. These selected distances do not define universal course categories. Device/notch choice, the launch-to-roll transition and surface conditions must be included in a measured calibration rather than assigning $1.83$~m/s to every modern setup.
+
+\section{A Compound Pendulum Is a Conditional Stroke Model}
 \label{sec:putting_pendulum}
 
-The putting stroke is well approximated as a pendulum swinging about a pivot near the base of the neck, with the putter and arms forming a compound pendulum of effective length $L_p$ and small-angle natural frequency $\omega_p = \sqrt{g / L_p}$. For $L_p \approx 0.8$~m this gives $\omega_p \approx 3.5$~rad/s and a period $T_p \approx 1.8$~s, remarkably close to the measured half-period of elite putting strokes ($\approx 0.8$--$1.0$~s backswing plus downswing) \cite{mackenzie2011putting}. The pendulum analogy explains why tour players are taught to let the stroke ``swing freely'': at the pendulum's natural frequency the stroke requires minimal muscular input and thus minimal opportunity for neuromuscular noise to corrupt the line and speed.
+For a rigid assembly rotating about a fixed horizontal pivot, let $I_p$ be inertia about that pivot and $d$ the pivot-to-COM distance. With a point torque $\tau(t)$ and no other losses,
+\begin{equation}
+I_p\ddot\theta+mgd\sin\theta=\tau(t),\qquad
+L_{\mathrm{eff}}=\frac{I_p}{md}.
+\end{equation}
+The equivalent pendulum length $L_{\mathrm{eff}}$ is not generally the actual pivot-to-putterhead radius $\ell_h$. Linearizing near the downward equilibrium and setting $\tau=0$ gives
+\[
+\omega_n=\sqrt{g/L_{\mathrm{eff}}},\qquad
+T=2\pi\sqrt{L_{\mathrm{eff}}/g}.
+\]
+For $L_{\mathrm{eff}}=0.8$~m, $T=1.794$~s, $T/2=0.897$~s and $T/4=0.449$~s. Comparing the full period with a measured half-cycle is a factor-of-two error. Larger amplitude changes the passive period; $T/T_0=1+\theta_{\max}^2/16+O(\theta_{\max}^4)$ for angles in radians. Compound-pendulum assumptions and equivalent length are described in \citet{OpenStaxPendulumReview}.
 
-\section{Tempo and Consistency}
+A passive bottom-to-extremum-to-bottom excursion has equal outgoing and return durations. It does not derive a universal 2:1 backswing-to-downswing ratio. Starting from rest at the bottom requires an input to initiate motion at all. A real golfer can move the pivot, change joint configuration and stiffness, and apply time-dependent torque; event definitions also affect reported ratios. Grober proposes a \emph{driven} oscillator and fixed timing/velocity-shape factors as a distance-control model \cite{Grober2011PuttingReview}. Such a conditional account should not be replaced by a claim that an unforced pendulum proves optimal human tempo or minimal neuromuscular noise.
+
+\section{Connect Putter Speed to Ball Speed and Accuracy}
 \label{sec:putting_tempo}
 
-Elite putters exhibit extraordinarily consistent tempo ratios---the ratio of backswing to downswing time hovers near 2:1 across a wide range of putt lengths \cite{pelz2000putting}. Because the pendulum frequency is set by geometry rather than stroke length, this consistency emerges naturally from the physics: longer putts are produced by larger amplitude at the same frequency, not by swinging faster. Direction variance on flat greens among tour players is approximately $0.5^\circ$ \cite{karlsen2008putting}, which means a 20-foot putt can still finish within the hole if its initial line and speed are both within tight tolerances.
+For passive release from angle $\theta_0$, the ideal assembly's head speed at its lowest point is
+\begin{equation}
+U_h=\ell_h\sqrt{\frac{2g}{L_{\mathrm{eff}}}(1-\cos\theta_0)}
+\simeq\ell_h\omega_n|\theta_0|.
+\end{equation}
+This is \emph{putterhead speed}, not ball launch speed. In an ideal one-dimensional central collision of a moving free putter mass $M$ with a stationary ball of mass $m$, coefficient of restitution $e$ gives $v_b^+=(1+e)M U_h/(M+m)$. Real impact geometry, inertia, shaft/hand coupling, spin and the subsequent contact transition require a richer model or measured calibration. Do not silently identify $M$ with total putter mass or treat the central-collision formula as a complete golf impact law.
+
+For a declared impact-to-established-roll speed gain $k_{\mathrm{imp}}$, write $v_r=k_{\mathrm{imp}}U_h$. Combining this calibration with level constant deceleration yields
+\begin{equation}
+D=\frac{k_{\mathrm{imp}}^2U_h^2}{2a_0},
+\end{equation}
+where $D$ starts at established rolling, not necessarily at the impact point. Holding the impact transfer, surface and timing fixed explains why stroke amplitude can control distance in a small-angle model. It does not prove that golfers must keep timing fixed.
+
+Direction and speed errors must also be separated from aiming and green reading. Karlsen, Smith and Nilsson studied 1,301 approximately 4-m putts from 71 skilled players and distinguished stroke direction from the aim line \cite{karlsen2008putting}. Their stroke-specific variability estimates should not be promoted to universal hole-out probabilities. Standard deviation has units of degrees; angular variance has units of degrees squared. Even a deterministic $0.5^\circ$ direction error gives approximately $6.096\tan(0.5^\circ)=0.0532$~m lateral displacement at 20 feet before slope or speed effects. That calculation alone cannot establish capture, perceptual thresholds, or a coaching prescription.
 
 \begin{exercises}{Problems and Thought Experiments}{ex:putting}
-
 \begin{enumerate}
-
-\item \textbf{Skid-to-Roll Transition:} A ball is struck with initial velocity $v_0 = 2.0$~m/s and zero spin on a green with kinetic friction $\mu_k = 0.25$. Using $I = \tfrac{2}{5} m r^2$, compute the time $t_r$ and distance $x_r$ at which pure rolling is first achieved, and determine the velocity at that instant. What fraction of the initial kinetic energy has been dissipated during the skid?
-
-\item \textbf{Breaking Putt:} A 20-foot putt is aimed perpendicular to the fall line of a green sloped at $\alpha = 2^\circ$. Assume an effective rolling friction $\mu_r = 0.05$ and that the ball must arrive at the hole with vanishing velocity. (a)~Estimate the required initial speed. (b)~Estimate the lateral deflection (``break'') due to gravity, treating the trajectory as a short-time expansion. (c)~Where should the golfer aim relative to the hole?
-
-\item \textbf{Stimp and Stroke Length:} Two greens measure Stimp~9 and Stimp~12. For a 15-foot putt on each, use the rolling friction values implied by the Stimpmeter formula to compute the required initial velocity assuming pure rolling throughout. Assuming the pendulum model $v_0 = L_p \omega_p \theta_0$ with $L_p = 0.8$~m, what backswing amplitude $\theta_0$ does each putt require? Comment on whether the difference is within the putter's perceptual threshold.
-
+\item \textbf{Spin and Slip:} Reproduce the zero-spin example above. Then set $R\omega_0=3.0$~m/s while keeping $v_0=2.0$~m/s. Show that translation speeds up during contact slip while total kinetic energy decreases. Identify which assumptions fail if the ball bounces.
+\item \textbf{A Local Slope Prediction:} Use $\kappa=2/5$, $V=2.0$~m/s, $\alpha=2^\circ$, $a_0=0.15$~m/s$^2$ and $t=0.10$~s. Compute the second-order $x,y$ approximation and compare it with a numerical integration of equation~\eqref{eq:putting_rolling}. Explain why this is not an aim recommendation for a 20-foot putt with zero arrival speed.
+\item \textbf{Separate the Three Stages:} For illustrative Stimp distances 9 and 12 feet, use $v_s=1.83$~m/s to calculate $a_0$. For $D=15$ feet of established rolling, obtain $v_r$, then $U_h$ using a supplied $k_{\mathrm{imp}}=1.5$. Use $L_{\mathrm{eff}}=0.8$~m and $\ell_h=0.9$~m to compute small-angle release amplitudes. Compare their ratio and the exact passive-energy correction. Which measurements would be needed before transferring this calculation to a golfer?
 \end{enumerate}
-
 \end{exercises}

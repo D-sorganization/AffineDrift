@@ -1,0 +1,27 @@
+import json
+from pathlib import Path
+import numpy as np
+from scipy.spatial.transform import Rotation
+from scipy.signal import butter, sosfreqz
+rng=np.random.default_rng(4898)
+errors={'wrench_reconstruction':0.0,'action_reaction':0.0,'imu_acceleration':0.0,'two_pass_cutoff':0.0}
+for i in range(100):
+    r=rng.uniform(-.3,.3,3); force=rng.normal(size=3)*100; force[2]=rng.uniform(50,1500); tz=rng.normal()*10
+    moment=np.cross(r,force)+[0,0,tz]
+    x=(r[2]*force[0]-moment[1])/force[2]; y=(moment[0]+r[2]*force[1])/force[2]
+    recovered_tz=moment[2]-x*force[1]+y*force[0]
+    errors['wrench_reconstruction']=max(errors['wrench_reconstruction'],float(np.max(np.abs([x-r[0],y-r[1],recovered_tz-tz]))))
+    negf=-force; negm=-moment
+    negx=(r[2]*negf[0]-negm[1])/negf[2]; negy=(negm[0]+r[2]*negf[1])/negf[2]
+    negtz=negm[2]-negx*negf[1]+negy*negf[0]
+    errors['action_reaction']=max(errors['action_reaction'],float(np.max(np.abs([negx-x,negy-y,negtz+tz]))))
+    q=Rotation.random(random_state=rng).as_matrix(); accel=rng.normal(size=3)*30; gravity=np.array([0,0,-9.81]); bias=rng.normal(size=3)*.01
+    fm=q.T@(accel-gravity)+bias; recovered=q@(fm-bias)+gravity
+    errors['imu_acceleration']=max(errors['imu_acceleration'],float(np.max(np.abs(recovered-accel))))
+    fs=rng.uniform(100,2000); fc=fs*rng.uniform(.01,.4); order=int(rng.integers(1,9))
+    sos=butter(order,fc,fs=fs,output='sos'); _,response=sosfreqz(sos,worN=[fc],fs=fs)
+    errors['two_pass_cutoff']=max(errors['two_pass_cutoff'],abs(float(abs(response[0])**2)-.5))
+assert max(errors.values())<1e-9, errors
+record={'seed':4898,'cases_each':100,'maximum_absolute_error':errors,'threshold':1e-9,'scope':'Manufactured algebraic and ideal filter-response checks, not empirical sensor or biological validation','stationary_specific_force':[0,0,9.81],'free_fall_specific_force':[0,0,0]}
+Path('reports/technical-review/experimental-methods-independent-checks.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+print(json.dumps(record,indent=2))

@@ -1,0 +1,11 @@
+### Result
+[{"url":"/index.html","width":390,"scroll":390,"errors":0},{"url":"/volume0.html","width":390,"scroll":390,"errors":0},{"url":"/volume1.html","width":390,"scroll":390,"errors":0},{"url":"/index.html","width":1440,"scroll":1440,"errors":0},{"url":"/volume0.html","width":1440,"scroll":1440,"errors":0},{"url":"/volume1.html","width":1440,"scroll":1440,"errors":0}]
+### Ran Playwright code
+```js
+await (async(page)=>{const out=[];for(const width of [390,1440]){for(const name of ['index','volume0','volume1']){await page.setViewportSize({width,height:900});await page.goto('http://127.0.0.1:8881/'+name+'.html');await page.waitForTimeout(400);out.push(await page.evaluate(()=>({url:location.pathname,width:innerWidth,scroll:document.documentElement.scrollWidth,errors:document.querySelectorAll('mjx-merror').length})));await page.screenshot({path:'C:/Users/diete/Repositories/Worktrees/AffineDrift-technical-corpus-tail/docs/development/technical-review/corpus-tail/book-'+name+'-'+width+'.png',fullPage:true})}}return out;})(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8881/volume1.html
+- Page Title: 3  The Geometry of Motion — Volume I: Tangent-Space Methods for Nonlinear Control – Tangent-Space Methods for Nonlinear Control and Biomechanics
+### Events
+- New console entries: ..\..\..\..\..\AffineDrift-tangent-applications-review\docs\development\technical-review\tangent-applications-review\.playwright-cli\console-2026-10-05T06-46-26-207Z.log#L78-L80

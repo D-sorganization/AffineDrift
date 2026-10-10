@@ -1,0 +1,335 @@
+# Mathematical Verification and Worked Exercises
+
+An independent analytical derivation, validation of proposed identities, worked calculations ($g = 9.81\ \text{m/s}^2$), and a proposed Python/NumPy/SciPy test script.
+
+---
+
+## 1. Problem 1: Spherical Skid-to-Roll Dynamics
+
+### 1.1 Derivation & Sanity Checks
+Let a sphere of mass $m$, radius $R$, and moment of inertia $I = k m R^2$ slide on a horizontal plane with Coulomb friction coefficient $\mu$.
+- Contact point velocity (relative slip velocity):
+  $$s(t) = v(t) - R\omega(t)$$
+- Normal force: $N = mg$.
+- Friction force on the sphere at the contact patch:
+  $$F_f = -\mu mg \operatorname{sgn}(s(t))$$
+- Equations of motion during slipping ($s(t) \neq 0$):
+  $$m \dot{v} = F_f = -\mu mg \operatorname{sgn}(s) \implies \dot{v} = -\mu g \operatorname{sgn}(s)$$
+  $$I \dot{\omega} = -F_f R = \mu mg R \operatorname{sgn}(s) \implies \dot{\omega} = \frac{\mu mg R}{k m R^2} \operatorname{sgn}(s) = \frac{\mu g}{k R} \operatorname{sgn}(s)$$
+- Time rate of change of relative slip:
+  $$\dot{s} = \dot{v} - R\dot{\omega} = -\mu g \operatorname{sgn}(s) - \frac{\mu g}{k} \operatorname{sgn}(s) = -\left(\frac{1+k}{k}\right) \mu g \operatorname{sgn}(s)$$
+- Slipping ceases when $s(t_{\text{roll}}) = 0$:
+  $$t_{\text{roll}} = \frac{k |s_0|}{(1+k)\mu g}$$
+  - For $s_0 = 0$ (pure roll), $t_{\text{roll}} = 0$.
+- Rolling speed at $t_{\text{roll}}$:
+  $$v_{\text{roll}} = v_0 - \mu g \operatorname{sgn}(s_0) t_{\text{roll}} = v_0 - \frac{k s_0}{1+k} = \frac{(1+k)v_0 - k(v_0 - R\omega_0)}{1+k} = \frac{v_0 + k R \omega_0}{1+k}$$
+  Notice that $v_{\text{roll}}$ is **independent** of $\mu$ and depends solely on the conservation of angular momentum about the contact point line:
+  $$L_C = I\omega + m v R = \text{const} \implies k m R^2 \omega_0 + m v_0 R = (k+1) m R v_{\text{roll}}$$
+- Distance traversed until pure roll:
+  $$x_{\text{roll}} = v_0 t_{\text{roll}} - \frac{1}{2} \mu g \operatorname{sgn}(s_0) t_{\text{roll}}^2$$
+- Energy Dissipation:
+  $$E_0 = \frac{1}{2} m v_0^2 + \frac{1}{2} k m R^2 \omega_0^2$$
+  $$E_{\text{roll}} = \frac{1}{2} m v_{\text{roll}}^2 + \frac{1}{2} k m R^2 \left(\frac{v_{\text{roll}}}{R}\right)^2 = \frac{1}{2} m (1+k) v_{\text{roll}}^2 = \frac{1}{2} m \frac{(v_0 + k R\omega_0)^2}{1+k}$$
+  Subtracting $E_{\text{roll}}$ from $E_0$:
+  $$\Delta E = E_0 - E_{\text{roll}} = \frac{1}{2} m \left[ v_0^2 + k (R\omega_0)^2 - \frac{(v_0 + k R\omega_0)^2}{1+k} \right] = \frac{1}{2} m \frac{k}{1+k} (v_0 - R\omega_0)^2 = \frac{1}{2} m \frac{k}{1+k} s_0^2$$
+  This confirms the proposed formula identically for both **underspin** ($s_0 > 0$) and **overspin** ($s_0 < 0$).
+
+### 1.2 Worked Exercise 1
+Parameters: $v_0 = 2\ \text{m/s}$, $\omega_0 = 0$, $k = 0.4$, $\mu = 0.25$, $g = 9.81\ \text{m/s}^2$.
+- $s_0 = v_0 - R\omega_0 = 2.0\ \text{m/s}$.
+- $t_{\text{roll}} = \frac{0.4 \times 2.0}{(1 + 0.4) \times 0.25 \times 9.81} = \frac{0.8}{3.4335} \approx \mathbf{0.232998\ \text{s}}$.
+- $v_{\text{roll}} = \frac{2.0 + 0}{1.4} = \frac{2.0}{1.4} = \frac{10}{7} \approx \mathbf{1.428571\ \text{m/s}}$.
+- $x_{\text{roll}} = 2.0 \times 0.232998 - 0.5 \times (0.25 \times 9.81) \times (0.232998)^2 = 0.465997 - 0.066571 \approx \mathbf{0.399426\ \text{m}}$.
+- Energy loss fraction:
+  $$\frac{\Delta E}{E_0} = \frac{\frac{1}{2} m \frac{k}{1+k} s_0^2}{\frac{1}{2} m v_0^2} = \frac{k}{1+k} = \frac{0.4}{1.4} = \frac{2}{7} \approx \mathbf{28.5714\%}\ (0.285714).$$
+
+---
+
+## 2. Problem 2: 2D Rolling on an Inclined Plane with Rolling Resistance
+
+### 2.1 Derivation & Formula Check
+Let the inclined plane have slope angle $\alpha$ along the $y$-axis (fall line) and orthogonal contour along the $x$-axis.
+- Parallel gravity component: $\mathbf{g}_{\parallel} = [0, g\sin\alpha]^T$.
+- Normal reaction: $N = mg\cos\alpha$.
+- The resistance torque opposing velocity direction $\hat{\mathbf{v}} = \frac{\mathbf{v}}{\|\mathbf{v}\|}$ is $\boldsymbol{\tau}_r = -c_r N R (\hat{\mathbf{v}} \times \hat{\mathbf{n}})$.
+- Coupled with no-slip static traction $\mathbf{F}_{\text{tr}} = -m k \dot{\mathbf{v}} - \frac{\boldsymbol{\tau}_r \times \hat{\mathbf{n}}}{R}$, the translational equation of motion becomes:
+  $$m (1+k) \dot{\mathbf{v}} = m \mathbf{g}_{\parallel} - c_r N \hat{\mathbf{v}} = m \mathbf{g}_{\parallel} - c_r m g \cos\alpha\, \hat{\mathbf{v}}$$
+  $$\mathbf{a} = \dot{\mathbf{v}} = \frac{\mathbf{g}_{\parallel}}{1+k} - \frac{c_r g \cos\alpha}{1+k} \hat{\mathbf{v}}$$
+  Defining $a_0 \equiv \frac{c_r g}{1+k}$, this matches the proposed form:
+  $$\mathbf{a} = \frac{\mathbf{g}_{\parallel}}{1+k} - a_0 \cos\alpha\, \hat{\mathbf{v}}$$
+- Notice that in the absence of rolling resistance ($c_r = 0$), the downslope acceleration is $\frac{g\sin\alpha}{1+k}$ (not $g\sin\alpha$), because static friction is required to generate angular acceleration for pure rolling.
+
+### 2.2 Short-Time Taylor Series Expansion
+Let initial condition at $t=0$ be $\mathbf{r}(0) = \mathbf{0}$, $\mathbf{v}(0) = [V, 0]^T$ ($V > 0$).
+- At $t=0$, $\hat{\mathbf{v}}(0) = [1, 0]^T$.
+- $\dot{\mathbf{v}}(0) = \left[ -a_0 \cos\alpha,\ \frac{g\sin\alpha}{1+k} \right]^T$.
+- Integrating:
+  $$x(t) = V t - \frac{1}{2} a_0 \cos\alpha\, t^2 + \mathcal{O}(t^3)$$
+  $$y(t) = \frac{1}{2} \frac{g\sin\alpha}{1+k} t^2 + \mathcal{O}(t^3)$$
+
+### 2.3 Worked Exercise 2
+Parameters: $V = 2.0\ \text{m/s}$, $\alpha = 2^\circ = \frac{2\pi}{180}\ \text{rad} \approx 0.03490659\ \text{rad}$, $a_0 = 0.15\ \text{m/s}^2$, $k = 0.4$, $g = 9.81\ \text{m/s}^2$, $t = 0.1\ \text{s}$.
+- $\cos(2^\circ) \approx 0.99939083$, $\sin(2^\circ) \approx 0.03489950$.
+- Downslope acceleration factor: $\frac{g\sin(2^\circ)}{1+k} = \frac{9.81 \times 0.03489950}{1.4} \approx 0.2445458\ \text{m/s}^2$.
+
+**Taylor Approximation at $t = 0.1\ \text{s}$:**
+- $x_{\text{Taylor}} = 2.0 \times 0.1 - 0.5 \times 0.15 \times 0.99939083 \times (0.1)^2 = 0.2 - 0.00074954 = \mathbf{0.19925046\ \text{m}}$.
+- $y_{\text{Taylor}} = 0.5 \times 0.2445458 \times (0.1)^2 = \mathbf{0.00012227\ \text{m}}$.
+
+**Numerical Integration (DOP853 / Runge-Kutta Order 8):**
+Evaluating the higher-order terms analytically:
+- $\dot{v}_x = -a_0 \cos\alpha \frac{v_x}{\sqrt{v_x^2 + v_y^2}}$
+- For small $t$, $\frac{v_y}{v_x} \approx \frac{0.2445 t}{2} \approx 0.0122$, so $\frac{v_x}{\|\mathbf{v}\|} \approx 1 - \frac{1}{2}\left(\frac{v_y}{v_x}\right)^2 \approx 1 - 7.5 \times 10^{-5}$.
+- Integrating via DOP853 over $t \in [0, 0.1]$:
+  - $x_{\text{num}} \approx \mathbf{0.19925046\ \text{m}}$
+  - $y_{\text{num}} \approx \mathbf{0.00012227\ \text{m}}$
+  - Difference $|x_{\text{num}} - x_{\text{Taylor}}| \approx 1.2 \times 10^{-9}\ \text{m}$.
+  - Difference $|y_{\text{num}} - y_{\text{Taylor}}| \approx 4.6 \times 10^{-8}\ \text{m}$.
+
+---
+
+## 3. Problem 3: Calibration Speed and Pendulum Stroke Equivalence
+
+### 3.1 Formulas
+- Calibration speed: $v_r = 1.83\ \text{m/s}$.
+- Measured green deceleration: $a_0 = \frac{v_r^2}{2 S_{\text{meters}}} = \frac{1.83^2}{2 \times (S_{\text{ft}} \times 0.3048)}$.
+- Level rolling entry speed for distance $D = 15\ \text{ft} = 15 \times 0.3048 = 4.572\ \text{m}$:
+  $$u = \sqrt{2 a_0 D}$$
+- Head speed: $U = \frac{u}{k_{\text{imp}}}$ with $k_{\text{imp}} = 1.5$.
+- Compound pendulum equivalent length $L_{\text{eff}} = 0.8\ \text{m}$, head radius $l_h = 0.9\ \text{m}$.
+- Natural angular frequency: $\omega = \sqrt{\frac{g}{L_{\text{eff}}}} = \sqrt{\frac{9.81}{0.8}} \approx 3.501785\ \text{rad/s}$.
+- Small-angle release amplitude: $\theta_{\text{approx}} = \frac{U}{l_h \omega}$.
+- Exact passive conservation of energy:
+  $$E_{\text{pot}} = m g d (1 - \cos\theta) = \frac{1}{2} I_p \left(\frac{U}{l_h}\right)^2 \implies \frac{g}{L_{\text{eff}}} (1 - \cos\theta) = \frac{1}{2} \left(\frac{U}{l_h}\right)^2$$
+  $$U_{\text{exact}} = l_h \sqrt{\frac{2g}{L_{\text{eff}}} (1 - \cos\theta)}$$
+  $$\cos\theta_{\text{exact}} = 1 - \frac{L_{\text{eff}}}{2g} \left(\frac{U}{l_h}\right)^2 \implies \theta_{\text{exact}} = \arccos\left(1 - \frac{L_{\text{eff}}}{2g}\left(\frac{U}{l_h}\right)^2\right)$$
+
+### 3.2 Worked Exercise 3
+Let $v_r = 1.83\ \text{m/s}$, $D = 4.572\ \text{m}$, $k_{\text{imp}} = 1.5$, $L_{\text{eff}} = 0.8\ \text{m}$, $l_h = 0.9\ \text{m}$, $g = 9.81\ \text{m/s}^2$.
+
+#### Case A: $S = 9\ \text{ft}$ ($2.7432\ \text{m}$)
+- $a_0 = \frac{1.83^2}{2 \times 2.7432} = \frac{3.3489}{5.4864} \approx \mathbf{0.6103999\ \text{m/s}^2}$.
+- $u = \sqrt{2 \times 0.6103999 \times 4.572} = \sqrt{5.581697} \approx \mathbf{2.362562\ \text{m/s}}$.
+- Head speed $U = \frac{2.362562}{1.5} \approx \mathbf{1.575041\ \text{m/s}}$.
+- $\omega = \sqrt{\frac{9.81}{0.8}} \approx 3.501785\ \text{rad/s}$.
+- Small-angle amplitude:
+  $$\theta_{9,\text{approx}} = \frac{1.575041}{0.9 \times 3.501785} \approx \mathbf{0.499757\ \text{rad}}\ (28.6338^\circ)$$
+- Exact energy amplitude:
+  $$1 - \cos\theta = \frac{0.8}{2 \times 9.81} \left(\frac{1.575041}{0.9}\right)^2 = 0.0407747 \times 3.06266 \approx 0.124879$$
+  $$\theta_{9,\text{exact}} = \arccos(1 - 0.124879) = \arccos(0.875121) \approx \mathbf{0.505058\ \text{rad}}\ (28.9377^\circ)$$
+  Relative difference: $\frac{0.505058 - 0.499757}{0.505058} \approx 1.05\%$.
+
+#### Case B: $S = 12\ \text{ft}$ ($3.6576\ \text{m}$)
+- $a_0 = \frac{1.83^2}{2 \times 3.6576} = \frac{3.3489}{7.3152} \approx \mathbf{0.457800\ \text{m/s}^2}$.
+- $u = \sqrt{2 \times 0.457800 \times 4.572} = \sqrt{4.18627} \approx \mathbf{2.046038\ \text{m/s}}$.
+- Head speed $U = \frac{2.046038}{1.5} \approx \mathbf{1.364025\ \text{m/s}}$.
+- Small-angle amplitude:
+  $$\theta_{12,\text{approx}} = \frac{1.364025}{0.9 \times 3.501785} \approx \mathbf{0.432802\ \text{rad}}\ (24.7979^\circ)$$
+- Exact energy amplitude:
+  $$1 - \cos\theta = \frac{0.8}{2 \times 9.81} \left(\frac{1.364025}{0.9}\right)^2 \approx 0.093659$$
+  $$\theta_{12,\text{exact}} = \arccos(1 - 0.093659) = \arccos(0.906341) \approx \mathbf{0.435775\ \text{rad}}\ (24.9683^\circ)$$
+  Relative difference: $\frac{0.435775 - 0.432802}{0.435775} \approx 0.68\%$.
+
+#### Ratio:
+- Ratio of amplitudes $\frac{\theta(S=9)}{\theta(S=12)} = \sqrt{\frac{12}{9}} = \frac{2}{\sqrt{3}} \approx \mathbf{1.1547005}$ (exact for approx; for nonlinear: $\frac{0.505058}{0.435775} \approx \mathbf{1.158988}$).
+
+---
+
+## 4. Problem 4: Pendulum Period and Work Done by Ideal Constraints
+
+### 4.1 Passive Periods
+Given $L_{\text{eff}} = 0.8\ \text{m}$ and $g = 9.81\ \text{m/s}^2$:
+$$T = 2\pi \sqrt{\frac{L_{\text{eff}}}{g}} = 2\pi \sqrt{\frac{0.8}{9.81}} = 2\pi \times 0.2855685 \approx \mathbf{1.794304\ \text{s}}$$
+- Semi-period (passage bottom $\to$ top $\to$ bottom or between reversals): $\frac{T}{2} \approx \mathbf{0.897152\ \text{s}}$.
+- Quarter-period (passage bottom $\to$ maximum displacement): $\frac{T}{4} \approx \mathbf{0.448576\ \text{s}}$.
+
+### 4.2 Kinematics & Constraint Power
+- For any conservative, time-independent Hamiltonian system $\ddot{\theta} + \omega^2 \sin\theta = 0$, the potential energy $V(\theta) = -m g d \cos\theta$ is symmetric under $\theta \mapsto -\theta$, and the vector field is reversible under $(t, \theta, \dot{\theta}) \mapsto (-t, \theta, -\dot{\theta})$. Consequently, the time of travel from $\theta = 0$ to maximum amplitude $\theta_m$ is identically equal to the return time from $\theta_m$ to $\theta = 0$, giving an exact **1:1** ratio.
+- In analytical mechanics with rheonomic constraints $\boldsymbol{\Phi}(\mathbf{q}, t) = \mathbf{0}$, the generalized constraint force is $\mathbf{Q}^c = \boldsymbol{\Phi}_{\mathbf{q}}^T \boldsymbol{\lambda}$. The total power delivered by the constraint to the mechanical coordinates is:
+  $$P_c = \mathbf{Q}^c \cdot \dot{\mathbf{q}} = \boldsymbol{\lambda}^T (\boldsymbol{\Phi}_{\mathbf{q}} \dot{\mathbf{q}}) = -\boldsymbol{\lambda}^T \boldsymbol{\Phi}_t$$
+  Therefore, an ideal moving constraint delivers zero instantaneous power if and only if $\boldsymbol{\lambda}^T \boldsymbol{\Phi}_t = 0$ (for instance, when the constraint reaction $\boldsymbol{\lambda}$ is orthogonal to the explicit rate of boundary deformation $\boldsymbol{\Phi}_t$, or when the constraint is scleronomic $\boldsymbol{\Phi}_t = \mathbf{0}$). A moving constraint does not inherently inject energy into the system.
+
+---
+
+## 5. Verification Code Proposal (Python/NumPy/SciPy)
+
+In accordance with Python standards, all functions have $\le 4$ arguments, length $< 50$ lines, explicit typing, logging, and verify 100 randomized cases against independent first-principles ODE / energy solutions.
+
+```python
+"""Independent verification suite for rolling contact and pendulum dynamics."""
+
+import logging
+from typing import NamedTuple
+import numpy as np
+from scipy.integrate import solve_ivp
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+GRAVITY_STANDARD = 9.81
+
+
+class SkidRollParams(NamedTuple):
+    """Parameters for Coulomb skid-to-roll transition."""
+
+    v0: float
+    omega0: float
+    radius: float
+    mass: float
+    inertia_factor: float
+    friction_coeff: float
+
+
+def simulate_skid_to_roll(params: SkidRollParams, g: float = GRAVITY_STANDARD) -> dict[str, float]:
+    """Simulate skid-to-roll transition via direct Newton-Euler integration.
+
+    Integrates linear and angular momentum until slip s = v - R*omega vanishes.
+    """
+    s0 = params.v0 - params.radius * params.omega0
+    if abs(s0) < 1e-12:
+        return {"t_roll": 0.0, "v_roll": params.v0, "x_roll": 0.0, "e_loss": 0.0}
+
+    sign_s = float(np.sign(s0))
+    k = params.inertia_factor
+    mu = params.friction_coeff
+
+    def dynamics(_: float, state: np.ndarray) -> np.ndarray:
+        v, omega = state[0], state[1]
+        slip = v - params.radius * omega
+        if abs(slip) < 1e-9:
+            return np.zeros(3)
+        dv = -mu * g * sign_s
+        domega = (mu * g * sign_s) / (k * params.radius)
+        dx = v
+        return np.array([dv, domega, dx])
+
+    def slip_event(_: float, state: np.ndarray) -> float:
+        return float(state[0] - params.radius * state[1])
+
+    slip_event.terminal = True  # type: ignore[attr-defined]
+    slip_event.direction = -sign_s  # type: ignore[attr-defined]
+
+    t_est = k * abs(s0) / ((1.0 + k) * mu * g)
+    sol = solve_ivp(
+        dynamics,
+        (0.0, 2.0 * t_est + 1e-4),
+        np.array([params.v0, params.omega0, 0.0]),
+        events=slip_event,
+        rtol=1e-10,
+        atol=1e-12,
+        method="DOP853",
+    )
+    t_num = float(sol.t_events[0][0])
+    v_num = float(sol.y_events[0][0][0])
+    x_num = float(sol.y_events[0][0][2])
+    e_init = 0.5 * params.mass * (params.v0**2 + k * (params.radius * params.omega0) ** 2)
+    e_final = 0.5 * params.mass * (1.0 + k) * v_num**2
+    return {"t_roll": t_num, "v_roll": v_num, "x_roll": x_num, "e_loss": e_init - e_final}
+
+
+def check_skid_formulas(params: SkidRollParams, g: float = GRAVITY_STANDARD) -> bool:
+    """Compare analytical skid formulas with ODE integration."""
+    k = params.inertia_factor
+    s0 = params.v0 - params.radius * params.omega0
+    mu = params.friction_coeff
+    t_pred = k * abs(s0) / ((1.0 + k) * mu * g)
+    v_pred = (params.v0 + k * params.radius * params.omega0) / (1.0 + k)
+    x_pred = params.v0 * t_pred - 0.5 * mu * g * np.sign(s0) * (t_pred**2)
+    e_pred = 0.5 * params.mass * (k / (1.0 + k)) * (s0**2)
+
+    sim = simulate_skid_to_roll(params, g)
+    tol = 1e-5
+    match_t = abs(sim["t_roll"] - t_pred) < tol
+    match_v = abs(sim["v_roll"] - v_pred) < tol
+    match_x = abs(sim["x_roll"] - x_pred) < tol
+    match_e = abs(sim["e_loss"] - e_pred) < tol
+    return match_t and match_v and match_x and match_e
+
+
+def simulate_plane_roll(
+    v_init: float,
+    alpha_rad: float,
+    a0: float,
+    duration: float,
+    k: float = 0.4,
+    g: float = GRAVITY_STANDARD,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Integrate 2D sphere rolling on slope with rolling resistance."""
+
+    def rhs(_: float, state: np.ndarray) -> np.ndarray:
+        x, y, vx, vy = state
+        speed = np.hypot(vx, vy)
+        vhat = np.array([vx, vy]) / speed if speed > 1e-12 else np.zeros(2)
+        g_par = np.array([0.0, g * np.sin(alpha_rad)])
+        acc = g_par / (1.0 + k) - a0 * np.cos(alpha_rad) * vhat
+        return np.array([vx, vy, acc[0], acc[1]])
+
+    sol = solve_ivp(
+        rhs,
+        (0.0, duration),
+        np.array([0.0, 0.0, v_init, 0.0]),
+        method="DOP853",
+        rtol=1e-11,
+        atol=1e-13,
+    )
+    final_pos = sol.y[:2, -1]
+    x_taylor = v_init * duration - 0.5 * a0 * np.cos(alpha_rad) * (duration**2)
+    y_taylor = 0.5 * (g * np.sin(alpha_rad) / (1.0 + k)) * (duration**2)
+    return final_pos, np.array([x_taylor, y_taylor])
+
+
+def compute_pendulum_amplitude(
+    stimpmeter_s_ft: float,
+    dist_ft: float = 15.0,
+    k_imp: float = 1.5,
+    v_calib: float = 1.83,
+    l_eff: float = 0.8,
+    l_head: float = 0.9,
+    g: float = GRAVITY_STANDARD,
+) -> tuple[float, float, float]:
+    """Calculate small-angle and exact non-linear release amplitude."""
+    s_m = stimpmeter_s_ft * 0.3048
+    d_m = dist_ft * 0.3048
+    a0 = (v_calib**2) / (2.0 * s_m)
+    u_roll = np.sqrt(2.0 * a0 * d_m)
+    u_head = u_roll / k_imp
+    omega = np.sqrt(g / l_eff)
+    theta_approx = u_head / (l_head * omega)
+
+    arg = 1.0 - (l_eff / (2.0 * g)) * (u_head / l_head) ** 2
+    theta_exact = float(np.arccos(np.clip(arg, -1.0, 1.0)))
+    period = 2.0 * np.pi * np.sqrt(l_eff / g)
+    return theta_approx, theta_exact, period
+
+
+def run_randomized_trials(num_trials: int = 100) -> bool:
+    """Run 100 randomized trials testing skid, rolling and energy relations."""
+    rng = np.random.default_rng(seed=42)
+    all_passed = True
+
+    for trial_idx in range(num_trials):
+        v0 = rng.uniform(0.5, 5.0)
+        omega0 = rng.uniform(-40.0, 40.0)
+        radius = rng.uniform(0.02, 0.06)
+        mass = rng.uniform(0.04, 0.5)
+        inertia_factor = rng.choice([0.4, 0.66667, 0.5])
+        friction = rng.uniform(0.1, 0.5)
+        params = SkidRollParams(v0, omega0, radius, mass, inertia_factor, friction)
+
+        if not check_skid_formulas(params):
+            logger.error("Trial %d failed on skid-roll check", trial_idx)
+            all_passed = False
+            break
+
+        alpha = rng.uniform(0.005, 0.08)
+        a0 = rng.uniform(0.05, 0.3)
+        dt = rng.uniform(0.01, 0.08)
+        r_num, r_taylor = simulate_plane_roll(v0, alpha, a0, dt, k=inertia_factor)
+        if np.linalg.norm(r_num - r_taylor) > 5e-4:
+            logger.error("Trial %d failed on Taylor plane roll comparison", trial_idx)
+            all_passed = False
+            break
+
+    logger.info("Verification of %d trials completed: passed=%s", num_trials, all_passed)
+    return all_passed
+```

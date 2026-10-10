@@ -8,22 +8,14 @@ categories:
 - impact-ball-flight
 ---
 
+::: {.laymans-terms}
 ```{=html}
-<section class="laymans-terms">
-  <h2><button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button></h2>
-  <div class="laymans-terms-content"><div class="laymans-terms-inner">
-    <p class="laymans-terms-intro">A putting simulator connects the stroke, the ground and the hole. Each connection needs a model: how the ball starts sliding and rolling, how the green changes its motion, and which arrivals count as captured. A convincing animation does not establish that those models predict a real putt.</p>
-    <div class="laymans-item"><h3>A Map Is Part of the Physics</h3>
-      <p>The local tilt of the green steers the ball, while turf resistance reduces its speed. The ball also spins, so some gravitational energy changes rotation. A model that ignores that rotational motion can draw the wrong break even when its elevation map is accurate.</p></div>
-    <div class="key-takeaway"><strong>Key Takeaway:</strong> A simulated make percentage describes a particular model and a particular set of uncertain inputs. More simulated putts reduce sampling error; they cannot repair the wrong slope equation, a poor hole model or unrealistic stroke variability.</div>
-    <div class="laymans-item"><h3>Why Run Many Putts?</h3>
-      <p>A single run answers what happens for one specified input. An ensemble asks how outcomes change when start line, speed or surface conditions vary. Those variations can turn a modeled make into a miss, or a modeled miss into a make. To predict a player, the distributions and the physical model need independent measurement checks.</p></div>
-  </div></div>
-</section>
+<p class="laymans-terms-intro">A putting simulator links the stroke, the green, and the hole. Each link needs a model. How does the ball start sliding and rolling? How does the green change its motion? Which arrivals count as holed? A convincing animation does not show that these models predict a real putt.</p>
+<div class="laymans-item"><h3>The Map Is Part of the Physics</h3><p>Local tilt steers the ball, and turf resistance slows it. The ball also spins, so some gravitational <a href="../pages/glossary.html#potential-energy">energy</a> goes into rotation. A model that ignores rotation can draw the wrong break even with an accurate elevation map.</p></div>
+<div class="laymans-item"><h3>Why Run Many Putts?</h3><p>One run answers what happens for one set of inputs. Many runs ask how outcomes change when start line, speed, or surface vary. Those changes can turn a modeled make into a miss, or the reverse. To predict a player, the input spread and the physical model each need independent checks against measurements.</p></div>
+<div class="key-takeaway"><strong>Key Takeaway:</strong> A simulated make rate describes one model and one set of uncertain inputs. More putts reduce sampling error. They cannot fix a wrong slope equation, a poor hole model, or unrealistic stroke variation.</div>
 ```
+:::
 
 ## Scope and Intent
 
@@ -225,3 +217,11 @@ A reproducible result should identify the code and surface revision, coordinates
 - [Pinned Python putting source](https://github.com/D-sorganization/Tools/tree/96ab281ef0af185640e93571dd4bf2b94ff761a5/src/shared/python/swing_sim/putting) and [pinned browser model source](https://github.com/D-sorganization/rate-of-closure-explorer/tree/af7f2682213f57bb2e95052fed6d5b0740596cbd/src/model): implementation evidence, including their explicit limits. Source inspection does not confer empirical qualification.
 
 *Implementation companion to [The Physics of the Rolling Putt](putting-roll-models.html).*
+
+## Related Articles
+
+- [The Physics of the Rolling Putt](putting-roll-models.html) — the physical model layers that this implementation companion exercises
+- [Secondary-Axis Stability and Putter Design](secondary-axis-stability.html) — putter delivery and inertial design
+- [On the Limits of Strokes-Gained Inference for Individual Golfers](strokes-gained-limitations.html) — outcome statistics and their inference limits
+- [Launch Monitor Technology: Measurement and Inference](technology-launch-monitors.html) — how launch conditions are measured and what they support
+- [Impact Mechanics and Ball Flight: A Reference Treatment](impact-mechanics-and-ball-flight.html) — contact impulse and launch-state inference

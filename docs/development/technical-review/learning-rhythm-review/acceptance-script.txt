@@ -1,0 +1,47 @@
+import csv
+import hashlib
+import io
+import json
+import subprocess
+from pathlib import Path
+
+root = Path.cwd()
+qa = root / 'docs/development/technical-review/learning-rhythm-review'
+head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+assert head == '1c25166ad562a4d6bf1e3a47f83341aa144f8b60'
+assert (qa / 'full-tests.exit').read_text().strip() == '0'
+assert (qa / 'full-tests-before.txt').stat().st_size == 0
+assert (qa / 'full-tests-after.txt').stat().st_size == 0
+assert '7047 passed, 29 skipped, 210 deselected, 60 warnings' in (qa / 'full-tests.txt').read_text(encoding='utf-8')
+chapters = ['ch05_ideomotor', 'ch08_cpg', 'ch09_motor_learning']
+paths = [f'articles/The_Geometry_of_Motion/Volume_IV/chapters/{name}.tex' for name in chapters]
+paths += ['articles/The_Geometry_of_Motion/Volume_IV/main.tex', 'articles/The_Geometry_of_Motion/geometry_of_motion.bib', 'articles/The_Geometry_of_Motion/Volume_IV/main.pdf', 'tests/test_cpg_listings.py', 'tests/test_motor_learning_listings.py', 'reports/technical-review/learning-rhythm-independent-checks.json']
+hashes = {path: hashlib.sha256(subprocess.check_output(['git', 'show', f'{head}:{path}'])).hexdigest() for path in paths}
+record = {
+    'issue':4917, 'epic':4009,
+    'status':'Complete chapter sources and scoped PDF accepted; protected delivery pending',
+    'accepted_source_commit':head, 'git_blob_sha256':hashes,
+    'scope':'Complete files ch05, ch08 and ch09 (printed Chapters 5, 9, 10); no whole-volume or empirical certification',
+    'full_regression':{'head':head,'passed':7047,'skipped':29,'deselected':210,'warnings':60,'seconds':454.97,'src_coverage_percent':93.24,'exit_code':0,'tracked_tree_unchanged':True,'command':'python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60','log':str((qa/'full-tests.txt').relative_to(root).as_posix())},
+    'pdf':{'pages':84,'printed_entries':45,'unresolved_citations_or_references':0,'visual_scope':'Physical pages 3-6, 34-37, 62-70 and 82-84 inspected','build_log':str((qa/'accepted-pass11.txt').relative_to(root).as_posix()),'limits':'Historical duplicate destinations and package warnings; no overfull boxes'},
+    'mathematics':{'record':paths[-1],'identities':7,'cases_each':100,'threshold':1e-6,'scope':'Manufactured mathematics, not human or gait validation'},
+    'actual_listing_tests':43,
+    'delegation':{'helpers':9,'model':'agy Gemini 3.8 Flash','mode':'Read-only reviews and test proposals; successful answers lead-adjudicated','failed_excluded':0},
+    'delivery':{'status':'Preparing regular PR','base':'fix/prediction-passive-control-review','dependency':'PR 4919','next':'Protected delivery then fetched-main blob verification'}
+}
+(root/'reports/technical-review/learning-rhythm-validation.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+index = root/'docs/development/technical-review/corpus-review-index.csv'
+rows = list(csv.DictReader(io.StringIO(index.read_text(encoding='utf-8'))))
+assert len(rows)==407
+changed = 0
+for row in rows:
+    if row['Source'] in paths[:3]:
+        assert row['Review Scope'].startswith('Indexed;')
+        row['Review Scope']='Complete Chapter Source and Scoped PDF Reviewed; Issue #4917; Protected Delivery Pending; No Empirical Certification'
+        changed += 1
+assert changed==3
+output=io.StringIO(newline='')
+writer=csv.DictWriter(output,fieldnames=rows[0].keys(),lineterminator='\n')
+writer.writeheader()
+writer.writerows(rows)
+index.write_bytes(output.getvalue().encode('utf-8'))

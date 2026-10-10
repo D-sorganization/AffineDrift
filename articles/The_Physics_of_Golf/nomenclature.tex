@@ -2,27 +2,27 @@
 \addcontentsline{toc}{chapter}{Nomenclature}
 
 Throughout this book, we use the following notation conventions and symbol definitions.
-Every equation in the text uses only symbols defined here or introduced explicitly in the
-surrounding paragraph.
+Chapter-local definitions specify the model, reference frame, units and any
+exceptions to these conventions. Reusing a letter does not identify two physical quantities.
 
 \section*{General Conventions}
 \begin{itemize}
-    \item Scalars are lowercase Roman or Greek letters: $m, t, \theta, \omega$.
+    \item Scalars are generally lowercase Roman or Greek letters: $m, t, \theta, \omega$; energy symbols $T,V$ are exceptions.
     \item Vectors are bold lowercase: $\bm{x}, \bm{u}, \bm{q}, \bm{v}$.
     \item Matrices are bold uppercase: $\bm{A}, \bm{B}, \bm{M}, \bm{J}$.
     \item Sets and manifolds are script or blackboard bold: $\mathcal{Q}, \mathcal{M}, \mathbb{R}$.
     \item A dot above a symbol denotes a time derivative: $\dot{\bm{q}} = \frac{\dd \bm{q}}{\dd t}$.
-    \item Subscript ``drift'' denotes autonomous (unforced, $\bm{u} = \bm{0}$) components; ``input'' or ``ctrl'' denotes control channel components.
+    \item Subscript ``drift'' denotes zero-declared-input ($\bm{u}=\bm{0}$) evolution, retaining gravity, passive forces and internal state; it is autonomous only when the model has no explicit time dependence.
     \item Subscript ``head'' refers to the clubhead; ``hand'' to the grip/handle point.
 \end{itemize}
 
 \section*{Coordinates and Kinematics}
 \begin{description}
-    \item[$\bm{q} \in \mathbb{R}^n$] Generalized coordinate vector (joint angles, shaft modes, etc.).
-    \item[$\dot{\bm{q}}, \ddot{\bm{q}}$] Generalized velocity and acceleration.
-    \item[$\bm{x} \in \mathbb{R}^{n_x}$] Full state vector; $\bm{x} = [\bm{q}^T, \dot{\bm{q}}^T]^T$ for rigid systems, or $\bm{x} = [\bm{q}^T, \dot{\bm{q}}^T, \bm{\eta}^T, \dot{\bm{\eta}}^T]^T$ when including shaft flexibility.
+    \item[$\bm{q} \in \mathbb{R}^n$] Rigid generalized coordinates in a local independent chart. Flexible coordinates $\bm{\eta}$ are kept separate here.
+    \item[$\dot{\bm{q}}, \ddot{\bm{q}}$] Coordinate velocity and acceleration. Nonminimal representations may use speeds $\bm{v}$ satisfying $\dot{\bm{q}}=N(\bm{q})\bm{v}$, with different coordinate and speed dimensions.
+    \item[$\bm{x} \in \mathbb{R}^{n_x}$] Full state. In local mechanical coordinates, $\bm{x}=[\bm{q}^T,\dot{\bm{q}}^T]^T$; with flexibility, append $\bm{\eta},\dot{\bm{\eta}}$ once. Activation, hysteresis or other internal states $\bm{z}$ must also be included when modeled.
     \item[$n$] Number of rigid-body degrees of freedom.
-    \item[$m$] Number of flexible shaft modal coordinates.
+    \item[$m$] Number of flexible shaft modal coordinates in this coordinate convention; chapter-local $m$ may instead denote mass.
     \item[$\theta_1, \theta_2, \ldots$] Joint angles (shoulder, elbow, wrist, etc.).
     \item[$\bm{p}_{\mathrm{head}} \in \mathbb{R}^3$] Position of the clubhead center of mass.
     \item[$\bm{v}_{\mathrm{head}} \in \mathbb{R}^3$] Velocity of the clubhead.
@@ -31,37 +31,37 @@ surrounding paragraph.
 
 \section*{Dynamics and Forces}
 \begin{description}
-    \item[$\bm{M}(\bm{q}) \in \mathbb{R}^{n \times n}$] Mass (inertia) matrix, symmetric positive definite.
-    \item[$\bm{C}(\bm{q}, \dot{\bm{q}}) \in \mathbb{R}^{n \times n}$] Coriolis and centrifugal force matrix.
-    \item[$\bm{g}(\bm{q}) \in \mathbb{R}^n$] Gravitational torque vector.
+    \item[$\bm{M}(\bm{q}) \in \mathbb{R}^{n \times n}$] Mass matrix; symmetric positive definite for independent coordinates with a nondegenerate positive kinetic-energy metric.
+    \item[$\bm{C}(\bm{q}, \dot{\bm{q}}) \in \mathbb{R}^{n \times n}$] A generally nonunique matrix representation of velocity-dependent inertial loads. The generalized load is $\bm{C}\dot{\bm{q}}$, not $\bm{C}$ alone.
+    \item[$\bm{g}(\bm{q}) \in \mathbb{R}^n$] Gravitational generalized load on the left-hand side of the declared force balance; units depend on the corresponding coordinates.
     \item[$\bm{d}(\bm{q}, \dot{\bm{q}}) \in \mathbb{R}^n$] Dissipative (damping/friction) forces.
-    \item[$\bm{u} \in \mathbb{R}^p$] Control input vector (joint torques applied by muscles/actuators).
-    \item[$\bm{B} \in \mathbb{R}^{n \times p}$] Input selection matrix ($p \leq n$).
-    \item[$\boldsymbol{\tau}_{\mathrm{total}}$] Total generalized force at a joint.
-    \item[$\boldsymbol{\tau}_{\mathrm{drift}}$] Generalized drift force: autonomous generalized force with declared control set to zero ($\bm{u} = \bm{0}$).
+    \item[$\bm{u} \in \mathbb{R}^p$] Declared actuator input; generalized torques, muscle forces and neural commands are different possible input choices, not interchangeable measurements.
+    \item[$\bm{B}(\bm{q}) \in \mathbb{R}^{n \times p}$] Input-to-generalized-force map. It may be a selection matrix; redundant actuation permits $p>n$.
+    \item[$\boldsymbol{\tau}_{\mathrm{total}}$] Total generalized-force vector in the stated balance, with each component power-conjugate to its coordinate velocity.
+    \item[$\boldsymbol{\tau}_{\mathrm{drift}}$] Generalized drift term in the stated balance with declared control set to zero ($\bm{u}=\bm{0}$), retaining explicit time dependence when present.
     \item[$\boldsymbol{\tau}_{\mathrm{input}}$] Generalized control force: contribution from the applied control channel ($\bm{B}\bm{u}$).
-    \item[$\boldsymbol{\lambda}$] Constraint force vector (Lagrange multipliers).
+    \item[$\boldsymbol{\lambda}$] Constraint multipliers; $\bm{Q}_c=\bm{J}_c^T\boldsymbol{\lambda}$ is the generalized constraint force. Multiplier units depend on constraint scaling.
 \end{description}
 
 \section*{Affine Control Decomposition}
 \begin{description}
     \item[$\state$] The full system state, equivalent to $\bm{x}$ (used interchangeably for readability).
-    \item[$f(\state)$] Drift vector field: complete autonomous evolution of the declared effective plant with zero applied control ($\bm{u} = \bm{0}$).
+    \item[$f(\state)$] Zero-declared-input vector field of the full effective plant. Use $f(\state,t)$ for explicit time dependence, or include time as an augmented state.
     \item[$G(\state)$] Input (control) matrix field, mapping control inputs to state derivatives.
     \item[$G(\state)\control$] Control vector field: state-derivative contribution from the declared control channel.
     \item[$\dot{\state} = f(\state) + G(\state)\control$] The control-affine system equation.
     \item[$\state^{\mathrm{ZTCF}}(t)$] Forward Zero-Torque Counterfactual trajectory (evolution of the declared effective plant with $\control = \bm{0}$).
     \item[$\bm{a}_{\mathrm{ZVCF}}(\bm{q},\bm{z})$] Instantaneous Zero-Velocity Counterfactual acceleration with velocity and declared control set to zero.
-    \item[$\mathrm{DCR}_{W,\mathcal{U}}(\state)$] Drift-Control Ratio in a declared acceleration or task-projected space: $\norm{W\bm{a}_{\mathrm{drift}}}/(\sup_{u\in\mathcal{U}}\norm{W\bm{B}_a u}+\varepsilon)$.
+    \item[$\mathrm{DCR}_{W,\mathcal{U}}(\state)$] Drift-Control Ratio: $\norm{W\bm{a}_{\mathrm{drift}}}/(\sup_{u\in\mathcal{U}}\norm{W\bm{B}_a u}+\varepsilon)$. Declare the acceleration map $\bm{B}_a$ after solving constraints, feasible input set $\mathcal{U}$, weighting $W$ and positive regularizer $\varepsilon$ in the denominator's units. This pointwise norm ratio is not a reachability certificate.
 \end{description}
 
 \section*{Constraint Mechanics}
 \begin{description}
-    \item[$\bm{\Phi}(\bm{q}) = \bm{0}$] Holonomic constraint equations.
-    \item[$\bm{J}_c(\bm{q})$] Constraint Jacobian: $\bm{J}_c = \frac{\partial \bm{\Phi}}{\partial \bm{q}}$.
+    \item[$\bm{\Phi}(\bm{q},t) = \bm{0}$] Holonomic constraints, allowing explicit time dependence; $\bm{J}_c\dot{\bm{q}}=-\bm{\Phi}_t$.
+    \item[$\bm{J}_c(\bm{q},t)$] Constraint Jacobian: $\bm{J}_c = \frac{\partial \bm{\Phi}}{\partial \bm{q}}$.
     \item[$\bm{J}_{\mathrm{loop}}$] Loop-closure Jacobian for parallel mechanisms.
-    \item[$\boldsymbol{\lambda}$] Constraint forces (Lagrange multipliers).
-    \item[$\mathcal{N}(\bm{J}_c)$] Null space of the constraint Jacobian (feasible motion directions).
+    \item[$\boldsymbol{\lambda}$] Lagrange multipliers under the convention $\bm{Q}_c=\bm{J}_c^T\boldsymbol{\lambda}$.
+    \item[$\mathcal{N}(\bm{J}_c)$] Feasible virtual-displacement directions at fixed time, for regular constraints. Actual velocities lie in this null space only when $\bm{\Phi}_t=0$.
     \item[$\mathcal{R}(\bm{J}_c^T)$] Range of $\bm{J}_c^T$ (directions in which constraints exert force).
 \end{description}
 
@@ -71,16 +71,16 @@ surrounding paragraph.
     \item[$\dot{\bm{\eta}}$] Shaft modal velocities.
     \item[$K_s$] Shaft bending stiffness (or modal stiffness matrix).
     \item[$D_s$] Shaft damping coefficient (or modal damping matrix).
-    \item[$EI$] Shaft flexural rigidity (Young's modulus $\times$ second moment of area).
+    \item[$EI$] Shaft flexural rigidity (Young's modulus $\times$ second moment of area), with units N\,m$^2$. Modal stiffness and damping units depend on mode normalization.
 \end{description}
 
 \section*{Energy and Power}
 \begin{description}
     \item[$T(\bm{q}, \dot{\bm{q}})$] Kinetic energy: $T = \frac{1}{2}\dot{\bm{q}}^T \bm{M}(\bm{q})\dot{\bm{q}}$.
     \item[$V(\bm{q})$] Potential energy (gravitational + elastic).
-    \item[$P_{\mathrm{drift}}(t)$] Power delivered by autonomous generalized drift forces: $P_{\mathrm{drift}} = \boldsymbol{\tau}_{\mathrm{drift}}^T \dot{\bm{q}}$.
+    \item[$P_{\mathrm{drift}}(t)$] Coordinate-balance quantity $\boldsymbol{\tau}_{\mathrm{drift}}^T\dot{\bm{q}}$. If drift includes velocity-dependent inertial terms, this is not a separate physical energy source; the kinetic-energy balance also contains $\tfrac12\dot{\bm{q}}^T\dot{\bm{M}}\dot{\bm{q}}$.
     \item[$P_{\mathrm{input}}(t)$] Power delivered by the declared control channel: $P_{\mathrm{input}} = (\bm{B}\bm{u})^T \dot{\bm{q}}$.
-    \item[$P_{\mathrm{constraint}}(t)$] Power associated with constraint forces (identically zero for ideal constraints).
+    \item[$P_{\mathrm{constraint}}(t)$] Actual power $\bm{Q}_c^T\dot{\bm{q}}=-\boldsymbol{\lambda}^T\bm{\Phi}_t$. It vanishes for ideal stationary constraints. Ideal moving constraints can exchange energy even though their virtual work is zero.
     \item[$W$] Work (time-integrated power).
 \end{description}
 
@@ -92,7 +92,7 @@ surrounding paragraph.
     \item[$v^M_i$] Muscle fiber contraction velocity.
     \item[$K_{\mathrm{tissue}}$] Tissue stiffness (for fascia, tendon, ligament).
     \item[$\sigma$] Stress (force per unit area in tissue).
-    \item[$\varepsilon$] Strain (deformation per unit length in tissue).
+    \item[$\varepsilon$] Tissue strain (deformation per unit length); distinct from the DCR regularizer.
 \end{description}
 
 \section*{Pendulum Models}

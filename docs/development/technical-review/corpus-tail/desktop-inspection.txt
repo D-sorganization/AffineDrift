@@ -1,0 +1,12 @@
+### Result
+[{"url":"/books/index.html","width":1440,"scroll":1440,"errors":0},{"url":"/books/roadmap.html","width":1440,"scroll":1440,"errors":0},{"url":"/articles/drift-control-ratio.html","width":1440,"scroll":1440,"errors":0}]
+### Ran Playwright code
+```js
+await (async(page)=>{const out=[];await page.setViewportSize({width:1440,height:1000});for(const path of ['books/index.html','books/roadmap.html','articles/drift-control-ratio.html']){await page.goto('http://127.0.0.1:8880/'+path);await page.waitForTimeout(500);out.push(await page.evaluate(()=>({url:location.pathname,width:innerWidth,scroll:document.documentElement.scrollWidth,errors:document.querySelectorAll('mjx-merror').length})));if(path.includes('drift-control')){const panel=page.locator('#trust-panel-ad-dcr-reachability').locator('..');await panel.screenshot({path:'C:/Users/diete/Repositories/Worktrees/AffineDrift-technical-corpus-tail/docs/development/technical-review/corpus-tail/trust-panel-desktop.png'})}else{await page.screenshot({path:'C:/Users/diete/Repositories/Worktrees/AffineDrift-technical-corpus-tail/docs/development/technical-review/corpus-tail/desktop-'+path.replaceAll('/','_')+'.png',fullPage:true})}}return out;})(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8880/articles/drift-control-ratio.html
+- Page Title: Drift, Control Capacity and Golf-Swing Correction – AffineDrift
+- Console: 2 errors, 0 warnings
+### Events
+- New console entries: ..\..\..\..\..\AffineDrift-tangent-applications-review\docs\development\technical-review\tangent-applications-review\.playwright-cli\console-2026-10-05T06-46-26-207Z.log#L81-L84

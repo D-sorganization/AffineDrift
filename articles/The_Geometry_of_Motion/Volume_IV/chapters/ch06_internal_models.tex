@@ -1,188 +1,264 @@
-\chapter{Internal Models: Forward and Inverse}
+\chapter[Internal Models: Forward and Inverse]{Internal Models:\\Forward and Inverse}
 \label{ch:internal-models}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter separates prediction, inversion, context inference and feedback.
+The checked linear/Gaussian listing illustrates specified mathematical
+operations; it is not a complete learned MOSAIC system or evidence that a
+particular neural circuit implements those operations.
 \end{gomdraftnotice}
 
-\epigraph{%
-  To control is to predict.
-  To predict is to have a model.
-  To have a model is to have learned.
-}{}
+\section{State Prediction and Sensory Prediction}
 
-\begin{figure}[h]
+A discrete forward dynamics model propagates state,
+\begin{equation}
+ \hat x_{k+1|k}=\hat f(\hat x_{k|k},u_k),\qquad
+ \hat y_{k+1|k}=\hat h(\hat x_{k+1|k}).
+ \label{eq:ch6:forward-model}
+\end{equation}
+The second map predicts a sensory measurement. State and measurement need not
+have the same dimension or units. Measured prediction error is
+$y_{k+1}-\hat y_{k+1|k}$; it is not generally a directly observed full-state
+error. Process uncertainty, sensor noise, delay and model error contribute
+different terms to an estimator, as in the neural architecture chapter.
+
+A forward model is useful for comparing candidate commands, interpreting
+delayed observations and detecting unexpected outcomes. None of these uses
+implies exact prediction or proves a neural implementation. A model may be
+learned, identified from data, analytically specified, or a combination.
+
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.95]
-  % Forward model path
-  \draw (0, 1) rectangle (1, 1.5);
-  \draw (0.5, 1.25) node[align=center, anchor=center, font=\tiny\bf] {$\hat{x}_k$};
-
-  \draw[->, thick] (1, 1.25) -- (2, 1.25) node[align=center, anchor=south, midway, font=\tiny] {$u_k$};
-
-  \draw (2, 0.8) rectangle (3.5, 1.7);
-  \draw (2.75, 1.25) node[align=center, anchor=center, font=\small] {Forward};
-  \draw (2.75, 0.95) node[align=center, anchor=center, font=\tiny] {Model};
-
-  \draw[->, thick] (3.5, 1.25) -- (4.5, 1.25) node[align=center, anchor=south, midway, font=\tiny] {$\hat{x}_{k+1}$};
-
-  % Actual state
-  \draw (4.5, 0.8) rectangle (5.5, 1.7);
-  \draw (5, 1.25) node[align=center, anchor=center, font=\tiny\bf] {$x_{k+1}$};
-
-  % Feedback path
-  \draw[->, thick, red] (5, 0.8) -- (5, 0.2);
-  \draw (5.5, 0.5) node[align=center, anchor=west, font=\tiny, color=red] {error};
-
-  % Error-based update
-  \draw (4, -0.2) rectangle (6, 0.2);
-  \draw (5, 0) node[align=center, anchor=center, font=\tiny] {Update weights};
-
-  % Inverse model (right side)
-  \draw (0, -1) rectangle (1, -0.5);
-  \draw (0.5, -0.75) node[align=center, anchor=center, font=\tiny\bf] {$x_k$};
-
-  \draw (2, -1.2) rectangle (3.5, -0.3);
-  \draw (2.75, -0.75) node[align=center, anchor=center, font=\small] {Inverse};
-  \draw (2.75, -1.05) node[align=center, anchor=center, font=\tiny] {Model};
-
-  \draw[->, thick] (0, -0.75) -- (2, -0.75);
-  \draw[->, thick] (1, -0.75) -- (2, -0.75) node[align=center, anchor=south, midway, font=\tiny] {$x_{\text{des}}$};
-
-  \draw[->, thick] (3.5, -0.75) -- (4.5, -0.75);
-  \draw (4, -1.05) node[align=center, anchor=center, font=\tiny] {$u^*$};
-
-  % Label
-  \draw (2.75, 2.3) node[align=center, anchor=center, font=\small\bf] {Forward-Inverse Model Pair};
+\begin{tikzpicture}[node distance=0.6cm]
+ \node[draw,align=center] (input) {$\hat x_k,u_k$};
+ \node[draw,align=center,right=of input] (forward) {Dynamics\\$\hat f$};
+ \node[draw,align=center,right=of forward] (state) {$\hat x_{k+1|k}$};
+ \node[draw,align=center,right=of state] (sensor) {Sensor Map\\$\hat h$};
+ \node[draw,align=center,right=of sensor] (output) {$\hat y_{k+1|k}$};
+ \draw[->] (input)--(forward);
+ \draw[->] (forward)--(state);
+ \draw[->] (state)--(sensor);
+ \draw[->] (sensor)--(output);
 \end{tikzpicture}
-\caption{Paired forward and inverse models: forward model predicts state evolution from
-command; inverse model computes command to reach desired state. Learning updates both
-based on sensory prediction error.}
+\caption{State and Sensory Prediction Are Separate Maps. An inverse command
+calculation additionally requires a desired outcome, feasibility conditions
+and a rule for choosing among possible commands.}
 \label{fig:ch6:forward-inverse}
 \end{figure}
 
-\section{Forward Models}
+\section{Inversion Is a Feasibility and Selection Problem}
 
-A forward model predicts the sensory consequences of a motor command:
+For $x_{k+1}=Ax_k+Bu_k$, define $d=x_{k+1}^{\mathrm{des}}-Ax_k$.
+An exact inverse command exists precisely when $d\in\operatorname{range}B$.
+If $B$ has a null space, multiple commands may produce the same increment.
+The minimum Euclidean-norm least-squares solution and its residual are
 \begin{equation}
-  \hat{\state}_{k+1} = f(\hat{\state}_k, \control_k),
-  \label{eq:ch6:forward-model}
+ u_*=B^\dagger d,\qquad r=d-Bu_*.
+ \label{eq:ch6:inverse-model}
 \end{equation}
-which is exactly the state propagation used in Volume~I.
+A nonzero residual means this requested one-step state is not exactly
+reachable in the chosen linear model. It does not prove multi-step
+uncontrollability. The sampled matrices depend on the discretization and
+sampling interval; a zero position block in an explicit-Euler input matrix
+is not a universal property of sampled mechanical systems.
 
-\subsection{The MOSAIC Architecture}
+Minimum command norm depends on command coordinates and units. It is not
+minimum muscle energy without an appropriate physical cost and model.
+Actuator bounds, contact forces and joint constraints introduce a constrained
+optimization problem. Nonlinear inversion can have several branches or no
+solution; writing $f^{-1}$ without a domain and selection rule hides these issues.
 
-The MOSAIC model (Modular Selection and Identification for Control)~\cite{WolpertKawato1998}
-proposes that the brain maintains multiple paired forward-inverse models, each tuned to
-different dynamics or contexts. The claim that a model is acquired \emph{per tool} rather
-than adjusted in place has direct imaging support: cerebellar activity acquired while
-learning a novel visuomotor tool persists as a tool-specific representation, separable from
-the activity driven by the movement itself~\cite{Imamizu2000}.
+\section{Context Inference and the MOSAIC Hypothesis}
 
-\begin{lstlisting}[language=Python, caption={MOSAIC-style multiple model architecture.}]
+MOSAIC proposes paired predictive and command models with context-dependent
+responsibility~\cite{WolpertKawato1998,HarunoMosaic2001Review}. The developed
+architecture includes learning and contextual selection before and during
+movement. Its weighted inverse commands are a proposed construction tested
+in specified simulations, not a general inversion theorem.
+Visuomotor-tool learning has been associated with changing cerebellar activity
+in an imaging experiment~\cite{Imamizu2000}. That association alone does not
+identify a separate forward--inverse pair for every tool or establish the
+architecture uniquely.
+
+For a fixed bank with prediction $\mu_i$, observed vector $z$, covariance
+$R_i\succ0$ and prior $\pi_i>0$, a Gaussian observation model gives
+\begin{align}
+ \ell_i&=\log\pi_i-\tfrac12\left[
+ (z-\mu_i)^TR_i^{-1}(z-\mu_i)+\log\det R_i+n\log(2\pi)\right],\\
+ w_i&=\frac{\exp\ell_i}{\sum_j\exp\ell_j}.
+\end{align}
+Covariance makes the quadratic residual dimensionless; its determinant
+normalizer matters when covariances differ. Equal priors and a common identity
+covariance reduce this to normalized exponentials of negative squared errors.
+Those special assumptions should not be silently applied to measurements
+with mixed units. All likelihood densities must use the
+same measurement coordinates and reference measure; a common invertible
+change of units transforms means and covariances together and its common
+density Jacobian cancels in the posterior weights. A prior conditioned on
+contextual cues differs from a posterior based on the new observation.
+Repeated measurements require a
+specified context transition model and dependence assumptions; this function
+does not learn or propagate them.
+
+\begin{lstlisting}[language=Python, caption={Linear Inversion and Gaussian Model Responsibilities.}]
+from dataclasses import dataclass
 import numpy as np
-from typing import List, Tuple
-
-class ForwardInversePair:
-    """A paired forward-inverse model for one context."""
-    def __init__(self, A: np.ndarray, B: np.ndarray):
-        self.A = A  # State transition
-        self.B = B  # Input matrix
-
-    def forward_predict(self, x: np.ndarray,
-                        u: np.ndarray) -> np.ndarray:
-        """Predict next state."""
-        return self.A @ x + self.B @ u
-
-    def inverse(self, x: np.ndarray,
-                x_desired: np.ndarray) -> np.ndarray:
-        """Compute control to reach desired state."""
-        return np.linalg.lstsq(self.B,
-                               x_desired - self.A @ x,
-                               rcond=None)[0]
+from scipy.special import logsumexp
 
 
-class MOSAIC:
-    """Multiple paired forward-inverse model architecture."""
-    def __init__(self, models: List[ForwardInversePair]):
-        self.models = models
-        self.n_models = len(models)
-        self.responsibilities = np.ones(self.n_models) / self.n_models
+def checked_vector(value: np.ndarray, size: int) -> np.ndarray:
+    """Require a finite vector of the specified dimension."""
+    result = np.asarray(value, dtype=float)
+    if result.shape != (size,) or not np.all(np.isfinite(result)):
+        raise ValueError("Invalid finite-vector contract")
+    return result
 
-    def update_responsibilities(self, x: np.ndarray,
-                                u: np.ndarray,
-                                x_next: np.ndarray) -> None:
-        """Update model responsibilities based on prediction errors."""
-        errors = np.zeros(self.n_models)
-        for i, model in enumerate(self.models):
-            prediction = model.forward_predict(x, u)
-            errors[i] = np.sum((x_next - prediction)**2)
 
-        # Softmax weighting (lower error = higher responsibility)
-        log_resp = -0.5 * errors
-        log_resp -= np.max(log_resp)  # numerical stability
-        self.responsibilities = np.exp(log_resp)
-        self.responsibilities /= np.sum(self.responsibilities)
+@dataclass
+class LinearPair:
+    """Fixed discrete dynamics and an unconstrained least-squares inverse."""
 
-    def predict(self, x: np.ndarray,
-                u: np.ndarray) -> np.ndarray:
-        """Weighted prediction across all models."""
-        prediction = np.zeros_like(x)
-        for i, model in enumerate(self.models):
-            prediction += self.responsibilities[i] * \
-                         model.forward_predict(x, u)
-        return prediction
+    A: np.ndarray
+    B: np.ndarray
 
-    def control(self, x: np.ndarray,
-                x_desired: np.ndarray) -> np.ndarray:
-        """Weighted inverse model output."""
-        u = np.zeros(self.models[0].B.shape[1])
-        for i, model in enumerate(self.models):
-            u += self.responsibilities[i] * \
-                 model.inverse(x, x_desired)
-        return u
+    def __post_init__(self) -> None:
+        self.A = np.array(self.A, dtype=float, copy=True)
+        self.B = np.array(self.B, dtype=float, copy=True)
+        if self.A.ndim != 2 or self.A.shape[0] == 0:
+            raise ValueError("A must be a nonempty square matrix")
+        size = self.A.shape[0]
+        if self.A.shape != (size, size):
+            raise ValueError("A must be square")
+        if self.B.ndim != 2 or self.B.shape[0] != size:
+            raise ValueError("B must have the same state dimension")
+        if self.B.shape[1] == 0:
+            raise ValueError("At least one command coordinate is required")
+        if not (np.isfinite(self.A).all() and np.isfinite(self.B).all()):
+            raise ValueError("Dynamics matrices must be finite")
+
+    def predict(self, x: np.ndarray, u: np.ndarray) -> np.ndarray:
+        """Predict state with float arithmetic, including integer inputs."""
+        state = checked_vector(x, self.A.shape[0])
+        command = checked_vector(u, self.B.shape[1])
+        return self.A @ state + self.B @ command
+
+    def inverse(self, x: np.ndarray, target: np.ndarray) -> tuple:
+        """Return minimum-norm command and unachieved state residual."""
+        state = checked_vector(x, self.A.shape[0])
+        desired = checked_vector(target, self.A.shape[0])
+        increment = desired - self.A @ state
+        command = np.linalg.lstsq(self.B, increment, rcond=None)[0]
+        return command, increment - self.B @ command
+
+
+def gaussian_log_likelihoods(errors: np.ndarray,
+                             covariances: np.ndarray) -> np.ndarray:
+    """Compute Gaussian log likelihoods with batched Cholesky solves."""
+    count, size = errors.shape
+    covariance = np.asarray(covariances, dtype=float)
+    if covariance.shape != (count, size, size):
+        raise ValueError("One square covariance per prediction is required")
+    if not np.isfinite(covariance).all():
+        raise ValueError("Covariances must be finite")
+    if not np.allclose(covariance, covariance.swapaxes(-1, -2),
+                       rtol=0, atol=1e-12):
+        raise ValueError("Covariances must be symmetric")
+    try:
+        lower = np.linalg.cholesky(covariance)
+    except np.linalg.LinAlgError as error:
+        raise ValueError("Covariances must be positive definite") from error
+    whitened = np.linalg.solve(lower, errors[..., None])[..., 0]
+    logdet = 2 * np.log(np.diagonal(lower, axis1=1, axis2=2)).sum(axis=1)
+    return -0.5 * ((whitened**2).sum(axis=1)
+                   + logdet + size * np.log(2 * np.pi))
+
+
+def responsibilities(predictions: np.ndarray, observation: np.ndarray,
+                     covariances: np.ndarray, priors: np.ndarray) -> np.ndarray:
+    """Normalize a fixed bank's Gaussian posterior; no model learning."""
+    means = np.asarray(predictions, dtype=float)
+    if means.ndim != 2 or min(means.shape) == 0:
+        raise ValueError("Predictions must be a nonempty model-by-state array")
+    if not np.isfinite(means).all():
+        raise ValueError("Predictions must be finite")
+    observed = checked_vector(observation, means.shape[1])
+    prior = checked_vector(priors, means.shape[0])
+    if np.any(prior <= 0) or not np.isclose(prior.sum(), 1, rtol=0, atol=1e-12):
+        raise ValueError("Priors must be positive and sum to one")
+    logits = np.log(prior) + gaussian_log_likelihoods(observed - means, covariances)
+    if not np.isfinite(logits).all():
+        raise ValueError("Likelihood exceeds numerical range")
+    logits -= logits.max()
+    return np.exp(logits - logsumexp(logits))
 \end{lstlisting}
 
-\section{Inverse Models}
+Two identical zero-error predictions with scalar variances $1,4$ and equal
+priors receive weights $2/3,1/3$: the broader density has half the peak
+likelihood. Logarithmic normalization avoids the all-zero likelihood problem
+for large residuals, but does not remove finite-precision limits or model misspecification.
 
-An inverse model computes the motor command required to achieve a desired state:
+\subsection{Mixing Predictions Does Not Invert a Plant}
+
+Consider scalar $A_1=A_2=0$, $B_1=1$, $B_2=10$, and target $10$.
+The individual exact commands are $10$ and $1$. Equal-weight mixing gives
+$u=5.5$, which produces $55$ under model 2. Neither averaging commands nor
+averaging forward models establishes the correct command for the actual
+plant. Given fixed model probabilities, minimizing expected squared one-step
+error instead yields, when the matrix is invertible,
 \begin{equation}
-  \control_k = f^{-1}(\state_k, \state_{k+1}^{\text{des}}),
-  \label{eq:ch6:inverse-model}
+ u_* =\left(\sum_i w_i B_i^TB_i\right)^{-1}
+             \sum_i w_i B_i^T(x_{\rm des}-A_i x).
 \end{equation}
-which corresponds to the feedforward control of Volume~II. How such a model could be
-\emph{acquired} rather than assumed is the contribution of feedback-error learning: the
-output of a crude feedback controller is used as the training signal for the inverse model,
-so the feedback loop teaches the feedforward path and then falls
-silent~\cite{Kawato1987}. Note that this is the inverse-model result; the forward-model
-evidence is separate, and conflating the two is easy because both trace to the same
-group.
+For this example $u_*=110/101$, different from the inverse mixture. This
+calculation assumes fixed probabilities, unconstrained commands and a
+specified quadratic loss; it is not a complete adaptive or dual-control policy.
 
-\section{Smith Predictor for Neural Delays}
+\section{Learning and Delayed Feedback}
 
-The sensorimotor system faces finite neural and sensing delays. The Smith predictor
-architecture uses a forward model to compensate:
+Feedback-error learning uses a feedback command as a training signal for a
+feedforward inverse path~\cite{Kawato1987}. Whether it converges, what it
+learns and how much residual feedback remains depend on the plant, learning
+rule, excitation, noise and approximation. It does not imply that feedback
+always falls silent, nor that sensory prediction error and command error are
+interchangeable without a model of their relationship.
+
+Starting from an estimated delayed state, an engineering predictor can propagate
 \begin{equation}
-  \hat{\state}_{\text{current}} = \hat{\state}(t - \Delta t) +
-  \int_{t-\Delta t}^{t} f(\hat{\state}, \control) \, \dd\tau,
-  \label{eq:ch6:smith-predictor}
+ \hat x(t)=\hat x(t-\tau)+\int_{t-\tau}^{t}
+             \hat f(\hat x(s),u(s))\,ds.
+ \label{eq:ch6:smith-predictor}
 \end{equation}
-where $\Delta t$ is the sensory delay. The controller operates on the
-\emph{predicted current state} rather than the delayed sensory measurement.
+This requires input history and a specified estimator at $t-\tau$.
+It is state propagation, not by itself a complete Smith-predictor loop.
+In one classical linear input-delay construction, a plant has transfer
+$e^{-s\tau}G(s)$ and the controller receives the effective feedback
+\begin{equation}
+ y_{\rm eff}=y+\bigl(G_m-e^{-s\tau}G_m\bigr)u.
+\end{equation}
+The measured-minus-delayed-model residual corrects the delay-free model
+output. Under exact matching $G_m=G$, known constant delay and compatible
+initial histories, this feedback becomes $G_m u$. Internal stability and
+robustness still need analysis; cancellation reasoning alone is insufficient
+for unstable plants or model mismatch. Neural delay compensation is a
+hypothesis to test, not established by drawing this engineering loop.
+
+For golf, the relevant question is how prediction error, delay, changing
+contacts and actuator history affect a specified task outcome. The same
+trajectory can be consistent with several combinations of anticipatory
+commands and feedback. Perturbations and measurements must distinguish those
+alternatives before assigning a neural algorithm or a passive contribution.
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{MOSAIC.} Using the provided code, simulate a system that switches
-        between two dynamics (e.g., carrying an empty cup vs.\ a full cup). Show
-        how the responsibilities shift.
-
-  \item \textbf{Smith Predictor.} Implement a Smith predictor for a simple pendulum
-        with a user-chosen sensory delay parameter. Compare performance with and
-        without prediction.
-
-  \item \textbf{(Research.)} Summarize evidence for multiple internal models in
-        human motor control, citing at least three experimental studies.
+ \item \textbf{Reachability.} With $A=I$, $B=(0,1)^T$, $x=0$ and target
+ $(1,2)^T$, compute command and residual. Explain why a one-step residual
+ does not determine multi-step controllability.
+ \item \textbf{Context Likelihood.} Reproduce the variance example and
+ examine unequal priors. State which assumptions would justify updating a
+ prior from previous observations without double-counting data.
+ \item \textbf{Command Mixtures.} Verify $110/101$ for the expected-loss
+ minimizer. Compare outcomes under each actual plant and under actuator bounds.
+ \item \textbf{Delayed Feedback.} Specify plant, delay, estimator and input
+ history for a closed-loop comparison. Report tracking and stability limits;
+ do not equate a prediction rollout with a validated delay compensator.
 \end{enumerate}

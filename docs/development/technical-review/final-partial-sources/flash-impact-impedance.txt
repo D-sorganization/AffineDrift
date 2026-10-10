@@ -1,0 +1,94 @@
+An adversarial review of both source documents for concrete equation, convention, assumption, and summary overclaim errors yields the following findings:
+
+---
+
+### 1. Concrete Convention / Geometry Error: Spin-Loft Identity Sign Inversion
+
+- **Source File**: [ch28_impact_collision.tex](file:///C:/Users/diete/Repositories/Worktrees/AffineDrift-final-partial-sources-review/articles/The_Physics_of_Golf/chapters/ch28_impact_collision.tex#L162-L175)
+- **Specific Source Wording**:
+  > "Use a forward/up/right frame, face azimuth $\phi$, path azimuth $\psi$, dynamic loft $\lambda$, and attack angle $\alpha$. The unit vectors are
+  > \begin{align}
+  > \hat n&=(\cos\lambda\cos\phi,\sin\lambda,\cos\lambda\sin\phi),\\
+  > \hat v&=(\cos\alpha\cos\psi,\sin\alpha,\cos\alpha\sin\psi).
+  > \end{align}
+  > Spin loft is their angle:
+  > \begin{equation}
+  > \cos\Phi=\sin\lambda\sin\alpha+
+  > \cos\lambda\cos\alpha\cos(\phi-\psi).
+  > \end{equation}
+  > For zero face-to-path, $\Phi=|\lambda-\alpha|$ in the relevant range."
+
+- **Mathematical Counterexample & Analysis**:
+  1. Under the stated unit vectors, the inner product is:
+     $$\hat n \cdot \hat v = \cos\lambda\cos\alpha(\cos\phi\cos\psi + \sin\phi\sin\psi) + \sin\lambda\sin\alpha = \cos\lambda\cos\alpha\cos(\phi-\psi) + \sin\lambda\sin\alpha.$$
+  2. For zero face-to-path ($\phi = \psi$), this formula yields:
+     $$\cos\Phi = \cos\lambda\cos\alpha + \sin\lambda\sin\alpha = \cos(\lambda - \alpha) \implies \Phi = |\lambda - \alpha|.$$
+  3. However, physically and by definition in impact mechanics, $\hat n$ is the normal pointing outward from the face (away from the club, into the ball; dynamic loft $\lambda > 0$ tilts $\hat n$ upward), while $\hat v$ is defined as the incoming club velocity direction (pointing forward, $\alpha$ pointing slightly upward or downward).
+  4. In a pure head-on zero-loft collision ($\lambda = 0, \phi = 0, \alpha = 0, \psi = 0$), the face normal $\hat n$ and incident velocity vector $\hat v$ point in the *same* direction ($\hat n \cdot \hat v = 1 \implies \Phi = 0$). But as dynamic loft $\lambda$ increases, the angle between the face normal $\hat n$ and the club velocity $\hat v$ is actually the loft angle itself. If loft $\lambda = 12^\circ$ and attack angle $\alpha = 0^\circ$, $\Phi = 12^\circ$.
+  5. Now consider the cross-product definition stated later in the same section:
+     > "For a centred symmetric impact on a nonspinning ball, the ideal spin direction is parallel to $\hat v\times\hat n$."
+     In the stated forward/up/right frame:
+     - Forward = $+x$, Up = $+y$, Right = $+z$.
+     - Let $\phi = \psi = 0$, $\lambda = 12^\circ$, $\alpha = 0^\circ$.
+     - $\hat v = (1, 0, 0)$.
+     - $\hat n = (\cos 12^\circ, \sin 12^\circ, 0)$.
+     - Then $\hat v \times \hat n = (1, 0, 0) \times (\cos 12^\circ, \sin 12^\circ, 0) = (0, 0, \sin 12^\circ)$.
+     - Since $+z$ is **Right**, a vector along $+z$ corresponds to clockwise rotation about the right-pointing axis, which is **topspin**, not backspin. In golf impact, positive dynamic loft with forward velocity produces backspin (which points to the golfer's left, $-z$).
+     - Furthermore, in the right-handed Cartesian frame where $x$ is forward, $y$ is up, and $z$ is right, the spherical parameterization with azimuth measured from forward toward right has:
+       $x = \cos\lambda\cos\phi$, $y = \sin\lambda$, $z = \cos\lambda\sin\phi$.
+       For a right-handed system ($x \times y = z$), $(1, 0, 0) \times (0, 1, 0) = (0, 0, 1) = \text{Right}$. This means positive $\hat z$ is indeed rightward, and positive rotation around $+z$ pitches the top forward (topspin). Therefore, backspin requires the spin axis vector to point in $-\hat z$, contradicting $\hat v \times \hat n$ producing $+\hat z$.
+
+---
+
+### 2. Concrete Equation Inconsistency: Ball Speed Normal-Only Model
+
+- **Source File**: [ch28_impact_collision.tex](file:///C:/Users/diete/Repositories/Worktrees/AffineDrift-final-partial-sources-review/articles/The_Physics_of_Golf/chapters/ch28_impact_collision.tex#L190-L194)
+- **Specific Source Wording**:
+  > "In a normal-only model with $C=(1+e)/(1+m/M_{\rm eff})$, $v_b=C(v_P\cdot\hat n)\hat n$. Total ball speed scales with $\cos\Phi$; its projection onto incident velocity scales with $\cos^2\Phi$. Those are different outputs."
+
+- **Mathematical Counterexample & Analysis**:
+  1. Let $v_P = v \hat v$, so $v_P \cdot \hat n = v(\hat v \cdot \hat n) = v \cos\Phi$.
+  2. Then $v_b = C v \cos\Phi \hat n$.
+  3. The magnitude (total ball speed) is $\|v_b\| = C v |\cos\Phi|$, which indeed scales with $\cos\Phi$ for $\Phi \in [0, \pi/2)$.
+  4. Now evaluate the projection of $v_b$ onto the incident velocity direction $\hat v$:
+     $$\text{proj}_{\hat v} v_b = v_b \cdot \hat v = (C v \cos\Phi \hat n) \cdot \hat v = C v \cos\Phi (\hat n \cdot \hat v) = C v \cos^2\Phi.$$
+     This part is algebraically consistent.
+  5. **However**, notice the coefficient definition:
+     $$C = \frac{1+e}{1+m/M_{\rm eff}} = \frac{(1+e)M_{\rm eff}}{M_{\rm eff}+m}.$$
+     In Section 2 (Equation \eqref{eq:ball_velocity_after}), $v_b^+$ was derived as:
+     $$v_b^+ = \frac{(1+e)M}{M+m} v.$$
+     When extending 1D impact to 3D with effective mass $M_{\rm eff}$ along the normal $\hat n$, $v_P \cdot \hat n$ is the normal approach velocity.
+     However, the claim:
+     > "Total ball speed scales with $\cos\Phi$"
+     is an **assumption overclaim** for off-centre impacts because Section 3 explicitly defined:
+     $$\frac{1}{M_{\rm eff}}=\frac1M+ (r\times\hat n)^T I_c^{-1}(r\times\hat n).$$
+     $M_{\rm eff}$ is an explicit function of $\hat n$ (and thus varies with $\lambda$ and $\phi$, and hence varies with $\Phi$).
+     Therefore, $C$ is not constant with respect to $\Phi$ whenever $r \times \hat n \neq 0$. Stating without qualification that total ball speed scales with $\cos\Phi$ in the presence of $M_{\rm eff}$ holds strictly only if $r \times \hat n = 0$ (a centred strike where $M_{\rm eff} = M$).
+
+---
+
+### 3. Concrete Algebraic Error: Tangent Stiffness Derivative in Internal Work Rate
+
+- **Source File**: [intentional-constraint-collapse.qmd](file:///C:/Users/diete/Repositories/Worktrees/AffineDrift-final-partial-sources-review/articles/intentional-constraint-collapse.qmd#L125-L135)
+- **Specific Source Wording**:
+  > "Changing stiffness can exchange mechanical energy. For a spring with fixed reference and $V=\tfrac12 k(t)e^2$,
+  > $$
+  > \dot V=ke\dot e+\tfrac12\dot k e^2.
+  > $$
+  > At nonzero deformation, increasing $k$ adds stored energy even if $\dot e=0$. An ideal instantaneous lock can also require an impulse and change kinetic energy. Neither operation is automatically a cost-free redirection of momentum."
+
+- **Mathematical Counterexample & Analysis**:
+  - While the time derivative $\frac{d}{dt}\left(\frac{1}{2}k(t)e^2\right) = k e \dot e + \frac{1}{2}\dot k e^2$ is mathematically correct for state function $V$, the claim that $\frac{1}{2}\dot k e^2$ represents mechanical power exchanged with the physical coordinates (work rate on the system coordinates) confuses thermodynamic/potential energy variation with generalized force work.
+  - The generalized force exerted by the spring on the coordinate is $F = -\frac{\partial V}{\partial e} = -k(t)e$.
+  - The mechanical power delivered *to* the mechanical system degrees of freedom is $P_{\rm mech} = F(-\dot e) = k(t)e\dot e$.
+  - When $\dot e = 0$, $P_{\rm mech} = 0$: no mechanical work is performed on the kinematic coordinates $\dot q$. The term $\frac{1}{2}\dot k e^2$ represents the non-conservative rate of parametric energy injection/dissipation into the parameter $k(t)$ (e.g. parametric excitation / actuator stiffness adjustment), not mechanical work exchanged with club momentum. Asserting that an instantaneous change in $k$ "is not a cost-free redirection of momentum" conflates energetic parametric cost with momentum change: a pure stiffness change at $\dot e = 0$ exerts zero impulse ($\int F dt = 0$) and cannot alter velocity or momentum instantaneously, unlike an ideal impulsive kinematic lock.
+
+---
+
+### Summary Table of Adjudicated Issues
+
+| File | Section / Lines | Error Type | Summary |
+| :--- | :--- | :--- | :--- |
+| `ch28_impact_collision.tex` | §5 (Exact Spin-Loft Geometry) | Convention / Sign Error | In the defined forward/up/right frame, $\hat v \times \hat n$ yields a positive rightward vector ($+\hat z$), which represents topspin rather than backspin. |
+| `ch28_impact_collision.tex` | §5 (Exact Spin-Loft Geometry) | Assumption Overclaim | Asserting total ball speed scales strictly as $\cos\Phi$ when using $C(M_{\rm eff})$ ignores that $M_{\rm eff}$ is itself an explicit quadratic function of $\hat n$ whenever strike offset $r \times \hat n \neq 0$. |
+| `intentional-constraint-collapse.qmd` | §Mechanical and Metabolic Costs | Assumption / Conceptual Conflation | Equating parametric potential change $\frac{1}{2}\dot k e^2$ with momentum redirection: parametric stiffness variation at $\dot e=0$ transmits zero impulse and cannot redirect momentum, unlike kinematic constraint impacts. |

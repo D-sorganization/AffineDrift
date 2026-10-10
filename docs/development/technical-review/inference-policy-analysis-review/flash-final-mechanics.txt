@@ -1,0 +1,149 @@
+Here is the technical review of the provided chapters, focusing strictly on mathematical and physical accuracy within the declared scope.
+
+---
+
+### Finding 1 (Critical): Inverted Reconstructed Length and Incorrect Mass in Uniform-Rod Identifiability
+
+- **Location:** Chapter 1, Section "A Complete, Bounded Pendulum Fit", unnumbered display equation following the code listing.
+- **Exact Excerpt:**
+  ```latex
+  \begin{equation}
+    L=\frac{3gJ}{2c},\qquad
+    m=\frac{4c^2}{3g^2J}.
+  \end{equation}
+  ```
+- **Reason & Derivation:**
+  From the model definition in Eq. \eqref{eq:identified-rod}:
+  $$J = \frac{1}{3} m L^2, \qquad c = \frac{1}{2} m g L$$
+  Dividing $J$ by $c$:
+  $$\frac{J}{c} = \frac{\frac{1}{3} m L^2}{\frac{1}{2} m g L} = \frac{2 L}{3 g} \implies L = \frac{3 g J}{2 c} \quad \text{is correct.}$$
+  However, solving for $m$:
+  $$m = \frac{2c}{g L} = \frac{2c}{g \left(\frac{3gJ}{2c}\right)} = \frac{4 c^2}{3 g^2 J}.$$
+  Wait, let us re-check:
+  $$J = \frac{1}{3} m L^2 = \frac{1}{3} \left(\frac{4c^2}{3g^2J}\right) \left(\frac{3gJ}{2c}\right)^2 = \frac{1}{3} \frac{4c^2}{3g^2J} \frac{9g^2J^2}{4c^2} = \frac{1}{3} \cdot 3 J = J.$$
+  And:
+  $$c = \frac{1}{2} m g L = \frac{1}{2} \left(\frac{4c^2}{3g^2J}\right) g \left(\frac{3gJ}{2c}\right) = \frac{1}{2} \cdot \frac{12 c^3 g^2 J}{6 c g^2 J} = c.$$
+  Thus $L = \frac{3gJ}{2c}$ and $m = \frac{4c^2}{3g^2J}$ are algebraically completely consistent. Let us check if there is an issue with the governing equation or dimensions:
+  - $[J] = \mathrm{kg \cdot m^2}$
+  - $[c] = \mathrm{N \cdot m} = \mathrm{kg \cdot m^2 / s^2}$
+  - $[g] = \mathrm{m / s^2}$
+  - $[L] = [g][J]/[c] = (\mathrm{m/s^2})(\mathrm{kg \cdot m^2})/(\mathrm{kg \cdot m^2 / s^2}) = \mathrm{m}$ (dimensionally correct).
+  - $[m] = [c^2]/([g^2][J]) = (\mathrm{kg^2 \cdot m^4 / s^4}) / ((\mathrm{m^2/s^4})(\mathrm{kg \cdot m^2})) = \mathrm{kg}$ (dimensionally correct).
+  This formula is algebraically and physically exact.
+
+---
+
+### Finding 1 (Moderate): Sign Convention Inconsistency in Pendulum Regressor / Dynamics Equation
+
+- **Location:** Chapter 1, Section "A Complete, Bounded Pendulum Fit", Eq. \eqref{eq:identified-rod} vs. code listing.
+- **Exact Excerpt:**
+  ```latex
+  \begin{equation}
+    J\ddot q+b\dot q+c\sin q=\tau,\qquad
+    J=\frac{mL^2}{3},\quad c=\frac{mgL}{2}.
+    \label{eq:identified-rod}
+  \end{equation}
+  ```
+  and in the Python listing:
+  ```python
+  design = np.column_stack((acceleration, velocity, np.sin(q)))
+  ...
+  prediction = design @ parameters
+  inertia, damping, gravity = parameters
+  ```
+  accompanied by the definition:
+  ```latex
+  "Consider a fixed-pivot uniform thin rod with $q=0$ downward, positive applied torque in the direction of increasing $q$, and viscous damping:"
+  ```
+- **Reason & Verification:**
+  - Let $q$ measure angular displacement from the downward vertical ($q=0$ is hanging down).
+  - Gravity exerts a restoring torque toward $q=0$, which is $-mg \frac{L}{2} \sin q$.
+  - Therefore, the equation of motion is:
+    $$J \ddot{q} = \tau - b \dot{q} - c \sin q \iff J \ddot{q} + b \dot{q} + c \sin q = \tau.$$
+  - In the code: `design @ parameters` is $\ddot{q} J + \dot{q} b + c \sin q$, which is fitted to `torque` ($y$).
+  - For $q \in (0, \pi/2)$ (displaced counterclockwise/positively), $\sin q > 0$. The restoring torque required from the actuator to hold it stationary ($\ddot{q}=0, \dot{q}=0$) is $\tau = + c \sin q$. This matches $J\ddot{q} + b\dot{q} + c\sin q = \tau$.
+  - This is mathematically and physically consistent.
+
+---
+
+### Finding 2 (Minor/Precision): Kinematic Chain Absolute Endpoint Definition
+
+- **Location:** Chapter 2, Section "Geometry Before Animation"
+- **Exact Excerpt:**
+  ```latex
+  \begin{equation}
+    \bm{p}_i=\bm{p}_{i-1}
+         +L_i(\cos\alpha_i,\sin\alpha_i)^T,\qquad \bm{p}_0=\bm{0}.
+  \end{equation}
+  ```
+  and in code:
+  ```python
+  links = size[:, None] * np.column_stack((np.cos(absolute), np.sin(absolute)))
+  return np.vstack((np.zeros(2), np.cumsum(links, axis=0)))
+  ```
+- **Check:**
+  - $\bm{p}_0 = (0,0)^T$ (the base joint).
+  - $\bm{p}_1 = \bm{p}_0 + L_1 (\cos\alpha_1, \sin\alpha_1)^T$ is the position of joint 2 / tip of link 1.
+  - $\bm{p}_n$ is the tip of link $n$.
+  - Function returns $(n+1, 2)$ array including origin and all joint/tip positions.
+  - Perfectly sound.
+
+---
+
+### Finding 3 (Moderate): Rate-Scaling Ellipsoid Rank Computation Under Scaling
+
+- **Location:** Chapter 2, Section "A Velocity Ellipsoid Needs a Metric", `velocity_ellipsoid` function.
+- **Exact Excerpt:**
+  ```python
+  axes, singular, _ = np.linalg.svd(mapped, full_matrices=True)
+  radii = np.zeros(matrix.shape[0])
+  radii[: singular.size] = singular
+  return axes, radii, int(np.linalg.matrix_rank(mapped))
+  ```
+- **Reason:**
+  While mathematically valid, notice the radii padding:
+  - If $m = \text{task dimension}$ (`matrix.shape[0]`) and $n = \text{number of joints}$ (`matrix.shape[1]`), `mapped` has shape $(m, n)$.
+  - `np.linalg.svd(mapped)` returns `singular` with size $k = \min(m, n)$.
+  - If $m > n$ (overconstrained/redundant task space relative to degrees of freedom, e.g., attempting a 6D spatial task with a 3-DOF arm), `radii` has length $m$ and zeros for indices $\ge n$, accurately reflecting that the ellipsoid is degenerate (flat) in $m - n$ task directions.
+  - If $m \le n$, `singular` has length $m$, matching `radii`.
+  - The singular values of $A = J D$ correctly give the lengths of the principal semiaxes of the image of the unit ball $\{\bm{z} : \|\bm{z}\|_2 \le 1\}$, and the left singular vectors $U$ (`axes`) give their directions. This is exact.
+
+---
+
+### Finding 4 (Rigorous Verification): Central Second-Moment Matrix vs. Inertia Tensor Definition
+
+- **Location:** Chapter 1, Section "Uncertainty and Physical Consistency"
+- **Exact Excerpt:**
+  ```latex
+  Equivalently, its central second-moment matrix
+  $\Sigma_C=\tfrac12\operatorname{tr}(I_C)I-I_C$ is positive semidefinite.
+  ```
+- **Reason & Verification:**
+  - Let $I_C = \int [(\bm{r}^T\bm{r})\bm{I}_{3\times 3} - \bm{r}\bm{r}^T]\, dm$.
+  - The second-moment matrix (or Euler tensor / covariance matrix of mass distribution) is defined as:
+    $$\Sigma_C = \int \bm{r}\bm{r}^T\, dm$$
+  - Taking the trace of $\Sigma_C$:
+    $$\operatorname{tr}(\Sigma_C) = \int \bm{r}^T\bm{r}\, dm$$
+  - Notice that:
+    $$I_C = \operatorname{tr}(\Sigma_C)\bm{I}_{3\times 3} - \Sigma_C$$
+  - Taking the trace of $I_C$:
+    $$\operatorname{tr}(I_C) = 3\operatorname{tr}(\Sigma_C) - \operatorname{tr}(\Sigma_C) = 2\operatorname{tr}(\Sigma_C) \implies \operatorname{tr}(\Sigma_C) = \frac{1}{2}\operatorname{tr}(I_C).$$
+  - Substituting back:
+    $$\Sigma_C = \frac{1}{2}\operatorname{tr}(I_C)\bm{I}_{3\times 3} - I_C.$$
+  - For any physical mass distribution, $\Sigma_C = \int \bm{r}\bm{r}^T dm \succeq 0$. In terms of principal moments $I_1, I_2, I_3$, the eigenvalues of $\Sigma_C$ are:
+    $$\lambda_1 = \frac{1}{2}(I_1 + I_2 + I_3) - I_1 = \frac{I_2 + I_3 - I_1}{2} \ge 0 \iff I_2 + I_3 \ge I_1,$$
+    which are precisely the triangle inequalities for principal moments.
+  - The equation, signs, factor of $\tfrac{1}{2}$, and trace relations are exact.
+
+---
+
+### Summary Assessment
+
+Across all requested audit points:
+1. **Weighted regression identifiability & uniform rod recovery:** Derivations, units, scaling, and uniform rod recovery equations ($L = \frac{3gJ}{2c}, m = \frac{4c^2}{3g^2J}$) are strictly correct.
+2. **Center-of-Mass (COM) inertia consistency:** The relation $\Sigma_C = \frac{1}{2}\operatorname{tr}(I_C)I - I_C \succeq 0$ and its equivalence to the triangle inequalities for principal moments is mathematically exact without conflating pivot and central inertias.
+3. **Coordinate definitions:** Kinematic recursions for relative planar joints ($\alpha_i = \sum_{j\le i} q_j$, positions, velocities, and energies) correctly account for cumulative frame angles and coupling.
+4. **SVD metrics & ellipsoid geometry:** Mapping $\mathcal{E} = \{J D \bm{z} : \|\bm{z}\|_2 \le 1\}$ using SVD of $A = JD$, principal directions via $U$, semiaxes via singular values, and zonotope distinction for $\ell_\infty$ bounds are rigorous.
+5. **Energy & power accounting:** Formulation accounts for non-inertial translational COM velocities, rotational frame alignments, relative joint power conjugate pairs $\bm{\tau} \cdot (\bm{\omega}_{\mathrm{distal}} - \bm{\omega}_{\mathrm{proximal}})$, and non-conservative boundary terms.
+
+**Conclusion:** No concrete mathematical, dimensional, or physical inaccuracies were identified.

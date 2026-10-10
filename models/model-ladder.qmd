@@ -56,6 +56,39 @@ terms. Its prescribed impact-speed errors are 0.08, 0.02, 0.005, and 0.00125
 m/s. The exact factor-of-four decrease is an executable regression for the
 protocol; it is not a measured convergence rate for a physical shaft.
 
+## The Planar Rung, Animated {#swing-viewer-section}
+
+The viewer below plays one run of the lowest rung: the planar, rigid
+three-link teaching model in `src/affine_control/golf_model.py`. It starts at
+rest from a declared top-of-backswing pose. A constant torque of 100 N m acts
+at the hub and 30 N m at the middle joint, and the wrist joint gets none. The
+run stops when the club link first points straight down.
+
+Each link is coloured by where its angular acceleration comes from at that
+instant: the drift (gravity and motion, with no torque) or the applied torque.
+The club link is driven only through the joints above it, so its colour shows
+how much of its swing the passive dynamics supply. The frames are computed in
+Python by `scripts/generate_swing_viewer_data.py`; the page only draws them.
+
+```{=html}
+<figure class="swing-viewer" id="swing-viewer" aria-describedby="swing-viewer-caption">
+<div class="sv-stage"></div>
+<div class="sv-controls">
+<button type="button" class="sv-play" aria-pressed="false">Play</button>
+<label class="sv-slider-label">Time <input type="range" class="sv-slider" min="0" max="0" step="1" value="0"></label>
+</div>
+<p class="sv-readout" aria-live="polite"></p>
+<ul class="sv-legend">
+<li><span class="sv-swatch sv-swatch--drift"></span>Drift: no torque</li>
+<li><span class="sv-swatch sv-swatch--input"></span>Applied torque</li>
+</ul>
+<figcaption id="swing-viewer-caption">Planar (2D) rigid three-link teaching model, drawn as SVG (no WebGL needed). The shaft is rigid: nothing here bends. Torques are illustrative, not measured, and the motion plays at one-eighth speed only when you press Play.</figcaption>
+<noscript><p>The animation needs JavaScript. In the run, the club lags behind the arm, then releases through the bottom at about 43 m/s after 0.34 s.</p></noscript>
+</figure>
+<script src="../js/swing-viewer-data.js"></script>
+<script src="../js/swing-viewer.js"></script>
+```
+
 ## Task-Specific Metrics and Uncertainty
 
 Each level records the same output categories, with metric-specific units and
@@ -125,3 +158,10 @@ tests rather than empirical validation.
 The executable contract lives in
 `src/affine_control/model_ladder_protocol.py`; exact fixtures live in
 `src/affine_control/model_ladder_fixtures.py`.
+
+## Related Articles
+
+- [Modeling Suite](models.html)
+- [Hybrid Impact-Contact and Event-Time Uncertainty](hybrid-impact-contact.html)
+- [Research Protocol and Data-Readiness Library](research-protocol-readiness.html)
+- [Theory Series, Part 1](../articles/theory-part1.html)

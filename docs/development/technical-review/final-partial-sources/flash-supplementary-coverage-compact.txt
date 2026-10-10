@@ -1,0 +1,102 @@
+Based on the provided dataset and verified supporting facts, here is the classification and audit of the 27 paths outside the historical article index.
+
+---
+
+### 1. Records Without a Reviewer (6 Paths)
+
+The following **6 records** have `reviewer: null`, `reviewed_on: null`, and `review_commit: null`:
+
+1. `articles/The_Geometry_of_Motion/quarto/_includes/ch06_lqr_example.qmd`
+   - *Supporting status*: Generated LQR mirror sharing checked `#4950` generator.
+2. `articles/_generated/trust/critique-annotations/proximal-distal-energy-transfer.qmd`
+   - *Supporting status*: Shares checked critique ledger.
+3. `articles/_generated/trust/critique-annotations/theory-part2.qmd`
+   - *Supporting status*: Shares checked critique ledger.
+4. `articles/_generated/trust/critique-annotations/zero-torque-counterfactual.qmd`
+   - *Supporting status*: Shares checked critique ledger.
+5. `articles/_includes/impact-acoustics.qmd`
+   - *Supporting status*: Full-source and scoped-render receipts preserved in `heavy-hit-source-review.json` and `heavy-hit-render-verification.json`.
+6. `articles/_includes/impact-research-program.qmd`
+   - *Supporting status*: Full-source and scoped-render receipts preserved in `heavy-hit-source-review.json` and `heavy-hit-render-verification.json`.
+
+---
+
+### 2. Classification of the Remaining 21 Reviewed Records
+
+Per the directive, route-level checks and reconciliation audits are not treated as full article readings. The 21 records with reviewers divide into distinct verification categories:
+
+#### A. Dedicated Full/Technical Reviews & Preserved Passes (3 Paths)
+*Paths evaluated under full technical reading, comprehensive entry audits, or preserved corpus status:*
+
+- **`articles/null-space-constraint-jacobian-bibliography.qmd`**
+  - *Reviewer*: `codex-technical-review-20260912-nullspace`
+  - *Status*: Bibliography source pass preserved by `corpus-status-reconciliation.json` from `#4371/4373`.
+  - *Findings*: `ad-finding-nullspace-bibliography-provenance`
+- **`pages/drifter-manifesto.qmd`**
+  - *Reviewer*: `codex-technical-review-20260922-manifesto`
+  - *Scope*: Complete index reread and browser review (`source/render2250d07f`).
+  - *Findings*: 5 findings (`ad-finding-manifesto-intervention-overreach`, etc.).
+- **`pages/glossary.qmd`**
+  - *Reviewer*: `codex-technical-review-20261003-glossary`
+  - *Scope*: `#4839` full 72-entry review.
+  - *Findings*: 8 findings (`ad-finding-site-glossary-plant-input-and-time`, etc.).
+
+---
+
+#### B. Route / Surface Reviews & Scoped Link Verifications (6 Paths)
+*Pages validated via targeted route audits, link existence resolution, and automated/policy checks (not full article readings):*
+
+- **`pages/accessibility.qmd`**
+  - *Reviewer*: `claude-opus-5-5 route review 20260930`
+  - *Scope*: Checked against `#4139` scan figures and report-only axe policy.
+  - *Findings*: `ad-finding-accessibility-closed-tracker`
+- **`pages/content-inventory.qmd`**
+  - *Reviewer*: `claude-opus-5-5 route review 20260930`
+  - *Scope*: `#4602` generated site-information page checked against generator and committed data.
+  - *Findings*: `ad-finding-content-inventory-coverage`
+- **`pages/contributor-guide.qmd`**
+  - *Reviewer*: `claude-sonnet-5 route review 20260930`
+  - *Scope*: `#4607` link resolution check for 4 issue templates, docs, and cross-links.
+  - *Findings*: `null`
+- **`pages/notation-quick-reference.qmd`**
+  - *Reviewer*: `claude-sonnet-5 route review 20260930`
+  - *Scope*: `#4551` acronym expansions, physical units, coordinate frame checks vs `NOTATION.md`, link checks.
+  - *Findings*: `null`
+- **`pages/parameters.qmd`**
+  - *Reviewer*: `claude-sonnet-5 route review 20260930`
+  - *Scope*: `#4551` Authority and Limit callout hedging, `PARAMETERS.md` include, Related Articles links.
+  - *Findings*: `null`
+- **`pages/privacy-policy.qmd`**
+  - *Reviewer*: `claude-opus-5-5 route review 20260930`
+  - *Scope*: Checked against `js/metrics.js`, `service-worker.js`, CSP, and embeds.
+  - *Findings*: `ad-finding-privacy-csp-image-scope`
+
+---
+
+#### C. Site-Surface Provenance Reconciliation & Content Scope (12 Paths)
+*Pages audited under `#4429` site-surface provenance reconciliation (intervening diffs audited as non-scientific navigation/categories; prior scope preserved in `site-surface-provenance-reconciliation.json`) or dedicated single-page content reviews:*
+
+- **`pages/how-to-read.qmd`**
+  - *Reviewer*: `codex-technical-review-20260930` (`#4491` how-to-read content review)
+  - *Findings*: `null`
+- **`pages/about.qmd`** (`#4429` reconciliation) — *Finding*: `ad-finding-about-authority-boundary`
+- **`pages/book-reviews.qmd`** (`#4429` reconciliation) — *Finding*: `ad-finding-book-reviews-active-state`
+- **`pages/collaborate.qmd`** (`#4429` reconciliation) — *Finding*: `ad-finding-collaboration-promises`
+- **`pages/contact.qmd`** (`#4429` reconciliation) — *Finding*: `ad-finding-contact-channel-contract`
+- **`pages/daydreams-doodles.qmd`** (`#4429` reconciliation) — *Finding*: `ad-finding-daydreams-analogy-authority`
+- **`pages/development-roadmap.qmd`** (`#4429` reconciliation) — *Finding*: `ad-finding-roadmap-stale-readiness`
+- **`pages/notation.qmd`** (`#4429` reconciliation) — *Findings*: `ad-finding-notation-authority-limit`, `ad-finding-notation-render-integrity`
+- **`pages/overview.qmd`** (`#4429` reconciliation) — *Findings*: `ad-finding-overview-upstream-contract`, `ad-finding-overview-python-support-boundary`
+- **`pages/tangent-hyperplanes.qmd`** (`#4429` reconciliation) — *Findings*: `ad-finding-tangent-locality-readiness`, `ad-finding-tangent-reference-completeness-amplification`
+- **`pages/technology.qmd`** (`#4429` reconciliation) — *Finding*: `ad-finding-technology-summary-amplification`
+- **`pages/tools.qmd`** (`#4429` reconciliation) — *Finding*: `ad-finding-tools-capability-overreach`
+
+---
+
+### Summary Breakdown
+- **Total paths evaluated**: 27
+- **Unreviewed / Reviewer Null**: 6 (1 LQR mirror, 3 critique annotations, 2 impact includes)
+- **Reviewed / Reconciled**: 21
+  - *Full / Technical / Preserved Bibliographic*: 3
+  - *Route / Surface / Structural Verification*: 6
+  - *Site-Surface Provenance Reconciliation / Navigation Scope*: 12

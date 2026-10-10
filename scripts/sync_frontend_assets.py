@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Synchronize canonical frontend assets to mirrored locations.
 
-This repository has historical duplication across root/src/docs trees.
+This repository has historical duplication across root/src/_site trees.
 To control drift safely, we synchronize only explicitly-mapped files that are
 expected to remain byte-identical.
 
@@ -36,6 +36,8 @@ CANONICAL_JS_NAMES = (
     "dataset-explorer-ui.js",
     "dcr-visualizer.js",
     "dcr-visualizer-ui.js",
+    "drift-control-sandbox.js",
+    "drift-control-sandbox-ui.js",
     "equation-runtime-gate.js",
     "forms.js",
     "history.js",
@@ -49,39 +51,49 @@ CANONICAL_JS_NAMES = (
     "rotation-converter-ui.js",
     "rotation-converter-viz.js",
     "search-maturity-badge.js",
+    "swing-viewer.js",
+    "swing-viewer-data.js",
     "service-worker-updates.js",
     "service-worker-utils.js",
+    "symbol-hover.js",
     "ui-components.js",
     "utils.js",
+    "ztcf-explorer.js",
+    "ztcf-explorer-ui.js",
 )
 
 
 SYNC_MAPS: tuple[SyncMap, ...] = (
-    SyncMap(source="css/rotation-converter.css", mirrors=("docs/css/rotation-converter.css",)),
-    # css/ is the canonical source; docs/css/ is the Quarto-served mirror.
+    SyncMap(source="css/rotation-converter.css", mirrors=("_site/css/rotation-converter.css",)),
+    # css/ is the canonical source; _site/css/ is the Quarto-served mirror.
     # src/css/ has been removed (issue #1382); deploy_assets.py now reads from css/ directly.
-    SyncMap(source="css/dcr-visualizer.css", mirrors=("docs/css/dcr-visualizer.css",)),
+    SyncMap(source="css/dcr-visualizer.css", mirrors=("_site/css/dcr-visualizer.css",)),
+    SyncMap(
+        source="css/drift-control-sandbox.css",
+        mirrors=("_site/css/drift-control-sandbox.css",),
+    ),
+    SyncMap(source="css/ztcf-explorer.css", mirrors=("_site/css/ztcf-explorer.css",)),
     SyncMap(
         source="css/search-metrics.css",
-        mirrors=("docs/css/search-metrics.css",),
+        mirrors=("_site/css/search-metrics.css",),
     ),
     SyncMap(
         source="css/print.css",
-        mirrors=("docs/css/print.css",),
+        mirrors=("_site/css/print.css",),
     ),
     SyncMap(
         source="css/bibliography.css",
-        mirrors=("docs/css/bibliography.css",),
+        mirrors=("_site/css/bibliography.css",),
     ),
     SyncMap(
         source="css/critics-corner.css",
-        mirrors=("docs/css/critics-corner.css",),
+        mirrors=("_site/css/critics-corner.css",),
     ),
     SyncMap(
         source="css/resources.css",
-        mirrors=("docs/css/resources.css",),
+        mirrors=("_site/css/resources.css",),
     ),
-    # NOTE: styles.css is NOT a byte-identical mirror. docs/styles.css is the
+    # NOTE: styles.css is NOT a byte-identical mirror. _site/styles.css is the
     # flattened CSS bundle produced by scripts/bundle_css.py (issue #3219): the
     # canonical styles.css keeps its modular @import graph, while the bundle
     # inlines that graph into a single render-blocking stylesheet. Bundle
@@ -89,7 +101,7 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
     # byte-equality here.
 ) + tuple(
     # js/ is canonical; every runtime module must reach the deploy mirror.
-    SyncMap(source=f"js/{name}", mirrors=(f"docs/js/{name}",))
+    SyncMap(source=f"js/{name}", mirrors=(f"_site/js/{name}",))
     for name in CANONICAL_JS_NAMES
 )
 

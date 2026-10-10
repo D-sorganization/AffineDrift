@@ -1,0 +1,134 @@
+### Mathematical & Implementation Review
+
+#### 1. Code Implementation Bug: Array Whitening Dimension Mismatch
+In `gaussian_objective(problem)`:
+```python
+noise = covariance_factor(problem.noise_cov, data.shape[1])
+...
+residual = solve_triangular(noise, (data - predicted).T, lower=True)
+```
+- **Issue:** Let $N$ be the number of samples (`data.shape[0]`) and $d$ be the channel dimension (`data.shape[1]`). 
+  - `noise` is the lower-triangular Cholesky factor $L$ of $R \in \mathbb{R}^{d \times d}$ such that $L L^T = R$.
+  - `(data - predicted).T` has shape $(d, N)$, which correctly matches $L \in \mathbb{R}^{d \times d}$ on the left when solving $L Z = (Y - \hat{Y})^T$.
+  - However, for `deviation`:
+    ```python
+    prior = covariance_factor(problem.prior_cov, mean.size)
+    ...
+    deviation = solve_triangular(prior, theta - mean, lower=True)
+    ```
+    `prior` is $L_P$ where $L_P L_P^T = P$. `theta - mean` is a 1D array of shape $(p,)$. `solve_triangular(L_P, theta - mean, lower=True)` solves $L_P z = \theta - \mu$.
+    Then `deviation @ deviation` gives $z^T z = (\theta - \mu)^T P^{-1} (\theta - \mu)$.
+  - **Critique on `residual`:** `residual` has shape $(d, N)$ where column $k$ is $z_k = L^{-1} r_k$. Then $\sum_{k=1}^N r_k^T R^{-1} r_k = \sum_{k=1}^N z_k^T z_k = \operatorname{tr}(Z^T Z) = \sum_{i,j} Z_{ij}^2$. In NumPy, `np.sum(residual**2)` computes the Frobenius norm squared $\sum_{i,k} Z_{ik}^2$, which mathematically equals $\sum_{k=1}^N r_k^T R^{-1} r_k$. This part is correct.
+- **Robustness/Type Mismatch:** In `map_estimate`:
+  ```python
+  if start.shape != np.shape(problem.prior_mean) or not np.all(np.isfinite(start)):
+  ```
+  `problem.prior_mean` is not validated until `gaussian_objective(problem)` is called. If `problem.prior_mean` was passed as a list or nested sequence, `start.shape != np.shape(...)` might behave inconsistently with `mean.ndim != 1` checks in `gaussian_objective`.
+
+---
+
+#### 2. Verification of Worked Example (Section: "A Mode Is Not a Posterior Distribution")
+The chapter states:
+> For manufactured scalar observations $y_k=\theta+\epsilon_k$, take $y=(1,3)$, $R=1$, $\mu=0$, $P=1$. Completing the square yields
+> \begin{equation}
+>  \Phi(\theta)=\tfrac12[(1-\theta)^2+(3-\theta)^2+\theta^2]
+>  =\tfrac32(\theta-4/3)^2+\text{constant}.
+> \end{equation}
+
+**Independent Verification:**
+\begin{align}
+\Phi(\theta) &= \tfrac{1}{2} \left[ (1 - \theta)^2 + (3 - \theta)^2 + \theta^2 \right] \\
+&= \tfrac{1}{2} \left[ 1 - 2\theta + \theta^2 + 9 - 6\theta + \theta^2 + \theta^2 \right] \\
+&= \tfrac{1}{2} \left[ 3\theta^2 - 8\theta + 10 \right] \\
+&= \tfrac{3}{2} \left( \theta^2 - \tfrac{8}{3}\theta \right) + 5 \\
+&= \tfrac{3}{2} \left( \theta - \tfrac{4}{3} \right)^2 - \tfrac{3}{2} \left( \tfrac{16}{9} \right) + 5 \\
+&= \tfrac{3}{2} \left( \theta - \tfrac{4}{3} \right)^2 + \tfrac{7}{3}.
+\end{align}
+- Precision check: $\frac{3}{2} \cdot 2 (\theta - \frac{4}{3}) = 3\theta - 4$. Setting $3\theta - 4 = 0 \implies \theta = 4/3$.
+- Posterior variance: The coefficient of $\frac{1}{2}\theta^2$ in the exponent is $3$, so the precision is $3$, and posterior variance is $\sigma_{\text{post}}^2 = 1/3$.
+- Under box $[0, 1]$: $\Phi'(\theta) = 3\theta - 4$. For $\theta \in [0, 1]$, $\Phi'(\theta) \le -1 < 0$. The objective is strictly decreasing on $[0, 1]$, hence the minimum is attained at the upper boundary $\theta^* = 1$, where $\Phi'(1) = -1 \neq 0$.
+**Result:** The analytical equations and claims in this section are **correct**.
+
+---
+
+#### 3. Verification of Exercise 1
+> "Change prior variance from $1$ to $4$ and derive the new mean and variance."
+
+**Derivation:**
+With $N=2$, $y_1=1, y_2=3$, $R=1$, $\mu=0$, $P = \sigma_0^2 = 4$:
+\begin{align}
+\Phi(\theta) &= \tfrac{1}{2} \left[ (1-\theta)^2 + (3-\theta)^2 + \frac{\theta^2}{4} \right] \\
+&= \tfrac{1}{2} \left[ 2\theta^2 - 8\theta + 10 + \tfrac{1}{4}\theta^2 \right] \\
+&= \tfrac{1}{2} \left[ \tfrac{9}{4}\theta^2 - 8\theta + 10 \right] \\
+&= \tfrac{9}{8} \left( \theta - \tfrac{16}{9} \right)^2 + \text{const}.
+\end{align}
+- Precision $\tau_{\text{post}} = N \cdot R^{-1} + P^{-1} = 2(1) + \frac{1}{4} = \frac{9}{4}$.
+- Posterior variance $\sigma_{\text{post}}^2 = \frac{4}{9}$.
+- Posterior mean $\mu_{\text{post}} = \sigma_{\text{post}}^2 \left( R^{-1} \sum y_k + P^{-1}\mu \right) = \frac{4}{9} (4 + 0) = \frac{16}{9} \approx 1.778$.
+**Result:** Well-posed exercise.
+
+---
+
+#### 4. Verification of Exercise 4 & Sensitivity / Hessian Approximation
+> "For $\hat y=\theta^2$, derive the exact data Hessian and its Gauss--Newton approximation. State when they agree."
+
+Let scalar observation be $y$, prediction $\hat{y}(\theta) = \theta^2$, residual $r(\theta) = y - \theta^2$, with variance $R = 1$.
+Data objective:
+\begin{equation}
+f(\theta) = \tfrac{1}{2}(y - \theta^2)^2.
+\end{equation}
+First derivative:
+\begin{equation}
+f'(\theta) = -(y - \theta^2) \cdot 2\theta = -2\theta(y - \theta^2) = 2\theta^3 - 2y\theta.
+\end{equation}
+Exact Hessian:
+\begin{equation}
+H(\theta) = f''(\theta) = 6\theta^2 - 2y.
+\end{equation}
+Gauss--Newton approximation:
+\begin{equation}
+H_{\text{GN}}(\theta) = S(\theta)^T S(\theta) = \left( \frac{\partial \hat{y}}{\partial \theta} \right)^2 = (2\theta)^2 = 4\theta^2.
+\end{equation}
+Comparison:
+\begin{equation}
+H(\theta) - H_{\text{GN}}(\theta) = (6\theta^2 - 2y) - 4\theta^2 = 2(\theta^2 - y) = -2 r(\theta).
+\end{equation}
+They agree if and only if $r(\theta) = y - \theta^2 = 0$ (zero residual), or in expectation under zero-mean noise when evaluated at the true parameter $\mathbb{E}[y - \theta^2] = 0$.
+**Result:** Well-posed and mathematically consistent with the text in Section 3 ("The data Hessian contains both sensitivity products and residual-weighted second derivatives of predictions").
+
+---
+
+#### 5. Mathematical & Notation Ambiguities / Unsupported Claims
+
+1. **Equation (1) Stacking vs. Sensor Notation:**
+   \begin{equation}
+    \dot x=f(x,u,\theta),\qquad
+    \hat y_k=H_k(x(t_k),\theta),\qquad y_k=\hat y_k+\epsilon_k.
+   \end{equation}
+   Later in Section 1.1:
+   > "Stack predictions into $\hat y(\theta)$ and examine sensitivity $S=\partial\hat y/\partial\theta$. Under fixed Gaussian noise with stacked covariance $\Sigma$, $S^T\Sigma^{-1}S$ describes local data information."
+   - If $y_k \in \mathbb{R}^d$ for $k=1,\dots,N$, the stacked vector $\hat{y} \in \mathbb{R}^{Nd}$, and stacked noise covariance $\Sigma \in \mathbb{R}^{Nd \times Nd}$. With independent noise $\epsilon_k \sim \mathcal{N}(0, R)$, $\Sigma = I_N \otimes R$. This is mathematically standard and consistent, but explicit mention that $\Sigma$ is block-diagonal with blocks $R$ clarifies the connection to Eq. (3).
+
+2. **Equation (3) Matrix Determinant / Normalization:**
+   \begin{equation}
+    -\log p(y\mid\theta)=\tfrac12\sum_{k=1}^N r_k^TR^{-1}r_k+
+    \tfrac N2\log\det R+\tfrac{Nd}{2}\log(2\pi).
+   \end{equation}
+   - Check: $\det(I_N \otimes R) = (\det R)^N$, so $\log\det(I_N \otimes R) = N \log\det R$.
+   - Dimension: $Nd$ total observations.
+   - Result: Exactly matches $-\log \left[ (2\pi)^{-Nd/2} (\det \Sigma)^{-1/2} \exp(-\frac{1}{2} r^T \Sigma^{-1} r) \right]$. Correct.
+
+3. **Scale Ambiguity Example:**
+   \begin{equation}
+    m\ddot q+c\dot q+kq=0,\qquad m>0.
+   \end{equation}
+   The text states:
+   > "Replacing $(m,c,k)$ by $(sm,sc,sk)$, $s>0$, leaves the equation unchanged after division by $m$. Thus the experiment cannot identify their absolute scale. It can constrain $c/m$ and $k/m$ only if the trajectory is informative; a stationary zero trajectory does not even determine those ratios."
+   - Note on declared modeling limit: Free decay requires nonzero initial conditions $q(0) \neq 0$ or $\dot{q}(0) \neq 0$. If $q(0) = \dot{q}(0) = 0$, $q(t) \equiv 0$ for all $t$. The sentence correctly acknowledges this limiting case.
+
+4. **L-BFGS-B Derivative Requirement in Listing:**
+   - In `map_estimate(problem, initial)`:
+     ```python
+     result = minimize(objective, start, method="L-BFGS-B", bounds=problem.bounds)
+     ```
+     `scipy.optimize.minimize` with `method="L-BFGS-B"` approximates gradients via 2-point finite differences if `jac` is not provided. While functional, numerical finite-differencing on expensive ODE forward solvers can be ill-conditioned or sensitive to step size. Stating in the text or docstring that `scipy.optimize.minimize` relies on finite-difference gradient approximations when an analytic Jacobian is omitted would prevent user confusion.

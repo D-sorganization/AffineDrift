@@ -1,0 +1,55 @@
+from pathlib import Path
+import json
+import numpy as np
+from scipy.optimize import minimize
+rng=np.random.default_rng(4900)
+errors={k:0.0 for k in ['path_power','stiffness_derivative','segment_kinetic_energy','inverse_dynamics_power','allocation']}
+min_eigen=1.
+
+def mass(q):
+    c=np.cos(q[1]); return np.array([[.15+.09*c,.03+.045*c],[.03+.045*c,.03]])
+
+def trajectory(t):
+    return np.array([np.sin(np.pi*t),np.pi*t/2]),np.array([np.pi*np.cos(np.pi*t),np.pi/2]),np.array([-np.pi**2*np.sin(np.pi*t),0.])
+
+def energy(t):
+    q,v,_=trajectory(t)
+    return .5*v@mass(q)@v+9.81*(.45*np.sin(q[0])+.15*np.sin(q.sum()))
+
+for i in range(100):
+    q=rng.uniform(-1,1,2); v=rng.normal(size=2); base=rng.normal(size=(3,2))*.02
+    raw=rng.normal(size=(3,2,2))*.003; hess=(raw+raw.transpose(0,2,1))/2
+    k=rng.uniform(500,2000,3); f0=rng.uniform(100,300,3)
+    def loads(z):
+        length_delta=base@z+.5*np.einsum('i,aij,j->a',z,hess,z)
+        r=-(base+np.einsum('aij,j->ai',hess,z)).T
+        force=f0+k*length_delta
+        return r,force,r@force
+    r,force,torque=loads(q)
+    length_rate=(base+np.einsum('aij,j->ai',hess,q))@v
+    errors['path_power']=max(errors['path_power'],abs(torque@v+force@length_rate))
+    analytic=r@np.diag(k)@r.T+np.einsum('a,aij->ij',force,hess)
+    eps=1e-6; numeric=np.column_stack([-(loads(q+eps*np.eye(2)[j])[2]-loads(q-eps*np.eye(2)[j])[2])/(2*eps) for j in range(2)])
+    errors['stiffness_derivative']=max(errors['stiffness_derivative'],float(np.max(abs(analytic-numeric))))
+    q=rng.uniform(-np.pi,np.pi,2); v=rng.normal(size=2)
+    e1=np.array([-np.sin(q[0]),np.cos(q[0])]);e2=np.array([-np.sin(q.sum()),np.cos(q.sum())])
+    vc1=.15*v[0]*e1;vc2=.3*v[0]*e1+.15*v.sum()*e2
+    kinetic=.5*(vc1@vc1+vc2@vc2)+.5*.0075*(v[0]**2+v.sum()**2)
+    errors['segment_kinetic_energy']=max(errors['segment_kinetic_energy'],abs(.5*v@mass(q)@v-kinetic))
+    min_eigen=min(min_eigen,float(np.linalg.eigvalsh(mass(q))[0]))
+    t=rng.uniform(.05,.95);q,v,a=trajectory(t);b=.045*np.sin(q[1])
+    coriolis=np.array([-b*(2*v[0]*v[1]+v[1]**2),b*v[0]**2])
+    gravity=9.81*np.array([.45*np.cos(q[0])+.15*np.cos(q.sum()),.15*np.cos(q.sum())])
+    tau=mass(q)@a+coriolis+gravity
+    errors['inverse_dynamics_power']=max(errors['inverse_dynamics_power'],abs(tau@v-(energy(t+eps)-energy(t-eps))/(2*eps)))
+    target=rng.uniform(.2,1.)
+    for p in [2,3]:
+        ratio=2**(1/(p-1));exact=target*np.array([1,ratio])/(1+2*ratio)
+        opt=minimize(lambda x:sum(x**p),np.array([target/3,target/3]),jac=lambda x:p*x**(p-1),bounds=[(0,1)]*2,constraints={'type':'eq','fun':lambda x:x[0]+2*x[1]-target,'jac':lambda x:np.array([1.,2.])},method='SLSQP',options={'ftol':1e-14,'maxiter':200})
+        assert opt.success,opt.message
+        errors['allocation']=max(errors['allocation'],float(np.max(abs(opt.x-exact))))
+assert max(errors.values())<1e-6,errors
+assert min_eigen>0
+record={'seed':4900,'cases_each':100,'maximum_absolute_error':errors,'threshold':1e-6,'minimum_mass_eigenvalue':min_eigen,'scope':'Manufactured path, stiffness, planar rigid-body and optimization identities; not anatomical or experimental validation'}
+Path('reports/technical-review/biological-inverse-independent-checks.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+print(json.dumps(record,indent=2))

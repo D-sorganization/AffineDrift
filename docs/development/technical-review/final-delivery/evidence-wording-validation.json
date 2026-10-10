@@ -1,0 +1,94 @@
+{
+  "issue": 4976,
+  "scope": "Local source and scoped render acceptance; protected/public delivery pending",
+  "base_revision": "7bd543d00123bb2415b90eb8aaf012ffa863b67c",
+  "primary_source": "https://www.nationalacademies.org/read/25303/chapter/3",
+  "paths": {
+    "pages/how-to-read.qmd": {
+      "before_sha256": "64418a756daf67928fd29efd7c2097f33ddbfb7a1e2af844bfcd483f4b2ac494",
+      "after_sha256": "59d366beb644ca307ff22e70a7b0768dd558feb974bc4805d7d3828e92957196"
+    },
+    "config/maturity.yml": {
+      "before_sha256": "c394de65d06a30d9ba4d2923cce6f156b5195df2c57a77bd6b7a163c238bc342",
+      "after_sha256": "a83c574a558aac655371bfc36b054670b850a0e703cc33a0694aef30afff35fe"
+    },
+    "data/trust/claim_audit_inventory.json": {
+      "before_sha256": "de73b70beabd63f14729e7f360fe00b299f89cf9a6b17ab1567ff34a46097b87",
+      "after_sha256": "14b49d3d01d1c191a78595b715505c59793f6fafdd096058d534f7d9050740a7"
+    },
+    "data/trust/generated/claim_audit_report.json": {
+      "before_sha256": "b2fed507d976be135cf1f7ed2cb3cf4003d08ca9c637f492d6d086ab90260fe5",
+      "after_sha256": "f554abd1aa9bb4166975f6ed56f75154d36d45fb56f479cec8a83e2fdc671707"
+    }
+  },
+  "config_behavior_unchanged": true,
+  "metadata_comparison": [
+    {
+      "path": "data/trust/claim_audit_inventory.json",
+      "differences": [
+        {
+          "field": "/routes/213/review/evidence_sha256/pages/how-to-read.qmd",
+          "before": "64418a756daf67928fd29efd7c2097f33ddbfb7a1e2af844bfcd483f4b2ac494",
+          "after": "59d366beb644ca307ff22e70a7b0768dd558feb974bc4805d7d3828e92957196"
+        }
+      ],
+      "other_metadata_unchanged": true
+    },
+    {
+      "path": "data/trust/generated/claim_audit_report.json",
+      "differences": [
+        {
+          "field": "/routes/213/review_evidence/evidence_sha256/pages/how-to-read.qmd",
+          "before": "64418a756daf67928fd29efd7c2097f33ddbfb7a1e2af844bfcd483f4b2ac494",
+          "after": "59d366beb644ca307ff22e70a7b0768dd558feb974bc4805d7d3828e92957196"
+        }
+      ],
+      "other_metadata_unchanged": true
+    }
+  ],
+  "focused_tests": {
+    "passed": 54,
+    "suites": [
+      "tests/test_evidence_ladder.py",
+      "tests/test_validate_frontmatter.py",
+      "tests/test_maturity_vocabulary.py",
+      "tests/test_caveats_block.py"
+    ],
+    "coverage_claim": null
+  },
+  "frontmatter": {
+    "checked_files": 245,
+    "passed": true
+  },
+  "canonical_evidence_regeneration_check": "passed",
+  "quarto_render": {
+    "source": "pages/how-to-read.qmd",
+    "format": "html",
+    "passed": true
+  },
+  "browser": {
+    "viewports": [
+      390,
+      1440
+    ],
+    "document_widths": [
+      390,
+      1440
+    ],
+    "desktop_mathjax_error_count": 0,
+    "primary_source_href": "https://www.nationalacademies.org/read/25303/chapter/3",
+    "edited_prose_visually_inspected": true,
+    "limitations": [
+      "Single-page local preview, not all-route production verification.",
+      "Local preview lacks public-site-manifest.json; blocked legacy polyfill and font path 404 were observed.",
+      "Sticky navigation, update notice and floating controls affect long element captures; viewport captures inspect the revised replication and terminology paragraphs. No global layout or accessibility clearance is asserted."
+    ]
+  },
+  "screenshots": {
+    "output\\playwright\\evidence-wording-desktop-section.png": "94709a0f92e777da4a8b98bbb9dff16fcd9e105fdda3ceea83bf265e4109e6c8",
+    "output\\playwright\\evidence-wording-desktop.png": "e32f23db3855a94b7455b5a42c7f71418c820d49a61e6b3863efed47b75fe858",
+    "output\\playwright\\evidence-wording-mobile-replication.png": "8e4f3b15ee10e98530cdb5d64dc66bd9b989936f23f58c029841057a733d1fcd",
+    "output\\playwright\\evidence-wording-mobile-terminology.png": "21a07b3fca0e46da130fd1365de14223655cdc753b2b37ebaf8b10c709a227df",
+    "output\\playwright\\evidence-wording-mobile.png": "0945d16112907d4f684d4756027ad2194b26ef1d16cf016ce06cb581c8a5d9da"
+  }
+}

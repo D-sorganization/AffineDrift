@@ -4,7 +4,7 @@
 ``styles.css`` is authored as a modular, 3-level-deep ``@import`` waterfall (26
 small render-blocking requests). The canonical sources under ``css/`` stay
 modular for authoring and for ``check_css_architecture.py``; this build step
-recursively inlines every ``@import`` into one flattened ``docs/styles.css`` so
+recursively inlines every ``@import`` into one flattened ``_site/styles.css`` so
 production browsers fetch a single stylesheet on the critical rendering path.
 
 Resolution rules
@@ -17,8 +17,8 @@ Resolution rules
 
 Usage::
 
-    python3 scripts/bundle_css.py                      # writes docs/styles.css
-    python3 scripts/bundle_css.py --check              # fail if docs/ is stale
+    python3 scripts/bundle_css.py                      # writes _site/styles.css
+    python3 scripts/bundle_css.py --check              # fail if _site/ is stale
 """
 
 from __future__ import annotations
@@ -96,18 +96,18 @@ def bundle(entry: Path, repo_root: Path) -> str:
 
 
 def main() -> int:
-    """Build the bundle and write/verify ``docs/styles.css``."""
+    """Build the bundle and write/verify ``_site/styles.css``."""
     parser = argparse.ArgumentParser(description="Flatten CSS @import graph into a bundle")
     parser.add_argument(
         "--check",
         action="store_true",
-        help="Verify docs/styles.css matches a freshly computed bundle; exit 1 on drift",
+        help="Verify _site/styles.css matches a freshly computed bundle; exit 1 on drift",
     )
     args = parser.parse_args()
 
     repo_root = Path(__file__).resolve().parent.parent
     entry = repo_root / "styles.css"
-    output = repo_root / "docs" / "styles.css"
+    output = repo_root / "_site" / "styles.css"
 
     flattened = bundle(entry, repo_root)
 
@@ -118,11 +118,11 @@ def main() -> int:
         current = output.read_text(encoding="utf-8")
         if current != flattened:
             print(
-                "DRIFT: docs/styles.css is stale; run scripts/bundle_css.py",
+                "DRIFT: _site/styles.css is stale; run scripts/bundle_css.py",
                 file=sys.stderr,
             )
             return 1
-        print("docs/styles.css bundle is up to date.")
+        print("_site/styles.css bundle is up to date.")
         return 0
 
     output.parent.mkdir(parents=True, exist_ok=True)

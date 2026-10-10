@@ -43,6 +43,7 @@ css:
   - ../css/articulated-body.css
   - ../css/force-measurement.css
   - ../css/zero-torque.css
+  - ../css/ztcf-explorer.css
 format:
   html:
     toc: true
@@ -54,58 +55,15 @@ categories:
 
 {{< include _generated/trust/critique-annotations/zero-torque-counterfactual.qmd >}}
 
+::: {.laymans-terms}
 ```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        Not familiar with control theory or differential equations? Here is what the Zero-Torque Counterfactual means in everyday language.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The Model Branch</h3>
-        <p>
-          Imagine freezing the modeled swing at the top of the downswing and asking: "If the model's applied generalized control were set to zero here, where would the club go?"
-        </p>
-        <p>
-          The answer is a <strong>forward Zero-Torque Counterfactual (ZTCF)</strong>: a model-conditioned intervention with declared generalized-control channels set to zero. Only the forces, constraints, contacts, and internal states explicitly retained by the record remain.
-        </p>
-        <div class="analogy">
-          <strong>Software analogy:</strong> Copy one simulator state, change one named input vector to zero, and advance both branches under their declared protocols. This analogy concerns model bookkeeping, not what a golfer's muscles do.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Why Does This Matter?</h3>
-        <p>
-          Comparing two registered model branches yields a simulated trajectory difference. Whether that difference is used as a contribution measure or a causal estimand requires additional assumptions. It does not identify individual muscle forces, co-contraction, metabolic effort, or conscious intent.
-        </p>
-        <div class="key-takeaway">
-          ZTCF evaluates one declared intervention. Interpretation is conditional on the exact model and version, branch state, zeroed inputs, retained inventory, solver, frame, units, horizon, and uncertainty treatment.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>A Thought Experiment, Not a Real Swing</h3>
-        <p>
-          ZTCF is a mathematical intervention, not a measurement of muscle state. A generalized torque can be zero under one coordinate convention even while internal muscle forces, co-contraction, or contact loads are nonzero and unidentified.
-        </p>
-        <p>
-          <strong>Impedance boundary:</strong> Stiffness and damping are retained only when the intervention record declares them as fixed plant parameters or internal states. The intervention does not establish that those quantities were identified from a golfer or can be maintained independently of activation.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
+<p class="laymans-terms-intro">New to control theory? Here is what the Zero-Torque Counterfactual means in everyday language.</p>
+<div class="laymans-item"><h3>The Model Branch</h3><p>Freeze the modeled swing at the top of the downswing. Where would the club go if the model's declared applied control were zero here? This is a forward <a href="../pages/glossary.html#zero-torque-counterfactual">Zero-Torque Counterfactual</a> (ZTCF). Only what the record keeps remains: forces, constraints, contacts and internal states.</p><div class="analogy"><strong>Software analogy:</strong> Copy a simulator state, zero one input, and run both branches. This is model bookkeeping, not what muscles do.</div></div>
+<div class="laymans-item"><h3>Why Does This Matter?</h3><p>Comparing two model branches gives a simulated path difference. Reading it as a contribution or a cause needs extra assumptions. It does not identify muscle forces, co-contraction, effort or intent.</p><div class="analogy">ZTCF tests one declared intervention. Its meaning depends on the exact model, branch state, zeroed inputs, retained inventory, solver, frame, horizon and uncertainty handling.</div></div>
+<div class="laymans-item"><h3>A Thought Experiment, Not a Real Swing</h3><p>Zero here means zero in the declared applied-control channel under the stated model. It is not a measurement of muscle state. A generalized torque can be zero under one coordinate choice while muscle forces, co-contraction or contact loads stay nonzero and unidentified. Stiffness and damping stay only if the record declares them as fixed parameters or internal states. The intervention does not show they were identified from a golfer or can be held apart from activation.</p></div>
+<div class="key-takeaway"><strong>Key Takeaway:</strong> ZTCF is a model intervention. It is not a limp body and it is not no muscle.</div>
 ```
+:::
 
 ::: {.callout-note}
 ## Novelty Status
@@ -409,6 +367,93 @@ State which velocities are reset, including any stored in internal states, and c
 **Measurement processing.** Differentiation amplifies motion-measurement noise. Report reconstruction, filtering, differentiation, synchronization and uncertainty together; smoothing trades noise reduction against bias and bandwidth, and does not guarantee accurate accelerations.
 
 **Event definition.** A fixed-time output differs from an output at each branch's impact event. State event localization and what is reported if the branch never reaches impact. A missing event is not assigned the reference branch's value.
+
+## Interactive Counterfactual Explorer {#sec-ztcf-explorer}
+
+Pick an intervention time. The explorer integrates one declared, constant joint torque from the registered fixture state, then branches a zero-torque counterfactual from the *actual* state at that time and runs both to the same horizon.
+
+```{=html}
+<div id="ztx-app">
+<noscript>
+<p>This explorer needs JavaScript. It integrates the registered three-link
+model under a declared constant torque and branches a zero-torque rollout at a
+chosen time. The numbers are reproducible in Python with
+<code>src/affine_control/ztcf_explorer.py::explore</code>.</p>
+</noscript>
+<p class="ztx-badge">Exploratory model output</p>
+<div id="ztx-controls">
+  <label for="ztx-step">Intervention time <i>t</i><sub>i</sub> (s): <span id="ztx-step-value">0</span></label>
+  <input id="ztx-step" type="range" min="0" max="199" step="1" value="50">
+</div>
+<div id="ztx-status" role="status" aria-live="polite"></div>
+<canvas id="ztx-canvas" width="480" height="480" role="img" aria-label="ZTCF counterfactual explorer"></canvas>
+<p class="ztx-legend">
+  <span class="ztx-legend-actual">— Declared-torque run</span> ·
+  <span class="ztx-legend-branch">- - Zero-torque branch from <i>t</i><sub>i</sub></span> ·
+  grey: the chain at <i>t</i><sub>i</sub>. Thick lines show both chains at the horizon; thin lines trace the club tip.
+</p>
+<p class="ztx-legend">Clubhead speed (m/s) against time, range <span id="ztx-range">—</span></p>
+<svg id="ztx-chart" viewBox="0 0 560 140" class="ztx-chart" role="img" aria-label="Clubhead speed of both branches over time; values in the data table">
+  <polyline class="ztx-line-actual" fill="none" stroke-width="2"></polyline>
+  <polyline class="ztx-line-branch" fill="none" stroke-width="2"></polyline>
+  <polyline class="ztx-cursor" fill="none" stroke-width="1"></polyline>
+</svg>
+<table class="ztx-results">
+  <thead>
+    <tr><th scope="col">At the 0.2 s horizon</th><th scope="col">Value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Clubhead speed, declared-torque run (m/s)</td><td id="ztx-speed-actual" class="ztx-mono">—</td></tr>
+    <tr><td>Clubhead speed, zero-torque branch (m/s)</td><td id="ztx-speed-branch" class="ztx-mono">—</td></tr>
+    <tr><td>Simulated difference, run minus branch (m/s)</td><td id="ztx-speed-difference" class="ztx-mono">—</td></tr>
+    <tr><td>Joint-angle difference Δ<i>q</i><sub>1</sub>, Δ<i>q</i><sub>2</sub>, Δ<i>q</i><sub>3</sub> (rad)</td><td class="ztx-mono"><span id="ztx-dq1">—</span>, <span id="ztx-dq2">—</span>, <span id="ztx-dq3">—</span></td></tr>
+  </tbody>
+</table>
+<details>
+<summary>Sampled clubhead speeds (data table)</summary>
+<table class="ztx-results">
+  <thead>
+    <tr><th scope="col"><i>t</i> (s)</th><th scope="col">Declared-torque run (m/s)</th><th scope="col">Zero-torque branch (m/s)</th></tr>
+  </thead>
+  <tbody id="ztx-data"></tbody>
+</table>
+</details>
+<div class="ztx-provenance">
+<p><strong>Provenance.</strong> Model, parameters and initial state come from
+<code>data/ztcf/planar_golf_forward_fixture_v2.json</code>, SHA-256
+<code id="ztx-fixture-sha256">65c56f993d7e4eb2fb30efca1cd264f6eead8b2727e3fe010d8f1f885cccc021</code>.
+The declared torque is (40, 15, 3) N·m, held constant; it is illustrative and
+not fitted to a golfer. The Python reference writes each branch as a
+<code>ZTCFIntervention</code> record and replays it through
+<code>execute_ztcf_intervention</code>; the browser mirror is checked against it by
+<code>tests/fixtures/widgets/ztcf-explorer.parity.json</code>.</p>
+</div>
+<div class="ztx-caveats">
+<p><strong>What the difference does not identify.</strong> No contribution fraction
+is identified, and generalized-torque removal does not identify muscle
+activation, force, effort, or intent. The fixture names these as not
+identified:</p>
+<ul>
+  <li>individual muscle forces</li>
+  <li>co-contraction and impedance cost</li>
+  <li>unmodeled loads or contact changes</li>
+  <li>human strategy or coaching outcome</li>
+</ul>
+<p>Open critiques of this page:
+<a href="../critiques/ztcf_identifiability.html">Identifiability and "Input" as a Residual</a> (high),
+<a href="../critiques/static_fallacy_zvcf.html">The Static Fallacy (Zero Velocity Counterfactual)</a> (medium) and
+<a href="../critiques/passive_overshoot_artifact.html">Passive Overshoot Artifact</a> (medium).</p>
+</div>
+</div>
+<script src="../js/ztcf-explorer.js"></script>
+<script src="../js/ztcf-explorer-ui.js"></script>
+```
+
+This is an **exploratory model output**. Watch how the difference changes with $t_i$. It need not shrink steadily as the intervention moves later, because each branch starts from a different state that the torque helped reach. The difference is a simulated trajectory difference inside this model; reading it as a share of speed "supplied by the golfer" needs the extra assumptions discussed in the critiques above.
+
+### The Same Branch, Animated {#sec-ztcf-animation}
+
+{{< include ../_includes/generated/explainers/ztcf.qmd >}}
 
 ## Scope and Limitations
 

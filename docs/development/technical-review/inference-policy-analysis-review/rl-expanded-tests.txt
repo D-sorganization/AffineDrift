@@ -1,0 +1,18 @@
+.............F.......                                                    [100%]
+================================== FAILURES ===================================
+________________ test_full_rollout_wrap_and_speed_cap[-2.0-11] ________________
+tests\test_rl_pendulum_listing.py:250: in test_full_rollout_wrap_and_speed_cap
+    assert np.any(np.abs(after[:, 2]) == 8.0)
+E   AssertionError: assert np.False_
+E    +  where np.False_ = <function any at 0x000001B96F0C51B0>(array([0.84353644, 1.6632926 , 2.4363375 , 3.135154  , 3.7299197 ,\n       4.191702  , 4.4975767 , 4.636068  , 4.610621...7242 , 1.3805237 , 1.794799  ,\n       2.2266974 , 2.6722615 , 3.122031  , 3.5597928 , 3.9620085 ],\n      dtype=float32) == 8.0)
+E    +    where <function any at 0x000001B96F0C51B0> = np.any
+E    +    and   array([0.84353644, 1.6632926 , 2.4363375 , 3.135154  , 3.7299197 ,\n       4.191702  , 4.4975767 , 4.636068  , 4.610621...7242 , 1.3805237 , 1.794799  ,\n       2.2266974 , 2.6722615 , 3.122031  , 3.5597928 , 3.9620085 ],\n      dtype=float32) = <ufunc 'absolute'>(array([-0.84353644, -1.6632926 , -2.4363375 , -3.135154  , -3.7299197 ,\n       -4.191702  , -4.4975767 , -4.636068  , ... 1.3805237 ,  1.794799  ,\n        2.2266974 ,  2.6722615 ,  3.122031  ,  3.5597928 ,  3.9620085 ],\n      dtype=float32))
+E    +      where <ufunc 'absolute'> = np.abs
+============================ slowest 20 durations =============================
+0.01s call     tests/test_rl_pendulum_listing.py::test_run_pendulum_physics_and_reward
+0.01s call     tests/test_rl_pendulum_listing.py::test_full_rollout_wrap_and_speed_cap[-2.0-11]
+
+(18 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ===========================
+FAILED tests/test_rl_pendulum_listing.py::test_full_rollout_wrap_and_speed_cap[-2.0-11]
+1 failed, 20 passed in 1.08s

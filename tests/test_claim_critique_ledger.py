@@ -21,7 +21,7 @@ LEDGER = ROOT / "data/trust/claim_critique_ledger.json"
 SCHEMA = ROOT / "schemas/claim-critique-ledger-v1.schema.json"
 CLAIMS = ROOT / "data/trust/claim_registry.json"
 CRITIQUE_STATUS = ROOT / "critiques/_generated/critique-status.qmd"
-DEFENSE = ROOT / "critiques/DEFENSE_STRATEGY.md"
+DEFENSE = ROOT / "critiques/adjudication-summary.md"
 SEARCH = ROOT / "data/trust/generated/claim_critique_search.json"
 ANNOTATIONS = ROOT / "articles/_generated/trust/critique-annotations"
 
@@ -52,7 +52,7 @@ def test_every_public_critique_has_exactly_one_ledger_record() -> None:
         path.relative_to(ROOT).as_posix()
         for path in (ROOT / "critiques").glob("*.md")
         if "-bibliography" not in path.name
-        and path.name not in {"DEFENSE_STRATEGY.md", "INLINE_SUGGESTIONS.md"}
+        and path.name not in {"adjudication-summary.md", "INLINE_SUGGESTIONS.md"}
     }
     registered = {str(item["source_path"]) for item in _critiques(_canonical())}
 
@@ -369,3 +369,24 @@ def test_ztcf_and_proximal_distal_pages_carry_critique_annotations() -> None:
             f"{{{{< include _generated/trust/critique-annotations/{slug}.qmd >}}}}" in page_source
         )
         assert (ANNOTATIONS / f"{slug}.qmd").is_file()
+
+
+def test_adjudication_summary_has_a_neutral_name_and_redirects_the_old_url() -> None:
+    """WEB-05.4 (#4525): the old DEFENSE_STRATEGY URL keeps working."""
+    import yaml
+
+    assert not (ROOT / "critiques/DEFENSE_STRATEGY.md").exists()
+    front = yaml.safe_load(DEFENSE.read_text(encoding="utf-8").split("---")[1])
+    assert front["aliases"] == ["DEFENSE_STRATEGY.html"]
+    ledger = yaml.safe_load((ROOT / "config/redirects.yml").read_text(encoding="utf-8"))
+    assert {
+        "from": "/critiques/DEFENSE_STRATEGY.html",
+        "to": "/critiques/adjudication-summary.html",
+    }.items() <= next(
+        entry
+        for entry in ledger["redirects"]
+        if entry["from"] == "/critiques/DEFENSE_STRATEGY.html"
+    ).items()
+    assert "(adjudication-summary.html)" in (ROOT / "critiques/index.qmd").read_text(
+        encoding="utf-8"
+    )

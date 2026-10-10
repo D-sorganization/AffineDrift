@@ -21,11 +21,12 @@ from pathlib import Path
 
 import pytest
 
+from scripts.bundle_css import bundle
+
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_LUA = ROOT / "_extensions/status/status.lua"
 STATUS_CSS = ROOT / "css/components/status-badge.css"
 STYLES_CSS = ROOT / "styles.css"
-DOCS_STYLES_CSS = ROOT / "docs/styles.css"
 TOOLS_QMD = ROOT / "pages/tools.qmd"
 
 CANONICAL_STATES = [
@@ -97,8 +98,7 @@ def test_status_badge_css_exists_and_imported_in_styles() -> None:
 
 
 def test_docs_styles_bundle_contains_status_badge_rules() -> None:
-    assert DOCS_STYLES_CSS.exists()
-    content = DOCS_STYLES_CSS.read_text(encoding="utf-8")
+    content = bundle(STYLES_CSS, ROOT)
     assert ".status-badge" in content
     for state in CANONICAL_STATES:
         assert f".status-badge--{state}" in content

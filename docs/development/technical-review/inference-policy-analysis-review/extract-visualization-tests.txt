@@ -1,0 +1,24 @@
+from pathlib import Path
+p=Path('docs/development/technical-review/inference-policy-analysis-review/flash-visualization-tests.txt')
+s=p.read_text(encoding='utf-8').split('```python',1)[1].split('```',1)[0].strip()+'\n'
+s=s.replace(r'\[language=Python\]',r'\[language=Python[^\]]*\]')
+s=s.replace('    # nosemgrep:', '    # Repository-owned listing at a fixed path, with no external input.\n    # nosemgrep:')
+start=s.index('    p0 = compute_joint_positions_2d(q, lens)[-1]')
+end=s.index('    np.testing.assert_allclose(j_num',start)
+s=s[:start]+'''    def centered_column(column: int) -> np.ndarray:
+        delta = eps * np.eye(2)[column]
+        return (compute_joint_positions_2d(q + delta, lens)[-1]
+                - compute_joint_positions_2d(q - delta, lens)[-1]) / (2 * eps)
+
+    j_num = np.vectorize(centered_column, signature="()->(n)")(np.arange(2)).T
+
+'''+s[end:]
+# Parameterize the three rectangular cases instead of a Python array loop.
+start=s.index('def test_velocity_ellipsoid_reconstruction_tall_and_wide()')
+end=s.index('\ndef test_velocity_ellipsoid_singular',start)
+block=s[start:end]
+cases=block[block.index('    test_cases = [')+len('    test_cases = '):block.index('    for J, scales in test_cases:')].strip()
+body=block[block.index('        A = J @ np.diag(scales)'):]
+body='\n'.join(line[4:] if line.startswith('    ') else line for line in body.splitlines())
+s=s[:start]+'@pytest.mark.parametrize(("J", "scales"), '+cases+')\ndef test_velocity_ellipsoid_reconstruction_tall_and_wide(J: np.ndarray, scales: np.ndarray) -> None:\n    """Reconstruct the mapped rate-ball shape for rectangular Jacobians."""\n'+body+'\n\n'+s[end:]
+Path('tests/test_visualization_analysis_listings.py').write_text(s,encoding='utf-8')

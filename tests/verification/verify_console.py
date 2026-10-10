@@ -1,7 +1,7 @@
 """
 Verification script for checking console logs in the documentation.
 
-This script uses Playwright to navigate to the docs/index.html page and
+This script uses Playwright to navigate to the _site/index.html page and
 ensures that no banned logs (errors, warnings, or specific forbidden strings)
 are present in the browser console.
 """
@@ -19,12 +19,12 @@ def test_console_logs() -> None:
     """
     Tests that the console does not contain banned logs when loading the index page.
 
-    This test launches a headless browser, navigates to the docs/index.html page,
+    This test launches a headless browser, navigates to the _site/index.html page,
     and captures console messages. It asserts that specific banned messages
     are not present in the logs.
     """
     cwd = os.getcwd()
-    url = f"file://{cwd}/docs/index.html"
+    url = f"file://{cwd}/_site/index.html"
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)

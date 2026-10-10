@@ -108,6 +108,28 @@ called a **realized drift-to-input ratio**, not DCR.
 The aerodynamic **Drag-Curve Ratio (DgCR)** remains
 $(1-\mathrm{COR})/(1+\mathrm{COR})$ and must never use the bare DCR acronym.
 
+### Equation Symbol Definitions
+
+Pages that opt in to symbol hover references show these definitions when a
+reader points at a marked symbol, and list them under each marked equation.
+Authors mark a symbol as `\symref{key}{tex}`; the key must appear below. The
+site registry `data/symbol_references.json` is generated from this table.
+
+<!-- SYMBOL-REFERENCES:START -->
+
+| Key | Symbol        | Name                        | Definition                                                                                                                                                 |
+| --- | ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `x` | $x$           | State x                     | Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities.                                   |
+| `f` | $f(x)$        | Drift f(x)                  | Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load. |
+| `G` | $G(x)$        | Input map G(x)              | Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations.                       |
+| `u` | $u$           | Control input u             | Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set.                                            |
+| `M` | $M(q)$        | Mass matrix M(q)            | Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates.                                               |
+| `C` | $C(q,\dot q)$ | Coriolis matrix C(q, q-dot) | Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads.                                   |
+| `g` | $g(q)$        | Gravity vector g(q)         | Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity.                                        |
+| `B` | $B(q)$        | Actuation matrix B(q)       | Maps the declared control input to generalized forces, so the applied load is B(q) times u.                                                                |
+
+<!-- SYMBOL-REFERENCES:END -->
+
 ---
 
 ## Coordinate Systems & Rotation

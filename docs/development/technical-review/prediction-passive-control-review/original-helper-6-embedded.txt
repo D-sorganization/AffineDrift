@@ -1,0 +1,151 @@
+# Comprehensive Review: Chapter "Internal Models: Forward and Inverse" (Issue 4915)
+
+---
+
+## 1. Executive Summary & Taxonomy of Defects
+
+The draft chapter introduces central concepts in computational motor control (forward/inverse models, MOSAIC, Feedback-Error Learning, and delay compensation). However, it contains severe conceptual, mathematical, and implementation defects ranging from unconditional mathematical bugs to conflated constructs and unvalidated empirical claims.
+
+Below is the structured audit categorizing defects into:
+1. **Unconditional Mathematical & Code Defects**
+2. **Missing Assumptions vs. Structural Deficiencies**
+3. **Control-Theoretic Misconceptions (Smith Predictor vs. Open-Loop Propagation)**
+4. **Empirical & Neuroscientific Inference Gaps**
+
+---
+
+## 2. In-Depth Analysis of Mathematical & Code Defects
+
+### 2.1. One-Step Inverse Reachability & Underdetermined/Infeasible Inverses
+In both the text and code:
+$$x_{k+1} = A x_k + B u_k \implies B u_k = x_{k+1}^{\text{des}} - A x_k$$
+The code implements:
+```python
+np.linalg.lstsq(self.B, x_desired - self.A @ x, rcond=None)[0]
+```
+
+#### Defects:
+- **Unconditional Infeasibility Defect:** In physical mechanical systems (e.g., rigid-body manipulators, musculoskeletal systems), $B$ maps generalized forces/torques to generalized accelerations. If state $x = [q^\top, \dot{q}^\top]^\top$, $B = [0, M(q)^{-1}]^\top$. For any target state $x_{k+1}^{\text{des}}$ whose coordinate subvector $q_{k+1}^{\text{des}} \neq q_k + \Delta t \dot{q}_k$, **no control input $u$ exists** that can reach $x_{k+1}^{\text{des}}$ in a single time step.
+- `np.linalg.lstsq` returns a least-squares pseudo-inverse solution $\hat{u} = B^\dagger (x^{\text{des}} - A x)$. If $x^{\text{des}} - A x \notin \operatorname{Im}(B)$, the residual $\|B \hat{u} - (x^{\text{des}} - A x)\|_2 > 0$, meaning the target is **unreachable** in one step, yet the code silently applies $\hat{u}$.
+- **Underdetermined / Ill-Posed Systems:** When $\operatorname{rank}(B) < \dim(u)$ (muscle redundancy), minimum norm least-squares is only one arbitrary objective (energy minimization) without considering physiological non-negativity constraints ($u \ge 0$).
+
+#### Small Numerical Counterexample:
+Consider a single double integrator with Euler discretization ($\Delta t = 1$):
+$$x_k = \begin{bmatrix} p_k \\ v_k \end{bmatrix}, \quad A = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}, \quad B = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$$
+Let $x_k = \begin{bmatrix} 0 \\ 0 \end{bmatrix}$. The user requests $x_{k+1}^{\text{des}} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ (reach position 1 with zero velocity in one step).
+$$x^{\text{des}} - A x_k = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$$
+Since $\operatorname{Im}(B) = \operatorname{span}\left(\begin{bmatrix} 0 \\ 1 \end{bmatrix}\right)$, $\begin{bmatrix} 1 \\ 0 \end{bmatrix} \notin \operatorname{Im}(B)$.
+Computing the least-squares solution:
+$$B^\dagger = \begin{bmatrix} 0 & 1 \end{bmatrix} \implies u^* = \begin{bmatrix} 0 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 0 \end{bmatrix} = 0$$
+The actual next state reached is:
+$$x_{k+1} = A x_k + B(0) = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \neq \begin{bmatrix} 1 \\ 0 \end{bmatrix}$$
+The position error is $1.0$, completely failing to reach the target because arbitrary full-state targets are non-admissible without dynamic trajectory planning or output/subspace selection.
+
+---
+
+### 2.2. Responsibility Likelihood, Covariance, and Prior Assumptions
+In `update_responsibilities`:
+```python
+errors[i] = np.sum((x_next - prediction)**2)
+log_resp = -0.5 * errors
+log_resp -= np.max(log_resp)
+self.responsibilities = np.exp(log_resp)
+self.responsibilities /= np.sum(self.responsibilities)
+```
+
+#### Defects:
+- **Missing Sensory / Dynamic Noise Covariance:** The exponent $-0.5 \times \text{error}$ assumes an isotropic Gaussian observation model with covariance $\Sigma_i = I$. If sensory dimensions have different units (e.g., position in radians $[-\pi, \pi]$ vs. velocity $[-\text{rad/s}, \text{rad/s}]$ or torque $[\text{N}\cdot\text{m}]$), unweighted sum-of-squares is dimensionally inconsistent.
+- **Normalization Factor Omission:** The Gaussian likelihood is $p(x_{k+1} \mid i, x_k, u_k) = \frac{1}{(2\pi)^{d/2} |\Sigma_i|^{1/2}} \exp\left(-\frac{1}{2} e_i^\top \Sigma_i^{-1} e_i\right)$. If models have different process noises $|\Sigma_i|$, omitting the determinant term $|\Sigma_i|^{-1/2}$ distorts posterior weighting.
+- **Static Prior Assumption:** The code implements a memoryless softmax likelihood matching an equal, static prior $P(i) = \frac{1}{N}$. In true MOSAIC (Wolpert & Kawato 1998; Haruno, Wolpert & Kawato 2001), responsibilities $\lambda_i(t)$ represent posterior probabilities conditioned on sensory feedback **and** context priors:
+  $$\lambda_i(t) = P(i \mid y_t) = \frac{p(y_t \mid i) P(i \mid \text{context})}{\sum_j p(y_t \mid j) P(j \mid \text{context})}$$
+  or dynamic Markov transitions between models. Dropping the contextual prior causes models to fluctuate solely on instantaneous observation noise.
+
+---
+
+### 2.3. Convex Combination of Non-Commutative / Nonlinear Inverse Dynamics (Weighted Inverse Mixing)
+In `control`:
+```python
+u = np.zeros(...)
+for i, model in enumerate(self.models):
+    u += self.responsibilities[i] * model.inverse(x, x_desired)
+```
+
+#### Defects:
+- **Unconditional Error for Nonlinear / Affine Dynamics with State-Dependent Controls:** While linear time-invariant dynamics $x_{k+1} = A x_k + B u_k$ with identical $B$ can admit linear superposition of control, mixing inverse controllers via convex combination $\bar{u} = \sum_i \lambda_i u_i$ fails fundamentally when $B$ depends on the model $i$, or in general nonlinear robotic systems:
+  $$M_i(q) \ddot{q} + C_i(q, \dot{q})\dot{q} + g_i(q) = u$$
+  The inverse control for model $i$ is $u_i = M_i(q) \ddot{q}^{\text{des}} + C_i(q, \dot{q})\dot{q} + g_i(q)$.
+  If the true environment is a mixture (or one of the models), the plant response to $\bar{u}$ is:
+  $$\ddot{q}_{\text{actual}} = M_{\text{true}}^{-1} \left( \sum_i \lambda_i u_i - C_{\text{true}}\dot{q} - g_{\text{true}} \right) \neq \ddot{q}^{\text{des}}$$
+  Because the inverse of an expectation is **not** the expectation of an inverse ($(\sum \lambda_i B_i)^{-1} \neq \sum \lambda_i B_i^{-1}$).
+
+#### Small Numerical Counterexample:
+Suppose system dynamics are scalar with input gains $B_1 = 1, B_2 = 10$, $A_1 = A_2 = 0$.
+We want $x_{k+1}^{\text{des}} = 10$ from $x_k = 0$.
+- Model 1 inverse: $u_1 = \frac{10}{1} = 10$.
+- Model 2 inverse: $u_2 = \frac{10}{10} = 1$.
+
+Suppose ambiguity exists and $\lambda_1 = 0.5, \lambda_2 = 0.5$.
+The mixed control is:
+$$\bar{u} = 0.5(10) + 0.5(1) = 5.5$$
+- If the true environment is Model 2 ($B_{\text{true}} = 10$):
+  $$x_{\text{actual}} = 10 \times 5.5 = 55 \quad (\text{Target was } 10! \text{ 450\% overshoot})$$
+- Even if the true environment is the average plant $B_{\text{avg}} = 0.5(1) + 0.5(10) = 5.5$:
+  $$x_{\text{actual}} = 5.5 \times 5.5 = 30.25 \neq 10$$
+Blending control outputs directly across models with varying control authority / inertia matrices leads to massive trajectory distortion and potential instability.
+
+---
+
+### 2.4. State vs. Sensory Prediction Confusion
+In Section "Forward Models":
+> *"A forward model predicts the sensory consequences of a motor command:*
+> $$\hat{\state}_{k+1} = f(\hat{\state}_k, \control_k)"$$
+
+#### Defects:
+- **Conflation of State and Sensory Consequence:** $\state_{k+1}$ denotes the internal latent physical state (joint angles, velocities). The sensory consequence is an observation $y_{k+1} = h(x_{k+1})$.
+- In biological motor control, forward models are split into:
+  1. **Forward dynamic model:** $\hat{x}_{k+1} = f(\hat{x}_k, u_k)$ (predicts limb state).
+  2. **Forward sensory model:** $\hat{y}_{k+1} = h(\hat{x}_{k+1})$ (predicts reafference: proprioceptive spindle firing, retinal slip, cutaneous contact).
+- Fig. 1 shows "sensory prediction error" updating the forward model, but the equation and code use direct state difference $(x_{k+1} - \hat{x}_{k+1})$, assuming full direct observation of the state vector without sensory delay, transformation, or sensor noise.
+
+---
+
+### 2.5. Delay Compensation vs. Full Smith Predictor
+
+#### The Chapter's Formulation:
+$$\hat{\state}_{\text{current}} = \hat{\state}(t - \Delta t) + \int_{t-\Delta t}^{t} f(\hat{\state}, \control) \, \dd\tau$$
+
+#### Defects:
+- **This is Pure Open-Loop Dead-Reckoning (Propagation), NOT a Smith Predictor:**
+  A true Smith Predictor (Smith 1957; Miall et al. 1993 for neural systems) contains **three** essential feedback signals to prevent divergence under model mismatch and disturbance:
+  1. An undelayed forward model prediction: $\hat{y}(t) = G_m(s) u(t)$
+  2. A delayed forward model prediction: $\hat{y}_{\text{delayed}}(t) = G_m(s) e^{-s \Delta t} u(t)$
+  3. A feedback correction from the delayed prediction error: $\epsilon(t) = y(t) - \hat{y}_{\text{delayed}}(t)$
+  
+  The state fed to the controller is:
+  $$y_{\text{eff}}(t) = \hat{y}(t) + \big(y(t) - \hat{y}_{\text{delayed}}(t)\big)$$
+- **Catastrophic Failure under Disturbance:**
+  In the equation provided in Eq. (6.4), if an external disturbance force $d(t)$ acts on the limb during $[t-\Delta t, t]$, or if $\hat{x}(t-\Delta t)$ has an offset, the open-loop integral does not receive the delayed error correction $\epsilon(t)$. It drifts unboundedly. Calling Eq. (6.4) a "Smith predictor" is technically incorrect in classic and physiological control literature.
+
+---
+
+## 3. Empirical & Neuroscientific Inference Defects
+
+1. **Over-interpretation of Imamizu et al. (2000):**
+   - The text claims: *"cerebellar activity acquired while learning a novel visuomotor tool persists as a tool-specific representation, separable from the activity driven by the movement itself [Imamizu 2000]."*
+   - **Nuance / Defect:** Imamizu et al. demonstrated localized fMRI BOLD signal increases in the lateral cerebellum (lobules Crus I / HVIIA) that remained elevated after learning to use a novel computer mouse with rotated dynamics. However, fMRI spatial resolution (~3mm voxels) aggregates millions of Purkinje cells; inferring discrete "acquired forward-inverse pairs per tool" rather than overlapping population-level basis function adaptation overstates the imaging resolution. Furthermore, whether cerebellar representations reflect pure forward, pure inverse, or coupled forward-inverse architectures remains a subject of active debate (e.g., Pasalar et al., 2006; Ebner & Pasalar, 2008).
+
+2. **Conflating Feedback-Error Learning (FEL) with Forward Model Evidence:**
+   - The chapter correctly notes that Kawato et al. (1987) introduced Feedback-Error Learning for inverse models, but fails to distinguish that FEL specifically circumvents the classic inverse problem (which requires backpropagating errors through the plant or using a forward model as a distal teacher, as in Jordan & Rumelhart 1992).
+   - In FEL, the feedback motor command $u_{FB}$ acts directly as the error signal for the feedforward controller: $\Delta w \propto u_{FB} \cdot (\partial u_{FF}/\partial w)^\top$. In contrast, forward model learning uses sensory prediction error ($y - \hat{y}$). Mixing these without clear functional pathways creates confusion.
+
+---
+
+## 4. Summary of Corrections Required
+
+| Section / Element | Current Flaw | Correct Mathematical / Conceptual Formulation |
+| :--- | :--- | :--- |
+| **Inverse Equation & Code** | `np.linalg.lstsq(B, x_des - A@x)` assumes arbitrary 1-step full state reachability. | Restrict target to reachable subspace, or formulate as trajectory optimization / output tracking ($C x_{k+1}^{\text{des}}$) with explicit admissibility checks. |
+| **Responsibility Softmax** | $-0.5 \sum (x - \hat{x})^2$ ignores metric units, covariance $\Sigma_i$, and contextual priors. | Use full multivariate Gaussian likelihood $\mathcal{N}(y; \hat{y}_i, \Sigma_i)$ weighted by context prior $P(i \mid c)$. |
+| **Inverse Output Blending** | Direct summation $\sum \lambda_i u_i$ over models causes severe bias/overshoot in non-identical plants. | Note limitations of linear control mixing; in nonlinear systems, mix forward models first to identify the plant, or use hierarchical selection rather than output averaging. |
+| **State vs. Sensor** | $\hat{x}_{k+1} = f(\hat{x}_k, u_k)$ labeled as sensory consequence. | Formulate state propagation $\hat{x}_{k+1} = f(\hat{x}_k, u_k)$ and observation model $\hat{y}_k = h(\hat{x}_k)$. |
+| **Smith Predictor** | Given as pure dead-reckoning integration $\hat{x}_{t-\Delta} + \int f$. | Incorporate delayed observation discrepancy $y(t) - \hat{y}(t-\Delta t)$ into the estimated current state to form a true closed-loop Smith predictor. |

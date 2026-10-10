@@ -1,0 +1,91 @@
+"""Reproduce pinned-provider and independent workbench checks (issue 4933)."""
+from __future__ import annotations
+
+import ast
+import hashlib
+import json
+from pathlib import Path
+from types import SimpleNamespace
+from urllib.request import urlopen
+
+import numpy as np
+
+QA = Path('docs/development/technical-review/workbench-contract-review')
+
+
+def load_selected(name: str, expected_blob: str, selected: set[str]) -> dict:
+    """Execute only the inspected pure definitions from a verified source blob."""
+    path = QA / name
+    if not path.exists():
+        source_url = ('https://raw.githubusercontent.com/D-sorganization/Tools/'
+                      'cefcc1878de11804c44cd7d1d19c0ffcf58fa89e/'
+                      'src/pendulum_simulator/src/double_pendulum_golf/' + name.removesuffix('.source'))
+        with urlopen(source_url, timeout=30) as response:
+            path.write_bytes(response.read())
+    raw = path.read_bytes()
+    # Git stores provider source with LF; local snapshots may use CRLF.
+    raw = raw.replace(b'\r\n', b'\n')
+    actual = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+    assert actual == expected_blob, (name, actual)
+    tree = ast.parse(raw.decode('utf-8'))
+    nodes = [node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name in selected]
+    assert {node.name for node in nodes} == selected
+    namespace = {'np': np, '_native_backend': SimpleNamespace(double_mass_matrix=lambda *args: None)}
+    preface = ast.parse('from __future__ import annotations').body
+    # Only explicitly named and inspected mathematical functions from pinned source.
+    exec(compile(ast.Module(body=preface + nodes, type_ignores=[]), str(path), 'exec'), namespace)
+    return namespace
+
+
+physics = load_selected('physics.py.source', '46948b294add0c61807564bc5d96705b5f24b685', {'_m2eff', 'mass_matrix'})
+transfer = load_selected('transfer_strategy.py.source', 'ea9b28c9a007b308fe73bd013ed4664ce281d9b8', {'_club_kinetic_energy'})
+params = SimpleNamespace(m1=2.0, m2=3.0, mClub=1.0, L1=0.7, L2=1.0)
+state = np.array([[0.0, 0.0, 0.0, 2.0]])
+vel = state[0, 2:]
+point = float(0.5 * vel @ physics['mass_matrix'](0.0, params) @ vel)
+rod = float(transfer['_club_kinetic_energy'](state, params)[0])
+assert point == 8.0 and rod == 4.0
+
+rng = np.random.default_rng(4933)
+states = rng.uniform(-3.0, 3.0, (100, 4))
+theta, phi, proximal_rate, relative_rate = states.T
+omega = proximal_rate + relative_rate
+wrist_velocity = params.L1 * proximal_rate[:, None] * np.column_stack((np.cos(theta), np.sin(theta)))
+tangent = np.column_stack((np.cos(theta + phi), np.sin(theta + phi)))
+tip_velocity = wrist_velocity + params.L2 * omega[:, None] * tangent
+point_club = 0.5 * (params.m2 + params.mClub) * np.sum(tip_velocity**2, axis=1)
+rod_club = transfer['_club_kinetic_energy'](states, params)
+expected_difference = (0.5 * params.m2 * params.L2 * omega * np.sum(wrist_velocity * tangent, axis=1)
+                       + params.m2 * params.L2**2 * omega**2 / 3.0)
+energy_error = float(np.max(np.abs(point_club - rod_club - expected_difference)))
+assert energy_error < 1e-12
+
+# Independent midpoint wrench and translation-of-reference-point identity.
+positions = rng.normal(size=(100, 2, 3))
+forces = rng.normal(size=(100, 2, 3))
+moments = rng.normal(size=(100, 2, 3))
+midpoint = positions.mean(axis=1)
+difference = positions[:, 1] - positions[:, 0]
+mid_moment = 0.5 * np.cross(difference, forces[:, 1] - forces[:, 0]) + moments.sum(axis=1)
+origin_moment = np.cross(positions, forces).sum(axis=1) + moments.sum(axis=1)
+wrench_error = float(np.max(np.abs(origin_moment - mid_moment - np.cross(midpoint, forces.sum(axis=1)))))
+assert wrench_error < 1e-12
+
+# Additive force-work closure is compatible with an arbitrarily wrong energy history.
+time = np.linspace(0, 1, 101)
+velocity = rng.normal(size=(101, 2))
+total_force = rng.normal(size=(101, 2))
+drift_force = rng.normal(size=(101, 2))
+force_parts = np.stack((total_force, drift_force, total_force - drift_force))
+work = np.trapezoid(np.einsum('kti,ti->kt', force_parts, velocity), time, axis=1)
+closure = float(work[0] - work[1] - work[2])
+assert abs(closure) < 1e-12
+record = {'issue': 4933, 'provider_commit': 'cefcc1878de11804c44cd7d1d19c0ffcf58fa89e',
+          'seed': 4933, 'cases': 100, 'all_passed': True,
+          'actual_python_fallback_energy_j': point, 'actual_transfer_energy_j': rod,
+          'energy_difference_identity_max_error': energy_error,
+          'midpoint_wrench_identity_max_error': wrench_error,
+          'additive_work_residual_j': closure,
+          'limits': 'Pinned inspected Python functions only; no GUI/native/TypeScript or human qualification; additive closure is not energy conservation.'}
+Path('reports/technical-review/workbench-contract-independent-checks.json').write_bytes((json.dumps(record, indent=2)+'\n').encode())
+print(json.dumps(record, indent=2))

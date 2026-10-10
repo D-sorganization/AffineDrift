@@ -1,0 +1,167 @@
+# Mathematical and Numerical Review: Chapter "Inference on Biological Systems"
+
+**Reviewer Context:** Read-only mathematical and numerical audit for lead Codex. No tools invoked, no edits applied, no issue claims filed.
+
+---
+
+## 1. Likelihood Assumptions & Normalization Audit
+
+### 1.1 Fixed-Covariance Simplification vs. Arithmetic Accuracy
+In Equation \eqref{eq:ch8:mle} and `log_posterior`:
+* The observation noise is assumed additive Gaussian $\bm{v}_k \sim \mathcal{N}(\mathbf{0}, R)$, temporally independent, and identically distributed across $k = 1, \dots, N$.
+* When $R$ (and prior covariance $P$) are **fixed, known hyperparameters** independent of $\bm{\theta}$, dropping the normalizing terms $-\frac{N d}{2} \ln(2\pi) - \frac{N}{2} \ln \det R$ and $-\frac{p}{2} \ln(2\pi) - \frac{1}{2} \ln \det P$ is **strictly valid** for computing point estimators:
+  $$\arg\max_{\bm{\theta}} p(\bm{\theta} \mid \bm{y}_{1:N}) = \arg\min_{\bm{\theta}} \left[ \frac{1}{2} \sum_{k=1}^N \|\bm{y}_k - h(\state_k(\bm{\theta}))\|_{R^{-1}}^2 + \frac{1}{2} \|\bm{\theta} - \bm{\mu}_\theta\|_{P^{-1}}^2 \right].$$
+* **Clarification**: We must **distinguish fixed-covariance Gaussian simplification from wrong arithmetic**. Demanding log-determinant terms when $R$ and $P$ are constant with respect to $\bm{\theta}$ is mathematically unnecessary for MAP/MLE point estimation. 
+* **Scope Boundary**: If $R = R(\bm{\theta})$ (state-/parameter-dependent heteroscedastic noise) or if hyperparameter marginal likelihood / Bayesian model selection (evidence $p(\mathcal{D})$) is evaluated, the $-\frac{1}{2} \ln \det R(\bm{\theta})$ term is mandatory; without it, optimization falsely collapses residual variance to zero.
+
+### 1.2 Multi-Observation Quadratic Form Arithmetic
+In `log_posterior`:
+```python
+residuals = observations - predicted  # shape: (n_obs, n_dims)
+R_inv = np.linalg.inv(noise_cov)      # shape: (n_dims, n_dims)
+log_likelihood = -0.5 * np.sum(residuals @ R_inv * residuals)
+```
+* **Linear Algebra Verification**:
+  For row vector $\bm{r}_k \in \mathbb{R}^{1 \times d}$ (the $k$-th row of `residuals`), the $k$-th row of `residuals @ R_inv` is $\bm{r}_k R^{-1}$. Elementwise multiplication `(residuals @ R_inv) * residuals` yields row $k$ with entries $[(\bm{r}_k R^{-1})_j r_{k,j}]$. Summing across all entries and rows produces:
+  $$\sum_{k=1}^N \sum_{j=1}^d (\bm{r}_k R^{-1})_j r_{k,j} = \sum_{k=1}^N \bm{r}_k R^{-1} \bm{r}_k^\top = \sum_{k=1}^N \|\bm{r}_k\|_{R^{-1}}^2.$$
+  The arithmetic expression `np.sum(residuals @ R_inv * residuals)` correctly evaluates the sum of Mahalanobis forms across observations in $O(N d^2)$ operations.
+
+---
+
+## 2. Actual Code Contracts & Execution Failure Modes
+
+While the quadratic form identity holds, the code has distinct contract vulnerabilities when invoked with arbitrary array ranks and optimizer states:
+
+1. **Shape Mismatch on 1D Observations**:
+   * Docstring specifies `observations: np.ndarray, shape (n_obs, n_dims)`.
+   * If a user passes a 1D scalar time series or single observation $\bm{y} \in \mathbb{R}^N$ with `shape == (N,)`, then `residuals @ R_inv` expects `R_inv` to be scalar or matrix compatible under NumPy broadcasting. If `noise_cov` is $(d, d)$ and $N = d$, 1D vectors evaluate as a single vector rather than batch rows, or raise `ValueError: operands could not be broadcast together`.
+   * **Explicit contract requirement**: Prepend `observations = np.atleast_2d(observations)` and `predicted = np.atleast_2d(predicted)`.
+
+2. **Numerical Inversion vs. Cholesky Factorization**:
+   * Repeatedly calling `np.linalg.inv(noise_cov)` and `np.linalg.inv(prior_cov)` inside `log_posterior` incurs $O(d^3 + p^3)$ overhead per objective evaluation.
+   * More critically, inversion is numerically fragile if $P$ or $R$ have large condition numbers. Standard numerical practice requires precomputing the Cholesky factorization $L L^\top = R$ or solving triangular systems (`scipy.linalg.cho_solve`), or passing precomputed precision matrices $Q = R^{-1}$ and $\Lambda = P^{-1}$.
+
+3. **Return Value Semantics**:
+   * Function returns `-(log_likelihood + log_prior)`.
+   * The docstring correctly documents: *"Returns float: Negative log-posterior (for minimization)"*. However, naming the function `log_posterior` while returning the **negative** log-posterior is an API hazard. Renaming to `negative_log_posterior` prevents sign errors when used outside `minimize`.
+
+4. **Missing Convergence & Optimization Result Checking**:
+   * `map_estimate` returns `result.x` unconditionally. If `scipy.optimize.minimize` terminates prematurely due to line-search failure, boundary traps, or maximum iterations (`result.success == False`), an unvalidated estimate is returned silently.
+
+---
+
+## 3. Physical Priors, Support Constraints, and Parameter Transformation
+
+* **Support Mismatch**: The prior in `log_posterior` is an unconstrained multivariate Gaussian $\bm{\theta} \sim \mathcal{N}(\bm{\mu}_\theta, P)$, assigning non-zero probability density to negative values ($\theta_i < 0$).
+* **Physical Reality**: Parameters like maximum isometric force $F_0 > 0$, optimal fiber length $l_0^M > 0$, tendon slack length $l_s^T > 0$, and mass/inertia $m, I > 0$ are strictly positive physical quantities.
+* **Truncated vs. Transformed Distributions**:
+  * Passing `bounds` to `L-BFGS-B` restricts the search domain to a box $\Theta_{\text{admissible}}$, effectively converting the prior to a truncated Gaussian:
+    $$p(\bm{\theta}) \propto \mathcal{N}(\bm{\theta}; \bm{\mu}_\theta, P) \cdot \mathbb{I}(\bm{\theta} \in \Theta_{\text{admissible}}).$$
+    While valid for MAP (the truncation constant does not depend on $\bm{\theta}$ within the interior), boundary solutions $\hat{\bm{\theta}} \in \partial\Theta$ yield zero posterior gradient and invalidate standard asymptotic Laplace approximations.
+  * **Log-Normal / Transformed Parameterization**: A standard formulation for biological scaling is log-normal priors, setting $\bm{\phi} = \ln \bm{\theta}$, where $\bm{\phi} \sim \mathcal{N}(\bm{\mu}_\phi, \Sigma_\phi)$, naturally ensuring $\bm{\theta} \in (0, \infty)^p$ without artificial hard-clipping.
+
+---
+
+## 4. MAP Point Estimation vs. Posterior Uncertainty
+
+* **Point vs. Distribution**: MAP provides only a mode $\hat{\bm{\theta}}_{\text{MAP}} = \arg\max p(\bm{\theta} \mid \mathcal{D})$. In clinical or biomechanical modeling, a point estimate without credible intervals can overstate confidence in unidentifiable directions.
+* **Laplace Approximation (Local Uncertainty)**:
+  At the interior mode $\hat{\bm{\theta}}$, the posterior covariance is approximated by the inverse Hessian of the negative log-posterior:
+  $$\Sigma_{\text{post}} \approx \left[ \nabla^2 (-\ln p(\hat{\bm{\theta}} \mid \mathcal{D})) \right]^{-1} = \left[ J_h(\hat{\bm{\theta}})^\top \left( \bigoplus_{k=1}^N R^{-1} \right) J_h(\hat{\bm{\theta}}) + P^{-1} \right]^{-1},$$
+  where $J_h(\hat{\bm{\theta}}) = \frac{\partial \hat{\bm{y}}}{\partial \bm{\theta}}$ is the sensitivity Jacobian.
+* The draft chapter currently omits sampling (MCMC), variational inference, or local curvature estimates, creating a gap between point optimization and statistical quantification.
+
+---
+
+## 5. Rejection of Universal Measurement Impossibility
+
+* **Critique of the Epigraph & Introductory Text**:
+  * Epigraph: *"We cannot open the body and read the parameters."*
+  * Text: *"Biological system parameters ... cannot typically be measured directly in vivo."*
+* **Correction & Nuance**:
+  * Universal measurement impossibility is an overstatement. Modern experimental biomechanics routinely measures parameters *in vivo* directly or semi-directly:
+    1. **B-mode ultrasound**: Directly measures fascicle length, pennation angle, and tendon elongation in real time during contraction.
+    2. **Dual-energy X-ray absorptiometry (DEXA) & MRI**: Provide direct, subject-specific segment inertial properties (mass, center of mass, moment of inertia tensor) and muscle physiological cross-sectional area (PCSA).
+    3. **Intraoperative stimulation & passive range-of-motion dynamometry**: Directly isolate joint limits and passive stiffness.
+  * **Accurate Framing**: Indirect inference is required when direct in vivo measurement is either **prohibitively invasive**, **technically non-viable under dynamic conditions**, or **altered by dynamic muscle contraction/tendon interaction**.
+
+---
+
+## 6. Identifiability Analysis
+
+### 6.1 Structural vs. Practical Identifiability
+* **Structural Identifiability**: A property of the model structure and observation map $h(f(\cdot))$. The model is structurally identifiable if:
+  $$h(\state(\bm{\theta}_1)) = h(\state(\bm{\theta}_2)) \quad \forall t \implies \bm{\theta}_1 = \bm{\theta}_2.$$
+* **Practical Identifiability**: Governed by experimental data quality, noise covariance $R$, sampling frequency, and excitation magnitude. Even if structurally identifiable, low Fisher information along specific eigenvectors produces ill-conditioned parameter estimates.
+
+---
+
+## 7. Independently Checkable Benchmark Examples
+
+### 7.1 Linear-Gaussian Posterior Benchmark (Closed-Form Analytical vs. MAP)
+
+Consider a linear observation model:
+$$\bm{y} = H \bm{\theta} + \bm{v}, \quad \bm{v} \sim \mathcal{N}(\mathbf{0}, R), \quad \bm{\theta} \sim \mathcal{N}(\bm{\mu}_0, P).$$
+
+#### Analytical Formulation
+The true Bayesian posterior is Gaussian $\bm{\theta} \mid \bm{y} \sim \mathcal{N}(\bm{\mu}_{\text{post}}, \Sigma_{\text{post}})$ with:
+$$\Sigma_{\text{post}} = (P^{-1} + H^\top R^{-1} H)^{-1}, \quad \bm{\mu}_{\text{post}} = \Sigma_{\text{post}} (P^{-1} \bm{\mu}_0 + H^\top R^{-1} \bm{y}).$$
+
+#### Numerical Verification Problem
+Let:
+$$H = \begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix}, \quad R = \begin{bmatrix} 0.5 & 0 \\ 0 & 0.2 \end{bmatrix}, \quad P = \begin{bmatrix} 2.0 & 0.4 \\ 0.4 & 1.0 \end{bmatrix}, \quad \bm{\mu}_0 = \begin{bmatrix} 1.0 \\ 2.0 \end{bmatrix}, \quad \bm{y} = \begin{bmatrix} 4.0 \\ 7.5 \end{bmatrix}.$$
+
+1. **Prior Information**:
+   $$P^{-1} = \frac{1}{(2)(1) - (0.4)^2} \begin{bmatrix} 1.0 & -0.4 \\ -0.4 & 2.0 \end{bmatrix} = \frac{1}{1.84} \begin{bmatrix} 1.0 & -0.4 \\ -0.4 & 2.0 \end{bmatrix} \approx \begin{bmatrix} 0.543478 & -0.217391 \\ -0.217391 & 1.086957 \end{bmatrix}.$$
+2. **Fisher Information Matrix ($H^\top R^{-1} H$)**:
+   $$R^{-1} = \begin{bmatrix} 2.0 & 0 \\ 0 & 5.0 \end{bmatrix}.$$
+   $$H^\top R^{-1} H = \begin{bmatrix} 1 & 3 \\ 2 & 1 \end{bmatrix} \begin{bmatrix} 2 & 0 \\ 0 & 5 \end{bmatrix} \begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix} = \begin{bmatrix} 2 & 15 \\ 4 & 5 \end{bmatrix} \begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix} = \begin{bmatrix} 47.0 & 19.0 \\ 19.0 & 13.0 \end{bmatrix}.$$
+3. **Posterior Precision & Covariance**:
+   $$\Sigma_{\text{post}}^{-1} = P^{-1} + H^\top R^{-1} H \approx \begin{bmatrix} 47.543478 & 18.782609 \\ 18.782609 & 14.086957 \end{bmatrix}.$$
+   $$\det(\Sigma_{\text{post}}^{-1}) \approx (47.543478)(14.086957) - (18.782609)^2 \approx 669.7429 - 352.7864 = 316.9565.$$
+   $$\Sigma_{\text{post}} \approx \begin{bmatrix} 0.044444 & -0.059259 \\ -0.059259 & 0.150000 \end{bmatrix} = \begin{bmatrix} 4/90 & -16/270 \\ -16/270 & 27/180 \end{bmatrix}.$$
+4. **Information Vector & Mean**:
+   $$P^{-1} \bm{\mu}_0 \approx \begin{bmatrix} 0.108696 \\ 1.956522 \end{bmatrix}, \quad H^\top R^{-1} \bm{y} = \begin{bmatrix} 2 & 15 \\ 4 & 5 \end{bmatrix} \begin{bmatrix} 4.0 \\ 7.5 \end{bmatrix} = \begin{bmatrix} 120.5 \\ 53.5 \end{bmatrix}.$$
+   $$\bm{\eta} = P^{-1} \bm{\mu}_0 + H^\top R^{-1} \bm{y} \approx \begin{bmatrix} 120.608696 \\ 55.456522 \end{bmatrix}.$$
+   $$\bm{\mu}_{\text{post}} = \Sigma_{\text{post}} \bm{\eta} \approx \begin{bmatrix} 0.044444(120.608696) - 0.059259(55.456522) \\ -0.059259(120.608696) + 0.150000(55.456522) \end{bmatrix} = \begin{bmatrix} 2.074074 \\ 1.171296 \end{bmatrix} \approx \begin{bmatrix} 2.0741 \\ 1.1713 \end{bmatrix}.$$
+
+*Executing `map_estimate` with `forward_model = lambda theta: H @ theta` on this system converges identically to $\hat{\bm{\theta}}_{\text{MAP}} = [2.0741, 1.1713]^\top$, validating the implementation for well-conditioned linear Gaussian systems.*
+
+---
+
+### 7.2 Structurally Unidentifiable Biomechanical Example
+
+Consider a classical isometric tendon-muscle equilibrium model with observation of total muscle-tendon force $F$:
+$$l_{MT} = l_t + l_m \cos\alpha.$$
+Under small pennation angle ($\cos\alpha \approx 1$), $l_{MT} = l_t + l_m$.
+Let the passive muscle force be linear:
+$$F_m(l_m) = k_m (l_m - l_{0m}),$$
+and linear elastic tendon force:
+$$F_t(l_t) = k_t (l_t - l_{0t}).$$
+In series equilibrium, $F = F_m = F_t$. Eliminating internal states $(l_m, l_t)$ yields the observed force-length relationship:
+$$F(l_{MT}) = \frac{k_m k_t}{k_m + k_t} \left( l_{MT} - (l_{0m} + l_{0t}) \right).$$
+
+Define the structural parameter vector:
+$$\bm{\theta} = \begin{bmatrix} k_m \\ k_t \\ l_{0m} \\ l_{0t} \end{bmatrix} \in \mathbb{R}^4.$$
+The forward observation map at fixed muscle-tendon lengths $l_{MT, k}$ depends solely on two lumped parameters:
+1. Equivalent stiffness: $k_{\text{eq}}(\bm{\theta}) = \frac{k_m k_t}{k_m + k_t}$
+2. Equivalent rest length: $l_{0,\text{eq}}(\bm{\theta}) = l_{0m} + l_{0t}$
+
+#### Identifiability Failure Proof
+* For any measurement set $\mathcal{D} = \{(l_{MT, k}, F_k)\}_{k=1}^N$ of arbitrary size and infinite precision, the likelihood function is constant along the two-dimensional manifold:
+  $$\mathcal{M}(\hat{k}_{\text{eq}}, \hat{l}_{0,\text{eq}}) = \left\{ \bm{\theta} \in \mathbb{R}_+^4 \;\middle|\; \frac{k_m k_t}{k_m + k_t} = \hat{k}_{\text{eq}}, \; l_{0m} + l_{0t} = \hat{l}_{0,\text{eq}} \right\}.$$
+* The sensitivity matrix $J_h = \frac{\partial \hat{\bm{y}}}{\partial \bm{\theta}}$ has $\text{rank}(J_h) = 2 < 4$ for all configurations:
+  $$\frac{\partial F}{\partial l_{0m}} = \frac{\partial F}{\partial l_{0t}} = -k_{\text{eq}} \implies \text{col}_3(J_h) = \text{col}_4(J_h),$$
+  $$\frac{\partial F}{\partial k_m} = \left(\frac{k_t}{k_m + k_t}\right)^2 (l_{MT} - l_{0,\text{eq}}), \quad \frac{\partial F}{\partial k_t} = \left(\frac{k_m}{k_m + k_t}\right)^2 (l_{MT} - l_{0,\text{eq}}).$$
+* Without informative priors ($P^{-1} \to 0$), the Fisher information matrix is singular, and optimization gradients along the null manifold $\ker(J_h)$ are identically zero. 
+* Only by introducing non-zero prior precision $P^{-1}$ or multi-modal dynamic protocols (such as rapid length releases that isolate tendon elasticity $k_t$ via frequency response) is the degeneracy resolved.
+
+---
+
+## 8. Summary of Actionable Recommendations for Lead Codex
+
+1. **Retain Fixed-Covariance Simplification**: Keep log-determinant terms omitted from `log_posterior` when $R$ and $P$ are non-parameterized, but add a brief note clarifying that fixed additive constants are dropped.
+2. **Defensive Array Shaping**: Add explicit 2D conversion (`np.atleast_2d`) for `observations` and `predicted` in `log_posterior` to prevent broadcasting bugs with 1D data.
+3. **Factorization over Inversion**: Recommend replacing `np.linalg.inv` inside objective loops with Cholesky factorization or pre-inverted precision matrices passed as arguments.
+4. **Clarify Epigraph and Text**: Revise the opening statements to avoid universal impossibility claims regarding in vivo parameter measurements, highlighting ultrasound and DEXA/MRI capabilities.
+5. **Add Identifiability Context**: Incorporate the distinction between structural rank deficiency (e.g., lumped series compliance) and practical lack of excitation into Section 2.

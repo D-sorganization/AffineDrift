@@ -173,8 +173,8 @@ def main() -> int:
     parser.add_argument(
         "--docs-dir",
         type=Path,
-        default=Path("docs"),
-        help="Directory containing HTML files to fix (default: docs)",
+        default=Path("_site"),
+        help="Directory containing HTML files to fix (default: _site)",
     )
     parser.add_argument(
         "--dry-run",

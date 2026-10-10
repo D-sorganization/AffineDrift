@@ -1,5 +1,7 @@
 # CLAUDE.md — AffineDrift
+
 @AGENTS.md
+
 <!-- Claude Code reads CLAUDE.md; the line above imports AGENTS.md, the single source of agent guidance. Edit AGENTS.md (or its fleet-rules sources), not this file. -->
 
 > **GAAI Fleet Member.** GAAI framework installed in `.gaai/`. Read `.gaai/core/GAAI.md` for full governance spec.
@@ -27,7 +29,8 @@ Research platform, educational textbook series, and companion website exploring 
 - `references/` — BibTeX bibliography databases
 - `schemas/` — JSON schemas for companion manifests, falsification atlases, and research readiness
 - `css/` — Canonical stylesheets (CSS budget enforced by CI)
-- `docs/` — Destination directory for Quarto rendered output (built at deploy time)
+- `docs/` — Internal documentation (ADRs, dev logs, CSS plans)
+- `_site/` — Quarto rendered output (git-ignored, built at deploy time)
 - `config/` — Quality budgets, terminology baselines, and tree parity baselines
 
 ## Python and Tooling
@@ -87,7 +90,7 @@ The `dev` stage is the entry point for new contributors: it avoids installing Qu
 7. pytest coverage at or above the single `fail_under` floor in `pyproject.toml` — coverage must not decrease
 8. Jest — all JS tests pass (`js-tests` feeds the fan-in `quality-gate`)
 9. Playwright E2E — full-site render, every spec on Chromium, per-route axe-core (`e2e-tests` feeds `quality-gate`)
-10. CSS mirror enforcement — `css/` must be mirrored in `docs/` (never edit `docs/` CSS directly)
+10. CSS mirror enforcement — `css/` must be mirrored in `_site/` (never edit `_site/` CSS directly)
 11. No `print()` in `src/` — use logging
 12. No TODO/FIXME unless tied to a tracked GitHub issue
 
@@ -103,7 +106,7 @@ The `dev` stage is the entry point for new contributors: it avoids installing Qu
 - **Black with 100-char lines.** Do not configure or run `ruff format` in this repo.
 - **Quarto rendering** is slow (~14 min full site on the fleet runner); the E2E lane renders the full site when site-facing files change. The Quarto version is pinned once in `.quarto-version`.
 - **Playwright** requires `npx playwright install` for browser binaries before first run.
-- **CSS lives in two places:** edit in `css/`, CI validates that `docs/` mirrors match. Never edit rendered CSS directly.
+- **CSS lives in two places:** edit in `css/`, CI validates that `_site/` mirrors match. Never edit rendered CSS directly.
 
 ## Logging Standard
 

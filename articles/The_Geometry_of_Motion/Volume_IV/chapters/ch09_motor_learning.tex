@@ -1,195 +1,239 @@
 \chapter{Motor Learning and Adaptation}
 \label{ch:motor-learning}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+Improved performance, changed prediction, a persistent aftereffect and faster
+relearning are different observations. They can involve interacting processes
+and do not map one-to-one onto three brain regions or three fixed time scales.
+This chapter develops a bounded trial-by-trial model, then shows what it can
+and cannot establish about learning a movement.
 
-\epigraph{%
-  Practice does not make perfect.
-  Practice makes permanent.
-  Only perfect practice makes perfect.
-}{}
+\section{Distinguishing Processes and Measurements}
 
-\section{Three Learning Systems}
+Error-based adaptation changes subsequent behavior in response to experienced
+errors. Task error measures success relative to a goal; sensory prediction error
+measures discrepancy from an expected observation. Explicit aiming strategies,
+reward-based action selection and use-dependent biases from repetition can also
+affect the measured movement. These categories describe different questions,
+not mutually exclusive anatomical compartments. A falling error curve alone
+does not isolate any one of them.
 
-Motor learning involves three distinct neural systems with different timescales and mechanisms:
+Huang and colleagues distinguish internal-model adaptation from proposed
+model-free contributions to repetition biases and savings
+\cite{Huang2011}. Their account concerns particular adaptation paradigms, not a
+universal assignment of every fast change to one neural structure. Similarly,
+the fast and slow processes inferred by Smith and colleagues describe retention
+and error sensitivity in a short-term reaching model; the paper explicitly
+does not uniquely identify their neural realization\cite{SmithDualRate2006Review}.
 
-\begin{enumerate}
-  \item \textbf{Error-based learning} (cerebellum): uses sensory prediction errors (climbing
-        fiber signals) to update cerebellar forward models via LTD~\cite{Marr1969,Kawato1987}.
-        Trial-by-trial timescale (minutes to hours). It drives adaptation both to altered limb
-        \emph{dynamics}~\cite{Shadmehr1994} and to an altered visuomotor
-        \emph{mapping}~\cite{Krakauer1999} --- and those two are acquired independently of one
-        another, so they are worth keeping distinct rather than filing together as
-        ``adaptation''.
+Consolidation concerns stabilization or other time-dependent changes in memory
+assessed with a specified retention/interference protocol. Use-dependent bias
+means a repeated movement influences later movement selection. Structural
+learning concerns regularities across tasks. These are not interchangeable
+names for repetition, nor does an immediate aftereffect prove consolidation.
+Seconds within a movement, trial number and elapsed time between practice
+sessions must also be distinguished.
 
-  \item \textbf{Reinforcement learning} (basal ganglia): uses dopamine reward signals to
-        strengthen successful motor patterns~\cite{Schultz1997}. Slower than error-based
-        learning (hours to days). Enables discovery of novel solutions not implicit in the
-        task structure.
+\section{A Single-Rate Model With an Exact Solution}
 
-  \item \textbf{Consolidation and structural learning} (cortical): repetition of a movement
-        biases future movements toward repeated patterns~\cite{Cohen2005}. Timescale of
-        hours to days; explains habit formation. Involves gradual changes in M1 tuning and
-        synaptic weights.
-\end{enumerate}
+Let $p_k$ be an imposed angular perturbation, $x_k$ the learned compensation
+\emph{before} trial $k$, and $e_k$ the error available to this idealized model:
+\begin{equation}
+ e_k=p_k-x_k,\qquad x_{k+1}=a x_k+b e_k=(a-b)x_k+b p_k.
+ \label{eq:ch9:single-rate}
+\end{equation}
+All three angular quantities use the same units. Retention $a$ and sensitivity
+$b$ are dimensionless per-trial parameters. This deterministic scalar recurrence
+does not separate explicit from implicit learning, estimate a neural state or
+represent within-swing feedback. Its error is a declared input to the model,
+not automatically an experimentally isolated sensory prediction error.
 
-\begin{figure}[h]
+For constant $p$, write $\lambda=a-b$. If $|\lambda|<1$,
+\begin{equation}
+ x_\infty=\frac{b p}{1-a+b},\quad
+ e_\infty=\frac{(1-a)p}{1-a+b},\quad
+ x_k=x_\infty+(x_0-x_\infty)\lambda^k.
+\end{equation}
+Convergence is monotone relative to the fixed point when $0\leq\lambda<1$;
+negative $\lambda$ gives alternating deviations. Stable parameter choices need
+not eliminate error. With $a=0.98$, $b=0.05$, $p=30^\circ$, the asymptotic
+compensation is $150/7\approx21.43^\circ$ and error is
+$60/7\approx8.57^\circ$. Those are manufactured model values, not a human
+adaptation ceiling. The listing restricts $a,b$ to $[0,1]$ and $|a-b|<1$;
+this is a declared example domain, not a universal biological parameter law.
+
+\subsection{Washout Is Not a Zero-Error Clamp}
+
+After $N$ adaptation trials the state is $x_N$, including the update after the
+last observed error. Removing the perturbation gives first washout error
+$-x_N$ and subsequent states $x_{N+j}=\lambda^j x_N$. For positive compensation,
+the initial aftereffect has the opposite sign to the initial perturbation error.
+By contrast, an ideal zero-error clamp supplies $e_k=0$ regardless of the state,
+so $x_{N+j}=a^j x_N$. The different decay factors follow from different
+feedback conditions. A force-channel experiment that constrains lateral error
+is not the same as removing the force field, and neither is automatically
+equivalent to every visual clamp or absence of feedback.
+
+\begin{figure}[ht]
 \centering
-\begin{tikzpicture}[scale=0.85]
-  % Timeline
-  \draw (0, 0) -- (8, 0);
-  \draw (0, -0.2) node[align=center, anchor=north] {Baseline};
-  \draw (3.5, -0.2) node[align=center, anchor=north] {Adaptation};
-  \draw (7.5, -0.2) node[align=center, anchor=north] {Washout};
-
-  % Error curve (schematic)
-  \draw[blue, thick] (0, 1) -- (1.5, 1) -- (2, 3) -- (3.5, 1.2) -- (4.5, 0.3) -- (5.5, 0.1) -- (8, 0.8);
-
-  % Labels
-  \draw (0.75, 0.5) node[align=center, anchor=center, font=\tiny] {minimal};
-  \draw (2.75, 3.3) node[align=center, anchor=center, font=\tiny] {early};
-  \draw (4, 0.8) node[align=center, anchor=center, font=\tiny] {adaptation};
-  \draw (7.2, 1.2) node[align=center, anchor=center, font=\tiny] {aftereffect};
-
-  % Dashed line (zero)
-  \draw[dashed] (0, 0) -- (8, 0);
-
-  % Y-axis
-  \draw[->, thick] (-0.3, 0) -- (-0.3, 3.5) node[align=center, anchor=east, rotate=90] {Error};
-
-  % Title
-  \draw (4, 4.2) node[align=center, anchor=center, font=\small\bf] {Visuomotor Adaptation Curve};
-  \draw (4, 3.8) node[align=center, anchor=center, font=\tiny] {(Reaching with visual rotation)};
+\begin{tikzpicture}[x=0.7cm,y=0.6cm]
+ \draw[->] (0,-2.4)--(0,3.1) node[above] {Signed Error};
+ \draw[->] (0,0)--(9,0) node[right] {Trials};
+ \draw[dashed] (2,-2.3)--(2,2.8);
+ \draw[dashed] (6,-2.3)--(6,2.8);
+ \draw[blue,thick] (0,0)--(2,0)--(2,2.6)
+   .. controls (3,1.1) and (4,0.8) .. (6,0.75)
+   --(6,-1.85) .. controls (7,-0.6) and (8,-0.1) .. (8.6,-0.05);
+ \node[font=\small] at (1,-2.8) {Baseline};
+ \node[font=\small] at (4,-2.8) {Adaptation};
+ \node[font=\small] at (7.5,-2.8) {Washout};
 \end{tikzpicture}
-\caption{Characteristic visuomotor adaptation profile~\cite{Krakauer1999}:
-rapid error reduction (first 20 trials), gradual asymptote, persistent aftereffect
-demonstrating learning consolidation.}
+\caption{A Qualitative Signed-Error Schematic for the Declared Recurrence.
+It Illustrates the Opposite-Sign Aftereffect, Not Measured Data or Consolidation.}
 \label{fig:ch9:visuomotor-adaptation}
 \end{figure}
 
-\section{Visuomotor Adaptation}
+\begin{lstlisting}[language=Python, caption={Trial States With Explicit Feedback Conditions}]
+from dataclasses import dataclass
 
-The classic paradigm for studying error-based learning~\cite{Krakauer1999}:
-
-\begin{lstlisting}[language=Python, caption={Visuomotor adaptation simulation.}]
 import numpy as np
+from scipy.signal import lfilter
 
-def simulate_visuomotor_adaptation(
-    n_baseline: int = 50,
-    n_adaptation: int = 200,
-    n_washout: int = 100,
-    perturbation_deg: float = 30.0,
-    learning_rate: float = 0.05,
+
+@dataclass(frozen=True)
+class AdaptationModel:
+    """Scalar trial model; all angular inputs and outputs are degrees."""
+
     retention: float = 0.98
-) -> dict:
-    """Simulate visuomotor rotation adaptation.
+    sensitivity: float = 0.05
 
-    A simple state-space model of adaptation:
-    x_{k+1} = retention * x_k + learning_rate * e_k
+    def __post_init__(self) -> None:
+        rates = np.asarray([self.retention, self.sensitivity], dtype=float)
+        if not np.isfinite(rates).all() or np.any((rates < 0) | (rates > 1)):
+            raise ValueError("Rates must be finite and within [0, 1]")
+        if abs(self.retention - self.sensitivity) >= 1:
+            raise ValueError("Veridical-feedback recurrence must be stable")
 
-    Parameters
-    ----------
-    n_baseline : int
-        Baseline trials (no perturbation).
-    n_adaptation : int
-        Adaptation trials (perturbation on).
-    n_washout : int
-        Post-adaptation trials (perturbation off).
-    perturbation_deg : float
-        Rotation perturbation in degrees.
-    learning_rate : float
-        Rate of error-based learning.
-    retention : float
-        Memory retention between trials.
-
-    Returns
-    -------
-    dict
-        Keys: 'trial', 'reaching_error', 'internal_state',
-              'phase' (labels for each trial)
-    """
-    n_total = n_baseline + n_adaptation + n_washout
-    p = np.radians(perturbation_deg)
-
-    # Internal state (learned compensation)
-    x = 0.0
-    errors = np.zeros(n_total)
-    states = np.zeros(n_total)
-    phases = []
-
-    for trial in range(n_total):
-        if trial < n_baseline:
-            perturbation = 0.0
-            phases.append('baseline')
-        elif trial < n_baseline + n_adaptation:
-            perturbation = p
-            phases.append('adaptation')
-        else:
-            perturbation = 0.0
-            phases.append('washout')
-
-        # Reaching error = perturbation - compensation
-        error = perturbation - x
-        errors[trial] = np.degrees(error)
-        states[trial] = np.degrees(x)
-
-        # Update internal state
-        x = retention * x + learning_rate * error
-
-    return {
-        'trial': np.arange(n_total),
-        'reaching_error': errors,
-        'internal_state': states,
-        'phase': phases
-    }
+    def run(self, perturbations: np.ndarray, initial: float = 0.0,
+            feedback: str = "veridical") -> dict[str, np.ndarray | float]:
+        """Return pretrial states, supplied errors and final updated state."""
+        schedule = np.asarray(perturbations, dtype=float)
+        if schedule.ndim != 1 or schedule.size == 0:
+            raise ValueError("A nonempty one-dimensional schedule is required")
+        if not np.isfinite(schedule).all() or not np.isfinite(initial):
+            raise ValueError("Schedule and initial state must be finite")
+        if feedback not in ("veridical", "clamp"):
+            raise ValueError("Unknown feedback condition")
+        if feedback == "clamp" and np.any(schedule != 0):
+            raise ValueError("Use a zero schedule for the zero-error clamp")
+        pole = self.retention
+        forcing = np.zeros_like(schedule)
+        if feedback == "veridical":
+            pole -= self.sensitivity
+            forcing = self.sensitivity * schedule
+        # The filter output is the POST-trial state; zi carries x0.
+        updated, _ = lfilter([1.0], [1.0, -pole], forcing,
+                             zi=[pole * initial])
+        states = np.concatenate(([initial], updated[:-1]))
+        errors = schedule - states if feedback == "veridical" else forcing
+        return {"state": states, "error": errors,
+                "final_state": float(updated[-1])}
 
 
-result = simulate_visuomotor_adaptation()
-print("Visuomotor Adaptation Summary:")
-print(f"  Baseline error:  {np.mean(np.abs(result['reaching_error'][:50])):.1f} deg")
-print(f"  Final adaptation error: "
-      f"{np.abs(result['reaching_error'][249]):.1f} deg")
-print(f"  Aftereffect: {result['reaching_error'][250]:.1f} deg")
+schedule = np.concatenate((np.zeros(50), np.full(200, 30.0), np.zeros(100)))
+result = AdaptationModel().run(schedule)
 \end{lstlisting}
 
-\section{Savings and Interference}
+The filter implements the same recurrence without a Python loop over trials.
+The returned final state permits exact continuation across blocks. The index at
+which washout begins comes from the schedule, not a hard-coded assertion about
+every experiment. Holding the full initial state and parameters fixed must
+reproduce the same trajectory; this model has no additional memory of practice.
 
-\subsection{Savings}
-Re-learning a previously learned adaptation is faster than initial learning,
-even after complete washout~\cite{Huang2011} --- an observation that predates motor
-control, going back to Ebbinghaus's 1885 work on memory. This savings
-effect suggests that motor memories are not erased but suppressed, with additional
-learning circuits retaining implicit information about the learning dynamics.
+\section{Savings, Interference and Hidden States}
 
-\subsection{Interference and Dual-Rate Learning}
-Learning opposite perturbations (A then B) produces anterograde interference:
-learning B slows retention of A (Li and Xie, 2000). This is explained by dual-rate
-learning models: a fast process learns trial-by-trial; a slow process consolidates.
-Interference occurs because the fast process is task-specific while the slow process
-is more general.
+Savings means faster relearning under a specified comparison protocol. The
+same apparent initial performance need not imply the same hidden state. A
+two-rate model makes this distinction explicit:
+\begin{align}
+ x_{f,k+1}&=a_f x_{f,k}+b_f e_k, &
+ x_{s,k+1}&=a_s x_{s,k}+b_s e_k,\\
+ x_k&=x_{f,k}+x_{s,k}, &e_k&=p_k-x_k,
+\end{align}
+with $a_f<a_s$ and $b_f>b_s$ in the intended regime. During veridical feedback
+the joint state matrix is
+$\operatorname{diag}(a_f,a_s)-(b_f,b_s)^{\mathsf T}(1,1)$.
+Its eigenvalues, not retention factors alone, determine linear stability.
+The parameters describe trial dynamics and do not assign fast learning to
+conscious thought or slow learning to a particular brain region.
 
-\section{Structural Learning and Meta-Learning}
+Under a zero-error clamp the two states decay separately. If initially
+$x_f=-c$ and $x_s=c$, output is zero, but after $j$ trials
+\begin{equation}
+ x_j=c(a_s^j-a_f^j).
+\end{equation}
+For $0<a_f<a_s<1$ and $c>0$, this gives a positive transient rebound and then
+decay. Smith and colleagues tested a prediction of this kind using force-channel
+reaching after adaptation and brief opposite-field training
+\cite{SmithDualRate2006Review}. The observed recovery supports multiple time
+scales in that task; it does not uniquely locate two anatomical modules.
 
-Over many adaptation experiences, subjects develop the ability to adapt faster---they
-learn to learn (context-dependent learning). Smith et al. (1998) showed that prior
-exposure to one visuomotor rotation task accelerates learning of a novel rotation.
-This involves learning the structure of the task space itself, not just individual
-parameter values. Brain areas like dorsolateral prefrontal cortex appear to encode
-such meta-learning (Gershman et al., 2017).
+Residual hidden states can also facilitate relearning. If \emph{all} states,
+parameters and inputs are reset to their original values, a deterministic
+fixed-parameter model reproduces its original learning curve. Thus zero net
+output is weaker than erasing every state. Savings after extended washout can
+motivate additional mechanisms, including retrieval of previously successful
+actions, as proposed and tested in particular visuomotor paradigms
+\cite{Huang2011}; no single curve proves a unique mechanism.
+
+\textbf{Anterograde interference} means earlier learning of A impairs subsequent
+learning of B. \textbf{Retrograde interference} means later learning of B impairs
+retention or expression of A. Specify exposure, test delay, washout and the
+performance measure before applying either label. A change in error immediately
+after switching perturbations is not sufficient to identify a memory mechanism.
+
+\section{Learning Structure Across Tasks}
+
+Braun and colleagues varied visuomotor transformations within a task family and
+tested transfer to new transformations. Their findings supported facilitation,
+interference reduction and preferential exploration related to the experienced
+structure\cite{BraunStructure2009Review}. Structural learning therefore concerns
+relations among tasks, rather than repetition of one solution. It need not be
+assigned to a specific cortical area to state this behavioral claim.
+
+A simple engineering illustration is a family of parameters
+$\theta=\theta_0+S\eta$, with orthonormal columns of $S$. Searching in $\eta$
+can reduce the number of adjustable coefficients. But for a new target
+$\theta_*$, the least-squares residual is
+$(I-SS^{\mathsf T})(\theta_*-\theta_0)$. A task outside the learned subspace
+therefore incurs a restriction bias. The coordinates, metric and applicability
+of that family must be established; lower dimension is not a guarantee of
+universally faster or more accurate learning.
+
+\section{Intertwined Changes in Golf Practice}
+
+Changing club mass or shaft compliance changes plant dynamics. Changing a
+displayed aim direction changes information or a task reference. Wind changes
+ball-flight dynamics after impact. These are different interventions, although
+each can change observed shot error. A useful experiment measures impact
+conditions as well as ball outcome and separates familiarization, adaptation,
+retention and transfer tests.
+
+Repeated practice may change a chosen trajectory, an internal prediction, a
+feedback policy or a strategy. Existing activation and stored elastic energy
+affect each swing's mechanics; between-trial learning can change how those states
+are prepared. The scalar recurrence illustrates one possible history dependence,
+not a validated prescription for swing correction. A convincing golf claim needs
+measured outcomes, a specified perturbation and competing explanations, with
+generalization tested rather than inferred from a range-practice curve.
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{State-Space Model.} Using the provided code, explore how learning
-        rate and retention affect adaptation speed and aftereffect size.
-
-  \item \textbf{Dual-Rate Model.} Implement a dual-rate model (fast + slow process)
-        and show that it can explain savings.
-
-  \item \textbf{(Programming.)} Simulate interference by adapting to $+30^\circ$ then
-        $-30^\circ$. Plot the adaptation curves and aftereffects.
+ \item Derive the finite-trial solution and asymptote. Compare monotone and
+ alternating convergence and compute the first washout error exactly.
+ \item Starting from the same compensation, compare perturbation removal
+ with a zero-error clamp. Explain their different decay factors.
+ \item Construct the two-state rebound above. Then reset both states to zero
+ and show why the unchanged model cannot retain a practice advantage.
+ \item Derive the subspace residual and design a transfer test containing
+ tasks both inside and outside an assumed golf-control parameter family.
 \end{enumerate}

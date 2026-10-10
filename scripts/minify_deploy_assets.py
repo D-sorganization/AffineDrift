@@ -2,7 +2,7 @@
 """Minify deploy-only CSS and JavaScript assets.
 
 Canonical assets stay readable in ``css/`` and ``js/``. This script runs after
-Quarto render and mirror checks, shrinking only the generated ``docs/`` files
+Quarto render and mirror checks, shrinking only the generated ``_site/`` files
 that are uploaded to GitHub Pages.
 """
 
@@ -137,12 +137,12 @@ def minify_file(path: Path, minifier: Callable[[str], str]) -> None:
 def minify_deploy_assets(repo_root: Path) -> list[Path]:
     """Minify generated deploy assets and return the files touched."""
     touched: list[Path] = []
-    css_path = repo_root / "docs" / "styles.css"
+    css_path = repo_root / "_site" / "styles.css"
     if css_path.is_file():
         minify_file(css_path, minify_css)
         touched.append(css_path)
 
-    js_dir = repo_root / "docs" / "js"
+    js_dir = repo_root / "_site" / "js"
     if js_dir.is_dir():
         for js_path in sorted(js_dir.glob("*.js")):
             minify_file(js_path, minify_js)
@@ -151,12 +151,12 @@ def minify_deploy_assets(repo_root: Path) -> list[Path]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Minify generated docs CSS/JS deploy assets")
+    parser = argparse.ArgumentParser(description="Minify generated _site CSS/JS deploy assets")
     parser.add_argument(
         "--repo-root",
         type=Path,
         default=Path(__file__).resolve().parent.parent,
-        help="Repository root containing docs/",
+        help="Repository root containing _site/",
     )
     args = parser.parse_args()
     repo_root = args.repo_root.resolve()

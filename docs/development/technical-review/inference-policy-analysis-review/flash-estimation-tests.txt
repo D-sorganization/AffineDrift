@@ -1,0 +1,214 @@
+Here is the complete read-only proposal for the single pytest test file satisfying all architectural, mathematical, and coding guidelines:
+
+```python
+"""Tests for pendulum parameter estimation extracting code from Chapter 7.
+
+Validates `fit_pendulum` extracted directly from the LaTeX source of Volume V, Chapter 7
+against physics constraints, rank deficiency, noise weighting, and input validation.
+"""
+
+from collections.abc import Callable
+import importlib
+from pathlib import Path
+import re
+import sys
+import types
+from typing import Any
+
+import numpy as np
+import pytest
+
+
+def _load_chapter_module() -> types.ModuleType:
+    """Extract and compile Python lstlisting blocks from chapter 7 LaTeX source."""
+    module_name = "ch07_parameter_estimation_extracted"
+    if module_name in sys.modules:
+        return sys.modules[module_name]
+
+    root = Path(__file__).resolve().parents[1]
+    tex_path = (
+        root
+        / "articles"
+        / "The_Geometry_of_Motion"
+        / "Volume_V"
+        / "chapters"
+        / "ch07_parameter_estimation.tex"
+    )
+    content = tex_path.read_text(encoding="utf-8")
+    pattern = re.compile(
+        r"\\begin\{lstlisting\}(?:\[.*?language=Python.*?\])?\s*\n(.*?)\n\s*\\end\{lstlisting\}",
+        re.DOTALL,
+    )
+    matches = pattern.findall(content)
+    if not matches:
+        pytest.fail(f"No Python lstlisting blocks found in {tex_path}")
+
+    mod = types.ModuleType(module_name)
+    mod.__file__ = str(tex_path)
+    sys.modules[module_name] = mod
+    code_str = "\n\n".join(matches)
+    compiled = compile(code_str, str(tex_path), "exec", dont_inherit=True)
+    # nosemgrep: python.lang.security.audit.exec-detected.exec-detected
+    # Executing trusted code extracted dynamically from fixed repository LaTeX chapter source.
+    exec(compiled, mod.__dict__)
+    return mod
+
+
+@pytest.fixture(scope="module")
+def fit_pendulum() -> Callable[..., dict[str, Any]]:
+    """Fixture providing the dynamically loaded fit_pendulum callable."""
+    mod = _load_chapter_module()
+    if not hasattr(mod, "fit_pendulum"):
+        pytest.fail("Module does not export fit_pendulum")
+    return getattr(mod, "fit_pendulum")
+
+
+def _generate_trajectory(
+    t: np.ndarray, j_val: float = 0.4, b_val: float = 0.1, c_val: float = 2.0
+) -> tuple[np.ndarray, np.ndarray]:
+    """Generate smooth analytic trajectory samples and torque."""
+    q = 0.3 * np.sin(t) + 0.2 * np.sin(2.3 * t)
+    qdot = 0.3 * np.cos(t) + 0.46 * np.cos(2.3 * t)
+    qddot = -0.3 * np.sin(t) - 1.058 * np.sin(2.3 * t)
+    samples = np.column_stack([q, qdot, qddot])
+    regressor = np.column_stack([qddot, qdot, np.sin(q)])
+    torque = regressor @ np.array([j_val, b_val, c_val])
+    return samples, torque
+
+
+def test_noiseless_recovery(fit_pendulum: Callable[..., dict[str, Any]]) -> None:
+    """Verify exact recovery of parameters under heterogeneous sigma."""
+    t = np.linspace(0.1, 4.0, 50)
+    samples, torque = _generate_trajectory(t, 0.4, 0.1, 2.0)
+    sigma = 0.5 + 0.5 * np.cos(t) ** 2
+    res = fit_pendulum(samples, torque, sigma)
+
+    np.testing.assert_allclose(res["parameters"], [0.4, 0.1, 2.0], rtol=1e-6, atol=1e-6)
+    np.testing.assert_allclose(res["prediction"], torque, rtol=1e-6, atol=1e-6)
+    np.testing.assert_allclose(res["weighted_residual"], np.zeros_like(torque), atol=1e-6)
+    assert res["physical"] is True
+    assert len(res["singular_values"]) == 3
+    assert np.all(res["singular_values"] > 0)
+
+
+def test_permutation_invariance(fit_pendulum: Callable[..., dict[str, Any]]) -> None:
+    """Verify row permutation does not affect estimation."""
+    t = np.linspace(0.1, 3.0, 30)
+    samples, torque = _generate_trajectory(t)
+    sigma = 0.2 + np.abs(np.sin(t))
+    perm = np.random.default_rng(42).permutation(len(t))
+
+    res1 = fit_pendulum(samples, torque, sigma)
+    res2 = fit_pendulum(samples[perm], torque[perm], sigma[perm])
+
+    np.testing.assert_allclose(res1["parameters"], res2["parameters"], rtol=1e-8)
+    np.testing.assert_allclose(res1["singular_values"], res2["singular_values"], rtol=1e-8)
+
+
+def test_nonphysical_result(fit_pendulum: Callable[..., dict[str, Any]]) -> None:
+    """Negative torque yields unconstrained negative parameters marked physical=False."""
+    t = np.linspace(0.1, 2.0, 20)
+    samples, torque = _generate_trajectory(t)
+    sigma = np.ones_like(torque)
+    res = fit_pendulum(samples, -torque, sigma)
+
+    np.testing.assert_allclose(res["parameters"], [-0.4, -0.1, -2.0], rtol=1e-6)
+    assert res["physical"] is False
+
+
+def test_rank_deficiency(fit_pendulum: Callable[..., dict[str, Any]]) -> None:
+    """Verify rejection of rank<3 or zero-column regressors."""
+    t = np.linspace(0.1, 2.0, 20)
+    # Zero column via q=0, qdot=0, qddot=0
+    samples_zero = np.zeros((20, 3))
+    with pytest.raises(ValueError):
+        fit_pendulum(samples_zero, np.ones(20), np.ones(20))
+
+    # Unforced undamped qddot = -5 sin(q), making columns 0 and 2 colinear
+    q = 0.5 * np.sin(t)
+    qdot = np.cos(t)  # arbitrary qdot
+    qddot = -5.0 * np.sin(q)
+    samples_colinear = np.column_stack([q, qdot, qddot])
+    with pytest.raises(ValueError):
+        fit_pendulum(samples_colinear, np.ones(20), np.ones(20))
+
+
+def test_weighted_residual_orthogonality(
+    fit_pendulum: Callable[..., dict[str, Any]]
+) -> None:
+    """Verify weighted residual is orthogonal to whitened design matrix with noisy data."""
+    t = np.linspace(0.1, 4.0, 40)
+    samples, torque = _generate_trajectory(t)
+    # Deliberate offset to produce non-zero residuals
+    perturbed_torque = torque + 0.3 * np.cos(5.0 * t)
+    sigma = 0.1 + 0.4 * np.abs(np.sin(t))
+
+    res = fit_pendulum(samples, perturbed_torque, sigma)
+    # Construct whitened design matrix
+    q, qdot, qddot = samples[:, 0], samples[:, 1], samples[:, 2]
+    x_matrix = np.column_stack([qddot, qdot, np.sin(q)])
+    x_whitened = x_matrix / sigma[:, np.newaxis]
+
+    # Weighted residual orthogonality condition: X_whitened.T @ r_weighted = 0
+    orthogonality = x_whitened.T @ res["weighted_residual"]
+    np.testing.assert_allclose(orthogonality, np.zeros(3), atol=1e-7)
+
+
+def test_uncertainty_weighting_influence(
+    fit_pendulum: Callable[..., dict[str, Any]]
+) -> None:
+    """Verify sample with higher uncertainty exerts less influence on parameter error."""
+    t = np.linspace(0.2, 3.0, 30)
+    true_params = np.array([0.4, 0.1, 2.0])
+    samples, torque = _generate_trajectory(t, *true_params)
+
+    # Base observation standard deviation
+    sigma_base = np.full(30, 0.5)
+
+    # Altered sample at index 5 with perturbation +10.0
+    torque_pert = torque.copy()
+    torque_pert[5] += 10.0
+
+    # Fit 1: altered sample has low uncertainty (equal to baseline)
+    res_low_sigma = fit_pendulum(samples, torque_pert, sigma_base)
+    err_low_sigma = np.linalg.norm(res_low_sigma["parameters"] - true_params)
+
+    # Fit 2: altered sample has high uncertainty (large sigma)
+    sigma_high = sigma_base.copy()
+    sigma_high[5] = 100.0
+    res_high_sigma = fit_pendulum(samples, torque_pert, sigma_high)
+    err_high_sigma = np.linalg.norm(res_high_sigma["parameters"] - true_params)
+
+    assert err_high_sigma < err_low_sigma
+
+
+def test_input_validation(fit_pendulum: Callable[..., dict[str, Any]]) -> None:
+    """Verify input dimension, shape, NaN, and positive sigma validation."""
+    valid_samples = np.ones((5, 3))
+    valid_torque = np.ones(5)
+    valid_sigma = np.ones(5)
+
+    with pytest.raises(ValueError):  # N < 3
+        fit_pendulum(np.ones((2, 3)), np.ones(2), np.ones(2))
+    with pytest.raises(ValueError):  # wrong sample dimension
+        fit_pendulum(np.ones((5, 2)), valid_torque, valid_sigma)
+    with pytest.raises(ValueError):  # torque wrong shape
+        fit_pendulum(valid_samples, np.ones((5, 1)), valid_sigma)
+    with pytest.raises(ValueError):  # sigma mismatch shape
+        fit_pendulum(valid_samples, valid_torque, np.ones(4))
+    with pytest.raises(ValueError):  # NaNs in samples
+        bad_samples = valid_samples.copy()
+        bad_samples[0, 0] = np.nan
+        fit_pendulum(bad_samples, valid_torque, valid_sigma)
+    with pytest.raises(ValueError):  # NaNs in torque
+        bad_torque = valid_torque.copy()
+        bad_torque[0] = np.nan
+        fit_pendulum(valid_samples, bad_torque, valid_sigma)
+    with pytest.raises(ValueError):  # Non-positive sigma (0 or negative)
+        bad_sigma = valid_sigma.copy()
+        bad_sigma[0] = 0.0
+        fit_pendulum(valid_samples, valid_torque, bad_sigma)
+    with pytest.raises(ValueError):
+        bad_sigma[0] = -1.0
+        fit_pendulum(valid_samples, valid_torque, bad_sigma)
+```

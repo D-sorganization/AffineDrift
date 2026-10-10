@@ -1,0 +1,228 @@
+### 1. Manufactured Tests & Isolated Quadratic Core (`quadratic_step`)
+
+#### 1.1 Architectural Separation
+Broken end-to-end trajectory optimizers frequently conflate forward rollout integration, derivative linearization error, line search heuristics, and local subproblem minimization. 
+
+To make the algorithm verifiable and isolated, we factor out the **pure quadratic step** into a standalone mathematical primitive and keep the outer nonlinear iLQR forward/backward iteration explicitly unimplemented/stubbed until the core satisfies exact algebraic invariants.
+
+```python
+import numpy as np
+
+
+def quadratic_step(
+    gradient: np.ndarray,
+    hessian: np.ndarray,
+    state_size: int,
+) -> dict[str, np.ndarray | float]:
+    """Single-stage unconstrained quadratic minimization for z = [dx, du]^T.
+
+    Minimizes:
+        Q(dx, du) = 0.5 * z^T H z + g^T z
+    where:
+        z = [dx; du]
+        g = [gx; gu]
+        H = [[Hxx, Hxu],
+             [Hux, Huu]]
+
+    Preconditions:
+        - H is symmetric and finite.
+        - Huu is strictly positive definite (verified via Cholesky decomposition).
+    """
+    g = np.asarray(gradient, dtype=np.float64).reshape(-1)
+    H = np.asarray(hessian, dtype=np.float64)
+
+    n = state_size
+    m = g.shape[0] - n
+    if m <= 0 or H.shape != (n + m, n + m):
+        raise ValueError("Incompatible dimensions for state_size and gradient/hessian.")
+
+    # Symmetry and finiteness checks
+    if not np.all(np.isfinite(H)) or not np.all(np.isfinite(g)):
+        raise FloatingPointError("Non-finite values encountered in gradient or Hessian.")
+    if not np.allclose(H, H.T, atol=1e-12, rtol=1e-12):
+        raise ValueError("Hessian must be symmetric.")
+
+    # Partition blocks
+    gx = g[:n]
+    gu = g[n:]
+    Hxx = H[:n, :n]
+    Hxu = H[:n, n:]
+    Hux = H[n:, :n]
+    Huu = H[n:, n:]
+
+    # Positive-definiteness via Cholesky factor L: Huu = L L^T
+    try:
+        L = np.linalg.cholesky(Huu)
+    except np.linalg.LinAlgError as err:
+        raise ValueError(
+            "Huu block is not positive definite; regularization required."
+        ) from err
+
+    # Solve Huu @ k = -gu and Huu @ K = -Hux
+    # Using forward/back substitution:
+    y_k = np.linalg.solve(L, -gu)
+    k = np.linalg.solve(L.T, y_k)
+
+    y_K = np.linalg.solve(L, -Hux)
+    K = np.linalg.solve(L.T, y_K)
+
+    # Value function local approximations
+    # V(dx) = V0 + Vx^T dx + 0.5 dx^T Vxx dx
+    value_offset = -0.5 * float(gu.T @ -k)  # -0.5 * gu^T (Huu^{-1} gu)
+    value_gradient = gx + Hxu @ k
+    value_hessian = Hxx + Hxu @ K
+
+    return {
+        "k": k,
+        "K": K,
+        "value_gradient": value_gradient,
+        "value_hessian": value_hessian,
+        "value_offset": value_offset,
+    }
+
+
+def ilqr_solve_trajectory(*args, **kwargs):
+    """Nonlinear trajectory optimization loop."""
+    raise NotImplementedError(
+        "Nonlinear outer loop stubbed pending verification of quadratic minimization core."
+    )
+```
+
+---
+
+#### 1.2 Scalar Sanity Check
+Consider a 1D state and 1D control problem ($n=1, m=1$):
+$$
+z = \begin{bmatrix} \delta x \\ \delta u \end{bmatrix}, \quad
+g = \begin{bmatrix} 3 \\ 4 \end{bmatrix} \implies g_x = 3, \; g_u = 4
+$$
+$$
+H = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} \implies H_{xx} = 2, \; H_{xu} = 1, \; H_{ux} = 1, \; H_{uu} = 2
+$$
+
+Evaluating the closed-form expressions:
+1. **Feedforward gain $k$:**
+   $$k = -H_{uu}^{-1} g_u = -\frac{4}{2} = -2$$
+2. **Feedback gain $K$:**
+   $$K = -H_{uu}^{-1} H_{ux} = -\frac{1}{2} = -0.5$$
+3. **Value gradient $V_x$:**
+   $$V_x = g_x + H_{xu} k = 3 + 1 \cdot (-2) = 1$$
+4. **Value Hessian $V_{xx}$:**
+   $$V_{xx} = H_{xx} + H_{xu} K = 2 + 1 \cdot (-0.5) = 1.5$$
+5. **Value offset $\Delta V_0$:**
+   $$\Delta V_0 = -\frac{1}{2} g_u^T H_{uu}^{-1} g_u = -\frac{1}{2} (4) \left(\frac{4}{2}\right) = -4$$
+
+This provides an exact, zero-tolerance analytical unit test for the step logic without numerical ambiguity.
+
+---
+
+#### 1.3 Finite-Difference Reduced Cost Verification
+The optimal control perturbation $\delta u^*(\delta x) = k + K \delta x$ eliminates the control degree of freedom. Substituting this into the joint expansion gives the reduced cost:
+$$
+V(\delta x) = \min_{\delta u} Q(\delta x, \delta u) = Q(\delta x, k + K \delta x)
+$$
+Because this is strictly quadratic in $\delta x$:
+1. **Directional Derivative Test:** For any test direction $v \in \mathbb{R}^n$ and step size $\epsilon$:
+   $$
+   \frac{V(\epsilon v) - V(-\epsilon v)}{2\epsilon} = V_x^T v + \mathcal{O}(\epsilon^2)
+   $$
+   Because higher-order terms beyond quadratic are identically zero for a pure quadratic model, central differences match $V_x^T v$ up to machine precision rounding.
+2. **Curvature Test:**
+   $$
+   \frac{V(\epsilon v) - 2V(0) + V(-\epsilon v)}{\epsilon^2} = v^T V_{xx} v
+   $$
+   Testing along coordinate directions $e_i$ and combinations $e_i + e_j$ numerically reconstructs $V_x$ and $V_{xx}$ to verify the Schur complement formula $V_{xx} = H_{xx} - H_{xu} H_{uu}^{-1} H_{ux}$.
+
+---
+
+### 2. Feedback Control Guarantees & Tracking Discrepancies
+
+#### 2.1 PD + Gravity Compensation for Constant Setpoints
+Consider a fully actuated rigid body manipulator in configuration coordinates $q \in \mathbb{R}^p$:
+$$
+M(q)\ddot{q} + C(q, \dot{q})\dot{q} + g(q) = \tau
+$$
+For a **constant desired setpoint** $q^* \in \mathbb{R}^p$ (where $\dot{q}^* = 0, \ddot{q}^* = 0$), the PD with gravity cancellation law is:
+$$
+\tau = g(q) - K_p \tilde{q} - K_d \dot{q}, \quad \tilde{q} = q - q^*
+$$
+Substituting $\tau$ yields the closed-loop dynamics:
+$$
+M(q)\ddot{q} + C(q, \dot{q})\dot{q} + K_p \tilde{q} + K_d \dot{q} = 0
+$$
+
+**Lyapunov Stability Proof:**
+Choose the candidate Lyapunov function:
+$$
+V(\tilde{q}, \dot{q}) = \frac{1}{2} \dot{q}^T M(q) \dot{q} + \frac{1}{2} \tilde{q}^T K_p \tilde{q}
+$$
+Taking the time derivative along system trajectories:
+$$
+\dot{V} = \dot{q}^T M(q)\ddot{q} + \frac{1}{2} \dot{q}^T \dot{M}(q)\dot{q} + \dot{q}^T K_p \tilde{q}
+$$
+Substitute $M(q)\ddot{q} = -C(q, \dot{q})\dot{q} - K_p \tilde{q} - K_d \dot{q}$:
+$$
+\dot{V} = \dot{q}^T \left( -C \dot{q} - K_p \tilde{q} - K_d \dot{q} \right) + \frac{1}{2}\dot{q}^T \dot{M} \dot{q} + \dot{q}^T K_p \tilde{q}
+$$
+Rearranging terms:
+$$
+\dot{V} = -\dot{q}^T K_d \dot{q} + \frac{1}{2} \dot{q}^T \left( \dot{M}(q) - 2C(q, \dot{q}) \right) \dot{q}
+$$
+**Mathematical Requirements:**
+- **Skew-symmetry of $\dot{M} - 2C$:** With the Christoffel formulation of $C(q, \dot{q})$, the matrix $\dot{M} - 2C$ is skew-symmetric, meaning $z^T (\dot{M} - 2C) z = 0$ for all $z \in \mathbb{R}^p$.
+- **Symmetric Positive Definiteness (SPD):** Both $K_p \succ 0$ and $K_d \succ 0$.
+- **Result:** $\dot{V} = -\dot{q}^T K_d \dot{q} \le 0$.
+- **LaSalle's Invariance Principle:** $\dot{V} = 0 \implies \dot{q} = 0 \implies \ddot{q} = 0$. Substituting $\dot{q} = \ddot{q} = 0$ into the closed loop yields $K_p \tilde{q} = 0 \implies \tilde{q} = 0$. Hence, the equilibrium $(q^*, 0)$ is asymptotically stable.
+
+---
+
+#### 2.2 Arbitrary Trajectory Tracking & Computed Torque
+When tracking a time-varying trajectory $q_d(t)$, gravity compensation plus PD:
+$$
+\tau = g(q) - K_p (q - q_d(t)) - K_d (\dot{q} - \dot{q}_d(t))
+$$
+fails because the closed loop retains non-vanishing inertial and Coriolis terms:
+$$
+M(q)\ddot{e} + C(q, \dot{q})\dot{e} + K_d \dot{e} + K_p e = -M(q)\ddot{q}_d - C(q, \dot{q})\dot{q}_d
+$$
+Even if tracking error $e = q - q_d = 0$ and $\dot{e} = 0$, the controller cannot generate the non-zero acceleration $\ddot{q}_d$ required to stay on the path.
+
+**The Computed-Torque Resolution:**
+Computed torque linearizes the dynamics via exact feedback linearization:
+$$
+\tau = M(q) \left( \ddot{q}_d(t) - K_d \dot{e} - K_p e \right) + C(q, \dot{q})\dot{q} + g(q)
+$$
+This injects the **acceleration feedforward scaled by the inertia matrix** $M(q)\ddot{q}_d(t)$, rendering the closed-loop error dynamics purely linear:
+$$
+\ddot{e} + K_d \dot{e} + K_p e = 0
+$$
+
+---
+
+#### 2.3 Minimal Counterexample: Unit Mass Tracking $r(t) = \sin(t)$
+Let $\ddot{x} = u$ ($M=1, C=0, g=0$). We wish to track $r(t) = \sin(t)$.
+- Desired acceleration: $\ddot{r}(t) = -\sin(t)$.
+- Let error be $e(t) = x(t) - r(t)$.
+- Under a gravity-only / static-equilibrium PD law:
+  $$u(t) = -K_p e(t) - K_d \dot{e}(t)$$
+- Evaluate at perfect tracking state ($e(t_0) = 0, \dot{e}(t_0) = 0$ at $t_0 = \pi/2$ where $r(\pi/2) = 1, \dot{r}(\pi/2) = 0$):
+  $$u(t_0) = 0$$
+- Resulting system acceleration:
+  $$\ddot{x}(t_0) = 0$$
+- Required trajectory acceleration:
+  $$\ddot{r}(t_0) = -\sin(\pi/2) = -1$$
+- Tracking error curvature:
+  $$\ddot{e}(t_0) = \ddot{x}(t_0) - \ddot{r}(t_0) = 0 - (-1) = 1 \neq 0$$
+
+The tracking error instantly deviates from zero with positive curvature. A static/gravity-only PD controller has zero feedforward command at zero error and is fundamentally incapable of exact dynamic tracking.
+
+---
+
+### 3. Summary of Structural Issues & Verification Protocol
+
+| Component | Mathematical Pitfall | Prescribed Manufactured Test |
+| :--- | :--- | :--- |
+| **iLQR Step Core** | Asymmetric or indefinite $H_{uu}$ causing invalid search direction | Reject non-symmetric $H$; verify positive definiteness with Cholesky factorization before inversion |
+| **Quadratic Cost Reduction** | Sign errors or missing factor of $0.5$ in $\Delta V_0$ | Compare $\Delta V_0$ and $(V_x, V_{xx})$ directly against the scalar sanity check ($k=-2, K=-0.5, V_x=1, V_{xx}=1.5, \Delta V_0=-4$) |
+| **Trajectory Optimization** | Coupling backward pass logic with forward shooting bugs | Isolate `quadratic_step` into a pure functional unit; enforce reduced cost $V(\delta x) = Q(\delta x, k + K \delta x)$ via finite difference directional derivatives |
+| **Manipulator Tracking** | Applying setpoint PD + $g(q)$ to dynamic trajectories | Verify tracking error dynamics on non-zero acceleration references ($\ddot{q}_d \neq 0$); check for presence of $M(q)\ddot{q}_d$ feedforward term |

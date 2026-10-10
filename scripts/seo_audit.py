@@ -178,7 +178,7 @@ def main() -> None:
                 logger.info("  %s: %s", filepath_str, issue)
 
     # Generate JSON report
-    report_path = Path("docs/data/seo_audit.json")
+    report_path = Path("_site/data/seo_audit.json")
     report_path.parent.mkdir(parents=True, exist_ok=True)
     with open(report_path, "w") as f:
         json.dump(

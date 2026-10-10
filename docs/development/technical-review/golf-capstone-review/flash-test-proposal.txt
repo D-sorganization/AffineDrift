@@ -1,0 +1,205 @@
+Here is the proposed concise `pytest` test suite for the corrected `SwingAnalysis` and `synthetic_swing` API.
+
+---
+
+### Test Suite Proposal: `tests/test_swing_analysis.py`
+
+```python
+import math
+import numpy as np
+import numpy.testing as npt
+import pytest
+
+from src.affine_control.swing_analysis import (
+    GolfModel,
+    SwingAnalysis,
+    synthetic_swing,
+)
+
+
+def _default_params():
+    return {
+        "segment_lengths": np.array([0.6, 0.45, 0.85], dtype=float),
+        "segment_masses": np.array([2.0, 1.2, 0.35], dtype=float),
+    }
+
+
+def test_synthetic_swing_grid_spacing_and_endpoints():
+    """Verify n=ceil(duration/dt)+1 endpoint inclusion and actual grid spacing for non-integer duration/dt."""
+    duration = 0.3005
+    dt = 0.001
+    expected_n = math.ceil(duration / dt) + 1
+
+    swing = synthetic_swing(duration=duration, dt=dt, **_default_params())
+
+    assert len(swing.time) == expected_n
+    npt.assert_allclose(swing.time[0], 0.0)
+    npt.assert_allclose(swing.time[-1], duration)
+    # Consecutive step spacing check
+    diffs = np.diff(swing.time)
+    assert np.all(diffs > 0)
+    npt.assert_allclose(diffs, duration / (expected_n - 1))
+
+
+def test_synthetic_swing_analytic_derivatives_and_dynamics_consistency():
+    """Verify endpoint rates match analytic qdot values and torques satisfy M(q)*qdd + C(q,v)*v + g(q)."""
+    duration = 0.30
+    dt = 0.001
+    swing = synthetic_swing(duration=duration, dt=dt, **_default_params())
+    model = swing.model()
+
+    # Analytic endpoint checks at s=0 and s=1
+    # q = [-pi/2 + pi*s^2, pi/3*sin(pi*s), -pi/2*cos(pi*s/2)]
+    # qdot = [2*pi*s/T, (pi^2/3T)*cos(pi*s), (pi^2/4T)*sin(pi*s/2)]
+    expected_v0 = np.array([0.0, (np.pi**2) / (3.0 * duration), 0.0])
+    expected_v1 = np.array([
+        (2.0 * np.pi) / duration,
+        -(np.pi**2) / (3.0 * duration),
+        (np.pi**2) / (4.0 * duration),
+    ])
+    npt.assert_allclose(swing.joint_velocities[0], expected_v0, atol=1e-12)
+    npt.assert_allclose(swing.joint_velocities[-1], expected_v1, atol=1e-12)
+
+    # Inverse dynamics consistency at arbitrary index k
+    k = len(swing.time) // 2
+    q, v, tau = swing.joint_angles[k], swing.joint_velocities[k], swing.joint_torques[k]
+    # Evaluate acceleration directly from decomposition sum
+    bias_acc, control_acc = swing.joint_acceleration_components()
+    qdd_reconstructed = bias_acc[k] + control_acc[k]
+
+    M = model.rigid_mass_matrix(q)
+    Cv = model.coriolis(q, v)
+    g = model.gravity_torque(q)
+    npt.assert_allclose(M @ qdd_reconstructed + Cv + g, tau, atol=1e-10)
+
+
+def test_acceleration_components_vector_cancellation_when_tau_equals_bias():
+    """Verify exact algebraic cancellation: -M^-1(Cv + g) + M^-1(tau) == 0 when tau == Cv + g."""
+    params = _default_params()
+    q = np.array([[0.1, -0.2, 0.3]])
+    v = np.array([[0.5, 0.2, -0.4]])
+    time = np.array([0.0])
+
+    analysis_tmp = SwingAnalysis(
+        time=time,
+        joint_angles=q,
+        joint_velocities=v,
+        joint_torques=np.zeros_like(q),
+        **params,
+    )
+    model = analysis_tmp.model()
+    tau_bias = (model.coriolis(q[0], v[0]) + model.gravity_torque(q[0]))[np.newaxis, :]
+
+    analysis = SwingAnalysis(
+        time=time,
+        joint_angles=q,
+        joint_velocities=v,
+        joint_torques=tau_bias,
+        **params,
+    )
+    bias_acc, ctrl_acc = analysis.joint_acceleration_components()
+
+    assert bias_acc.shape == (1, 3)
+    assert ctrl_acc.shape == (1, 3)
+    npt.assert_allclose(bias_acc + ctrl_acc, np.zeros((1, 3)), atol=1e-12)
+
+
+def test_signed_vectors_versus_norm_nonadditivity_and_legacy_ztcf():
+    """Verify legacy ztcf_decomposition returns norms, does not integrate trajectories, and ||a+b|| != ||a|| + ||b||."""
+    swing = synthetic_swing(duration=0.30, dt=0.005, **_default_params())
+    bias_vec, ctrl_vec = swing.joint_acceleration_components()
+    bias_norm, ctrl_norm = swing.ztcf_decomposition()
+
+    # Norm consistency
+    npt.assert_allclose(bias_norm, np.linalg.norm(bias_vec, axis=1), atol=1e-12)
+    npt.assert_allclose(ctrl_norm, np.linalg.norm(ctrl_vec, axis=1), atol=1e-12)
+
+    # Triangle inequality strict inequality check (nonadditivity of norms)
+    total_acc_norm = np.linalg.norm(bias_vec + ctrl_vec, axis=1)
+    norm_sum = bias_norm + ctrl_norm
+    assert np.any(total_acc_norm < norm_sum - 1e-6)
+
+
+def test_summary_reports_medians_in_rad_s2_without_percentages():
+    """Verify summary dictionary outputs medians in rad/s^2 and contains no percentage fields."""
+    swing = synthetic_swing(duration=0.30, dt=0.005, **_default_params())
+    summary = swing.summary()
+
+    bias_vec, ctrl_vec = swing.joint_acceleration_components()
+    expected_bias_median = np.median(bias_vec, axis=0)
+    expected_ctrl_median = np.median(ctrl_vec, axis=0)
+
+    npt.assert_allclose(summary["bias_acceleration_median_rad_s2"], expected_bias_median)
+    npt.assert_allclose(summary["control_acceleration_median_rad_s2"], expected_ctrl_median)
+
+    # Ensure no percentage or ratio metrics exist in summary keys
+    for key in summary.keys():
+        assert "percent" not in key.lower()
+        assert "%" not in key
+
+
+def test_clubhead_speed_forwarding_and_time_offset_invariance():
+    """Verify clubhead_speed matches model calculation and acceleration decomposition is invariant to time offset."""
+    params = _default_params()
+    swing = synthetic_swing(duration=0.30, dt=0.01, **params)
+    model = swing.model()
+
+    speeds = swing.clubhead_speed()
+    assert speeds.shape == (len(swing.time),)
+    expected_speed_0 = model.clubhead_speed(swing.joint_angles[0], swing.joint_velocities[0])
+    npt.assert_allclose(speeds[0], expected_speed_0, atol=1e-12)
+
+    # Shift time array by arbitrary t0 offset (e.g. t0 = 10.0 s)
+    shifted_swing = SwingAnalysis(
+        time=swing.time + 10.0,
+        joint_angles=swing.joint_angles,
+        joint_velocities=swing.joint_velocities,
+        joint_torques=swing.joint_torques,
+        **params,
+    )
+    b1, c1 = swing.joint_acceleration_components()
+    b2, c2 = shifted_swing.joint_acceleration_components()
+    npt.assert_allclose(b1, b2, atol=1e-12)
+    npt.assert_allclose(c1, c2, atol=1e-12)
+
+
+@pytest.mark.parametrize(
+    ("bad_time", "bad_angles", "bad_lengths", "bad_masses"),
+    [
+        # Non-monotonic time
+        (np.array([0.0, 0.02, 0.01]), np.zeros((3, 3)), np.ones(3), np.ones(3)),
+        # Non-finite values (NaN / Inf)
+        (np.array([0.0, 0.01, np.nan]), np.zeros((3, 3)), np.ones(3), np.ones(3)),
+        (np.array([0.0, 0.01, 0.02]), np.full((3, 3), np.inf), np.ones(3), np.ones(3)),
+        # Mismatched dimensions
+        (np.array([0.0, 0.01]), np.zeros((3, 3)), np.ones(3), np.ones(3)),
+        # Non-positive physical parameters
+        (np.array([0.0, 0.01, 0.02]), np.zeros((3, 3)), np.array([0.6, -0.45, 0.85]), np.ones(3)),
+        (np.array([0.0, 0.01, 0.02]), np.zeros((3, 3)), np.ones(3), np.array([2.0, 0.0, 0.35])),
+    ],
+)
+def test_validation_malformed_nonfinite_and_invalid_parameters(bad_time, bad_angles, bad_lengths, bad_masses):
+    """Verify ValueError is raised on invalid, non-finite, dimensionally mismatched, or non-positive physical inputs."""
+    n = len(bad_time)
+    with pytest.raises(ValueError):
+        SwingAnalysis(
+            time=bad_time,
+            joint_angles=bad_angles if bad_angles.shape[0] == n else np.zeros((n, 3)),
+            joint_velocities=np.zeros((n, 3)),
+            joint_torques=np.zeros((n, 3)),
+            segment_lengths=bad_lengths,
+            segment_masses=bad_masses,
+        )
+```
+
+---
+
+### Rationale
+
+1. **`test_synthetic_swing_grid_spacing_and_endpoints`**: Tests the specified boundary conditions, guaranteeing that $n = \lceil \text{duration} / dt \rceil + 1$ points are generated, $t_0 = 0$ and $t_{-1} = \text{duration}$ are strictly respected, and handles non-integer ratios without drift or dropping terminal points.
+2. **`test_synthetic_swing_analytic_derivatives_and_dynamics_consistency`**: Validates the closed-form boundary rates for $s \in \{0, 1\}$ against analytic derivatives of the trajectory, then asserts inverse dynamic consistency ($\tau = M \ddot{q} + Cv + g$) through reconstructed accelerations.
+3. **`test_acceleration_components_vector_cancellation_when_tau_equals_bias`**: Directly verifies the algebraic foundation of the acceleration decomposition $-M^{-1}(Cv + g) + M^{-1}\tau$ ensuring that setting $\tau = Cv + g$ yields exact vector cancellation ($\mathbf{0}$).
+4. **`test_signed_vectors_versus_norm_nonadditivity_and_legacy_ztcf`**: Verifies that the legacy `ztcf_decomposition` produces norms rather than vectors and explicitly enforces the triangle inequality non-additivity ($\|\mathbf{a} + \mathbf{b}\| \le \|\mathbf{a}\| + \|\mathbf{b}\|$), proving why signed component analysis is mandatory.
+5. **`test_summary_reports_medians_in_rad_s2_without_percentages`**: Guarantees that `summary()` produces median acceleration components with units of $\text{rad/s}^2$ and guards against unphysical percentage/ratio normalizations.
+6. **`test_clubhead_speed_forwarding_and_time_offset_invariance`**: Checks kinematic forwarding to `GolfModel.clubhead_speed` and validates that instantaneous dynamics are translation-invariant with respect to non-zero initial time offsets ($t_0 \ne 0$).
+7. **`test_validation_malformed_nonfinite_and_invalid_parameters`**: Parameterized rejection test preventing silent propagation of non-monotonic grids, NaNs/Infs, length/shape mismatches, or non-positive physical segment lengths and masses.

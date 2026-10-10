@@ -3,7 +3,7 @@
 # Stages:
 #   base     — Python 3.12 + Quarto + Node.js system dependencies
 #   dev      — full dev/test environment (default for `docker run`)
-#   builder  — renders the Quarto site to docs/
+#   builder  — renders the Quarto site to _site/
 #   runtime  — minimal static-file server (production)
 #
 # Usage:
@@ -81,7 +81,7 @@ COPY . .
 CMD ["python", "-m", "pytest", "--cov=src", "-v"]
 
 # ---------------------------------------------------------------------------
-# builder: renders Quarto site to docs/
+# builder: renders Quarto site to _site/
 # ---------------------------------------------------------------------------
 FROM base AS builder
 
@@ -95,8 +95,10 @@ RUN npm ci --prefer-offline
 COPY . .
 RUN rm -f .env .env.local \
     && quarto render . --to html \
-    && find docs -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}' > /tmp/site.sha256 \
-    && python -c "import json, os, pathlib; provenance = {'git_commit': os.environ.get('AFFINEDRIFT_GIT_SHA', 'unknown'), 'quarto_version': os.environ['QUARTO_VERSION'], 'quarto_deb_sha256': os.environ['QUARTO_DEB_SHA256'], 'python_lock_file': 'requirements-docker.lock', 'python_lock_sha256': pathlib.Path('/tmp/python-lock.sha256').read_text(encoding='utf-8').strip(), 'site_sha256': pathlib.Path('/tmp/site.sha256').read_text(encoding='utf-8').strip()}; pathlib.Path('docs/build-provenance.json').write_text(json.dumps(provenance, indent=2) + '\\n', encoding='utf-8')"
+    && python3 scripts/bundle_css.py \
+    && python3 scripts/sync_frontend_assets.py \
+    && find _site -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}' > /tmp/site.sha256 \
+    && python -c "import json, os, pathlib; provenance = {'git_commit': os.environ.get('AFFINEDRIFT_GIT_SHA', 'unknown'), 'quarto_version': os.environ['QUARTO_VERSION'], 'quarto_deb_sha256': os.environ['QUARTO_DEB_SHA256'], 'python_lock_file': 'requirements-docker.lock', 'python_lock_sha256': pathlib.Path('/tmp/python-lock.sha256').read_text(encoding='utf-8').strip(), 'site_sha256': pathlib.Path('/tmp/site.sha256').read_text(encoding='utf-8').strip()}; pathlib.Path('_site/build-provenance.json').write_text(json.dumps(provenance, indent=2) + '\\n', encoding='utf-8')"
 
 # ---------------------------------------------------------------------------
 # runtime: minimal production image — serves the rendered site
@@ -121,8 +123,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN addgroup --system affinedrift \
     && adduser --system --ingroup affinedrift --home /site affinedrift
 
-COPY --from=builder --chown=affinedrift:affinedrift /workspace/docs/ /site/
-COPY --from=builder --chown=affinedrift:affinedrift /workspace/docs/build-provenance.json /site/build-provenance.json
+COPY --from=builder --chown=affinedrift:affinedrift /workspace/_site/ /site/
+COPY --from=builder --chown=affinedrift:affinedrift /workspace/_site/build-provenance.json /site/build-provenance.json
 
 USER affinedrift
 

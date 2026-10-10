@@ -1,0 +1,259 @@
+"""Tests validating numerical APIs and snippet execution from Volume V chapters."""
+
+from __future__ import annotations
+
+import re
+import sys
+import types
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import pytest
+from scipy.integrate import solve_ivp
+from dataclasses import dataclass
+
+
+CHAPTER_REL_PATHS: tuple[Path, ...] = (
+    Path("articles/The_Geometry_of_Motion/Volume_V/chapters/ch01_platform_overview.tex"),
+    Path("articles/The_Geometry_of_Motion/Volume_V/chapters/ch02_engine_comparison.tex"),
+)
+
+
+@dataclass(frozen=True)
+class RodParameters:
+    """Inertial and geometric parameters for a damped planar rigid rod."""
+
+    mass: float = 1.0
+    length: float = 1.0
+    radius: float = 0.02
+    damping: float = 0.05
+
+    def __post_init__(self) -> None:
+        if not (np.isfinite(self.mass) and self.mass > 0):
+            raise ValueError("mass must be positive and finite")
+        if not (np.isfinite(self.length) and self.length > 0):
+            raise ValueError("length must be positive and finite")
+        if not (np.isfinite(self.radius) and self.radius > 0):
+            raise ValueError("radius must be positive and finite")
+        if not (np.isfinite(self.damping) and self.damping >= 0):
+            raise ValueError("damping must be non-negative and finite")
+
+    @property
+    def pivot_inertia(self) -> float:
+        """Return the moment of inertia about the pivot endpoint."""
+        return float(self.mass * (self.length**2 / 3.0 + self.radius**2 / 4.0))
+
+
+def simulate_pendulum(
+    parameters: RodParameters,
+    initial: tuple[float, float],
+    times: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Simulate a planar damped pendulum under gravity with energy tracking."""
+    if not isinstance(parameters, RodParameters):
+        raise TypeError("parameters must be a RodParameters instance")
+
+    t_arr = np.asarray(times, dtype=float)
+    if t_arr.ndim != 1 or len(t_arr) < 2 or not np.all(np.isfinite(t_arr)):
+        raise ValueError("times must be a finite 1D array of length >= 2")
+    if t_arr[0] != 0.0 or not np.all(np.diff(t_arr) > 0):
+        raise ValueError("times must start at 0 and be strictly increasing")
+
+    init_arr = np.asarray(initial, dtype=float)
+    if init_arr.shape != (2,) or not np.all(np.isfinite(init_arr)):
+        raise ValueError("initial state must be a finite 2-element tuple")
+
+    inertia = parameters.pivot_inertia
+    mass, length, damping = parameters.mass, parameters.length, parameters.damping
+    g = 9.81
+
+    def derivatives(t: float, y: np.ndarray) -> list[float]:
+        q, v = y[0], y[1]
+        torque = -mass * g * (length / 2.0) * np.sin(q) - damping * v
+        q_dot_dot = torque / inertia
+        dissipation_rate = damping * (v**2)
+        return [v, q_dot_dot, dissipation_rate]
+
+    sol = solve_ivp(
+        derivatives,
+        t_span=(float(t_arr[0]), float(t_arr[-1])),
+        y0=[float(init_arr[0]), float(init_arr[1]), 0.0],
+        t_eval=t_arr,
+        rtol=1e-12,
+        atol=1e-12,
+        method="DOP853",
+    )
+    if not sol.success:
+        raise RuntimeError("solve_ivp integration failed")
+
+    q = sol.y[0]
+    qd = sol.y[1]
+    dissipated = sol.y[2]
+    kinetic = 0.5 * inertia * (qd**2)
+    potential = mass * g * (length / 2.0) * (1.0 - np.cos(q))
+    energy = kinetic + potential
+    return t_arr, q, qd, energy, dissipated
+
+
+def trajectory_errors(
+    times: np.ndarray,
+    actual: np.ndarray,
+    reference: np.ndarray,
+    scales: np.ndarray,
+) -> dict[str, float]:
+    """Compute normalized trajectory RMS via trapezoidal quadrature and max norm."""
+    t = np.asarray(times, dtype=float)
+    if t.ndim != 1 or len(t) < 2 or not np.all(np.isfinite(t)) or not np.all(np.diff(t) > 0):
+        raise ValueError("times must be finite, strictly increasing 1D array >= 2")
+
+    act, ref = np.asarray(actual, dtype=float), np.asarray(reference, dtype=float)
+    s = np.asarray(scales, dtype=float)
+    if act.ndim != 2 or act.shape != ref.shape or act.shape[0] != len(t):
+        raise ValueError("actual and reference states must match times on axis 0")
+    if not (np.all(np.isfinite(act)) and np.all(np.isfinite(ref))):
+        raise ValueError("state entries must be finite")
+    if s.ndim != 1 or s.shape[0] != act.shape[1] or not (np.all(np.isfinite(s)) and np.all(s > 0)):
+        raise ValueError("scales must be positive, finite and match state dimension")
+
+    scaled_diff = (act - ref) / s
+    norm_sq = np.sum(scaled_diff**2, axis=1)
+    integral = float(np.trapezoid(norm_sq, t))
+    rms_val = float(np.sqrt(integral / (t[-1] - t[0])))
+    max_val = float(np.max(np.sqrt(norm_sq)))
+    return {"rms": rms_val, "max": max_val}
+
+
+def _extract_listings(tex_path: Path) -> list[str]:
+    pattern = re.compile(
+        r"\\begin\{lstlisting\}(?:\[.*?language=Python.*?\])?\s*(.*?)\\end\{lstlisting\}",
+        re.DOTALL,
+    )
+    content = tex_path.read_text(encoding="utf-8")
+    return [block.strip() for block in pattern.findall(content) if block.strip()]
+
+
+def test_latex_python_listings_execution() -> None:
+    """Compile and execute all Python listings in target volume chapters."""
+    repo_root = Path(__file__).resolve().parent
+    while repo_root.parent != repo_root and not (repo_root / "articles").is_dir():
+        repo_root = repo_root.parent
+
+    for rel_path in CHAPTER_REL_PATHS:
+        tex_path = repo_root / rel_path
+        if not tex_path.is_file():
+            continue
+        blocks = _extract_listings(tex_path)
+        for idx, code in enumerate(blocks):
+            mod_name = f"test_listing_mod_{tex_path.stem}_{idx}"
+            mod = types.ModuleType(mod_name)
+            mod.__file__ = str(tex_path)
+            sys.modules[mod_name] = mod
+            try:
+                compiled = compile(code, str(tex_path), "exec", dont_inherit=True)
+                exec(compiled, mod.__dict__)
+            finally:
+                sys.modules.pop(mod_name, None)
+
+
+def test_rod_parameters_validation() -> None:
+    """Verify validation of physical parameters and moment of inertia calculation."""
+    params = RodParameters(mass=1.0, length=1.0, radius=0.02, damping=0.05)
+    expected_inertia = 1.0 * (1.0 / 3.0 + 0.02**2 / 4.0)
+    assert np.isclose(params.pivot_inertia, expected_inertia, rtol=1e-12)
+
+    with pytest.raises(ValueError):
+        RodParameters(mass=-1.0)
+    with pytest.raises(ValueError):
+        RodParameters(length=0.0)
+    with pytest.raises(ValueError):
+        RodParameters(radius=np.nan)
+    with pytest.raises(ValueError):
+        RodParameters(damping=-0.1)
+
+
+def test_simulate_pendulum_invalid_inputs() -> None:
+    """Verify simulate_pendulum handles invalid grids, states, and parameters."""
+    params = RodParameters()
+    valid_times = np.linspace(0.0, 1.0, 11)
+
+    with pytest.raises(TypeError):
+        simulate_pendulum(cast(Any, None), (0.0, 0.0), valid_times)
+    with pytest.raises(ValueError):
+        simulate_pendulum(params, (0.0, 0.0), np.array([1.0, 2.0]))
+    with pytest.raises(ValueError):
+        simulate_pendulum(params, (0.0, 0.0), np.array([0.0, 0.5, 0.5]))
+    with pytest.raises(ValueError):
+        simulate_pendulum(params, (0.0, 0.0), np.array([0.0]))
+    with pytest.raises(ValueError):
+        simulate_pendulum(params, (0.0, 0.0, 0.0), valid_times)  # type: ignore[arg-type]
+    with pytest.raises(ValueError):
+        simulate_pendulum(params, (np.nan, 0.0), valid_times)
+
+
+def test_simulate_pendulum_zero_rest() -> None:
+    """Verify that a pendulum at rest at downward vertical remains stationary."""
+    params = RodParameters(mass=1.0, length=1.0, radius=0.02, damping=0.05)
+    times = np.linspace(0.0, 2.0, 21)
+    _, q, qd, energy, dissipated = simulate_pendulum(params, (0.0, 0.0), times)
+
+    assert np.allclose(q, 0.0, atol=1e-12)
+    assert np.allclose(qd, 0.0, atol=1e-12)
+    assert np.allclose(energy, 0.0, atol=1e-12)
+    assert np.allclose(dissipated, 0.0, atol=1e-12)
+
+
+def test_simulate_pendulum_energy_balance() -> None:
+    """Verify total energy conservation accounting for dissipated energy."""
+    params = RodParameters(mass=1.2, length=0.8, radius=0.03, damping=0.1)
+    times = np.linspace(0.0, 3.0, 101)
+    _, _, _, energy, dissipated = simulate_pendulum(params, (np.pi / 4.0, 0.5), times)
+
+    e0 = energy[0]
+    assert e0 > 0.0
+    total_system_energy = energy + dissipated
+    assert np.allclose(total_system_energy, e0, atol=1e-8, rtol=1e-8)
+
+
+def test_simulate_pendulum_small_angle_linearization() -> None:
+    """Verify small-angle oscillations match analytical cosine within tolerance."""
+    params = RodParameters(mass=1.0, length=1.0, radius=0.02, damping=0.0)
+    times = np.linspace(0.0, 1.0, 101)
+    q0 = 1e-5
+    _, q, _, _, _ = simulate_pendulum(params, (q0, 0.0), times)
+
+    omega = np.sqrt(params.mass * 9.81 * (params.length / 2.0) / params.pivot_inertia)
+    q_analytic = q0 * np.cos(omega * times)
+    max_err = np.max(np.abs(q - q_analytic))
+    assert max_err < 1e-11
+
+
+def test_trajectory_errors_benchmarks_and_validation() -> None:
+    """Test standard benchmark quadrature, node evaluations, and input checks."""
+    t = np.array([0.0, 1.0, 3.0])
+    actual = t.reshape(-1, 1)
+    reference = np.zeros_like(actual)
+    scales = np.array([1.0])
+
+    res = trajectory_errors(t, actual, reference, scales)
+    assert np.isclose(res["rms"], np.sqrt(3.5), rtol=1e-12)
+    assert np.isclose(res["max"], 3.0, rtol=1e-12)
+
+    unweighted_node_rms = float(np.sqrt(np.mean(actual.flatten() ** 2)))
+    assert np.isclose(unweighted_node_rms, np.sqrt(10.0 / 3.0), rtol=1e-12)
+    assert not np.isclose(unweighted_node_rms, np.sqrt(82.0 / 3.0), rtol=1e-12)
+
+    res_scaled = trajectory_errors(t, actual, reference, np.array([2.0]))
+    assert np.isclose(res_scaled["rms"], np.sqrt(3.5) / 2.0, rtol=1e-12)
+    assert np.isclose(res_scaled["max"], 1.5, rtol=1e-12)
+
+    with pytest.raises(ValueError):
+        trajectory_errors(np.array([0.0]), actual[:1], reference[:1], scales)
+    with pytest.raises(ValueError):
+        trajectory_errors(t, actual, reference, np.array([0.0]))
+    with pytest.raises(ValueError):
+        trajectory_errors(t, actual, reference[:-1], scales)
+    with pytest.raises(ValueError):
+        trajectory_errors(t, np.full_like(actual, np.nan), reference, scales)
+    with pytest.raises(ValueError):
+        trajectory_errors(np.array([0.0, 1.0, 1.0]), actual, reference, scales)

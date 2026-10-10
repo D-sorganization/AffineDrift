@@ -1,0 +1,91 @@
+---
+title: "The Big Idea in Five Minutes"
+description: "Drift versus control, the zero-torque counterfactual and the drift-control ratio, explained with everyday examples and no equations."
+toc: true
+page-layout: article
+categories:
+- site-information
+---
+
+This page explains the one idea behind most of AffineDrift. It uses no equations. It takes about five minutes to read. Each example comes with a note on where it stops being true, because a good example can still mislead.
+
+## Two Arrows at Every Moment {#two-arrows}
+
+Think of a golf swing as a series of moments. At each moment the body and club have a position and a speed. In the next instant they change. AffineDrift splits that change into two arrows.
+
+The first arrow is the **drift**. It is what gravity and the motion already under way would do on their own, with no help from the golfer. The second arrow is the **push**. It is the extra change that the golfer's muscles add through the joints. Add the two arrows and you get the change the model predicts.
+
+{{< include ../_includes/generated/drift-plus-control.qmd >}}
+
+The split comes from a model, not from a camera or a sensor. The model is a set of linked rods with joints. It is a tool for thinking, not a measured picture of a real golfer.
+
+::: {.callout-note collapse="true" title="In symbols"}
+For readers who like symbols, the whole idea fits in one line: $\dot{x} = f(x) + G(x)u$. Here *x* holds the positions and speeds, *f(x)* is the drift arrow, and *G(x)u* is the push arrow, where *u* stands for the joint torques.
+:::
+
+## A Swing on a Playground {#playground-swing}
+
+Pull a child's swing back and let go. It swings down, rises on the other side and comes back, with nobody pushing. That motion is all drift. Gravity pulls the seat down, and the speed it gains carries it up again.
+
+Now a parent gives a push. The push only makes sense next to the drift. A small push at the right moment, just as the seat starts forward, makes the swing go higher. The same push at the wrong moment, against the motion, slows it down. You cannot judge the push until you know what the swing was already doing.
+
+That is the first lesson. To ask "what did the golfer add?" you first need "what would have happened anyway?"
+
+::: {.callout-caution title="Where the analogy breaks"}
+A playground swing is one rope and one seat, and the parent pushes from outside. A golf swing is a chain of body parts and a club. The golfer pushes from inside, with muscles that act across joints and against the ground. A push at one joint also moves the other links, so the push arrow is spread along the whole chain.
+:::
+
+## A Thrown Ball and a Pushed Ball {#thrown-and-pushed}
+
+Hold a ball and move it with your hand. At every moment your hand changes how it moves, so its motion is drift plus push. Now throw it. Once it leaves your hand, only gravity and the air act on it. From then on its motion is all drift.
+
+But where the ball lands still depends on how hard you threw it. The drift after release carries the results of the earlier push. That is the second lesson. Drift is not "the part the golfer did not cause." Later drift belongs to positions and speeds that earlier pushes helped create.
+
+::: {.callout-caution title="Where the analogy breaks"}
+A thrown ball has a clear moment of release. In the downswing, the golfer never lets go of the club before impact. Drift and push act together the whole way down, so there is no clean "after release" stretch where only drift is left.
+:::
+
+## What If the Golfer Stopped Pushing? {#stopped-pushing}
+
+This question has a name on this site: the [zero-torque counterfactual](../articles/zero-torque-counterfactual.html) family, or ZTCF family for short ([glossary entry](../pages/glossary.html#zero-torque-counterfactual)).
+
+Pick one moment in the swing. Take the position and speed of every link at that moment. Then, in the model, set the golfer's joint torques to zero and let the model run on from there. The site calls this a branched run, because it branches off the real swing at one moment. Compare that run with the real swing. The gap between them shows what the push added from that moment on, according to the model.
+
+There is a family of these comparisons. Some take a single snapshot, and some run the model forward from a chosen moment. Each page that uses one says which it means, because they answer different questions.
+
+::: {.callout-caution title="Where the analogy breaks"}
+A real golfer cannot switch their muscles off in an instant. Even a relaxed body has tissue that stretches and resists. "Zero torque" means the model's declared push is set to zero. It does not mean the muscles go quiet. So the counterfactual is a calculation inside a model. Nobody can run it on a person, and its answer depends on how good the model is.
+:::
+
+## How Big Is the Push? {#how-big}
+
+The last idea compares the size of the two arrows. The [drift-control ratio](../articles/drift-control-ratio.html), or DCR ([glossary entry](../pages/glossary.html#drift-control-ratio)), takes the drift arrow at one moment. It divides that by the biggest push arrow that the model's allowed torques could make at the same moment.
+
+Think of a river and a swimmer. The ratio compares the speed of the current with the fastest the swimmer could ever swim. It says nothing about how hard the swimmer is trying right now.
+
+So the ratio can be bigger than one. That means the drift at that moment is stronger than anything the push could add there. It is a ratio of capacity. It is not the share of the motion caused by drift, and it does not measure muscle effort. Its value also depends on the torque limits the model allows and on how the joints are weighed against each other.
+
+## Try It Yourself {#try-it}
+
+The [drift versus control sandbox](../articles/theory-part1.html#drift-control-sandbox) runs a two-link model of an arm and a club in your browser. Choose the **Zero torque (drift only)** scenario and the push arrow disappears: the model swings on drift alone. Then choose **Shoulder drive** and keep **Show the zero-torque counterfactual** ticked. A faint grey copy of the model runs with no push, and the driven model pulls away from it. Notice that the drift arrow keeps changing too, because the push has moved the links to new places.
+
+## Where to Go Next {#where-next}
+
+Pick the reader closest to you. Each link opens a reading plan of 5 minutes, 30 minutes or 3 hours.
+
+- [Learner](../resources/on-ramp-paths.html#onramp-learner): new to control theory or biomechanics.
+- [Researcher](../resources/on-ramp-paths.html#onramp-researcher): the formal theory and its limits.
+- [Integrator](../resources/on-ramp-paths.html#onramp-integrator): the models as software.
+- [Experimentalist](../resources/on-ramp-paths.html#onramp-experimentalist): running and changing the models.
+- [Reviewer](../resources/on-ramp-paths.html#onramp-reviewer): checking the claims.
+- [Contributor](../resources/on-ramp-paths.html#onramp-contributor): helping build the project.
+- [Curious Golfer / Coach](../resources/on-ramp-paths.html#onramp-golfer-coach): physics, equipment and swing mechanics.
+- [Student](../resources/on-ramp-paths.html#onramp-student): coursework, robotics and biomechanics.
+
+## Related Articles
+
+- [Start Here](start-here.html) — What the site is and how to read it
+- [Glossary](glossary.html) — Plain definitions of the site's terms
+- [Zero-Torque Counterfactual](../articles/zero-torque-counterfactual.html) — The family of "stop pushing" comparisons in full
+- [Drift-Control Ratio](../articles/drift-control-ratio.html) — The capacity ratio and what it does not prove
+- [Theory Series, Part 1](../articles/theory-part1.html) — The drift and push split, with the mathematics

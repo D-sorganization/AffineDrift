@@ -181,8 +181,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Generate sitemap.xml")
     parser.add_argument(
         "--output",
-        default="docs/sitemap.xml",
-        help="Output path for the generated sitemap (default: docs/sitemap.xml)",
+        default="_site/sitemap.xml",
+        help="Output path for the generated sitemap (default: _site/sitemap.xml)",
     )
     args = parser.parse_args()
 

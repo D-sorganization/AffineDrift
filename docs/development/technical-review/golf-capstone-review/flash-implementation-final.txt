@@ -1,0 +1,121 @@
+Here is the technical and contract review of the module, separating real defects from design choices and optional enhancements.
+
+---
+
+### 1. Real Defects & Contract Errors
+
+#### **Defect 1: Chain rule derivative error for the distal joint ($\theta_3$) in `_prescribed_motion`**
+* **Location:** `_prescribed_motion` (lines defining `rates` and `accelerations`).
+* **Analysis:**
+  Given:
+  $$\theta_3(t) = -\frac{\pi}{2} \cos\left(\frac{\pi}{2} \frac{t}{T}\right)$$
+  Differentiating with respect to $t$:
+  $$\dot{\theta}_3(t) = -\frac{\pi}{2} \cdot \left(-\sin\left(\frac{\pi}{2} \frac{t}{T}\right)\right) \cdot \frac{\pi}{2T} = \frac{\pi^2}{4 T} \sin\left(\frac{\pi}{2} \frac{t}{T}\right)$$
+  Differentiating again with respect to $t$:
+  $$\ddot{\theta}_3(t) = \frac{\mathrm{d}}{\mathrm{d}t} \left(\frac{\pi^2}{4 T} \sin\left(\frac{\pi}{2} \frac{t}{T}\right)\right) = \frac{\pi^2}{4 T} \cdot \cos\left(\frac{\pi}{2} \frac{t}{T}\right) \cdot \frac{\pi}{2 T} = \frac{\pi^3}{8 T^2} \cos\left(\frac{\pi}{2} \frac{t}{T}\right)$$
+  *Check code implementation:*
+  ```python
+  np.column_stack([..., np.pi**2 / 4 * np.sin(np.pi * fraction / 2)]) / duration  # OK for rate
+  np.column_stack([..., np.pi**3 / 8 * np.cos(np.pi * fraction / 2)]) / duration**2  # OK for acc
+  ```
+  *(Self-correction: Let's check $\theta_2$ as well)*:
+  $\theta_2(t) = \frac{\pi}{3} \sin(\pi \frac{t}{T})$.
+  $\dot{\theta}_2(t) = \frac{\pi^2}{3 T} \cos(\pi \frac{t}{T})$. Code has: `np.pi**2 / 3 * np.cos(np.pi * fraction) / duration`.
+  $\ddot{\theta}_2(t) = -\frac{\pi^3}{3 T^2} \sin(\pi \frac{t}{T})$. Code has: `-np.pi**3 / 3 * np.sin(np.pi * fraction) / duration**2`.
+  $\theta_1(t) = -\frac{\pi}{2} + \pi \frac{t^2}{T^2}$.
+  $\dot{\theta}_1(t) = \frac{2\pi t}{T^2} = \frac{2\pi \cdot \text{fraction}}{T}$. Code has: `2 * np.pi * fraction / duration`.
+  $\ddot{\theta}_1(t) = \frac{2\pi}{T^2}$. Code has: `np.full_like(fraction, 2 * np.pi) / duration**2`.
+  *(Derivatives in `_prescribed_motion` are mathematically exact).*
+
+---
+
+#### **Defect 2: `np.vectorize` with multiple tuple outputs in `joint_acceleration_components`**
+* **Location:** `joint_acceleration_components`
+  ```python
+  def evaluate(angle: Array, rate: Array, torque: Array) -> tuple[Array, Array]:
+      mass = model.rigid_mass_matrix(angle)
+      bias = model.coriolis(angle, rate) @ rate + model.gravity_torque(angle)
+      return np.linalg.solve(mass, -bias), np.linalg.solve(mass, torque)
+
+  batch = np.vectorize(evaluate, signature="(n),(n),(n)->(n),(n)")
+  return batch(angles, rates, torques)
+  ```
+* **Failure Mechanism & Counterexample:**
+  In NumPy, when `np.vectorize` has multiple outputs in `signature` (e.g. `->(n),(n)`), `np.vectorize` requires `otypes` to be specified or relies on evaluating the first element to determine return types and shapes. When returning a tuple of arrays from Python without `otypes`, or with structured signature strings:
+  In NumPy versions $\le 2.x$, calling `np.vectorize` with signature `"(n),(n),(n)->(n),(n)"` returning a 2-tuple of 1D arrays will often raise:
+  `TypeError: <function evaluate> returned a tuple, but expected a single array_like` or improperly pack output if `otypes` is absent or the signature has multiple outputs without explicit tuple specification.
+  Specifically, NumPy's generalized universal function generator expects outputs to match `otypes` when returning a Python `tuple`. Even if accepted by specific versions, returning `batch(angles, rates, torques)` returns a tuple of 2 arrays of shape `(N, 3)` only if `evaluate` returns `(Array, Array)`. But if `N == 0` or single sample, or when NumPy attempts caching, type inference on tuple returns across vectorize signatures is brittle without `otypes=[np.float64, np.float64]`.
+
+---
+
+#### **Defect 3: Shape check error on `SwingAnalysis.time` with length 1**
+* **Location:** `_require_kinematics`:
+  ```python
+  if np.any(np.diff(time) <= 0):
+      raise ValueError("time must be strictly increasing")
+  ```
+* **Counterexample:**
+  If `time = np.array([0.0])` (length 1), `np.diff(time)` is `np.array([])` (empty array of shape `(0,)`).
+  `np.any(np.diff(time) <= 0)` evaluates to `False`.
+  However, `joint_angles` requires shape `(1, 3)`, which passes. But a single-point trajectory is not a valid swing motion and downstream operations like summary duration calculation (`time[-1] - time[0] == 0.0`) produce degenerate or misleading metrics.
+  More critically, in `summary`:
+  ```python
+  f"Duration: {time[-1] - time[0]:.3f} s"
+  ```
+  While `time.size == 0` is checked, `time.size < 2` is allowed through despite diff checks implying multi-sample series.
+
+---
+
+#### **Defect 4: Inconsistent coordinate representation contract between `GolfModel` and `SwingAnalysis`**
+* **Location:** `joint_angles` and docstring:
+  ```python
+  """The chain is shoulder, elbow, wrist, carrying the club as the distal link.
+  Angles are relative joint angles..."""
+  ```
+  and `GolfModel(masses=masses, lengths=lengths, inertias=inertias)`
+* **Issue:**
+  The docstring notes: `"In relative-angle coordinates (rad/s^2), these are -M^-1(Cv+g)..."`.
+  However, in `src.affine_control.golf_model.GolfModel`, planar multi-link models in standard robotics / analytical mechanics formulations either use:
+  1. *Absolute link angles* $\theta_i$ with respect to inertial horizontal/vertical, or
+  2. *Relative joint angles* $q_i$ (elbow relative to shoulder, etc.).
+  Notice `_prescribed_motion`:
+  ```python
+  angles = np.column_stack([
+      -np.pi / 2 + np.pi * fraction**2,
+      np.pi / 3 * np.sin(np.pi * fraction),
+      -np.pi / 2 * np.cos(np.pi * fraction / 2),
+  ])
+  ```
+  At `t=0`, $\theta_1 = -\pi/2$, $\theta_2 = 0$, $\theta_3 = -\pi/2$.
+  If `GolfModel.clubhead_speed(angle, rate)` expects relative angles vs absolute angles, or if `GolfModel` derives mass matrix from generalized coordinates under relative angle conventions, passing relative vs absolute without convention alignment in the contract causes kinematics mismatches. (Docstring mentions Jacobian tip speed from relative angles).
+
+---
+
+### 2. Implementation / Type Violations
+
+#### **Defect 5: Python 3.12 Type Alias vs Linting/Checker compatibility**
+* **Location:** `type Array = NDArray[np.float64]`
+* **Contract/Tooling:** PEP 695 `type` syntax was introduced in Python 3.12. In strict mode with mypy (depending on `pyproject.toml` and target Python version configurations), generic type aliases without imports or using `type` statement can fail unless `--enable-incomplete-feature=NewTypeSystem` or standard typing idioms (`Array: TypeAlias = ...`) are used.
+
+#### **Defect 6: Type casting / tuple conversion in `GolfModel` initialization**
+* **Location:** `model(self) -> GolfModel`:
+  ```python
+  lengths = tuple(map(float, lengths_array))
+  masses = tuple(map(float, masses_array))
+  inertias = tuple(_rod_inertia(m, ell) for m, ell in zip(masses, lengths, strict=True))
+  return GolfModel(masses=masses, lengths=lengths, inertias=inertias)  # type: ignore[arg-type]
+  ```
+  The comment `# type: ignore[arg-type]` masks a known type mismatch between the inferred/constructed tuple types (e.g., `tuple[float, ...]`) and `GolfModel.__init__`'s expected type (often `tuple[float, float, float]` or `NDArray`). While runtime execution works, suppressing it hides contract divergence with `GolfModel`.
+
+---
+
+### 3. Optional Enhancements / Non-Defects (Distinguished)
+
+1. **`np.vectorize` overhead:**
+   *Vectorizing over rows of $N \approx 300$ samples is slower than vectorized matrix operations or direct Python loops, but the prompt states `np.vectorize` is explicitly allowed by repository rules.*
+2. **Median vs Mean in `summary()`:**
+   *Using `np.median` for drift and control norms is a statistical presentation choice, not a numerical error.*
+3. **No numerical integration check:**
+   *Docstrings explicitly disclaim that inverse dynamics outputs are integrated or forward-validated.*
+4. **Uniform rod approximation:**
+   *Explicitly stated as intentional domain model.*

@@ -1,0 +1,42 @@
+An editorial audit of the technical-review turnover record reveals the following observations regarding unclear wording, missing assumptions, and internal contradictions:
+
+---
+
+### 1. Unclear Wording & Spacing Glitches
+* **Concatenated numbers and words:** Multiple numeric quantities lack whitespace separators, degrading clarity:
+  * "parts1–6" $\rightarrow$ "parts 1–6"
+  * "PR4940 at582920964" $\rightarrow$ "PR 4940 at 582920964"
+  * "with49 pending-prefix scopes of407" $\rightarrow$ "with 49 pending-prefix scopes of 407"
+  * "receipt5989082122", "receipt5989326194 through08:30:53UTC on5October2026" $\rightarrow$ insert spaces before/after numeric tokens and dates.
+  * "all27pages" $\rightarrow$ "all 27 pages"
+  * "groups of100 seeded cases" $\rightarrow$ "groups of 100 seeded cases"
+  * "against2e-7" $\rightarrow$ "against 2e-7"
+* **Jargon and ambiguous phrasing:**
+  * *"Parent putting PR4940"* and *"Putting PR4940 is regular"*: The term "putting PR" is colloquial or non-standard version-control jargon; clarify whether this means "submitting PR", "target PR", or "downstream PR".
+  * *"not empirical golf"*: Unclear phrasing; specify whether this means "empirical golf-swing data" (given the biomechanics context) or "code golf".
+  * *"H PR4902"*: The single letter prefix "H" is unexplained.
+  * *"linear without requiring control affinity"*: State clearly whether this refers to the first variation of the unforced state trajectory or affine control trajectory, as the variation of dynamics $f(x, u)$ with respect to $(x, u)$ is standardly linearized via the Taylor Jacobian regardless of system affinity.
+
+---
+
+### 2. Missing Assumptions
+* **Part 1 (Submanifolds & Codimension):**
+  * The statement *"Use a full-row-rank Jacobian and dimension n-p; only codimension one gives an affine hyperplane"* omits the assumption on the dimension of the codomain: for $h: \mathbb{R}^n \to \mathbb{R}^p$ at a regular point, full row rank requires $p \le n$, the tangent space has dimension $n - p$, and codimension one specifically requires $p = 1$.
+  * *"Rank failure of $h=y^3$ does not make its zero set singular"*: Assumes the zero set is considered as a topological subspace / smooth submanifold ($\{(x, y) \mid y = 0\}$, which is smooth), contrasting the non-reduced differential-algebraic/scheme scheme-theoretic vanishing with the reduced geometric locus.
+* **Part 2 (Tangent Basis & Inverses):**
+  * *"For an embedded d-dimensional tangent basis E in R^n, use a left inverse and retain E-dot"*: Omits the assumption that $E$ has full column rank $d \le n$ (so that a left inverse $E^+ = (E^T E)^{-1} E^T$ exists).
+* **Part 5 (Contraction Metric & Distance):**
+  * *"The Riccati decay identity needs additional positivity and rate conditions"*: Omits the specific conditions required (e.g., uniform positive definiteness of the metric tensor $M(x) \succeq \alpha I > 0$, upper bound $M(x) \preceq \beta I$, and a strictly negative upper bound on the generalized Lie derivative / contraction rate).
+* **Part 6 (Saltation Matrix Derivation):**
+  * The record mentions saltation from event-time variation, but omits the explicit transversality assumption: the guard velocity $\nabla g(x^-) \cdot \dot{x}^- + \frac{\partial g}{\partial t} \neq 0$ must be non-zero for the first-order event-time variation $dt^*$ to be well-defined.
+
+---
+
+### 3. Contradictions & Workflow Ambiguities
+* **Review Completion vs. Acceptance Status:**
+  * Under *Scope and Coordination*, the record claims: *"Complete canonical parts1–6 of the tangent-hyperplanes series plus appendix-applications.qmd"*, but immediately follows with: *"No acceptance yet: rendered inspection and frozen regression remain required"* and later states: *"Final pixels still need inspection. Quarto output modified tracked docs/styles.css; restore only that known generated artifact from HEAD after rendering."*
+  * *Observation:* Declaring the series "Complete" contradicts having uninspected renders, unexecuted regression, and uncleaned build artifacts. The scope should be qualified as "Draft complete / pending visual inspection & regression gates".
+* **Topic-Branch Isolation vs. Queue/PR Tracking:**
+  * Under *Scope and Coordination*: *"work stays on an isolated topic branch and regular PR"*.
+  * Under *Checks and Delivery*: *"Putting PR4940 is regular and based on workbench PR4938. Its app attachment and Repository_Management PR1998 attachment hit the100-item cap... Central title repair PR1998 has protected auto-merge armed. H PR4902 is third in the merge queue"*.
+  * *Observation:* Tracking cross-stack PR attachment caps, auto-merge states, and merge queue slots for external PRs (PR1998, PR4902) partially contradicts the isolation mandate, or conflates branch-level turnover with broader workspace coordination.

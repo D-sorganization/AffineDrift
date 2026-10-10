@@ -1,0 +1,180 @@
+---
+title: "Tangent Hyperplanes II: Dynamics"
+description: "Infinitesimal dynamics and moving tangent spaces: affine control formulations and coordinate-free trajectory representations."
+aliases:
+  - ../tangent-hyperplane-contraction/chapters/02-variational-dynamics.html
+  - ../tangent-hyperplane-articles/Drafts_Original_Articles/Tangent_Hyperplanes_Series_Package/02_Tangent_Hyperplanes_II_Dynamics.html
+categories:
+- tangent-space
+---
+
+## Variational Dynamics Along Trajectories
+
+The tangent space is not merely a static geometric concept; it provides the rigorous foundation for variational analysis in dynamical systems. Consider a general nonlinear control system:
+
+$$
+\dot{x}(t) = f(x(t), u(t))
+$$
+
+where $x(t) \in \mathbb{R}^n$ represents the state vector, $u(t) \in \mathbb{R}^m$ is the control input, and $f: \mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n$ is a continuously differentiable vector field.
+
+It is worth noting that for first-order input linearization, the dynamics need not be control-affine of the form $\dot{x} = f_0(x) + \sum g_j(x)u_j$. The differential formulation applies directly to general smooth couplings $f(x, u)$, because the first differential with respect to the control input $u$ yields a linear map regardless of whether $u$ enters affinely in the underlying differential equation.
+
+To distinguish exact infinitesimal variations from finite trajectory increments, consider a one-parameter family of solutions $x_\epsilon(t)$ driven by controls $u_\epsilon(t)$, continuously differentiable in $\epsilon \in (-\epsilon_0, \epsilon_0)$, satisfying:
+
+$$
+\dot{x}_\epsilon(t) = f(x_\epsilon(t), u_\epsilon(t)).
+$$
+
+Let $\epsilon = 0$ specify the nominal reference trajectory $(x^*(t), u^*(t)) \equiv (x_0(t), u_0(t))$. The exact infinitesimal variations are defined by the parametric derivatives evaluated at $\epsilon = 0$:
+
+$$
+\xi(t) \triangleq \left.\frac{\partial x_\epsilon(t)}{\partial \epsilon}\right|_{\epsilon=0}, \qquad \nu(t) \triangleq \left.\frac{\partial u_\epsilon(t)}{\partial \epsilon}\right|_{\epsilon=0}.
+$$
+
+Differentiating the family equation $\dot{x}_\epsilon(t) = f(x_\epsilon(t), u_\epsilon(t))$ with respect to $\epsilon$ and interchanging the time derivative with the parameter derivative (guaranteed under $C^1$ regularity) yields the exact linear variational differential equation:
+
+$$
+\dot{\xi}(t) = A(t)\xi(t) + B(t)\nu(t)
+$$
+
+where the coefficient matrices are the Jacobians evaluated strictly along the nominal trajectory:
+
+$$
+A(t) = \left.\frac{\partial f}{\partial x}\right|_{(x^*(t), u^*(t))}, \qquad B(t) = \left.\frac{\partial f}{\partial u}\right|_{(x^*(t), u^*(t))}.
+$$
+
+Here $\xi(t)$ is an element of the tangent space $T_{x^*(t)}\mathbb{R}^n \cong \mathbb{R}^n$ at each instant. The linear differential equation for $\xi(t)$ is exact for the parametric derivative of the family.
+
+## Finite Differences and Remainder Terms
+
+In physical applications—such as tracking the finite trajectory of a golf ball subject to aerodynamic drag and wind gusts—one deals not with an infinitesimal directional derivative $\xi(t)$, but with actual finite differences:
+
+$$
+\Delta x(t) = x(t) - x^*(t), \qquad \Delta u(t) = u(t) - u^*(t).
+$$
+
+Differentiating $\Delta x(t)$ with respect to time gives:
+
+$$
+\Delta\dot{x}(t) = f(x^*(t) + \Delta x(t), u^*(t) + \Delta u(t)) - f(x^*(t), u^*(t)).
+$$
+
+When $f$ is of class $C^1$, Taylor's theorem ensures that:
+
+$$
+\Delta\dot{x}(t) = A(t)\Delta x(t) + B(t)\Delta u(t) + R_1(\Delta x(t), \Delta u(t))
+$$
+
+where the remainder satisfies $R_1(\Delta x, \Delta u) = o(\|(\Delta x, \Delta u)\|)$ as $\|(\Delta x, \Delta u)\| \to 0$. If $f$ is additionally of class $C^2$ with bounded second derivatives along the tube surrounding the trajectory, Taylor's expansion with integral or Lagrange remainder guarantees an upper-order bound on the quadratic remainder:
+
+$$
+\Delta\dot{x}(t) = A(t)\Delta x(t) + B(t)\Delta u(t) + R_2(\Delta x(t), \Delta u(t)),
+$$
+
+$$
+\|R_2(\Delta x, \Delta u)\| \le \frac{1}{2} M_2 \left(\|\Delta x\|^2 + \|\Delta u\|^2\right).
+$$
+
+Notice that the second-order Hessian contribution can vanish along specific directions or for affine dynamics; it is not unconditionally non-zero, but the bounded second derivative guarantees an upper bound on truncation error. While the variational variable $\xi(t)$ satisfies $\dot{\xi} = A\xi + B\nu$ without approximation, the physical increment $\Delta x(t)$ satisfies the linear system only up to the finite remainder $R_2$.
+
+## Moving Tangent Spaces and Embedded Bases
+
+![Moving tangent spaces](./figures/moving_tangent.svg){fig-alt="A trajectory passes through a sequence of moving tangent spaces, each carrying the local linear perturbation dynamics."}
+
+As the nominal state $x^*(t)$ moves through the state space along a flight path or orbit, the tangent space $T_{x^*(t)}\mathbb{R}^n$ translates and rotates.
+
+When considering submanifolds or moving coordinate frames, care must be taken regarding transport. Consider an embedded tangent vector $\xi(t) \in T_{x^*(t)}M$ attached to a trajectory on an embedded manifold $M$ (for instance, a tangent vector to a sphere or a unit circle $S^1$ in $\mathbb{R}^2$). While the vector $\xi(t)$ itself remains in the tangent space $T_{x^*(t)}M$ for each $t$, its ordinary ambient time derivative $\dot{\xi}(t)$ in the ambient Euclidean embedding does not necessarily lie in $T_{x^*(t)}M$. On a rotating circle, for example, the time derivative of a moving unit tangent vector acquires an inward normal component proportional to the path curvature and angular velocity.
+
+To represent variational dynamics intrinsic to moving tangent frames without missing transport terms, let $\{e_1(t), \dots, e_n(t)\}$ be a smooth time-varying basis for the tangent space, collected into an invertible matrix $E(t) = [e_1(t) \cdots e_n(t)]$. Expressing the variational vector in terms of coordinates $\eta(t)$ via $\xi(t) = E(t)\eta(t)$, its ambient time derivative is:
+
+$$
+\dot{\xi}(t) = E(t)\dot{\eta}(t) + \dot{E}(t)\eta(t).
+$$
+
+Substituting into the variational dynamics $\dot{\xi} = A(t)\xi + B(t)\nu$ yields:
+
+$$
+E(t)\dot{\eta}(t) + \dot{E}(t)\eta(t) = A(t)E(t)\eta(t) + B(t)\nu(t).
+$$
+
+Solving for the internal coordinate derivative $\dot{\eta}(t)$:
+
+$$
+\dot{\eta}(t) = E(t)^{-1}\left(A(t)E(t) - \dot{E}(t)\right)\eta(t) + E(t)^{-1}B(t)\nu(t).
+$$
+
+The explicit presence of $\dot{E}(t)$ accounts for frame transport. Omitting $\dot{E}(t)$ conflates the rate of change of the coordinates with the rotation of the moving coordinate frame.
+
+## Superposition and Shared Reference Trajectories
+
+Superposition is an exact structural property of linear differential equations: if $\xi_1(t)$ solves $\dot{\xi} = A(t)\xi + B(t)\nu_1$ and $\xi_2(t)$ solves $\dot{\xi} = A(t)\xi + B(t)\nu_2$, their sum $\xi_1(t) + \xi_2(t)$ solves $\dot{\xi} = A(t)\xi + B(t)(\nu_1 + \nu_2)$.
+
+Crucially, this exact superposition requires that both variational solutions share the **identical nominal reference trajectory** $(x^*(t), u^*(t))$. Because $A(t) = D_x f(x^*(t), u^*(t))$ and $B(t) = D_u f(x^*(t), u^*(t))$ depend explicitly on the base trajectory, perturbations computed around different base paths cannot be added directly; their respective tangent spaces and system matrices differ.
+
+When evaluating finite differences $\Delta x_1$ and $\Delta x_2$ on the nonlinear system, superposition fails due to the coupled interaction terms in the nonlinear expansion:
+
+$$
+f(x^* + \Delta x_1 + \Delta x_2, u^*) \neq f(x^*, u^*) + [f(x^* + \Delta x_1, u^*) - f(x^*, u^*)] + [f(x^* + \Delta x_2, u^*) - f(x^*, u^*)].
+$$
+
+The cross terms in the Taylor series constitute an inherent breakdown of superposition for finite increments.
+
+## The State Transition Matrix and Finite Prediction Horizons
+
+For the linear time-varying (LTV) variational system, the state transition matrix $\Phi(t, t_0)$ is the unique matrix solution satisfying:
+
+$$
+\frac{\partial}{\partial t}\Phi(t, t_0) = A(t)\Phi(t, t_0), \qquad \Phi(t_0, t_0) = I.
+$$
+
+While $A(t)$ is smooth along smooth trajectory segments, standard Carathéodory conditions ensure that piecewise continuous coefficients $A(t)$ and $B(t)$ are fully adequate to define a unique, absolutely continuous state transition matrix $\Phi(t, t_0)$ across discrete switches or mode transitions (such as contact phases or staging events).
+
+The exact solution of the variational dynamics over a time horizon $[t_0, t]$ is:
+
+$$
+\xi(t) = \Phi(t, t_0)\xi(t_0) + \int_{t_0}^{t} \Phi(t, \tau) B(\tau) \nu(\tau) \, d\tau.
+$$
+
+When this LTV solution is used to predict the evolution of actual finite perturbations $\Delta x(t)$, its validity is confined to a bounded finite-horizon tube. Applying the variation-of-constants formula to the full perturbed equation $\Delta\dot{x} = A(t)\Delta x + B(t)\Delta u + R_2(\Delta x, \Delta u)$ yields:
+
+$$
+\Delta x(t) = \Phi(t, t_0)\Delta x(t_0) + \int_{t_0}^{t} \Phi(t, \tau) B(\tau) \Delta u(\tau) \, d\tau + \int_{t_0}^{t} \Phi(t, \tau) R_2(\Delta x(\tau), \Delta u(\tau)) \, d\tau.
+$$
+
+The discrepancy between the linearized forecast and the true nonlinear state increment is governed entirely by the accumulated remainder integral. By the Grönwall-Bellman inequality, if the Jacobian $A(t)$ has positive eigenvalues or substantial non-normal growth (unstable variational modes), $\|\Phi(t, \tau)\|$ can grow rapidly.
+
+An unstable derivative $A(t)$ does not invalidate the linear tangent model as an infinitesimal description; rather, it exponentially amplifies the effect of the finite remainder $R_2$, causing the tube of practical validity around the nominal trajectory to shrink rapidly over time.
+
+## Application: Finite Golf Trajectory Variations
+
+Consider the flight of a golf ball modeled by positional coordinates $r = [x, y, z]^T$ and velocity $v = [v_x, v_y, v_z]^T$:
+
+$$
+\dot{r} = v, \qquad \dot{v} = g - \frac{1}{2m} \rho C_D A_{\text{ref}} \|v - w(r)\| (v - w(r)) + \frac{1}{2m} \rho C_L A_{\text{ref}} (\omega \times (v - w(r)))
+$$
+
+where $w(r)$ is a spatially varying wind field, $\omega$ is the spin vector, $g$ is gravity, and $C_D, C_L$ are aerodynamic coefficients.
+
+1. **Nonlinear Coupling:** Aerodynamic drag depends quadratically on the relative speed $\|v - w(r)\|$. Linearizing the dynamics about a nominal ballistic trajectory $(r^*(t), v^*(t))$ yields time-varying Jacobians:
+   $$
+   A(t) = \begin{bmatrix} 0 & I \\ A_{vr}(t) & A_{vv}(t) \end{bmatrix}.
+   $$
+2. **Infinitesimal vs. Finite Launch Variations:** A small variation in initial launch angle or ball speed can be formally cast as an infinitesimal parameter variation $\xi(0) = [\delta r_0^T, \delta v_0^T]^T$. The state transition matrix $\Phi(t_{\text{impact}}, 0)$ maps this initial variation directly to the final landing displacement on the green:
+   $$
+   \xi(t_{\text{impact}}) = \Phi(t_{\text{impact}}, 0)\xi(0).
+   $$
+3. **Finite Remainder and Wind Disturbances:** For finite launch errors $\Delta v_0$ and gust increments $\Delta w(t)$, the quadratic speed term generates a non-zero remainder $R_2(\Delta v, \Delta w)$. Along a high-speed driver shot, $A_{vv}(t)$ exhibits large negative damping eigenvalues along the velocity vector, keeping longitudinal variations bounded, while crosswind shears introduce off-diagonal coupling. The linearized prediction $\Phi(t, 0)\Delta x(0)$ provides an accurate prediction within a bounded tube of launch deviations, but degrades as launch angle perturbations exceed a few degrees.
+
+## Looking Ahead
+
+The linear variational equation $\dot{\xi} = A(t)\xi + B(t)\nu$ provides the exact infinitesimal dynamic model of a trajectory, while its integration via the state transition matrix provides the foundation for local feedback. In [Part 3](./part-3-control.html), we explore how differential dynamic programming (DDP) and iterative linear-quadratic regulators (iLQR) leverage this moving tangent framework to synthesize optimal control policies along nonlinear paths.
+
+## Related Articles
+
+::: {.callout-note}
+## See Also
+
+- **[Tangent-Space Series](../../pages/tangent-hyperplanes.html)** — The series hub: full reading order, provenance, and companion material
+- **[Superposition in Affine Control Systems](../superposition.html)** — Exact instantaneous superposition at a fixed state, the dynamics-level counterpart of this part's linearization
+:::

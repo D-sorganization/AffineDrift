@@ -1,0 +1,194 @@
+"""Tests for state-space motor adaptation extracted from Chapter 09 listing."""
+
+from __future__ import annotations
+
+import math
+import re
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import pytest
+
+TEX_REL = Path("articles/The_Geometry_of_Motion/Volume_IV/chapters/ch09_motor_learning.tex")
+
+
+def _load_model_class() -> type:
+    target_tex = Path(__file__).parents[1] / TEX_REL
+    if not target_tex.is_file():
+        pytest.fail(f"Missing target TeX source: {target_tex}")
+    content = target_tex.read_text(encoding="utf-8")
+    match = re.search(
+        r"\\begin\{lstlisting\}(?:\[.*?\])?\s*\n(.*?)\\end\{lstlisting\}", content, re.DOTALL
+    )
+    if not match:
+        pytest.fail("First lstlisting block not found in TeX file.")
+    code = match.group(1)
+    namespace: dict[str, Any] = {"__name__": "example"}
+    compiled = compile(code, str(target_tex), "exec", dont_inherit=True)
+    # Repository-owned listing at a fixed path, with no external input.
+    # nosemgrep: python.lang.security.audit.exec-detected.exec-detected
+    exec(compiled, namespace)
+    if "AdaptationModel" not in namespace:
+        pytest.fail("Symbol 'AdaptationModel' not defined in first lstlisting.")
+    return namespace["AdaptationModel"]
+
+
+AdaptationModel = _load_model_class()
+
+
+def test_contract_defaults_and_fields() -> None:
+    model = AdaptationModel()
+    assert math.isclose(model.retention, 0.98)
+    assert math.isclose(model.sensitivity, 0.05)
+
+
+def test_complete_state_reset_reproduces_original_learning() -> None:
+    model = AdaptationModel()
+    schedule = np.full(20, 30.0)
+    first = model.run(schedule)
+    model.run(-schedule, initial=first["final_state"])
+    reset = model.run(schedule, initial=0.0)
+    np.testing.assert_array_equal(reset["state"], first["state"])
+
+
+def test_no_learning_and_complete_forgetting_boundary() -> None:
+    result = AdaptationModel(retention=0, sensitivity=0).run(np.array([5, 8]), initial=2)
+    np.testing.assert_array_equal(result["state"], [2, 0])
+    assert result["final_state"] == 0
+
+
+def test_reject_rates_out_of_bounds() -> None:
+    with pytest.raises(ValueError):
+        AdaptationModel(retention=1.05, sensitivity=0.05)
+    with pytest.raises(ValueError):
+        AdaptationModel(retention=-0.01, sensitivity=0.05)
+    with pytest.raises(ValueError):
+        AdaptationModel(retention=0.9, sensitivity=1.1)
+    with pytest.raises(ValueError):
+        AdaptationModel(retention=0.9, sensitivity=-0.1)
+
+
+def test_reject_unstable_or_boundary_pole() -> None:
+    with pytest.raises(ValueError):
+        AdaptationModel(retention=1.0, sensitivity=0.0)
+    with pytest.raises(ValueError):
+        AdaptationModel(retention=0.0, sensitivity=1.0)
+
+
+def test_reject_non_finite_parameters() -> None:
+    with pytest.raises(ValueError):
+        AdaptationModel(retention=float("nan"), sensitivity=0.05)
+    with pytest.raises(ValueError):
+        AdaptationModel(retention=0.95, sensitivity=float("inf"))
+
+
+def test_reject_invalid_feedback_mode() -> None:
+    model = AdaptationModel()
+    with pytest.raises(ValueError):
+        model.run(np.array([30.0, 30.0]), feedback="invalid_mode")
+
+
+def test_clamp_requires_all_zero_perturbation() -> None:
+    model = AdaptationModel()
+    with pytest.raises(ValueError):
+        model.run(np.array([30.0, 0.0]), feedback="clamp")
+
+
+def test_reject_invalid_perturbation_shapes_and_empty() -> None:
+    model = AdaptationModel()
+    with pytest.raises(ValueError):
+        model.run(np.array([]))
+    with pytest.raises(ValueError):
+        model.run(np.ones((5, 2)))
+
+
+def test_reject_non_finite_inputs() -> None:
+    model = AdaptationModel()
+    with pytest.raises(ValueError):
+        model.run(np.array([10.0, np.nan]))
+    with pytest.raises(ValueError):
+        model.run(np.array([10.0, 0.0]), initial=float("inf"))
+
+
+def test_exact_finite_geometric_series() -> None:
+    a, b, p0 = 0.95, 0.15, 20.0
+    model = AdaptationModel(retention=a, sensitivity=b)
+    n = 12
+    res = model.run(np.full(n, p0), initial=0.0, feedback="veridical")
+    lam = a - b
+    k = np.arange(n)
+    expected_state = (b * p0 / (1.0 - lam)) * (1.0 - (lam**k))
+    np.testing.assert_allclose(res["state"], expected_state, rtol=1e-9)
+    np.testing.assert_allclose(res["error"], p0 - expected_state, rtol=1e-9)
+
+
+def test_asymptote_and_error_constants() -> None:
+    model = AdaptationModel(retention=0.98, sensitivity=0.05)
+    res = model.run(np.full(300, 30.0), initial=0.0, feedback="veridical")
+    np.testing.assert_allclose(res["state"][-1], 30.0 * 5.0 / 7.0, atol=1e-6)
+    np.testing.assert_allclose(res["error"][-1], 60.0 / 7.0, atol=1e-6)
+
+
+def test_first_washout_negative_post_adaptation_state() -> None:
+    model = AdaptationModel(retention=0.9, sensitivity=0.2)
+    pert = np.concatenate([np.full(40, 20.0), np.zeros(20)])
+    res = model.run(pert, initial=0.0, feedback="veridical")
+    washout_start_idx = 40
+    assert res["state"][washout_start_idx] > 10.0
+    assert res["error"][washout_start_idx] < -10.0
+    assert res["error"][washout_start_idx] == -res["state"][washout_start_idx]
+
+
+def test_washout_decay_lambda_vs_clamp_decay_a() -> None:
+    a, b = 0.9, 0.1
+    lam = a - b
+    model = AdaptationModel(retention=a, sensitivity=b)
+    x0 = 15.0
+    n = 10
+    res_wash = model.run(np.zeros(n), initial=x0, feedback="veridical")
+    res_clamp = model.run(np.zeros(n), initial=x0, feedback="clamp")
+    steps = np.arange(n)
+    np.testing.assert_allclose(res_wash["state"], x0 * (lam**steps), rtol=1e-9)
+    np.testing.assert_allclose(res_clamp["state"], x0 * (a**steps), rtol=1e-9)
+    np.testing.assert_allclose(res_clamp["error"], np.zeros(n), rtol=1e-9)
+
+
+def test_restart_from_hidden_state_reproduces() -> None:
+    model = AdaptationModel(retention=0.92, sensitivity=0.12)
+    p = np.array([15.0, 25.0, -10.0, 5.0, 0.0, 10.0])
+    res_full = model.run(p, initial=2.5, feedback="veridical")
+    split = 3
+    res_part1 = model.run(p[:split], initial=2.5, feedback="veridical")
+    res_part2 = model.run(p[split:], initial=res_part1["final_state"], feedback="veridical")
+    joined = np.concatenate([res_part1["state"], res_part2["state"]])
+    np.testing.assert_allclose(joined, res_full["state"], rtol=1e-12)
+    assert math.isclose(res_part2["final_state"], res_full["final_state"])
+
+
+def test_chunk_continuation_arbitrary_schedules() -> None:
+    model = AdaptationModel(retention=0.88, sensitivity=0.18)
+    p = np.sin(np.linspace(0.1, 3.0, 15)) * 20.0
+    r_full = model.run(p, initial=1.0)
+    r1 = model.run(p[:7], initial=1.0)
+    r2 = model.run(p[7:], initial=r1["final_state"])
+    np.testing.assert_allclose(
+        np.concatenate([r1["error"], r2["error"]]), r_full["error"], rtol=1e-12
+    )
+
+
+def test_endpoint_a1_b1_instant_learn_and_retain() -> None:
+    model = AdaptationModel(retention=1.0, sensitivity=1.0)
+    res = model.run(np.array([45.0, 45.0, 45.0]), initial=0.0, feedback="veridical")
+    np.testing.assert_allclose(res["state"], np.array([0.0, 45.0, 45.0]))
+    np.testing.assert_allclose(res["error"], np.array([45.0, 0.0, 0.0]))
+    assert math.isclose(res["final_state"], 45.0)
+
+
+def test_clamp_zero_error_preservation() -> None:
+    model = AdaptationModel(retention=0.96, sensitivity=0.08)
+    res = model.run(np.zeros(5), initial=12.0, feedback="clamp")
+    np.testing.assert_allclose(res["error"], np.zeros(5))
+    expected = 12.0 * (0.96 ** np.arange(5))
+    np.testing.assert_allclose(res["state"], expected, rtol=1e-9)
+    assert math.isclose(res["final_state"], 12.0 * (0.96**5))

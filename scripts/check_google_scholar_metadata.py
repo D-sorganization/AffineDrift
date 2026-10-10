@@ -151,8 +151,8 @@ def main() -> int:
     parser.add_argument(
         "--docs-dir",
         type=Path,
-        default=Path("docs"),
-        help="Path to directory containing rendered HTML (defaults to docs)",
+        default=Path("_site"),
+        help="Path to directory containing rendered HTML (defaults to _site)",
     )
     args = parser.parse_args()
 
@@ -161,7 +161,7 @@ def main() -> int:
         if args.docs_dir.is_dir():
             files_to_check = list(args.docs_dir.glob("articles/*.html"))
         else:
-            logger.error("No files specified and docs directory '%s' not found.", args.docs_dir)
+            logger.error("No files specified and output directory '%s' not found.", args.docs_dir)
             return 1
 
     total_errors: list[str] = []

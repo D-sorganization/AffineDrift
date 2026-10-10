@@ -2,7 +2,7 @@
 
 The canonical ``styles.css`` keeps its modular ``@import`` graph for authoring
 and for ``check_css_architecture.py``. The bundler inlines that graph into a
-single render-blocking ``docs/styles.css`` so browsers fetch one stylesheet
+single render-blocking ``_site/styles.css`` so browsers fetch one stylesheet
 instead of a 26-request, 3-level-deep waterfall.
 """
 

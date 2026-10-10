@@ -13,7 +13,7 @@
           "reviewed_by": "AffineDrift issue #4036 adversarial scientific review",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-active-impedance-001",
-          "sha256": "ac8dccffd1d223a25f68aeeb6e3e53e205b6821f6cc1102ac48eee52ebebeb40",
+          "sha256": "cd8bddcf96511d1a247bd1708db637580699bc5ec7569778db84e8b8de405fb9",
           "status": "verified"
         },
         {
@@ -25,7 +25,7 @@
           "reviewed_by": "AffineDrift issue #4041 executable contract",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-active-impedance-001",
-          "sha256": "8462a0c2d2811a72a78e6cb114af5748c58498a18c45986b3ed78abba80581d9",
+          "sha256": "5ebf0ba682340604e1244a0ed513570f6ee6245c42d9970fb714860552393736",
           "status": "verified"
         },
         {
@@ -120,8 +120,8 @@
         }
       ],
       "protocol_id": "ad-protocol-active-impedance-001",
-      "protocol_revision": "42ddfc356fd6037605e874f751e7d34a17edb83b3a86d33ea2312311c8a64aa4",
-      "record_revision": "284a90b3dd023555637e1f5a39fa19f0505332d3048f423ac06a08784dbfcfb9",
+      "protocol_revision": "476f9a4dfd5e5b5ea260888fe40e308c6c0188557023883e33f0d07869ab6680",
+      "record_revision": "7aa34090351c6733fd679854075b1f31ae853877c360fd7ac01733159e26df5a",
       "specification": {
         "analysis": {
           "deviation_policy": "Append deviations before analysis and create a new revision after a locked change.",
@@ -134,11 +134,14 @@
             "A required gate is satisfied by modeled evidence outside its allowed scope"
           ],
           "null_result_policy": "Retain negative, null, and unavailable outcomes in every generated view.",
-          "power_plan": "Unavailable until a pilot supplies a justified variance or precision basis.",
+          "power_plan": "No sample size can be justified yet: there is no pilot estimate of the variance of stiffness, damping, and residual diagnostics, and any number quoted before a pilot would be invented. A pilot must first supply that variance and a smallest effect worth detecting.",
           "promotion_criteria": [
             "Meet every target-state gate",
             "Obtain independent #4042 release evidence before publication",
             "Preserve claim, critique, and route-audit joins"
+          ],
+          "scientific_falsifiers": [
+            "On held-out perturbation trials, a passive-only model with fixed stiffness and damping and no activation-dependent terms predicts the measured force and displacement response as well as the active-impedance model does."
           ],
           "uncertainty_plan": "Propagate declared model, parameter, measurement, event-time, and sampling uncertainty; unavailable components remain unavailable.",
           "workflow_path": "src/affine_control/impedance_protocol.py"
@@ -190,6 +193,7 @@
           {
             "calibration_id": "cal-active-impedance",
             "frame": "declared segment and perturbation frames",
+            "modality": "A mechanical perturbation device with force sensing, optical motion capture and surface EMG.",
             "name": "displacement, force, activation, and response",
             "quantity_class": "manufactured-synthetic",
             "unit": "m, N, and normalized activation"
@@ -229,7 +233,7 @@
           "reviewed_by": "codex-technical-review-4710; bounded citation/dependency verification only; prior scientific review preserved in two-hand-wrench-prior-reviews.json",
           "reviewed_on": "2026-09-30",
           "scope": "ad-protocol-bilateral-hand-wrench-001",
-          "sha256": "8f768577df6b232423352bbb70c9e4ff8ce5184d58c597f118a5ef1fa393f1c8",
+          "sha256": "6acddb867693a90c6169b34e039145b582cf19bb1910cd08b9a0da6afa04d68a",
           "status": "verified"
         },
         {
@@ -241,7 +245,7 @@
           "reviewed_by": "AffineDrift issue #4041 executable contract",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-bilateral-hand-wrench-001",
-          "sha256": "8462a0c2d2811a72a78e6cb114af5748c58498a18c45986b3ed78abba80581d9",
+          "sha256": "5ebf0ba682340604e1244a0ed513570f6ee6245c42d9970fb714860552393736",
           "status": "verified"
         },
         {
@@ -336,8 +340,8 @@
         }
       ],
       "protocol_id": "ad-protocol-bilateral-hand-wrench-001",
-      "protocol_revision": "121300cd84f3e4548686a574af8cd17ecb32fbfe198ea3f8b2ec7305b58861e1",
-      "record_revision": "28d5bbb2f447e345557445ba2ab261bc3c4332427afded185f5d4dea6d778ae1",
+      "protocol_revision": "e75ecc6f2ce36d3af35b785c993694881421cd3941fcc5dc4efd7bca11621878",
+      "record_revision": "d43d128baf1acb530692c1bdccfdced15002f49440cdcd2818d669e37a68fc33",
       "specification": {
         "analysis": {
           "deviation_policy": "Append deviations before analysis and create a new revision after a locked change.",
@@ -350,11 +354,14 @@
             "A required gate is satisfied by modeled evidence outside its allowed scope"
           ],
           "null_result_policy": "Retain negative, null, and unavailable outcomes in every generated view.",
-          "power_plan": "Unavailable until a pilot supplies a justified variance or precision basis.",
+          "power_plan": "No sample size can be justified yet: there is no pilot estimate of the variance of identifiability rank and wrench error, and any number quoted before a pilot would be invented. A pilot must first supply that variance and a smallest effect worth detecting.",
           "promotion_criteria": [
             "Meet every target-state gate",
             "Obtain independent #4042 release evidence before publication",
             "Preserve claim, critique, and route-audit joins"
+          ],
+          "scientific_falsifiers": [
+            "Under the declared grip perturbations, the measured bilateral wrench matrix is rank-deficient or its reconstruction error exceeds the calibration limits, so the lead-hand and trail-hand force and moment components cannot be separated."
           ],
           "uncertainty_plan": "Propagate declared model, parameter, measurement, event-time, and sampling uncertainty; unavailable components remain unavailable.",
           "workflow_path": "src/affine_control/hand_wrench_protocol.py"
@@ -406,6 +413,7 @@
           {
             "calibration_id": "cal-bilateral-hand-wrench",
             "frame": "declared grip frame",
+            "modality": "Two calibrated six-axis force/torque transducers built into the grip, synchronized with optical motion capture.",
             "name": "bilateral force and moment",
             "quantity_class": "manufactured-synthetic",
             "unit": "N and N m"
@@ -445,7 +453,7 @@
           "reviewed_by": "codex-technical-review-4853; bounded later-figure repair; old complete #4338 reviewer/date/source retained in dcr-figures-prior-review.json; exact source-bound figure acceptance",
           "reviewed_on": "2026-10-03",
           "scope": "ad-protocol-dcr-perturbation-001",
-          "sha256": "8f299d65868857ea50abf7855de2d76615d325ed8447a7e873a57620fdffd7c4",
+          "sha256": "0b57afa1689ac696db7350705625bec253b2d5619af3717f402ca023dd4ff1f6",
           "status": "verified"
         },
         {
@@ -457,7 +465,7 @@
           "reviewed_by": "AffineDrift issue #4041 executable contract",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-dcr-perturbation-001",
-          "sha256": "8462a0c2d2811a72a78e6cb114af5748c58498a18c45986b3ed78abba80581d9",
+          "sha256": "5ebf0ba682340604e1244a0ed513570f6ee6245c42d9970fb714860552393736",
           "status": "verified"
         },
         {
@@ -560,8 +568,8 @@
         }
       ],
       "protocol_id": "ad-protocol-dcr-perturbation-001",
-      "protocol_revision": "d773ee332f1af1d3068fc60a3fedec174b3fbe70003cec754fae3b8004032495",
-      "record_revision": "5493b9895f34c8a7e51d352a7f57b52cd7b02af268ec9a57e8d6f80cec583bc5",
+      "protocol_revision": "208e89baac03f568af376842e75d8aa483285957f87fc46dc5a266c12434051f",
+      "record_revision": "d6b2d5697cccbe8a4669d2d91dbd4861736f28a256837127542427a2baf8a4be",
       "specification": {
         "analysis": {
           "deviation_policy": "Append deviations before analysis and create a new revision after a locked change.",
@@ -574,11 +582,14 @@
             "A required gate is satisfied by modeled evidence outside its allowed scope"
           ],
           "null_result_policy": "Retain negative, null, and unavailable outcomes in every generated view.",
-          "power_plan": "Unavailable until a pilot supplies a justified variance or precision basis.",
+          "power_plan": "Not applicable: no participants are sampled. Precision is set by the declared solver tolerances and the size of the declared perturbation family.",
           "promotion_criteria": [
             "Meet every target-state gate",
             "Obtain independent #4042 release evidence before publication",
             "Preserve claim, critique, and route-audit joins"
+          ],
+          "scientific_falsifiers": [
+            "Across the declared family of bounded input perturbations, ranking states by DCR orders their finite-horizon reachable-set widths no better than a shuffled-state baseline, so DCR carries no information about reachability in that family."
           ],
           "uncertainty_plan": "Propagate declared model, parameter, measurement, event-time, and sampling uncertainty; unavailable components remain unavailable.",
           "workflow_path": "tests/test_dcr_reachability_contract.py"
@@ -630,6 +641,7 @@
           {
             "calibration_id": "cal-dcr-perturbation",
             "frame": "declared model coordinates",
+            "modality": "Analytical and numerical computation on declared models; no physical measurement is involved.",
             "name": "projected acceleration and event state",
             "quantity_class": "analytical",
             "unit": "declared SI units"
@@ -669,7 +681,7 @@
           "reviewed_by": "AffineDrift issue #4040 adversarial scientific review",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-equipment-response-001",
-          "sha256": "71d770bbdada9129d50c941fcedac1277b608074d3226435e28f6deb5b24f1b4",
+          "sha256": "bbeb175844f7af968e438981460567ba7ccaa7576c8592e49b938d9163892bc5",
           "status": "verified"
         },
         {
@@ -681,7 +693,7 @@
           "reviewed_by": "AffineDrift issue #4041 executable contract",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-equipment-response-001",
-          "sha256": "8462a0c2d2811a72a78e6cb114af5748c58498a18c45986b3ed78abba80581d9",
+          "sha256": "5ebf0ba682340604e1244a0ed513570f6ee6245c42d9970fb714860552393736",
           "status": "verified"
         },
         {
@@ -776,8 +788,8 @@
         }
       ],
       "protocol_id": "ad-protocol-equipment-response-001",
-      "protocol_revision": "b38d8b21d0fb23d7ae7db2d3bebee1c56e8765616bc937d892b9f23c29d72872",
-      "record_revision": "5159b2ee80ecc7d52e995b9005011a8924fdec76d2d9dc561fb0f0aee9385fb5",
+      "protocol_revision": "73d212a5b00737c54d4fbf1ace0ad2a3596cb9942e01d774b0773cd73779c887",
+      "record_revision": "97fe2a3af007d82a10acf7fbd5f3142a8508f9486327e9b916c590fbb4e2359f",
       "specification": {
         "analysis": {
           "deviation_policy": "Append deviations before analysis and create a new revision after a locked change.",
@@ -790,11 +802,14 @@
             "A required gate is satisfied by modeled evidence outside its allowed scope"
           ],
           "null_result_policy": "Retain negative, null, and unavailable outcomes in every generated view.",
-          "power_plan": "Unavailable until a pilot supplies a justified variance or precision basis.",
+          "power_plan": "No sample size can be justified yet: there is no pilot estimate of the variance of individual contrast, interval, repeatability, and sensitivity, and any number quoted before a pilot would be invented. A pilot must first supply that variance and a smallest effect worth detecting.",
           "promotion_criteria": [
             "Meet every target-state gate",
             "Obtain independent #4042 release evidence before publication",
             "Preserve claim, critique, and route-audit joins"
+          ],
+          "scientific_falsifiers": [
+            "Within-golfer differences between randomized equipment conditions are no larger than session-to-session repeatability after multiplicity correction, so no individual equipment response is identifiable."
           ],
           "uncertainty_plan": "Propagate declared model, parameter, measurement, event-time, and sampling uncertainty; unavailable components remain unavailable.",
           "workflow_path": "src/affine_control/equipment_response_analysis.py"
@@ -846,6 +861,7 @@
           {
             "calibration_id": "cal-equipment-response",
             "frame": "declared equipment and laboratory frames",
+            "modality": "Randomized repeated-measures sessions with a calibrated launch monitor and strain-gauge shaft instrumentation.",
             "name": "equipment state, shaft response, and impact outcome",
             "quantity_class": "manufactured-synthetic",
             "unit": "declared SI and launch-monitor units"
@@ -885,7 +901,7 @@
           "reviewed_by": "AffineDrift issue #4038 adversarial scientific review",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-hybrid-impact-001",
-          "sha256": "7ae82553e04467a3a48b0ca2dcff259a5be9a0d886a766640dc7511170d02a4b",
+          "sha256": "b87850a51b71f753571fdafef9c8dc4bd3cb9e425e7482a6d8e9e797e71c39e6",
           "status": "verified"
         },
         {
@@ -897,7 +913,7 @@
           "reviewed_by": "AffineDrift issue #4041 executable contract",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-hybrid-impact-001",
-          "sha256": "8462a0c2d2811a72a78e6cb114af5748c58498a18c45986b3ed78abba80581d9",
+          "sha256": "5ebf0ba682340604e1244a0ed513570f6ee6245c42d9970fb714860552393736",
           "status": "verified"
         },
         {
@@ -992,8 +1008,8 @@
         }
       ],
       "protocol_id": "ad-protocol-hybrid-impact-001",
-      "protocol_revision": "446ce0af9264ae5a46052d32a1022636580ea997001a222570a6ccada257771e",
-      "record_revision": "866de8bbecccc62d74dee73fceb4efe7bb4ebdf8dcd12cac93dc165433998ff4",
+      "protocol_revision": "11b4b28a963e4d63014f80b6ecfcbc78d9bdd480323e766783a269d2c2ca8e93",
+      "record_revision": "765efa7c9a6470796fee48526c7e1b5f4472ecd7ab65f504246e1cb6f52536d7",
       "specification": {
         "analysis": {
           "deviation_policy": "Append deviations before analysis and create a new revision after a locked change.",
@@ -1006,11 +1022,14 @@
             "A required gate is satisfied by modeled evidence outside its allowed scope"
           ],
           "null_result_policy": "Retain negative, null, and unavailable outcomes in every generated view.",
-          "power_plan": "Unavailable until a pilot supplies a justified variance or precision basis.",
+          "power_plan": "Not applicable: no participants are sampled. Precision is set by the declared solver tolerances and the size of the declared perturbation family.",
           "promotion_criteria": [
             "Meet every target-state gate",
             "Obtain independent #4042 release evidence before publication",
             "Preserve claim, critique, and route-audit joins"
+          ],
+          "scientific_falsifiers": [
+            "Across admissible contact models and event-time choices, predicted ball speed, launch angle and spin differ by less than the declared resolution of a launch monitor, so the modeled contact detail makes no observable difference to the impact outcome."
           ],
           "uncertainty_plan": "Propagate declared model, parameter, measurement, event-time, and sampling uncertainty; unavailable components remain unavailable.",
           "workflow_path": "src/affine_control/impact_contact_models.py"
@@ -1062,6 +1081,7 @@
           {
             "calibration_id": "cal-hybrid-impact",
             "frame": "declared club-ball contact frame",
+            "modality": "Numerical simulation of declared contact models; comparison with launch-monitor and high-speed video data is unavailable.",
             "name": "contact state, impulse, and event time",
             "quantity_class": "modeled",
             "unit": "m, m/s, N s, and s"
@@ -1101,7 +1121,7 @@
           "reviewed_by": "AffineDrift issue #4034 adversarial scientific review",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-model-ladder-001",
-          "sha256": "d1f7ecd021945fe9cffe7175f6aeba28670f6b619489762da2830169efdd7161",
+          "sha256": "a8d4e1712b1065acd3105ac3f688ff5715efd50057a616ac83f0fe049dee4bd7",
           "status": "verified"
         },
         {
@@ -1113,7 +1133,7 @@
           "reviewed_by": "AffineDrift issue #4041 executable contract",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-model-ladder-001",
-          "sha256": "8462a0c2d2811a72a78e6cb114af5748c58498a18c45986b3ed78abba80581d9",
+          "sha256": "5ebf0ba682340604e1244a0ed513570f6ee6245c42d9970fb714860552393736",
           "status": "verified"
         },
         {
@@ -1208,8 +1228,8 @@
         }
       ],
       "protocol_id": "ad-protocol-model-ladder-001",
-      "protocol_revision": "297d8c14a2bd50b4cb9418a25f9f78c01b7a127c66852a0732f2bd9e8c1eab38",
-      "record_revision": "48ee21076194f0bd41624edf3c87267a37d41a6cc7907a4293e4805207ef08ae",
+      "protocol_revision": "595328951ed5303a6c7c46c8a2434d2517f81d5dc985bb8a253be0fb63454981",
+      "record_revision": "234d572b6ea19347c363c9d167ac35727e14b3bd41db6c65368e063aa454b0ac",
       "specification": {
         "analysis": {
           "deviation_policy": "Append deviations before analysis and create a new revision after a locked change.",
@@ -1222,11 +1242,14 @@
             "A required gate is satisfied by modeled evidence outside its allowed scope"
           ],
           "null_result_policy": "Retain negative, null, and unavailable outcomes in every generated view.",
-          "power_plan": "Unavailable until a pilot supplies a justified variance or precision basis.",
+          "power_plan": "Not applicable: no participants are sampled. Precision is set by the declared solver tolerances and the size of the declared perturbation family.",
           "promotion_criteria": [
             "Meet every target-state gate",
             "Obtain independent #4042 release evidence before publication",
             "Preserve claim, critique, and route-audit joins"
+          ],
+          "scientific_falsifiers": [
+            "A conclusion the planar rung declares stable, such as the proximal-to-distal peak-speed order or the sign of a drift-control split, reverses or moves beyond its declared tolerance when the spatial, closed-chain or flexible-shaft rung is added."
           ],
           "uncertainty_plan": "Propagate declared model, parameter, measurement, event-time, and sampling uncertainty; unavailable components remain unavailable.",
           "workflow_path": "src/affine_control/model_ladder_protocol.py"
@@ -1278,6 +1301,7 @@
           {
             "calibration_id": "cal-model-ladder",
             "frame": "rung-specific declared frames",
+            "modality": "Multibody simulation across declared model rungs; no physical measurement is involved.",
             "name": "state, constraint, and shaft-response discrepancy",
             "quantity_class": "modeled",
             "unit": "declared SI units"
@@ -1317,7 +1341,7 @@
           "reviewed_by": "AffineDrift issue #4037 adversarial scientific review",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-neural-timing-001",
-          "sha256": "fe8a5711af93b94cb170ac67d487e60d971b896d1abd93d2694788f913e99b37",
+          "sha256": "06978eca3a1b8320d859458ba0684e487c6aca00037e4a8304d535f9ed865d34",
           "status": "verified"
         },
         {
@@ -1329,7 +1353,7 @@
           "reviewed_by": "AffineDrift issue #4041 executable contract",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-neural-timing-001",
-          "sha256": "8462a0c2d2811a72a78e6cb114af5748c58498a18c45986b3ed78abba80581d9",
+          "sha256": "5ebf0ba682340604e1244a0ed513570f6ee6245c42d9970fb714860552393736",
           "status": "verified"
         },
         {
@@ -1424,8 +1448,8 @@
         }
       ],
       "protocol_id": "ad-protocol-neural-timing-001",
-      "protocol_revision": "58d112830f3718ff837ffe52d423eee025394fcfc7aa068a92dcb38465d96dc0",
-      "record_revision": "e9d33f5094027aa72c85511ad1974344603ebbe1776bbf05dc3b5a46f863edb3",
+      "protocol_revision": "7fab1634c20494b5a962119699fbd2854cd6eb8f8c8c150d38d39e8a1a05fe0d",
+      "record_revision": "9d1b2024e761f6914f123762282cc47a85a6aab6b81ec74c10b3d5abcbc27860",
       "specification": {
         "analysis": {
           "deviation_policy": "Append deviations before analysis and create a new revision after a locked change.",
@@ -1438,11 +1462,14 @@
             "A required gate is satisfied by modeled evidence outside its allowed scope"
           ],
           "null_result_policy": "Retain negative, null, and unavailable outcomes in every generated view.",
-          "power_plan": "Unavailable until a pilot supplies a justified variance or precision basis.",
+          "power_plan": "No sample size can be justified yet: there is no pilot estimate of the variance of latency-window and response-contrast estimates, and any number quoted before a pilot would be invented. A pilot must first supply that variance and a smallest effect worth detecting.",
           "promotion_criteria": [
             "Meet every target-state gate",
             "Obtain independent #4042 release evidence before publication",
             "Preserve claim, critique, and route-audit joins"
+          ],
+          "scientific_falsifiers": [
+            "Kinematic and muscle-activation onsets after a declared perturbation do not differ from unperturbed trials within the declared short- and long-latency response windows, so the competing feedback-timing hypotheses cannot be told apart."
           ],
           "uncertainty_plan": "Propagate declared model, parameter, measurement, event-time, and sampling uncertainty; unavailable components remain unavailable.",
           "workflow_path": "src/affine_control/neural_timing_analysis.py"
@@ -1494,6 +1521,7 @@
           {
             "calibration_id": "cal-neural-timing",
             "frame": "declared event-aligned frames",
+            "modality": "Surface EMG with sensory or mechanical perturbation, synchronized with optical motion capture at a declared sampling rate.",
             "name": "event time, kinematics, and activation",
             "quantity_class": "manufactured-synthetic",
             "unit": "s, rad, and normalized activation"
@@ -1533,7 +1561,7 @@
           "reviewed_by": "AffineDrift issue #4039 adversarial scientific review",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-population-generalization-001",
-          "sha256": "24fca9835a43485cbc4258ce2af27bf556f27f8052685dfd31643e2a331bfd0c",
+          "sha256": "7e9372e4f2607ac63488d877908078ca5ae4649181656cb48d7d5628c171512f",
           "status": "verified"
         },
         {
@@ -1545,7 +1573,7 @@
           "reviewed_by": "AffineDrift issue #4041 executable contract",
           "reviewed_on": "2026-08-29",
           "scope": "ad-protocol-population-generalization-001",
-          "sha256": "8462a0c2d2811a72a78e6cb114af5748c58498a18c45986b3ed78abba80581d9",
+          "sha256": "5ebf0ba682340604e1244a0ed513570f6ee6245c42d9970fb714860552393736",
           "status": "verified"
         },
         {
@@ -1640,8 +1668,8 @@
         }
       ],
       "protocol_id": "ad-protocol-population-generalization-001",
-      "protocol_revision": "c0863f70e49c6d09b7cb2eca569fac40b1a15bf3e7f6b3d8573ef3c151d9f74d",
-      "record_revision": "5496e4973cec029e6ef78fb024339013f0a867bdcd0bd3a8b40ccdceedc810bc",
+      "protocol_revision": "85382c0c0c2f827304d78ac8c3e229ae0cc06ac9bb8efbdc7b84c1a1e32d1e7e",
+      "record_revision": "b24b5df262d0fd1cf7abc3f44e9661d8d151bd158eca9b5114e2b2d3c7303b17",
       "specification": {
         "analysis": {
           "deviation_policy": "Append deviations before analysis and create a new revision after a locked change.",
@@ -1654,11 +1682,14 @@
             "A required gate is satisfied by modeled evidence outside its allowed scope"
           ],
           "null_result_policy": "Retain negative, null, and unavailable outcomes in every generated view.",
-          "power_plan": "Unavailable until a pilot supplies a justified variance or precision basis.",
+          "power_plan": "No sample size can be justified yet: there is no pilot estimate of the variance of held-out error, calibration, subgroup, and transportability metrics, and any number quoted before a pilot would be invented. A pilot must first supply that variance and a smallest effect worth detecting.",
           "promotion_criteria": [
             "Meet every target-state gate",
             "Obtain independent #4042 release evidence before publication",
             "Preserve claim, critique, and route-audit joins"
+          ],
+          "scientific_falsifiers": [
+            "Error on held-out participants, sessions, sites or equipment exceeds within-sample error by more than the declared transport margin, or calibration fails in a declared subgroup, so the model does not generalize beyond its development sample."
           ],
           "uncertainty_plan": "Propagate declared model, parameter, measurement, event-time, and sampling uncertainty; unavailable components remain unavailable.",
           "workflow_path": "src/affine_control/population_generalization.py"
@@ -1710,6 +1741,7 @@
           {
             "calibration_id": "cal-population-generalization",
             "frame": "declared measurement frames",
+            "modality": "Group-held-out evaluation of measured outcomes from motion capture and launch-monitor sessions, split by participant, session, site and equipment.",
             "name": "predictions, outcomes, group IDs, and calibration",
             "quantity_class": "manufactured-synthetic",
             "unit": "declared outcome units"

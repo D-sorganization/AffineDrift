@@ -26,6 +26,12 @@ RECEIPT = REPO_ROOT / "docs" / "development" / "change-fragment-bundle.json"
 CLI = Path("shared_scripts") / "changes_fragment.py"
 
 
+# An issue number that can never be a real DEVELOPMENT_LOG entry: the scratch
+# repo copies the real log, so a real number (1976 was) collides once its own
+# fragment is collated and the entry is updated in place instead of created.
+SYNTHETIC_ISSUE = "999991"
+
+
 def _receipt() -> dict[str, object]:
     data = json.loads(RECEIPT.read_text(encoding="utf-8"))
     assert isinstance(data, dict)
@@ -88,11 +94,15 @@ def _cli(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 
 def test_new_validate_collate_round_trip(scratch_repo: Path) -> None:
+    devlog_path = scratch_repo / "docs/development/DEVELOPMENT_LOG.md"
+    # Precondition: the fixture issue is absent from the copied real log, so
+    # collate must create a new entry rather than update one in place.
+    assert f"DL-#{SYNTHETIC_ISSUE} " not in devlog_path.read_text(encoding="utf-8")
     created = _cli(
         scratch_repo,
         "new",
         "--issue",
-        "1976",
+        SYNTHETIC_ISSUE,
         "--summary",
         "vendor the change fragment tooling",
         "--dl-state",
@@ -100,10 +110,10 @@ def test_new_validate_collate_round_trip(scratch_repo: Path) -> None:
         "--next-step",
         "Merge the pull request.",
         "--branch",
-        "chore/1976-change-fragments-tooling",
+        f"chore/{SYNTHETIC_ISSUE}-change-fragments-tooling",
     )
     assert created.returncode == 0, created.stderr
-    fragment = scratch_repo / "changes" / "1976-vendor-the-change-fragment-tooling.md"
+    fragment = scratch_repo / "changes" / f"{SYNTHETIC_ISSUE}-vendor-the-change-fragment-tooling.md"
     assert fragment.is_file()
 
     validated = _cli(scratch_repo, "validate")
@@ -125,7 +135,7 @@ def test_new_validate_collate_round_trip(scratch_repo: Path) -> None:
     assert "| 2026-10-04 | #4242 | vendor the change fragment tooling |" in spec
     devlog = (scratch_repo / "docs/development/DEVELOPMENT_LOG.md").read_text(encoding="utf-8")
     # Title-cased so the collated heading passes the document-title gate.
-    assert "### DL-#1976 · Vendor the Change Fragment Tooling" in devlog
+    assert f"### DL-#{SYNTHETIC_ISSUE} · Vendor the Change Fragment Tooling" in devlog
     assert "- **PR:** #4242" in devlog
 
 

@@ -15,49 +15,16 @@ categories:
 
 {{< include _generated/trust/critique-annotations/drift-components-wrench-double-pendulum.qmd >}}
 
+::: {.laymans-terms}
 ```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        A two-link pendulum lets us examine how an arm-like segment and a club-like segment influence each other. At the same position and velocity, changing either joint torque can change the force between the links. We separate the force predicted with zero declared input from the additional effect of that input. Both components can pull on the club-like link; the separation does not tell us whether muscles are relaxed or whether an action is conscious.
-      </p>
+<p class="laymans-terms-intro">A two-link pendulum shows how an arm-like link and a club-like link push on each other. At one position and speed, changing either joint torque changes the force between the links. We separate the force with zero declared input from the added effect of that input. Both can pull on the club-like link. The split does not show whether muscles are relaxed or an action is conscious.</p>
+<div class="laymans-item"><h3>Natural and Active Force</h3><p>We compare two parts at one instant. The natural part is the <a href="../pages/glossary.html#drift">drift</a>: the zero-input prediction, with gravity, motion effects, and any other loads kept. Current motion already reflects earlier input. The active part is the change caused by the declared torque at that same state. It can change both the force between links and the joint moment. Picture a motor-driven pendulum next to one with the motor off at the same position and speed. That holds only for one instant. Once both move, their states differ and a later comparison asks a different question.</p></div>
+<div class="laymans-item"><h3>The Double Pendulum Model</h3><p>We apply this to a double pendulum standing in for arms and club.</p></div>
+<div class="key-takeaway"><strong>Key Takeaway:</strong> Zero wrist-like torque does not mean zero input-driven power to the club-like link, because shoulder-like torque can change the connecting force. The worked example shows this distinction. It does not show measured late-downswing dominance or advise stopping torque.</div>
+```
+:::
 
-      <div class="laymans-item">
-        <h3>Natural vs. Active Force</h3>
-        <p>
-          For this model, we compare two contributions at one instantaneous state:
-        </p>
-        <ul>
-            <li><strong>Natural (Drift):</strong> The zero-input prediction, retaining gravity, motion-dependent effects and any other explicitly retained loads. The current motion already reflects earlier input.</li>
-            <li><strong>Active:</strong> The change caused by the declared torque input at that same state. It can affect both the inter-link force and the joint moment.</li>
-        </ul>
-        <div class="analogy">
-          <strong>Analogy:</strong> At one instant, compare a motor-driven pendulum with the same pendulum at the same position and speed but zero motor torque. This is a local calculation. If both are then allowed to move, their states diverge and a later comparison asks a different question.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The Double Pendulum Model</h3>
-        <p>
-          We apply this to a double pendulum (representing the arms and club).
-        </p>
-        <div class="key-takeaway">
-          Zero wrist-like torque does not mean zero input-driven power to the club-like link: shoulder-like torque can change the connecting force. The worked example demonstrates this distinction, not a measured late-downswing dominance or an instruction to stop applying torque.
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
+```{=html}
 <!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
 <section class="critics-comments">
   <h2>
@@ -581,3 +548,11 @@ python -m pytest tests/test_drift_wrench_review.py tests/test_double_pendulum_ch
 ```
 
 The power tests use a central directional difference of the independently computed COM energy, with an explicit absolute numerical tolerance. This checks the instantaneous rate; it does not integrate a zero-torque trajectory or establish long-horizon solver accuracy. Any forward comparison must specify its initial state, input history, numerical convergence and complete work balance separately.
+
+## Related Articles
+
+- [Superposition in Affine Control Systems via Newton–Euler, Lagrangian, and Screw-Theoretic Formulations](superposition.html) — additive decomposition of natural and active contributions
+- [Theory Series, Part 3: Drift Invariance and Force Taxonomy](theory-part3.html) — drift invariance and the force taxonomy in compact form
+- [Zero-Torque Counterfactual (ZTCF) Family](zero-torque-counterfactual.html) — the counterfactual used to isolate natural motion
+- [Force and Mobility Ellipsoids in the Golf Swing](force-mobility-matrices.html) — how configuration shapes available force and motion
+- [Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations](inverse-dynamics.html) — why net joint torques do not identify muscle action

@@ -1,0 +1,68 @@
+Here are the concrete issues identified across the test listings:
+
+---
+
+### 1. Hardcoded Constant Mismatch in Energy & Frequency Assertions
+* **Issue:** In `test_energy_work_balance`:
+  ```python
+  initial_energy = 0.5 * params.pivot_inertia * 0.2**2 + 4.905 * (1 - np.cos(0.4))
+  ```
+  and in `test_small_angle_frequency`:
+  ```python
+  frequency = np.sqrt(4.905 / params.pivot_inertia)
+  ```
+  The potential energy term and frequency calculation hardcode $m \cdot g \cdot \frac{L}{2} = 4.905$.
+* **Why it is incorrect:** 
+  In `test_energy_work_balance`, `params` is instantiated via `pendulum.RodParameters(damping=damping)`, which takes the default mass and length. 
+  - $4.905$ assumes $m = 1.0$, $g = 9.81$, and center of mass distance $r_{\text{com}} = L/2 = 0.5$ (so $1.0 \times 9.81 \times 0.5 = 4.905$).
+  - If `RodParameters` defaults to any other mass or length (for instance, the test right before it uses $L=0.6, m=2.0$), or uses $g = 9.8$ or $9.80665$, this hardcoded $4.905$ will fail against the actual analytic mechanics contract of the model. The gravitational torque / potential term must be computed from `params.mass * g * (params.length / 2)` or from the parameter model directly.
+
+---
+
+### 2. Coordinate Sign / Direction Mismatch in MuJoCo Center of Mass (`xipos`)
+* **Issue:** In `test_mujoco_import_matches_analytic_mechanics`:
+  ```python
+  data.qpos[0], data.qvel[0] = 0.3, 2.0
+  ...
+  np.testing.assert_allclose(data.xipos[body], [-0.5 * np.sin(0.3), 0, -0.5 * np.cos(0.3)])
+  ```
+* **Why it is incorrect:**
+  - The URDF joint specifies `axis="0 1 0"`.
+  - The link inertial and visual origins are defined at `0 0 -0.5` (along $-z$).
+  - A positive right-handed rotation $\theta = 0.3$ around the $+y$ axis rotates $+z$ toward $+x$, and $-z$ toward $-x$. Specifically:
+    $$x = -(-0.5) \sin(\theta) = +0.5 \sin(0.3)$$
+    $$z = -0.5 \cos(\theta) = -0.5 \cos(0.3)$$
+  - Asserting $x = -0.5 \sin(0.3)$ has the opposite sign, causing the test to fail against actual forward kinematics.
+
+---
+
+### 3. Worldbody / Base Link Mass Included in `model.body_mass`
+* **Issue:** In `test_mujoco_import_matches_analytic_mechanics`:
+  ```python
+  assert np.sum(model.body_mass) == pytest.approx(1.0)
+  ```
+* **Why it is incorrect:**
+  - In MuJoCo, `model.body_mass` has size `model.nbody`. Body 0 is always the `world` body (mass 0.0), and the URDF specifies both a `<link name="base">` and `<link name="rod">`.
+  - Depending on whether the URDF parser treats `base` as a massless body, a fixed link welded to world, or assigns it an inertia/mass, summing over all body masses may include extra bodies or fail if `base` has any mass defined or if `model.body_mass[body]` should have been inspected directly (i.e. `model.body_mass[body] == pytest.approx(1.0)`).
+
+---
+
+### 4. Flawed Tautology / Zero-Variance Test in `test_nonuniform_time_weighted_metric`
+* **Issue:** In `test_nonuniform_time_weighted_metric`:
+  ```python
+  assert result["rms"] != pytest.approx(np.sqrt(10.0 / 3.0))
+  ```
+* **Why it is an issue:**
+  - Asserting inequality (`!= pytest.approx(...)`) against an arbitrary alternative formula does not validate correctness of the trapezoidal rule; any buggy value that happens not to equal $\sqrt{10/3}$ passes. The test should rely on the positive assertion `result == pytest.approx({"rms": np.sqrt(3.5), "max": 3.0})`.
+
+---
+
+### 5. Weak Contract in `test_solver_failure_surfaces`
+* **Issue:** In `test_solver_failure_surfaces`:
+  ```python
+  monkeypatch.setattr(
+      pendulum, "solve_ivp", lambda *args, **kwargs: SimpleNamespace(success=False)
+  )
+  ```
+* **Why it is an issue:**
+  - `scipy.integrate.solve_ivp` returns an `OdeResult` with attributes `success`, `message`, `status`, `t`, `y`. If `pendulum.simulate_pendulum` inspects `result.message` or `result.status` when raising its descriptive `RuntimeError`, this bare `SimpleNamespace(success=False)` can trigger an `AttributeError` instead of exercising the published function's intended error-handling branch for `RuntimeError`. Attributes like `message="Integration failed"` should be supplied.

@@ -17,7 +17,7 @@ is no stale on-disk copy to keep in sync (#4572).
 python scripts/generate_sitemap.py
 ```
 
-**Output:** `docs/sitemap.xml` (pass `--output` to write elsewhere)
+**Output:** `_site/sitemap.xml` (pass `--output` to write elsewhere)
 
 ### generate_feed.py
 
@@ -32,7 +32,7 @@ feed.
 python scripts/generate_feed.py
 ```
 
-**Output:** `docs/feed.xml` (pass `--output` to write elsewhere)
+**Output:** `_site/feed.xml` (pass `--output` to write elsewhere)
 
 ### generate_search_index.py
 
@@ -44,7 +44,7 @@ Creates the search index for the site's search functionality.
 python scripts/generate_search_index.py
 ```
 
-**Output:** `docs/search.json`
+**Output:** `_site/search.json`
 
 ### generate_bibliography_data.py
 

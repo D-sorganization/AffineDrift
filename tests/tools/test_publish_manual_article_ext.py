@@ -43,8 +43,8 @@ class TestPublishManualArticleMainPaths:
         # Create the full expected directory structure
         articles_dir = tmp_path / "articles"
         articles_dir.mkdir()
-        docs_articles = tmp_path / "docs" / "articles"
-        docs_articles.mkdir(parents=True)
+        site_articles = tmp_path / "_site" / "articles"
+        site_articles.mkdir(parents=True)
 
         qmd_file = articles_dir / "intentional-constraint-collapse.qmd"
         qmd_file.write_text(
@@ -53,7 +53,7 @@ class TestPublishManualArticleMainPaths:
         )
 
         # Create a minimal template file
-        template_file = tmp_path / "docs" / "articles.html"
+        template_file = tmp_path / "_site" / "articles.html"
         template_file.write_text(
             "<html><head><title>Old Title</title>"
             '<meta name="description" content="old">'
@@ -66,7 +66,7 @@ class TestPublishManualArticleMainPaths:
         try:
             # Should not raise — publishes the article
             main()
-            output = docs_articles / "intentional-constraint-collapse.html"
+            output = site_articles / "intentional-constraint-collapse.html"
             assert output.exists()
         finally:
             os.chdir(original)
