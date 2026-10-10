@@ -26,6 +26,9 @@ project:
     - "critiques/*.md"
     - "!critiques/INLINE_SUGGESTIONS.md"
   resources:
+    - articles/forward_dynamics_matching/matching-forward-dynamics-draft.pdf
+    - articles/forward_dynamics_matching/source_manifest.json
+    - articles/forward_dynamics_matching/link_validation.json
     - data/
     - schemas/research-protocol-readiness-v1.schema.json
     - schemas/proximal-distal-falsification-atlas-v1.schema.json
@@ -106,6 +109,8 @@ website:
               href: articles/The_Geometry_of_Motion/quarto/index.html
             - text: "Proximal-to-Distal Energy Transfer"
               href: articles/proximal_distal_energy_transfer/index.html
+            - text: "Forward Dynamics Matching"
+              href: articles/forward_dynamics_matching/index.html
             - text: "Proximal–Distal Falsification Atlas"
               href: articles/proximal-distal-falsification-atlas.html
         - section: "Book Series Volumes"
@@ -182,6 +187,67 @@ website:
               href: articles/The_Geometry_of_Motion/quarto/volume1.html
             - text: "Volume II: Control Is Motion"
               href: articles/The_Geometry_of_Motion/quarto/volume2.html
+
+    - id: forward-matching-nav
+      title: "Forward Dynamics Matching"
+      style: "docked"
+      collapse-level: 2
+      contents:
+        - text: "Forward Dynamics Matching"
+          href: articles/forward_dynamics_matching/index.html
+        - text: "The Forward Dynamics Matching Problem"
+          href: articles/forward_dynamics_matching/01_problem.html
+        - text: "The UpstreamDrift Method Inventory"
+          href: articles/forward_dynamics_matching/02_upstream_inventory.html
+        - text: "Lessons From Historical Fits"
+          href: articles/forward_dynamics_matching/03_historical_lessons.html
+        - text: "Measurement and Preprocessing for Dynamic Matching"
+          href: articles/forward_dynamics_matching/04_measurements.html
+        - text: "Inverse Kinematics and Inverse Dynamics as Baselines"
+          href: articles/forward_dynamics_matching/05_inverse_methods.html
+        - text: "Shooting Methods for Forward Model Matching"
+          href: articles/forward_dynamics_matching/06_shooting.html
+        - text: "Direct Collocation for Dynamic Tracking and Model Fitting"
+          href: articles/forward_dynamics_matching/07_collocation.html
+        - text: "Control Parameterizations and Continuation Methods"
+          href: articles/forward_dynamics_matching/08_control_bases.html
+        - text: "Constraints, Contact, and Hybrid Events"
+          href: articles/forward_dynamics_matching/09_contact.html
+        - text: "Differentiable Simulation and Gradient Checking"
+          href: articles/forward_dynamics_matching/10_gradients.html
+        - text: "Muscle-Driven Matching of Forward Dynamics Models"
+          href: articles/forward_dynamics_matching/11_muscles.html
+        - text: "Filtering, Smoothing, and Data Assimilation for Dynamics Matching"
+          href: articles/forward_dynamics_matching/12_state_estimation.html
+        - text: "Uncertainty, Identifiability, and Validation"
+          href: articles/forward_dynamics_matching/13_validation.html
+        - text: "Bayesian Parameter and Model Inference"
+          href: articles/forward_dynamics_matching/14_bayesian.html
+        - text: "Identifiability Before Dimension Selection"
+          href: articles/forward_dynamics_matching/15_identifiability.html
+        - text: "Learning Physical Parameters and Anatomical Dimension"
+          href: articles/forward_dynamics_matching/16_dimensions.html
+        - text: "Sparse Discovery and Model Order Selection"
+          href: articles/forward_dynamics_matching/17_sparse_discovery.html
+        - text: "An Adaptive Model-Constrained Matching Design"
+          href: articles/forward_dynamics_matching/18_adaptive_design.html
+        - text: "Research Synthesis and Priority Gaps"
+          href: articles/forward_dynamics_matching/19_research_synthesis.html
+        - text: "Latent Learned Dynamics and Their Physical Interpretation"
+          href: articles/forward_dynamics_matching/20_latent_dynamics.html
+        - text: "Experimental Design and Model Comparison"
+          href: articles/forward_dynamics_matching/21_experimental_design.html
+        - text: "Learning-Based Tracking and Iterative Control"
+          href: articles/forward_dynamics_matching/22_learning_tracking.html
+        - text: "Software Architecture and Test Contracts"
+          href: articles/forward_dynamics_matching/23_software_contracts.html
+        - text: "References and Verification Ledger"
+          href: articles/forward_dynamics_matching/24_references.html
+        - text: "Benchmarks, Reproducibility, and Publication Maintenance"
+          href: articles/forward_dynamics_matching/25_maintenance.html
+
+        - text: "Forward Surrogates and Multimodal Inverse Proposals"
+          href: articles/forward_dynamics_matching/26_neural_proposals.html
 
   navbar:
     logo: logo/logo-navbar.png
@@ -282,6 +348,7 @@ website:
 # the pages this project renders can resolve what they cite.
 bibliography:
   - references/affine-drift.bib
+  - references/forward-dynamics-matching.bib
   - references/impact-acoustics.bib
   - references/proximal-distal-energy.bib
   - articles/The_Physics_of_Golf/golf_physics.bib

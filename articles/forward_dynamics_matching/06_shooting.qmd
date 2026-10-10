@@ -1,0 +1,120 @@
+---
+description: "Shooting Methods for Forward Model Matching: forward dynamics matching research manuscript chapter (local draft; not peer reviewed or empirically validated)."
+---
+
+# Shooting Methods for Forward Model Matching
+
+Shooting methods make a forward simulation the core of the estimator. The optimization chooses an initial state, control trajectory, and possibly model parameters; the equations of motion then generate states by integration. The predicted measurements are compared with observed kinematics and other sensor channels. This preserves a direct causal chain from controls and parameters to motion, but it also exposes the optimization to the sensitivity and instability of that chain.
+
+## Single Shooting Formulation
+
+Let observations occur at times $t_0,\ldots,t_N$, controls be parameterized by coefficients $\theta$, and model parameters be $p$. Starting from $x_0$, the numerical flow map integrates $\dot{x}=f(x,u(t;\theta),p)$, $x(t_0)=x_0$,
+
+to produce $x_k=\Phi_{t_k,t_0}(x_0,\theta,p)$. A tracking objective is $J(x_0,\theta,p)=\sum_k \rho(L_k^{-1}[h(x_k,p)-y_k]) + R(\theta,p,x_0)$,
+
+possibly with terminal, force, EMG, contact, or task terms. Here $L_kL_k^T=\Sigma_k$ whitens observation residuals. Bounds constrain controls, states, and parameters. The problem can be solved by a gradient-based nonlinear optimizer, derivative-free search, or stochastic method; derivatives of the objective with respect to parameters can be computed through sensitivities or automatic differentiation of the integrator.
+
+The essential feature is that states are not independent decision variables. They are determined by integration. Therefore, if the simulated system is unstable or highly sensitive, a small change in control or initial condition can create a large final-state error. Conversely, a long-horizon objective may give a weak gradient to a parameter whose effect is rapidly damped or hidden by feedback-like controls. This is the classical credit-assignment difficulty of trajectory optimization.
+
+## Control Parameterization
+
+The control history must be finite-dimensional. Common parameterizations include piecewise constants, piecewise-linear values, splines, basis functions, or a feedback policy. Coarse control knots regularize the problem and reduce dimension, but may be unable to represent fast activation changes or impacts. Fine knots increase flexibility and can fit measurement noise, while worsening conditioning and creating unrealistic rapid switching. Activation dynamics provide a physical low-pass filter: muscle excitation may be the control and activation a state. For a first-order model, $\dot{a}=(u-a)/\tau(u,a)$ with distinct activation/deactivation time constants, the optimizer cannot instantaneously jump the muscle force. This distinction is important: optimizing activation directly may allow controls that no excitation can realize.
+
+A useful basis has interpretable scale and smoothness. If $u(t)=\sum_jB_j(t)\theta_j$, then a regularizer such as $\int\|\dot{u}(t)\|^2\,dt$ becomes a quadratic form in $\theta$. But smoothness is a modeling assumption; impacts and rapid control transitions may be real. One should compare the fit and control spectrum across knot densities and regularization strengths. Mesh refinement should improve fit until measurement noise or model error limits meaningful resolution.
+
+## Sensitivities and Gradients
+
+For a parameter $\theta_j$, define sensitivity $S_j(t)=\partial x(t)/\partial\theta_j$. Differentiating the ODE gives the variational equation $\dot{S}_j=f_xS_j+f_{\theta_j}$,
+
+with an initial condition determined by whether $x_0$ depends on $\theta_j$. The measurement derivative is $\partial h/\partial\theta_j=h_xS_j+h_{\theta_j}$. This gives the gradient of a residual-based objective. For many controls and parameters, forward sensitivities become expensive because each parameter requires a sensitivity state. Adjoint methods solve a backward costate equation; they are most attractive when there are many decision variables but relatively few scalar objectives. Automatic differentiation can generate derivatives through the discretized solver but requires careful treatment of solver branches, event handling, and contact discontinuities.
+
+Gradient accuracy should be checked against finite differences on small representative cases. A seemingly sophisticated differentiable solver can produce incorrect gradients if tolerances are loose, event times shift, or a branch changes. Before fitting high-dimensional geometry, test the gradients for each parameter group and test the integration error independently.
+
+### Adjoint Gradient Derivation
+
+Consider a smooth ODE with a parameterized control, $\dot{x}=f(x,u(t;\theta),p)$, and objective
+
+$J=\Phi(x(T),p)+\int_0^T L(x(t),u(t;\theta),p,t)\,dt$.
+
+For a perturbation in $\theta$, the state variation $\delta x$ satisfies $\delta\dot{x}=f_x\delta x+f_{\theta}\delta\theta$, where $f_{\theta}$ includes the chain rule through the control basis and any direct parameter dependence. The first variation of the objective is
+
+$\delta J=\Phi_x\delta x(T)+\Phi_{\theta}\delta\theta+\int_0^T[L_x\delta x+L_{\theta}\delta\theta]\,dt$.
+
+Introduce a costate $\lambda(t)$ and add zero in the form $\int_0^T\lambda^T(f_x\delta x+f_{\theta}\delta\theta-\delta\dot{x})\,dt$. Integrating the $-\lambda^T\delta\dot{x}$ term by parts produces the boundary contribution $-\lambda(T)^T\delta x(T)+\lambda(0)^T\delta x(0)$ and the integral $\int_0^T\dot{\lambda}^T\delta x\,dt$. Choose the terminal condition $\lambda(T)=\nabla_x\Phi(x(T),p)$ and the backward differential equation
+
+$-\dot{\lambda}=f_x^T\lambda+\nabla_xL$.
+
+The coefficient of the arbitrary state variation inside the integral then vanishes. For a fixed initial state, the remaining parameter gradient is
+
+$\nabla_{\theta}J=\nabla_{\theta}\Phi+\int_0^T[\nabla_{\theta}L+f_{\theta}^T\lambda]\,dt$.
+
+If the initial state depends on $\theta$, add $(\partial x_0/\partial\theta)^T\lambda(0)$; any terminal direct dependence is already in $\nabla_{\theta}\Phi$. For control parameters, $f_{\theta}=f_u\partial u/\partial\theta$ and similarly $L_{\theta}=L_u\partial u/\partial\theta$, summed over the control channels. This method computes a gradient with one backward costate solve per scalar objective, independent of the number of parameter components in the leading solve cost. It is attractive for a large control vector and a small number of scalar objectives. If there are many separate objectives or outputs, forward sensitivities can be more efficient because each sensitivity pass yields derivatives for all outputs.
+
+The derivation assumes differentiable dynamics and fixed event structure. Hybrid event times and contact switches add jump conditions to the costate and parameter sensitivity. Ignoring those terms yields incorrect gradients near impacts. A practical implementation should compare adjoint directional derivatives with finite differences on smooth test problems before using them in hybrid biomechanics.
+
+## Multiple Shooting
+
+Multiple shooting divides time into intervals. At each interval boundary $t_j$, the state $s_j$ becomes an explicit optimization variable. The dynamics are integrated locally from $s_j$ using controls over that interval, and continuity constraints enforce $c_j = \Phi_{t_{j+1},t_j}(s_j,\theta_j,p)-s_{j+1}=0$.
+
+The objective still compares states and predicted measurements to data. Compared with single shooting, multiple shooting introduces more variables and equality constraints, but it can improve conditioning because the optimizer can adjust intermediate states directly during early iterations. It can also initialize each segment from a measured or inverse-kinematic state estimate. A defect penalty may ease optimization, but final solutions must satisfy the continuity constraints tightly; otherwise the trajectory is a sequence of inconsistent segments, not one forward solution.
+
+Shooting intervals should be short enough that local integration sensitivity is manageable, but not so short that the nonlinear program becomes dominated by unnecessary boundary variables. For a gait cycle, intervals may align with phases or contact events; for smooth movement, a uniform mesh may suffice. A measured trajectory supplies a strong initial state sequence, while control initialization can use inverse dynamics or static optimization. Continuity constraints then adjust the guess toward dynamic consistency.
+
+## Contact and Hybrid Events
+
+Impacts create discontinuous velocity changes. A smooth ODE integrator must locate events and apply a reset map $x^+=\Delta(x^-,p)$. Event times depend on states and parameters, which can make derivatives nonsmooth. One approach fixes contact times from data and solves a sequence of smooth phases with reset constraints. Another estimates event times or contact modes jointly, which is more general but increases nonconvexity. Penalty contact models smooth the transition but may introduce stiffness, requiring small integration steps and making sensitivities difficult.
+
+Hybrid dynamics require explicit accounting for mode-dependent constraints. During stance, a foot may be constrained or compliant; during flight, contact force should be zero. Treating stance as a bilateral joint can generate attractive forces, while a penalty model can permit penetration. The event model should match the scientific use: if the task is to infer muscle control given measured contact timing, fixing the contact schedule is reasonable; if the model is meant to predict contact timing, fixing it would leak the answer.
+
+## Strengths and Limits
+
+Single shooting is conceptually simple and guarantees dynamic consistency up to integration error. It has few decision variables and works well for stable systems, short horizons, and good initial guesses. It is often ideal for final validation even when another method finds the solution. Its weaknesses become severe for long, unstable, stiff, or contact-rich systems. Initial state error propagates; gradients can vanish or explode; a bad trajectory may provide no useful local direction.
+
+Multiple shooting reduces long-range sensitivity and makes a data-informed initial trajectory available as optimization variables. It is often more robust for biomechanics trajectories with many observations. Its costs are larger nonlinear programs, continuity constraints, and the possibility of “cheating” during intermediate iterations by allowing defects. Tight convergence and independent reintegration are required. Neither method resolves model identifiability. If body dimensions and controls both influence the same observed motion, optimization can trade one against the other. Priors and multiple trials are still needed.
+
+## Regularization and Identifiability
+
+A tracking estimator without control or parameter penalties can fit noise. A generic regularizer is $R=\lambda_u\int\|u(t)\|^2\,dt+\lambda_s\int\|\dot{u}(t)\|^2\,dt+(p-p_0)^T\Lambda_p(p-p_0)$,
+
+where $p_0$ is a prior mean and $\Lambda_p$ is a prior precision. The scales should correspond to prior uncertainty or a principled task objective. A free-running trajectory with low effort but poor fit is not useful; an exact data fit requiring actuator saturation and implausible dimensions is also suspect. Report each objective component separately and examine tradeoff curves rather than presenting only a weighted sum.
+
+The regularized local precision approximation is $H=J_r^TWJ_r+\Lambda$, where $J_r$ is the residual Jacobian with respect to all decision variables. Strongly correlated columns reveal compensations: for example, larger muscle strength paired with lower activation can preserve force; a longer segment paired with altered joint-center position can preserve marker locations. Singular vectors identify combinations that data do not resolve. Adapt only parameters whose effects are distinguishable under the observed motions.
+
+## Worked Derivation: Why Shooting Can Be Ill-Conditioned
+
+Consider the scalar unstable system $\dot{x}=a x + u$, with fixed $x(0)=0$ and constant control $u$. Its terminal state is $x(T)=u(\exp(aT)-1)/a$ for $a\ne0$. The derivative with respect to control is $(\exp(aT)-1)/a$, which grows exponentially when $aT$ is large and positive. Thus a small control change creates a large terminal change, making a long single-shooting horizon sensitive. For stable $a<0$ and large $T$, the terminal derivative approaches $-1/a$; early control effects disappear, so fitting early observations from a terminal objective becomes difficult. Multiple shooting inserts intermediate states and local continuity constraints, reducing the long sensitivity chain.
+
+## Practical Algorithm
+
+1. Construct a fixed-parameter model and validate its forward integrator on short simulations.
+2. Initialize $x(t_k)$ from IK or a state estimator; align clocks and contact phases.
+3. Initialize controls using inverse-dynamics or a simple controller, then smooth and bound them.
+4. Fit controls with geometry fixed, using multiple shooting if long-horizon conditioning is poor.
+5. Add a small, interpretable parameter block with priors; inspect parameter-control correlation.
+6. Increase control resolution only when residual structure supports it.
+7. Tighten continuity and integrator tolerances, then perform an independent open-loop rollout.
+8. Report state and observation residuals, control magnitude and smoothness, parameter values, defects, contact violations, and rollout error.
+
+## Exercises With Solutions
+
+### Exercise 1: Piecewise Constant Control Count
+
+A 2-second trial has control knots every 0.1 seconds. How many piecewise-constant intervals are there, and what is the main tradeoff in doubling the knot rate?
+
+**Solution.** There are 20 intervals. Doubling the knot rate approximately doubles control variables per input channel and increases flexibility and potential overfit; it may represent faster control changes but worsens conditioning and optimization cost.
+
+### Exercise 2: A Defect-Tolerant Solution
+
+A multiple-shooting optimizer achieves tiny observation error but continuity defects of 0.2 meters at several interval boundaries. Is this a successful fit?
+
+**Solution.** No. The state sequence is dynamically discontinuous. It cannot be generated by one forward integration. Continuity constraints are part of feasibility and must be driven below a physically meaningful tolerance, then checked by independent reintegration.
+
+### Exercise 3: Control-Parameter Confounding
+
+A joint torque is $\tau=spu$, where $s$ is muscle strength, $p$ moment arm, and $u$ activation. With only joint angle observations, can all three be uniquely identified?
+
+**Solution.** Generally not. The product is what drives the motion, so scaling strength up and activation down or changing moment arm can preserve torque. Independent anatomical/EMG/force information or informative movements are required.
+
+## References
+
+The direct-method comparison by Porsa, Lin, and Pandy reports direct shooting and collocation on a large musculoskeletal model: [DOI 10.1007/s10439-015-1538-6](https://doi.org/10.1007/s10439-015-1538-6), indexed in PubMed/repository records. A broad treatment of practical optimal control is available in [@betts2010practical], alongside multibody dynamics context in [@featherstone2008rigid].

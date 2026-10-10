@@ -1,0 +1,126 @@
+---
+description: "Bayesian Parameter and Model Inference: forward dynamics matching research manuscript chapter (local draft; not peer reviewed or empirically validated)."
+---
+
+# Bayesian Parameter and Model Inference
+
+## From A Best Fit to an Uncertainty Statement
+
+Optimization returns a parameter vector that minimizes an objective. It does not by itself show how strongly the observations support that value, whether multiple solutions exist, or whether alternative structures predict equally well. Bayesian inference makes assumptions about parameters and data explicit through a prior $p(\theta\mid m)$, a likelihood $p(y\mid\theta,m)$, and a posterior
+
+$$
+p(\theta\mid y,m)=\frac{p(y\mid\theta,m)p(\theta\mid m)}{p(y\mid m)}.
+$$
+
+Here $m$ denotes a model structure, and the denominator is the marginal likelihood or evidence. The posterior describes parameter uncertainty conditional on the model, prior, observation process, and data. It does not erase structural uncertainty or compensate for an incorrect likelihood.
+
+For forward dynamics matching, $y$ may be a full kinematic sequence and the likelihood may integrate the equations from initial conditions. A common Gaussian observation model is
+
+$$
+y_k\mid x_k,\theta,m\sim\mathcal N(h_m(x_k,\theta),R_k),
+$$
+
+with a transition model that includes process discrepancy. If $R_k$ and process covariance are fixed, posterior concentration can be interpretable. If both are freely adjusted, a model may explain residuals by inflating noise rather than improving its dynamics. Noise parameters therefore need priors, calibration, or sensitivity analysis.
+
+## Priors Encode Real Knowledge and Regularization
+
+Priors can encode positivity of mass, smoothness of force laws, plausible parameter ranges, or group-level shrinkage for candidate terms. A log transform enforces positive scalar parameters; a Cholesky factorization can enforce a positive-definite inertia matrix; hierarchical priors can shrink related coefficients together. Positive-definiteness alone does not guarantee a physically realizable rigid-body inertia: mass must be positive and the principal moments must satisfy the inertia triangle inequalities (equivalently, the associated second-moment matrix must be positive semidefinite). These are not neutral numerical choices. They affect posterior uncertainty and model evidence, especially when the data are weak.
+
+A useful prior should be stated in physical units and tested for sensitivity. Uniform priors over a parameter can become highly informative after nonlinear reparameterization. Broad priors may assign substantial mass to physically impossible regions unless constraints are built in. When a posterior is concentrated far from prior boundaries, modest prior changes may have little effect; near boundaries, conclusions can be prior-driven. Report the prior scale and transformed parameterization.
+
+## Laplace Approximation
+
+The Laplace approximation replaces the posterior near a mode $\hat\theta$ with a Gaussian. For negative log posterior $J(\theta)$ and Hessian $H=\nabla^2J(\hat\theta)$, the local approximation is
+
+$$
+p(\theta\mid y,m)\approx\mathcal N(\hat\theta,H^{-1}).
+$$
+
+The approximation is attractive because it is fast and provides approximate uncertainty and evidence. Around a well-identified, unimodal, interior mode with a smooth likelihood, it can work well. It can fail when the posterior is skewed, multimodal, bounded, strongly correlated, or nearly singular. A Hessian inverse at one optimum cannot reveal a distant second mode. For dimension selection, Laplace evidence can be especially sensitive to whether the mode lies near parameter boundaries and whether the local Gaussian approximation is credible.
+
+Evidence approximations include both fit quality and an Occam factor related to posterior volume relative to prior volume. This is often described as automatic complexity control, but the penalty is conditional on prior scale. A candidate with many parameters can be penalized because only a tiny prior region fits, yet changing the prior width changes that volume ratio. MacKay's work on Bayesian interpolation develops evidence-based regularization ideas; the direct DOI URL is https://doi.org/10.1162/neco.1992.4.3.415, pending link validation.
+
+## Profile Likelihood
+
+Profile likelihood is a frequentist alternative for diagnosing practical identifiability. For parameter of interest $\theta_i$, fix it at value $a$ and re-optimize nuisance parameters:
+
+$$
+\ell_{prof}(a)=\max_{\theta_{-i}}\ell(\theta_i=a,\theta_{-i}).
+$$
+
+A sharp profile indicates the data constrain the parameter locally; a flat or one-sided profile indicates weak identification. Profiles reveal nonlinear ridges and boundary effects that a quadratic approximation misses. They are computationally more expensive because the model must be refit over a grid, and their confidence interpretation relies on regularity assumptions. Correlated parameters should be profiled jointly when a single-parameter profile hides a ridge.
+
+Raue and colleagues discuss profile likelihood for practical identifiability in nonlinear dynamical models. A canonical reference link is https://doi.org/10.1093/bioinformatics/btp358; live validation is pending. Profile likelihood is not Bayesian posterior uncertainty: it does not incorporate a prior, and its confidence set is based on likelihood-ratio behavior. Using both profiles and posterior summaries can be informative because they expose different dependencies.
+
+## Markov Chain Monte Carlo
+
+MCMC generates dependent samples whose stationary distribution is the posterior. Hamiltonian Monte Carlo and its adaptive variants can explore continuous, correlated parameter spaces more efficiently than random-walk proposals when gradients are available. Differential evolution, slice sampling, and ensemble methods can be useful in other settings. No sampler is universally reliable. Chains can remain trapped in one mode, mix slowly along weakly identified ridges, or produce apparently stable summaries while missing alternative structures.
+
+Use multiple dispersed chains, inspect trace plots and effective sample sizes, compare rank-normalized convergence diagnostics, and verify posterior predictive behavior. These diagnostics assess aspects of convergence but cannot prove that all modes have been found. Synthetic parameter-recovery experiments are valuable: generate data from known settings, fit the model, and check interval coverage and recovery rates across a range of noise and excitation. For high-dimensional latent models, exact posterior sampling may be infeasible; variational approximations are faster but often understate uncertainty and should be calibrated against smaller problems.
+
+Unknown states add another layer. Jointly sampling an entire trajectory and parameters can create strong correlations and high dimensionality. State-space smoothers, marginalized likelihoods, or particle MCMC can help, but each adds computational and modeling choices. Approximate state estimates plugged into a parameter likelihood can understate uncertainty because the uncertainty in the trajectory is ignored.
+
+## Comparing Candidate Models
+
+For model structure $m$, the marginal likelihood is
+
+$$
+p(y\mid m)=\int p(y\mid\theta,m)p(\theta\mid m)\,d\theta.
+$$
+
+Posterior model odds combine evidence with prior model probabilities. The evidence averages fit over parameter space, so a highly flexible model is not rewarded merely for having one excellent parameter setting. But the result depends on the prior distribution and on the completeness of the candidate set. If every model omits the correct contact mode, the highest-probability candidate is merely the least inadequate among those considered.
+
+When model dimensions differ, reversible-jump MCMC can move among parameter spaces of varying dimensions. Green's foundational article is “Reversible jump Markov chain Monte Carlo computation and Bayesian model determination,” with DOI https://doi.org/10.1093/biomet/82.4.711; live validation is pending. The dimension-matching transformation and proposal probabilities must be correct, and chain mixing across structures must be demonstrated. In many applied studies, a small predeclared set of candidates plus robust held-out validation is more practical than an unrestricted transdimensional sampler.
+
+## Worked Example: Two Damping Models
+
+Compare $m_1$, which uses a single damping coefficient $b$ in two regimes, with $m_2$, which uses separate coefficients $b_1,b_2$. Suppose the data include only regime 1, and the prior for $b_1$ under $m_2$ matches the prior for $b$ under $m_1$. Let $\eta$ denote any other shared parameters. Because $b_2$ does not appear in the likelihood, the evidence factors as
+
+$$
+p(y\mid m_2)=\int p(y\mid b_1,\eta,m_2) p(b_1,\eta\mid m_2)\underbrace{\left[\int p(b_2\mid b_1,\eta,m_2)\,db_2\right]}_{1}\,db_1\,d\eta.
+$$
+
+The bracketed integral is one. Under matched priors for shared parameters and identical regime-1 likelihoods, this gives exactly the same evidence as $m_1$; the unobserved $b_2$ incurs no automatic Occam penalty. Its posterior remains its prior conditional on shared parameters, so the data say nothing about it. If regime-2 observations are present but weak, their likelihood depends slightly on $b_2$; then evidence can reflect the prior-to-posterior volume change, and a profile may be broad. A new informative trial in regime 2 can identify the coefficient. Do not equate a parameter absent from the likelihood with one that has a weak but nonzero likelihood effect.
+
+A robust report therefore includes posterior distributions, prior-to-posterior comparison, profile curves for critical parameters, evidence sensitivity, and held-out predictions. If two model structures produce practically indistinguishable predictions on all feasible protocols, report that equivalence rather than presenting a posterior probability as a universal truth.
+
+## Calibrating Uncertainty
+
+Uncertainty intervals should be checked for coverage on synthetic and, where available, repeated experimental data. Posterior predictive checks compare simulated trajectories with features not used merely to construct the likelihood: event timing, peak velocity, cross-joint coordination, residual autocorrelation, constraint error, and response to perturbations. A model can have well-behaved parameter chains but poor predictive calibration if the likelihood omits temporal correlation or contact events.
+
+For adaptive dimension learning, separate uncertainty into at least three levels: parameter uncertainty within a candidate model; model uncertainty across candidate structures; and data or measurement uncertainty. A single standard error does not capture all three. If the candidate set changes during ongoing adaptation, preserve the history of proposals and evidence so that model selection remains auditable.
+
+
+## Parameter Correlation and Reparameterization
+
+Weakly identified models often produce long posterior ridges. Sampling in the original coordinates can be inefficient when two parameters trade off, such as mass scale and torque scale or passive damping and feedback gain. Reparameterization can align the sampler with identifiable combinations: estimate the ratio and overall scale separately, or use a centered/non-centered hierarchical form depending on data strength. This can improve computation, but it does not add information. Always translate the result back to physical quantities and state which combinations the experiment actually constrains.
+
+For multibody systems, physically valid parameterizations matter. Sampling unconstrained entries of an inertia matrix can generate nonphysical bodies; a structured parameterization must enforce positive mass and a realizable central inertia (principal moments satisfying triangle inequalities, equivalently a positive-semidefinite second-moment matrix), as well as any required positive definiteness. Parameterizing mass, center of mass, and a valid second-moment matrix can help. Constraints can create truncated or curved posterior geometry. A Laplace approximation should account for the transformed coordinates and Jacobian when it approximates density in physical space. Reporting an uncertainty interval in transformed log-mass space as if it were symmetric in mass is incorrect.
+
+## Evidence Computation and Model Priors
+
+Marginal likelihood can be estimated by bridge sampling, nested sampling, thermodynamic integration, or Laplace approximation. Each method has failure modes. Importance sampling can have unstable weights when proposal tails are too light; nested sampling depends on accurately exploring constrained likelihood contours; thermodynamic integration requires adequate sampling across inverse temperatures; Laplace depends on local Gaussian geometry. Evidence estimates should include numerical uncertainty and convergence diagnostics. Comparing tiny differences without Monte Carlo error is false precision.
+
+Prior model probabilities matter as well. If one candidate adds a coordinate that is considered a priori unlikely, the posterior odds may favor a simpler structure before data are seen. This can be a reasonable scientific preference, but it should be reported separately from likelihood support. Sensitivity analysis should vary both parameter priors and model priors over defensible ranges. Evidence is especially fragile when candidate parameterizations contain redundant dimensions or singular limits, such as a larger model reducing to a smaller one when a coefficient is zero.
+
+## Posterior Predictive Checks for Dynamics
+
+Draw parameter and state samples from the posterior, simulate forward under measured and novel inputs, and compare trajectory summaries with observations. Checks should preserve temporal structure: compare autocorrelation, cross-correlation between joints, peak and phase timing, impulse response, and event transitions. Pointwise marker coverage alone can look good even when the model has the wrong phase dynamics. For long-horizon prediction, report the distribution of trajectory error and constraint violations across posterior draws, not just the mean trajectory. A mean over trajectories with different contact timings may be physically meaningless.
+
+Posterior predictive success is conditional on the chosen model class. It can reveal model inadequacy when replicated data fail to resemble observed data, but agreement does not prove the model's internal mechanism. Combine predictive checks with synthetic recovery, intervention response, parameter profiles, and independent physical measurements. In adaptive model selection, store these checks per model version so changes in fit are traceable.
+
+## Limitations
+
+Bayesian inference is conditional on the prior, likelihood, and model set. Laplace approximations can miss skewness and multiple modes; MCMC can fail to mix; profile likelihood can be costly and is not a posterior; and approximate variational methods can understate uncertainty. Evidence comparisons are sensitive to prior volume. Predictive validation remains necessary even when posterior calculations appear numerically stable.
+
+## Exercises
+
+1. Explain why a narrow posterior can still be misleading if process noise is fixed to an unrealistically small value.
+2. A Laplace approximation reports a tiny standard error, while a profile likelihood is flat on one side. What may be happening?
+3. Model A has lower training loss than Model B, but lower marginal likelihood. Give a plausible explanation and a necessary sensitivity check.
+
+## Solution Sketches
+
+1. The model is forced to attribute all deviations to parameters, producing overconfident estimates under a misspecified noise model. Revisit the measurement/process covariance and examine posterior predictive residuals.
+2. The posterior may be asymmetric, boundary-limited, or ridge-shaped; the local Hessian captures only curvature near the mode. Inspect multi-start fits, joint profiles, and posterior samples.
+3. A's larger parameter space may fit well only in a small region of its prior, producing a stronger complexity penalty. Check prior-scale sensitivity, candidate completeness, convergence of the evidence estimator, and held-out predictive performance.

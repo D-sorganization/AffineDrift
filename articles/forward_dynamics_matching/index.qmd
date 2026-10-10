@@ -1,0 +1,78 @@
+---
+title: "Forward Dynamics Matching"
+description: "Research textbook on fitting constrained forward dynamics to kinematic observations, auditing UpstreamDrift methods, and designing adaptive models."
+sidebar: forward-matching-nav
+categories:
+- books
+---
+## Publication and Evidence Status
+
+**Local research manuscript, 2026-10-05.** This book has been assembled for AffineDrift publication. It has not yet been deployed to affinedrift.com, rendered through the repository's Quarto pipeline, or independently peer reviewed. External link validation remains incomplete because GitHub returned an API quota error and the repository requires stopping network activity. The [reference and verification ledger](24_references.html) records these limits.
+
+The source review pins UpstreamDrift to revision `d7c7d07add0d7407a5a3376d5fe4a97aee9112a0`. It separates implemented algorithms, stored test and experiment evidence, historical failures, and proposed improvements. Native engines and empirical subject measurements were not executed in this review. A proposed adaptive model is a research design, not a delivered matcher.
+
+[Download the 135-page local PDF preview](matching-forward-dynamics-draft.pdf). This Pandoc/XeLaTeX preview is a review artifact; the Quarto publication and full visual acceptance gates remain pending.
+
+## The Central Question
+
+Can a declared mechanical model, admissible actuation, and one initial state reproduce recorded motion while satisfying physical constraints? A convincing answer requires more than a close animation: observation semantics, numerical consistency, uninterrupted replay, uncertainty, and independently tested prediction all matter.
+
+The book develops that question from measurement and inverse dynamics through shooting, collocation, state estimation, differentiable simulation, muscle-driven tracking, learned proposals, and adaptive model selection. Its focus is improving model-constrained matching without confusing fitted shape, physical degrees of freedom, latent memory, and control representation.
+
+## How to Read the Book
+
+Start with the problem formulation and the two UpstreamDrift review chapters for the shortest route to current capabilities and gaps. Read the classical methods before the adaptive chapters if trajectory estimation is unfamiliar. The final design and synthesis chapters combine those foundations into a proposed implementation and research program.
+
+Each chapter includes assumptions, failure modes, worked arguments, and exercises with solution sketches. Mathematical examples are synthetic or derived. Historical numerical values are attributed to checked-in upstream receipts and remain conditional on their recorded model and run.
+
+## Foundations and the Existing Program
+
+1. [The Forward Dynamics Matching Problem](01_problem.html)
+2. [The UpstreamDrift Method Inventory](02_upstream_inventory.html)
+3. [Lessons From Historical Fits](03_historical_lessons.html)
+4. [Measurements and Preprocessing](04_measurements.html)
+5. [Inverse Kinematics and Inverse Dynamics](05_inverse_methods.html)
+
+## Classical Matching and Estimation
+
+6. [Shooting Methods](06_shooting.html)
+7. [Direct Collocation](07_collocation.html)
+8. [Control Parameterizations and Continuation](08_control_bases.html)
+9. [Constraints, Contact, and Hybrid Events](09_contact.html)
+10. [Differentiable Simulation and Gradient Checking](10_gradients.html)
+11. [Muscle-Driven Matching](11_muscles.html)
+12. [Filtering, Smoothing, and Data Assimilation](12_state_estimation.html)
+13. [Uncertainty and Validation](13_validation.html)
+14. [Bayesian Parameter and Model Inference](14_bayesian.html)
+
+## Learning and Adaptive Dimensions
+
+15. [Identifiability Before Dimension Selection](15_identifiability.html)
+16. [Physical Parameters and Anatomical Dimension](16_dimensions.html)
+17. [Sparse Discovery and Model Order](17_sparse_discovery.html)
+18. [An Adaptive Model-Constrained Matching Design](18_adaptive_design.html)
+19. [Research Synthesis and Priority Gaps](19_research_synthesis.html)
+20. [Latent Learned Dynamics](20_latent_dynamics.html)
+21. [Experimental Design and Model Comparison](21_experimental_design.html)
+22. [Learning-Based Tracking and Iterative Control](22_learning_tracking.html)
+
+The appendix, [Forward Surrogates and Multimodal Inverse Proposals](26_neural_proposals.html), develops learned acceleration and native reranking in detail.
+
+## Engineering and Publication
+
+23. [Software Architecture and Test Contracts](23_software_contracts.html)
+24. [References and Verification Ledger](24_references.html)
+25. [Benchmarks, Reproducibility, and Maintenance](25_maintenance.html)
+
+## What the Adaptive Design Adds
+
+The proposed learner adapts a restricted physical geometry before interpreting dynamics, profiles out compensating controls and calibration variables, and compares registered structures on independent trials. It reports data information separately from prior information and retains compatible alternatives when the observations cannot distinguish them.
+
+No new production code is introduced in this publication change. The engineering chapter specifies tests-first implementation, design by contract, the Law of Demeter, and shared logic for future code. The source audit does not certify existing upstream code as uniformly compliant with those principles.
+
+## Related Articles
+
+- [Degrees of Freedom and Dimensionality](../degrees-of-freedom-and-dimensionality.html)—Distinguishes configuration, tangent, and task dimensions before interpreting a learned model.
+- [UpstreamDrift Educational Integration](../upstreamdrift-educational-integration.html)—Connects the executable engine platform with the textbook library.
+- [The Model Ladder](../../models/model-ladder.html)—Organizes mechanical assumptions and the predictions each model can represent.
+- [Books and Textbooks](../../books/index.html)—Returns to AffineDrift's long-form library.

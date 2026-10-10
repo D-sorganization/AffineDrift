@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 250
+- Reviewed: 277
 - Deferred: 0
 - Exempt: 3
 
@@ -24,6 +24,33 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 16 |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
+| `/articles/forward_dynamics_matching/01_problem.html` | `articles/forward_dynamics_matching/01_problem.qmd` | 1 |
+| `/articles/forward_dynamics_matching/02_upstream_inventory.html` | `articles/forward_dynamics_matching/02_upstream_inventory.qmd` | 1 |
+| `/articles/forward_dynamics_matching/03_historical_lessons.html` | `articles/forward_dynamics_matching/03_historical_lessons.qmd` | 1 |
+| `/articles/forward_dynamics_matching/04_measurements.html` | `articles/forward_dynamics_matching/04_measurements.qmd` | 1 |
+| `/articles/forward_dynamics_matching/05_inverse_methods.html` | `articles/forward_dynamics_matching/05_inverse_methods.qmd` | 1 |
+| `/articles/forward_dynamics_matching/06_shooting.html` | `articles/forward_dynamics_matching/06_shooting.qmd` | 1 |
+| `/articles/forward_dynamics_matching/07_collocation.html` | `articles/forward_dynamics_matching/07_collocation.qmd` | 1 |
+| `/articles/forward_dynamics_matching/08_control_bases.html` | `articles/forward_dynamics_matching/08_control_bases.qmd` | 1 |
+| `/articles/forward_dynamics_matching/09_contact.html` | `articles/forward_dynamics_matching/09_contact.qmd` | 1 |
+| `/articles/forward_dynamics_matching/10_gradients.html` | `articles/forward_dynamics_matching/10_gradients.qmd` | 1 |
+| `/articles/forward_dynamics_matching/11_muscles.html` | `articles/forward_dynamics_matching/11_muscles.qmd` | 1 |
+| `/articles/forward_dynamics_matching/12_state_estimation.html` | `articles/forward_dynamics_matching/12_state_estimation.qmd` | 1 |
+| `/articles/forward_dynamics_matching/13_validation.html` | `articles/forward_dynamics_matching/13_validation.qmd` | 1 |
+| `/articles/forward_dynamics_matching/14_bayesian.html` | `articles/forward_dynamics_matching/14_bayesian.qmd` | 1 |
+| `/articles/forward_dynamics_matching/15_identifiability.html` | `articles/forward_dynamics_matching/15_identifiability.qmd` | 1 |
+| `/articles/forward_dynamics_matching/16_dimensions.html` | `articles/forward_dynamics_matching/16_dimensions.qmd` | 1 |
+| `/articles/forward_dynamics_matching/17_sparse_discovery.html` | `articles/forward_dynamics_matching/17_sparse_discovery.qmd` | 1 |
+| `/articles/forward_dynamics_matching/18_adaptive_design.html` | `articles/forward_dynamics_matching/18_adaptive_design.qmd` | 1 |
+| `/articles/forward_dynamics_matching/19_research_synthesis.html` | `articles/forward_dynamics_matching/19_research_synthesis.qmd` | 1 |
+| `/articles/forward_dynamics_matching/20_latent_dynamics.html` | `articles/forward_dynamics_matching/20_latent_dynamics.qmd` | 1 |
+| `/articles/forward_dynamics_matching/21_experimental_design.html` | `articles/forward_dynamics_matching/21_experimental_design.qmd` | 1 |
+| `/articles/forward_dynamics_matching/22_learning_tracking.html` | `articles/forward_dynamics_matching/22_learning_tracking.qmd` | 1 |
+| `/articles/forward_dynamics_matching/23_software_contracts.html` | `articles/forward_dynamics_matching/23_software_contracts.qmd` | 1 |
+| `/articles/forward_dynamics_matching/24_references.html` | `articles/forward_dynamics_matching/24_references.qmd` | 1 |
+| `/articles/forward_dynamics_matching/25_maintenance.html` | `articles/forward_dynamics_matching/25_maintenance.qmd` | 1 |
+| `/articles/forward_dynamics_matching/26_neural_proposals.html` | `articles/forward_dynamics_matching/26_neural_proposals.qmd` | 1 |
+| `/articles/forward_dynamics_matching/index.html` | `articles/forward_dynamics_matching/index.qmd` | 1 |
 | `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
 | `/articles/ideomotor-theory-and-predictive-brain.html` | `articles/ideomotor-theory-and-predictive-brain.qmd` | 5 |
 | `/articles/impact-mechanics-and-ball-flight.html` | `articles/impact-mechanics-and-ball-flight.qmd` | 1 |
@@ -280,6 +307,33 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-4a8ccbe60039` | `/articles/drift-control-ratio.html` | Reviewed | — | `ad-dcr-001` | `crit-dimensional-inconsistency-dcr`, `crit-lie-bracket-formalism-overreach`, `crit-normative-ambiguity-drift`, `crit-planar-dcr-blindness`, `crit-precision-gross-control` | 3 |
 | `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Reviewed | — | None | None | 0 |
 | `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Reviewed | — | None | None | 6 |
+| `ad-route-6a107a9826c5` | `/articles/forward_dynamics_matching/01_problem.html` | Reviewed | — | None | None | 0 |
+| `ad-route-08fa2a4f6759` | `/articles/forward_dynamics_matching/02_upstream_inventory.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d45004d00079` | `/articles/forward_dynamics_matching/03_historical_lessons.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a510f3e8ab30` | `/articles/forward_dynamics_matching/04_measurements.html` | Reviewed | — | None | None | 0 |
+| `ad-route-7f6f35665af6` | `/articles/forward_dynamics_matching/05_inverse_methods.html` | Reviewed | — | None | None | 0 |
+| `ad-route-4d45c2731480` | `/articles/forward_dynamics_matching/06_shooting.html` | Reviewed | — | None | None | 0 |
+| `ad-route-4efd5080c2a0` | `/articles/forward_dynamics_matching/07_collocation.html` | Reviewed | — | None | None | 0 |
+| `ad-route-0f0618bd2fa7` | `/articles/forward_dynamics_matching/08_control_bases.html` | Reviewed | — | None | None | 0 |
+| `ad-route-08ac7fb42698` | `/articles/forward_dynamics_matching/09_contact.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a576e0d76515` | `/articles/forward_dynamics_matching/10_gradients.html` | Reviewed | — | None | None | 0 |
+| `ad-route-fbe0fc534f2b` | `/articles/forward_dynamics_matching/11_muscles.html` | Reviewed | — | None | None | 0 |
+| `ad-route-9f244bf93200` | `/articles/forward_dynamics_matching/12_state_estimation.html` | Reviewed | — | None | None | 0 |
+| `ad-route-1e9a77dd9e42` | `/articles/forward_dynamics_matching/13_validation.html` | Reviewed | — | None | None | 0 |
+| `ad-route-1d970e57c9ee` | `/articles/forward_dynamics_matching/14_bayesian.html` | Reviewed | — | None | None | 0 |
+| `ad-route-8636d51f1ebe` | `/articles/forward_dynamics_matching/15_identifiability.html` | Reviewed | — | None | None | 0 |
+| `ad-route-197e19842aa2` | `/articles/forward_dynamics_matching/16_dimensions.html` | Reviewed | — | None | None | 0 |
+| `ad-route-48f9bb72bd5d` | `/articles/forward_dynamics_matching/17_sparse_discovery.html` | Reviewed | — | None | None | 0 |
+| `ad-route-5293bc0e98a2` | `/articles/forward_dynamics_matching/18_adaptive_design.html` | Reviewed | — | None | None | 0 |
+| `ad-route-24669aacf887` | `/articles/forward_dynamics_matching/19_research_synthesis.html` | Reviewed | — | None | None | 0 |
+| `ad-route-914fc30d2f5e` | `/articles/forward_dynamics_matching/20_latent_dynamics.html` | Reviewed | — | None | None | 0 |
+| `ad-route-6a3c68f64277` | `/articles/forward_dynamics_matching/21_experimental_design.html` | Reviewed | — | None | None | 0 |
+| `ad-route-5bbd68eaaa48` | `/articles/forward_dynamics_matching/22_learning_tracking.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a8af9377f114` | `/articles/forward_dynamics_matching/23_software_contracts.html` | Reviewed | — | None | None | 0 |
+| `ad-route-ee3b20014eef` | `/articles/forward_dynamics_matching/24_references.html` | Reviewed | — | None | None | 0 |
+| `ad-route-ba22d181565f` | `/articles/forward_dynamics_matching/25_maintenance.html` | Reviewed | — | None | None | 0 |
+| `ad-route-9bcc4dcc73ff` | `/articles/forward_dynamics_matching/26_neural_proposals.html` | Reviewed | — | None | None | 0 |
+| `ad-route-578f41d14736` | `/articles/forward_dynamics_matching/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 9 |
 | `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Reviewed | — | None | None | 6 |
 | `ad-route-cae4475c188f` | `/articles/impact-mechanics-and-ball-flight.html` | Reviewed | — | None | None | 0 |

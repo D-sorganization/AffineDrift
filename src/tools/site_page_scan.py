@@ -39,6 +39,7 @@ CONTENT_DIRS: tuple[str, ...] = (
 BOOK_TREES: tuple[str, ...] = (
     "articles/The_Physics_of_Golf",
     "articles/The_Geometry_of_Motion",
+    "articles/forward_dynamics_matching",
     "articles/proximal_distal_companion",
     "articles/proximal_distal_energy_transfer",
     "articles/tangent-hyperplane-contraction/chapters",

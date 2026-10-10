@@ -1,0 +1,92 @@
+---
+description: "Identifiability Before Dimension Selection: forward dynamics matching research manuscript chapter (local draft; not peer reviewed or empirically validated)."
+---
+
+# Identifiability Before Dimension Selection
+
+## Why This Chapter Comes First
+
+A forward model predicts acceleration or future motion from state and input. Matching it to measured kinematics looks like an optimization problem, but optimization is downstream of a more basic question: do the available observations distinguish the candidate mechanisms at all? If two parameter settings or two model structures produce the same measured trajectories under every input in the experiment, no optimizer can select the physically correct one from those data. It can only choose according to initialization, regularization, or prior assumptions.
+
+This distinction is central when a model is allowed to learn its dimensions. A smaller model can predict observed motion just as well as a larger one because the experiment never excited the extra coordinate. A latent state can mimic an omitted force, a time delay, or a contact mode. The resulting fit may be numerically excellent and structurally wrong. The correct output in such a case is an equivalence class or an explicit statement that the data do not identify the requested quantity.
+
+## Structural and Practical Identifiability
+
+Structural identifiability asks whether ideal, noise-free, sufficiently rich observations uniquely determine unknown parameters or structure under a specified model and input class. Practical identifiability asks whether a finite, noisy experiment determines them with useful precision. Structural failure cannot be fixed by collecting more samples of the same uninformative motion. Practical weakness may improve with more trials, better sensors, or better excitation.
+
+For a smooth state-space model,
+
+$$
+\dot{x}=f(x,u,\theta), \qquad y=h(x,\theta),
+$$
+
+where $x$ is the state, $u$ is the known input, $y$ is the observation, and $\theta$ is a parameter vector, one may study local sensitivity of the predicted output to parameters. For sampled outputs $y_k(\theta)$, define the sensitivity matrix $S_{ki}=\partial y_k/\partial\theta_i$. If a column is zero, that parameter has no local effect on the data. If two columns are nearly proportional, their effects are confounded. The Fisher information approximation is
+
+$$
+\mathcal I(\theta)=S^T R^{-1} S,
+$$
+
+where $R$ is observation-noise covariance. Small eigenvalues indicate combinations of parameter changes that barely alter the observations. This is a local diagnostic, not proof of global uniqueness, but it is a useful way to expose weak directions.
+
+In nonlinear systems, observability concerns reconstruction of hidden state from outputs and inputs; parameter identifiability concerns uniqueness of model parameters. The questions interact. If a coordinate is unobservable, parameters acting only through that coordinate may also be unidentifiable. Conversely, state reconstruction can be possible while inertial parameters remain confounded. Hermann and Krener developed a differential-geometric observability framework for nonlinear systems. A canonical DOI URL is https://doi.org/10.1109/TAC.1977.1101601; live validation is pending. Structural identifiability depends on the observation map, equations, and inputs, so any review source added for this claim should be verified before publication.
+
+## A Mechanical Example: Two Pendulum Parameters
+
+Consider a planar pendulum with known length $l$, angle $q$, mass $m$, gravity $g$, viscous coefficient $b$, and applied torque $u$:
+
+$$
+ml^2\ddot q+b\dot q+mgl\sin q=u.
+$$
+
+Dividing by $ml^2$ gives
+
+$$
+\ddot q=\frac{u}{ml^2}-\frac{b}{ml^2}\dot q-\frac{g}{l}\sin q.
+$$
+
+If $u=0$, $l$ is known, and $g$ is fixed, observations of a sufficiently varied decay may reveal the ratio $b/m$, but not necessarily $m$ and $b$ separately: multiplying both by a common positive constant leaves the normalized equation unchanged. With measured, calibrated torque input, the acceleration response to $u$ can identify the inertia scale and break that symmetry. If the input torque is itself unknown up to a scale, the ambiguity returns. The issue is not an optimizer defect; it is an invariance of the observation model.
+
+This illustrates why kinematic-only model matching requires care. Kinematics provide positions, and perhaps velocities and accelerations after estimation. They do not provide the forces that generated those accelerations. Unknown control, passive dynamics, external forces, and contact can substitute for one another. A model fitted only to one unperturbed swing can explain the path while having incorrect inertial or actuator parameters.
+
+## Observation Maps and Coordinate Ambiguity
+
+Let the physical configuration be $q\in\mathbb R^n$, while the instrument reports markers $y=h(q,\alpha)+\epsilon$, with calibration parameters $\alpha$ and noise $\epsilon$. Marker count is not coordinate count. Markers may be redundant, occluded, or insensitive to a rotational degree of freedom. A latent state $z$ adds another distinction: a learned model may represent the same input-output behavior in several coordinate systems related by an invertible transformation. The numerical dimension of that representation does not establish anatomical meaning.
+
+Constraints also change what “dimension” means. A rigid body with six pose coordinates may have fewer independent coordinates after a joint constraint. A mechanism can contain coordinates that are fixed in the experiment but available in the anatomy. Thus report separately: raw model coordinates, independent constrained coordinates, observed outputs, latent state size, active library terms, and unknown parameter count.
+
+## A Practical Diagnostic Sequence
+
+First specify the observation and input model. Identify which quantities are measured, calibrated, inferred, or unknown. Second, simulate the candidate model under the exact experimental protocol and compute local sensitivities. Third, inspect singular values and parameter correlations, using several parameter points because nonlinear sensitivities can vary. Fourth, profile important parameters: fix one parameter over a grid and re-optimize the others. Flat profiles expose weak identification that a local Hessian can obscure. Fifth, test recovery on synthetic data generated from known parameters, including realistic noise, sampling, filtering, and missing observations. Finally, deliberately construct observationally equivalent candidate structures. A selection procedure should abstain on those cases.
+
+The experiment should be designed to excite uncertain modes. In the pendulum example, known torque variation separates inertial scale from damping. For a multi-joint system, independent perturbations and varied initial conditions can expose coupling that a stereotyped trajectory hides. Contact requires trials with distinct contact regimes if mode behavior is to be identified. Excitation must remain within a safe and valid domain; arbitrary persistently exciting inputs are not automatically appropriate for human movement.
+
+## From Diagnostics to Model Decisions
+
+A useful model report does not merely print an optimizer covariance. It includes parameter sensitivity singular values, profiles or posterior correlations for influential parameters, recovery performance in controlled simulations, and a plain description of unresolved ambiguities. For discrete structures, compare the predictions of plausible alternatives on trajectories and conditions not used in fitting. If two structures remain indistinguishable, preserve both as candidates or select the simpler one only as a declared engineering convention.
+
+The forward model should also separate measurement residual from dynamics residual. A large marker residual may indicate a bad pose estimate or observation map; a small marker residual with a large rollout error indicates dynamics mismatch. A model that reproduces fitted samples but drifts badly over a forward rollout is not a successful forward model. Long-horizon prediction, constraint violation, energy behavior where appropriate, and event timing should be reported alongside observation fit.
+
+## Limitations
+
+Sensitivity analysis is local, and rank can change with the trajectory. Fisher information assumes a useful noise model and does not account automatically for optimizer multimodality. Profile likelihood is more robust to some nonlinearities but can be expensive. Bayesian posterior concentration can reflect prior assumptions when data are weak. Observability tests for idealized models may be difficult to apply to high-dimensional constrained systems. These tools are diagnostics, not certificates that a complex model is correct.
+
+
+## Diagnostic Example: Sensitivity Rank in A Two-Coordinate Model
+
+Suppose an observation vector stacks sampled marker positions, and a candidate model has parameters θ=(I_1,I_2,k). A finite-difference approximation to the sensitivity column for parameter θ_i is [y(θ+δe_i)-y(θ-δe_i)]/(2δ). After whitening by measurement covariance, form a singular value decomposition S=UΣV^T. The right singular vector associated with the smallest singular value describes a parameter combination that barely changes predicted measurements. For example, it may increase I_1 while decreasing I_2 and adjusting k. This is more informative than reporting that each individual standard error is “large,” because the ambiguity is a direction through parameter space.
+
+The calculation must respect constraints. Finite-difference perturbations that create negative mass or an invalid inertia matrix are not valid probes. Use transformed parameters, such as logarithms for positive scalars, and interpret sensitivities in scaled coordinates. Repeat at several fitted solutions and initial conditions. If the weak direction rotates substantially, a single local covariance is especially misleading.
+
+A useful practical distinction is between a parameter that is unidentifiable but irrelevant to the requested prediction and one that affects the deployment task. If all candidate values predict the same output over the target domain, the parameter need not be estimated for that purpose. If they diverge under deployment inputs, the unresolved parameter is a material risk and the data collection protocol should change.
+
+## Exercises
+
+1. For the pendulum equation above, show that if torque is unknown and modeled as $u(t)=c\tilde u(t)$, the acceleration depends on $c/m$. Which additional measurement or perturbation could identify $m$ and $c$ separately?
+2. Suppose two coordinate sensitivity columns are nearly collinear. Explain why collecting ten times as many samples from the same trajectory may not resolve the ambiguity. Suggest a different experiment.
+3. A latent model with dimension 8 predicts held-out marker positions slightly better than a model with dimension 5. List at least three checks needed before claiming that the physical system has eight degrees of freedom.
+
+## Solution Sketches
+
+1. Substitution yields $\ddot q=(c/(ml^2))\tilde u-\cdots$; only the ratio is identified without an external scale. Calibrated torque, known mass, or an independent force measurement can break the ambiguity.
+2. Repeated samples increase precision along already informative directions but preserve nearly dependent sensitivity columns. Apply a perturbation that affects the two coordinates differently, alter initial conditions, or add a sensor with a different observation map.
+3. Check whether latent dimension is stable across seeds and priors; demonstrate identifiable mapping from latent variables to coordinates; compare on independent trajectories and inputs; verify dynamics and constraints; rule out delay, contact, or omitted actuation as the source of extra state.

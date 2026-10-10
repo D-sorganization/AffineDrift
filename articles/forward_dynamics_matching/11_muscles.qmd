@@ -1,0 +1,103 @@
+---
+description: "Muscle-Driven Matching of Forward Dynamics Models: forward dynamics matching research manuscript chapter (local draft; not peer reviewed or empirically validate"
+---
+
+# Muscle-Driven Matching of Forward Dynamics Models
+
+Muscle-driven matching asks which control history, model parameters, and sometimes state trajectory allow a musculoskeletal model to reproduce measured movement while obeying its dynamics. It is a stronger test than prescribing the measured kinematics into the model: the motion must emerge from actuators and external forces. It is also a more underdetermined problem. Many muscle recruitment patterns can explain similar motion, measurements do not directly reveal neural commands, and model properties such as tendon slack length or maximum isometric force can trade off with activation.
+
+## From Excitation to Motion
+
+A simplified Hill-type muscle-tendon model transforms neural excitation $e$ to activation $a$, activation and muscle-tendon state to force $F_m$, and muscle force through moment arms to joint torque. A first-order activation equation is often represented as $\dot{a}=(e-a)/\tau$, with separate time constants for activation and deactivation. Muscle force depends on active force-length and force-velocity factors, passive fiber force, tendon force-length behavior, and maximum isometric force. The generalized force contribution is $\tau_m(q)=R(q)F_m$, where sign and moment-arm conventions matter. Forward dynamics then evolves the coordinates and muscle states.
+
+This chain creates multiple sources of lag and uncertainty. An excitation waveform can lead activation; fiber and tendon dynamics can delay force; joint motion reflects inertia and external loads. Fitting excitation directly to kinematic data without these states may attribute all lag to control timing. Conversely, highly flexible tendon parameters may absorb a bad time offset. Muscle models differ in whether tendon is rigid or elastic, whether equilibrium is solved algebraically, and how pennation and compliant tissues are represented. These choices alter the dynamics and optimization conditioning.
+
+## Computed Muscle Control
+
+Computed Muscle Control was designed as a practical method to generate dynamic simulations that track desired kinematics. In the original formulation, static optimization determines muscle forces or excitations, while feedforward and feedback components drive the simulated trajectory toward a desired path. This approach efficiently produced muscle-driven simulations from experimental data and remains historically important. Thelen and colleagues demonstrated it in pedaling; subsequent work generated forward walking simulations by combining residual elimination with CMC.
+
+CMC's advantages are speed and accessibility. The controller provides a correction when simulation state differs from the desired path, and static optimization resolves instantaneous muscle redundancy according to a declared cost. It is effective for building an initial muscle-driven simulation or generating controls for later forward rollout. Its limitations follow from the architecture. Static optimization treats each step largely locally, so it may not represent full-horizon anticipatory tradeoffs. The feedback controller can mask model mismatch: large corrective excitation may keep tracking error small even if the model's passive dynamics or dimensions are wrong. A final open-loop simulation is therefore essential. Report controller gains, desired trajectory source, residual actuators, muscle objective, and achieved excitation limits.
+
+## Forward Optimal Control
+
+A trajectory-level muscle matching problem can optimize excitations and states across the entire time horizon: $\min_{x,e,p}J_{track}(x,p)+\lambda_e\int\|e\|^2\,dt+\lambda_s\int\|\dot{e}\|^2\,dt+R_p(p)$,
+
+subject to activation dynamics, muscle-tendon force equilibrium, multibody dynamics, contact, and physiological bounds. Dynamic optimization accounts for history dependence and can trade effort at one time against motion fidelity later. Direct collocation or multiple shooting typically transcribes this problem. The objective can be modified to include metabolic cost, EMG residuals, joint-load penalties, or task success, but each criterion encodes a hypothesis about motor coordination.
+
+A precise statement of the inference is crucial. If only kinematic markers are observed, muscle control is inferred through the model and the chosen regularizer. If ground reaction forces and moments are added, whole-body force balance constrains the solution. If EMG is included, excitation or activation can be tethered to processed electromyograms with muscle-specific mapping and time delay. If tendon forces or ultrasound fascicle lengths are observed, additional internal states become more identifiable. No one sensor should be treated as exact physiological truth.
+
+## Tracking Variants
+
+**Prescribed kinematics with muscle optimization** uses IK trajectories as fixed inputs and estimates muscle forces or activations. It is useful for load estimation conditional on motion but does not test whether the forward model produces that motion.
+
+**Feedback controller tracking** drives a forward simulation toward target kinematics online. It is computationally efficient and tolerates mismatch, but controller action can compensate for inaccurate parameters.
+
+**Optimal-control tracking** allows motion to deviate from data according to noise-weighted loss while enforcing the dynamics. It handles uncertainty and model mismatch more transparently; its computational and modeling burden is higher.
+
+**EMG-informed tracking** constrains controls with muscle-specific electrical activity. EMG amplitude is affected by electrode placement, crosstalk, normalization, muscle fiber conduction, and electromechanical delay. The relationship between EMG and force is not a universal calibration curve. A sound estimator uses uncertainty, subject-specific calibration when available, and reports sensitivity to EMG weighting.
+
+**External-force tracking** fits measured ground reaction forces and center of pressure in addition to motion. This can substantially improve dynamic consistency but depends on correct force transformation and foot assignment. When the same force record both drives contact and appears in the objective, distinguish whether it is prescribed input or an independently predicted output; otherwise the reported fit may be tautological.
+
+## Muscle Model Calibration and Scale
+
+The maximum isometric force and optimal fiber length are commonly scaled from generic muscle parameters using subject size or physiological cross-sectional area. Such scaling is only a starting prior: two people with the same segment dimensions can differ in strength, architecture, training, and pathology. If the observed movement never approaches high force, maximum strength may be practically unidentifiable even with excellent kinematic tracking. A fit may simply select stronger muscles and lower activation, or weaker muscles and higher activation, with nearly identical generalized force. Activation bounds can truncate this tradeoff but cannot establish which strength value is true.
+
+Parameterize calibration so that each quantity has a clear role. A global force scale may be better supported than independent scales for every muscle; a small set of muscle-group multipliers can provide a regularized intermediate model. Preserve muscle-specific architecture where there is direct evidence, and avoid simultaneously freeing force scale, excitation scale, EMG gain, and tendon slack length without independent observations. Compare fitted parameters across multiple tasks and test whether the same calibration predicts movement outside the training range.
+
+## Residual Actuators
+
+Residual actuators are generalized-force terms introduced to stabilize or reconcile a simulation. They can be useful numerical aids and diagnostics but should not silently bear the movement. A muscle-driven result is more convincing when residual magnitudes and work are small relative to physiological actuator contributions, and when conclusions are robust to residual penalty strength. Since force magnitude alone ignores duration, compare residual impulse and work: $I_{res}=\int\tau_{res}(t)\,dt$, $W_{res}=\int\tau_{res}(t)^T\dot{q}(t)\,dt$. A large residual that performs substantial positive or negative work can change the inferred muscle demands even if its peak is short.
+
+Residual penalties should have physically meaningful scales. Penalizing force alone can make an optimizer choose a large high-frequency correction with low time-integrated force. Penalizing residual work alone can permit large force near zero speed. Reporting peak, RMS, impulse, work, and direction over time offers a more complete picture.
+
+## Adaptive Dimensions and Co-Estimation
+
+Geometry and muscle parameters influence the tracking model through different pathways. Segment dimensions alter marker projection, joint centers, lever arms, inertia, and sometimes contact geometry. Muscle maximum force scales torque at a given activation. Tendon slack length shifts operating length and force. When these parameters are all free with control, a single motion trial often cannot distinguish them. The problem is not solved by adding more optimizer iterations.
+
+A promising design adapts dimensions in a low-dimensional, interpretable layer. Start with segment scale factors, functional joint-axis parameters, and perhaps a small number of inertial adjustments, each with anatomical priors. Derive dependent quantities consistently: changing femur length must update marker locations and muscle paths where applicable, not just the rendered skeleton. Positive quantities such as lengths and strength can be represented logarithmically; inertia matrices should remain positive definite; rotations should be updated on $\mathrm{SO}(3)$ rather than by unconstrained Euler increments. Include multiple trials and speeds so a single parameter set must explain distinct accelerations and postures.
+
+A hierarchical model can share population parameters while fitting subject-specific deviations. For example, $p_i\sim\mathcal{N}(\mu_p,\Sigma_p)$ for subject $i$, with $\mu_p$ and covariance learned across a cohort. This prevents each subject fit from drifting arbitrarily and quantifies population variability. Adaptation should be staged: fit sensor calibration and body scale, then dynamic inertial parameters, then selected muscle parameters, and only then allow a richer shape model if residuals persist. Jointly fitting everything from the start obscures which evidence supports each change.
+
+## Practical Fit Protocol
+
+1. Validate a passive/torque-driven forward simulation before adding muscle complexity.
+2. Fix geometry and fit controls using a simple actuator set; verify markers, forces, and rollout.
+3. Add muscle states and physiologic bounds; initialize with static optimization or CMC.
+4. Optimize full-horizon tracking with explicit sensor covariances and effort/EMG priors.
+5. Inspect muscle excitations, activations, fiber/tendon states, saturation, and residual actuators.
+6. Adapt only well-motivated model parameters with priors; analyze correlations with control variables.
+7. Validate on a held-out stride or task and test open-loop rollout away from the exact training data.
+
+Results should identify the objective and all weights, model version, muscle formulation, activation dynamics, contact model, parameter bounds, residual actuators, solver and mesh, and the actual measured channels used. A muscle force estimate should be framed as conditional on those choices.
+
+## Worked Derivation: EMG Delay and Activation
+
+Consider $\dot{a}=(e-a)/\tau$ with constant excitation $e=e_0$ from an initially inactive muscle $a(0)=0$. The solution is $a(t)=e_0(1-\exp(-t/\tau))$. If measured EMG rises at time zero but force is delayed, one plausible explanation is activation dynamics; another is an electromechanical delay $\delta$, tendon compliance, or timing misalignment. For a ramp-like signal, a delay and a larger $\tau$ can produce similar trajectories over a short observation window. Joint kinematics alone may not distinguish them. Multi-channel EMG, tendon/fascicle measurements, repeated activation patterns, or calibrated priors can improve identification. This example explains why simultaneously freeing time offset, activation time constant, and tendon slack length is poorly conditioned.
+
+## Exercises With Solutions
+
+### Exercise 1: Feedback Masking
+
+A CMC simulation tracks joint angles with small error but uses large residual pelvis torques and saturated muscle activations. Is the model validated?
+
+**Solution.** No. The controller achieves tracking through artificial and saturated actuation. The forward model's ability to explain the motion physiologically is weak. Report those corrections, reduce reliance on residual actuators, examine model/data mismatch, and perform an open-loop rollout.
+
+### Exercise 2: Effort Norm
+
+Why does minimizing $\sum_i a_i^2$ not uniquely identify biological recruitment?
+
+**Solution.** It selects the feasible activation vector with smallest squared activation under the assumed muscle model and constraints. Alternative objectives, strength parameters, or EMG evidence can select other solutions. The objective is a prior on coordination, not a direct measurement.
+
+### Exercise 3: More Sensors
+
+What does a measured ground reaction wrench add beyond joint-angle tracking?
+
+**Solution.** It constrains external force and moment balance, reducing some tradeoffs between muscle action and unobserved net loading. It does not by itself resolve muscle redundancy or prove internal forces, and it depends on correct frame transformation and contact assignment.
+
+## References
+
+- Thelen DG, Anderson FC, Delp SL, “Generating dynamic simulations of movement using computed muscle control,” [DOI 10.1016/S0021-9290(02)00432-3](https://doi.org/10.1016/S0021-9290(02)00432-3), indexed in PubMed/publisher results.
+- Thelen DG, Anderson FC, “Using computed muscle control to generate forward dynamic simulations of human walking from experimental data,” [PubMed record](https://pubmed.ncbi.nlm.nih.gov/16023125/), DOI 10.1016/j.jbiomech.2005.02.010; citation details and abstract indexed.
+- Dembia CL et al., “OpenSim Moco: Musculoskeletal optimal control,” [DOI 10.1371/journal.pcbi.1008493](https://doi.org/10.1371/journal.pcbi.1008493), PLOS/PubMed indexed.
+- Erdemir A et al., “Model-based estimation of muscle forces exerted during movements,” [DOI 10.1016/j.clinbiomech.2006.09.005](https://doi.org/10.1016/j.clinbiomech.2006.09.005), publisher/PubMed indexed.
+- The 2024 review classifies controller-based, EMG-informed, trajectory-optimization, residual-minimization, and parameter-adjustment strategies: [DOI 10.3389/fbioe.2024.1386874](https://doi.org/10.3389/fbioe.2024.1386874).
