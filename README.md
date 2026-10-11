@@ -169,12 +169,14 @@ corrections, one for critique responses, and one for proposing an article.
 Report security issues through [SECURITY.md](SECURITY.md), not through public
 issues.
 
-## License
+## Licensing
 
-Source code is released under the MIT License; see [LICENSE](LICENSE).
-
-Written content, figures, and the textbook material published on
-[affinedrift.com](https://affinedrift.com) are reserved by the author. Quote and
-cite them under normal academic practice; ask before republishing them in
-substantial part. [COPYRIGHT.md](COPYRIGHT.md) states exactly which files fall
-under each, and gives the citation format.
+- **Code:** MIT License; see [LICENSE](LICENSE). This covers `src/`, `tests/`,
+  `js/`, stylesheets, build scripts, and workflows.
+- **Text and data:** [Creative Commons Attribution 4.0 International
+  (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/legalcode); see
+  [LICENSE-CONTENT](LICENSE-CONTENT).
+- **Attribution:** credit "Dieter Olson, _AffineDrift_", name the article or
+  dataset, link to [affinedrift.com](https://affinedrift.com), and say if you
+  changed it. [COPYRIGHT.md](COPYRIGHT.md) lists which files fall under each
+  licence, including the citation format and the material that stays reserved.
