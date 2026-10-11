@@ -1,3 +1,11 @@
+# Shot-Pattern Report Publication — Current Work
+
+- Issue #5004; branch `codex/shot-pattern-report-publication`. The reviewed 39-page report, one-page graphical summary, six shot-pattern plots, and Facebook preview are in `articles/shot_pattern_analysis/` with `asset_manifest.json`.
+- The article is `articles/shot-pattern-analysis.qmd`. All plots use lateral distance horizontally and downrange distance vertically. Results are geometric and model-conditional; no universal preferred shape or measured player benefit is claimed.
+- Local Quarto rendering, nine asset hashes, links, social metadata, render coverage, and site checks pass. The owner-approved generated log reconciliation is committed at `4a1e6d31`; its evidence is in `reports/shot-pattern-publication/devlog-reconciliation/`. Gate limits and the other 111 log entries are unchanged.
+- Canonical pre-PR validation is running against the publication changes. Next: inspect its terminal result, push a ready PR through protected review/merge, then verify the public article, PDF bytes, and Facebook preview. No live publication is claimed yet.
+- Preserve the upstream frozen study and original public release. UpstreamDrift PR #12278 remains separate integration work; website publication does not establish its merge or clear deferred empirical validation.
+
 # Final Technical Review Handoff — 5 October 2026
 
 The accepted technical review and final guide are delivered to protected main.
