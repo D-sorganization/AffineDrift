@@ -186,8 +186,10 @@ def test_public_status_and_upstream_capability_language_is_bounded() -> None:
     technology = (ROOT / "pages/technology.qmd").read_text(encoding="utf-8")
     tools = (ROOT / "pages/tools.qmd").read_text(encoding="utf-8")
 
-    assert "Publication-state key" in home
-    assert "Available" in home and "Validated" in home and "Experimental" in home
+    assert "Read the Evidence" in home
+    assert "does not imply peer review or validation" in home
+    assert 'href="pages/how-to-read.html#publication-states"' in home
+    assert "Available" in home and "Experimental" in home
     assert "UpstreamDrift authority snapshot" in overview
     assert "8cc236c6879e7535bb6bd15aecbe3396fb6dbb36" in overview
     assert "python scripts/ci/verify_installation.py" in overview

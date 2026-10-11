@@ -1,7 +1,7 @@
 """Contract of the WEB-01.1 "Start Here" page (#4486).
 
 One plain-language entry page: what the site is, the big idea in one picture
-(WEB-08.2), a card per persona, how to read the evidence labels, and what the
+(WEB-08.2), three goals with specialist paths, how to read the evidence labels, and what the
 site is not. It must be the first navbar item and the home page's primary call
 to action, carry no display equations, and score at most grade 10.
 """
@@ -16,7 +16,6 @@ from tests.helpers.entry_pages import (
     ROOT,
     assert_no_display_equations,
     assert_readable_hub_page,
-    assert_routes_every_persona,
     headings,
     page_text,
     section,
@@ -51,18 +50,20 @@ def test_big_idea_reuses_the_signature_graphic() -> None:
     assert "{{< include ../_includes/generated/drift-plus-control.qmd >}}" in _section(SECTIONS[1])
 
 
-def test_every_persona_has_a_card_linking_to_its_on_ramp() -> None:
+def test_every_persona_remains_available_through_specialist_paths() -> None:
     personas = yaml.safe_load((ROOT / "config" / "personas.yml").read_text(encoding="utf-8"))
-    cards = _section(SECTIONS[2])
-    assert_routes_every_persona(cards)
+    assert "[Specialist Reading Paths](../resources/on-ramp-paths.html)" in _section(SECTIONS[2])
+    paths = page_text("resources/on-ramp-paths.qmd")
     for persona_id, persona in personas["personas"].items():
-        assert persona["tagline"] in cards, persona_id
+        assert f"{{#onramp-{persona_id.replace('_', '-')}}}" in paths
+        assert persona["name"] in paths
 
 
 def test_evidence_labels_link_to_the_canonical_definitions() -> None:
     section_text = _section(SECTIONS[3])
     assert "../pages/how-to-read.html#publication-states" in section_text
     assert "../pages/how-to-read.html#evidence-ladder" in section_text
+    section_text += page_text("_includes/generated/publication-states.qmd")
     for state in ("Available", "Validated", "Experimental", "Planned", "Deprecated", "Opinion"):
         assert f"**{state}**" in section_text, state
 

@@ -59,7 +59,7 @@ def normalize_title_publication_date(content: str) -> str:
     """Replace Quarto's invalid title-date placeholder without altering article prose."""
 
     def replace_title(match: re.Match[str]) -> str:
-        title = INVALID_TITLE_DATE_PATTERN.sub(r"\1Date unverified\2", match.group(2))
+        title = INVALID_TITLE_DATE_PATTERN.sub(r"\1Publication date not verified\2", match.group(2))
         return match.group(1) + title + match.group(3)
 
     return TITLE_BLOCK_PATTERN.sub(replace_title, content)

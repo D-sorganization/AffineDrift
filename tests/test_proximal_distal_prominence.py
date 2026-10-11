@@ -35,11 +35,12 @@ def test_global_read_navigation_promotes_the_technical_monograph() -> None:
     assert f"href: {MONOGRAPH_ROUTE}" in read_navigation
 
 
-def test_home_promotes_the_monograph_in_latest_writing_and_books() -> None:
-    """The home page should expose the monograph in both discovery surfaces."""
+def test_home_features_the_monograph_once_with_its_scientific_limits() -> None:
+    """Featured Reading exposes the monograph without duplicate listings."""
     home = _read("index.qmd")
 
-    assert home.count(f'href="{MONOGRAPH_ROUTE}"') >= 2
+    assert "<h2>Featured Reading</h2>" in home
+    assert home.count(f'href="{MONOGRAPH_ROUTE}"') == 1
     assert "Technical monograph and computational publication" in home
     assert "Independent scientific review and human validation remain open" in home
 

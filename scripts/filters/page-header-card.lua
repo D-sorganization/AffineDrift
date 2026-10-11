@@ -1,34 +1,8 @@
--- scripts/filters/page-header-card.lua
--- Pandoc filter for the Page Header Card component (WEB-03.2 #4507).
---
--- Renders metadata from front matter:
--- - maturity / status badge
--- - audience level badge
--- - estimated reading time (explicitly labelled "estimate")
--- - prerequisites
--- - first published and last reviewed dates
--- - "Cite this page" link (WEB-07.2)
---
--- All markup is accessible: a semantic <dl> with <dt> and <dd> pairs,
--- and text-carrying badges.
-
-local function stringify(val)
-  if val == nil then
-    return ""
-  end
-  return pandoc.utils.stringify(val)
-end
-
-local function escape_html(str)
-  local map = {
-    ["&"] = "&amp;",
-    ["<"] = "&lt;",
-    [">"] = "&gt;",
-    ['"'] = "&quot;",
-    ["'"] = "&#39;"
-  }
-  return (str:gsub("[&<>'\"']", map))
-end
+-- Page metadata is rendered once; prerequisites use canonical source titles.
+local directory = pandoc.path.directory(PANDOC_SCRIPT_FILE)
+local ui = dofile(directory .. "/page-header-utils.lua")
+local prerequisites = dofile(directory .. "/page-header-prerequisites.lua")
+local stringify, escape_html = ui.stringify, ui.escape_html
 
 local function normalize_state(raw)
   if raw == nil then return nil end
@@ -61,241 +35,84 @@ local ICONS = {
   ["opinion"] = '<svg class="status-badge__icon" aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>'
 }
 
-local function compute_how_to_read_path()
-  local input_file = ""
-  if PANDOC_STATE and PANDOC_STATE.input_files and #PANDOC_STATE.input_files > 0 then
-    input_file = PANDOC_STATE.input_files[1] or ""
-  end
 
-  input_file = input_file:gsub("\\", "/")
-  local repo_rel = input_file:match(".*AffineDrift/(.*)$")
-  if repo_rel then
-    input_file = repo_rel
+local function badge_item(meta, key, label)
+  local raw = meta.audience or meta["audience-level"]
+  if key == "maturity" then raw = meta.status or meta.maturity end
+  local text = stringify(raw)
+  if text == "" then return nil end
+  local variant = text:lower():gsub("%s+", "-"):gsub("[^%w%-]", "")
+  local badge = '<span class="badge badge--audience badge--' .. variant .. '">' .. escape_html(text) .. '</span>'
+  if key == "maturity" then
+    local state = normalize_state(text)
+    badge = '<a href="/pages/how-to-read.html#publication-states" class="badge badge--maturity status-badge status-badge--' ..
+      state .. ' badge--' .. variant .. '" title="Read Publication State Definition">' ..
+      (ICONS[state] or "") .. '<span class="status-badge__text">' .. escape_html(text) .. '</span></a>'
   end
+  return ui.item(key, label, badge)
+end
 
-  local dir = input_file:match("^(.*)/[^/]+$") or ""
-  if dir == "" or dir == "." then
-    return "pages/how-to-read.html#publication-states"
+local function reading_time_item(meta)
+  local text = stringify(meta["reading-time"] or meta["estimated-reading-time"])
+  if text == "" then return nil end
+  if not text:lower():match("estimate") then
+    if not text:lower():match("min") then text = text .. " min read" end
+    text = text .. " (estimate)"
   end
-  if dir == "pages" then
-    return "how-to-read.html#publication-states"
-  end
-  if dir:match("^pages/") then
-    local _, count = dir:gsub("/", "/")
-    return string.rep("../", count) .. "how-to-read.html#publication-states"
-  end
+  return ui.item("reading-time", "Reading Time", '<span class="reading-time-text">' .. escape_html(text) .. '</span>')
+end
 
-  dir = dir:gsub("^[A-Za-z]:/", ""):gsub("^%./", "")
-  local count = 1
-  for _ in dir:gmatch("/") do
-    count = count + 1
+local function date_item(meta, reviewed)
+  -- Quarto's title already owns `date`; retain dates supplied only to this card.
+  if not reviewed and meta.date ~= nil then return nil end
+  local raw = meta.published or meta["date-published"]
+  if reviewed then raw = meta["last-reviewed"] or meta["date-modified"] or meta.reviewed end
+  local text = stringify(raw)
+  if text == "" then return nil end
+  local content = '<span class="date-unverified">Publication date not verified</span>'
+  local unverified = not reviewed and stringify(meta["date-source"]):lower() == "unverified"
+  if not unverified and text:match("^%d%d%d%d%-%d%d%-%d%d$") then
+    content = '<time datetime="' .. text .. '">' .. text .. '</time>'
+  elseif reviewed then
+    -- Quarto may already have formatted date-modified for human readers.
+    content = '<span>' .. escape_html(text) .. '</span>'
   end
-  return string.rep("../", count) .. "pages/how-to-read.html#publication-states"
+  return ui.item(reviewed and "reviewed" or "published", reviewed and "Last Reviewed" or "Published", content)
+end
+
+local function citation_link(meta)
+  local raw = meta.citation or meta["cite-this-page"] or meta["cite-link"]
+  if raw == nil or raw == false or stringify(raw) == "false" then return nil end
+  local target = stringify(raw)
+  if not ui.safe_href(target) then target = "#citation" end
+  return '<a href="' .. escape_html(target) .. '" class="page-header-cite-link">Cite this page</a>'
+end
+
+local function metadata_items(meta)
+  local items = {}
+  local function add(value)
+    if value then table.insert(items, value) end
+  end
+  add(badge_item(meta, "maturity", "Status"))
+  add(badge_item(meta, "audience", "Audience"))
+  add(reading_time_item(meta))
+  add(date_item(meta, false))
+  add(date_item(meta, true))
+  local prereqs = prerequisites.render(meta.prerequisites, ui)
+  if prereqs then add(ui.item("prerequisites", "Prerequisites", prereqs)) end
+  return items
 end
 
 function Pandoc(doc)
-  local meta = doc.meta
-
-  -- 1. Status / Maturity
-  local status_raw = meta["status"] or meta["maturity"]
-  local status_str = stringify(status_raw)
-  local has_status = status_str:match("%S") ~= nil
-
-  -- 2. Audience Level
-  local audience_raw = meta["audience"] or meta["audience-level"]
-  local audience_str = stringify(audience_raw)
-  local has_audience = audience_str:match("%S") ~= nil
-
-  -- 3. Reading Time
-  local reading_time_raw = meta["reading-time"] or meta["estimated-reading-time"]
-  local reading_time_str = stringify(reading_time_raw)
-  local has_reading_time = reading_time_str:match("%S") ~= nil
-
-  -- 4. Dates
-  local published_raw = meta["date"] or meta["published"] or meta["date-published"]
-  local published_str = stringify(published_raw)
-  local publication_unverified = stringify(meta["date-source"]):lower() == "unverified"
-  if publication_unverified then published_str = "Date unverified" end
-  local has_published = published_str:match("%S") ~= nil
-
-  local reviewed_raw = meta["last-reviewed"] or meta["date-modified"] or meta["reviewed"]
-  local reviewed_str = stringify(reviewed_raw)
-  local has_reviewed = reviewed_str:match("%S") ~= nil
-
-  -- 5. Prerequisites
-  local prereqs_raw = meta["prerequisites"]
-  local has_prereqs = false
-  local prereqs_list = {}
-  if prereqs_raw ~= nil then
-    if type(prereqs_raw) == "table" and prereqs_raw.t == "MetaList" then
-      for _, item in ipairs(prereqs_raw) do
-        local s = stringify(item)
-        if s:match("%S") then
-          table.insert(prereqs_list, s)
-        end
-      end
-      if #prereqs_list > 0 then
-        has_prereqs = true
-      end
-    else
-      local s = stringify(prereqs_raw)
-      if s:match("%S") then
-        table.insert(prereqs_list, s)
-        has_prereqs = true
-      end
-    end
-  end
-
-  -- 6. Citation
-  local cite_raw = meta["citation"] or meta["cite-this-page"] or meta["cite-link"]
-  local has_cite = false
-  local cite_href = "#citation"
-  if cite_raw ~= nil then
-    if type(cite_raw) == "boolean" then
-      has_cite = cite_raw
-    elseif type(cite_raw) == "table" then
-      if cite_raw.t == "MetaBool" then
-        if cite_raw[1] == true or cite_raw.value == true or tostring(cite_raw[1]) == "true" then
-          has_cite = true
-        end
-      else
-        has_cite = true
-      end
-    else
-      local s = stringify(cite_raw)
-      if s == "true" then
-        has_cite = true
-      elseif s:match("^#") or s:match("^https?://") or s:match("^/") then
-        has_cite = true
-        cite_href = s
-      elseif s:match("%S") and s ~= "false" then
-        has_cite = true
-      end
-    end
-  end
-
-  -- If no relevant front matter exists, do nothing
-  if not (has_status or has_audience or has_reading_time or has_published or has_reviewed or has_prereqs or has_cite) then
+  local items = metadata_items(doc.meta)
+  local cite = citation_link(doc.meta)
+  if #items == 0 then
+    if cite then table.insert(doc.blocks, pandoc.RawBlock("html", '<p class="page-citation-link">' .. cite .. '</p>')) end
     return doc
   end
-
-  local items = {}
-
-  if has_status then
-    local variant = status_str:lower():gsub("%s+", "-"):gsub("[^%w%-]", "")
-    local canonical = normalize_state(status_str) or variant
-    local icon = ICONS[canonical] or ""
-    local href = compute_how_to_read_path()
-    local title_attr = escape_html(status_str .. " — Click to Read Publication State Definition")
-    table.insert(items,
-      '    <div class="page-header-item page-header-item--maturity">\n' ..
-      '      <dt class="page-header-label">Status</dt>\n' ..
-      '      <dd class="page-header-value">\n' ..
-      '        <a href="' .. escape_html(href) .. '" class="badge badge--maturity status-badge status-badge--' .. escape_html(canonical) .. ' badge--' .. escape_html(variant) .. '" title="' .. title_attr .. '">' ..
-      icon .. '<span class="status-badge__text">' .. escape_html(status_str) .. '</span></a>\n' ..
-      '      </dd>\n' ..
-      '    </div>'
-    )
-  end
-
-  if has_audience then
-    local variant = audience_str:lower():gsub("%s+", "-"):gsub("[^%w%-]", "")
-    table.insert(items,
-      '    <div class="page-header-item page-header-item--audience">\n' ..
-      '      <dt class="page-header-label">Audience</dt>\n' ..
-      '      <dd class="page-header-value">\n' ..
-      '        <span class="badge badge--audience badge--' .. escape_html(variant) .. '">' ..
-      escape_html(audience_str) .. '</span>\n' ..
-      '      </dd>\n' ..
-      '    </div>'
-    )
-  end
-
-  if has_reading_time then
-    local rt_display = reading_time_str
-    if not rt_display:lower():match("estimate") then
-      if not rt_display:lower():match("min") then
-        rt_display = rt_display .. " min read (estimate)"
-      else
-        rt_display = rt_display .. " (estimate)"
-      end
-    end
-    table.insert(items,
-      '    <div class="page-header-item page-header-item--reading-time">\n' ..
-      '      <dt class="page-header-label">Reading Time</dt>\n' ..
-      '      <dd class="page-header-value">\n' ..
-      '        <span class="reading-time-text">' .. escape_html(rt_display) .. '</span>\n' ..
-      '      </dd>\n' ..
-      '    </div>'
-    )
-  end
-
-  if has_published then
-    local published_markup = '<time datetime="' .. escape_html(published_str) .. '">' .. escape_html(published_str) .. '</time>'
-    if publication_unverified then
-      -- Uncertainty is text, not a machine-readable instant.
-      published_markup = '<span class="date-unverified">Date unverified</span>'
-    end
-    table.insert(items,
-      '    <div class="page-header-item page-header-item--published">\n' ..
-      '      <dt class="page-header-label">Published</dt>\n' ..
-      '      <dd class="page-header-value">\n' ..
-      '        ' .. published_markup .. '\n' ..
-      '      </dd>\n' ..
-      '    </div>'
-    )
-  end
-
-  if has_reviewed then
-    table.insert(items,
-      '    <div class="page-header-item page-header-item--reviewed">\n' ..
-      '      <dt class="page-header-label">Last Reviewed</dt>\n' ..
-      '      <dd class="page-header-value">\n' ..
-      '        <time datetime="' .. escape_html(reviewed_str) .. '">' .. escape_html(reviewed_str) .. '</time>\n' ..
-      '      </dd>\n' ..
-      '    </div>'
-    )
-  end
-
-  if has_prereqs then
-    local prereq_content = ""
-    if #prereqs_list == 1 then
-      prereq_content = '<span class="page-header-prereq-item">' .. escape_html(prereqs_list[1]) .. '</span>'
-    else
-      prereq_content = '<ul class="page-header-prereq-list">\n'
-      for _, p in ipairs(prereqs_list) do
-        prereq_content = prereq_content .. '          <li>' .. escape_html(p) .. '</li>\n'
-      end
-      prereq_content = prereq_content .. '        </ul>'
-    end
-    table.insert(items,
-      '    <div class="page-header-item page-header-item--prerequisites">\n' ..
-      '      <dt class="page-header-label">Prerequisites</dt>\n' ..
-      '      <dd class="page-header-value">\n' ..
-      '        ' .. prereq_content .. '\n' ..
-      '      </dd>\n' ..
-      '    </div>'
-    )
-  end
-
-  if has_cite then
-    table.insert(items,
-      '    <div class="page-header-item page-header-item--citation">\n' ..
-      '      <dt class="page-header-label">Citation</dt>\n' ..
-      '      <dd class="page-header-value">\n' ..
-      '        <a href="' .. escape_html(cite_href) .. '" class="page-header-cite-link">Cite this page</a>\n' ..
-      '      </dd>\n' ..
-      '    </div>'
-    )
-  end
-
-  local html = '<header class="page-header-card" role="region" aria-label="Page metadata">\n' ..
-               '  <dl class="page-header-metadata">\n' ..
-               table.concat(items, "\n") .. '\n' ..
-               '  </dl>\n' ..
-               '</header>'
-
-  local card_block = pandoc.RawBlock("html", html)
-  table.insert(doc.blocks, 1, card_block)
+  if cite then table.insert(items, ui.item("citation", "Citation", cite)) end
+  local html = '<header class="page-header-card" role="region" aria-label="Page metadata">' ..
+    '<dl class="page-header-metadata">' .. table.concat(items, "\n") .. '</dl></header>'
+  table.insert(doc.blocks, 1, pandoc.RawBlock("html", html))
   return doc
 end
