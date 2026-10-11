@@ -227,13 +227,13 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
 | `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 6 |
 | `/pages/glossary.html` | `pages/glossary.qmd` | 7 |
-| `/pages/how-to-read.html` | `pages/how-to-read.qmd` | 1 |
+| `/pages/how-to-read.html` | `pages/how-to-read.qmd` | 5 |
 | `/pages/notation-quick-reference.html` | `pages/notation-quick-reference.qmd` | 2 |
 | `/pages/notation.html` | `pages/notation.qmd` | 4 |
 | `/pages/overview.html` | `pages/overview.qmd` | 3 |
 | `/pages/parameters.html` | `pages/parameters.qmd` | 2 |
 | `/pages/privacy-policy.html` | `pages/privacy-policy.qmd` | 1 |
-| `/pages/start-here.html` | `pages/start-here.qmd` | 2 |
+| `/pages/start-here.html` | `pages/start-here.qmd` | 6 |
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |

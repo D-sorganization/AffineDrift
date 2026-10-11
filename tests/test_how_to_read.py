@@ -45,9 +45,11 @@ def test_how_to_read_page_metadata() -> None:
 
 
 def test_single_source_of_publication_states() -> None:
-    """Verify pages/how-to-read.qmd defines all 6 canonical states under #publication-states."""
+    """The guide renders all six shared states under its stable public anchor."""
     content = HOW_TO_READ_PATH.read_text(encoding="utf-8")
     assert "{#publication-states}" in content
+    assert "{{< include ../_includes/generated/publication-states.qmd >}}" in content
+    content = (ROOT / "_includes/generated/publication-states.qmd").read_text(encoding="utf-8")
 
     for state in CANONICAL_STATES:
         assert f"**{state}**" in content, f"State '{state}' missing from canonical table"

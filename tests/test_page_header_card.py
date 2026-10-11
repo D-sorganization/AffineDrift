@@ -117,7 +117,7 @@ def test_page_with_dates_renders_published_and_reviewed() -> None:
 @pytest.mark.integration
 def test_page_with_citation_renders_cite_link() -> None:
     html = _render_html("citation: true")
-    assert "page-header-card" in html
+    assert "page-header-card" not in html
     assert "Cite this page" in html
     assert 'href="#citation"' in html
 

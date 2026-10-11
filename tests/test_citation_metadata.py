@@ -286,9 +286,11 @@ class TestUnverifiedDatePresentation:
         title_date = soup.select_one("#title-block-header .date")
         published = soup.select_one(".page-header-item--published")
         reviewed = soup.select_one(".page-header-item--reviewed")
-        assert title_date is not None and title_date.get_text(strip=True) == "Date unverified"
-        assert published is not None and "Date unverified" in published.get_text()
-        assert published.find("time") is None
+        assert (
+            title_date is not None
+            and title_date.get_text(strip=True) == "Publication date not verified"
+        )
+        assert published is None
         assert reviewed is not None and "2026" in reviewed.get_text()
         assert "Invalid Date" in soup.find("code").get_text()
         assert "citation_publication_date" not in extract_citation_meta(content)
@@ -301,7 +303,7 @@ class TestUnverifiedDatePresentation:
         updated, _ = process_html_content(content, Path("sample.html"))
         assert updated == content.replace(
             '<p class="date">Invalid Date</p></header>',
-            '<p class="date">Date unverified</p></header>',
+            '<p class="date">Publication date not verified</p></header>',
         )
         assert process_html_content(updated, Path("sample.html"))[0] == updated
 
@@ -322,8 +324,8 @@ class TestUnverifiedDatePresentation:
         soup = BeautifulSoup(content, "html.parser")
         published = soup.select_one(".page-header-item--published")
         if verified:
-            assert published is not None and published.find("time") is not None
-            assert "2026" in published.get_text()
+            assert published is None
+            assert "2026" in soup.select_one("#title-block-header .date").get_text()
             assert extract_citation_meta(content)["citation_publication_date"] == ["2026-03-10"]
         else:
             assert published is None

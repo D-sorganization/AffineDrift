@@ -115,10 +115,11 @@ def test_linked_from_start_here() -> None:
     assert f"../pages/{PAGE_URL}" in section("pages/start-here.qmd", "The Big Idea in One Picture")
 
 
-def test_linked_from_the_home_page_hero() -> None:
+def test_reachable_through_the_home_page_primary_action() -> None:
     home = page_text("index.qmd")
     hero = home[home.index('<section id="welcome"') : home.index("</section>")]
-    assert f'href="pages/{PAGE_URL}"' in hero
+    assert 'href="pages/start-here.html"' in hero
+    assert f"../pages/{PAGE_URL}" in section("pages/start-here.qmd", "The Big Idea in One Picture")
 
 
 def test_linked_from_the_top_of_theory_part_one() -> None:
