@@ -14,7 +14,8 @@ pytestmark = pytest.mark.integration
 def render_card(metadata: str) -> BeautifulSoup:
     """Run the production Lua filter with project-relative prerequisite sources."""
     quarto = shutil.which("quarto")
-    assert quarto, "Quarto is required to verify the metadata contract"
+    if quarto is None:
+        pytest.skip("Quarto metadata contracts run in the E2E job with pinned Quarto")
     result = subprocess.run(
         [
             quarto,

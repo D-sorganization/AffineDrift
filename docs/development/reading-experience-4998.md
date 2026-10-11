@@ -57,12 +57,29 @@ definitions. Three shell integration tests pass with Git Bash on PATH. The
 JavaScript minifier test passes with Python UTF-8 mode. The explainer tests pass
 after restoring canonical LF caption bytes (no tracked content change). The
 figure reproducibility test passes with the pinned Matplotlib 3.11.2 installed
-in an isolated temporary directory; the host has 3.10.8. The remaining pin scan
-includes generated `_site` partials and must run after deployment pruning.
+in an isolated temporary directory; the host has 3.10.8. The pin scanner includes
+generated `_site` partials; the same test passes with the generated directory
+temporarily outside the checkout. Deployment pruning does not remove those
+partials. No source pin was changed. Full-run coverage was 80.21%, above the
+configured 75% floor.
 
-Jest passed 41 suites (626 tests; 19 skipped). The first desktop/mobile browser
-run passed 18 of 20 cases; correcting two overly broad selectors yielded two
-passing article reruns. Final changed-page checks are recorded below when done.
+Final focused Python validation passed **113 tests**. Jest passed **41 suites**
+(626 tests; 19 skipped). The final desktop Chromium and Mobile Chrome run passed
+**34 tests**, covering the new reading experience and existing homepage checks.
+The browser checks include navigation, document budgets, axe accessibility,
+keyboard focus, overflow, and console errors. Desktop and mobile screenshots
+were inspected. Six relevant pages were rendered with Quarto 1.8.26.
+
+The local browser fixture contains nine rendered pages and a manifest generated
+for that subset; it is not represented as full-site coverage. CI retains the
+strict full-site manifest and render requirements. The Python CI job intentionally
+has no Quarto: metadata integration tests follow the existing optional-runtime
+skip convention there and run explicitly after pinned Quarto setup in the E2E job.
+All ten metadata integration cases passed locally after that CI-placement fix.
+
+Final HTML sizes: homepage 72,459 bytes; Start Here 72,792; How to Read 73,924;
+article catalog 157,053. All four contain zero `citation_reference` tags. The
+representative research article retains 995 tags in its 682,949-byte document.
 
 The central pre-PR wrapper has an existing Black argument-expansion defect:
 it passes individual characters from `--check` as paths. Tracked in
@@ -74,4 +91,4 @@ equivalent lint/format validation; the wrapper itself is not reported green.
 A full local Quarto build was stopped after 46 pages because it was taking
 substantially longer than representative renders. Full-site acceptance remains
 with the required CI build. A concurrent repeat of the focused suite timed out
-in an existing synthetic citation render; it is rerun in isolation below.
+in an existing synthetic citation render; the isolated 113-test rerun passed.
