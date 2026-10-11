@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#1917 · Sync the Agent-Identity Managed Block and Vendored automerge_guard.py: The Owner's Personal Token Is an Approved Agent Identity
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #1917
+- **Branch:** merged via #5002
+- **PR:** #5002
+- **Paths:** see #5002
+- **Started:** 2026-10-11
+- **Last verified:** 2026-10-11 (`a77692bd`; collated from changes/1917-sync-the-agent-identity-managed-block-an.md)
+- **Summary:** Sync the agent-identity managed block and vendored automerge_guard.py: the owner's personal token is an approved agent identity
+- **Next step:** Shipped in PR #5002.
+
 ### DL-#4597 · Move the Quarto Output-Dir From Docs/ to the Git-Ignored _Site/ so Docs/ Holds Only Tracked Internal Documentation; Untrack the Committed CSS/JS/PDF Build Mirrors, Drop the Markdown-Pruning Half of prune_internal_docs_from_deploy.py, and Pin the Separation in Tests/test_site_output_dir.py. Supersedes Draft #4683.
 
 - **State:** shipped
