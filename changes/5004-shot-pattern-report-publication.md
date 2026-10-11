@@ -2,7 +2,7 @@
 issue: 5004
 summary: "Prepare a model-conditional shot-pattern research article and share preview"
 dl_state: "in_review"
-next_step: "Review the validated publication commit, then integrate through the protected PR and merge queue"
+next_step: "Complete full publication gates, safely fast-forward PR #5005, then verify protected merge and public asset responses"
 branch: "codex/shot-pattern-report-publication"
 ---
 
@@ -21,3 +21,5 @@ Upstream study and publication provenance are tracked under UpstreamDrift
 #11976 and PR #12278.
 
 The owner authorized a generated pre-merge development-log reconciliation for three independently verified merged scopes (#1976, #4952, #4998). Official collation helpers preserve the other 111 entries and reduce active count from 77 to 74 without changing limits. Evidence and exact patch: `reports/shot-pattern-publication/devlog-reconciliation/`. Publication acceptance still awaits protected delivery and live verification.
+
+The successor review corrects article frontmatter/navigation and separates unavailable nominal matches from simulated-row accounting. It adds an evidence-bound route audit and carries forward only the configuration digests for two existing reviews, preserving their identities/dates/commits. Full gates and live acceptance remain pending; all nine asset bytes are unchanged.

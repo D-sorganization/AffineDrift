@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 250
+- Reviewed: 251
 - Deferred: 0
 - Exempt: 3
 
@@ -40,7 +40,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 8 |
 | `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 221 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 2 |
-| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 32 |
+| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 33 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 4 |
 | `/articles/proximal_distal_energy_transfer/index.html` | `articles/proximal_distal_energy_transfer/index.qmd` | 38 |
 | `/articles/putting-roll-models.html` | `articles/putting-roll-models.qmd` | 5 |
@@ -50,6 +50,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/rotation-representations-reference.html` | `articles/rotation-representations-reference.qmd` | 1 |
 | `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 5 |
 | `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 8 |
+| `/articles/shot-pattern-analysis.html` | `articles/shot-pattern-analysis.qmd` | 13 |
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
 | `/articles/superposition.html` | `articles/superposition.qmd` | 4 |
@@ -214,7 +215,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/programming/programs.html` | `models/programming/programs.qmd` | 4 |
 | `/models/programming/provenance.html` | `models/programming/provenance.qmd` | 4 |
 | `/models/programming/workflows.html` | `models/programming/workflows.qmd` | 4 |
-| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 35 |
+| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 36 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
 | `/pages/accessibility.html` | `pages/accessibility.qmd` | 1 |
 | `/pages/big-idea.html` | `pages/big-idea.qmd` | 2 |
@@ -306,6 +307,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-934aea328ade` | `/articles/rotation-representations-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Reviewed | — | None | None | 7 |
 | `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 6 |
+| `ad-route-98afce2d9c4b` | `/articles/shot-pattern-analysis.html` | Reviewed | — | None | None | 0 |
 | `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |
 | `ad-route-0cd531e060c5` | `/articles/superposition.html` | Reviewed | — | None | None | 4 |
