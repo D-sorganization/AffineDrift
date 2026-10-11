@@ -28,3 +28,8 @@ The successor canonical pre-PR and evidence freshness checks pass in the complet
 requirements environment. Full local Python and Quarto runs remain in progress;
 protected CI and live HTTP/hash acceptance are still required. See
 `reports/shot-pattern-publication/followup-validation.json`.
+
+CI at `94831b9e` passes7,615tests and93.42%coverage but finds a stale
+generated search-maturity index. Official regeneration adds only this article
+experimental entry; all7index tests and generator freshness pass afterward.
+The nine frozen assets and13review-bound evidence digests remain unchanged.
