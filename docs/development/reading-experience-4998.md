@@ -19,6 +19,7 @@ Base revision: `05ddd506a` (current `origin/main` when the worktree was created)
 - Before production edits, eight entry/content contract tests failed. Five of eight initial metadata integration cases failed, while the three unsafe-target cases already passed.
 - A date-presentation test failed before updating the post-render text. A publication-only fixture exposed an invented review date in the refactor; it failed before the conditional was corrected.
 - Further regression tests failed before fixing audience-only metadata inventing a status, placing citation-only links after the body, and writing portable LF bytes for the generated include.
+- The full CI browser suite found two 21-pixel catalog links below its 44-pixel touch-target requirement. The secondary links now have 44-pixel clickable areas while retaining plain-link styling; the existing touch-target tests verify the fix.
 - The generator tests initially failed at collection because the generator did not exist. They now exercise all canonical definitions and boundaries, authority changes, incomplete vocabularies, empty boundaries, and stale output.
 - Prerequisite rendering separates route resolution, markup handling, and card composition. Only safe link targets become links. The card's HTML boundary escapes labels and validates class slugs.
 - The canonical maturity loader supplies definitions; the two reader pages do not keep independent prose copies. Existing enum validation is reused.
@@ -65,7 +66,8 @@ configured 75% floor.
 
 Final focused Python validation passed **113 tests**. Jest passed **41 suites**
 (626 tests; 19 skipped). The final desktop Chromium and Mobile Chrome run passed
-**34 tests**, covering the new reading experience and existing homepage checks.
+**46 tests**, covering the new reading experience, existing homepage checks,
+and touch-target compliance after the CI-discovered secondary-link fix.
 The browser checks include navigation, document budgets, axe accessibility,
 keyboard focus, overflow, and console errors. Desktop and mobile screenshots
 were inspected. Six relevant pages were rendered with Quarto 1.8.26.
@@ -80,6 +82,12 @@ All ten metadata integration cases passed locally after that CI-placement fix.
 Final HTML sizes: homepage 72,459 bytes; Start Here 72,792; How to Read 73,924;
 article catalog 157,053. All four contain zero `citation_reference` tags. The
 representative research article retains 995 tags in its 682,949-byte document.
+
+CI on `83db648c2` passed 7,615 Python tests with 93.42% source coverage, the
+content/quality checks, JavaScript tests, and performance benchmarks. Its full
+252-page render passed; the browser suite passed 183 checks and failed only the
+two secondary touch targets described above. The CSS fix stays within the
+existing stylesheet budget (3,393 of 3,400 lines); final CI remains required.
 
 The central pre-PR wrapper has an existing Black argument-expansion defect:
 it passes individual characters from `--check` as paths. Tracked in
