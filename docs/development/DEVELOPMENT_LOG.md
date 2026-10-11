@@ -269,6 +269,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4998 · Clarify Entry Paths, Share Publication Definitions, Improve Metadata, and Reduce Navigation HTML Overhead
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #4998
+- **Branch:** feat/4998-reading-experience
+- **PR:** #4999
+- **Paths:** see #4999
+- **Started:** 2026-10-11
+- **Last verified:** 2026-10-11 (`367220b0`; collated from changes/4998-clarify-entry-paths-share-publication-de.md)
+- **Summary:** Clarify entry paths, share publication definitions, improve metadata, and reduce navigation HTML overhead
+- **Next step:** Complete required CI on PR #4999 and enter the normal merge queue.
+
 ### DL-#4584 · WEB-11.6 Symbol Hover References: NOTATION.md Symbol Table Generates Data/Symbol_References.Json; Symbol-Hover.Lua Marks \symref Symbols on Opted-In Pages With MathJax Class Hooks Plus a Native Details Symbol List; Js/Symbol-Hover.Js Adds Pointer Tooltips; Theory Part 1 Opts In.
 
 - **State:** in_review
