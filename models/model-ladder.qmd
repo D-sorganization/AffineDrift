@@ -3,6 +3,18 @@ title: "Planar-to-Spatial Model Ladder"
 description: "A bounded protocol for deciding when planar, spatial, closed-chain, or flexible-shaft mechanics are required"
 categories:
 - models
+caveats:
+  evidence-level: "Declared kinematic model with a cited source and assumed axes"
+  establishes:
+    - "The spatial viewer draws forward kinematics of the cited three-joint arm chain (Johnson 2015), computed in Python and checked against the model."
+    - "Every pose in the sweep stays inside the declared joint limits."
+  does-not-establish:
+    - "Measured or simulated swing motion: the sweep is a prescribed illustration, and no dynamics, torso rotation or club shaft are modelled."
+    - "Anatomical joint ranges: the limits are passive-moment breakpoints, where restoring moments begin, not hard stops."
+  open-critiques:
+    - "The shoulder and wrist axes (+z) and forearm axis (+x) are assumed because the axis directions of the source figure are not stated in its text."
+    - "The sign of each positive angle against the anatomical direction is unverified."
+  next-gate: "Verify the axis directions and angle signs against the source figure or measured data before using the chain to interpret a real swing."
 ---
 
 This page defines a comparison protocol for four nested model levels. It asks a
@@ -87,6 +99,41 @@ Python by `scripts/generate_swing_viewer_data.py`; the page only draws them.
 </figure>
 <script src="../js/swing-viewer-data.js"></script>
 <script src="../js/swing-viewer.js"></script>
+```
+
+## The Spatial Rung, Arm Chain {#arm-viewer-section}
+
+The viewer below draws the cited three-dimensional arm chain
+`JOHNSON_2015_ARM` from `src/affine_control/golf_model_3d.py`: shoulder
+transverse flexion, forearm pronation and wrist deviation, with lengths and
+limits from Johnson (2015) [@johnson2015]. The motion is a **prescribed sweep**
+of the three joints through 80 percent of their nearer limit, not a swing. Drag
+the view slider to turn the scene and see the wrist leave the arm's swing
+plane. Johnson's 30 and 50 degree torso and swing-plane inclinations are viewer
+placement only and are not applied.
+
+Read these caveats with the figure; they are part of the result.
+
+```{=html}
+<figure class="swing-viewer arm-viewer" id="arm-viewer" aria-describedby="arm-viewer-caption">
+<div class="sv-stage"></div>
+<div class="sv-controls">
+<button type="button" class="sv-play" aria-pressed="false">Play</button>
+<label class="sv-slider-label">Sweep <input type="range" class="sv-slider" min="0" max="0" step="1" value="0"></label>
+</div>
+<label class="av-yaw-label">View angle <input type="range" class="av-yaw" min="-90" max="90" step="5" value="35"></label>
+<p class="sv-readout" aria-live="polite"></p>
+<ul class="av-caveats" aria-label="Caveats of the spatial arm chain"></ul>
+<table class="av-joints">
+<caption>Declared joints (axes assumed, limits are passive-moment breakpoints)</caption>
+<thead><tr><th scope="col">Joint</th><th scope="col">Axis</th><th scope="col">Limits (degrees)</th></tr></thead>
+<tbody></tbody>
+</table>
+<figcaption id="arm-viewer-caption">Spatial (3D) rigid arm chain after Johnson (2015), drawn as SVG with a fixed orthographic projection. A prescribed joint sweep, not a measured or simulated swing; no shaft and no torso. The sweep plays at one-eighth speed only when you press Play.</figcaption>
+<noscript><p>The animation needs JavaScript. Caveats: the joint limits are passive-moment breakpoints, not hard stops; the joint axes are assumed and the angle signs are unverified; the motion is a prescribed sweep, not a swing.</p></noscript>
+</figure>
+<script src="../js/arm-viewer-data.js"></script>
+<script src="../js/arm-viewer.js"></script>
 ```
 
 ## Task-Specific Metrics and Uncertainty
