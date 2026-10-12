@@ -11,6 +11,7 @@
 ## Other Current Boundaries
 
 - The accepted final technical-review evidence for epic #4009 is in `docs/development/technical-review/final-delivery/closing-review.md` and its public receipt. This handoff does not renew those acceptance claims.
+- AffineDrift #3954 is the revision-pinned markerless-mocap publication projection; Tools owns its public contracts and UpstreamDrift owns scientific computation. AffineDrift #3956 is the camera evidence registry; candidate devices and manufactured fixtures are not procurement or validation authority. Neither boundary changes in this follow-up.
 - For other workstreams, consult `docs/development/HANDOFF.md`, the governing issue, and their scope-specific receipts before acting. The earlier handoff contains historical checkpoints, including research issue #4828, whose present status is not asserted here.
 
 ## Historical Handoff Preservation
