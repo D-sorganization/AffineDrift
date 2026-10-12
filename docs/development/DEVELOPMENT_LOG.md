@@ -288,12 +288,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5004
 - **Branch:** codex/shot-pattern-report-publication
-- **PR:** #5005
+- **PR:** #5005, #5016
 - **Paths:** see #5005
 - **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`ace2a1ac`; collated from changes/5004-shot-pattern-report-publication.md)
+- **Last verified:** 2026-10-12 (`8162b803`; collated from changes/5004-mobile-title-readability.md)
 - **Summary:** Prepare a model-conditional shot-pattern research article and share preview
-- **Next step:** Review and push main-merged PR #5005 with passing local gates, await new protected CI, then verify protected merge and public asset responses
+- **Next step:** Review and merge the article-only Code control correction, then verify deployed mobile title and unchanged publication asset hashes
 
 ### DL-#4584 · WEB-11.6 Symbol Hover References: NOTATION.md Symbol Table Generates Data/Symbol_References.Json; Symbol-Hover.Lua Marks \symref Symbols on Opted-In Pages With MathJax Class Hooks Plus a Native Details Symbol List; Js/Symbol-Hover.Js Adds Pointer Tooltips; Theory Part 1 Opts In.
 
@@ -773,6 +773,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#4589 · Consolidate Pages/tools.qmd Scope Caveats Into the WEB-03.4 Caveats Block (Refs 4589, Page 1)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4589
+- **Branch:** merged via #5012
+- **PR:** #5012
+- **Paths:** see #5012
+- **Started:** 2026-10-12
+- **Last verified:** 2026-10-12 (`a003c386`; collated from changes/4589-consolidate-pages-tools-qmd-scope-caveat.md)
+- **Summary:** Consolidate pages/tools.qmd scope caveats into the WEB-03.4 caveats block (Refs 4589, page 1)
+- **Next step:** Shipped in PR #5012.
 
 ### DL-#4553 · Consolidate Okabe-Ito Palette CSS Tokens Into Css/Tokens/colors.css and Add Design Token Audit
 

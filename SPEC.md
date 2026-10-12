@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-12 | #5016 | Keep the published shot-pattern article title readable on mobile |
+| 2026-10-12 | #5012 | Consolidate pages/tools.qmd scope caveats into the WEB-03.4 caveats block (Refs 4589, page 1) |
 | 2026-10-12 | #5013 | Add rigid SE(3) golf_model_3d forward-kinematics provider (slice 1; Refs issue 4973) |
 | 2026-10-12 | #5005 | Prepare a model-conditional shot-pattern research article and share preview |
 | 2026-10-12 | #5011 | Re-archive HANDOFF.md under the 200-line target |
