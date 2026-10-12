@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import dataclasses
 import math
+import pathlib
 
 import numpy as np
 import pytest
 
 from src.affine_control.golf_model import SEGMENTS
-from src.affine_control.golf_model_3d import PLANAR_REDUCED, GolfModel3D
+from src.affine_control.golf_model_3d import JOHNSON_2015_ARM, PLANAR_REDUCED, GolfModel3D
 
 PLANAR_CONFIGS = [
     np.zeros(3),
@@ -97,7 +98,7 @@ def test_rotations_stay_orthonormal_with_positive_determinant(
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"segment_lengths_m": (0.3, 0.0, 1.15)},
+        {"segment_lengths_m": (0.0, 0.0, 0.0)},
         {"segment_lengths_m": (0.3, -0.35, 1.15)},
         {"segment_lengths_m": (0.3, float("nan"), 1.15)},
         {"segment_lengths_m": (0.3, 0.35)},
@@ -130,3 +131,46 @@ def test_parameters_carry_units_and_provenance() -> None:
     assert "placeholder: owner review required" in PLANAR_REDUCED.provenance
     with pytest.raises(dataclasses.FrozenInstanceError):
         PLANAR_REDUCED.provenance = "changed"  # type: ignore[misc]
+
+
+BIB = pathlib.Path(__file__).resolve().parent.parent / "references" / "proximal-distal-energy.bib"
+
+
+def test_zero_length_segment_acts_as_a_pure_rotation_joint() -> None:
+    model = _model(segment_lengths_m=(0.3, 0.0, 1.15))
+    tip = model.tip_position(np.array([0.0, 1.0, 0.0]))
+    np.testing.assert_allclose(
+        tip, [0.3 + 1.15 * math.cos(1.0), 1.15 * math.sin(1.0), 0.0], atol=1e-12
+    )
+
+
+def test_johnson_axes_limits_and_lengths_match_the_cited_tables() -> None:
+    # Johnson 2015 Table 3.2 (arm 60 cm, hand and grip 20 cm), Table 3.4 breakpoints.
+    assert JOHNSON_2015_ARM.segment_lengths_m == (0.60, 0.0, 0.20)
+    assert JOHNSON_2015_ARM.joint_axes == ((0.0, 0.0, 1.0), (1.0, 0.0, 0.0), (0.0, 0.0, 1.0))
+    assert JOHNSON_2015_ARM.joint_limits_rad == (
+        (-1.289, 1.210),
+        (-1.237, 1.340),
+        (-1.171, 1.185),
+    )
+
+
+def test_forearm_roll_is_about_the_long_axis_and_keeps_the_hand_on_it() -> None:
+    q = np.array([0.4, 1.0, 0.0])
+    base = JOHNSON_2015_ARM.tip_position(np.array([0.4, 0.0, 0.0]))
+    np.testing.assert_allclose(JOHNSON_2015_ARM.tip_position(q), base, atol=1e-12)
+
+
+def test_wrist_deviation_leaves_the_plane_after_forearm_roll() -> None:
+    q = np.array([0.0, 1.2, 0.5])
+    flat = JOHNSON_2015_ARM.tip_position(np.array([0.0, 0.0, 0.5]))
+    assert flat[2] == pytest.approx(0.0, abs=1e-12)
+    # expected z = hand * sin(roll) * sin(deviation) (hand = 0.20 m)
+    expected = 0.20 * math.sin(1.2) * math.sin(0.5)
+    assert JOHNSON_2015_ARM.tip_position(q)[2] == pytest.approx(expected, abs=1e-12)
+
+
+def test_johnson_provenance_cites_a_bibliography_key_that_exists() -> None:
+    assert "johnson2015" in JOHNSON_2015_ARM.provenance
+    assert "@mastersthesis{johnson2015," in BIB.read_text(encoding="utf8")
+    assert "modeling assumption" in JOHNSON_2015_ARM.provenance
