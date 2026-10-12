@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-12 | #5006 | Licensing: code MIT, written text and data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT updated (refs #4609) |
 | 2026-10-11 | #5002 | Sync the agent-identity managed block and vendored automerge_guard.py: the owner's personal token is an approved agent identity |
 | 2026-10-11 | #4999 | Clarify entry paths, share publication definitions, improve metadata, and reduce navigation HTML overhead |
 | 2026-10-07 | #4995 | Move the Quarto output-dir from docs/ to the git-ignored _site/ so docs/ holds only tracked internal documentation; untrack the committed CSS/JS/PDF build mirrors, drop the markdown-pruning half of prune_internal_docs_from_deploy.py, and pin the separation in tests/test_site_output_dir.py. Supersedes draft #4683. |
