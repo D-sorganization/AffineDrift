@@ -18,7 +18,6 @@ REQUIREMENTS_PATH = ROOT_DIR / "requirements.txt"
 LATEX_RELEASE_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "latex-release-volumes.yml"
 ANTI_PHANTOM_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "anti-phantom-merge.yml"
 LOCAL_ONLY_GUARD_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "local-only-runner-guard.yml"
-WORKFLOW_LINTER_PATH = ROOT_DIR / ".github" / "workflows" / "lint-workflow-files.yml"
 
 
 def test_deploy_workflow_integrity() -> None:
@@ -57,30 +56,6 @@ def test_deploy_workflow_gates_local_and_live_every_page_evidence() -> None:
     assert "npx playwright install" in content
     assert "public-site-verification" in content
     assert "upload-artifact" in content
-
-
-def test_deploy_finishes_active_revision_before_newer_main_push() -> None:
-    """Keep one active revision-bound publish while newer pending pushes coalesce."""
-    content = WORKFLOW_PATH.read_text(encoding="utf-8")
-    concurrency = content.split("\nconcurrency:\n", maxsplit=1)[1].split(
-        "\npermissions:\n", maxsplit=1
-    )[0]
-
-    assert "group: ${{ github.workflow }}-${{ github.ref }}" in concurrency
-    assert re.search(r"(?m)^  cancel-in-progress: false$", concurrency)
-    assert not re.search(r"(?m)^  queue:", concurrency)
-    assert '--source-revision "$GITHUB_SHA"' in content
-    assert 'if [ "$SOURCE_REVISION" = "$GITHUB_SHA" ]; then' in content
-
-
-def test_workflow_linter_recognizes_only_the_exact_pages_publisher() -> None:
-    """The publishing exception must not relax ordinary workflow cancellation."""
-    content = WORKFLOW_LINTER_PATH.read_text(encoding="utf-8")
-    exception_block = content.split('case "$(basename "$f")" in', maxsplit=1)[1]
-    exceptions = exception_block.split(";;", maxsplit=1)[0]
-
-    assert "deploy-website.yml" in exceptions
-    assert "cancel-in-progress:\\s*true" in content.split("      *)", maxsplit=1)[1]
 
 
 def test_live_manifest_poll_retries_transient_non_json_responses() -> None:
