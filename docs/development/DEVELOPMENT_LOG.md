@@ -269,19 +269,6 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4998 · Clarify Entry Paths, Share Publication Definitions, Improve Metadata, and Reduce Navigation HTML Overhead
-
-- **State:** in_review
-- **Owner:** unassigned
-- **Issue:** #4998
-- **Branch:** feat/4998-reading-experience
-- **PR:** #4999
-- **Paths:** see #4999
-- **Started:** 2026-10-11
-- **Last verified:** 2026-10-11 (`367220b0`; collated from changes/4998-clarify-entry-paths-share-publication-de.md)
-- **Summary:** Clarify entry paths, share publication definitions, improve metadata, and reduce navigation HTML overhead
-- **Next step:** Complete required CI on PR #4999 and enter the normal merge queue.
-
 ### DL-#4584 · WEB-11.6 Symbol Hover References: NOTATION.md Symbol Table Generates Data/Symbol_References.Json; Symbol-Hover.Lua Marks \symref Symbols on Opted-In Pages With MathJax Class Hooks Plus a Native Details Symbol List; Js/Symbol-Hover.Js Adds Pointer Tooltips; Theory Part 1 Opts In.
 
 - **State:** in_review
@@ -359,19 +346,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4954-final-partial-sources.md)
 - **Summary:** Complete impact and inverse-dynamics source review with book reconciliation
 - **Next step:** Source accepted at 07c71ed500; integrate current presentation component and verify protected delivery
-
-### DL-#4952 · Repair Inherited Development-Log Metadata and Archive Completed Records Without Losing Evidence
-
-- **State:** in_review
-- **Owner:** codex
-- **Issue:** #4952
-- **Branch:** feat/technical-review-consolidated-20261005
-- **PR:** #4953
-- **Paths:** see #4953
-- **Started:** 2026-10-05
-- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4952-development-log-metadata-repair.md)
-- **Summary:** Repair inherited development-log metadata and archive completed records without losing evidence
-- **Next step:** Verify the consolidation pre-PR gate against the repaired generated development log
 
 ### DL-#4950 · Correct Publication Introductions and Complete Generated-Content Review
 
@@ -646,19 +620,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Clarify dimension types and bind educational integration claims to qualified provider evidence
 - **Next step:** Protected main merge of PR 4889, verify four accepted canonical hashes, then retarget date PR 4891
 
-### DL-#1976 · Vendor RM-5 Change Fragment Tooling
-
-- **State:** in_review
-- **Owner:** unassigned
-- **Issue:** #1976
-- **Branch:** feat/1976-ad-change-fragments
-- **PR:** #4918
-- **Paths:** see #4918
-- **Started:** 2026-10-05
-- **Last verified:** 2026-10-05 (`8a36da45`; collated from changes/1976-vendor-rm-5-change-fragment-tooling.md)
-- **Summary:** Vendor RM-5 Change Fragment Tooling
-- **Next step:** Merge the pull request.
-
 ### DL-#4531 · ADR 0002, Interactive Technology Stack
 
 - **State:** in_review
@@ -812,6 +773,44 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-10-12 (`464c1243`; collated from changes/4609-licensing-code-mit-written-text-and-data.md)
 - **Summary:** Licensing: code MIT, written text and data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT updated (refs #4609)
 - **Next step:** Shipped in PR #5006.
+### DL-#4998 · Clarify Entry Paths, Share Publication Definitions, Improve Metadata, and Reduce Navigation HTML Overhead
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4998
+- **Branch:** feat/4998-reading-experience
+- **PR:** #4999
+- **Paths:** see #4999
+- **Started:** 2026-10-11
+- **Last verified:** 2026-10-11 (`367220b0`; collated from completion reconciliation of merged PR #4999; evidence in reports/shot-pattern-publication/devlog-reconciliation)
+- **Summary:** Clarify entry paths, share publication definitions, improve metadata, and reduce navigation HTML overhead
+- **Next step:** Implementation delivered in merged PR #4999; all issue acceptance criteria checked. CI run 38101964867 succeeded on f7e432a6cd5f4966eb998931e06b490491f54f9b. No live deployment verification is asserted.
+
+### DL-#4952 · Repair Inherited Development-Log Metadata and Archive Completed Records Without Losing Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **Issue:** #4952
+- **Branch:** feat/technical-review-consolidated-20261005
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-11 (`76815ab5`; collated from completion reconciliation of merged PR #4953; evidence in reports/shot-pattern-publication/devlog-reconciliation)
+- **Summary:** Repair inherited development-log metadata and archive completed records without losing evidence
+- **Next step:** Metadata repair delivered in merged PR #4953. Preservation receipts and current-book-links/integrated-pre-pr-final.txt record completed repair and a passing Fleet Policy Gate; scientific/publication acceptance remains in its own entries.
+
+### DL-#1976 · Vendor RM-5 Change Fragment Tooling
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #1976
+- **Branch:** feat/1976-ad-change-fragments
+- **PR:** #4918
+- **Paths:** see #4918
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-11 (`8a36da45`; collated from completion reconciliation of merged PR #4918; evidence in reports/shot-pattern-publication/devlog-reconciliation)
+- **Summary:** Vendor RM-5 Change Fragment Tooling
+- **Next step:** Tooling delivered in merged PR #4918; 21 unit/root-hygiene tests recorded. Workflow follow-up delivered in PR #4926. This closes the local tooling scope, not the cross-repository rollout.
 
 ### DL-#1917 · Sync the Agent-Identity Managed Block and Vendored automerge_guard.py: The Owner's Personal Token Is an Approved Agent Identity
 

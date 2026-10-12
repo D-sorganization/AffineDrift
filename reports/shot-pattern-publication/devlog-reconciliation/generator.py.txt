@@ -1,0 +1,68 @@
+"""Read canonical source; write only a proposed collation under /tmp."""
+import difflib
+import hashlib
+import json
+from datetime import date
+from pathlib import Path
+from shared_scripts import development_log as devlog
+from shared_scripts.changes_fragment_schema import render_fragment, parse
+from shared_scripts.changes_fragment_collate import apply_devlog_entry
+
+root = Path.cwd()
+out = Path('/tmp/shot-affine-devlog-collation-review')
+relative = Path('docs/development/DEVELOPMENT_LOG.md')
+original = (root / relative).read_text()
+text = original
+items = [
+ (1976, 4918, '8a36da455d9f97e0ec9ba32de8bfbd8dd5f35f55',
+  'Vendor RM-5 Change Fragment Tooling',
+  'Tooling delivered in merged PR #4918; 21 unit/root-hygiene tests recorded. Workflow follow-up delivered in PR #4926. This closes the local tooling scope, not the cross-repository rollout.'),
+ (4952, 4953, '76815ab5e86807ab78d02a98fc69d832b6ab2feb',
+  'Repair Inherited Development-Log Metadata',
+  'Metadata repair delivered in merged PR #4953. Preservation receipts and current-book-links/integrated-pre-pr-final.txt record completed repair and a passing Fleet Policy Gate; scientific/publication acceptance remains in its own entries.'),
+ (4998, 4999, '367220b089eb67e105f2258828d4b2db9853b796',
+  'Clarify Site Entry Paths, Evidence Labels, and Reading Experience',
+  'Implementation delivered in merged PR #4999; all issue acceptance criteria checked. CI run 38101964867 succeeded on f7e432a6cd5f4966eb998931e06b490491f54f9b. No live deployment verification is asserted.'),
+]
+for issue, pr, sha, title, evidence in items:
+ name = f'{issue}-verified-completion.md'
+ fragment_text = render_fragment(issue, title, dl_state='shipped', next_step=evidence,
+     handoff=f'Proposed reconciliation of already merged scope. Original merge: https://github.com/D-sorganization/AffineDrift/pull/{pr}\nMerge SHA: {sha}\n\n{evidence}')
+ (out / name).write_text(fragment_text)
+ fragment, errors = parse(fragment_text, name)
+ assert not errors and fragment is not None, errors
+ text = apply_devlog_entry(text, fragment, pr=pr, today=date(2026,10,11), sha=sha,
+     source=f'completion reconciliation of merged PR #{pr}; evidence in reports/shot-pattern-publication/devlog-reconciliation')
+old = {e.entry_id:e for e in devlog.parse_entries(original)}
+new = {e.entry_id:e for e in devlog.parse_entries(text)}
+assert old.keys() == new.keys()
+selected = {f'DL-#{item[0]}' for item in items}
+changes = {}
+for key, prior in old.items():
+ differences = {field: {'before': prior.fields.get(field), 'after': new[key].fields.get(field)}
+    for field in prior.fields.keys() | new[key].fields.keys()
+    if prior.fields.get(field) != new[key].fields.get(field)}
+ if key not in selected:
+  assert not differences, (key, differences)
+ else:
+  assert set(differences) == {'State', 'Last verified', 'Next step'}
+  changes[key] = differences
+assert (root / relative).read_text() == original
+findings = devlog.validate_devlog_content(text, relative)
+assert not findings, findings
+(out / 'DEVELOPMENT_LOG.proposed.md').write_text(text)
+(out / 'DEVELOPMENT_LOG.patch').write_text(''.join(difflib.unified_diff(
+ original.splitlines(keepends=True), text.splitlines(keepends=True),
+ fromfile='a/'+relative.as_posix(), tofile='b/'+relative.as_posix())))
+receipt = {'canonical_input_sha256': hashlib.sha256(original.encode()).hexdigest(),
+ 'proposed_sha256': hashlib.sha256(text.encode()).hexdigest(),
+ 'active_before':sum(e.is_active for e in old.values()),
+ 'active_after':sum(e.is_active for e in new.values()),
+ 'active_after_future_5004_in_review':sum(e.is_active for e in new.values())+1,
+ 'structural_findings':[], 'unchanged_other_entries':len(old)-len(selected),
+ 'changed_fields':changes,
+ 'canonical_files_modified':False,
+ 'spec_rows_modified':False,
+ 'notes':'Official apply_devlog_entry API only; moved selected entries to Shipped. Existing PR fields, owner, summary, paths and historical records preserved. Portfolio in_progress warning remains.'}
+(out / 'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
+print(json.dumps({k:v for k,v in receipt.items() if k!='changed_fields'},indent=2))
