@@ -141,3 +141,13 @@ CI and public deployment checks remain separate pending gates.
 The inventory should identify the actual commit containing these reviewed
 source bytes once committed. Later changes require checking affected review
 claims rather than silently carrying this receipt forward.
+
+## Presentation-Only Mobile Title Follow-Up — 12 October 2026
+
+The published source above has SHA-256 `6359c5ee00826365c2ddcc4fc238ccc9eefeb8057ddbc2df9d6ca97a7da42dc2`.
+The follow-up source has SHA-256 `c0e8127f38dab54a504ba59f5753dcb0d28ca6bb315d95c54243915f75a9800c`.
+The sole source change is `format.html.code-tools: false` for this article, which has no code blocks.
+It removes an unnecessary Code control beside the title; no scientific statement, figure,
+table, method, or linked asset changes. The prior scientific review remains bound to its
+original source hash. The rendered mobile layout regression fails before this change and
+passes afterward, and all nine published assets retain their recorded hashes and byte counts.
