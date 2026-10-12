@@ -16,3 +16,8 @@ This change preserves the active revision-bound Pages publish and coalesces newe
 pending main pushes. It changes no route, scientific claim, asset, manifest,
 browser check, or release acceptance rule. A future complete deployment and
 fresh live verification remain necessary for issue #5004 closure.
+
+Canonical RM-6 on the fixed source passed seven gates, including affected unit
+tests and workflow lint. The remaining failure is the development-log ceiling:
+the existing `origin/main` log has 76 active entries against a limit of 75.
+This branch leaves that log and its policy unchanged and remains unpublished.
