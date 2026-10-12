@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-12 | #5005 | Prepare a model-conditional shot-pattern research article and share preview |
 | 2026-10-12 | #5011 | Re-archive HANDOFF.md under the 200-line target |
 | 2026-10-12 | #5008 | Consolidate Okabe-Ito palette CSS tokens into css/tokens/colors.css and add design token audit |
 | 2026-10-12 | #5006 | Licensing: code MIT, written text and data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT updated (refs #4609) |

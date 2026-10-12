@@ -269,6 +269,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5004 · Prepare a Model-Conditional Shot-Pattern Research Article and Share Preview
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5004
+- **Branch:** codex/shot-pattern-report-publication
+- **PR:** #5005
+- **Paths:** see #5005
+- **Started:** 2026-10-12
+- **Last verified:** 2026-10-12 (`ace2a1ac`; collated from changes/5004-shot-pattern-report-publication.md)
+- **Summary:** Prepare a model-conditional shot-pattern research article and share preview
+- **Next step:** Review and push main-merged PR #5005 with passing local gates, await new protected CI, then verify protected merge and public asset responses
+
 ### DL-#4584 · WEB-11.6 Symbol Hover References: NOTATION.md Symbol Table Generates Data/Symbol_References.Json; Symbol-Hover.Lua Marks \symref Symbols on Opted-In Pages With MathJax Class Hooks Plus a Native Details Symbol List; Js/Symbol-Hover.Js Adds Pointer Tooltips; Theory Part 1 Opts In.
 
 - **State:** in_review
