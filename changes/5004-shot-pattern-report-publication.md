@@ -24,12 +24,17 @@ The owner authorized a generated pre-merge development-log reconciliation for th
 
 The successor review corrects article frontmatter/navigation and separates unavailable nominal matches from simulated-row accounting. It adds an evidence-bound route audit and carries forward only the configuration digests for two existing reviews, preserving their identities/dates/commits. Full gates and live acceptance remain pending; all nine asset bytes are unchanged.
 
-The successor canonical pre-PR and evidence freshness checks pass in the complete
-requirements environment. Full local Python and Quarto runs remain in progress;
-protected CI and live HTTP/hash acceptance are still required. See
+The successor canonical pre-PR at `26f1de47` and evidence freshness checks pass
+in the complete requirements environment. The local Python attempt timed out at
+60 seconds in unchanged dynamics. The redundant local full-site Quarto render
+was terminated after 48/253 pages; remote CI full-site build at `94831b9e`
+passed. Updated-commit protected CI and live HTTP/hash acceptance are still required. See
 `reports/shot-pattern-publication/followup-validation.json`.
 
 CI at `94831b9e` passes7,615tests and93.42%coverage but finds a stale
 generated search-maturity index. Official regeneration adds only this article
 experimental entry; all7index tests and generator freshness pass afterward.
 The nine frozen assets and13review-bound evidence digests remain unchanged.
+The exact canonical pre-PR pass and incomplete local-render transcripts are
+retained in `reports/shot-pattern-publication/` with hashes in the progress
+receipt. The CI browser job at `94831b9e` was still running at this checkpoint.
