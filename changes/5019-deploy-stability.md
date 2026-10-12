@@ -21,3 +21,5 @@ and workflow lint. The remaining failure was the inherited development-log
 ceiling: the existing `origin/main` log had 76 active entries against a limit
 of 75. The separate completed #5004 publication row is reconciled through
 the governed log collator with its original bytes preserved in this branch.
+Fresh canonical RM-6 passed all eight gates on `ba75df15b` after the state
+correction; independent review and protected PR delivery remain.
