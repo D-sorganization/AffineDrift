@@ -48,6 +48,24 @@ local function format_evidence_level(meta_caveats, meta_rung)
   return "Theory"
 end
 
+-- Insertion position: after the summary-takeaways card if present; otherwise after a
+-- raw-HTML block carrying the page H1 (full-layout pages hand-write their heading, and
+-- a card above it pushes the H1 out of the first mobile viewport, #4589); otherwise
+-- at index 1.
+local function card_insert_index(blocks)
+  for i, block in ipairs(blocks) do
+    if block.t == "Div" and block.classes:includes("summary-takeaways-card") then
+      return i + 1
+    end
+  end
+  for i, block in ipairs(blocks) do
+    if block.t == "RawBlock" and block.format == "html" and block.text:find("<h1[%s>]") then
+      return i + 1
+    end
+  end
+  return 1
+end
+
 function Pandoc(doc)
   local meta = doc.meta
   local caveats = meta["caveats"]
@@ -191,16 +209,7 @@ function Pandoc(doc)
   })
   local card_div = pandoc.Div(card_content, card_attr)
 
-  -- Insertion position: after summary-takeaways-card if present, otherwise at index 1
-  local insert_idx = 1
-  for i, block in ipairs(new_blocks) do
-    if block.t == "Div" and block.classes:includes("summary-takeaways-card") then
-      insert_idx = i + 1
-      break
-    end
-  end
-
-  table.insert(new_blocks, insert_idx, card_div)
+  table.insert(new_blocks, card_insert_index(new_blocks), card_div)
   doc.blocks = new_blocks
   return doc
 end
