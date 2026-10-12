@@ -27,8 +27,10 @@ The successor review corrects article frontmatter/navigation and separates unava
 The successor canonical pre-PR at `26f1de47` and evidence freshness checks pass
 in the complete requirements environment. The local Python attempt timed out at
 60 seconds in unchanged dynamics. The redundant local full-site Quarto render
-was terminated after 48/253 pages; remote CI full-site build at `94831b9e`
-passed. Updated-commit protected CI and live HTTP/hash acceptance are still required. See
+was terminated after 48/253 pages; remote CI at `94831b9e` completed its
+full-site E2E build, Chromium, every-route axe, screenshot, and layout checks
+successfully in 56m31s. Updated-commit protected CI and live HTTP/hash
+acceptance are still required. See
 `reports/shot-pattern-publication/followup-validation.json`.
 
 CI at `94831b9e` passes7,615tests and93.42%coverage but finds a stale
@@ -37,4 +39,7 @@ experimental entry; all7index tests and generator freshness pass afterward.
 The nine frozen assets and13review-bound evidence digests remain unchanged.
 The exact canonical pre-PR pass and incomplete local-render transcripts are
 retained in `reports/shot-pattern-publication/` with hashes in the progress
-receipt. The CI browser job at `94831b9e` was still running at this checkpoint.
+receipt. The CI browser job at `94831b9e` passed. Its overall run failed
+solely because the Python lane checked the stale generated index; its dependent
+quality gate also failed. The repaired index at `26f1de47` awaits a new
+protected CI run.
