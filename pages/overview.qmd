@@ -14,78 +14,78 @@ categories:
 </div>
 ```
 
-AffineDrift is a public technical website about control-affine mechanics, golf-swing modeling, and related questions in biomechanics and motor control. The site combines textbooks, research notes, critiques, and implementation resources. Its purpose is not to present every interpretation as settled; it is to distinguish established mathematical structure from model-dependent inference and open hypotheses.
+AffineDrift is a public technical website about control-affine mechanics, golf-swing models, and related questions in biomechanics and motor control. It brings together textbooks, research notes, critiques, and software resources. It does not present every interpretation as settled. Its job is to separate three things: established math, conclusions that depend on a model, and open hypotheses.
 
 ::: {.callout-important}
 ## Suggested Reading Path
 
-1. [Article Index](../resources/articles.html) for the current inventory.
-2. [Drifter Manifesto](../pages/drifter-manifesto.html) for the core AffineDrift series.
-3. [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html) for the golf-specific textbook treatment.
-4. [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html) for the broader mathematical series.
-5. [Critiques and Responses](../critiques/index.html) for scope limits, objections, and unresolved points.
+1. [Article Index](../resources/articles.html) lists everything published now.
+2. [Drifter Manifesto](../pages/drifter-manifesto.html) is the core AffineDrift series.
+3. [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html) is the textbook on golf.
+4. [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html) is the wider series on the math.
+5. [Critiques and Responses](../critiques/index.html) covers scope limits, objections, and unresolved points.
 :::
 
 ## Core Analytical Framing
 
-The recurring mathematical form on the site is the control-affine ordinary differential equation
+The same equation appears again and again on this site. It is a control-affine ordinary differential equation:
 
 $$\dot{x} = f(x) + G(x)u.$$
 
-In this notation, $x$ denotes the modeled state, $f(x)$ collects state-dependent dynamics that remain when the applied control input is set to zero, and $G(x)u$ represents the contribution of the modeled input. That ODE form is standard in nonlinear control theory. AffineDrift's site-specific contribution is to use it as an organizing lens for golf-swing mechanics and related biomechanical questions.
+Here $x$ is the modeled state of the system. The term $f(x)$ is what the system does when the control input is set to zero. The term $G(x)u$ is the effect of the modeled input. This form is standard in nonlinear control theory. AffineDrift's own contribution is to use it as a lens on golf-swing mechanics and related biomechanics questions.
 
-On this site, **drift** refers to the state-dependent dynamics represented by $f(x)$, and **control** refers to the modeled input contribution $G(x)u$. That distinction can be analytically useful, but its interpretation depends on the chosen coordinates, the multibody model, the treatment of constraints, and the level at which actuation is represented. The [Mathematical Notation Reference](notation.html) is the normative source for drift, control, the ZTCF family, ZVCF, DCR, DgCR, and symbol conventions.
+On this site, **drift** means the part of the motion given by $f(x)$. **Control** means the modeled input, $G(x)u$. The split can be useful. But what it means depends on four choices: the coordinates, the multibody model, how constraints are treated, and how actuation is represented. The [Mathematical Notation Reference](notation.html) is the official source for drift, control, the ZTCF family, ZVCF, DCR, DgCR, and the symbols.
 
 ::: {.callout-note}
 ## Where This Framework Comes From
 
-The control-affine formulation itself is standard nonlinear-systems material. The site's use of drift/input decomposition, zero-torque counterfactuals, and related golf-specific interpretations is original AffineDrift synthesis built on top of that standard machinery.
+The control-affine form itself is standard material in nonlinear systems. The site's use of the drift and input split, zero-torque counterfactuals, and related golf-specific readings is original AffineDrift synthesis. It is built on top of that standard machinery.
 :::
 
 ## What Counts as Evidence Here
 
-- Equations and derivations are strongest when they follow directly from stated model assumptions and cited source material.
-- Quantitative claims are only as strong as the model, parameter set, and identification procedure behind them.
-- Interpretive claims about motor control, skill, or causation should be read cautiously unless the page provides direct data, citations, or a clearly delimited derivation.
-- Exploratory pages are retained where they may still be useful, but they should be read as proposals or working notes rather than settled conclusions.
+- Equations and derivations are strongest when they follow directly from stated model assumptions and cited sources.
+- A number is only as strong as the model, the parameters, and the method used to fit them.
+- Read claims about motor control, skill, or cause with caution. Trust them only if the page gives direct data, citations, or a clearly bounded derivation.
+- Exploratory pages stay up because they may still be useful. Read them as proposals or working notes, not as settled conclusions.
 
 ## Main Content Areas
 
-- [Drifter Manifesto](../pages/drifter-manifesto.html): canonical AffineDrift series on control-affine modeling of the golf swing.
-- [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html): textbook-scale golf application of the site's mechanics framework.
-- [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html): broader mathematical and computational series.
-- [Tangent Hyperplanes](../pages/tangent-hyperplanes.html): exploratory tangent-space series with explicit sourcing and scope notes.
-- [Research Reviews](../resources/research-reviews.html): literature-review hub; the current review pages are still incomplete.
+- [Drifter Manifesto](../pages/drifter-manifesto.html): the main AffineDrift series on control-affine models of the golf swing.
+- [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html): a textbook that applies the site's mechanics to golf.
+- [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html): a wider series on the math and computing.
+- [Tangent Hyperplanes](../pages/tangent-hyperplanes.html): an exploratory series on tangent-space methods, with clear sources and scope notes.
+- [Research Reviews](../resources/research-reviews.html): the hub for literature reviews. The current review pages are still incomplete.
 - [Models](../models/models.html): modeling and simulation resources across several software stacks.
-- [UpstreamDrift](#upstreamdrift-the-software): the site's primary modeling software — web UI, REST API, and analysis tools (see the section below).
+- [UpstreamDrift](#upstreamdrift-the-software): the site's main modeling software, with a web UI, a REST API, and analysis tools (see the section below).
 
 ## UpstreamDrift: The Software
 
 [UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) is the separate
-runtime and computational repository that AffineDrift accompanies. The statements
-below are an **UpstreamDrift authority snapshot** pinned to [protected](glossary.html) commit
+software repository that AffineDrift accompanies. The statements
+below are an **UpstreamDrift authority snapshot**. They are pinned to [protected](glossary.html) commit
 [`8cc236c6879e7535bb6bd15aecbe3396fb6dbb36`](https://github.com/D-sorganization/UpstreamDrift/tree/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36),
 reviewed on 2026-08-29. The upstream repository remains the live authority.
 
-At that revision, the web UI and versioned REST API are **available**. Engine
-support is not uniform:
+At that revision, the web UI and the versioned REST API are **available**. Not
+every engine is supported to the same level:
 
-- **Supported:** MuJoCo, exercised by required pull-request CI.
-- **Extended:** Drake and Pinocchio, exercised by nightly or targeted validation.
+- **Supported:** MuJoCo, tested on every required pull request.
+- **Extended:** Drake and Pinocchio, tested by nightly or targeted checks.
 - **Experimental:** OpenSim and MyoSuite, outside the required release gate.
 
-These are software support tiers, not proof of cross-engine numerical equality,
-biomechanical validity, participant-level accuracy, or fitness for coaching or
-clinical use. See the pinned
+These are software support tiers. They are not proof that the engines give the same
+numbers. They are not proof of biomechanical validity or accuracy for any participant.
+They do not show the software is fit for coaching or clinical use. See the pinned
 [support-tier contract](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/engines/support_tiers.md)
 and the [Models page](../models/models.html) for the AffineDrift link map.
 
 ### Quick Start
 
-The pinned package metadata declares `requires-python = ">=3.11"`, which is an
-installation lower bound rather than an open-ended compatibility claim.
-Python 3.11 and 3.12 are the tested interpreter minors at that revision. The
-metadata declaration does not establish support for untested interpreter minors
+The pinned package metadata declares `requires-python = ">=3.11"`. That is the
+lowest version that will install. It is not a promise that every later version works.
+Python 3.11 and 3.12 are the tested interpreter minors at that revision. (A minor
+version is one like 3.12.) The metadata declaration does not establish support for untested interpreter minors
 such as Python 3.13.
 
 ```bash
@@ -101,15 +101,15 @@ python scripts/ci/verify_installation.py
 upstream-drift
 ```
 
-For UI development without a real engine, `GOLF_USE_MOCK_ENGINE=1` selects the
-mock engine; its output is synthetic and must not be presented as a physics
+For UI work without a real engine, `GOLF_USE_MOCK_ENGINE=1` selects the
+mock engine. Its output is synthetic. Do not present it as a physics
 result. Full pinned instructions:
 [UpstreamDrift Getting Started](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/user_guide/getting_started.md).
 
 ### A Real API Example
 
 Once the API is running on its default local port, the pinned v1 simulation
-route accepts a request shaped by UpstreamDrift's `SimulationRequest` model:
+route accepts a request in the shape of UpstreamDrift's `SimulationRequest` model:
 
 ```python
 import requests
@@ -124,9 +124,9 @@ resp.raise_for_status()
 print(resp.json())
 ```
 
-This example establishes request shape only; successful execution still depends
-on the selected engine, model configuration, environment, and input validity.
-Inspect the running server's `/docs` endpoint for its exact OpenAPI contract.
+This example shows only the shape of a request. Whether it runs still depends
+on the engine you pick, the model setup, your environment, and valid inputs.
+Check the running server's `/docs` endpoint for its exact OpenAPI contract.
 
 ### Documentation & Troubleshooting
 
@@ -136,30 +136,30 @@ Inspect the running server's `/docs` endpoint for its exact OpenAPI contract.
 
 ::: {.callout-tip}
 ## Troubleshooting
-If installation fails, see the pinned [installation troubleshooting guide](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/troubleshooting/installation.md). For UI-only work, `GOLF_USE_MOCK_ENGINE=1` is experimental synthetic mode, not a scientific simulation.
+If installation fails, see the pinned [installation troubleshooting guide](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/troubleshooting/installation.md). For UI-only work, `GOLF_USE_MOCK_ENGINE=1` is an experimental synthetic mode. It is not a scientific simulation.
 :::
 
 ## Scope and Limits
 
-The site is strongest when it explains how a particular model behaves and what follows from that model's equations. It is weaker whenever a page jumps from model structure to broad claims about human intent, coaching, or biological mechanism without direct supporting evidence.
+The site is strongest when it explains how one model behaves and what follows from that model's equations. It is weaker when a page jumps from the model to broad claims about human intent, coaching, or biological mechanism without direct evidence.
 
-Several recurring topics deserve that caution:
+A few topics call for extra caution:
 
-- Golf-swing force attribution depends on coordinate choices, constraint models, and how internal forces are represented.
-- Quantitative drift/control comparisons are model-dependent and should not be generalized beyond the assumptions used to derive them.
-- Shaft flexibility, soft-tissue mechanics, and neuromuscular control introduce additional layers of modeling uncertainty.
-- Impact is a hybrid event; any pre-impact framework has to state clearly what it does and does not claim about the collision itself.
+- Which force caused what in a golf swing depends on the coordinates, the constraint models, and how internal forces are represented.
+- Numbers that compare drift and control depend on the model. Do not apply them beyond the assumptions used to derive them.
+- Shaft flexibility, soft-tissue mechanics, and neuromuscular control add more modeling uncertainty.
+- Impact is a hybrid event. Any framework for the swing before impact has to say clearly what it does and does not claim about the collision itself.
 
 ## Reader Guidance
 
-If you want the broadest introduction, start with the [Article Index](../resources/articles.html), then read the [Drifter Manifesto](../pages/drifter-manifesto.html) alongside the relevant critique pages.
+For the broadest introduction, start with the [Article Index](../resources/articles.html). Then read the [Drifter Manifesto](../pages/drifter-manifesto.html) next to the matching critique pages.
 
-If you want a golf-specific textbook path, begin with [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html).
+For a golf textbook path, begin with [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html).
 
-If you want the mathematical foundations first, begin with [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html), especially Volume 0 and Volume I.
+For the math first, begin with [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html). Volume 0 and Volume I are the best places to start.
 
 ## Related Articles
 
-- [Drifter Manifesto](drifter-manifesto.html) — The core AffineDrift theory series on control-affine golf swing modeling
-- [Article Index](../resources/articles.html) — Complete inventory of published articles
-- [Mathematical Notation Reference](notation.html) — Normative symbol conventions and control-affine definitions
+- [Drifter Manifesto](drifter-manifesto.html) — The core AffineDrift theory series on control-affine golf swing models.
+- [Article Index](../resources/articles.html) — Every published article.
+- [Mathematical Notation Reference](notation.html) — The official symbols and control-affine definitions.
