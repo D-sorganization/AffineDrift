@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4609 · Licensing: Code MIT, Written Text and Data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT Updated (Refs #4609)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4609
+- **Branch:** merged via #5006
+- **PR:** #5006
+- **Paths:** see #5006
+- **Started:** 2026-10-12
+- **Last verified:** 2026-10-12 (`464c1243`; collated from changes/4609-licensing-code-mit-written-text-and-data.md)
+- **Summary:** Licensing: code MIT, written text and data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT updated (refs #4609)
+- **Next step:** Shipped in PR #5006.
+
 ### DL-#1917 · Sync the Agent-Identity Managed Block and Vendored automerge_guard.py: The Owner's Personal Token Is an Approved Agent Identity
 
 - **State:** shipped
