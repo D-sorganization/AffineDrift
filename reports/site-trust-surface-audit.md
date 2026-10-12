@@ -11,7 +11,7 @@
 | Audit ID | Route | Source | SHA-256 | Claim Classes | Claims | Findings | Review Revision |
 |---|---|---|---|---|---:|---|---|
 | `ad-route-8a5edab28263` | `/` | `index.qmd` | `03855f75498ff009a0e8fc9ce47ae5ccc3229782b0da26db44619b29c6c1cfbd` | factual, mathematical, research_readiness | 1 | ad-finding-home-readiness-amplification | `dab057d47ce072b44c08dee101d1aac7fee542c1` |
-| `ad-route-ca1ccb1f17c1` | `/pages/about.html` | `pages/about.qmd` | `dd39996c86c593e7700041eefd262713868901182e4331cee8c514c51c593bc8` | causal, clinical_coaching, factual | 1 | ad-finding-about-authority-boundary | `63d98d19203049d3f52d44d071862fcbb1685147` |
+| `ad-route-ca1ccb1f17c1` | `/pages/about.html` | `pages/about.qmd` | `e3cfa813d512ca5023b29a5649c56855636051eac266de5899c6b3bed03dddbc` | causal, clinical_coaching, factual | 1 | ad-finding-about-authority-boundary | `63d98d19203049d3f52d44d071862fcbb1685147` |
 | `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | `1d9bbae08b203ab3bcf8a652214482212371c16fc82b5f45ad339add08e88b3e` | factual, research_readiness | 1 | ad-finding-book-reviews-active-state | `63d98d19203049d3f52d44d071862fcbb1685147` |
 | `ad-route-8a3bc575a409` | `/pages/collaborate.html` | `pages/collaborate.qmd` | `023f5f1d92ac20a38e48fd2ba22ab8143f08fe7d4aba509cab36415d09043344` | factual, research_readiness | 1 | ad-finding-collaboration-promises | `63d98d19203049d3f52d44d071862fcbb1685147` |
 | `ad-route-6e4e4be935a4` | `/pages/contact.html` | `pages/contact.qmd` | `54b9899e48623ee407e7da3e032246562d4f785a92c280a2a32bcc9b18de87ea` | factual | 1 | ad-finding-contact-channel-contract | `63d98d19203049d3f52d44d071862fcbb1685147` |
