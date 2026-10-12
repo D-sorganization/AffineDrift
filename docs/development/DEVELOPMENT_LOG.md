@@ -761,16 +761,29 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5019 · Keep a Running Revision-Bound Website Deployment Active While Newer Pushes Coalesce
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5019
+- **Branch:** codex/shot-pattern-deploy-stability
+- **PR:** #5022
+- **Paths:** see #5022
+- **Started:** 2026-10-12
+- **Last verified:** 2026-10-12 (`a49da727`; collated from changes/5019-deploy-stability.md)
+- **Summary:** Keep a running revision-bound website deployment active while newer pushes coalesce
+- **Next step:** Shipped in PR #5022.
+
 ### DL-#5004 · Prepare a Model-Conditional Shot-Pattern Research Article and Share Preview
 
 - **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5004
 - **Branch:** codex/shot-pattern-report-publication
-- **PR:** #5005, #5016
+- **PR:** #5005, #5016, #5022
 - **Paths:** see #5005
 - **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`9002c8a2`; collated from changes/5004-publication-closure.md)
+- **Last verified:** 2026-10-12 (`a49da727`; collated from changes/5004-publication-closure.md)
 - **Summary:** Prepare a model-conditional shot-pattern research article and share preview
 - **Next step:** AffineDrift publication is complete; UpstreamDrift integration and empirical qualification remain separately governed
 

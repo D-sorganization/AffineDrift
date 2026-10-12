@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-12 | #5022 | Record the Verified Shot-Pattern Publication Closure; Keep a running revision-bound website deployment active while newer pushes coalesce |
 | 2026-10-12 | #5020 | Add cited 3D arm chain JOHNSON_2015_ARM (axes, limits, lengths from Johnson 2015) and allow zero-length rotation-only segments in GolfModel3D |
 | 2026-10-12 | #5016 | Keep the published shot-pattern article title readable on mobile |
 | 2026-10-12 | #5012 | Consolidate pages/tools.qmd scope caveats into the WEB-03.4 caveats block (Refs 4589, page 1) |
