@@ -282,19 +282,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Add rigid SE(3) golf_model_3d forward-kinematics provider (slice 1; Refs issue 4973)
 - **Next step:** Review placeholder parameters; wire viewer in later ADR 0002 slice.
 
-### DL-#5004 · Prepare a Model-Conditional Shot-Pattern Research Article and Share Preview
-
-- **State:** in_review
-- **Owner:** unassigned
-- **Issue:** #5004
-- **Branch:** codex/shot-pattern-report-publication
-- **PR:** #5005, #5016
-- **Paths:** see #5005
-- **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`8162b803`; collated from changes/5004-mobile-title-readability.md)
-- **Summary:** Prepare a model-conditional shot-pattern research article and share preview
-- **Next step:** Review and merge the article-only Code control correction, then verify deployed mobile title and unchanged publication asset hashes
-
 ### DL-#4584 · WEB-11.6 Symbol Hover References: NOTATION.md Symbol Table Generates Data/Symbol_References.Json; Symbol-Hover.Lua Marks \symref Symbols on Opted-In Pages With MathJax Class Hooks Plus a Native Details Symbol List; Js/Symbol-Hover.Js Adds Pointer Tooltips; Theory Part 1 Opts In.
 
 - **State:** in_review
@@ -773,6 +760,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#5004 · Prepare a Model-Conditional Shot-Pattern Research Article and Share Preview
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5004
+- **Branch:** codex/shot-pattern-report-publication
+- **PR:** #5005, #5016
+- **Paths:** see #5005
+- **Started:** 2026-10-12
+- **Last verified:** 2026-10-12 (`9002c8a2`; collated from changes/5004-publication-closure.md)
+- **Summary:** Prepare a model-conditional shot-pattern research article and share preview
+- **Next step:** AffineDrift publication is complete; UpstreamDrift integration and empirical qualification remain separately governed
 
 ### DL-#4589 · Consolidate Pages/tools.qmd Scope Caveats Into the WEB-03.4 Caveats Block (Refs 4589, Page 1)
 

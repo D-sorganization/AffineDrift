@@ -1,8 +1,6 @@
 ---
-issue: 5004
+issue: 5019
 summary: "Keep a running revision-bound website deployment active while newer pushes coalesce"
-dl_state: "in_review"
-next_step: "Review this workflow repair, pass canonical gates, merge through protected queue, then verify the actual deployed manifest and public article"
 branch: "codex/shot-pattern-deploy-stability"
 ---
 
@@ -14,10 +12,12 @@ are preserved losslessly in `reports/shot-pattern-publication/deploy-stability/`
 
 This change preserves the active revision-bound Pages publish and coalesces newer
 pending main pushes. It changes no route, scientific claim, asset, manifest,
-browser check, or release acceptance rule. A future complete deployment and
-fresh live verification remain necessary for issue #5004 closure.
+browser check, or release acceptance rule. Issue #5004 was subsequently closed
+after a complete deployment and fresh live verification; this independent
+delivery-scheduling repair is governed by issue #5019.
 
-Canonical RM-6 on the fixed source passed seven gates, including affected unit
-tests and workflow lint. The remaining failure is the development-log ceiling:
-the existing `origin/main` log has 76 active entries against a limit of 75.
-This branch leaves that log and its policy unchanged and remains unpublished.
+An earlier canonical RM-6 run passed seven gates, including affected unit tests
+and workflow lint. The remaining failure was the inherited development-log
+ceiling: the existing `origin/main` log had 76 active entries against a limit
+of 75. The separate completed #5004 publication row is reconciled through
+the governed log collator with its original bytes preserved in this branch.
