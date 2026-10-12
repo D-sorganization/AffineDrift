@@ -22,7 +22,7 @@ from numpy.typing import NDArray
 
 from src.affine_control.golf_model import SEGMENTS
 
-__all__ = ["PLANAR_REDUCED", "GolfModel3D"]
+__all__ = ["JOHNSON_2015_ARM", "PLANAR_REDUCED", "GolfModel3D"]
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,9 @@ class GolfModel3D:
     """Declared parameters of a rigid serial golfer-club chain.
 
     Units: lengths in metres, angles in radians. ``provenance`` states where
-    every value comes from; it must be non-empty.
+    every value comes from; it must be non-empty. A zero-length segment is
+    allowed: it makes its joint a pure rotation at the previous joint's
+    location, which is how several rotations share one anatomical joint.
     """
 
     segment_lengths_m: tuple[float, ...]
@@ -63,8 +65,16 @@ class GolfModel3D:
             raise ValueError("at least one segment is required")
         if len(self.joint_axes) != count or len(self.joint_limits_rad) != count:
             raise ValueError("segment_lengths_m, joint_axes and joint_limits_rad must match")
-        if not all(math.isfinite(v) and v > 0.0 for v in self.segment_lengths_m):
-            raise ValueError("segment lengths must be finite and positive")
+        if not all(math.isfinite(v) and v >= 0.0 for v in self.segment_lengths_m):
+            raise ValueError("segment lengths must be finite and non-negative")
+        if sum(self.segment_lengths_m) <= 0.0:
+            raise ValueError("at least one segment must have positive length")
+        self._validate_axes_and_limits()
+        if not self.provenance.strip():
+            raise ValueError("provenance must be a non-empty string")
+
+    def _validate_axes_and_limits(self) -> None:
+        """Axes must be finite unit 3-vectors; limits finite with lower < upper."""
         for axis in self.joint_axes:
             if len(axis) != 3 or not all(math.isfinite(v) for v in axis):
                 raise ValueError("joint axes must be finite 3-vectors")
@@ -73,8 +83,6 @@ class GolfModel3D:
         for lower, upper in self.joint_limits_rad:
             if not (math.isfinite(lower) and math.isfinite(upper) and lower < upper):
                 raise ValueError("joint limits must be finite with lower < upper")
-        if not self.provenance.strip():
-            raise ValueError("provenance must be a non-empty string")
 
     def forward_kinematics(self, q: Array) -> list[Array]:
         """Return the ``4x4`` SE(3) pose of every frame, base first.
@@ -138,3 +146,29 @@ PLANAR_REDUCED = GolfModel3D(
     ),
 )
 """The planar three-link model embedded in the x-y plane (rotation about +z)."""
+
+
+JOHNSON_2015_ARM = GolfModel3D(
+    segment_lengths_m=(0.60, 0.0, 0.20),
+    joint_axes=((0.0, 0.0, 1.0), (1.0, 0.0, 0.0), (0.0, 0.0, 1.0)),
+    joint_limits_rad=((-1.289, 1.210), (-1.237, 1.340), (-1.171, 1.185)),
+    provenance=(
+        "Arm of the four-degree-of-freedom golfer of johnson2015 Section 3.1 (after "
+        "mackenzie2009), torso rotation omitted. Joints: shoulder transverse "
+        "flexion/adduction, forearm pronation/supination, wrist radial/ulnar deviation "
+        "(johnson2015 Section 3.1). Lengths: arm 0.60 m and hand-and-grip 0.20 m "
+        "(johnson2015 Table 3.2); the club shaft is not modelled. Limits: the "
+        "passive-moment breakpoints theta-/theta+ in johnson2015 Table 3.4 for shoulder, "
+        "forearm and wrist, fitted there to experimental passive-moment data; they mark "
+        "where passive restoring moments begin, so they are comfortable-range limits "
+        "and not hard anatomical stops. Axes: pronation/supination is a rotation about "
+        "the forearm long axis (local +x here); the shoulder axis +z (normal to the arm "
+        "swing plane) and the wrist axis +z (cocking in the swing plane at neutral "
+        "forearm roll, turned out of it by roll) are a modeling "
+        "assumption because the axis directions of johnson2015 Figure 3.1 are not "
+        "stated in its text; the sign of each positive angle versus the anatomical "
+        "direction is also a modeling assumption; the 30 degree torso and 50 degree "
+        "swing-plane inclinations of johnson2015 are viewer placement, not kinematics."
+    ),
+)
+"""Cited 3D arm chain: shoulder (z), forearm roll (x, zero length), wrist (z)."""
