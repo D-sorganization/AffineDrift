@@ -65,7 +65,7 @@ jobs:
             # Exception allowlist — workflows where cancel-in-progress: false is legitimate
             # (publishes/releases should not be interrupted mid-stream)
             case "$(basename "$f")" in
-              publish-artifacts.yml|release.yml|publish.yml|deploy.yml|nightly-publish.yml)
+              publish-artifacts.yml|release.yml|publish.yml|deploy.yml|deploy-website.yml|nightly-publish.yml)
                 echo "::notice::Skipping cancel-in-progress check for $f (intentional exception)"
                 ;;
               *)
