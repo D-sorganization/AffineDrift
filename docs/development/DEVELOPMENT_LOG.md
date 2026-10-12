@@ -275,10 +275,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #4973
 - **Branch:** feat/4973-golf-model-3d
-- **PR:** #5013
+- **PR:** #5013, #5020
 - **Paths:** see #5013
 - **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`9e80c230`; collated from changes/4973-add-rigid-se-3-golf-model-3d-forward-kin.md)
+- **Last verified:** 2026-10-12 (`52dd3e4e`; collated from changes/4973-add-cited-3d-arm-chain-johnson-2015-arm.md)
 - **Summary:** Add rigid SE(3) golf_model_3d forward-kinematics provider (slice 1; Refs issue 4973)
 - **Next step:** Review placeholder parameters; wire viewer in later ADR 0002 slice.
 
