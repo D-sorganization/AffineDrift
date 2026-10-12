@@ -36,6 +36,14 @@ from src.affine_control.double_pendulum_affine import (
 from src.affine_control.ztcf_contract import execute_ztcf_intervention
 from src.affine_control.ztcf_explorer import DECLARED_TORQUE, HORIZON, STEPS, explore, load_fixture
 from src.core.constants import GRAVITY_M_S2
+from src.tools.rotation_reference_examples import (
+    GIMBAL_COSINE_TOLERANCE,
+    axis_angle_to_rotation,
+    euler_zyx_to_rotation,
+    rotation_to_axis_angle,
+    rotation_to_euler_zyx,
+    rotation_to_quaternion,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -226,6 +234,80 @@ def _ztcf_cases() -> list[dict[str, Any]]:
     return [_ztcf_replay_case()] + [_ztcf_explore_case(step) for step in ZTCF_STEPS]
 
 
+# --------------------------------------------------------------------------
+# rotation-converter (ISSUE-4127)
+# --------------------------------------------------------------------------
+
+
+def _rotation_case(case_id: str, R_matrix: np.ndarray) -> dict[str, Any]:
+    R = np.asarray(R_matrix, dtype=float)
+    q = rotation_to_quaternion(R)
+    axis, angle = rotation_to_axis_angle(R)
+    yaw, pitch, roll = rotation_to_euler_zyx(R)
+    cosine_pitch = float(np.hypot(R[0, 0], R[1, 0]))
+    gimbal_lock = bool(cosine_pitch < GIMBAL_COSINE_TOLERANCE)
+    exp_coord = axis * angle
+    return {
+        "id": case_id,
+        "inputs": {
+            "R": _floats(R.flatten()),
+            "quaternion": _floats(q),
+            "axisAngle": {"axis": _floats(axis), "angle": float(angle)},
+            "eulerZYX": {"psi": float(yaw), "theta": float(pitch), "phi": float(roll)},
+            "expCoord": _floats(exp_coord),
+        },
+        "expected": {
+            "R": _floats(R.flatten()),
+            "quaternion": _floats(q),
+            "axisAngle": {"axis": _floats(axis), "angle": float(angle)},
+            "eulerZYX": {
+                "psi": float(yaw),
+                "theta": float(pitch),
+                "phi": float(roll),
+                "gimbalLock": gimbal_lock,
+            },
+            "expCoord": _floats(exp_coord),
+        },
+    }
+
+
+def _rotation_converter_cases() -> list[dict[str, Any]]:
+    """Golden vectors for SO(3) rotation representation parity."""
+    cases = []
+    # 1. Identity
+    cases.append(_rotation_case("identity", np.eye(3)))
+
+    # 2. Cardinal 90-degree rotations
+    axes = np.eye(3)
+    cases.append(_rotation_case("x-90", axis_angle_to_rotation(axes[0], math.pi / 2)))
+    cases.append(_rotation_case("y-90", axis_angle_to_rotation(axes[1], math.pi / 2)))
+    cases.append(_rotation_case("z-90", axis_angle_to_rotation(axes[2], math.pi / 2)))
+
+    # 3. Cardinal 180-degree rotations
+    cases.append(_rotation_case("x-180", axis_angle_to_rotation(axes[0], math.pi)))
+    cases.append(_rotation_case("y-180", axis_angle_to_rotation(axes[1], math.pi)))
+    cases.append(_rotation_case("z-180", axis_angle_to_rotation(axes[2], math.pi)))
+
+    # 4. Arbitrary rotations
+    u_sym = np.array([1.0, 1.0, 1.0]) / math.sqrt(3)
+    cases.append(
+        _rotation_case("arb-symmetric-47deg", axis_angle_to_rotation(u_sym, 47.3 * math.pi / 180))
+    )
+
+    u_gen = np.array([1.0, 2.0, 3.0]) / math.sqrt(14)
+    cases.append(_rotation_case("arb-general-1_23rad", axis_angle_to_rotation(u_gen, 1.234)))
+
+    # 5. Gimbal lock cases (pitch = +pi/2 and -pi/2)
+    cases.append(
+        _rotation_case("gimbal-lock-positive", euler_zyx_to_rotation(0.5, math.pi / 2, 0.0))
+    )
+    cases.append(
+        _rotation_case("gimbal-lock-negative", euler_zyx_to_rotation(-0.3, -math.pi / 2, 0.0))
+    )
+
+    return cases
+
+
 WIDGETS: tuple[WidgetSpec, ...] = (
     WidgetSpec(
         widget="drift-control-sandbox",
@@ -245,6 +327,13 @@ WIDGETS: tuple[WidgetSpec, ...] = (
             "src/affine_control/ztcf_contract.py",
             "data/ztcf/planar_golf_forward_fixture_v2.json",
         ),
+    ),
+    WidgetSpec(
+        widget="rotation-converter",
+        source_path="src/tools/rotation_reference_examples.py",
+        source_function="rotation_to_quaternion",
+        build_cases=_rotation_converter_cases,
+        dependency_paths=("articles/The_Geometry_of_Motion/Volume_0/code/quaternion_demo.py",),
     ),
 )
 
