@@ -845,10 +845,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #1893
 - **Branch:** merged via #4991
-- **PR:** #4991
+- **PR:** #4991, #5011
 - **Paths:** docs/development/HANDOFF.md; docs/development/DEVELOPMENT_LOG.md; docs/development/DEVELOPMENT_LOG_ARCHIVE_2026.md; docs/development/archive/HANDOFF_ARCHIVE_2026.md
 - **Started:** 2026-10-07
-- **Last verified:** 2026-10-07 (`921f3fd2`; collated from changes/1893-archive-handoff-devlog.md)
+- **Last verified:** 2026-10-12 (`61bd4399`; collated from changes/1893-re-archive-handoff-md-under-the-200-line.md)
 - **Summary:** Archive HANDOFF.md (129 old sections) and shipped DEVELOPMENT_LOG.md entries (17) verbatim into docs/development/archive/ and the yearly DL archive (RM#1893).
 - **Next step:** Shipped in PR #4991.
 
