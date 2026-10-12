@@ -44,6 +44,7 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         "COPYRIGHT.md",
         "Dockerfile",
         "LICENSE",
+        "LICENSE-CONTENT",
         "Makefile",
         "NOTATION.md",
         "PARAMETERS.md",
