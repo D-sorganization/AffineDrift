@@ -1,6 +1,7 @@
 """Protect revision-bound Pages publication from newer main pushes."""
 
 import re
+from fnmatch import fnmatchcase
 from pathlib import Path
 
 import pytest
@@ -30,7 +31,10 @@ def test_workflow_linter_recognizes_only_the_exact_pages_publisher() -> None:
     """The publishing exception must not relax ordinary workflow cancellation."""
     content = WORKFLOW_LINTER.read_text(encoding="utf-8")
     exception_block = content.split('case "$(basename "$f")" in', maxsplit=1)[1]
-    exceptions = exception_block.split(";;", maxsplit=1)[0]
+    pattern_line = exception_block.split(")", maxsplit=1)[0].strip()
+    exceptions = pattern_line.split("|")
 
     assert "deploy-website.yml" in exceptions
+    assert not any(fnmatchcase("deploy-website.yml.bak", pattern) for pattern in exceptions)
+    assert not any(fnmatchcase("other-deploy-website.yml", pattern) for pattern in exceptions)
     assert "cancel-in-progress:\\s*true" in content.split("      *)", maxsplit=1)[1]
