@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-12 | #5008 | Consolidate Okabe-Ito palette CSS tokens into css/tokens/colors.css and add design token audit |
 | 2026-10-12 | #5006 | Licensing: code MIT, written text and data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT updated (refs #4609) |
 | 2026-10-11 | #5002 | Sync the agent-identity managed block and vendored automerge_guard.py: the owner's personal token is an approved agent identity |
 | 2026-10-11 | #4999 | Clarify entry paths, share publication definitions, improve metadata, and reduce navigation HTML overhead |

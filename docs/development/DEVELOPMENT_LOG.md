@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4553 · Consolidate Okabe-Ito Palette CSS Tokens Into Css/Tokens/colors.css and Add Design Token Audit
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4553
+- **Branch:** merged via #5008
+- **PR:** #5008
+- **Paths:** see #5008
+- **Started:** 2026-10-12
+- **Last verified:** 2026-10-12 (`0e9f8585`; collated from changes/4553-consolidate-okabe-ito-palette-css-tokens.md)
+- **Summary:** Consolidate Okabe-Ito palette CSS tokens into css/tokens/colors.css and add design token audit
+- **Next step:** Shipped in PR #5008.
+
 ### DL-#4609 · Licensing: Code MIT, Written Text and Data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT Updated (Refs #4609)
 
 - **State:** shipped
