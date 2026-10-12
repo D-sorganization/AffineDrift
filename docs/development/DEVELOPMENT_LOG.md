@@ -269,6 +269,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4973 · Add Rigid SE(3) Golf_Model_3D Forward-Kinematics Provider (Slice 1; Refs Issue 4973)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #4973
+- **Branch:** feat/4973-golf-model-3d
+- **PR:** #5013
+- **Paths:** see #5013
+- **Started:** 2026-10-12
+- **Last verified:** 2026-10-12 (`9e80c230`; collated from changes/4973-add-rigid-se-3-golf-model-3d-forward-kin.md)
+- **Summary:** Add rigid SE(3) golf_model_3d forward-kinematics provider (slice 1; Refs issue 4973)
+- **Next step:** Review placeholder parameters; wire viewer in later ADR 0002 slice.
+
 ### DL-#5004 · Prepare a Model-Conditional Shot-Pattern Research Article and Share Preview
 
 - **State:** in_review
