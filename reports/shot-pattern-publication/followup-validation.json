@@ -1,6 +1,6 @@
 {
   "status": "active_unpublished",
-  "recorded_at_utc": "2026-10-12T00:39:11+00:00",
+  "recorded_at_utc": "2026-10-12T04:20:26+00:00",
   "source_review_commit": "6f0d81ebfd5ef93ac12810e83b665c96d8b13120",
   "frozen_pdf_sha256": "fd5506da87f5e619a550fb8cc871a0e8195b6fb98965a99809e3238a0f01508b",
   "asset_hash_checks": {
@@ -25,7 +25,8 @@
       "/articles/shot_pattern_analysis/report.pdf": 404,
       "/articles/shot_pattern_analysis/summary.png": 404,
       "/articles/shot_pattern_analysis/facebook_preview.png": 404
-    }
+    },
+    "captured_at_utc": "2026-10-12T04:20:17.272770+00:00"
   },
   "full_render": {
     "local_status": "INCOMPLETE: terminated after 48/253 pages; exit 143",
@@ -73,6 +74,50 @@
     "green": "All7search-maturity tests and generator --check pass",
     "review": "Astra accepted derived-only diff; all13bound evidence hashes unchanged",
     "canonical_recheck": "PASS at 26f1de47; exit 0; exact receipt in canonical_pre_pr",
-    "updated_commit_ci": "pending: repaired generated index at 26f1de47 has not run in protected CI"
+    "updated_commit_ci": "PASS: all six workflows at 05a76506, including Python test and E2E jobs; new merge commit awaits CI"
+  },
+  "ci_at_05a76506": {
+    "head_commit": "05a76506dcce3bc4a94466cd356cb8e340f52c4d",
+    "status": "completed",
+    "six_workflows": "PASS: CI Standard, Reject Redundant Self-Approval, Anti-Phantom Merge Guard, Spec Check, Link Checker, Performance Benchmarks",
+    "ci_standard_run": "https://github.com/D-sorganization/AffineDrift/actions/runs/38188889122",
+    "ci_standard_jobs": "PASS: Python tests (3.12), e2e-tests, Static checks, website-lint, js-tests, quality-gate, routing and pick-runner",
+    "workflows_receipt": "followup-05a76506-workflows.json.gz",
+    "workflows_receipt_sha256": "09d710b41090ca49f31b8f29fa661a56bd0cb23db0953b35d0f15d19816ff31c",
+    "workflows_raw_sha256": "5381834914256a287d3ddf4c6ea419e617c5fde91c3f215142f01739f6e77858",
+    "jobs_receipt": "followup-05a76506-ci-jobs.json.gz",
+    "jobs_receipt_sha256": "4211d5e6dcd497284d8c51f29fe18240d333c0732119799390677b5c0de30146",
+    "jobs_raw_sha256": "c360361f1c3874a88fc1ba4a137b83402c637afcf2e6d73972f3136206acd06c"
+  },
+  "merge_origin_main": {
+    "base_main": "81ef6e0d9e73ee9d145b2b346f4ca6757e21d9d0",
+    "merge_commit": "44e59bcf1a3df89f42517540e770986198b96872",
+    "conflict": "Only docs/development/DEVELOPMENT_LOG.md; retained main shipped #4553/#4609 and publication reconciliation shipped #4998/#4952/#1976",
+    "reviewed_source_files_unchanged": true,
+    "article_evidence_digests_matching": 13,
+    "frozen_asset_hashes_matching": "9/9 including 39-page PDF",
+    "search_maturity_generator_check": "PASS; no regeneration needed",
+    "search_maturity_tests": "7 passed",
+    "claim_audit_inventory_check": "PASS with --check --enforce-publication, without rendered manifest",
+    "development_log_check": "exit 0 with existing portfolio warning: 7 concurrent WIP entries exceed personal cap of 2",
+    "canonical_pre_pr": {
+      "result": "PASS",
+      "exit_code": 0,
+      "command": "PYTHONPATH=/home/dieterolson/Repositories/Repository_Management /tmp/shot-affine-final-venv/bin/python -m shared_scripts.pre_pr --base-ref origin/main",
+      "receipt": "followup-postmerge-prepr-pass.txt.gz",
+      "receipt_sha256": "43b19391b834418a26c3fb1a030adb04f460fa15f0f7149a01a48f9549ac18e7",
+      "raw_sha256": "94bb4b90170da0c533ae68a6a8a5632e06104ba3ada4865da4b4357de810e943"
+    },
+    "protected_ci": "pending for merged branch head"
+  },
+  "predeployment_verification": {
+    "captured_at_utc": "2026-10-12T04:20:17.272770+00:00",
+    "status": "predeployment only; no live publication acceptance",
+    "receipt": "followup-predeployment-verification.json",
+    "receipt_sha256": "360382ec57d3c7824a5e59731612f756b52dc8f4c91e6ac2c857559a6e633c2a",
+    "frozen_desktop_pdf": "39 pages; SHA-256 matches manifest",
+    "local_assets": "9/9 expected bytes and SHA-256 match",
+    "live_manifest": "253 pages; article route absent",
+    "live_routes": "article, PDF, summary and Facebook preview all 404"
   }
 }

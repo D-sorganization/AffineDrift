@@ -2,7 +2,7 @@
 issue: 5004
 summary: "Prepare a model-conditional shot-pattern research article and share preview"
 dl_state: "in_review"
-next_step: "Safely fast-forward PR #5005 with passing canonical gates, await complete CI publication checks, then verify protected merge and public asset responses"
+next_step: "Review and push main-merged PR #5005 with passing local gates, await new protected CI, then verify protected merge and public asset responses"
 branch: "codex/shot-pattern-report-publication"
 ---
 
@@ -43,3 +43,17 @@ receipt. The CI browser job at `94831b9e` passed. Its overall run failed
 solely because the Python lane checked the stale generated index; its dependent
 quality gate also failed. The repaired index at `26f1de47` awaits a new
 protected CI run.
+
+At `05a76506`, all six PR workflows passed, including CI Standard's Python,
+full-site E2E, and quality-gate jobs. Main `81ef6e0d` was merged locally at
+`44e59bcf`; the sole development-log conflict retains both main's new shipped
+entries and the publication reconciliation's three shipped entries. The
+post-merge canonical pre-PR, seven search-index tests, search-index generator
+check, claim-audit check, all 13 article evidence digests, and nine frozen
+asset hashes pass. The development-log checker exits zero with an existing
+portfolio WIP-cap warning. The merged head still awaits protected CI, review,
+and live publication verification; see the exact receipts in
+`reports/shot-pattern-publication/followup-validation.json`.
+The separate predeployment receipt confirms the frozen 39-page desktop PDF and
+all nine local asset hashes. At that checkpoint the live manifest contained
+253 pages without this article, and the four target routes returned 404.
