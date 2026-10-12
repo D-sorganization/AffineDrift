@@ -149,6 +149,31 @@ def test_page_without_caveats_is_unchanged() -> None:
 
 
 @pytest.mark.integration
+def test_caveats_card_follows_raw_html_page_heading() -> None:
+    """Full-layout pages carry their H1 in raw HTML; the card must not precede it.
+
+    Regression for AffineDrift#4589: inserting at block index 1 pushed the
+    pages/tools.qmd H1 below the first mobile viewport.
+    """
+    frontmatter = (
+        "caveats:\n"
+        '  evidence-level: "Capability inventory"\n'
+        "  establishes:\n"
+        '    - "Which tools are listed."\n'
+        "  does-not-establish:\n"
+        '    - "Validated behavior."\n'
+    )
+    body = (
+        '```{=html}\n<h1 class="section-heading">Raw Page Heading</h1>\n```\n\n'
+        "```{=html}\n<p>Rest of the page.</p>\n```\n"
+    )
+    html = _render_html(frontmatter, body)
+    heading_at = html.index("Raw Page Heading")
+    card_at = html.index("caveats-card")
+    assert heading_at < card_at < html.index("Rest of the page.")
+
+
+@pytest.mark.integration
 def test_page_with_caveats_renders_component() -> None:
     """A page with caveats front matter renders the accessible caveat block."""
     frontmatter = (
