@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-13 | #5024 | Wire JOHNSON_2015_ARM into a spatial arm viewer on the model-ladder page with caveats and joint table |
 | 2026-10-12 | #5021 | WEB-12.4: plain-language rewrite of entry pages (home, Overview, About, Tools, Learning Paths, Books hub, Resources hub) with every caveat preserved; source digests re-pinned |
 | 2026-10-12 | #5022 | Record the Verified Shot-Pattern Publication Closure; Keep a running revision-bound website deployment active while newer pushes coalesce |
 | 2026-10-12 | #5020 | Add cited 3D arm chain JOHNSON_2015_ARM (axes, limits, lengths from Johnson 2015) and allow zero-length rotation-only segments in GolfModel3D |
