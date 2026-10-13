@@ -130,10 +130,7 @@ def render_tools_qmd(registry: dict[str, list[dict[str, Any]]]) -> str:
             "                <td><strong>Rotation Representation Converter</strong> "
             "(<code>rotation_converter</code>)</td>"
         ),
-        (
-            '                <td><span class="badge bg-secondary">PyQt6</span> '
-            '<span class="badge bg-info text-dark">Web</span></td>'
-        ),
+        ("                <td><code>PyQt6</code> " "<code>Web</code></td>"),
         (
             '                <td><a href="../articles/rotation-converter.html">'
             "Rotation Representation Converter</a></td>"
@@ -149,10 +146,7 @@ def render_tools_qmd(registry: dict[str, list[dict[str, Any]]]) -> str:
             "                <td><strong>Rate of Closure Impact Explorer</strong> "
             "(<code>rate_of_closure</code>)</td>"
         ),
-        (
-            '                <td><span class="badge bg-secondary">PyQt6</span> '
-            '<span class="badge bg-info text-dark">Web</span></td>'
-        ),
+        ("                <td><code>PyQt6</code> " "<code>Web</code></td>"),
         (
             '                <td><a href="../pages/tools.html">'
             "Programs &amp; Tools</a> (T-10 exploration)</td>"
@@ -197,23 +191,12 @@ def render_tools_qmd(registry: dict[str, list[dict[str, Any]]]) -> str:
             desc_text = html.escape(tool.get("desc", ""))
             path_str = html.escape(tool.get("path", ""))
 
-            surface_badge = "bg-info text-dark" if surface == "web" else "bg-secondary"
-            maturity_badge = (
-                "bg-success"
-                if maturity == "stable"
-                else ("bg-secondary" if maturity == "beta" else "bg-light text-dark")
-            )
-
             id_cell = (
                 f"                <td><strong>{name}</strong><br>"
                 f'<small class="text-muted"><code>{tool_id}</code></small></td>'
             )
-            surf_cell = (
-                f'                <td><span class="badge {surface_badge}">{surface}</span></td>'
-            )
-            mat_cell = (
-                f'                <td><span class="badge {maturity_badge}">{maturity}</span></td>'
-            )
+            surf_cell = f"                <td><code>{surface}</code></td>"
+            mat_cell = f"                <td><code>{maturity}</code></td>"
             desc_cell = f"                <td>{desc_text}</td>"
             path_cell = f"                <td><small><code>{path_str}</code></small></td>"
 
