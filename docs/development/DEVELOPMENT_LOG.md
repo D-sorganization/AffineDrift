@@ -269,6 +269,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4719 · Adjudicate Historical Screw-Theory Research Outline (#4719)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #4719
+- **Branch:** fix/4719-screw-outline-review
+- **PR:** #5043
+- **Paths:** see #5043
+- **Started:** 2026-10-13
+- **Last verified:** 2026-10-13 (`e12f7a44`; collated from changes/4719-adjudicate-historical-screw-theory-resea.md)
+- **Summary:** Adjudicate historical screw-theory research outline (#4719)
+- **Next step:** Merge PR after CI.
+
 ### DL-#5007 · Disclose the Tools #5431 Distributed-Convention Fix on the Proximal-Distal Workbench and Impact-Optimality Pages (Historical Numbers Kept and Labelled)
 
 - **State:** in_review
