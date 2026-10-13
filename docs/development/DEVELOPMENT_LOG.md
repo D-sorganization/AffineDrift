@@ -832,12 +832,13 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #4609
 - **Branch:** merged via #5006
-- **PR:** #5006
+- **PR:** #5006, #5030
 - **Paths:** see #5006
 - **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`464c1243`; collated from changes/4609-licensing-code-mit-written-text-and-data.md)
+- **Last verified:** 2026-10-13 (`c8d28097`; collated from changes/4609-educator-resources-page-four-teaching-mo.md)
 - **Summary:** Licensing: code MIT, written text and data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT updated (refs #4609)
 - **Next step:** Shipped in PR #5006.
+
 ### DL-#4998 · Clarify Entry Paths, Share Publication Definitions, Improve Metadata, and Reduce Navigation HTML Overhead
 
 - **State:** shipped
