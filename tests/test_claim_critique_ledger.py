@@ -390,3 +390,10 @@ def test_adjudication_summary_has_a_neutral_name_and_redirects_the_old_url() -> 
     assert "(adjudication-summary.html)" in (ROOT / "critiques/index.qmd").read_text(
         encoding="utf-8"
     )
+
+
+def test_no_critiques_have_unknown_severity() -> None:
+    """WEB-05.4 (#4525): all critiques must have a justified non-unknown severity."""
+    severities = [str(item["severity"]) for item in _critiques(_canonical())]
+    assert "unknown" not in severities
+    assert all(sev in {"critical", "high", "medium", "low"} for sev in severities)

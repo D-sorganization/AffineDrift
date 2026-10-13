@@ -47,3 +47,13 @@ The mathematical derivation of the flexible shaft dynamics (Part 1 & Appendix B)
     - $M_{q\eta} = \int \rho J^T \Phi ds + m_{head} J(L)^T \Phi(L)$
     - $M_{\eta\eta} = \int \rho \Phi^T \Phi ds + m_{head} \Phi(L)^T \Phi(L)$
 3.  **Update Boundary Conditions**: In Appendix B, replace "free-tip conditions" with "mass-loaded boundary conditions" or acknowledge that the assumed modes must account for the tip mass to ensure convergence.
+
+## Adjudication Scope and Next Validation Gate
+
+- **Response Priority**: Critical (Target response timeline SLA: <= 14 days).
+- **Scope & Boundary Condition**: Part 1 flexible-shaft derivation and Appendix B boundary conditions currently omit the discrete clubhead tip mass ($m_{\text{head}} \approx 200\,\text{g}$) and tip inertia $I_{\text{head}}$ at $s=L$. Free-tip boundary conditions ($EI\,w_{ss}(L,t)=0, EI\,w_{sss}(L,t)=0$) underestimate shaft lag and inertial coupling $M_{q\eta}$ by an order of magnitude.
+- **Next Validation Gate**:
+  1. Formulate mass-loaded boundary conditions at $s=L$: $-EI\,w_{sss}(L,t) = m_{\text{head}}\ddot{w}(L,t)$.
+  2. Integrate discrete clubhead kinetic energy $\frac{1}{2}m_{\text{head}}\|v(L)\|^2 + \frac{1}{2}\omega(L)^T I_{\text{head}}\omega(L)$ into the global Lagrangian and generalized inertia matrix $M(q)$.
+  3. Validate against existing modal beam listings in `tests/test_inference_flexible_control_listings.py` and `tests/test_modal_pendulum_rigor.py` before updating `articles/theory-part1.qmd`.
+
