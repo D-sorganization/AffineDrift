@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-13 | #5043 | Adjudicate historical screw-theory research outline (#4719) |
 | 2026-10-13 | #5026 | Generate tools capability catalog and golden-vector parity suite |
 | 2026-10-13 | #5038 | Disclose the Tools #5431 distributed-convention fix on the proximal-distal workbench and impact-optimality pages (historical numbers kept and labelled) |
 | 2026-10-13 | #5030 | Educator Resources page: four teaching modules (rotations, wrist constraint torques, proximal-distal energy accounting, control-affine counterfactuals) with objectives, reading paths and worked solutions; footer link; tests recompute every answer |
