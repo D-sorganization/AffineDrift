@@ -1,0 +1,1130 @@
+{
+  "draft_for_issue": 4522,
+  "notice": "Unpublished drafts for owner review. No claim here has owner sign-off. The publish path reads only data/trust/claim_registry.json. Inside registry, reviewed_on and review_commit record the draft date and the source snapshot commit the drafts were written against, because the v1 schema requires them; they do not record an owner review. technical_anchor values do not yet exist in the source pages.",
+  "publication_state": "unpublished-owner-review-draft",
+  "registry": {
+    "pages": [
+      {
+        "page_id": "ad-draft-affine-nature-golf-swing",
+        "source_path": "articles/affine-nature-golf-swing.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "Inside a declared model, the motion at one instant can be split into a part that does not depend on the current input and a part that does. The split holds at that instant only and does not describe two motions added together."
+            },
+            "claim_id": "ad-affine-001",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The governing evidence is the article's derivation and a double-pendulum implementation of the same split.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "For a model declared control-affine, a same-state evaluation where a(x, u1 + u2) differs from a(x, u1) + a(x, u2) - a(x, 0) beyond numerical tolerance shows the declared model is not affine in that input.",
+              "A drift field evaluated at a fixed state that changes when only the current input value changes shows the drift/input boundary was declared incorrectly."
+            ],
+            "limitations": [
+              "The split depends on the declared input convention; redefining the input as u = alpha(x) + beta(x) w moves G alpha into the drift.",
+              "State-only drift is not biologically passive: an identified effective impedance can contain effects of sustained activation.",
+              "Input-dependent impedance, activation dynamics or hybrid contact can make a different, non-affine model necessary."
+            ],
+            "next_validation_gate": "Independent implementation check of the split for the article's coupled rigid and flexible golfer-club-shaft model, including the flexible modal states.",
+            "population": "Declared finite-dimensional control-affine mechanical models; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/affine_control/double_pendulum_affine.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "5817037b0b6b5ee181684f8a30c885b58d2a7a7031a0fea0c64743f2a15919a5"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_affine_control/test_double_pendulum_affine.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "3c43ec75e4bda0fab0c35226619a13eef8c696d0464e40d161f6ea843ec417bc"
+              }
+            ],
+            "technical_anchor": "claim-ad-affine-001",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "In one declared smooth contact mode of a control-affine mechanical model, the acceleration at a fixed complete state equals the drift acceleration -M^-1 h plus the input contribution M^-1 B u. The two terms are rate vectors evaluated at the same state; they are not separate trajectories whose positions add to the observed motion."
+            },
+            "title": "Drift and Input Split Is a Same-State Model Identity",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "The identity is exact for the declared model; model-form, parameter and measurement uncertainty of any golfer application are not quantified."
+            },
+            "valid_conditions": [
+              "The inertia matrix is positive definite and the bias load includes every retained gravity, elastic, dissipative, velocity-dependent and external term.",
+              "Drift and input contributions are evaluated at the same complete state in one declared contact mode and coordinate chart."
+            ]
+          },
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "Switching off a modeled torque shows what that model does without it. It does not split the club's speed into a golfer share and a physics share."
+            },
+            "claim_id": "ad-ztcf-001",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The executable fixture is the registered planar model state in data/ztcf/planar_golf_forward_fixture_v2.json.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "Two models that fit the same recorded swing equally well but give materially different zero-torque contrasts for the same declared output show the contrast is not identified by the recording alone.",
+              "A study reporting ZTCF differences as additive percentages of impact speed that do not sum consistently across channels contradicts the share reading."
+            ],
+            "limitations": [
+              "A zero net-torque intervention is not a model of relaxed muscles; the frozen-impedance approximation must be tested over the counterfactual horizon.",
+              "An ordinary recorded swing does not reveal its zero-input alternative; physical validation needs identified parameters and held-out predictions."
+            ],
+            "next_validation_gate": "Identifiability study comparing zero-torque contrasts across parameter sets that fit the same measured swing, with held-out prediction.",
+            "population": "Declared golfer-club models with a registered zero-torque intervention; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/affine_control/ztcf_contract.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "f2c259e8f33946d81090d4d7fd8e123b0ee1dbe5febc4d4256a85b715326dfac"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_ztcf_intervention_contract.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "19024aa9b92bc4ee7ed3275190ecba24f9675d9ca1cb3e3e802e151cf3a3c0c2"
+              }
+            ],
+            "technical_anchor": "claim-ad-ztcf-001",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "The Zero Torque Counterfactual sets a declared torque channel to zero in a specified model. A difference between the actual and the zero-torque branch is a model-conditioned intervention contrast. It does not partition clubhead speed into shares supplied by the golfer and by passive dynamics, and it does not identify intention or muscle force."
+            },
+            "title": "A ZTCF Contrast Is a Model Intervention, Not a Speed Share",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "Parameter, intervention-fidelity and measurement uncertainty of the zero-torque branch are not quantified."
+            },
+            "valid_conditions": [
+              "The model, retained loads, input definition, branch state and stopping rule are declared.",
+              "The compared output, its frame and its event time are declared for both branches."
+            ]
+          },
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "Reading off the passive part of the motion at each recorded instant is different from running the model forward with the torque switched off. The two generally give different answers."
+            },
+            "claim_id": "ad-ztcf-002",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The executable branch starts from the registered planar model fixture.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "In the declared scalar model x' = -x + 1 with x(0) = 0, an integration of the zero-input model that matches the integral of drift sampled along the actual solution would contradict the stated counterexample.",
+              "For x' = -x + u with constant u, a trajectory difference equal to u(t - t_b) rather than u(1 - exp(-(t - t_b))) would contradict the difference equation."
+            ],
+            "limitations": [
+              "Local uniqueness does not guarantee existence for an arbitrary duration, admissibility of zero input or continuation through contact.",
+              "A time-dependent retained load needs an explicit choice between keeping its recorded schedule and freezing it at the branch."
+            ],
+            "next_validation_gate": "Report forward-branch and stitched-trace results side by side for a declared golfer model with integration-error bounds and a declared output tolerance.",
+            "population": "Declared smooth control-affine models with a locally Lipschitz drift field; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/affine_control/ztcf_explorer.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "608ebd966d9aa3aeaeb02a0ac8a7991c6f486eebac6a98f9d9003884aabefb0c"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_ztcf_explorer.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "764dbb96130286b2125852557611e95b6979cf35bde7e16b54650e80075c4561"
+              }
+            ],
+            "technical_anchor": "claim-ad-ztcf-002",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "A forward ZTCF integrates the zero-input model from one branch state, and all later evaluations use the evolving counterfactual state. Drift samples stitched along the recorded motion generally do not solve that initial-value problem, and the trajectory difference is not the integral of the instantaneous input term."
+            },
+            "title": "A Stitched Drift Trace Is Not the Zero-Torque Trajectory",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "Integration error and parameter uncertainty along the branch are not quantified by the construction."
+            },
+            "valid_conditions": [
+              "The drift field is locally Lipschitz on the state domain the branch visits.",
+              "The branch stopping rule (first contact, domain exit or prescribed time) is declared."
+            ]
+          },
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "This check freezes the modeled motion for one instant to see which loads come from posture alone. It is not how heavy the club feels and not a load the golfer holds."
+            },
+            "claim_id": "ad-zvcf-001",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. No executable ZVCF regression is registered; the listed module only supplies the zero-velocity drift evaluation for a rigid model.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "A model in which inverse dynamics at zero velocity and the ZVCF acceleration does not return zero generalized load would contradict the stated identity ID(z, 0, a_ZVCF) = 0.",
+              "A velocity reset that also removes retained stiffness or stored elastic energy is a different intervention than the one defined here."
+            ],
+            "limitations": [
+              "Holding every coordinate of an underactuated model may need fictitious actuators; the holding load need not lie in the range of the input map.",
+              "For time-dependent constraints zero velocity may be inadmissible and needs a constraint-consistent evaluation.",
+              "Force evaluation does not identify stiffness."
+            ],
+            "next_validation_gate": "Add an executable ZVCF regression checking the signed drift-force convention and the inverse-dynamics identity on a declared model with retained elastic state.",
+            "population": "Declared mechanical models with stationary constraints; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/affine_control/golf_model.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "efb541b73b36765aadf9bcf57dc8c4d1266d69ae04a9a6530239e31a53edb0e0"
+              }
+            ],
+            "technical_anchor": "claim-ad-zvcf-001",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "The Zero Velocity Counterfactual evaluates the declared model at a specified configuration with the declared velocity coordinates reset to zero and other declared states retained. It gives configuration-dependent loads. It does not define a trajectory held in equilibrium and does not measure perceived club heaviness."
+            },
+            "title": "ZVCF Is a State Evaluation, Not a Holding Load",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "No uncertainty is attached to the evaluation; sign convention errors between drift force and holding load are a recognized risk."
+            },
+            "valid_conditions": [
+              "Constraints are stationary so that zero velocity is admissible.",
+              "Deformation, parameters, other internal states and the contact mode are retained at the reset."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-drift-control-ratio",
+        "source_path": "articles/drift-control-ratio.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "The drift-control ratio changes when you change how you measure it, even if the motion stays the same. A particular value is not a tipping point."
+            },
+            "claim_id": "ad-dcr-002",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The governing evidence is the article's exact examples and their independent test.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "For drift (3, 4) and inputs {(u, 0): |u| <= 2}, Euclidean and infinity-norm ratios that agree would contradict the stated values 2.5 and 2.",
+              "For q'' = u at q = 1, q' = 1, |u| <= 1, equal unregularized ratios in the charts q and z = q^2 would contradict the stated coordinate dependence."
+            ],
+            "limitations": [
+              "The worked values are stipulated examples, not estimated values for golfers.",
+              "Whether a carefully specified DCR adds predictive information in a measured dataset remains open."
+            ],
+            "next_validation_gate": "Preregistered comparison of DCR under several declared norms and charts against a measured delivery outcome, reporting whether the ranking of states is stable.",
+            "population": "Declared dynamical models and admissible input sets; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_dcr_article_rigor.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "312e7a6e70251a0c8ff8f580d8686ac8f11ec15d0109ad21dd886524308ca9df"
+              }
+            ],
+            "technical_anchor": "claim-ad-dcr-002",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "A DCR value is defined only together with its acceleration coordinates, weighting, norm, admissible input set and regularizer. The same state and input set give different values under different norms, and a nonlinear coordinate change can change the ratio without any change in the physical motion. No DCR threshold marks a discontinuous change in the model."
+            },
+            "title": "DCR Values Depend on Declared Norm, Weights and Coordinates",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "The examples are exact and deterministic; no uncertainty for a golfer application is quantified."
+            },
+            "valid_conditions": [
+              "Drift and input effects are evaluated at the same state in the same acceleration coordinates.",
+              "The weighting, norm, input set and regularizer, with consistent units, are reported with every value."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-superposition",
+        "source_path": "articles/superposition.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "Effects of separate inputs add up at a single instant in the model. Whole motions produced by separate inputs do not add up the same way."
+            },
+            "claim_id": "ad-superposition-001",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The governing evidence is the derivation and its independent numerical checks.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "A same-state evaluation of a declared control-affine model where a(u1 + u2) differs from a(u1) + a(u2) - a(0) beyond numerical tolerance.",
+              "A nonlinear model in which trajectories driven by u1 and u2 sum to the trajectory driven by u1 + u2 for all inputs would show the drift is affine in the state, outside this claim's premise."
+            ],
+            "limitations": [
+              "Superposition does not make force production independent or identify individual muscle forces.",
+              "Integrating same-state contributions along a recorded trajectory is an accounting quantity, not a rerun with one input removed.",
+              "Flexural modes are truncated to finite-dimensional coordinates (CRIT-005)."
+            ],
+            "next_validation_gate": "The page's declared next gate: Simscape numerical integrator validation with non-zero initial boundary conditions.",
+            "population": "Declared finite-dimensional control-affine mechanical models; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/affine_control/dynamics.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "acfb0ef46ef26770fd3400532e0f9da8480f71c515afd0591cb3de78ad2d55c2"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_superposition_article_rigor.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "acb89bdb53f39c2d543f288e131c7bb340de8f4d57bf6b1623967e734ad00306"
+              }
+            ],
+            "technical_anchor": "claim-ad-superposition-001",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "At a fixed complete state of a control-affine model, input contributions to generalized loads and accelerations superpose with the zero-input baseline counted once. Solutions driven by different inputs do not in general add to the solution driven by their sum, because the drift is nonlinear in the state."
+            },
+            "title": "Input Superposition Holds Instantaneously, Not for Trajectories",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "The identity is exact within the model; no uncertainty for a physical application is quantified."
+            },
+            "valid_conditions": [
+              "All contributions are evaluated at the same complete state and active constraint set.",
+              "Admissible inputs are declared; the admissible set need not be closed under addition."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-proximal-distal-energy-transfer",
+        "source_path": "articles/proximal-distal-energy-transfer.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "In one simple swing model, driving the wrist early gave less club speed than leaving it passive, and driving it later gave more. That ranking belongs to the model and the tested commands."
+            },
+            "claim_id": "ad-pd-001",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. Model outputs are pinned to UpstreamDrift commit a1a613999eb0c744da96caa040941955eb210a21 through the local audit snapshot.",
+            "evidence_class": "computational",
+            "falsifiers": [
+              "An early-drive program that delivers higher modeled speed under the same declared constraints would refute the stated ordering for that comparison.",
+              "Re-running the pinned sweep and obtaining a different ordering of the passive, early-drive and late-drive programs at the declared parameters."
+            ],
+            "limitations": [
+              "Constant shoulder torque does different work on different trajectories, so the ranking does not isolate timing at matched total work.",
+              "Physiological muscle activation, tissue history and continuous constrained optimal control remain open; no coaching recommendation follows."
+            ],
+            "next_validation_gate": "Matched-work timing comparison in the registered model ladder, then a participant-held-out human stage as declared in the article's audit.",
+            "population": "One declared planar two-link model with command-level actuator surrogates; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "scripts/check_proximal_distal_evidence.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "ad9fd236f9fdd7d61f8cc99935b7a264b33830a4bac35ae2cb295979e5d913de"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "data/proximal_distal_energy_transfer/complete_claim_audit_snapshot.json",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "83291612d94a2ae14e3b334ddd1c0889b28cb775b376a553a09b33645c6848c9"
+              }
+            ],
+            "technical_anchor": "claim-ad-pd-001",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "In the article's planar two-link model with a rigid shaft and fixed hub, and at the declared 60 N m shoulder torque, wrist drive from the start of the downswing gave lower modeled clubhead speed than a passive wrist, and grid-selected later wrist-drive programs gave higher speed. The ordering is reported to survive declared actuator bounds. It does not isolate timing at matched work and is not a continuous optimum."
+            },
+            "title": "Delayed Wrist Drive Was Faster in the Planar Two-Link Model",
+            "uncertainty": {
+              "status": "bounded",
+              "statement": "Robustness is reported across actuator bounds, impact criteria, one-at-a-time parameter cases and command transitions; population uncertainty is not estimated."
+            },
+            "valid_conditions": [
+              "Planar two-degree-of-freedom model with rigid shaft and fixed hub under the declared parameters and command grid.",
+              "Clubhead speed is compared at each program's own declared impact event."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-intentional-constraint-collapse",
+        "source_path": "articles/intentional-constraint-collapse.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "hypothesis",
+              "text": "The idea is that golfers might firm up the arms and hands just before impact to steady the clubface. It has not been measured."
+            },
+            "claim_id": "ad-icc-001",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset exists for this hypothesis.",
+            "evidence_class": "unknown",
+            "falsifiers": [
+              "No reproducible impedance change is detected over the declared pre-impact interval.",
+              "Geometry, club inertia, grip location or shaft deformation alone explains the apparent stiffening.",
+              "The proposed schedule fails to improve the prespecified outcome under matched conditions."
+            ],
+            "limitations": [
+              "The historical name suggests a lock; increased stiffness, a kinematic singularity, an ideal joint lock and a contact-mode change are different mechanisms.",
+              "EMG alone does not identify stiffness, muscle force or intent."
+            ],
+            "next_validation_gate": "Preregistered directional perturbation study measuring force-motion response over a declared pre-impact interval with matched delivery conditions.",
+            "population": "No population; the hypothesis concerns a future perturbation study in golfers.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/affine_control/impedance_protocol.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "35f36cd1c67f357c8b8acadcfc16509720fe5e8bc5702a2fb32ecdf6e2c7650a"
+              }
+            ],
+            "technical_anchor": "claim-ad-icc-001",
+            "technical_claim": {
+              "modal_strength": "hypothesis",
+              "text": "Hypothesis: a declared impedance schedule before impact lowers the sensitivity of a prespecified delivery output, such as face angle at first contact, to a specified small hand disturbance relative to a stated comparator, under matched initial state and feasible muscle inputs. No measurement supporting the hypothesis is reported."
+            },
+            "title": "Impedance Modulation Near Impact Is an Untested Hypothesis",
+            "uncertainty": {
+              "status": "unknown",
+              "statement": "No data exist, so no uncertainty can be stated."
+            },
+            "valid_conditions": [
+              "A perturbation protocol, a performance measure and a comparator schedule are declared before data collection.",
+              "Delivery conditions such as speed and loft are measured so that tradeoffs are reported."
+            ]
+          },
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "Making the joints stiffer resists motion but does not remove a direction the joints can move in. Stiffening and locking are different things."
+            },
+            "claim_id": "ad-icc-002",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The listed module is the related impedance declaration contract, not a regression of this example.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "For y = q1 + q2 and K_q = diag(2, 3), a task compliance other than 5/6, or a change in the rank of J = [1 1] when stiffness is scaled, would contradict the worked example.",
+              "A configuration where scaling a positive-definite stiffness changes the rank of J would contradict the claim, since J does not depend on stiffness."
+            ],
+            "limitations": [
+              "At a loaded equilibrium geometric and prestress terms enter tangent stiffness.",
+              "Static compliance does not determine the response to a brief collision."
+            ],
+            "next_validation_gate": "Add an executable regression of the rank-one compliance example, then extend it to a loaded equilibrium with prestress terms.",
+            "population": "Declared local perturbation models at an unloaded equilibrium; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/affine_control/impedance_protocol.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "35f36cd1c67f357c8b8acadcfc16509720fe5e8bc5702a2fb32ecdf6e2c7650a"
+              }
+            ],
+            "technical_anchor": "claim-ad-icc-002",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "At a fixed configuration, increasing joint stiffness does not change the rank of the task Jacobian. A finite stiffness can reduce task compliance while the same kinematic degrees of freedom remain available, so reduced compliance is not a kinematic singularity or an ideal lock."
+            },
+            "title": "Raising Joint Stiffness Does Not Change Kinematic Rank",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "Exact within the local static model; no physiological uncertainty is quantified."
+            },
+            "valid_conditions": [
+              "Small static perturbations at an unloaded equilibrium with positive-definite joint stiffness and no extra constraints.",
+              "Task compliance uses J K_q^-1 J^T; the inverse form needs a square nonsingular Jacobian."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-secondary-axis-stability",
+        "source_path": "articles/secondary-axis-stability.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "A tumbling free object is unstable about its middle axis. A putter in your hands is not free, so that fact does not show which putter design is better."
+            },
+            "claim_id": "ad-secondary-axis-001",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The checks use manufactured inertia spectra.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "A linearization of Euler's equations about the intermediate principal axis with distinct moments that yields purely imaginary transverse eigenvalues.",
+              "A matched putting study in which inertia-aligned designs differ in face orientation at impact exactly as the free-body growth rate predicts would contradict the claim that the free-body result is insufficient."
+            ],
+            "limitations": [
+              "Repeated principal moments need separate treatment.",
+              "The linear growth rate scales with spin and its practical effect depends on the product of growth rate and stroke duration.",
+              "No measured advantage in face control, scoring or muscle effort is established."
+            ],
+            "next_validation_gate": "Measure or reconstruct full mass properties and test matched delivery and contact conditions across participants for declared face, path and launch outcomes.",
+            "population": "Torque-free rigid bodies and declared putter mass properties; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_secondary_axis_rigor.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "147c6072c4f2a6ca4c7acb994d6d26354a86402a6fe852f4d463fbf3406db229"
+              }
+            ],
+            "technical_anchor": "claim-ad-secondary-axis-001",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "For a torque-free rigid body with three distinct principal moments, spin about the intermediate axis is linearly unstable and spin about the extreme axes has oscillatory transverse modes. A putter held through a grip is a forced constrained system, so the free-body result does not by itself establish a grip-torque requirement or the superiority of a central-spine design."
+            },
+            "title": "Free-Body Intermediate-Axis Instability Does Not Transfer to a Held Club",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "The free-body result is exact under its assumptions; the hand-held case has no quantified uncertainty."
+            },
+            "valid_conditions": [
+              "Three distinct positive principal moments about the center of mass.",
+              "Zero total external moment for the free-body statement."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-wrist-universal-joint",
+        "source_path": "articles/wrist-universal-joint.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "The load a joint carries to keep its shape can change at once when muscles elsewhere change their effort. Joint loads are not all passive."
+            },
+            "claim_id": "ad-wrist-001",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The checks use illustrative matrices.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "With A = (0, 0, 1), B = (e_x, e_y), zero bias and the article's illustrative M, an input (u, 0) giving lambda other than u / 4 would contradict the worked example.",
+              "A full saddle-point solve in which the reaction is invariant to every input would contradict the input dependence for that model."
+            ],
+            "limitations": [
+              "Multiplier components are not automatically anatomical torque components; their meaning depends on the constraint scaling.",
+              "The result does not show that every desired reaction can be prescribed independently of motion."
+            ],
+            "next_validation_gate": "Spatial wrist model with measured hand-club transform, verifying constraint residuals and inverse-to-forward replay before any grip comparison.",
+            "population": "Declared ideal-constraint wrist models; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_wrist_constraint_mechanics.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "2782f5298ff4e2f127e102f8fbe810c5e8889d65897e2c242a81e8faea9fdd93"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/tools/wrist_universal_joint/torque_calculator.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "53dadb437a117e6fd3bcbe7f83e731b3b0ac5689a2575a00a93490210e0db926"
+              }
+            ],
+            "technical_anchor": "claim-ad-wrist-001",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "For an ideal two-axis wrist constraint with independent constraint rows, the constraint multiplier depends on actuator input at the same state through -(A M^-1 A^T)^-1 A M^-1 B. A reaction can therefore change with input even with no actuator along its reciprocal direction, which disproves the blanket claim that all constraint loads belong to uncontrollable drift."
+            },
+            "title": "A Wrist Constraint Reaction Can Change Immediately With Input",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "Exact within the ideal model; anatomical joint compliance and measurement uncertainty are not quantified."
+            },
+            "valid_conditions": [
+              "Stationary ideal constraints with independent rows of A and positive-definite M.",
+              "Reactions are reconstructed from the full balance, not from reduced equations."
+            ]
+          },
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "The wrist joint can pass energy from forearm to hand without adding any. A large wrist load on its own says nothing about efficiency."
+            },
+            "claim_id": "ad-wrist-002",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The checks use illustrative values.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "An ideal-joint computation in which the hand and forearm reaction powers do not sum to zero within numerical tolerance.",
+              "For a 2 N m couple and a common 10 rad/s component along it, body powers other than +20 W and -20 W would contradict the worked example."
+            ],
+            "limitations": [
+              "For a moving constraint, reduced-subsystem reaction power need not vanish.",
+              "Muscle work, tissue energy storage and dissipation require their own system boundary and measurements."
+            ],
+            "next_validation_gate": "Segment power ledger from a measured swing with a declared system boundary, separating joint-reaction transfer from muscle work.",
+            "population": "Declared ideal-constraint wrist models; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_wrist_constraint_mechanics.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "2782f5298ff4e2f127e102f8fbe810c5e8889d65897e2c242a81e8faea9fdd93"
+              }
+            ],
+            "technical_anchor": "claim-ad-wrist-002",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "For an ideal wrist constraint the combined power of the reaction wrench on hand and forearm is zero, while the power delivered to each body need not be zero. The constraint can transfer energy between segments without generating it; a large transmitted torque alone measures no efficiency."
+            },
+            "title": "An Ideal Wrist Constraint Redistributes Energy Without Generating It",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "Exact within the ideal model; tissue storage and dissipation are outside it and unquantified."
+            },
+            "valid_conditions": [
+              "Coincident joint points with equal velocity and a reciprocal constraint couple.",
+              "The system boundary for muscle, tissue, gravity and contact power is declared."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-degrees-of-freedom-and-dimensionality",
+        "source_path": "articles/degrees-of-freedom-and-dimensionality.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "A system can lose energy or squeeze its state-space volume while some disturbances still grow. Shrinking volume does not show that every disturbance dies out."
+            },
+            "claim_id": "ad-contraction-001",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used. The listed module implements the pointwise metric rate, not this specific counterexample.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "For x' = x, y' = -2y, an x-perturbation that does not grow as exp(t) while area shrinks as exp(-t) would contradict the counterexample.",
+              "A proof that negative divergence on a domain implies contraction in some uniformly bounded metric for every smooth system would contradict the claim."
+            ],
+            "limitations": [
+              "A golf downswing is a finite-duration maneuver with an impact event, not automatically a limit cycle.",
+              "The contraction rate does not alone prescribe a controller's sampling bandwidth."
+            ],
+            "next_validation_gate": "Add an executable regression of the divergence counterexample beside the existing metric-rate examples.",
+            "population": "Declared smooth dynamical systems; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/tools/contraction_examples.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "15a067ed04914caa3487b57768563be056f422ee8ada2e83f4415b77cd79263a"
+              }
+            ],
+            "technical_anchor": "claim-ad-contraction-001",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "Energy dissipation, phase-volume shrinkage and contraction of every perturbation are different properties. Negative divergence does not prove contraction of distances; contraction needs a positive-definite metric satisfying the differential inequality, including the metric's total derivative, on a specified domain."
+            },
+            "title": "Negative Divergence Does Not Imply Contraction",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "Exact counterexample; no physical uncertainty applies."
+            },
+            "valid_conditions": [
+              "A positive-definite metric with uniform bounds on a specified domain with suitable invariance.",
+              "The metric derivative is its total derivative along the flow."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-tangent-part-5-contraction",
+        "source_path": "articles/tangent-hyperplanes-series/part-5-contraction.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "Checking stability at a few points along one swing does not show the whole neighborhood is stable. A real guarantee has to cover the whole region."
+            },
+            "claim_id": "ad-contraction-002",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "A system satisfying the inequality at every sampled point on a nominal trajectory in which nearby trajectories in the surrounding tube still diverge confirms the gap; a general theorem that pointwise samples imply a regional bound would refute it.",
+              "A contraction bound reported for a region without analytic, verified numerical or other domain-covering bounds."
+            ],
+            "limitations": [
+              "Comparison with straight-line endpoint distance needs a suitable connecting path, such as the straight segment lying in the region.",
+              "Time-varying tubes need an explicit argument that evolving connecting curves remain admissible."
+            ],
+            "next_validation_gate": "Produce a verified regional certificate (interval or sum-of-squares bounds) for one declared golf model and region.",
+            "population": "Declared smooth dynamical systems with a stated region and metric; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/tools/contraction_examples.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "15a067ed04914caa3487b57768563be056f422ee8ada2e83f4415b77cd79263a"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_contraction_chapter_examples.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "e014ae4836824847847ef0bdfd92b9e249c2e76341a9b02bd018e60e8a1ab9d9"
+              }
+            ],
+            "technical_anchor": "claim-ad-contraction-002",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "A finite-separation contraction bound follows only when solutions exist for the horizon and every point of the connecting curve stays in the region where the differential inequality holds. Checking the inequality at samples on a nominal trajectory is a diagnostic, not a proof throughout a surrounding tube."
+            },
+            "title": "Sampling a Contraction Inequality on One Trajectory Is Not a Certificate",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "The statement is a proof requirement; no physical uncertainty applies."
+            },
+            "valid_conditions": [
+              "A path-connected forward-invariant region with uniform metric bounds.",
+              "The inequality includes the metric's change along the trajectory."
+            ]
+          },
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "Keeping the clubhead on track does not show that every joint is settling. Some body motions leave the clubhead unchanged and go unseen by that measure."
+            },
+            "claim_id": "ad-contraction-004",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "A rank-deficient J for which J^T W J is positive definite.",
+              "A nonzero kernel direction v of J with v^T J^T W J v > 0."
+            ],
+            "limitations": [
+              "Adding a positive joint-space term defines a different metric whose inequality must be rechecked.",
+              "Numerical regularization is not a proof of unobserved stability."
+            ],
+            "next_validation_gate": "Report the kernel dimension and a joint-space contraction check alongside any task-space certificate claimed for a golf model.",
+            "population": "Declared redundant joint models with a task map; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_contraction_critique_rigor.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "70c6e684cffc3e18823fc31f0918fd2d79452262dd3c5ad85ee3ec4a9551f2db"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_contraction_reference_rigor.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "8a114e6ac0be337e3ad1599d3f6e0d7c06707339cac7881dff6af1034b5c0349"
+              }
+            ],
+            "technical_anchor": "claim-ad-contraction-004",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "The pullback J^T W J of a task metric is positive definite only when the task Jacobian has full column rank. When a clubhead task has fewer outputs than the joint model has coordinates, joint variations in the kernel of J have zero task length, so the pullback can certify a task-space statement but not contraction of every joint direction."
+            },
+            "title": "A Task-Space Metric Cannot Certify Contraction of Every Joint Direction",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "Exact linear-algebra statement; no physical uncertainty applies."
+            },
+            "valid_conditions": [
+              "A smooth task map with Jacobian J and positive-definite task metric W.",
+              "The task dimension is smaller than the joint dimension."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-tangent-part-3-control",
+        "source_path": "articles/tangent-hyperplanes-series/part-3-control.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "A controller that minimizes its cost is not for that reason stable. Stability needs extra conditions that the cost alone does not give."
+            },
+            "claim_id": "ad-contraction-003",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "For x' = x + u with Q = Q_f = 0 and R = 1, an optimal policy other than u = 0 or a non-zero S would contradict the counterexample.",
+              "A proof that every finite-horizon LQR value Hessian satisfies the uniform bounds and rate inequality would refute the claim."
+            ],
+            "limitations": [
+              "Positive-semidefinite S can assign zero length to nonzero variations.",
+              "A zero terminal state cost often makes uniform positivity fail at the horizon endpoint."
+            ],
+            "next_validation_gate": "Add an executable regression of the x' = x + u counterexample and report the rate inequality margin for one declared golf LQR design.",
+            "population": "Declared linear-quadratic and local nonlinear feedback models; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "src/affine_control/lqr.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "c589ac5b51eb160bb4934786b43a8e59ab8da182f4db879aea2121cd30c39070"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_contraction_critique_rigor.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "70c6e684cffc3e18823fc31f0918fd2d79452262dd3c5ad85ee3ec4a9551f2db"
+              }
+            ],
+            "technical_anchor": "claim-ad-contraction-003",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "The Riccati value Hessian S serves as a contracting metric only with uniform bounds aI <= S <= bI, a > 0, and Q + K^T R K >= 2 lambda S over the claimed interval. Finite-horizon optimality or a decreasing rollout objective does not supply these hypotheses: for x' = x + u penalizing only effort, the optimal input is zero and perturbations grow."
+            },
+            "title": "Optimal-Control Cost Decrease Does Not Supply a Contraction Metric",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "Exact counterexample; no physical uncertainty applies."
+            },
+            "valid_conditions": [
+              "Half-quadratic cost convention with gain K = R^-1 B^T S.",
+              "For nonlinear feedback, the inequality is checked for the full closed-loop Jacobian throughout the claimed region."
+            ]
+          }
+        ]
+      },
+      {
+        "page_id": "ad-draft-tangent-part-6-hybrid",
+        "source_path": "articles/tangent-hyperplanes-series/part-6-hybrid.qmd",
+        "claims": [
+          {
+            "accessible_summary": {
+              "modal_strength": "bounded",
+              "text": "Even if a motion settles between impacts, an impact can stir disturbances up again. Stability through contact needs its own check."
+            },
+            "claim_id": "ad-contraction-005",
+            "critique_status": "not_reviewed",
+            "data_provenance": "No participant dataset is used.",
+            "evidence_class": "analytical_counterexample",
+            "falsifiers": [
+              "A flow contracting at rate r between resets with reset gain g where g exp(-r T) > 1 that still contracts over repeated cycles would contradict the claim.",
+              "A theorem that smooth-flow contraction alone implies hybrid contraction for transverse events."
+            ],
+            "limitations": [
+              "At exact grazing the transverse-event derivation is unavailable.",
+              "The idealized restitution example is not a club-ball collision model."
+            ],
+            "next_validation_gate": "Compute the saltation-based metric comparison at ball contact for one declared club-ball contact model with stated restitution.",
+            "population": "Declared hybrid models with regular transverse events; no golfer population is inferred.",
+            "review_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+            "reviewed_on": "2026-10-12",
+            "software_provenance": [
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_contraction_critique_rigor.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "70c6e684cffc3e18823fc31f0918fd2d79452262dd3c5ad85ee3ec4a9551f2db"
+              },
+              {
+                "commit": "869f2d0cf10553852c7669a1a90880dabd8082ac",
+                "path": "tests/test_orbital_stability_rigor.py",
+                "repository": "D-sorganization/AffineDrift",
+                "sha256": "aaffdac663b6a0cb4073634c0690f2d632f5d5e76f18d586e7dfdb58d70e03a4"
+              }
+            ],
+            "technical_anchor": "claim-ad-contraction-005",
+            "technical_claim": {
+              "modal_strength": "bounded",
+              "text": "Contraction of the smooth flow between events does not guarantee contraction across a state-triggered event: an event can expand perturbations. A compatible metric comparison across the event, such as Xi^T M+ Xi <= M-, is an additional condition and does not follow from solving an optimal-control problem."
+            },
+            "title": "Contraction Between Contact Events Does Not Carry Across Them",
+            "uncertainty": {
+              "status": "unquantified",
+              "statement": "Exact statement about the hybrid model; no physical uncertainty applies."
+            },
+            "valid_conditions": [
+              "A fixed regular mode sequence with transverse events and a saltation matrix that includes event timing.",
+              "Metrics on both sides of the event are declared."
+            ]
+          }
+        ]
+      }
+    ],
+    "schema_version": "1.0.0"
+  },
+  "review_records": [
+    {
+      "claim_id": "ad-affine-001",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "The article derives the split from the declared equations of motion. src/affine_control/double_pendulum_affine.py implements the same-state split for a point-mass double pendulum and tests/test_affine_control/test_double_pendulum_affine.py checks it; neither executes the article's golfer-club-shaft model.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Drift vs. Input Decomposition",
+      "source_page": "articles/affine-nature-golf-swing.qmd",
+      "topic": "drift-control-decomposition"
+    },
+    {
+      "claim_id": "ad-ztcf-001",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "The article states this as a definitional boundary. src/affine_control/ztcf_contract.py executes registered ZTCF interventions on the planar golf model and tests/test_ztcf_intervention_contract.py checks that the public ZTCF sources publish the interpretation contract. No measured golfer data.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "What the Two Baselines Ask",
+      "source_page": "articles/affine-nature-golf-swing.qmd",
+      "topic": "ztcf-attribution"
+    },
+    {
+      "claim_id": "ad-ztcf-002",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "The article gives the scalar counterexample x' = -x + 1. src/affine_control/ztcf_explorer.py integrates a forward zero-torque branch from the actual state and tests/test_ztcf_explorer.py checks it on the registered planar model.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "A Pointwise Sample and a Freely Evolving Counterfactual",
+      "source_page": "articles/affine-nature-golf-swing.qmd",
+      "topic": "ztcf-attribution"
+    },
+    {
+      "claim_id": "ad-zvcf-001",
+      "evidence_basis": "derived-in-article-only",
+      "evidence_note": "The article defines the ZVCF through _includes/mechanics-zero-velocity.qmd. No dedicated ZVCF implementation or regression test was located in this repository or Tools. src/affine_control/golf_model.py drift_acceleration evaluated at zero joint velocity computes the configuration-dependent term for the rigid planar model only.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Zero Velocity Counterfactual (ZVCF)",
+      "source_page": "articles/affine-nature-golf-swing.qmd",
+      "topic": "zvcf"
+    },
+    {
+      "claim_id": "ad-dcr-002",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "tests/test_dcr_article_rigor.py independently checks the article's scaling, norm and coordinate examples. The existing published claim ad-dcr-001 covers the separate reachability boundary.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Dimensional Analysis and Norm Dependence",
+      "source_page": "articles/drift-control-ratio.qmd",
+      "topic": "dcr-interpretation"
+    },
+    {
+      "claim_id": "ad-superposition-001",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "The page declares evidence-rung mathematical-identity. tests/test_superposition_article_rigor.py checks the one-baseline subtraction and constrained cases; src/affine_control/dynamics.py supplies the reference dynamics.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "What Superposition *Does Not* Give You",
+      "source_page": "articles/superposition.qmd",
+      "topic": "superposition-limits"
+    },
+    {
+      "claim_id": "ad-pd-001",
+      "evidence_basis": "reported-snapshot",
+      "evidence_note": "The article reports this planar two-link result from simulations run in UpstreamDrift. This repository holds the pinned audit snapshot and its offline integrity checker, which verify pins and digests without recomputing the sweep. The sweep was not re-run for this draft.",
+      "evidence_rung": "qualified-simulation",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "E1 — Timing Sweep Results",
+      "source_page": "articles/proximal-distal-energy-transfer.qmd",
+      "topic": "proximal-distal-sequencing"
+    },
+    {
+      "claim_id": "ad-icc-001",
+      "evidence_basis": "asserted-hypothesis",
+      "evidence_note": "The article presents this as an untested hypothesis and states that neither a stiffness pulse nor its intentional timing is established by measurements. src/affine_control/impedance_protocol.py holds the fail-closed declaration contract for a future impedance-identification study; it produces no result for this claim.",
+      "evidence_rung": null,
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Observable Consequences and Testable Predictions",
+      "source_page": "articles/intentional-constraint-collapse.qmd",
+      "topic": "intentional-constraint-collapse"
+    },
+    {
+      "claim_id": "ad-icc-002",
+      "evidence_basis": "derived-in-article-only",
+      "evidence_note": "The article derives the rank argument and gives the task y = q1 + q2 example with K_q = diag(2, 3). No dedicated regression of this example was located.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Distinction: Impedance Modulation vs. Kinematic Singularity",
+      "source_page": "articles/intentional-constraint-collapse.qmd",
+      "topic": "intentional-constraint-collapse"
+    },
+    {
+      "claim_id": "ad-secondary-axis-001",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "tests/test_secondary_axis_rigor.py checks the Euler linearization on manufactured inertia spectra and guards removed unsupported statements. The central-spine putter layout is described as a design hypothesis with no measured advantage.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Constrained vs. Free-Body Dynamics",
+      "source_page": "articles/secondary-axis-stability.qmd",
+      "topic": "secondary-axis-stability"
+    },
+    {
+      "claim_id": "ad-wrist-001",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "tests/test_wrist_constraint_mechanics.py checks that the reaction changes with input in a full saddle-point solve and that the wrist reaction annihilates allowed relative rotation. src/tools/wrist_universal_joint/torque_calculator.py is the teaching tool's transmission calculator.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Theoretical Formulation of Constraint Torques",
+      "source_page": "articles/wrist-universal-joint.qmd",
+      "topic": "wrist-universal-joint-torque-transmission"
+    },
+    {
+      "claim_id": "ad-wrist-002",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "The article derives the power balance and gives the 2 N m, 10 rad/s example. tests/test_wrist_constraint_mechanics.py checks that the wrist reaction annihilates the actual relative rotation.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "The Wrist as a Torque Transmission Pathway",
+      "source_page": "articles/wrist-universal-joint.qmd",
+      "topic": "wrist-universal-joint-torque-transmission"
+    },
+    {
+      "claim_id": "ad-contraction-001",
+      "evidence_basis": "derived-in-article-only",
+      "evidence_note": "The page declares evidence-rung mathematical-identity and gives the x' = x, y' = -2y counterexample. No dedicated regression of that counterexample was located; src/tools/contraction_examples.py implements the pointwise metric-rate test the article states.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Dissipation, Contraction and Periodic Motion",
+      "source_page": "articles/degrees-of-freedom-and-dimensionality.qmd",
+      "topic": "tangent-space-contraction"
+    },
+    {
+      "claim_id": "ad-contraction-002",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "src/tools/contraction_examples.py states that a positive pointwise result is not a regional certificate; tests/test_contraction_chapter_examples.py checks that a metric derivative can disguise physical growth. Those tests target the contraction chapter examples, not this article's text.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Why Connecting Curves and Invariance Matter",
+      "source_page": "articles/tangent-hyperplanes-series/part-5-contraction.qmd",
+      "topic": "tangent-space-contraction"
+    },
+    {
+      "claim_id": "ad-contraction-003",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "The article gives the x' = x + u counterexample. tests/test_contraction_critique_rigor.py checks that a finite-horizon value can degenerate at the terminal time; it targets the contraction critique article, not this page.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Cost Decrease Does Not Automatically Prove Contraction",
+      "source_page": "articles/tangent-hyperplanes-series/part-3-control.qmd",
+      "topic": "tangent-space-contraction"
+    },
+    {
+      "claim_id": "ad-contraction-004",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "tests/test_contraction_critique_rigor.py and tests/test_contraction_reference_rigor.py both check that a task pullback can be singular on the full state; they target companion contraction articles, not this page.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Task-Space Metrics Can Miss Joint Motion",
+      "source_page": "articles/tangent-hyperplanes-series/part-5-contraction.qmd",
+      "topic": "tangent-space-contraction"
+    },
+    {
+      "claim_id": "ad-contraction-005",
+      "evidence_basis": "derived-and-executable-check",
+      "evidence_note": "tests/test_contraction_critique_rigor.py checks that a contracting flow can be overcome by periodic resets, and tests/test_orbital_stability_rigor.py checks that saltation includes event timing; both target companion articles, not this page.",
+      "evidence_rung": "mathematical-identity",
+      "owner_signoff": {
+        "signed_off_by": null,
+        "signed_off_on": null,
+        "status": "pending"
+      },
+      "source_heading": "Optimization and Stability Across Events",
+      "source_page": "articles/tangent-hyperplanes-series/part-6-hybrid.qmd",
+      "topic": "tangent-space-contraction"
+    }
+  ],
+  "source_snapshot_commit": "869f2d0cf10553852c7669a1a90880dabd8082ac"
+}
