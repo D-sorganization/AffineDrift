@@ -25,6 +25,7 @@ import yaml
 from src.affine_control.dynamics import double_pendulum_coriolis, double_pendulum_mass_matrix
 from src.affine_control.golf_model import GolfModel
 from src.affine_control.reachability import constant_additive_drift_interval
+from src.core.constants import GRAVITY_M_S2
 from src.tangent_models.examples import SimplePendulum
 from src.tools.utils.frontmatter import split_frontmatter
 
@@ -260,7 +261,7 @@ def test_reachable_interval_answers() -> None:
 
 
 def test_pendulum_drift_and_linearization_answers() -> None:
-    pendulum = SimplePendulum(m=1.0, L=1.0, g=9.81)
+    pendulum = SimplePendulum(m=1.0, L=1.0, g=GRAVITY_M_S2)
     state, control = np.array([0.5, 0.0]), np.array([0.0])
     drift = pendulum.dynamics(x=state, u=control)
     a_matrix, _ = pendulum.linearize(x=state, u=control)
