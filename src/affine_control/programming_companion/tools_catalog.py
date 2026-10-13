@@ -201,7 +201,7 @@ def render_tools_qmd(registry: dict[str, list[dict[str, Any]]]) -> str:
             maturity_badge = (
                 "bg-success"
                 if maturity == "stable"
-                else ("bg-warning text-dark" if maturity == "beta" else "bg-light text-dark")
+                else ("bg-secondary" if maturity == "beta" else "bg-light text-dark")
             )
 
             id_cell = (
