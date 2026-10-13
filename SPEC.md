@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-13 | #5038 | Disclose the Tools #5431 distributed-convention fix on the proximal-distal workbench and impact-optimality pages (historical numbers kept and labelled) |
 | 2026-10-13 | #5030 | Educator Resources page: four teaching modules (rotations, wrist constraint torques, proximal-distal energy accounting, control-affine counterfactuals) with objectives, reading paths and worked solutions; footer link; tests recompute every answer |
 | 2026-10-13 | #5024 | Wire JOHNSON_2015_ARM into a spatial arm viewer on the model-ladder page with caveats and joint table |
 | 2026-10-12 | #5021 | WEB-12.4: plain-language rewrite of entry pages (home, Overview, About, Tools, Learning Paths, Books hub, Resources hub) with every caveat preserved; source digests re-pinned |

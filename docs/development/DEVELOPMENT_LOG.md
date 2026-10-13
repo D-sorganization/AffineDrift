@@ -269,6 +269,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5007 · Disclose the Tools #5431 Distributed-Convention Fix on the Proximal-Distal Workbench and Impact-Optimality Pages (Historical Numbers Kept and Labelled)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5007
+- **Branch:** docs/5007-tools-5431-disclosure
+- **PR:** #5038
+- **Paths:** articles/proximal-distal-model-workbench.qmd,articles/impact-optimality-and-model-limits.qmd
+- **Started:** 2026-10-13
+- **Last verified:** 2026-10-13 (`8bb28f1f`; collated from changes/5007-tools-5431-disclosure.md)
+- **Summary:** Disclose the Tools #5431 distributed-convention fix on the proximal-distal workbench and impact-optimality pages (historical numbers kept and labelled)
+- **Next step:** Owner review of the unarmed PR; re-run swing results under Tools #5523.
+
 ### DL-#4973 · Add Rigid SE(3) Golf_Model_3D Forward-Kinematics Provider (Slice 1; Refs Issue 4973)
 
 - **State:** in_review
