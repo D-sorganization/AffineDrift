@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 252
+- Reviewed: 253
 - Deferred: 0
 - Exempt: 3
 
@@ -244,6 +244,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/repositories/repositories-models.html` | `repositories/repositories-models.qmd` | 1 |
 | `/repositories/repositories-pinocchio.html` | `repositories/repositories-pinocchio.qmd` | 1 |
 | `/repositories/repositories.html` | `repositories/repositories.qmd` | 1 |
+| `/repositories/tools.html` | `repositories/tools.qmd` | 1 |
 | `/resources/articles.html` | `resources/articles.qmd` | 4 |
 | `/resources/bibliography.html` | `resources/bibliography.qmd` | 1 |
 | `/resources/educator-resources.html` | `resources/educator-resources.qmd` | 1 |
@@ -504,6 +505,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-257639545452` | `/repositories/repositories-models.html` | Reviewed | — | None | None | 0 |
 | `ad-route-9220d15a31f4` | `/repositories/repositories-pinocchio.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7c9bece3a422` | `/repositories/repositories.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d1f4e6f125f3` | `/repositories/tools.html` | Reviewed | — | None | None | 0 |
 | `ad-route-32f17d5abbca` | `/resources/articles.html` | Reviewed | — | None | None | 1 |
 | `ad-route-cf2f7797b649` | `/resources/bibliography.html` | Reviewed | — | None | None | 0 |
 | `ad-route-04dd6ba1fafe` | `/resources/educator-resources.html` | Reviewed | — | None | None | 0 |
