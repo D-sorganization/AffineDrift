@@ -28,8 +28,9 @@ def _disclosure(path: Path) -> str:
 def test_page_discloses_the_tools_5431_convention_change(page: Path) -> None:
     note = " ".join(_disclosure(page).split())
     assert ".callout-warning" in _text(page)
-    for required in (ISSUE_URL, PR_URL, FOLLOW_UP_URL, "AffineDrift/issues/5007"):
+    for required in (ISSUE_URL, PR_URL, FOLLOW_UP_URL):
         assert required in note
+    assert "AffineDrift/issues/5007" not in note  # closed by this change
     assert "historical" in note
     assert "uniform shaft" in note or "uniform" in note
 
