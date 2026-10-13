@@ -460,7 +460,11 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
         record
         for record in inventory["routes"]
         if record["status"] == "reviewed"
-        and record["route"] != "/resources/educator-resources.html"
+        and record["route"]
+        not in {
+            "/resources/educator-resources.html",
+            "/repositories/tools.html",
+        }
         and (
             record["route"] == "/"
             or record["route"].startswith("/pages/")
@@ -523,6 +527,10 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     educator = _find_route(inventory, "/resources/educator-resources.html")
     assert educator["status"] == "reviewed"
     assert educator["review"]["source_path"] == "resources/educator-resources.qmd"
+    # Tools Repository (#4127) is newly published, outside the original census.
+    tools = _find_route(inventory, "/repositories/tools.html")
+    assert tools["status"] == "reviewed"
+    assert tools["review"]["source_path"] == "repositories/tools.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )

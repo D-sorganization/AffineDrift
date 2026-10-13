@@ -1,0 +1,632 @@
+---
+title: "Tools Repository"
+description: "Desktop and web tools catalog for biomechanics, robotics, kinematics, data processing, and simulation from the Tools repository."
+page-layout: full
+pinned_tools_sha: "f0112a4b76ff904c88733532c55bfbfc2d115e5c"
+pinned_tools_reviewed: "2026-10-12"
+categories:
+- tools
+- models
+---
+
+```{=html}
+<section class="resources-section">
+  <div class="ad-page-container">
+    <div class="resource-grid">
+      <div class="resource-card">
+        <h1 class="section-heading">Tools Repository</h1>
+        <p class="resource-description">
+          The <a href="https://github.com/D-sorganization/Tools" target="_blank" rel="noopener">Tools<span class="sr-only">(opens in a new tab)</span></a>
+          repository is the D-sorganization fleet's canonical suite of PyQt6 desktop tools, browser applications,
+          and computational utilities. Spanning biomechanics, robotics, motion capture, data processing, and numerical physics,
+          it provides both interactive user interfaces and verified calculation backends.
+        </p>
+        <p class="resource-description">
+          <strong>Authority snapshot.</strong> This catalog reflects the Tools repository at protected <code>main</code> commit 
+          <a href="https://github.com/D-sorganization/Tools/tree/f0112a4b76ff904c88733532c55bfbfc2d115e5c" target="_blank" rel="noopener"><code>f0112a4b</code><span class="sr-only">(opens in a new tab)</span></a>, 
+          reviewed 2026-10-12. It covers 36 declared tool interfaces across 15 functional categories.
+        </p>
+        <div class="site-card site-card--callout u-mb-2">
+          <h2 class="u-mb-1">Authority Boundary</h2>
+          <p class="resource-description">
+            <strong>This establishes</strong> an indexed catalog of desktop and web tools, launch surfaces, and implementation paths.
+          </p>
+          <p class="resource-description">
+            <strong>This does not establish</strong> independent clinical efficacy, human injury prevention validation, or commercial equipment certification without empirical testing.
+          </p>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Site Parity &amp; Mirrored Tools</h2>
+        <p class="resource-description">
+          Two canonical tools in this repository have dedicated representations on AffineDrift:
+        </p>
+        <div class="table-responsive u-mt-2">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Site Representation</th>
+                <th>Parity Verification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Rotation Representation Converter</strong> (<code>rotation_converter</code>)</td>
+                <td><code>PyQt6</code> <code>Web</code></td>
+                <td><a href="../articles/rotation-converter.html">Rotation Representation Converter</a></td>
+                <td>Automated golden-vector parity test suite (<code>tests/rotation-converter-parity.test.js</code>) against canonical quaternion/matrix algorithms.</td>
+              </tr>
+              <tr>
+                <td><strong>Rate of Closure Impact Explorer</strong> (<code>rate_of_closure</code>)</td>
+                <td><code>PyQt6</code> <code>Web</code></td>
+                <td><a href="../pages/tools.html">Programs &amp; Tools</a> (T-10 exploration)</td>
+                <td>Kinematic delivery discrepancy analysis between clubhead center of mass and geometric center.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Analysis</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Multi-Parameter Analysis</strong><br><small class="text-muted"><code>multi_param_analysis</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Run multi-parameter sensitivity analysis with grid evaluation</td>
+                <td><small><code>src/multi_param_analysis/launch_pyqt6.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Biomechanics</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>C3D Motion Capture Viewer</strong><br><small class="text-muted"><code>c3d_viewer</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>View and analyze C3D motion capture files</td>
+                <td><small><code>src/c3d_viewer/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Lower Body Model</strong><br><small class="text-muted"><code>lower_body_model</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Simulate and inspect lower-body MuJoCo kinematics and controls</td>
+                <td><small><code>src/lower_body_model/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Putting Launch Monitor</strong><br><small class="text-muted"><code>putting_launch_monitor</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>beta</code></td>
+                <td>Measure putt launch speed and direction from an overhead camera and send them to GSPro</td>
+                <td><small><code>src/putting_launch_monitor/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Rate of Closure Impact Explorer (PyQt6)</strong><br><small class="text-muted"><code>rate_of_closure</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Quantifies how a rotating clubhead&#x27;s impact-point delivery differs from the tracked reference point (COM or geometric center): path deviation, attack-angle change, face rotation during contact, and the launch-monitor geometric-center question, with an animated 3D clubhead and rate sweeps.</td>
+                <td><small><code>src/rate_of_closure/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Rate of Closure Impact Explorer (Web)</strong><br><small class="text-muted"><code>rate_of_closure</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>Quantifies how a rotating clubhead&#x27;s impact-point delivery differs from the tracked reference point (COM or geometric center): path deviation, attack-angle change, face rotation during contact, and the launch-monitor geometric-center question, with an animated 3D clubhead and rate sweeps.</td>
+                <td><small><code>src/rate_of_closure/launch_web.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Data Processing</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Data Explorer</strong><br><small class="text-muted"><code>data_explorer</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Interactive workbench for browsing simulation datasets</td>
+                <td><small><code>src/data_explorer/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Data Processor (PyQt6)</strong><br><small class="text-muted"><code>data_processor</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Signal processing and time-series data analysis tool</td>
+                <td><small><code>src/data_processing/data_processor/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Data Processor (Web)</strong><br><small class="text-muted"><code>data_processor</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>Signal processing and time-series data analysis tool</td>
+                <td><small><code>src/data_processing/data_processor/launch_web.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Development Tools</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Folder Packer Pro</strong><br><small class="text-muted"><code>folder_packer_pro</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Professional Project Archiving and Distribution Tool</td>
+                <td><small><code>src/folder_packer_pro/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Folder Tool (Utility)</strong><br><small class="text-muted"><code>folder_tool</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>experimental</code></td>
+                <td>Directory Management Utility</td>
+                <td><small><code>src/folder_tool/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>PDF Renamer</strong><br><small class="text-muted"><code>pdf_renamer</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Intelligent PDF File Renaming Tool</td>
+                <td><small><code>src/document_processing/pdf_renamer/launch_pyqt6.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Engineering Drafting</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>P&amp;ID Generator</strong><br><small class="text-muted"><code>pid_generator</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Generate P&amp;ID drawings from YAML specifications (DXF + SVG output)</td>
+                <td><small><code>src/pid_generator/launch_pyqt6.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Industrial</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>P1AM HMI Control System (Web)</strong><br><small class="text-muted"><code>p1am_control_system</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>HMI Control System for P1AM-100 PLC</td>
+                <td><small><code>src/p1am_control_system/launch_web.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Mathematics</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>ODE Solver (PyQt6)</strong><br><small class="text-muted"><code>ode_solver</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Solve systems of ordinary differential equations symbolically</td>
+                <td><small><code>src/ode_solver/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>ODE Solver (Web)</strong><br><small class="text-muted"><code>ode_solver</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>Solve systems of ordinary differential equations symbolically</td>
+                <td><small><code>src/ode_solver/launch_web.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Pendulum Simulator</strong><br><small class="text-muted"><code>pendulum_simulator</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>experimental</code></td>
+                <td>Multi-link pendulum dynamics with parameter sweeps</td>
+                <td><small><code>src/pendulum_simulator/launch_pyqt6.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Media Processing</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Video Processor (Web)</strong><br><small class="text-muted"><code>video_processor</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>Video file format conversion, frame extraction, and media analysis</td>
+                <td><small><code>src/media_processing/video_processor/launch_web.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Motion Capture</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Video Analyzer</strong><br><small class="text-muted"><code>video_analyzer</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Video-based motion analysis with pose tracking</td>
+                <td><small><code>src/video_analyzer/launch_pyqt6.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Optimization</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Movement Optimizer</strong><br><small class="text-muted"><code>movement_optimizer</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Optimize barbell biomechanics trajectories with Lagrangian dynamics, swingset, and chain models</td>
+                <td><small><code>src/movement_optimizer/launch_pyqt6.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Process Simulation</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Financial Calculator (PyQt6)</strong><br><small class="text-muted"><code>financial_calculator</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Comprehensive financial modeling for plant operations</td>
+                <td><small><code>src/financial_calculator/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Financial Calculator (Web)</strong><br><small class="text-muted"><code>financial_calculator</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>Comprehensive financial modeling for plant operations</td>
+                <td><small><code>src/financial_calculator/launch_web.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Pressure Drop Calculator (PyQt6)</strong><br><small class="text-muted"><code>pressure_drop_calculator</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Pipe flow pressure drop analysis with multiple friction methods</td>
+                <td><small><code>src/pressure_drop_calculator/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Pressure Drop Calculator (Web)</strong><br><small class="text-muted"><code>pressure_drop_calculator</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>Pipe flow pressure drop analysis with multiple friction methods</td>
+                <td><small><code>src/pressure_drop_calculator/launch_web.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Vessel Drafter</strong><br><small class="text-muted"><code>vessel_drafter</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Refractory vessel design with STEP, STL, BREP, and GLTF export</td>
+                <td><small><code>src/vessel_drafter/launch_pyqt6.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Robotics</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Humanoid Character Builder</strong><br><small class="text-muted"><code>humanoid_builder_gui</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Build parametric humanoid characters with anthropometric calculations</td>
+                <td><small><code>src/humanoid_builder_gui/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Inertia Calculator</strong><br><small class="text-muted"><code>inertia_calculator</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Calculate and validate inertia tensors for rigid bodies</td>
+                <td><small><code>src/inertia_calculator/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Parametric URDF Builder</strong><br><small class="text-muted"><code>urdf_builder_gui</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Generate parametric URDF models for robotics applications</td>
+                <td><small><code>src/urdf_builder_gui/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Rotation Converter (PyQt6)</strong><br><small class="text-muted"><code>rotation_converter</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Comprehensive rotation and rigid-body transform converter with interactive 3D visualization. Supports quaternions, Euler angles, rotation matrices, axis-angle, SE(3), twists, screw axes, and frame-aware transforms.</td>
+                <td><small><code>src/rotation_converter/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Rotation Converter (Web)</strong><br><small class="text-muted"><code>rotation_converter</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>Comprehensive rotation and rigid-body transform converter with interactive 3D visualization. Supports quaternions, Euler angles, rotation matrices, axis-angle, SE(3), twists, screw axes, and frame-aware transforms.</td>
+                <td><small><code>src/rotation_converter/launch_web.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Signal Processing</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Function Generator (PyQt6)</strong><br><small class="text-muted"><code>function_generator</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Generate and visualize various waveforms (sine, square, triangle, etc.)</td>
+                <td><small><code>src/function_generator/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Function Generator (Web)</strong><br><small class="text-muted"><code>function_generator</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>Generate and visualize various waveforms (sine, square, triangle, etc.)</td>
+                <td><small><code>src/function_generator/launch_web.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Signal Processing Studio</strong><br><small class="text-muted"><code>signal_processing_studio</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Unified signal processing: waveform generation, analysis, filtering, curve fitting</td>
+                <td><small><code>src/signal_processing_studio/launch_pyqt6.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Thermodynamics</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Steam Engine Calculator (PyQt6)</strong><br><small class="text-muted"><code>steam_engine_calculator</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Calculate thermodynamic properties of steam/water</td>
+                <td><small><code>src/steam_engine_calculator/launch_pyqt6.py</code></small></td>
+              </tr>
+              <tr>
+                <td><strong>Steam Engine Calculator (Web)</strong><br><small class="text-muted"><code>steam_engine_calculator</code></small></td>
+                <td><code>web</code></td>
+                <td><code>stable</code></td>
+                <td>Calculate thermodynamic properties of steam/water</td>
+                <td><small><code>src/steam_engine_calculator/launch_web.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Utilities</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Surface</th>
+                <th>Maturity</th>
+                <th>Description</th>
+                <th>Path</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Flow Rate Converter</strong><br><small class="text-muted"><code>flow_rate_converter</code></small></td>
+                <td><code>pyqt6</code></td>
+                <td><code>stable</code></td>
+                <td>Convert between mass, molar, and volumetric flow rate units</td>
+                <td><small><code>src/flow_rate_converter/launch_pyqt6.py</code></small></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="resource-card">
+        <h2>Repository Access</h2>
+        <p class="resource-description">
+          The Tools repository is hosted on GitHub:
+          <br><br>
+          <a href="https://github.com/D-sorganization/Tools" target="_blank" rel="noopener" class="resource-link">View on GitHub →<span class="sr-only">(opens in a new tab)</span></a><span class="u-text-muted"> (navigation only; not pinned to a specific commit)</span>
+          <br><br>
+          <strong>Clone with Git:</strong><br>
+          <code>git clone https://github.com/D-sorganization/Tools.git</code>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+## Related Articles
+
+- [Programs & Tools](../pages/tools.html)
+- [Rotation Representation Converter](../articles/rotation-converter.html)
+- [Repositories](repositories.html)
+- [Model Repositories](repositories-models.html)
+- [Modeling Suite](../models/models.html)
