@@ -1,0 +1,551 @@
+---
+title: "Educator Resources"
+description: "Four teaching modules for biomechanics, sport science and control courses, with learning objectives, reading paths and exercises with worked solutions."
+toc: true
+toc-depth: 2
+categories:
+- resources
+---
+
+## How to Use These Modules
+
+These modules are for instructors who teach biomechanics, sport science or
+control. Each one fits a single class session or a short problem set. Each
+module gives:
+
+- **Learning objectives** that say what a student should be able to do.
+- **A reading path** through pages that already exist on this site.
+- **Exercises** built on worked examples and interactive tools on this site.
+- **Worked solutions**, folded so you can hand out the exercises first.
+
+Every number in a solution comes from one of three places: a cited page, a
+cited interactive tool, or a derivation shown in full on this page. Where an
+exercise uses round numbers that are not on another page, the solution says so
+and shows every step. These numbers are chosen to make the arithmetic easy to
+follow. They are not measurements of golfers or clubs.
+
+| Module | Suggested Course | Main Tool or Example |
+| --- | --- | --- |
+| [1. Orientation and Rotation Representations](#module-1) | Biomechanics, motion capture | [Rotation Representation Converter](../articles/rotation-converter.html) |
+| [2. Constraint Torques at the Wrist](#module-2) | Biomechanics, multibody dynamics | [Cardan and Torque Projection Demonstration](../src/tools/wrist_universal_joint/grip_angle_simulator.html) |
+| [3. Energy Accounting in the Proximal-Distal Chain](#module-3) | Sport science, mechanics | [Proximal-Distal Model Workbench](../articles/proximal-distal-model-workbench.html) |
+| [4. Control-Affine Dynamics and Counterfactuals](#module-4) | Control, dynamical systems | Worked examples in the theory pages |
+
+The modules can be taught in any order. Module 1 helps before Module 2, because
+the wrist model uses rotation matrices.
+
+## Reuse and Licence
+
+You may copy, adapt and share the text of these modules, including the
+exercises and solutions, under the
+[Creative Commons Attribution 4.0 International licence](https://creativecommons.org/licenses/by/4.0/legalcode)
+(CC BY 4.0). Credit "AffineDrift (affinedrift.com)", link to the licence, and
+say if you changed anything. This applies to classroom handouts, course sites
+and commercial course material alike.
+
+The code these modules call, such as the rotation converter and the Python
+functions under `src/`, is released under the MIT License. Figures and
+illustrations on the linked pages are not covered by CC BY 4.0; ask before
+reusing them. The full terms are in
+[COPYRIGHT.md](https://github.com/D-sorganization/AffineDrift/blob/main/COPYRIGHT.md)
+and
+[LICENSE-CONTENT](https://github.com/D-sorganization/AffineDrift/blob/main/LICENSE-CONTENT).
+
+## Module 1: Orientation and Rotation Representations {#module-1}
+
+Motion-capture systems, simulators and papers describe the same orientation
+in different ways. Students who can convert between them, and who know where
+each one breaks, avoid a large class of analysis errors.
+
+### Learning Objectives
+
+- Convert one orientation between a rotation matrix, a unit quaternion, ZYX
+  Euler angles, an axis-angle pair and a rotation vector.
+- Explain why $q$ and $-q$ describe the same rotation.
+- Show by hand why ZYX Euler angles lose one angle at a pitch of $90^\circ$,
+  and say what the converter reports there.
+- State what an orientation does not tell you, such as angular velocity or
+  joint location.
+
+### Reading Path
+
+1. [Rotation Representation Converter](../articles/rotation-converter.html):
+   read the Background and Mathematical Reference sections (about 20 minutes).
+2. [Rotation Representations: A Cross-Reference Guide](../articles/rotation-representations-reference.html):
+   the derivations behind each conversion (about 40 minutes).
+3. [Rotations and SE(3)](../articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html)
+   in The Geometry of Motion, for a longer textbook treatment (optional).
+
+### Exercises
+
+All exercises use the converter's conventions: right-handed active rotations,
+Hamilton quaternions ordered $(w,x,y,z)$, and intrinsic ZYX angles with
+$R=R_z(\psi)R_y(\theta)R_x(\phi)$.
+
+**Exercise 1.1 (Quarter Turn).** By hand, write the rotation matrix,
+quaternion, axis-angle pair, rotation vector and ZYX angles for a $90^\circ$
+rotation about $z$. Then press the **Rz(90°)** preset and check every panel.
+
+**Exercise 1.2 (Two Quaternions, One Rotation).** Enter the quaternion
+$(0,0,0,-1)$. Which quaternion does the converter report, and why is that not
+a different rotation?
+
+**Exercise 1.3 (The Arbitrary Preset).** The preset labelled
+$\hat n=[1,1,1]/\sqrt3$, $47.3^\circ$ rotates about the diagonal axis.
+Before pressing it, predict the trace of $R$, the quaternion and the rotation
+vector. Then press the preset and compare.
+
+**Exercise 1.4 (Gimbal Lock).** Enter yaw $\psi=30^\circ$, pitch
+$\theta=90^\circ$ and roll $\phi=10^\circ$. Read the matrix panel. Then
+enter $\psi=20^\circ$, $\theta=90^\circ$, $\phi=0^\circ$. Explain what you
+see, and predict the Euler angles the converter reports if you press
+**Use this R**.
+
+### Worked Solutions
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 1.1"}
+With $c=\cos 90^\circ=0$ and $s=\sin 90^\circ=1$,
+
+$$
+R_z(90^\circ)=\begin{bmatrix}0&-1&0\\1&0&0\\0&0&1\end{bmatrix}.
+$$
+
+The quaternion for angle $\theta$ about unit axis $\hat n$ is
+$(\cos\tfrac\theta2,\ \hat n\sin\tfrac\theta2)$. Here
+$\cos 45^\circ=\sin 45^\circ=0.7071$, so $q=(0.7071,\,0,\,0,\,0.7071)$.
+The axis-angle pair is $\hat n=(0,0,1)$, $\theta=90^\circ$. The rotation
+vector is $\rho=\theta\hat n=(0,\,0,\,\pi/2)=(0,\,0,\,1.5708)$ rad. The ZYX
+angles are $\psi=90^\circ$, $\theta=0$, $\phi=0$. The converter shows the same
+values to more digits.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 1.2"}
+The converter reports $(0,0,0,1)$. The quaternion-to-matrix formula on the
+[converter page](../articles/rotation-converter.html) is quadratic in the
+components, so $q$ and $-q$ give the same matrix. Both describe a $180^\circ$
+turn about $z$. The converter picks the sign with $w\ge 0$ so that the reported
+angle lies in $[0,\pi]$. At exactly $180^\circ$, $w=0$, so that rule cannot
+decide; the converter's largest-component extraction returns $z=+1$. The axis
+sign is a free choice here: $+z$ and $-z$ give the same half-turn. This is a reporting
+convention, not a continuity rule. For a sampled swing you must choose signs
+so that consecutive quaternions stay close.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 1.3"}
+For any rotation, $\operatorname{tr}R=1+2\cos\theta$. With
+$\theta=47.3^\circ$, $\cos\theta=0.6782$, so $\operatorname{tr}R=2.3563$.
+The axis treats $x$, $y$ and $z$ alike, so the three diagonal entries are
+equal: each is $2.3563/3=0.7854$. The converter's matrix is
+
+$$
+R=\begin{bmatrix}0.7854&-0.3170&0.5316\\0.5316&0.7854&-0.3170\\-0.3170&0.5316&0.7854\end{bmatrix}.
+$$
+
+The quaternion is $w=\cos 23.65^\circ=0.9160$ and each vector component is
+$\sin 23.65^\circ/\sqrt3=0.2316$, so $q=(0.9160,\,0.2316,\,0.2316,\,0.2316)$.
+The angle in radians is $47.3\pi/180=0.8255$, and each rotation-vector
+component is $0.8255/\sqrt3=0.4766$ rad.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 1.4"}
+Both entries give the same matrix. Its first row is
+$(0,\,-0.3420,\,0.9397)=(0,\,-\sin 20^\circ,\,\cos 20^\circ)$. To see why,
+multiply out the product at $\theta=90^\circ$:
+
+$$
+R_y(90^\circ)R_x(\phi)=\begin{bmatrix}0&\sin\phi&\cos\phi\\0&\cos\phi&-\sin\phi\\-1&0&0\end{bmatrix},
+$$
+
+$$
+R_z(\psi)R_y(90^\circ)R_x(\phi)=\begin{bmatrix}0&-\sin(\psi-\phi)&\cos(\psi-\phi)\\0&\cos(\psi-\phi)&\sin(\psi-\phi)\\-1&0&0\end{bmatrix}.
+$$
+
+Only the difference $\psi-\phi$ appears. Yaw $30^\circ$ with roll $10^\circ$
+and yaw $20^\circ$ with roll $0^\circ$ both give $\psi-\phi=20^\circ$. When
+the matrix is the input, the converter detects the lock and sets roll to zero,
+so it reports $\psi=20^\circ$, $\theta=90^\circ$, $\phi=0^\circ$ with a
+gimbal-lock warning. The body can still rotate in every direction. Only this
+choice of three angles has stopped describing it uniquely.
+:::
+
+## Module 2: Constraint Torques at the Wrist {#module-2}
+
+A two-axis wrist model can carry a torque along a direction in which it does
+not allow rotation. This module separates that constraint torque from
+actuation, energy and grip claims.
+
+### Learning Objectives
+
+- Find the direction of an ideal universal joint's reaction couple and check
+  that it does no work on the allowed motion.
+- Show with a small example that a constraint reaction can change when the
+  actuator input changes.
+- Compute a club's transverse inertia about the grip from point-mass and
+  thin-rod terms.
+- Use the Cardan demonstration to tell a supported driveshaft apart from a
+  wrist, and explain why a torque ratio above one is not an efficiency above
+  one.
+- Derive how a constant torque error grows into an angle error.
+
+### Reading Path
+
+1. [Constraint Torques at the Wrist](../articles/wrist-universal-joint.html):
+   read through "The Grip Angle Hypothesis" and "The Cardan Driveshaft
+   Analogy" (about 60 minutes).
+2. [The Null Space of the Constraint Jacobian](../articles/null-space-constraint-jacobian.html):
+   the motion a constraint still allows (about 30 minutes).
+3. [Screw Theory Reference](../articles/screw-theory-reference.html):
+   wrenches, twists and reciprocity (optional).
+4. [Cardan and Torque Projection Demonstration](../src/tools/wrist_universal_joint/grip_angle_simulator.html):
+   the interactive tool used in Exercises 2.3 and 2.4.
+
+### Exercises
+
+**Exercise 2.1 (Reaction Direction).** Model the wrist as
+$R=R_x(\phi)R_y(\psi)$ with allowed rotation directions
+$\mathbf a=\mathbf e_x$ and $\mathbf b=R_x(\phi)\mathbf e_y$ in the forearm
+frame. At $\phi=30^\circ$, $\psi=20^\circ$, find the unit reaction direction
+$\mathbf n_c$ in the forearm frame and in the hand frame. Check that it does
+no work on the allowed motion.
+
+**Exercise 2.2 (A Reaction That Depends on the Input).** Take
+$M=\begin{bmatrix}2&0&0.5\\0&2&0\\0.5&0&2\end{bmatrix}$, the constraint
+$A=(0,0,1)$, inputs $B=(\mathbf e_x,\mathbf e_y)$ and no bias. Apply the
+input $(u,0)$. Find $\ddot q_x$ and the multiplier $\lambda$ two ways: by
+substitution, and with the wrist page's formula
+$\partial\lambda/\partial u=-(AM^{-1}A^T)^{-1}AM^{-1}B$.
+
+**Exercise 2.3 (The Cardan Demonstration).** Open the demonstration and set
+Demo Angle to $30^\circ$. Read the Angular Velocity Ratio and Torque
+Transmission Ratio in Model Information at Input Shaft Phase $0^\circ$ and
+$60^\circ$. Derive both readings, and explain why a torque ratio above one
+does not mean the joint creates energy.
+
+**Exercise 2.4 (Grip-Point Inertia).** With the demonstration's default club
+properties (200 g head at 0.85 m, 100 g shaft of length 1.00 m), the tool
+reports $I_\alpha$. Derive it. Then explain why the tool's
+$I_\gamma=0.5\,I_\alpha$ is not a measured club property.
+
+**Exercise 2.5 (How a Torque Error Grows).** A constant torque error $\eta$
+with standard deviation $\sigma_\tau$ acts on a single inertia $I$ for time
+$T$, starting from zero angle and velocity error. Derive the angle standard
+deviation $\sigma_\theta$. Evaluate it for $\sigma_\tau=0.15$ N m,
+$T=0.010$ s and $I=0.005$ or $0.00015$ kg m², the illustrative values on the
+wrist page.
+
+### Worked Solutions
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 2.1"}
+The ideal reaction couple must do no work on any allowed rotation, so it is
+perpendicular to both $\mathbf a$ and $\mathbf b$:
+$\mathbf n_c=\mathbf a\times\mathbf b=R_x(\phi)\mathbf e_z=(0,\,-\sin\phi,\,\cos\phi)$.
+At $\phi=30^\circ$ this is $(0,\,-0.500000,\,0.866025)$ in the forearm frame.
+
+In the hand frame,
+${}^H\mathbf n_c=R^T\mathbf n_c=R_y(\psi)^TR_x(\phi)^TR_x(\phi)\mathbf e_z=R_y(\psi)^T\mathbf e_z=(-\sin\psi,\,0,\,\cos\psi)$.
+At $\psi=20^\circ$ this is $(-0.342020,\,0,\,0.939693)$. Both match the
+[wrist page](../articles/wrist-universal-joint.html).
+
+Check: $\mathbf n_c\cdot\mathbf a=0$ because the first component is zero, and
+$\mathbf n_c\cdot\mathbf b=-\sin\phi\cos\phi+\cos\phi\sin\phi=0$, with
+$\mathbf b=(0,\cos\phi,\sin\phi)$. So the couple does no work on any allowed
+relative rotation $\mathbf a\dot\phi+\mathbf b\dot\psi$. The direction moves
+with the wrist: it is neither a fixed forearm axis nor a fixed hand axis.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 2.2"}
+**By substitution.** The constraint forces $\ddot q_z=0$. The equations
+$M\ddot q=Bu+A^T\lambda$ read
+
+$$
+2\ddot q_x+0.5\ddot q_z=u,\qquad 2\ddot q_y=0,\qquad 0.5\ddot q_x+2\ddot q_z=\lambda.
+$$
+
+With $\ddot q_z=0$, the first gives $\ddot q_x=u/2$, and the third gives
+$\lambda=0.5\cdot u/2$, so $\lambda=u/4$.
+
+**By the formula.** The $x$–$z$ block of $M$ has determinant
+$2\cdot2-0.5^2=3.75$, so $AM^{-1}A^T=2/3.75=0.5333$ and the $x$ entry of
+$AM^{-1}B$ is $-0.5/3.75=-0.1333$. The $y$ entry is zero. Then
+$\partial\lambda/\partial u=-(-0.1333)/0.5333=0.25$, which again gives
+$\lambda=u/4$.
+
+A changed input changes the reaction at the same state. This disproves the
+claim that every constraint load is drift that the input cannot affect. It
+does not show that any desired reaction can be chosen freely.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 2.3"}
+The [wrist page](../articles/wrist-universal-joint.html) gives the
+supported-shaft speed ratio
+$\dot\chi/\dot\varphi=\cos\delta/(1-\sin^2\delta\sin^2\varphi)$, and the
+demonstration computes exactly this. With $\delta=30^\circ$,
+$\cos\delta=0.866025$ and $\sin^2\delta=0.25$.
+
+- At phase $0^\circ$, $\sin\varphi=0$, so the speed ratio is $0.8660$ and the
+  torque ratio, its reciprocal, is $1.1547$.
+- At phase $60^\circ$, $\sin^2\varphi=0.75$, so the denominator is
+  $1-0.25\cdot0.75=0.8125$. The speed ratio is $0.866025/0.8125=1.0659$
+  and the torque ratio is $0.9382$.
+
+For a lossless joint with fixed supports, input power equals output power:
+$\tau_{\rm in}\dot\varphi=\tau_{\rm out}\dot\chi$. Torque goes up exactly
+when speed goes down, so the product of the two ratios is one. This is a
+driveshaft held in two bearings. It is not the freely moving wrist, and the
+demonstration's phase is not a wrist angle.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 2.4"}
+About the grip, a point head contributes $mr^2$ and a thin uniform shaft
+contributes $\tfrac13mL^2$:
+
+$$
+I_\alpha=0.200(0.85)^2+\tfrac13(0.100)(1.00)^2=0.1445+0.0333=0.177833\ \mathrm{kg\,m^2},
+$$
+
+which the tool shows as $0.1778$ kg m². This matches the
+[wrist page](../articles/wrist-universal-joint.html). The tool then sets
+$I_\gamma=0.5\,I_\alpha$, and its source labels this an illustrative ratio. A
+real shaft-axis inertia needs the shaft radius, the head's own inertia and its
+offset from the shaft. As the wrist page says, an assumed ratio does not
+become a measured property by appearing in a simulator.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 2.5"}
+With constant $\eta$, the angular acceleration is $\eta/I$. Integrating twice
+from zero gives $\delta\omega(T)=T\eta/I$ and $\delta\theta(T)=T^2\eta/(2I)$.
+The standard deviation scales the same way:
+$\sigma_\theta=T^2\sigma_\tau/(2I)$.
+
+- With $I=0.005$: $\sigma_\theta=(0.010)^2(0.15)/(2\cdot0.005)=0.0015$ rad.
+- With $I=0.00015$: $\sigma_\theta=(0.010)^2(0.15)/(2\cdot0.00015)=0.0500$ rad.
+
+The ratio is $0.005/0.00015=33.333$, as in the table on the
+[wrist page](../articles/wrist-universal-joint.html). Both inertias are
+illustrative and unmeasured. The result shows how sensitivity scales with
+inertia under these assumptions. It is not a clubface error or a grip
+comparison.
+:::
+
+## Module 3: Energy Accounting in the Proximal-Distal Chain {#module-3}
+
+Coaches and textbooks often say energy "flows" from the body to the club.
+This module teaches students to check that kind of claim with a clear system
+boundary, a consistent model and a stated falsifier.
+
+### Learning Objectives
+
+- Show how two mass models of the same club give different kinetic energies
+  for the same motion.
+- Compute the net force and moment from two hand forces, and recognize a pure
+  couple.
+- Tell an instantaneous counterfactual apart from a forward one, and say what
+  result would count against a stated mechanism.
+
+### Reading Path
+
+1. [How a Golf Swing Carries Energy](../articles/proximal-distal-a-journey-through-the-swing.html):
+   the visual narrative (about 30 minutes).
+2. [Explore the Proximal–Distal Models](../articles/proximal-distal-model-workbench.html):
+   read "What Would Count Against the Mechanism?" and "Read Work and Energy
+   With the Same Model" (about 40 minutes). Students who install the
+   workbench can run the guided experiments it lists.
+3. [Proximal-to-Distal Energy Transfer](../articles/proximal-distal-energy-transfer.html):
+   the technical summary (optional).
+
+### Exercises
+
+**Exercise 3.1 (Two Models of One Club).** One part of the workbench puts the
+shaft mass $m_2$ at the club tip with the head mass $m_c$. Another part treats
+the shaft as a uniform rod. With the arm still and the club turning at
+$\omega$, write the club's kinetic energy in each model. Evaluate both for
+$m_2=3$ kg, $m_c=1$ kg, $L_2=1$ m and $\omega=2$ rad/s, the test values on
+the workbench page.
+
+**Exercise 3.2 (Two Hands, One Couple).** The hands are 0.1 m apart along the
+shaft, so $\mathbf d=\mathbf r_R-\mathbf r_L=(0,0,0.1)$ m. The right hand
+pushes on the club with $\mathbf f_R=(10,0,0)$ N and the left hand with
+$\mathbf f_L=(-10,0,0)$ N. There are no contact moments. Find the net force
+and the moment about the midpoint. Does the moment change if you take it
+about the right hand instead? These round numbers are chosen for this exercise
+only.
+
+**Exercise 3.3 (What Would Count Against It?).** A student turns off the wrist
+torque at one instant, sees no change in the club's acceleration at that
+instant, and concludes that the wrist does nothing. Using the workbench page,
+explain what is wrong with this test and describe a better one.
+
+### Worked Solutions
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 3.1"}
+With the arm still, the club spins about the grip. A point mass at distance
+$L_2$ has speed $L_2\omega$, and a uniform rod has inertia $\tfrac13m_2L_2^2$
+about its end. So
+
+$$
+T_{\mathrm{tip}}=\tfrac12(m_2+m_c)L_2^2\omega^2,\qquad
+T_{\mathrm{rod}}=\tfrac12(m_2/3+m_c)L_2^2\omega^2.
+$$
+
+With the given values, $T_{\mathrm{tip}}=\tfrac12(4)(1)(4)=8$ J and
+$T_{\mathrm{rod}}=\tfrac12(2)(1)(4)=4$ J. The two parts of the same tool
+disagree by a factor of two on the same state, as the
+[workbench page](../articles/proximal-distal-model-workbench.html) warns. Any
+energy-transfer comparison must fix this mismatch first.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 3.2"}
+The net force is $\mathbf F=\mathbf f_R+\mathbf f_L=(0,0,0)$. The moment
+about the midpoint, from the
+[workbench page](../articles/proximal-distal-model-workbench.html), is
+
+$$
+\mathbf M_{\mathrm{mid}}=\frac{\mathbf d}{2}\times(\mathbf f_R-\mathbf f_L)
+=(0,0,0.05)\times(20,0,0)=(0,1,0)\ \mathrm{N\,m}.
+$$
+
+The cross product uses
+$(a\times b)_y=a_zb_x-a_xb_z=0.05\cdot20-0=1$; the other two components are
+zero. Because the net force is zero, this is a pure couple, and its moment is
+the same about every point. About the right hand, only the left force has a
+moment arm: $(\mathbf r_L-\mathbf r_R)\times\mathbf f_L=(0,0,-0.1)\times(-10,0,0)=(0,1,0)$
+N m. The hands turn the club without pushing it anywhere.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 3.3"}
+The [workbench page](../articles/proximal-distal-model-workbench.html) gives
+three reasons. First, an instantaneous change only measures
+$G(x)(u_1-u_0)$ at one state. Symmetry, cancellation or the choice of output
+can make that change zero even when the torque matters later. Second, the
+later effect of removing the torque includes the changed state, so it needs a
+forward counterfactual that starts from the same cut state and runs on.
+Third, the test did not say in advance what result it expected.
+
+A better test states, before running it, the observable (for example club
+speed at a defined event), the time window, what stays the same (stored
+elastic energy, damping, contact) and the size of effect expected. It then
+runs the matched forward counterfactual, a negative control and a step-size
+check. A failure of that stated, nonzero prediction would count against the
+mechanism.
+:::
+
+## Module 4: Control-Affine Dynamics and Counterfactuals {#module-4}
+
+The theory pages on this site each include a worked example whose numbers
+come from code in the repository. This module turns four of them into a
+problem set for a control or dynamical-systems course.
+
+### Learning Objectives
+
+- Evaluate the drift of a pendulum and linearize it at a state.
+- Show that the width of a reachable set does not depend on a constant drift,
+  even when the Drift-Control Ratio (DCR) is large.
+- Explain why the response of a control-affine system is affine in its input,
+  and check the superposition identity with numbers.
+- Distinguish a single pointwise drift sample from a forward zero-torque
+  trajectory.
+
+### Reading Path
+
+1. [Part 4: Worked Pendulum Dynamics](../articles/theory-part4.html)
+   (about 40 minutes).
+2. [Drift, Control Capacity and Golf-Swing Correction](../articles/drift-control-ratio.html):
+   read the worked example on reachable width (about 30 minutes).
+3. [Superposition in Affine Control Systems](../articles/superposition.html): read the worked example on
+   the double pendulum (about 30 minutes).
+4. [Zero-Torque Counterfactual (ZTCF) Family](../articles/zero-torque-counterfactual.html):
+   read the worked example on a pointwise sample (about 30 minutes).
+
+### Exercises
+
+**Exercise 4.1 (Pendulum Drift and Linearization).** For a rigid pendulum
+$\dot x=(\dot\theta,\ -g\sin\theta/L+u/(mL^2))$ with $m=1$ kg, $L=1$ m,
+$g=9.81$ m/s², evaluate the drift at $\theta=0.5$ rad, $\dot\theta=0$, $u=0$,
+and find the linearization $A$ at that state.
+
+**Exercise 4.2 (Reachable Width).** For $\dot x=d+u$ with $x(0)=0$,
+$|u(t)|\le1$ and horizon $T=1$, find the set of reachable $x(1)$ for $d=0$ and
+for $d=100$. What does this say about using the size of $d$ relative to $u$
+as a measure of control?
+
+**Exercise 4.3 (Superposition).** The superposition page defines
+$\Phi(\tau)=M(q)^{-1}(\tau-C(q,\dot q)\dot q)$ for a double pendulum and
+reports $\Phi(0)$, $\Phi(\tau_1)$ and $\Phi(\tau_2)$ for $\tau_1=(2,0)$ and
+$\tau_2=(0,1)$ N m. Use only those three results to predict
+$\Phi(\tau_1+\tau_2)$, then compare with the page. Why can this identity never
+fail?
+
+**Exercise 4.4 (One Drift Sample).** Reproduce the zero-torque page's
+pointwise sample for the default three-link model at rest, using the code
+below. Explain why this sample alone does not predict the club's path with
+the torques removed.
+
+```python
+import numpy as np
+from src.affine_control.golf_model import GolfModel
+
+GolfModel().drift_acceleration(np.zeros(3), np.zeros(3))
+```
+
+### Worked Solutions
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 4.1"}
+With $\sin 0.5=0.479426$ and $\cos 0.5=0.877583$, the drift is
+$\dot x=(0,\ -9.81\cdot0.479426)=(0,\ -4.7032)$, in rad/s and rad/s². The
+Jacobian of $-g\sin\theta/L$ with respect to $\theta$ is $-g\cos\theta/L$, so
+
+$$
+A=\begin{bmatrix}0&1\\-9.81\cdot0.877583&0\end{bmatrix}=\begin{bmatrix}0&1\\-8.6091&0\end{bmatrix},\qquad
+B=\begin{bmatrix}0\\1\end{bmatrix}.
+$$
+
+These match the worked example on
+[Part 4](../articles/theory-part4.html), which computes them with
+`SimplePendulum` in `src/tangent_models/examples.py`.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 4.2"}
+Integrate: $x(1)=d\cdot1+\int_0^1u\,dt$. The integral can take any value
+from $-1$ to $1$. So the reachable set is $[-1,1]$ for $d=0$ and
+$[99,101]$ for $d=100$. Both have width 2. A large drift moves the set but does
+not shrink it, so the control still has the same authority. A ratio of drift
+size to control size rose from 0 to 100 without any change in what the control
+can do. This matches the worked example on the
+[Drift-Control Ratio page](../articles/drift-control-ratio.html).
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 4.3"}
+From the [superposition page](../articles/superposition.html),
+$\Phi(0)=(-0.7709,\,2.5089)$, $\Phi(\tau_1)=(1.8448,\,-1.1359)$ and
+$\Phi(\tau_2)=(-2.5933,\,9.0483)$. Then
+
+$$
+\Phi(\tau_1)+\Phi(\tau_2)-\Phi(0)=(1.8448-2.5933+0.7709,\ -1.1359+9.0483-2.5089)=(0.0224,\ 5.4035),
+$$
+
+which is the page's value for $\Phi(\tau_1+\tau_2)$. The identity cannot fail
+because $\Phi(\tau)=M^{-1}\tau-M^{-1}C\dot q$ is a fixed matrix times $\tau$
+plus a fixed vector, at a fixed state. Subtracting $\Phi(0)$ removes the
+fixed vector once, which is why it appears with a minus sign. The numbers
+illustrate the theorem; they do not test it.
+:::
+
+::: {.callout-tip collapse="true" title="Solution to Exercise 4.4"}
+The call returns about $(-31.40,\ 29.98,\ 1.57)$ rad/s², the value on the
+[zero-torque page](../articles/zero-torque-counterfactual.html). At rest the
+velocity terms are zero, so this is the acceleration that gravity alone would
+cause at that one state. It is a single sample of the drift $f(x)$. The
+forward zero-torque trajectory starts from a state and then evolves under the
+drift alone, so the state, and the drift, change at every later instant.
+Predicting that path requires integrating the equations forward; one sample
+cannot do it.
+:::
+
+## Related Articles
+
+- [Learning Paths](learning-paths.html): longer guided reading sequences by background
+- [Short On-Ramp Paths](on-ramp-paths.html): 5-minute to 3-hour entry points
+- [Rotation Representation Converter](../articles/rotation-converter.html): the tool used in Module 1
+- [Constraint Torques at the Wrist](../articles/wrist-universal-joint.html): the source for Module 2
+- [Explore the Proximal–Distal Models](../articles/proximal-distal-model-workbench.html): the source for Module 3
+- [Site Glossary](../pages/glossary.html): definitions of drift, control and related terms
