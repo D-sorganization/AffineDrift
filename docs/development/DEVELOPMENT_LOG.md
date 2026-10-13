@@ -761,6 +761,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4590 · WEB-12.4: Plain-Language Rewrite of Entry Pages (Home, Overview, About, Tools, Learning Paths, Books Hub, Resources Hub) With Every Caveat Preserved; Source Digests Re-Pinned
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4590
+- **Branch:** merged via #5021
+- **PR:** #5021
+- **Paths:** see #5021
+- **Started:** 2026-10-12
+- **Last verified:** 2026-10-12 (`1e363187`; collated from changes/4590-web-12-4-plain-language-rewrite-of-entry.md)
+- **Summary:** WEB-12.4: plain-language rewrite of entry pages (home, Overview, About, Tools, Learning Paths, Books hub, Resources hub) with every caveat preserved; source digests re-pinned
+- **Next step:** Shipped in PR #5021.
+
 ### DL-#5019 · Keep a Running Revision-Bound Website Deployment Active While Newer Pushes Coalesce
 
 - **State:** shipped
