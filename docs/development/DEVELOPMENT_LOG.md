@@ -774,6 +774,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4127 · Generate Tools Capability Catalog and Golden-Vector Parity Suite
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4127
+- **Branch:** merged via #5026
+- **PR:** #5026
+- **Paths:** see #5026
+- **Started:** 2026-10-13
+- **Last verified:** 2026-10-13 (`53b8d97d`; collated from changes/4127-generate-tools-capability-catalog-and-go.md)
+- **Summary:** Generate tools capability catalog and golden-vector parity suite
+- **Next step:** Shipped in PR #5026.
+
 ### DL-#4590 · WEB-12.4: Plain-Language Rewrite of Entry Pages (Home, Overview, About, Tools, Learning Paths, Books Hub, Resources Hub) With Every Caveat Preserved; Source Digests Re-Pinned
 
 - **State:** shipped
