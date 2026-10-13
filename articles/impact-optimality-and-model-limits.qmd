@@ -44,6 +44,26 @@ illustrative inertia calculations have been independently checked. These are
 different evidence levels.
 :::
 
+::: {.callout-warning title="Disclosure: Tools #5431 Changed the Club Convention"}
+After this review, [Tools #5431](https://github.com/D-sorganization/Tools/issues/5431)
+(merged in [Tools PR #5554](https://github.com/D-sorganization/Tools/pull/5554))
+made the distributed club convention canonical: uniform shaft, centre of mass at
+$L_2/2$, $I_{\mathrm{cm}}=m_2L_2^2/12$, and a head point mass. All numbers in
+this article, including the 36.4 m/s and 0.36 m/s result and the tip-mass tables,
+are **historical, pre-fix values** and are kept unchanged. Tools records the
+lumped-club characterisations used here as the exact $m_2 \rightarrow 0$ limit of the new
+model, so they remain valid as statements about that limit; they are not results
+for the shipped distributed model.
+
+What changes: the shipped model is no longer tip-concentrated, so its
+impact-optimality coefficient is negative (hands move backward) rather than zero,
+and the zero survives only in the head-only limit. Golf presets were re-derived
+(Tools reports roughly 40% lower distal inertia about the wrist and 26 to 29%
+higher peak tip speed for the GUI preset). Re-running the swing-objective and
+impact-optimality results is tracked in
+[Tools #5523](https://github.com/D-sorganization/Tools/issues/5523).
+:::
+
 ## The Observation and the Three Questions
 
 The [model workbench](proximal-distal-model-workbench.html) compares downswing

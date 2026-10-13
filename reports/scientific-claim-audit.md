@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 251
+- Reviewed: 252
 - Deferred: 0
 - Exempt: 3
 
@@ -246,6 +246,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/repositories/repositories.html` | `repositories/repositories.qmd` | 1 |
 | `/resources/articles.html` | `resources/articles.qmd` | 4 |
 | `/resources/bibliography.html` | `resources/bibliography.qmd` | 1 |
+| `/resources/educator-resources.html` | `resources/educator-resources.qmd` | 1 |
 | `/resources/learning-path-biomechanics.html` | `resources/learning-path-biomechanics.qmd` | 1 |
 | `/resources/learning-path-control-theory.html` | `resources/learning-path-control-theory.qmd` | 1 |
 | `/resources/learning-path-foundations.html` | `resources/learning-path-foundations.qmd` | 1 |
@@ -505,6 +506,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-7c9bece3a422` | `/repositories/repositories.html` | Reviewed | — | None | None | 0 |
 | `ad-route-32f17d5abbca` | `/resources/articles.html` | Reviewed | — | None | None | 1 |
 | `ad-route-cf2f7797b649` | `/resources/bibliography.html` | Reviewed | — | None | None | 0 |
+| `ad-route-04dd6ba1fafe` | `/resources/educator-resources.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e162f8e1f669` | `/resources/learning-path-biomechanics.html` | Reviewed | — | None | None | 0 |
 | `ad-route-3b89c286bfae` | `/resources/learning-path-control-theory.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0ad68343def0` | `/resources/learning-path-foundations.html` | Reviewed | — | None | None | 0 |

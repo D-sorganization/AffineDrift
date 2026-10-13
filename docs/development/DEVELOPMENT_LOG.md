@@ -275,10 +275,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #4973
 - **Branch:** feat/4973-golf-model-3d
-- **PR:** #5013, #5020
+- **PR:** #5013, #5020, #5024
 - **Paths:** see #5013
 - **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`52dd3e4e`; collated from changes/4973-add-cited-3d-arm-chain-johnson-2015-arm.md)
+- **Last verified:** 2026-10-13 (`29908f5d`; collated from changes/4973-wire-johnson-2015-arm-into-a-spatial-arm.md)
 - **Summary:** Add rigid SE(3) golf_model_3d forward-kinematics provider (slice 1; Refs issue 4973)
 - **Next step:** Review placeholder parameters; wire viewer in later ADR 0002 slice.
 
@@ -760,6 +760,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#4590 · WEB-12.4: Plain-Language Rewrite of Entry Pages (Home, Overview, About, Tools, Learning Paths, Books Hub, Resources Hub) With Every Caveat Preserved; Source Digests Re-Pinned
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4590
+- **Branch:** merged via #5021
+- **PR:** #5021
+- **Paths:** see #5021
+- **Started:** 2026-10-12
+- **Last verified:** 2026-10-12 (`1e363187`; collated from changes/4590-web-12-4-plain-language-rewrite-of-entry.md)
+- **Summary:** WEB-12.4: plain-language rewrite of entry pages (home, Overview, About, Tools, Learning Paths, Books hub, Resources hub) with every caveat preserved; source digests re-pinned
+- **Next step:** Shipped in PR #5021.
 
 ### DL-#5019 · Keep a Running Revision-Bound Website Deployment Active While Newer Pushes Coalesce
 
