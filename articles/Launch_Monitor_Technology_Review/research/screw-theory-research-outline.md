@@ -1,6 +1,6 @@
 # Screw Theory Applied to Launch Monitors: A Research Outline
 
-> **Historical Research Outline — Qualification Pending.** The original proposal below is retained as provenance, not a verified estimator specification. The corrected Appendix E supersedes its claims of full-twist recovery from single-origin instantaneous Doppler, automatically calibrated covariance, free face closure or an ISA-defined swing plane, and an independently selectable TDM waveform budget. It also distinguishes conditional priors from measured information. Remaining optical, fusion, uncertainty, novelty, vendor, and experiment claims require full review under [#4719](https://github.com/D-sorganization/AffineDrift/issues/4719); no hardware or human validation is established here. See [the Appendix E review dossier](radar-screw-review-dossier.md) for the bounded correction and read scopes.
+> **Historical Research Outline — Adjudicated Proposal Ledger (#4719).** The body below is retained as provenance: ideas, conditional mechanisms, and _unexecuted_ experiment proposals. It is not a verified estimator specification, vendor survey, or hardware validation record. Corrected Appendix E and [#4717](https://github.com/D-sorganization/AffineDrift/issues/4717) bound single-origin Doppler rank, calibrated uncertainty reporting, closure/swing-plane projections, and illustrative TDM/range budgets. Conditional priors are distinguished from measured information throughout. See [the Appendix E review dossier](radar-screw-review-dossier.md) for evidence scopes. **Experiment status:** every E-row in Section 8 remains proposal-only unless an external governed validation program records otherwise.
 
 **Purpose.** A research-grade map of how screw-axis theory (twists, instantaneous
 screw axes, Plücker line geometry) can improve launch monitor measurement —
@@ -40,7 +40,8 @@ agree across devices while club parameters diverge.
 
   1.3. Thesis: a screw-theoretic estimation layer directly addresses D1 (twist =
   full velocity field → any declared reference point) and D3 (linear estimator →
-  true covariances), and _enables_ several routes to D2 (Sections 5–6) by
+  _model-based_ covariances once calibration and rank limits are respected), and
+  _enables_ several routes to D2 (Sections 5–6) by
   providing the propagation machinery that lets a face-orientation _anchor_
   measured at any time be carried to the impact instant.
 
@@ -59,7 +60,8 @@ timestamps. No resampling, no per-sensor pipelines that meet only at the end.
 - (a) Discrete EKF/RTS on SE(3) at the fastest sensor rate (tech-review App. E).
 - (b) Cumulative B-splines on SE(3) (continuous-time SLAM machinery; Sommer et
   al., Lovegrove et al.) — the natural choice once sensors are asynchronous:
-  radar rows at ~300 Hz, camera at 60 fps, events at µs, IMU at kHz.
+  radar rows at illustrative FMCW frame rates (budget-dependent; see App. E),
+  camera at 60 fps, events at µs, IMU at kHz.
 - (c) Dual-quaternion interpolation for pose composition where numerical
   elegance matters.
 
@@ -68,15 +70,18 @@ timestamps. No resampling, no per-sensor pipelines that meet only at the end.
   to impact). The twist trajectory _is_ that integral, with covariance. Every
   face-measurement idea in Section 5 reduces to "produce an anchor"; screw theory
   turns one anchor plus continuously measured ω into face angle at impact. Anchor
-  error and propagation error add in quadrature:
-  σ²*face(t_impact) ≈ σ²_anchor + ∫ σ²*ω dt — so the design rule is _anchor as
-  late as geometry allows, measure ω as well as possible throughout_.
+  and propagation uncertainties combine only after the full joint covariance is
+  formed (App. E); the uncorrelated shortcut
+  σ²*face(t_impact) ≈ σ²_anchor + ∫ σ²*ω dt is a _proposal-only_ design sketch,
+  not a calibrated error budget. Design rule: _anchor as late as geometry allows,
+  measure ω as well as possible throughout_.
 
   2.4. **Physically structured priors** (all screw-native):
 
 - Low pitch: downswing ≈ pure rotation (pitch h = ω·v/|ω|² small).
-- Hub proximity: ISA passes near the hands (Vena et al. verified ≥71% of marker
-  velocity is ISA-rotational).
+- Hub proximity (conditional prior): Vena et al. report a subset of marker
+  velocity aligned with an ISA model in their study; treat hub-near motion as a
+  weak, data-overridable prior, not a universal golfer constraint.
 - Smoothness of the ISA path (skilled-swing characteristic — usable as a prior
   _and_, inverted, as a skill metric).
 - Data-driven: a low-dimensional swing-manifold prior learned from logged twist
@@ -90,9 +95,13 @@ timestamps. No resampling, no per-sensor pipelines that meet only at the end.
 
 3.1. **Twist-native estimation (baseline).** Per-detection Doppler rows →
 weighted linear LS per frame → SE(3) smoothing. Fully specified in tech-review
-Appendix E. Benefits: D1 solved (declared reference point), closure rate and ISA
-swing plane as free projections, honest covariances. Hardware: IWR6843-class
-FMCW with custom chirps (~300 Hz frames, 3.75 cm range cells).
+Appendix E. Benefits (when rank and calibration permit): D1 mitigated via a
+declared reference point; closure rate and swing-plane _projections_ are
+derived quantities, not automatic measured status. Covariance reporting requires
+explicit calibration and must respect per-frame nullspaces. Hardware sketch:
+IWR6843-class FMCW with custom chirps; achievable frame rate, range cell, and
+Doppler budget depend on validated chirp/TDM design (App. E; not fixed at
+~300 Hz).
 
 3.2. **Rotational ISAR imaging of the clubhead.** The head rotates ~15–25°
 through the observable window; rotation is exactly what inverse synthetic
@@ -111,8 +120,10 @@ scatterer persistence across aspect; minimum SNR per chirp.
 nearly flat conductor: its RCS has a strong specular lobe about the face normal.
 As the face closes through the downswing, the normal sweeps through space; at
 the instant it crosses the radar's direction, the return spikes ("glint flash").
-That timestamp is a _direct orientation fix_: face normal ∥ line of sight at
-t_flash, to within the lobe width. One radar node gives one anchor; the twist
+That timestamp is a _conditional orientation cue_: under a flat-plate specular
+model the face normal would align with the line of sight near t_flash, only to
+within lobe width and clutter discrimination limits. One radar node gives one
+anchor candidate; the twist
 trajectory propagates it to impact (Section 2.3). Multiple nodes (3.4) give
 multiple anchors, over-determining the propagation. Modeling needs: flat-plate
 RCS lobe width at 24/60 GHz for real head geometries (bulge/roll curvature
@@ -121,7 +132,8 @@ flash from crown/sole flashes (range gating + timing logic).
 
 3.4. **Multistatic geometry as an observability instrument.** The per-frame
 twist system's weak directions are set by sight-line diversity. Cheap 24/60 GHz
-nodes are ~\$20–50; placing a second node down-target or overhead is the highest
+nodes can be low-cost in retail terms (order-of-magnitude only; no price quote);
+placing a second node down-target or overhead is the highest
 leverage accuracy purchase available. Method: optimal experiment design on the
 measurement matrix — place node k to maximize the smallest singular value of the
 stacked A over the swing window. This converts "where do I put the sensor?" from
@@ -166,10 +178,11 @@ prior carries information between frames.
 
 4.2. **Grooves as natural fiducials → direct face orientation.** The score
 lines are a manufactured, regulation-controlled set of parallel coplanar lines
-_on the face itself_. If a camera resolves even two grooves for even one frame,
-the projective geometry of parallel lines (their vanishing point + spacing
-foreshortening) yields the face plane's orientation directly — a markerless,
-per-club-calibration-free face anchor. Geometry favors: overhead cameras
+_on the face itself_. Resolving two or more groove lines in one frame is a
+_proposal_ for a face-plane anchor: projective geometry of parallel lines
+(vanishing point plus spacing foreshortening) can constrain orientation only when
+resolution, motion blur, and coplanarity assumptions hold — not from two blurred
+segments alone. Geometry favors: overhead cameras
 (Uneekor-style) for irons at address→impact; down-target cameras during release.
 Combine with 2.3: one groove-resolved frame anywhere in the last 50 ms suffices,
 propagated by the twist. Research: minimum resolution/illumination for groove
@@ -226,10 +239,10 @@ anchor-and-propagate principle (2.3).
 | #   | Method                                | Observable                                      | Modality               | Anchor time               | Maturity                                                                                                                                      |
 | --- | ------------------------------------- | ----------------------------------------------- | ---------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | F1  | Fiducial stickers on face             | marker constellation pose                       | camera                 | continuous                | commercial (Foresight; expired Acushnet art)                                                                                                  |
-| F2  | Groove-line projective geometry (4.2) | face-plane orientation                          | camera                 | any groove-resolved frame | novel, near-term                                                                                                                              |
+| F2  | Groove-line projective geometry (4.2) | face-plane orientation                          | camera                 | any groove-resolved frame | proposal; unexecuted                                                                                                                          |
 | F3  | Deflectometry (4.3)                   | surface normal directly                         | camera + structured IR | late downswing            | novel, medium-term                                                                                                                            |
 | F4  | Model-based silhouette fit (4.4)      | full head pose                                  | camera                 | continuous                | commercial-adjacent (overhead); screw prior is the upgrade                                                                                    |
-| F5  | Specular flash timing (3.3)           | normal ∥ LOS at t_flash                         | radar                  | flash instants            | novel, near-term                                                                                                                              |
+| F5  | Specular flash timing (3.3)           | specular flash timing cue                       | radar                  | flash instants            | proposal; unexecuted                                                                                                                          |
 | F6  | Passive RF tags (3.7)                 | 3-tag pose                                      | radar                  | continuous                | novel, medium-term                                                                                                                            |
 | F7  | Rotational ISAR scatterer map (3.2)   | head-frame geometry → pose                      | radar                  | continuous                | novel, long-term                                                                                                                              |
 | F8  | On-club IMU (6.1)                     | body-frame ω (+ orientation w/ calibration)     | inertial               | continuous                | commercial in training aids; fusion is the upgrade                                                                                            |
@@ -253,14 +266,17 @@ linear projections; the gyro constrains body ω; the spline ledger (2.1) fuses
 both trivially. Grip-mounted avoids impact shock; shaft flex (grip-to-head
 misalignment, several degrees dynamic) must be modeled — either via a calibrated
 2-mode flex model or by treating grip and head as two twist-linked bodies with a
-compliance prior. For a training-context product this is the cheapest route to
-continuous ω truth.
+compliance prior. For a training-context product this is the cheapest route to high-rate _grip_
+body-frame ω measurements; head ω still requires flex/compensation modeling and
+is not a silent ground-truth substitute for radar ω at the clubhead.
 
 6.2. **Ball-side niche: putting and roll state.** A rolling ball's ISA lies in
-the ground contact; a skidding ball's passes through the CG. Skid→roll
-transition = ISA migrating from center height to surface — so _true roll
-percentage_ is a direct screw observable from any sensor that resolves both v
-and ω early in the putt (camera dimple tracking does). Novel measurand;
+the ground contact; for a skidding ball, treating the ISA through the center of
+mass is a _kinematic model choice_, not an established measurement identity.
+Skid→roll transition modeled as ISA migrating from center height to surface is a
+proposal for a _true roll percentage_ measurand when both v and ω are resolved
+early in the putt (camera dimple tracking is one candidate sensor). Novel
+measurand proposal;
 putter-fitting relevance; distinct from bounce/slide/roll _classification_
 approaches.
 
@@ -280,8 +296,9 @@ footing.
 
 7.2. Use the twist measurement matrix as a _design tool_: sensor placement,
 chirp allocation, and frame-rate choices evaluated by their effect on the
-smallest singular values over the swing window (3.4). Report designs with the
-predicted, not just achieved, covariance.
+smallest singular values over the swing window (3.4). Predicted covariances are
+simulation outputs until validated on hardware; achieved covariances require
+calibrated field data.
 
 7.3. Conditioning pitfalls to carry through all work (from App. E): never invert
 per-frame weak directions; robust losses for glint/feature migration; rigidity
@@ -291,20 +308,20 @@ ends at first contact; priors must be pendulum-validated.
 
 ## 8. Ranked experimental program
 
-| Rank | Experiment                                                                                                       | Hardware delta              | Answers                                                                       |
-| ---- | ---------------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------------------------------------------------------------------- |
-| E1   | Synthetic twist-estimation study (simulated scatterers on CAD head + recorded swing trajectories)                | none                        | validates App. E pipeline; quantifies observability claims; tunes priors      |
-| E2   | OPS243-A velocity-distribution club analytics                                                                    | none                        | D1 mitigation on current hardware; spread↔ω correlation                      |
-| E3   | Pendulum rig with club                                                                                           | rig only                    | end-to-end bias test (analytic twist truth)                                   |
-| E4   | IWR6843 custom chirp bring-up + per-bin monopulse                                                                | firmware effort             | the enabling dataset for everything radar-side                                |
-| E5   | Specular-flash detection (3.3) on E4 data                                                                        | none beyond E4              | is the face flash detectable/timeable at consumer SNR?                        |
-| E6   | Groove-anchor feasibility: strobed GS camera, overhead, irons (4.2)                                              | Pi GS cam + strobe (~\$100) | minimum resolution/lighting for a groove-resolved frame                       |
-| E7   | Twist-propagated face angle: fuse E5/E6 anchor with E4 twist; compare vs D-plane-inverted face on the same shots | none beyond above           | the headline result: measured-vs-inferred face angle discrepancy distribution |
-| E8   | Deflectometry bench test on club faces at 850 nm (4.3)                                                           | LED array + camera          | which faces/finishes support direct normal measurement                        |
-| E9   | ISAR focusing of E4 coherent data (3.2)                                                                          | none                        | scatterer persistence; achievable cross-range resolution                      |
-| E10  | Grip IMU fusion (6.1)                                                                                            | ~\$30 IMU                   | ω truth for validating radar ω; shaft-flex magnitude data                     |
-| E11  | Acoustic impact-location classifier (4.6)                                                                        | none                        | auxiliary impact evidence from existing microphone                            |
-| E12  | Putting ISA / roll-state measurement (6.2)                                                                       | camera pointing down-line   | novel measurand demo                                                          |
+| Rank | Experiment                                                                                                       | Hardware delta              | Answers                                                                       | Status        |
+| ---- | ---------------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------------------------------------------------------------------- | ------------- |
+| E1   | Synthetic twist-estimation study (simulated scatterers on CAD head + recorded swing trajectories)                | none                        | validates App. E pipeline; quantifies observability claims; tunes priors      | proposal only |
+| E2   | OPS243-A velocity-distribution club analytics                                                                    | none                        | D1 mitigation on current hardware; spread↔ω correlation                      | proposal only |
+| E3   | Pendulum rig with club                                                                                           | rig only                    | end-to-end bias test (analytic twist truth)                                   | proposal only |
+| E4   | IWR6843 custom chirp bring-up + per-bin monopulse                                                                | firmware effort             | the enabling dataset for everything radar-side                                | proposal only |
+| E5   | Specular-flash detection (3.3) on E4 data                                                                        | none beyond E4              | is the face flash detectable/timeable at consumer SNR?                        | proposal only |
+| E6   | Groove-anchor feasibility: strobed GS camera, overhead, irons (4.2)                                              | Pi GS cam + strobe (budget) | minimum resolution/lighting for a groove-resolved frame                       | proposal only |
+| E7   | Twist-propagated face angle: fuse E5/E6 anchor with E4 twist; compare vs D-plane-inverted face on the same shots | none beyond above           | the headline result: measured-vs-inferred face angle discrepancy distribution | proposal only |
+| E8   | Deflectometry bench test on club faces at 850 nm (4.3)                                                           | LED array + camera          | which faces/finishes support direct normal measurement                        | proposal only |
+| E9   | ISAR focusing of E4 coherent data (3.2)                                                                          | none                        | scatterer persistence; achievable cross-range resolution                      | proposal only |
+| E10  | Grip IMU fusion (6.1)                                                                                            | grip-mounted IMU            | grip-frame ω for cross-checking radar ω; shaft-flex magnitude data            | proposal only |
+| E11  | Acoustic impact-location classifier (4.6)                                                                        | none                        | auxiliary impact evidence from existing microphone                            | proposal only |
+| E12  | Putting ISA / roll-state measurement (6.2)                                                                       | camera pointing down-line   | novel measurand demo                                                          | proposal only |
 
 E1–E3 need no new hardware and de-risk everything else. E7 is the
 proof-of-concept that would demonstrate, on one dataset, face angle measured two
@@ -318,7 +335,8 @@ of what the industry's inversion practice actually costs.
 - **Unification**: one motion object (the twist trajectory) that every sensor
   modality writes into and every reported parameter projects out of.
 - **Linearity where it counts**: Doppler and line observables are linear/
-  bilinear in twist coordinates → tractable estimators with honest covariance.
+  bilinear in twist coordinates → tractable estimators with model covariance
+  once calibration and rank limits are explicit.
 - **Reference-point invariance**: eliminates the largest definitional variance
   in club data (D1).
 - **The anchor-and-propagate principle**: converts the face-orientation problem
