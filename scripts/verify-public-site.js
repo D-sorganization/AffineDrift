@@ -7,6 +7,7 @@ const {
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   RETRYABLE_STATUS_CODES,
+  retryDelay,
   summarizeNavigationAttempts,
 } = require('./public-site-navigation.js');
 const {
@@ -19,8 +20,10 @@ const {
   summarizeAxeViolations,
 } = require('./public-site-axe.js');
 const {
+  failuresAreOnlyRetriableSubresourceNoise,
   isActionableConsoleError,
   isActionablePageError,
+  isTransientSubresourceLoadConsoleError,
 } = require('./public-site-browser-noise.js');
 const { formatFailures } = require('./public-site-failures.js');
 
@@ -442,43 +445,26 @@ async function waitForSettledPage(page) {
   }, undefined, { timeout: 15000 });
 }
 
-async function verifyItem(page, item, options) {
-  if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1') {
-    console.log(`Verifying ${item.route} (${item.viewport.id}, ${item.theme})`);
-  }
-  const consoleErrors = [];
-  const pageErrors = [];
-  const failedRequests = [];
-  const onConsole = (message) => {
-    if (message.type() === 'error' && isActionableConsoleError(message.text())) {
-      consoleErrors.push(message.text());
-    }
-  };
-  const onPageError = (error) => pageErrors.push(error.message);
-  const onRequestFailed = (request) => {
-    const target = new URL(request.url());
-    const isRequiredMathRuntime = target.href.startsWith(
-      'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/',
-    );
-    if (target.origin === new URL(options.baseUrl).origin || isRequiredMathRuntime) {
-      failedRequests.push(`${target.pathname}: ${request.failure()?.errorText ?? 'failed'}`);
-    }
-  };
-  page.on('console', onConsole);
-  page.on('pageerror', onPageError);
-  page.on('requestfailed', onRequestFailed);
+function sleepMs(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
+async function collectEvidenceAttempt(page, item, options, listeners) {
+  const {
+    consoleErrors,
+    pageErrors,
+    failedRequests,
+    onConsole,
+    onPageError,
+    onRequestFailed,
+    resetAttemptEvidence,
+  } = listeners;
   const targetUrl = new URL(item.route, options.baseUrl).href;
   let response = null;
   let inspection = { failures: ['page inspection did not run'] };
   let navigationError = null;
   let navigationAttempts = [];
   let navigationRetried = false;
-  const resetAttemptEvidence = () => {
-    consoleErrors.length = 0;
-    pageErrors.length = 0;
-    failedRequests.length = 0;
-  };
   try {
     const navResult = await navigateWithRetry(page, targetUrl, {
       timeout: 60000,
@@ -514,6 +500,91 @@ async function verifyItem(page, item, options) {
   failures.push(...consoleErrors.map((error) => `console: ${error}`));
   failures.push(...pageErrors.filter(isActionablePageError).map((error) => `pageerror: ${error}`));
   failures.push(...failedRequests.map((error) => `requestfailed: ${error}`));
+
+  return {
+    failures,
+    response,
+    inspection,
+    navigationError,
+    navigationAttempts,
+    navigationRetried,
+  };
+}
+
+async function verifyItem(page, item, options) {
+  if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1') {
+    console.log(`Verifying ${item.route} (${item.viewport.id}, ${item.theme})`);
+  }
+  const consoleErrors = [];
+  const pageErrors = [];
+  const failedRequests = [];
+  const onConsole = (message) => {
+    if (message.type() === 'error' && isActionableConsoleError(message.text())) {
+      consoleErrors.push(message.text());
+    }
+  };
+  const onPageError = (error) => pageErrors.push(error.message);
+  const onRequestFailed = (request) => {
+    const target = new URL(request.url());
+    const isRequiredMathRuntime = target.href.startsWith(
+      'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/',
+    );
+    if (target.origin === new URL(options.baseUrl).origin || isRequiredMathRuntime) {
+      failedRequests.push(`${target.pathname}: ${request.failure()?.errorText ?? 'failed'}`);
+    }
+  };
+  page.on('console', onConsole);
+  page.on('pageerror', onPageError);
+  page.on('requestfailed', onRequestFailed);
+  const listeners = {
+    consoleErrors,
+    pageErrors,
+    failedRequests,
+    onConsole,
+    onPageError,
+    onRequestFailed,
+    resetAttemptEvidence: () => {
+      consoleErrors.length = 0;
+      pageErrors.length = 0;
+      failedRequests.length = 0;
+    },
+  };
+
+  const maxEvidenceAttempts = options.documentRetries + 1;
+  let evidenceAttemptCount = 0;
+  let subresourceRetried = false;
+  let response = null;
+  let inspection = { failures: ['page inspection did not run'] };
+  let navigationError = null;
+  let navigationAttempts = [];
+  let navigationRetried = false;
+  let failures = [];
+  for (let evidenceAttempt = 1; evidenceAttempt <= maxEvidenceAttempts; evidenceAttempt += 1) {
+    if (evidenceAttempt > 1) {
+      subresourceRetried = true;
+      const delayMs = retryDelay(options.documentRetryDelayMs, evidenceAttempt - 1);
+      if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1') {
+        console.log(
+          `Transient subresource load on ${item.route} (${item.viewport.id}, ${item.theme}); ` +
+          `retrying evidence in ${delayMs}ms (attempt ${evidenceAttempt}/${maxEvidenceAttempts})...`,
+        );
+      }
+      await sleepMs(delayMs);
+      listeners.resetAttemptEvidence();
+    }
+    const attempt = await collectEvidenceAttempt(page, item, options, listeners);
+    evidenceAttemptCount = evidenceAttempt;
+    response = attempt.response;
+    inspection = attempt.inspection;
+    navigationError = attempt.navigationError;
+    navigationAttempts = navigationAttempts.concat(attempt.navigationAttempts);
+    navigationRetried = navigationRetried || attempt.navigationRetried;
+    failures = attempt.failures;
+    if (failures.length === 0) break;
+    if (options.documentRetries === 0) break;
+    if (!failuresAreOnlyRetriableSubresourceNoise(failures)) break;
+    if (evidenceAttempt === maxEvidenceAttempts) break;
+  }
 
   let screenshot = null;
   if (options.screenshots && !navigationError) {
@@ -559,6 +630,8 @@ async function verifyItem(page, item, options) {
     inspection,
     navigation_attempts: navigationAttempts,
     navigation_retried: navigationRetried,
+    evidence_attempt_count: evidenceAttemptCount,
+    subresource_retried: subresourceRetried,
     ...(axeViolations ? { axe_violations: axeViolations } : {}),
   };
 }
@@ -678,8 +751,10 @@ module.exports = {
   canonicalPathMatches,
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
+  failuresAreOnlyRetriableSubresourceNoise,
   isActionableConsoleError,
   isActionablePageError,
+  isTransientSubresourceLoadConsoleError,
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   parseArgs,

@@ -4,8 +4,10 @@ const {
   canonicalPathMatches,
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
+  failuresAreOnlyRetriableSubresourceNoise,
   isActionableConsoleError,
   isActionablePageError,
+  isTransientSubresourceLoadConsoleError,
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   parseArgs,
@@ -168,6 +170,38 @@ describe('public-site verifier contracts (WEB-D)', () => {
     expect(isActionableConsoleError(
       'Failed to load resource: the server responded with a status of 404 (File not found)',
     )).toBe(true);
+  });
+
+  test('classifies transient subresource 5xx console noise for live propagation retries (#4993)', () => {
+    const transient503 =
+      'Failed to load resource: the server responded with a status of 503 ()';
+    expect(isTransientSubresourceLoadConsoleError(transient503)).toBe(true);
+    expect(isTransientSubresourceLoadConsoleError(
+      'Failed to load resource: the server responded with a status of 502 (Bad Gateway)',
+    )).toBe(true);
+    expect(isTransientSubresourceLoadConsoleError(
+      'Failed to load resource: the server responded with a status of 504 (Gateway Timeout)',
+    )).toBe(true);
+    expect(isTransientSubresourceLoadConsoleError(
+      'Failed to load resource: the server responded with a status of 404 (File not found)',
+    )).toBe(false);
+    expect(isTransientSubresourceLoadConsoleError('ReferenceError: broken is not defined')).toBe(false);
+
+    expect(failuresAreOnlyRetriableSubresourceNoise([
+      `console: ${transient503}`,
+    ])).toBe(true);
+    expect(failuresAreOnlyRetriableSubresourceNoise([
+      `console: ${transient503}`,
+      'console: Failed to load resource: the server responded with a status of 502 ()',
+    ])).toBe(true);
+    expect(failuresAreOnlyRetriableSubresourceNoise([
+      `console: ${transient503}`,
+      'document response failed: 503',
+    ])).toBe(false);
+    expect(failuresAreOnlyRetriableSubresourceNoise([
+      'console: Failed to load resource: the server responded with a status of 404 (File not found)',
+    ])).toBe(false);
+    expect(failuresAreOnlyRetriableSubresourceNoise([])).toBe(false);
   });
 
   test('filters third-party embed localStorage SecurityError but keeps real page errors', () => {
