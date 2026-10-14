@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4487 · Redesign Home Page Around Audience Routing, Progressive Math Disclosure, and Scientific Trust Strip
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4487
+- **Branch:** merged via #5058
+- **PR:** #5058
+- **Paths:** see #5058
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`bfcc99b3`; collated from changes/4487-redesign-home-page-around-audience-routi.md)
+- **Summary:** Redesign home page around audience routing, progressive math disclosure, and scientific trust strip
+- **Next step:** Shipped in PR #5058.
+
 ### DL-#4522 · Register 12 Core Biomechanical and Control-Theoretic Theses in Claim_Registry.Json
 
 - **State:** shipped
