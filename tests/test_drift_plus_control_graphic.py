@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 
 from tests.helpers.entry_pages import ROOT, page_text
 
-SVG_PATH = ROOT / "images" / "drift-plus-control-vector-field.svg"
+SVG_PATH = ROOT / "pics" / "drift-plus-control-vector-field.svg"
 
 
 def test_svg_file_exists() -> None:
@@ -156,7 +156,7 @@ def test_start_here_qmd_references_the_svg() -> None:
         "drift-plus-control-vector-field.svg" in qmd_content
     ), "start-here.qmd must reference the SVG"
     assert (
-        "images/" in qmd_content or "../images/" in qmd_content
+        "pics/" in qmd_content or "../pics/" in qmd_content
     ), "SVG should be referenced with correct path"
 
 
