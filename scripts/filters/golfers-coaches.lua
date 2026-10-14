@@ -85,12 +85,6 @@ end
 local function build_box_blocks(box_data, meta)
   local blocks = {}
 
-  -- Accessible container open
-  table.insert(blocks, pandoc.RawBlock(
-    "html",
-    '<aside class="golfers-coaches-box" role="note" aria-label="What This Means for Golfers and Coaches" style="color: var(--bs-body-color, #1a1a1a);">'
-  ))
-
   -- Title Case Heading
   local main_title = pandoc.Header(
     2,
@@ -177,10 +171,17 @@ local function build_box_blocks(box_data, meta)
     table.insert(blocks, pandoc.BulletList(q_items))
   end
 
-  -- Accessible container close
-  table.insert(blocks, pandoc.RawBlock("html", '</aside>'))
-
-  return blocks
+  local card_attr = pandoc.Attr("", {
+    "callout",
+    "callout-style-simple",
+    "callout-note",
+    "no-icon",
+    "golfers-coaches-box"
+  }, {
+    ["role"] = "note",
+    ["aria-label"] = "What This Means for Golfers and Coaches"
+  })
+  return { pandoc.Div(blocks, card_attr) }
 end
 
 function Pandoc(doc)

@@ -85,7 +85,7 @@ def test_page_with_frontmatter_renders_accessible_box() -> None:
         '    - "Are swing adjustments practiced early in transition?"\n'
     )
     html = _render_html(frontmatter)
-    assert '<aside class="golfers-coaches-box"' in html
+    assert "golfers-coaches-box" in html
     assert 'role="note"' in html
     assert 'aria-label="What This Means for Golfers and Coaches"' in html
     assert "What This Means for Golfers and Coaches" in html
@@ -114,7 +114,7 @@ def test_page_with_div_renders_box() -> None:
         "Main article text continues here."
     )
     html = _render_html('evidence-rung: "mathematical-identity"', body=div_body)
-    assert '<aside class="golfers-coaches-box"' in html
+    assert "golfers-coaches-box" in html
     assert 'role="note"' in html
     assert "What This Means for Golfers and Coaches" in html
     assert "Varying mechanical impedance near impact stabilizes club delivery." in html
