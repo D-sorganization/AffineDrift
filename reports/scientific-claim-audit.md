@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 253
+- Reviewed: 254
 - Deferred: 0
 - Exempt: 3
 
@@ -238,6 +238,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
+| `/pages/validation-roadmap.html` | `pages/validation-roadmap.qmd` | 3 |
 | `/repositories/repositories-2d-model.html` | `repositories/repositories-2d-model.qmd` | 1 |
 | `/repositories/repositories-3d-model.html` | `repositories/repositories-3d-model.qmd` | 1 |
 | `/repositories/repositories-drake.html` | `repositories/repositories-drake.qmd` | 1 |
@@ -498,6 +499,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
+| `ad-route-f75062776350` | `/pages/validation-roadmap.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8544bec56dfb` | `/reports/scientific-claim-audit.html` | Exempt | — | None | None | 0 |
 | `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c28bd36edd3e` | `/repositories/repositories-3d-model.html` | Reviewed | — | None | None | 0 |

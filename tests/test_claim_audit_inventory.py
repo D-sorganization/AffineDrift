@@ -464,6 +464,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
         not in {
             "/resources/educator-resources.html",
             "/repositories/tools.html",
+            "/pages/validation-roadmap.html",
         }
         and (
             record["route"] == "/"
