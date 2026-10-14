@@ -11,7 +11,8 @@ const DOCUMENT_BUDGETS = {
   '/index.html': 100000,
   '/pages/start-here.html': 100000,
   '/pages/how-to-read.html': 120000,
-  '/resources/articles.html': 180000,
+  // Accommodates recovered forward dynamics matching monograph and reading listings
+  '/resources/articles.html': 210000,
 };
 
 for (const [route, limit] of Object.entries(DOCUMENT_BUDGETS)) {
