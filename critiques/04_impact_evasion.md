@@ -31,6 +31,10 @@ The AffineDrift framework is explicitly a **Theory of Delivery**, not a Theory o
 2.  **Define the Terminal Manifold:** Acknowledge that while impact physics are excluded, the _conditions_ for successful impact define the target state $x(t_f)$.
 3.  **Hybrid Extension:** Suggest (in Future Work) that the post-impact state $x^+$ can be the initial condition for a "Follow-Through" analysis, treating the impact as a discrete jump map.
 
+## Severity
+
+- **Medium**: Delivery-horizon truncation at $t_{\text{impact}}^-$ omits the impact interval; mitigated by cross-repo integration with `UpstreamDrift`'s fail-closed `impact_interval_audit`.
+
 ## References
 
 - **Winfield, D. C., & Tan, T. E.** (1996). Optimization of the golf swing.

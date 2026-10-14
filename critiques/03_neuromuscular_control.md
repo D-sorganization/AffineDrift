@@ -36,6 +36,10 @@ A conscious golfer cannot "choose" to output zero torque in the face of violent 
 2.  **Avoid "Golfer's Intent"**: The text should avoid implying that $\tau_{input}$ represents the golfer's "effort" or "choice." It represents the _net neuromuscular output_, much of which may be reflexive and subconscious.
 3.  **Future Control Models**: A more advanced model would decompose $u$ into feedforward and feedback components, allowing for a "Zero Voluntary Effort" counterfactual that retains reflexive stabilization.
 
+## Severity
+
+- **High**: Closed-loop stretch reflexes $u_{\text{reflex}}(q,\dot{q})$ couple state back into biological actuator input, requiring explicit distinction between mechanical $u \equiv 0$ drift and neural open-loop control.
+
 ## References
 
 - **Todorov, E., & Jordan, M. I.** (2002). Optimal feedback control as a theory of motor coordination. _Nature Neuroscience_.

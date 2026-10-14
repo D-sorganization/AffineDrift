@@ -38,6 +38,10 @@ The omission is therefore a **modeling choice**, not a theoretical necessity, bu
     - $F_d \approx 0.5 * 1.2 * 2500 * 0.005 = 7.5 N$
     - Work done over a 3m arc $\approx 22.5 J$. This is not negligible when examining "efficiency".
 
+## Severity
+
+- **Medium**: Aerodynamic drag is state-dependent and belongs in drift $f(x)$, preserving control-affine structure while requiring drag parameterization near impact.
+
 ## References
 
 - **Jorgensen, T.** (1994). _The Physics of Golf_. Springer.
