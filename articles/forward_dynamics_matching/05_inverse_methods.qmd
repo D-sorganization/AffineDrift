@@ -1,0 +1,93 @@
+---
+description: "Inverse Kinematics and Inverse Dynamics as Baselines: forward dynamics matching research manuscript chapter (local draft; not peer reviewed or empirically valid"
+---
+
+# Inverse Kinematics and Inverse Dynamics as Baselines
+
+Inverse methods are essential in a forward-dynamics matching project because they summarize the observations in mechanically interpretable quantities and provide initial guesses. Their role is often overstated. Inverse kinematics estimates configurations that explain measured positions or orientations. Inverse dynamics then asks what net generalized loads would produce the observed motion under a specified model and external loading. The combined pipeline is useful, but it does not demonstrate that a muscle-actuated forward simulation can generate the motion, and it does not uniquely identify muscle forces or neural control.
+
+## Inverse Kinematics
+
+For markers $y_i(t_k)$ and model marker locations $m_i(q_k,p)$, a weighted least-squares IK estimate solves $\hat{q}_k = \arg\min_q \sum_i (m_i(q,p)-y_i)^T W_i (m_i(q,p)-y_i) + R(q)$.
+
+Here $p$ contains fixed body dimensions and marker attachment locations; $R(q)$ may encode coordinate bounds, joint couplings, or a temporal prior. At each time sample, the model configuration is selected to minimize marker discrepancy. The problem is generally nonlinear because the forward kinematic map is nonlinear. It may be solved by Gauss-Newton, Levenberg-Marquardt, or another local method. When each time point is solved independently, the result can be noisy or jump between local minima; temporal regularization or a trajectory-level formulation improves continuity but changes the estimator and should be reported.
+
+The local geometry is described by the Jacobian $J_m=\partial m/\partial q$. Near a candidate $q$, the residual has approximation $r(q+\delta q)\approx r(q)+J_m\delta q$. A Gauss-Newton step solves $(J_m^TWJ_m+\Lambda)\delta q=-J_m^TWr$, where $\Lambda$ may stabilize weak directions. A small singular value of $W^{1/2}J_m$ indicates that the markers poorly observe a coordinate direction. Such a coordinate can vary substantially without changing marker fit. Regularization makes a numerical answer possible; it does not add information to the data.
+
+IK can be formulated in marker space or in a previously estimated joint-coordinate space. Marker-space IK retains direct connection to camera observations but depends on marker attachments and body geometry. Coordinate tracking avoids repeated marker fitting but inherits the assumptions and errors from the upstream reconstruction. A good workflow retains both: use IK for interpretable motion summaries and marker-space residuals in the final tracking estimator when raw markers are available.
+
+## Inverse Dynamics
+
+For a rigid multibody system with coordinates $q$, a common equation is $M(q,p)\ddot{q}+C(q,\dot{q},p)+g(q,p)=\tau+J_c(q)^T\lambda+Q_{ext}$. $M$ is the mass matrix, $C$ includes velocity-dependent terms, $g$ gravity, $\tau$ generalized actuator force, $J_c^T\lambda$ constraint or contact forces, and $Q_{ext}$ external applied loads. If $q$, $\dot{q}$, $\ddot{q}$, model parameters, and external loads are known, inverse dynamics computes the required net generalized force $\tau_{req}$ by rearranging the equation. In practice, the system can include unmodeled forces and residual actuators, so reported net loads are conditional on the chosen model and force inputs.
+
+This is a computationally powerful decomposition. It can reveal whether a model and force-plate record are dynamically compatible, help estimate net joint moments, and seed controls. But the inverse map from net joint moment to individual muscle force is underdetermined. With $n$ muscles and $d$ generalized coordinates, the relation $\tau = R(q) f_m$ maps many muscle force vectors to the same joint moment whenever the muscle set is redundant. Even if a unique nonnegative solution exists in a special case, the result is sensitive to moment arms, force limits, co-contraction, passive structures, and activation state. An optimizer selecting the minimum squared activation chooses a solution according to a criterion; it does not discover a directly observed muscle force.
+
+## Why Differentiation Is Dangerous
+
+Suppose measured position is $q_k=q(t_k)+\epsilon_k$ with independent noise variance $\sigma^2$. A central second difference is approximately $(q_{k+1}-2q_k+q_{k-1})/\Delta t^2$. Its noise variance is $(1+4+1)\sigma^2/\Delta t^4=6\sigma^2/\Delta t^4$. Halving the sample interval increases this variance by a factor of sixteen under this simple white-noise model. Higher sampling rate does not automatically make acceleration estimates better; it can expose higher-frequency sensor noise unless the estimation procedure accounts for it.
+
+Filtering before differentiation controls variance but biases the acceleration and may introduce phase distortion. Conversely, a very flexible smoothing spline reproduces noise. Inverse dynamics should therefore report its dependence on smoothing parameters, derivative method, endpoint handling, and external-force synchronization. A trajectory-level optimization can avoid differentiating noisy measured positions directly by treating velocities and accelerations as latent states constrained by dynamics, but that trades derivative noise for model dependence.
+
+## Residual Forces and Dynamic Inconsistency
+
+In musculoskeletal workflows, residual actuators often represent unmodeled force needed to reconcile kinematics, external loads, and model dynamics. These are not physiological muscle forces. Large residuals can reflect incorrect body mass or center of mass, marker-based kinematics inconsistent with force data, bad force-plate assignment, missing degrees of freedom, contact errors, or time mismatch. Residual thresholds are useful warnings, but a low aggregate threshold cannot tell which assumption is correct. Residual magnitude, direction, duration, and mechanical work should all be inspected. A brief large impulse can matter more than a modest bias sustained over a full stride.
+
+OpenSim's Residual Reduction Algorithm (RRA) addresses part of this issue by solving a torque-driven tracking problem that can adjust kinematics and mass properties while reducing residual forces and moments. The result is a dynamically improved target, not a proof that adjusted dimensions are anatomically correct. A downstream muscle-driven simulation should report both the original data fit and the adjusted trajectory fit, together with the adjustments to the model. Otherwise, a preprocessing modification may be mistaken for successful prediction.
+
+## Muscle Redundancy and Optimization Criteria
+
+A static optimization commonly selects muscle activations $a$ at each sample to minimize a cost such as $\sum_i a_i^p$, subject to $R(q)f(a,l,v)=\tau_{req}$ and activation bounds. The exponent $p$, muscle strength scaling, passive forces, and constraints alter recruitment. With $p=2$, the optimizer tends to distribute effort; with other norms, it may favor sparse or different patterns. If the optimization is solved independently at each time sample, temporal smoothness and activation dynamics are omitted unless explicitly added. Thus this is a convention for resolving redundancy, not a data-driven identification of control.
+
+Forward optimal control improves upon per-frame allocation by adding activation dynamics and the equations of motion over time. Yet the solution still depends on its objective: activation minimization, metabolic energy, EMG fit, joint-load penalties, or task performance can produce distinct controls and trajectories. The correct interpretation is conditional: “the control history that minimizes this declared objective under these model and data assumptions.”
+
+## Weighted Least Squares, Constraints, and Uncertainty
+
+IK is often described as a least-squares problem, but the choice of residual space determines what the result means. Marker-position residuals can be weighted by camera reconstruction covariance, while coordinate residuals can be weighted by confidence in a joint-angle estimate. These are not interchangeable objectives. If markers are correlated because they share a segment rigid-body fit or camera calibration, a block covariance is more appropriate than independent scalar weights. Robust losses can reduce the effect of marker swaps, but persistent directional residuals usually indicate a calibration, attachment, or model problem and should not be hidden with a robust penalty.
+
+Joint limits and couplings may be encoded as hard constraints or soft priors. A hard bound prevents anatomically impossible configurations but can cause estimates to pile up at the boundary; a soft penalty permits small violations while expressing uncertainty. Report active constraints and distinguish a measurement-driven coordinate from one determined mostly by its prior. In local uncertainty analysis, a prior precision contributes to the approximate information matrix, so a small posterior variance does not necessarily imply the markers observed that coordinate well. Compare the data-only information with the prior-augmented information.
+
+## Using Inverse Methods Well
+
+A disciplined sequence is to use IK and ID as diagnostics, not ground truth. First fit a scaled model to markers and inspect residuals by marker and segment. Then compute filtered derivatives and net joint loads, documenting sensitivity to smoothing. Check external-force consistency and residual-actuator demand. Use those results to initialize controls or to formulate observation terms. Finally solve a forward constrained problem and compare its independently generated observations to the raw measurements. If the forward result diverges, distinguish whether the cause is poor optimization, bad initialization, model misspecification, or incompatible data.
+
+A useful diagnostic identity is the local covariance of IK coordinates. Under a locally linear model with Gaussian marker noise, $\operatorname{Cov}(\hat{q})\approx(J_m^TWJ_m)^{-1}$ when the inverse exists. Near singular configurations, this covariance becomes large. A coordinate may appear precise only because a strong prior constrains it. Reporting this uncertainty helps identify which parts of a model can reasonably be adapted from the available markers.
+
+## Worked Derivation: Why Joint Moments Do Not Identify Muscle Forces
+
+Consider a single hinge with two muscles having moment arms $r_1=0.03\,\mathrm{m}$ and $r_2=-0.02\,\mathrm{m}$. The measured net flexion moment is $\tau=10\,\mathrm{N\,m}$. The moment equation is $0.03 f_1 - 0.02 f_2=10$, with $f_1,f_2\geq0$. One solution is $(f_1,f_2)=(333.3,0)\,\mathrm{N}$; another is $(400,100)\,\mathrm{N}$, since $12-2=10\,\mathrm{N\,m}$. A co-contraction of both muscles changes individual force substantially while preserving the same net moment. A cost function can select one point on this line—for example minimizing squared normalized activations—but no net moment measurement distinguishes those solutions.
+
+With $m$ muscles and $d$ moment equations, the linearized null space has dimension at least $m-\operatorname{rank}(R)$ before inequality and muscle-force constraints. Bounds may shrink the feasible set but usually do not make the true force identifiable. EMG, tendon-force measurements, activation dynamics, physiological priors, and multiple movement conditions add information, though each has uncertainty.
+
+## Failure Modes to Record
+
+- Joint angles are differentiated twice without a convergence or smoothing sensitivity analysis.
+- A force plate is assigned to the wrong foot or expressed about the wrong origin.
+- A residual actuator is interpreted as muscle force.
+- An IK fit is judged only by its average error, hiding a few large outlier markers.
+- A static optimizer's muscle recruitment is presented as uniquely inferred.
+- Coordinate limits or priors are mistaken for measurement information.
+- One preprocessing choice is fixed silently and no alternative is tested.
+
+## Exercises With Solutions
+
+### Exercise 1: Rank and Redundancy
+
+A model has 18 muscles acting around 6 generalized coordinates. What does the count alone imply about unique muscle-force recovery?
+
+**Solution.** The count suggests at least 12-dimensional null space if the moment-arm matrix has full row rank, before inequalities and muscle dynamics. Exact rank and feasible bounds matter, but the count immediately rules out uniqueness from six net moments alone.
+
+### Exercise 2: Acceleration Noise
+
+A central second difference is used at $\Delta t=0.01\,\mathrm{s}$. If position noise standard deviation is $1\,\mathrm{mm}$, estimate the standard deviation of acceleration noise under independent samples.
+
+**Solution.** The variance is $6\sigma^2/\Delta t^4$; the standard deviation is $\sqrt{6}(0.001)/(0.01)^2\approx24.5\,\mathrm{m/s^2}$. This large value explains why raw finite differences are unsuitable for typical marker noise.
+
+### Exercise 3: What Does Low Residual Prove?
+
+RRA reduces residual moments by adjusting torso center of mass. What can be concluded?
+
+**Solution.** The adjusted model and kinematics are more consistent with the observed loads under that formulation. It does not prove the original center of mass was wrong by exactly the fitted amount, because marker error, force errors, omitted dynamics, and other parameters can create similar residuals.
+
+## References
+
+The locally available bibliography includes [Featherstone, *Rigid Body Dynamics Algorithms*](https://doi.org/10.1007/978-1-4899-7560-7) [@featherstone2008rigid] . Relevant live-linked records collected for the full review: [Thelen, Anderson, and Delp (2003), CMC](https://doi.org/10.1016/S0021-9290(02)00432-3); [Thelen and Anderson (2006), gait forward simulations](https://pubmed.ncbi.nlm.nih.gov/16023125/); [OpenSim official RRA documentation](https://opensimconfluence.atlassian.net/wiki/spaces/OpenSim/pages/53089669/Residual%2BReduction%2BAlgorithm); and [the 2024 systematic review](https://doi.org/10.3389/fbioe.2024.1386874). Source-access and metadata status are recorded in the parent research ledger.
