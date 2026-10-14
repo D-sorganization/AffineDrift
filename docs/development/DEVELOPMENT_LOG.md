@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5065 · Publish Golf_Control_Theory and Scope-and-Limits to Resolve Deploy Website Link Check
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5065
+- **Branch:** merged via #5066
+- **PR:** #5066
+- **Paths:** see #5066
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`29cbb2aa`; collated from changes/5065-fix-deploy-website-link-resolution-a.md)
+- **Summary:** Add Golf_Control_Theory and scope-and-limits pages to fix broken link resolution on main
+- **Next step:** Shipped in PR #5066.
+
 ### DL-#4512 · Implement What This Means for Golfers and Coaches Lua Filter With Epistemic Guardrails and Roll Out to Core Articles
 
 - **State:** shipped
