@@ -587,10 +587,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #4525
 - **Branch:** claude/issue-4525-adjudication-summary
-- **PR:** #4971
+- **PR:** #4971, #5048
 - **Paths:** see #4971
 - **Started:** 2026-10-05
-- **Last verified:** 2026-10-05 (`282f7372`; collated from changes/4525-rename-critiques-defense-strategy-to-the.md)
+- **Last verified:** 2026-10-14 (`c240b5df`; collated from changes/4525-triage-unknown-critique-severities-in-cl.md)
 - **Summary:** Rename critiques/DEFENSE_STRATEGY to the neutral adjudication-summary with a Quarto alias and redirect-ledger entry
 - **Next step:** Owner assigns severities to the three Unknown critiques and dates the Critical tip-mass response
 
@@ -786,6 +786,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#4010 · Publish AffineDrift Adversarial Audit, Document 3-Tier Engine Equivalency in Companion Catalog, and Link Big Idea Explainer
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4010
+- **Branch:** merged via #5049
+- **PR:** #5049
+- **Paths:** see #5049
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`22888202`; collated from changes/4010-publish-affinedrift-adversarial-audit-do.md)
+- **Summary:** Publish AffineDrift adversarial audit, document 3-tier engine equivalency in companion catalog, and link Big Idea explainer
+- **Next step:** Shipped in PR #5049.
 
 ### DL-#4127 · Generate Tools Capability Catalog and Golden-Vector Parity Suite
 
