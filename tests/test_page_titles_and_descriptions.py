@@ -166,7 +166,8 @@ ALLOWLISTED_NAV_SHORT_FORMS: frozenset[tuple[str, str]] = frozenset(
             "Proximal-to-Distal Monograph",
         ),
         ("articles/core-theses-registry.qmd", "Core Theses Registry"),
-        ("pages/validation-roadmap.qmd", "Validation Roadmap"),
+        ("evidence/claims.qmd", "Claims & Evidence"),
+        ("articles/proximal-distal-falsification-atlas.qmd", "Falsification Atlas"),
         (
             "articles/proximal-distal-falsification-atlas.qmd",
             "Proximal–Distal Falsification Atlas",

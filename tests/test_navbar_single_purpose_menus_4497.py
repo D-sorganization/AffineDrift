@@ -52,8 +52,12 @@ EXPECTED_MENU_ITEMS: dict[str, list[tuple[str, str]]] = {
     "Evidence": [
         ("Critiques & Responses", "critiques/index.html"),
         ("Core Theses Registry", "articles/core-theses-registry.html"),
-        ("Falsification Atlas", "pages/falsification-atlas.html"),
-        ("Validation Roadmap", "pages/validation-roadmap.html"),
+        ("Claims & Evidence", "evidence/claims.html"),
+        (
+            "Falsification Atlas",
+            "articles/proximal-distal-falsification-atlas.html",
+        ),
+        ("Development Roadmap", "pages/development-roadmap.html"),
         ("Technology Overview", "pages/technology.html"),
         ("Force Measurement", "articles/technology-force-measurement.html"),
         ("Motion Capture", "articles/technology-motion-capture.html"),
