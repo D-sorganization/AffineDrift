@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "atlas_domain": "zero-torque-counterfactual",
+  "tracking_issue": "https://github.com/D-sorganization/AffineDrift/issues/4528",
+  "authorities": {
+    "critiques": {
+      "path": "data/trust/claim_critique_ledger.json"
+    },
+    "readiness": {
+      "path": "data/research_protocols/library.json"
+    }
+  },
+  "records": [
+    {
+      "atlas_id": "ztcf-atlas-passive-element-torque-leakage",
+      "title": "Passive Element Torque Leakage in Zero-Torque Drift",
+      "critique_id": "crit-ztcf-passive-torque-definition",
+      "critique_question": "Does setting active generalized torque tau_act = 0 leave passive joint capsule, ligament, and shaft restorative torques tau_pass(q, q_dot) unseparated from pure inertial and Coriolis drift?",
+      "alternative_mechanism": "Passive viscoelastic joint moments and structural elasticity continue to exert forces when active muscular drive ceases. If unseparated, these passive restorative torques produce non-inertial accelerations that are mistakenly attributed to pure drift.",
+      "discriminating_measurement": "Compare strict zero-torque rollouts (tau_total = 0) against active-torque-zeroed rollouts (tau_act = 0 with calibrated passive compliance) across UpstreamDrift Tier 1 rigid multi-body dynamics (MuJoCo, Pinocchio, Drake) and Tier 3 musculoskeletal models (OpenSim, MyoSuite).",
+      "required_instrumentation": "Multi-tier dynamics simulation framework; joint-angle kinematic trackers; passive tissue constitutive models.",
+      "falsification_threshold": "Relative trajectory deviation ||q_act(t) - q_total(t)||_M / ||q_total(t)||_M > 0.05 over a 100 ms counterfactual rollout window.",
+      "readiness_protocol_id": "ad-protocol-model-ladder-001"
+    },
+    {
+      "atlas_id": "ztcf-atlas-bilateral-grip-nullspace",
+      "title": "Bilateral Split-Grip Internal Force Nullspace",
+      "critique_id": "crit-ztcf-identifiability",
+      "critique_question": "Does net club-handle wrench uniquely identify dual-hand internal forces, individual hand loading, or neural motor intent?",
+      "alternative_mechanism": "Internal force pairs acting along the closed kinematic chain connecting the lead and trail hands occupy the algebraic wrench nullspace. Opposing internal grip forces cancel in resultant club acceleration but radically alter individual hand effort.",
+      "discriminating_measurement": "Instrumented split-grip handle sensor measuring synchronized closed-chain internal wrench nullspace forces independently for each hand alongside net clubhead acceleration.",
+      "required_instrumentation": "Dual multi-axis load cells embedded in split-grip handle; synchronized 1000 Hz optical motion capture.",
+      "falsification_threshold": "Internal hand force magnitude exceeding 15% of peak resultant wrench while net club wrench remains unchanged within sensor tolerance (+/- 2 N, +/- 0.1 N*m).",
+      "readiness_protocol_id": "ad-protocol-bilateral-hand-wrench-001"
+    },
+    {
+      "atlas_id": "ztcf-atlas-horizon-sensitivity",
+      "title": "Counterfactual Horizon Sensitivity and Dynamical Divergence",
+      "critique_id": "crit-ztcf-horizon-divergence",
+      "critique_question": "Does the counterfactual forward rollout window prior to impact remain dynamically and numerically valid against state perturbations and contact onset?",
+      "alternative_mechanism": "Forward unactuated trajectory integration over finite intervals prior to impact is subject to chaotic sensitivity and unmodeled pre-impact boundary constraints, causing unactuated rollouts to diverge exponentially from actual swing state manifolds.",
+      "discriminating_measurement": "Rollout window sensitivity sweeps Delta t in [5 ms, 50 ms] prior to impact t_impact^- evaluating finite-time Lyapunov exponents and terminal delivery variance under state perturbations across multi-body engines.",
+      "required_instrumentation": "High-rate kinematic trajectory integration; multi-body forward simulation; finite-horizon sensitivity auditing.",
+      "falsification_threshold": "Terminal clubhead position divergence exceeding +/- 15 mm or clubhead speed discrepancy exceeding 10% for integration horizons Delta t > 25 ms.",
+      "readiness_protocol_id": "ad-protocol-dcr-perturbation-001"
+    }
+  ]
+}

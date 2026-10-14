@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "atlas_domain": "drift-control-ratio",
+  "tracking_issue": "https://github.com/D-sorganization/AffineDrift/issues/4528",
+  "authorities": {
+    "critiques": {
+      "path": "data/trust/claim_critique_ledger.json"
+    },
+    "readiness": {
+      "path": "data/research_protocols/library.json"
+    }
+  },
+  "records": [
+    {
+      "atlas_id": "dcr-atlas-coordinate-chart-invariance",
+      "title": "Coordinate Chart Sensitivity of the Drift-Control Ratio",
+      "critique_id": "crit-dcr-coordinate-invariance",
+      "critique_question": "Do componentwise Euclidean norms ||f(x)||_2 / (||f(x)||_2 + ||G(x)u||_2) change under nonlinear generalized coordinate transformations q |-> phi(q)?",
+      "alternative_mechanism": "Unweighted Euclidean acceleration norms vary arbitrarily under smooth coordinate transformations, creating chart-dependent artifacts where changing joint angle parameterizations artificially alters the apparent drift-to-control balance.",
+      "discriminating_measurement": "Evaluate the kinetic-energy-metric-weighted tensor norm ||a||_M(q) = sqrt(a^T M(q) a) against unweighted coordinate norms across minimal joint angles and maximal Lie group / Cartesian coordinates.",
+      "required_instrumentation": "Coordinate transformation engine; Riemannian metric acceleration evaluator; minimal vs maximal coordinate simulators.",
+      "falsification_threshold": "Discrepancy between kinetic-energy-metric-weighted DCR and unweighted coordinate DCR exceeding 0.10 across physically equivalent swing trajectories.",
+      "readiness_protocol_id": "ad-protocol-model-ladder-001"
+    },
+    {
+      "atlas_id": "dcr-atlas-reflex-feedback-confounding",
+      "title": "Neuromuscular Reflex Feedback in Drift-Control Partitioning",
+      "critique_id": "crit-neuromuscular-control",
+      "critique_question": "Do involuntary spinal stretch reflexes u_reflex(q, q_dot) shift state-dependent feedback between drift f(x) and voluntary control G(x)u?",
+      "alternative_mechanism": "Rapid monosynaptic and polysynaptic stretch reflexes (30-60 ms latency) generate state-dependent joint torques that mimic passive mechanical plant impedance, blurring the theoretical distinction between autonomous drift and intentional control.",
+      "discriminating_measurement": "Compare open-loop generalized torque-driven Tier 1 rigid body models against reflex-enabled Tier 3 musculoskeletal models under unexpected kinematic perturbation trials during the downswing.",
+      "required_instrumentation": "High-density surface EMG array; transient torque-perturbation robotic handle; Tier 3 Hill-type neuromuscular reflex simulation.",
+      "falsification_threshold": "Perturbation-induced reflexive torque modulation exceeding 20% of nominal voluntary control torque within 50 ms of mechanical perturbation.",
+      "readiness_protocol_id": "ad-protocol-active-impedance-001"
+    },
+    {
+      "atlas_id": "dcr-atlas-impact-interval-truncation",
+      "title": "Impact Interval Truncation and Finite Contact Duration",
+      "critique_id": "crit-impact-evasion",
+      "critique_question": "Does pre-impact Drift-Control Ratio evaluated at t_impact^- retain predictive authority over ball launch conditions given finite contact duration [t_0, t_1]?",
+      "alternative_mechanism": "During the approximately 450 microsecond collision window, clubhead-ball deformation, high-frequency structural waves, and localized compliance dominate post-impact trajectory, decoupling pre-impact rigid-body acceleration ratios from launch outcomes.",
+      "discriminating_measurement": "Execute UpstreamDrift fail-closed audit_impact_interval across Tier 2 compliant viscoelastic contact solvers (Hunt-Crossley, Hertzian contact) against experimental ball launch and restitution data.",
+      "required_instrumentation": "Ultra-high-speed video (>= 20,000 fps); dynamic contact force sensors; fail-closed impact interval audit suite.",
+      "falsification_threshold": "Failure of momentum-energy balance audit or greater than 5% divergence in ball launch speed between instantaneous coefficient-of-restitution models and continuous contact integration.",
+      "readiness_protocol_id": "ad-protocol-hybrid-impact-001"
+    }
+  ]
+}
