@@ -232,6 +232,11 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-14 | #5052 | Register 12 core biomechanical and control-theoretic theses in claim_registry.json |
+| 2026-10-14 | #5053 | Consolidate repeated inline caveats into structured caveats front-matter on software.qmd and philosophy.qmd |
+| 2026-10-14 | #5051 | Add accessible theme-adaptive Drift Plus Control SVG vector-field diagram and embed on start-here.qmd |
+| 2026-10-14 | #5050 | Rewrite plain-language summaries to pass Grade 10 readability gate and keep Layman's Terms blocks open |
+| 2026-10-14 | #5054 | Withdraw the synthetic reader-validation study: its participant data was generated, not collected; remove the generator, schema, published JSON and partial |
 | 2026-10-14 | #5045 | Retry live gate on transient subresource 5xx |
 | 2026-10-14 | #5048 | Triage unknown critique severities in claim_critique_ledger.json and enforce non-unknown severity contract |
 | 2026-10-14 | #5049 | Publish AffineDrift adversarial audit, document 3-tier engine equivalency in companion catalog, and link Big Idea explainer |
