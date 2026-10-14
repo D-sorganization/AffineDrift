@@ -24,13 +24,13 @@ for (const [route, limit] of Object.entries(DOCUMENT_BUDGETS)) {
   });
 }
 
-test('home has one primary action, unique featured books, and working navigation', async ({ page }) => {
+test('home has primary actions, unique featured books, and working navigation', async ({ page }) => {
   await page.goto('/');
   const actions = page.locator('.home-hero__actions a');
-  await expect(actions).toHaveCount(1);
+  await expect(actions).toHaveCount(2);
   await expect(page.getByRole('heading', { name: /^Featured Reading/ })).toBeVisible();
   await expect(page.locator('main a[href*="The_Physics_of_Golf/quarto/"]')).toHaveCount(1);
-  await actions.click();
+  await actions.first().click();
   await expect(page).toHaveURL(/pages\/start-here.html$/);
 });
 

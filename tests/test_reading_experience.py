@@ -19,8 +19,9 @@ def source(path: str) -> str:
 def test_home_has_one_action_and_concise_introduction() -> None:
     home = BeautifulSoup(source("index.qmd"), "html.parser")
     actions = home.select(".home-hero__actions a")
-    assert len(actions) == 1
+    assert len(actions) == 2
     assert actions[0]["href"] == "pages/start-here.html"
+    assert actions[1]["href"] == "resources/articles.html"
     assert len(home.select_one(".home-hero__lede").get_text().split()) <= 40
     assert home.select_one('a[href="books/index.html"]')
     assert home.select_one('a[href="resources/articles.html"]')
