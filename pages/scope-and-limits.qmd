@@ -1,0 +1,70 @@
+---
+google-scholar: false
+title: "Scope and Limits"
+description: "Explicit boundaries of the control-affine framework, model assumptions, and canonical publication maturity states."
+page-layout: article
+categories:
+- site-information
+---
+
+## Framework Scope and Boundary Assumptions {#framework-scope}
+
+AffineDrift develops mathematical models and computational simulations to analyze the mechanics of the golf swing. Modeling any physical system requires explicit simplifying assumptions. Understanding what a model assumes is essential to interpreting its findings correctly.
+
+The core analytical framework represents the swing as a control-affine dynamical system:
+
+$$\dot{x} = f(x) + G(x)u$$
+
+Where:
+
+- $x$ represents the state vector of generalized coordinates and velocities.
+- $f(x)$ represents the passive drift vector field, encapsulating gravity, inertial couplings, and unforced mechanical motion.
+- $G(x)u$ represents the active control channel, encapsulating muscular joint torques and applied control inputs.
+
+### Boundary Conditions and Modeling Assumptions
+
+1. **Rigid-Body Approximation**: Skeletal segments are modeled as rigid bodies with constant moments of inertia. Soft tissue deformation, wobbling mass, and muscle belly displacement are not captured in the primary equations of motion.
+2. **Joint Degree-of-Freedom Constraints**: Anatomical joints (shoulder, elbow, wrist, pelvis) are idealized as kinematic pairs with specified rotational axes.
+3. **Planar vs Three-Dimensional Regimes**: Simplified planar double-pendulum benchmarks serve as analytical reference points, while full-body simulations operate in three dimensions. Insights from planar models cannot be assumed to transfer unconditionally to three-dimensional swing kinematics.
+4. **Neuromotor Simplification**: Actuation inputs $u(t)$ represent net joint torques rather than individual muscle activation dynamics, motor unit recruitment, or physiological fatigue.
+
+---
+
+## What the Model Establishes and Does Not Establish {#establishes-boundaries}
+
+### What the Framework Establishes
+
+- **Mathematical Consistency**: Formulations are verified for dimensional consistency, coordinate invariance, and numerical conservation principles.
+- **Decomposition Transparency**: The split between passive mechanical drift and active control input provides an exact accounting of what unforced mechanics would produce versus what muscular torque adds.
+- **Counterfactual Diagnostics**: The Zero-Torque Counterfactual (ZTCF) and Zero-Velocity Counterfactual (ZVCF) offer deterministic baselines against which to measure the net contribution of golfer effort.
+
+### What the Framework Does Not Establish
+
+- **Empirical Human Validation**: A simulation showing that a given torque profile delivers the clubhead to impact does not prove that living golfers execute that specific control strategy.
+- **Biomechanical Universality**: Optimal control trajectories derived from robotic or rigid-body models do not represent universal coaching prescriptions for every swing technique or physical build.
+- **Clinical or Instructional Authority**: AffineDrift is a scientific and educational inquiry platform. Its findings are open hypotheses and simulation studies, not medical advice or swing coaching dogma.
+
+---
+
+## Canonical Publication States {#maturity-key}
+
+Every major work, chapter, and tool across AffineDrift carries an explicit publication state. These six states distinguish what is mathematically checked from what remains provisional or untested in living golfers:
+
+{{< include ../_includes/generated/publication-states.qmd >}}
+
+For a detailed breakdown of how each state is assigned and audited, see the [How to Read This Site](how-to-read.html#publication-states) guide.
+
+---
+
+## Connecting to the Evidence Ladder {#evidence-connection}
+
+AffineDrift evaluates technical claims along a structured six-rung evidence progression, from model-internal identities to replicated human participant studies:
+
+1. **Mathematical Identity**: Deduced from equations of motion by algebraic proof.
+2. **Manufactured Fixture**: Software verification against known analytic or synthetic solutions.
+3. **Simulation**: Multibody simulation satisfying numerical convergence and energy accounting.
+4. **Measured Participant Result**: Comparison against empirical motion capture and force plate recordings.
+5. **Replicated Result**: Findings corroborated by independent participant datasets.
+6. **Bounded Application**: Field application within specified equipment, athlete, and environmental constraints.
+
+To explore ongoing experimental validation protocols and laboratory benchmarking pathways, consult the [Model-to-Human Validation Roadmap](validation-roadmap.html) and the full [Evidence Ladder](how-to-read.html#evidence-ladder).
