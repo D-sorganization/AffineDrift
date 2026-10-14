@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4993 · Retry Live Gate on Transient Subresource 5Xx
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4993
+- **Branch:** merged via #5045
+- **PR:** #5045
+- **Paths:** see #5045
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`aae4c1ad`; collated from changes/4993-live-subresource-retry.md)
+- **Summary:** Retry live gate on transient subresource 5xx
+- **Next step:** Shipped in PR #5045.
+
 ### DL-#4010 · Publish AffineDrift Adversarial Audit, Document 3-Tier Engine Equivalency in Companion Catalog, and Link Big Idea Explainer
 
 - **State:** shipped
