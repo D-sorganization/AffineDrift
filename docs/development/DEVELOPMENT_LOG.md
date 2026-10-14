@@ -910,10 +910,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #4553
 - **Branch:** merged via #5008
-- **PR:** #5008
+- **PR:** #5008, #5060
 - **Paths:** see #5008
 - **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`0e9f8585`; collated from changes/4553-consolidate-okabe-ito-palette-css-tokens.md)
+- **Last verified:** 2026-10-14 (`1bd5617e`; collated from changes/4553-remove-global-margin-padding-reset-from.md)
 - **Summary:** Consolidate Okabe-Ito palette CSS tokens into css/tokens/colors.css and add design token audit
 - **Next step:** Shipped in PR #5008.
 
