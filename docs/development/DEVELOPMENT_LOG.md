@@ -787,6 +787,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4512 · Implement What This Means for Golfers and Coaches Lua Filter With Epistemic Guardrails and Roll Out to Core Articles
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4512
+- **Branch:** merged via #5047
+- **PR:** #5047
+- **Paths:** see #5047
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`6f8dd8b6`; collated from changes/4512-implement-what-this-means-for-golfers-an.md)
+- **Summary:** Implement What This Means for Golfers and Coaches Lua filter with epistemic guardrails and roll out to core articles
+- **Next step:** Shipped in PR #5047.
+
+### DL-#4497 · Restructure Navbar Into Six Single-Purpose Menus With Zero Duplicate Links
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4497
+- **Branch:** merged via #5061
+- **PR:** #5061
+- **Paths:** see #5061
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`a2e3d741`; collated from changes/4497-restructure-navbar-into-six-single-purpo.md)
+- **Summary:** Restructure navbar into six single-purpose menus with zero duplicate links
+- **Next step:** Shipped in PR #5061.
+
 ### DL-#4528 · Add ZTCF and DCR Falsification Atlases and Publish Model-to-Human Validation Roadmap
 
 - **State:** shipped

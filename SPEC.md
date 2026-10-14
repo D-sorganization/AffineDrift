@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-14 | #5047 | Implement What This Means for Golfers and Coaches Lua filter with epistemic guardrails and roll out to core articles |
+| 2026-10-14 | #5061 | Restructure navbar into six single-purpose menus with zero duplicate links |
 | 2026-10-14 | #5046 | Add ZTCF and DCR falsification atlases and publish Model-to-Human Validation Roadmap |
 | 2026-10-14 | #5058 | Redesign home page around audience routing, progressive math disclosure, and scientific trust strip |
 | 2026-10-14 | #5060 | Remove global margin/padding reset from styles.css and document design tokens and component gallery |
