@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-14 | #5045 | Retry live gate on transient subresource 5xx |
 | 2026-10-14 | #5048 | Triage unknown critique severities in claim_critique_ledger.json and enforce non-unknown severity contract |
 | 2026-10-14 | #5049 | Publish AffineDrift adversarial audit, document 3-tier engine equivalency in companion catalog, and link Big Idea explainer |
 | 2026-10-13 | #5043 | Adjudicate historical screw-theory research outline (#4719) |
