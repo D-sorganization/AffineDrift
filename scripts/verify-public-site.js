@@ -9,6 +9,7 @@ const {
   RETRYABLE_STATUS_CODES,
   summarizeNavigationAttempts,
 } = require('./public-site-navigation.js');
+const { collectEvidenceWithSubresourceRetries } = require('./public-site-evidence-retry.js');
 const {
   AXE_FAILING_IMPACTS,
   AXE_MODES,
@@ -19,8 +20,10 @@ const {
   summarizeAxeViolations,
 } = require('./public-site-axe.js');
 const {
+  failuresAreOnlyRetriableSubresourceNoise,
   isActionableConsoleError,
   isActionablePageError,
+  isTransientSubresourceLoadConsoleError,
 } = require('./public-site-browser-noise.js');
 const { formatFailures } = require('./public-site-failures.js');
 
@@ -467,53 +470,35 @@ async function verifyItem(page, item, options) {
   page.on('console', onConsole);
   page.on('pageerror', onPageError);
   page.on('requestfailed', onRequestFailed);
-
-  const targetUrl = new URL(item.route, options.baseUrl).href;
-  let response = null;
-  let inspection = { failures: ['page inspection did not run'] };
-  let navigationError = null;
-  let navigationAttempts = [];
-  let navigationRetried = false;
-  const resetAttemptEvidence = () => {
-    consoleErrors.length = 0;
-    pageErrors.length = 0;
-    failedRequests.length = 0;
+  const listeners = {
+    consoleErrors,
+    pageErrors,
+    failedRequests,
+    onConsole,
+    onPageError,
+    onRequestFailed,
+    resetAttemptEvidence: () => {
+      consoleErrors.length = 0;
+      pageErrors.length = 0;
+      failedRequests.length = 0;
+    },
   };
-  try {
-    const navResult = await navigateWithRetry(page, targetUrl, {
-      timeout: 60000,
-      waitUntil: 'domcontentloaded',
-      maxRetries: options.documentRetries,
-      baseDelayMs: options.documentRetryDelayMs,
-      resetAttemptEvidence,
-    });
-    response = navResult.response;
-    navigationAttempts = navResult.attempts;
-    navigationRetried = navResult.retried;
-    if (navResult.error) {
-      throw new Error(navResult.error);
-    }
 
-    await waitForSettledPage(page);
-    inspection = await inspectRenderedPage(page, item);
-  } catch (error) {
-    navigationError = error.message;
-  }
-
-  const failures = [...inspection.failures];
-  if (navigationError) failures.push(`inspection: ${navigationError}`);
-  if (inspection.canonical) {
-    const canonicalPath = new URL(inspection.canonical).pathname;
-    if (!canonicalPathMatches(canonicalPath, item.route)) {
-      failures.push(`canonical path ${canonicalPath} does not match ${item.route}`);
-    }
-  }
-  if (!response || !response.ok()) {
-    failures.push(`document response failed: ${response?.status() ?? navigationError ?? 'no response'}`);
-  }
-  failures.push(...consoleErrors.map((error) => `console: ${error}`));
-  failures.push(...pageErrors.filter(isActionablePageError).map((error) => `pageerror: ${error}`));
-  failures.push(...failedRequests.map((error) => `requestfailed: ${error}`));
+  const evidence = await collectEvidenceWithSubresourceRetries(page, item, options, listeners, {
+    waitForSettledPage,
+    inspectRenderedPage,
+    canonicalPathMatches,
+  });
+  const {
+    evidenceAttemptCount,
+    subresourceRetried,
+    response,
+    inspection,
+    navigationError,
+    navigationAttempts,
+    navigationRetried,
+    failures,
+  } = evidence;
 
   let screenshot = null;
   if (options.screenshots && !navigationError) {
@@ -559,6 +544,8 @@ async function verifyItem(page, item, options) {
     inspection,
     navigation_attempts: navigationAttempts,
     navigation_retried: navigationRetried,
+    evidence_attempt_count: evidenceAttemptCount,
+    subresource_retried: subresourceRetried,
     ...(axeViolations ? { axe_violations: axeViolations } : {}),
   };
 }
@@ -678,8 +665,10 @@ module.exports = {
   canonicalPathMatches,
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
+  failuresAreOnlyRetriableSubresourceNoise,
   isActionableConsoleError,
   isActionablePageError,
+  isTransientSubresourceLoadConsoleError,
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   parseArgs,

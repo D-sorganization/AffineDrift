@@ -109,5 +109,6 @@ module.exports = {
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   RETRYABLE_STATUS_CODES,
+  retryDelay,
   summarizeNavigationAttempts,
 };
