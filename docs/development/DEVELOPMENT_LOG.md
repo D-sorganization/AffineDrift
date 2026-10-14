@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4522 · Register 12 Core Biomechanical and Control-Theoretic Theses in Claim_Registry.Json
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4522
+- **Branch:** merged via #5052
+- **PR:** #5052
+- **Paths:** see #5052
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`22dab862`; collated from changes/4522-register-12-core-biomechanical-and-contr.md)
+- **Summary:** Register 12 core biomechanical and control-theoretic theses in claim_registry.json
+- **Next step:** Shipped in PR #5052.
+
 ### DL-#4088 · Withdraw the Synthetic Reader-Validation Study: Its Participant Data Was Generated, Not Collected; Remove the Generator, Schema, Published JSON and Partial
 
 - **State:** shipped
