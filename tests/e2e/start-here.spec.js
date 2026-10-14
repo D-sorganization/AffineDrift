@@ -28,7 +28,7 @@ for (const route of ROUTES) {
       await directLink.first().click();
     } else {
       const startMenu = page.locator("#quarto-header .navbar-nav a.nav-link", {
-        hasText: /^Start$/,
+        hasText: /^\s*Start\s*$/,
       });
       await expect(startMenu.first()).toBeVisible();
       await startMenu.first().click();
