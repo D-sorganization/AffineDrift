@@ -1,10 +1,10 @@
-"""Navbar information-architecture contract (EPIC #3140 D1).
+"""Navbar information-architecture contract (EPIC #3140 D1, #4497).
 
-The site's top-level navigation exposes four focused dropdowns
-(Read / Technology / Build / Connect) plus the Home link, with the legacy
-Learn and Explore labels removed. Each dropdown is capped at 11 items (including
-separators) so the proximal--distal reader and its model workbench can remain
-discoverable without allowing unbounded menu growth.
+The site's top-level navigation exposes six focused dropdowns
+(Start / Library / Evidence / Tools / Resources / About), with the legacy
+Learn, Explore, Read, Build, and Connect labels removed or restructured. Each dropdown
+is capped at 11 items (including separators) so the reader and model workbench
+remain discoverable without allowing unbounded menu growth.
 """
 
 from __future__ import annotations
@@ -18,9 +18,13 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 QUARTO_YML = REPO_ROOT / "_quarto.yml"
 
 # Hard limits — the IA contract.
-EXPECTED_DROPDOWNS: frozenset[str] = frozenset({"Read", "Technology", "Build", "Connect"})
+EXPECTED_DROPDOWNS: frozenset[str] = frozenset(
+    {"Start", "Library", "Evidence", "Tools", "Resources", "About"}
+)
 MAX_ITEMS_PER_DROPDOWN: int = 11
-FORBIDDEN_TOP_LEVEL_LABELS: frozenset[str] = frozenset({"Learn", "Explore"})
+FORBIDDEN_TOP_LEVEL_LABELS: frozenset[str] = frozenset(
+    {"Learn", "Explore", "Read", "Build", "Connect"}
+)
 
 
 @pytest.fixture(scope="module")
@@ -59,8 +63,9 @@ def _entry_with_label(navbar: dict, label: str) -> dict:
 
 class TestTopLevelStructure:
     def test_home_link_present(self, navbar: dict) -> None:
-        labels = [e["text"] for e in _left_entries(navbar)]
-        assert "Home" in labels
+        start_entry = _entry_with_label(navbar, "Start")
+        hrefs = [e.get("href") for e in start_entry.get("menu", []) if isinstance(e, dict)]
+        assert "index.html" in hrefs
 
     def test_expected_number_of_dropdowns(self, navbar: dict) -> None:
         expected = len(EXPECTED_DROPDOWNS)
@@ -94,36 +99,36 @@ class TestDropdownContent:
         ), f"{label} dropdown has {count} items; budget is {MAX_ITEMS_PER_DROPDOWN}"
 
 
-class TestReadDropdownContent:
-    """The 'Read' dropdown is the primary content path — keep it focused."""
+class TestLibraryDropdownContent:
+    """The 'Library' dropdown is the primary content path — keep it focused."""
 
     def test_includes_physics_of_golf(self, navbar: dict) -> None:
-        menu = _entry_with_label(navbar, "Read")["menu"]
+        menu = _entry_with_label(navbar, "Library")["menu"]
         hrefs = [item.get("href", "") for item in menu]
         assert any("The_Physics_of_Golf" in h for h in hrefs)
 
     def test_includes_geometry_of_motion(self, navbar: dict) -> None:
-        menu = _entry_with_label(navbar, "Read")["menu"]
+        menu = _entry_with_label(navbar, "Library")["menu"]
         hrefs = [item.get("href", "") for item in menu]
         assert any("The_Geometry_of_Motion" in h for h in hrefs)
 
     def test_includes_bibliography(self, navbar: dict) -> None:
-        menu = _entry_with_label(navbar, "Read")["menu"]
+        menu = _entry_with_label(navbar, "Resources")["menu"]
         hrefs = [item.get("href", "") for item in menu]
         assert any("bibliography" in h for h in hrefs)
 
     def test_includes_learning_paths(self, navbar: dict) -> None:
         """IA cleanup (#3222): surface the buried learning-paths feature."""
-        menu = _entry_with_label(navbar, "Read")["menu"]
+        menu = _entry_with_label(navbar, "Start")["menu"]
         hrefs = [item.get("href", "") for item in menu]
         assert any("learning-paths" in h for h in hrefs)
 
 
-class TestBuildDropdownContent:
-    """Build points to curated hubs; engine leaves belong on the model hub."""
+class TestToolsDropdownContent:
+    """Tools points to curated hubs; engine leaves belong on the model hub."""
 
-    def test_build_menu_is_hub_first(self, navbar: dict) -> None:
-        menu = _entry_with_label(navbar, "Build")["menu"]
+    def test_tools_menu_is_hub_first(self, navbar: dict) -> None:
+        menu = _entry_with_label(navbar, "Tools")["menu"]
         labels = {item.get("text", "") for item in menu}
 
         assert {

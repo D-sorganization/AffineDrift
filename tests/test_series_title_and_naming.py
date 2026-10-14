@@ -80,17 +80,17 @@ def test_single_series_name_in_navbar_and_sidebar() -> None:
     website = data["website"]
 
     # Navbar check
-    read_menu = None
+    library_menu = None
     for item in website.get("navbar", {}).get("left", []):
-        if item.get("text") == "Read":
-            read_menu = item.get("menu", [])
+        if item.get("text") in ("Library", "Read"):
+            library_menu = item.get("menu", [])
             break
-    assert read_menu is not None, "Could not find 'Read' menu in navbar"
+    assert library_menu is not None, "Could not find 'Library' menu in navbar"
 
-    navbar_texts = [item.get("text") for item in read_menu if isinstance(item, dict)]
+    navbar_texts = [item.get("text") for item in library_menu if isinstance(item, dict)]
     assert (
         "Theory Series" in navbar_texts
-    ), f"Navbar 'Read' menu must contain 'Theory Series', found: {navbar_texts}"
+    ), f"Navbar 'Library' menu must contain 'Theory Series', found: {navbar_texts}"
     assert (
         "Drifter Manifesto & Theory" not in navbar_texts
     ), "Navbar must not use legacy 'Drifter Manifesto & Theory'"

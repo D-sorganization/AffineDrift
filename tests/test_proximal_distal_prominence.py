@@ -17,22 +17,25 @@ def _read(relative_path: str) -> str:
 
 
 def _read_navigation_block(quarto: str) -> str:
-    """Return the global Read navigation block without matching the Books sidebar."""
+    """Return the global Library/Read navigation block without matching the Books sidebar."""
     match = re.search(
-        r'      - text: "Read"(?P<body>.*?)      - text: "Technology"',
+        r'      - text: "(?:Library|Read)"(?P<body>.*?)      - text: "(?:Evidence|Technology)"',
         quarto,
         re.DOTALL,
     )
-    assert match is not None, "Read navigation block is missing"
+    assert match is not None, "Library/Read navigation block is missing"
     return match.group("body")
 
 
 def test_global_read_navigation_promotes_the_technical_monograph() -> None:
-    """The three long-form technical entries should be peers in the Read menu."""
-    read_navigation = _read_navigation_block(_read("_quarto.yml"))
+    """The long-form technical entries should be peers in the Library menu."""
+    navigation = _read_navigation_block(_read("_quarto.yml"))
 
-    assert 'text: "Proximal-to-Distal Technical Monograph"' in read_navigation
-    assert f"href: {MONOGRAPH_ROUTE}" in read_navigation
+    assert (
+        'text: "Proximal-to-Distal Monograph"' in navigation
+        or 'text: "Proximal-to-Distal Technical Monograph"' in navigation
+    )
+    assert f"href: {MONOGRAPH_ROUTE}" in navigation
 
 
 def test_home_features_the_monograph_once_with_its_scientific_limits() -> None:
