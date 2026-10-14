@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-14 | #5046 | Add ZTCF and DCR falsification atlases and publish Model-to-Human Validation Roadmap |
 | 2026-10-14 | #5058 | Redesign home page around audience routing, progressive math disclosure, and scientific trust strip |
 | 2026-10-14 | #5060 | Remove global margin/padding reset from styles.css and document design tokens and component gallery |
 | 2026-10-14 | #5052 | Register 12 core biomechanical and control-theoretic theses in claim_registry.json |

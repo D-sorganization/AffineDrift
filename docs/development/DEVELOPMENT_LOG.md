@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4528 · Add ZTCF and DCR Falsification Atlases and Publish Model-to-Human Validation Roadmap
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4528
+- **Branch:** merged via #5046
+- **PR:** #5046
+- **Paths:** see #5046
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`52849ec4`; collated from changes/4528-add-ztcf-and-dcr-falsification-atlases-a.md)
+- **Summary:** Add ZTCF and DCR falsification atlases and publish Model-to-Human Validation Roadmap
+- **Next step:** Shipped in PR #5046.
+
 ### DL-#4487 · Redesign Home Page Around Audience Routing, Progressive Math Disclosure, and Scientific Trust Strip
 
 - **State:** shipped

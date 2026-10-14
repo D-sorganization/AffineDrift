@@ -152,6 +152,7 @@ ALLOWLISTED_NAV_SHORT_FORMS: frozenset[tuple[str, str]] = frozenset(
         ("books/tangent-space-methods.qmd", "Volume I: Tangent-Space Methods"),
         ("books/biomechanics-biology-to-systems.qmd", "Volume III: Biomechanics"),
         ("books/roadmap.qmd", "Roadmap & Curriculum"),
+        ("pages/big-idea.qmd", "The Big Idea"),
         (
             "articles/proximal_distal_energy_transfer/index.qmd",
             "Proximal-to-Distal Energy Transfer",
@@ -160,6 +161,13 @@ ALLOWLISTED_NAV_SHORT_FORMS: frozenset[tuple[str, str]] = frozenset(
             "articles/proximal_distal_energy_transfer/index.qmd",
             "Proximal-to-Distal Technical Monograph",
         ),
+        (
+            "articles/proximal_distal_energy_transfer/index.qmd",
+            "Proximal-to-Distal Monograph",
+        ),
+        ("articles/core-theses-registry.qmd", "Core Theses Registry"),
+        ("evidence/claims.qmd", "Claims & Evidence"),
+        ("articles/proximal-distal-falsification-atlas.qmd", "Falsification Atlas"),
         (
             "articles/proximal-distal-falsification-atlas.qmd",
             "Proximal–Distal Falsification Atlas",

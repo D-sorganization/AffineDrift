@@ -84,8 +84,9 @@ def test_readability_is_grade_ten_or_lower_and_checked_as_a_hub_page() -> None:
 
 def test_is_the_first_navbar_item() -> None:
     config = yaml.safe_load((ROOT / "_quarto.yml").read_text(encoding="utf-8"))
-    first = config["website"]["navbar"]["left"][0]
-    assert first == {"text": "Start Here", "href": "pages/start-here.html"}
+    first_menu = config["website"]["navbar"]["left"][0]
+    assert first_menu.get("text") == "Start"
+    assert first_menu.get("menu", [])[0] == {"text": "Start Here", "href": "pages/start-here.html"}
 
 
 def test_is_the_home_page_primary_call_to_action() -> None:
