@@ -221,7 +221,7 @@ Static website in `_site/`, public site manifest (`_site/public-site-manifest.js
 ## 11. Roadmap & Open Issues
 
 - **Active Development**: Maintain coverage above the `pyproject.toml` floor, refine affine swing optimization models, expand educational textbook materials.
-- **Current Priorities**: Complete programming companion consumer integration (#4022-#4030), maintain root hygiene allowlists (#4128), execute reader validation protocols (#4088).
+- **Current Priorities**: Complete programming companion consumer integration (#4022-#4030), maintain root hygiene allowlists (#4128).
 - **Known Boundaries**: Real-time simulation is delegated to UpstreamDrift; DDP backward pass is a gated mock; markerless mocap runtime capture is external.
 
 ## 12. Change Log
