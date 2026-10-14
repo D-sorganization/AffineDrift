@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4711 · Import Governed UpstreamDrift Proximal-Distal Release Fixing Koike (2016) Proceedings Metadata
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4711
+- **Branch:** merged via #5068
+- **PR:** #5068
+- **Paths:** see #5068
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`e8414245`; collated from changes/4711-import-governed-upstreamdrift-proximal-d.md)
+- **Summary:** Import governed UpstreamDrift proximal-distal release fixing Koike (2016) proceedings metadata
+- **Next step:** Shipped in PR #5068.
+
 ### DL-#5065 · Publish Golf_Control_Theory and Scope-and-Limits to Resolve Deploy Website Link Check
 
 - **State:** shipped
