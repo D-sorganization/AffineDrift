@@ -125,3 +125,50 @@ def test_reachable_through_the_home_page_primary_action() -> None:
 def test_linked_from_the_top_of_theory_part_one() -> None:
     body = page_body("articles/theory-part1.qmd")
     assert f"../pages/{PAGE_URL}" in body[: body.index("\n## ")]
+
+
+def test_home_page_contains_three_ways_in_audience_routing() -> None:
+    home = page_text("index.qmd")
+    assert 'id="three-ways-in"' in home
+    welcome_idx = home.index('<section id="welcome"')
+    three_ways_idx = home.index('<section id="three-ways-in"')
+    assert welcome_idx < three_ways_idx
+    three_ways = home[three_ways_idx : home.index("</section>", three_ways_idx)]
+    assert "Curious Reader" in three_ways
+    assert "Student & Coach" in three_ways or "Student &amp; Coach" in three_ways
+    assert "Researcher" in three_ways
+    assert 'href="pages/start-here.html"' in three_ways
+    assert 'href="pages/big-idea.html"' in three_ways
+    assert 'href="pages/glossary.html"' in three_ways
+    assert 'href="articles/drift-control-ratio.html"' in three_ways
+    assert 'href="articles/wrist-universal-joint.html"' in three_ways
+    assert 'href="pages/Golf_Control_Theory.html"' in three_ways
+    assert 'href="articles/core-theses-registry.html"' in three_ways
+    assert 'href="pages/validation-roadmap.html"' in three_ways
+    assert 'href="models/programming/index.html"' in three_ways
+
+
+def test_home_page_tucks_math_behind_in_symbols_details_toggle() -> None:
+    home = page_text("index.qmd")
+    assert 'id="big-idea-preview"' in home
+    preview_idx = home.index('<section id="big-idea-preview"')
+    preview_section = home[preview_idx : home.index("</section>", preview_idx)]
+    assert "pics/drift-plus-control-vector-field.svg" in preview_section
+    assert "<details" in preview_section
+    assert "In Symbols" in preview_section
+    above_the_fold = home[: home.index("<details")]
+    assert "$$" not in above_the_fold
+    details_block = preview_section[preview_section.index("<details") :]
+    assert "$$" in details_block
+    assert "f(x) + G(x)u" in details_block
+
+
+def test_home_page_includes_scientific_trust_strip() -> None:
+    home = page_text("index.qmd")
+    assert 'id="trust-strip"' in home
+    trust_idx = home.index('<section id="trust-strip"')
+    trust_section = home[trust_idx : home.index("</section>", trust_idx)]
+    assert 'href="critiques/index.html"' in trust_section
+    assert 'href="articles/core-theses-registry.html"' in trust_section
+    assert 'href="pages/validation-roadmap.html"' in trust_section
+    assert 'href="pages/scope-and-limits.html"' in trust_section

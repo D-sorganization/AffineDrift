@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4522 · Register 12 Core Biomechanical and Control-Theoretic Theses in Claim_Registry.Json
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4522
+- **Branch:** merged via #5052
+- **PR:** #5052
+- **Paths:** see #5052
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`22dab862`; collated from changes/4522-register-12-core-biomechanical-and-contr.md)
+- **Summary:** Register 12 core biomechanical and control-theoretic theses in claim_registry.json
+- **Next step:** Shipped in PR #5052.
+
 ### DL-#4088 · Withdraw the Synthetic Reader-Validation Study: Its Participant Data Was Generated, Not Collected; Remove the Generator, Schema, Published JSON and Partial
 
 - **State:** shipped
@@ -897,10 +910,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #4553
 - **Branch:** merged via #5008
-- **PR:** #5008
+- **PR:** #5008, #5060
 - **Paths:** see #5008
 - **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`0e9f8585`; collated from changes/4553-consolidate-okabe-ito-palette-css-tokens.md)
+- **Last verified:** 2026-10-14 (`1bd5617e`; collated from changes/4553-remove-global-margin-padding-reset-from.md)
 - **Summary:** Consolidate Okabe-Ito palette CSS tokens into css/tokens/colors.css and add design token audit
 - **Next step:** Shipped in PR #5008.
 
