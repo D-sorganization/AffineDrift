@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-14 | #5066 | Add Golf_Control_Theory and scope-and-limits pages to fix broken link resolution on main |
 | 2026-10-14 | #5047 | Implement What This Means for Golfers and Coaches Lua filter with epistemic guardrails and roll out to core articles |
 | 2026-10-14 | #5061 | Restructure navbar into six single-purpose menus with zero duplicate links |
 | 2026-10-14 | #5046 | Add ZTCF and DCR falsification atlases and publish Model-to-Human Validation Roadmap |
