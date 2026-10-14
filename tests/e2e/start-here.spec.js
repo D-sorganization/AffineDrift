@@ -20,11 +20,27 @@ for (const route of ROUTES) {
     // On narrow screens the navbar first collapses behind its toggler.
     const toggler = page.locator(".navbar-toggler");
     if (await toggler.isVisible()) await toggler.click();
-    const link = page.locator("#quarto-header .navbar-nav a.nav-link", {
+    const directLink = page.locator("#quarto-header .navbar-nav a.nav-link", {
       hasText: "Start Here",
     });
-    await expect(link.first()).toBeVisible();
-    await link.first().click();
+    if ((await directLink.count()) > 0) {
+      await expect(directLink.first()).toBeVisible();
+      await directLink.first().click();
+    } else {
+      const startMenu = page.locator("#quarto-header .navbar-nav a.nav-link", {
+        hasText: /^\s*Start\s*$/,
+      });
+      await expect(startMenu.first()).toBeVisible();
+      await startMenu.first().click();
+      const dropdownItem = page.locator(
+        "#quarto-header .navbar-nav a.dropdown-item",
+        {
+          hasText: "Start Here",
+        },
+      );
+      await expect(dropdownItem.first()).toBeVisible();
+      await dropdownItem.first().click();
+    }
     await expect(page).toHaveURL(/\/pages\/start-here\.html$/);
     await expect(page.locator("h1")).toHaveText("Start Here");
   });
