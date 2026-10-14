@@ -541,6 +541,13 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     scope_limits = _find_route(inventory, "/pages/scope-and-limits.html")
     assert scope_limits["status"] == "reviewed"
     assert scope_limits["review"]["source_path"] == "pages/scope-and-limits.qmd"
+    # Forward Dynamics Matching book (#4948) is newly published, outside the original census.
+    fdm_index = _find_route(inventory, "/articles/forward_dynamics_matching/index.html")
+    assert fdm_index["status"] == "reviewed"
+    assert fdm_index["review"]["source_path"] == "articles/forward_dynamics_matching/index.qmd"
+    fdm_p01 = _find_route(inventory, "/articles/forward_dynamics_matching/01_problem.html")
+    assert fdm_p01["status"] == "reviewed"
+    assert fdm_p01["review"]["source_path"] == "articles/forward_dynamics_matching/01_problem.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )
