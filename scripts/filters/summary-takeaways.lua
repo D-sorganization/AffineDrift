@@ -6,6 +6,21 @@
 -- 2. Visible without interaction (no collapse / toggle).
 -- 3. Merges with legacy lay blocks to prevent double summary boxes.
 
+local function has_rich_laymans_content(div)
+  for _, child in ipairs(div.content) do
+    if child.t == "RawBlock" and (child.text:find("laymans%-item") or child.text:find("analogy")) then
+      return true
+    elseif child.t == "Div" and (child.classes:includes("laymans-item") or child.classes:includes("analogy")) then
+      return true
+    end
+  end
+  local str = pandoc.utils.stringify(div)
+  if str:find("analogy") or str:find("laymans%-item") then
+    return true
+  end
+  return false
+end
+
 function Pandoc(doc)
   local meta = doc.meta
   local summary_plain = meta['summary-plain']
@@ -30,7 +45,8 @@ function Pandoc(doc)
     return doc
   end
 
-  -- Filter out legacy laymans-terms blocks when front matter is present
+  -- Filter out legacy laymans-terms blocks when front matter is present,
+  -- but preserve authored laymans-terms blocks with rich items/analogies (#4494).
   local new_blocks = {}
   local in_legacy_raw = false
   for _, block in ipairs(doc.blocks) do
@@ -48,7 +64,9 @@ function Pandoc(doc)
         end
       end
     elseif block.t == "Div" and (block.classes:includes("laymans-terms") or block.identifier == "laymans-terms") then
-      is_legacy = true
+      if not has_rich_laymans_content(block) then
+        is_legacy = true
+      end
     elseif in_legacy_raw then
       is_legacy = true
     end

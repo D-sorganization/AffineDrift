@@ -145,6 +145,28 @@ def test_preserves_legacy_laymans_terms_when_frontmatter_absent() -> None:
     assert "Legacy Lay" in html
 
 
+@pytest.mark.integration
+def test_preserves_rich_laymans_terms_when_frontmatter_present() -> None:
+    frontmatter = 'summary-plain: "New plain summary from front matter."'
+    rich_body = (
+        "::: {.laymans-terms}\n"
+        "```{=html}\n"
+        '<p class="laymans-terms-intro">Everyday explanation.</p>\n'
+        '<div class="laymans-item"><h3>Core Idea</h3><p>Detailed concept.</p>'
+        '<div class="analogy">Think of a skateboard model.</div></div>\n'
+        "```\n"
+        ":::\n\n"
+        "Main article text continues here."
+    )
+    html = _render_html(frontmatter, body=rich_body)
+    assert "summary-takeaways-card" in html
+    assert "New plain summary from front matter." in html
+    assert "laymans-terms" in html
+    assert "Core Idea" in html
+    assert "Think of a skateboard model." in html
+    assert "Main article text continues here." in html
+
+
 def test_print_stylesheet_includes_summary_takeaways_rules() -> None:
     assert PRINT_CSS.exists()
     content = PRINT_CSS.read_text(encoding="utf-8")
