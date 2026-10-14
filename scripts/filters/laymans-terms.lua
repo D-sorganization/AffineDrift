@@ -18,8 +18,8 @@
 --    which keeps Enter/Space keyboard activation.
 -- 3. Placement: a block authored after the page's "Abstract" heading is moved
 --    directly above it.
--- 4. Must run after summary-takeaways.lua, which removes `.laymans-terms`
---    Divs on pages whose front matter supplies a plain-language summary.
+-- 4. Runs after summary-takeaways.lua, which preserves rich `.laymans-terms`
+--    Divs while filtering out legacy summary boxes.
 
 local OPEN_HTML = [[<section class="laymans-terms">
 <h2><button type="button" class="laymans-terms-header" aria-expanded="true"><span class="laymans-terms-header-title">In Layman's Terms</span><span class="laymans-terms-icon" aria-hidden="true">▼</span></button></h2>
