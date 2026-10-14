@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-10-13T22:20:00Z",
+  "repository": "D-sorganization/AffineDrift",
+  "cross_repo_authority": "D-sorganization/UpstreamDrift",
+  "packets": [
+    {
+      "packet_id": "WAVE-AD-1-4494",
+      "repo": "D-sorganization/AffineDrift",
+      "issue": 4494,
+      "epic": 4496,
+      "title": "Fix Lua Filter Layman-Block Deletion & Bring All Plain-Language Summaries Under Grade 10",
+      "owned_files": [
+        "scripts/filters/summary-takeaways.lua",
+        "tests/test_summary_takeaways.py",
+        "articles/degrees-of-freedom-and-dimensionality.qmd",
+        "articles/drifter-manifesto.qmd",
+        "articles/passive-distributed-control.qmd",
+        "articles/superposition.qmd",
+        "articles/theory-part1.qmd",
+        "articles/theory-part2.qmd",
+        "articles/theory-part3.qmd",
+        "articles/theory-part4.qmd",
+        "articles/theory-part5.qmd",
+        "articles/zero-torque-counterfactual.qmd",
+        "pages/technology.qmd"
+      ],
+      "verification": [
+        "python -m pytest tests/test_summary_takeaways.py -q",
+        "python -m scripts.check_readability --threshold 10.0",
+        "python -m scripts.check_title_case"
+      ]
+    },
+    {
+      "packet_id": "WAVE-AD-2-4525",
+      "repo": "D-sorganization/AffineDrift",
+      "issue": 4525,
+      "epic": 4530,
+      "title": "Triage Unknown Critique Severities, Adjudicate Tip-Mass Omission, and Publish Response Timelines",
+      "owned_files": [
+        "data/trust/claim_critique_ledger.json",
+        "critiques/tip_mass_omission.md",
+        "scripts/generate_claim_critique_ledger.py",
+        "tests/test_claim_critique_ledger.py"
+      ],
+      "verification": [
+        "python -m pytest tests/test_claim_critique_ledger.py -q",
+        "python -m scripts.regenerate_claim_audit_evidence --check",
+        "python -m scripts.check_title_case"
+      ]
+    },
+    {
+      "packet_id": "WAVE-AD-3-4528",
+      "repo": "D-sorganization/AffineDrift",
+      "issue": 4528,
+      "epic": 4530,
+      "title": "Publish Falsification Atlases for ZTCF and DCR and Model-to-Human Validation Roadmap",
+      "owned_files": [
+        "data/trust/ztcf_falsification_atlas.json",
+        "data/trust/dcr_falsification_atlas.json",
+        "scripts/generate_falsification_atlases.py",
+        "articles/_generated/ztcf-falsification-atlas.qmd",
+        "articles/_generated/dcr-falsification-atlas.qmd",
+        "pages/validation-roadmap.qmd",
+        "tests/test_falsification_atlases.py"
+      ],
+      "verification": [
+        "python -m pytest tests/test_falsification_atlases.py -q",
+        "python -m scripts.generate_falsification_atlases --check",
+        "python -m scripts.check_title_case"
+      ]
+    },
+    {
+      "packet_id": "WAVE-AD-4-4512",
+      "repo": "D-sorganization/AffineDrift",
+      "issue": 4512,
+      "epic": 4514,
+      "title": "Implement 'What This Means for Golfers and Coaches' Guardrail Box Filter and Core Article Rollout",
+      "owned_files": [
+        "scripts/filters/golfers-coaches.lua",
+        "css/components/golfers-coaches.css",
+        "tests/test_golfers_coaches_box.py",
+        "articles/drift-control-ratio.qmd",
+        "articles/intentional-constraint-collapse.qmd",
+        "articles/wrist-universal-joint.qmd",
+        "pages/tools.qmd"
+      ],
+      "verification": [
+        "python -m pytest tests/test_golfers_coaches_box.py -q",
+        "python -m scripts.check_title_case"
+      ]
+    },
+    {
+      "packet_id": "WAVE-AD-5-4010",
+      "repo": "D-sorganization/AffineDrift",
+      "issue": 4010,
+      "epic": 4008,
+      "title": "Align UpstreamDrift Companion Engine Catalog with 3-Tier Equivalency Contract & Audience Onboarding",
+      "owned_files": [
+        "models/programming/engines.qmd",
+        "index.qmd",
+        "pages/big-idea.qmd",
+        "docs/audits/AFFINEDRIFT_ADVERSARIAL_REVIEW.md",
+        "docs/audits/AFFINEDRIFT_FLASH_DISPATCH_QUEUE.json"
+      ],
+      "verification": [
+        "python -m scripts.check_title_case",
+        "python -m pytest tests/test_start_here_page.py -q"
+      ]
+    }
+  ]
+}

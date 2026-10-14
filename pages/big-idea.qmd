@@ -69,6 +69,10 @@ So the ratio can be bigger than one. That means the drift at that moment is stro
 
 The [drift versus control sandbox](../articles/theory-part1.html#drift-control-sandbox) runs a two-link model of an arm and a club in your browser. Choose the **Zero torque (drift only)** scenario and the push arrow disappears: the model swings on drift alone. Then choose **Shoulder drive** and keep **Show the zero-torque counterfactual** ticked. A faint grey copy of the model runs with no push, and the driven model pulls away from it. Notice that the drift arrow keeps changing too, because the push has moved the links to new places.
 
+### From Theory to Cross-Engine Simulation {#theory-to-simulation}
+
+Theory alone cannot swing a golf club. AffineDrift connects drift *f(x)*, control *G(x)u*, ZTCF, and DCR to the open-source [UpstreamDrift simulation companion](../models/programming/index.html). The companion uses a three-tier engine equivalency contract across rigid bodies, soft contact, and muscle actuation, backed by fail-closed impact-interval checks.
+
 ## Where to Go Next {#where-next}
 
 Pick the reader closest to you. Each link opens a reading plan of 5 minutes, 30 minutes or 3 hours.
@@ -89,3 +93,4 @@ Pick the reader closest to you. Each link opens a reading plan of 5 minutes, 30 
 - [Zero-Torque Counterfactual](../articles/zero-torque-counterfactual.html) — The family of "stop pushing" comparisons in full
 - [Drift-Control Ratio](../articles/drift-control-ratio.html) — The capacity ratio and what it does not prove
 - [Theory Series, Part 1](../articles/theory-part1.html) — The drift and push split, with the mathematics
+- [Programming Companion](../models/programming/index.html) — Three-tier simulation companion and cross-engine catalog

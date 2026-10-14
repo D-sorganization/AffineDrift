@@ -337,6 +337,16 @@ categories:
 - **Supported (`F0`):** Core stack (e.g. MuJoCo). Fully tested across operating systems.
 - **Extended (`F1`):** Extended stack (e.g. Drake, Pinocchio). Tested in simulation suites.
 - **Experimental (`F2`):** Research-grade experimental interfaces (e.g. OpenSim, MyoSuite).
+
+### Cross-Engine Mathematical Equivalency Tiers
+
+- **Tier 1: Rigid-Body Dynamics [MuJoCo, Pinocchio, Drake]:** Kinematic and forward-dynamics
+  parity for articulated rigid link mechanisms.
+- **Tier 2: Soft Contact & Impact Interval [MuJoCo, Putting Green, Simscape]:** Compliant
+  restitution, friction transition, and fail-closed impact-interval verification against
+  the Simscape Multibody oracle.
+- **Tier 3: Musculoskeletal Actuation [OpenSim, MyoSuite]:** Hill-type muscle activation,
+  tendon elasticity, and biological motor-unit control dynamics.
 """
 
     def generate_programs(self) -> str:
