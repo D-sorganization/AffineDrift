@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-14 | #5052 | Register 12 core biomechanical and control-theoretic theses in claim_registry.json |
 | 2026-10-14 | #5053 | Consolidate repeated inline caveats into structured caveats front-matter on software.qmd and philosophy.qmd |
 | 2026-10-14 | #5051 | Add accessible theme-adaptive Drift Plus Control SVG vector-field diagram and embed on start-here.qmd |
 | 2026-10-14 | #5050 | Rewrite plain-language summaries to pass Grade 10 readability gate and keep Layman's Terms blocks open |
