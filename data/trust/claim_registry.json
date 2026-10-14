@@ -50,6 +50,567 @@
       ],
       "page_id": "ad-dcr-reachability",
       "source_path": "articles/drift-control-ratio.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "The swing's equations of motion can be rearranged into a drift part (what the body does under its own inertia and gravity) and a control part (what applied joint torques add). This split is a bookkeeping identity of the declared equations, not a measurement of effort or an independent discovery about the body."
+          },
+          "claim_id": "ad-decomp-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is the declared symbolic equations of motion and their executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "A declared rigid-body equation of motion that cannot be rearranged into x_dot = f(x) + G(x) u for any admissible choice of f and G.",
+            "The control-affine split alone determines the physiological source of torque, a coaching cue, or a causal ordering between swing segments."
+          ],
+          "limitations": [
+            "The decomposition depends on the declared coordinates, generalized-force convention, and constraint set; it is not coordinate-free.",
+            "An exact algebraic identity of the model does not certify that the model itself matches a given golfer's biomechanics.",
+            "f(x) and G(x) are properties of the declared equations, not directly observable torques."
+          ],
+          "next_validation_gate": "Run preregistered multibody simulation studies that compare the declared f(x), G(x) split against an independently derived equation-of-motion model for the same mechanical system.",
+          "population": "Declared rigid-body and multibody dynamical models expressed in generalized coordinates; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/dynamics.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-decomp-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "For a declared rigid-body or multibody system with generalized coordinates x and admissible generalized forces u, the equation of motion can be written in the control-affine form x_dot = f(x) + G(x) u, where f(x) collects the uncontrolled drift dynamics (inertial, Coriolis, centrifugal, and gravitational terms) and G(x) is the input-mapping matrix for u. This split is an algebraic identity of the declared Newton-Euler or Lagrangian equations, not an independent physical hypothesis, a causal attribution of effort, or a claim about which segment of a human swing drives another."
+          },
+          "title": "Control-Affine Decomposition Is an Exact Equation-of-Motion Identity",
+          "uncertainty": {
+            "statement": "Model-form, parameter, and measurement uncertainty in a fitted f(x), G(x) pair are not quantified by the algebraic identity itself.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The system's equations of motion are expressed in the declared generalized coordinates x with admissible generalized forces u.",
+            "f(x) and G(x) are evaluated at the same state and under the same coordinate, unit, and sign conventions."
+          ]
+        }
+      ],
+      "page_id": "ad-decomp-control-affine",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "The pointwise ZTCF family asks what would happen if the muscles stopped pushing right now, inside the model. It shows how much of the motion is carried by momentum, gravity, and linkage geometry alone, within the declared model. It does not show what a golfer's muscles were actually doing or prove that one release mechanism exists."
+          },
+          "claim_id": "ad-ztcf-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is the declared forward-dynamics model and its executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "A declared forward-dynamics model and parameter set for which the zero-torque forward simulation cannot be reproduced from the stated initial conditions.",
+            "The stitched ZTCF trajectory for a fixed model and parameter set is not reproducible across independent re-integrations of the same equations."
+          ],
+          "limitations": [
+            "ZTCF is a property of the declared model and parameters, not a direct measurement of a golfer's muscle activity or intent.",
+            "Pointwise and stitched ZTCF answer different questions, an instantaneous rate versus a re-integrated trajectory, and are not interchangeable without saying which is meant.",
+            "ZTCF does not by itself identify a unique neuromuscular release event; see the governed critique ledger for open identifiability concerns."
+          ],
+          "next_validation_gate": "Run preregistered sensitivity studies comparing pointwise and stitched ZTCF trajectories against independently measured passive-release benchmarks under declared controls.",
+          "population": "Declared multibody swing models with specified mass, inertia, and joint-torque parameters; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/ztcf_contract.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-ztcf-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "For a declared multibody swing model, the pointwise Zero-Torque Counterfactual (ZTCF) evaluates the forward dynamics at a given state with all joint torque inputs set to zero, and the stitched ZTCF trajectory re-integrates this zero-torque condition forward from a sequence of such states. Both quantify the passive (inertial, Coriolis, centrifugal, and gravitational) contribution to acceleration or trajectory evolution within the declared model and parameters. ZTCF values do not establish what a human golfer's neuromuscular system actually contributed at that instant, nor do they identify a unique physiological release mechanism."
+          },
+          "title": "The Zero-Torque Counterfactual Isolates Passive-Release Dynamics Within a Declared Model",
+          "uncertainty": {
+            "statement": "Model-form, parameter, and measurement uncertainty in the mass, inertia, and torque inputs are not quantified by the ZTCF construction itself.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The forward-dynamics model, its parameters, and the integration scheme used to produce the ZTCF trajectory are declared.",
+            "The zero-torque condition is applied identically at every evaluated state or re-integration step."
+          ]
+        }
+      ],
+      "page_id": "ad-ztcf-attribution",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "ZVCF asks what torque would be needed just to hold a position still, with no motion at all. It isolates gravity and posture from momentum and swing-specific forces, within the declared model. It does not measure the torque present during the real, moving swing."
+          },
+          "claim_id": "ad-zvcf-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is the declared static equilibrium model and its executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "A declared static configuration and parameter set for which the required holding torque cannot be reproduced from the stated inertial and gravitational model.",
+            "The ZVCF baseline for a fixed configuration changes under re-evaluation of the same declared model and parameters."
+          ],
+          "limitations": [
+            "ZVCF is a property of a declared static configuration, not a measurement of in-motion torque, which also includes inertial and Coriolis contributions.",
+            "ZVCF values are frame- and convention-dependent and must be interpreted with the declared gravitational and coordinate convention.",
+            "A static baseline does not, by itself, explain how a golfer or model trajectory arrives at the evaluated configuration."
+          ],
+          "next_validation_gate": "Run preregistered static-posture studies that compare declared ZVCF holding-torque predictions against independently measured postural force-plate or load-cell baselines.",
+          "population": "Declared multibody models evaluated at fixed configurations; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/dynamics.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-zvcf-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "For a declared multibody model at a fixed configuration, the Zero-Velocity Counterfactual (ZVCF) evaluates the generalized forces or joint torques required to hold that configuration with all generalized velocities set to zero, isolating the gravitational and postural contribution at that configuration from inertial and Coriolis effects. ZVCF values are a property of the declared static configuration and model parameters; they do not establish the torque present during actual motion, nor a causal account of how a golfer reaches that configuration."
+          },
+          "title": "The Zero-Velocity Counterfactual Isolates a Static Gravitational and Postural Baseline Within a Declared Model",
+          "uncertainty": {
+            "statement": "Model-form, mass-distribution, and measurement uncertainty in the declared static configuration are not quantified by the ZVCF construction itself.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The configuration, mass distribution, and gravitational convention used for the static evaluation are declared.",
+            "All generalized velocities and accelerations are set to zero for the static evaluation."
+          ]
+        }
+      ],
+      "page_id": "ad-zvcf-baseline",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "In the declared swing model, the ratio of drift to control often grows late in the downswing, but how much it grows, and whether it crosses a given threshold, depends on which weighting or energy measure is used to compute it. This trend does not show that a real golfer or club loses the ability to correct the swing at that moment."
+          },
+          "claim_id": "ad-dcr-002",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is a declared simulated downswing trajectory and its executable regression tests.",
+          "evidence_class": "analytical_counterexample",
+          "falsifiers": [
+            "A declared downswing trajectory and admissible input set for which DCR does not vary with the choice of weighting or kinetic-energy metric.",
+            "A single scalar DCR threshold that reproduces the same drift-dominance timing across every declared metric choice for the same trajectory."
+          ],
+          "limitations": [
+            "DCR trends are metric-dependent; a reported late-downswing drift dominance is a property of the declared metric, not a metric-free fact about the swing.",
+            "The ratio does not quantify finite-horizon reachability or the input authority remaining to correct the trajectory; see claim ad-dcr-001.",
+            "The analytical trend is not a participant-level golf validation or a coaching prescription."
+          ],
+          "next_validation_gate": "Run preregistered multi-metric sensitivity sweeps across declared downswing trajectories, reporting DCR trends under at least three independent weighting choices.",
+          "population": "Declared downswing trajectory simulations with a specified weighting or kinetic-energy metric; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/reachability.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-dcr-002",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "Within a declared model, the Drift-Control Ratio (DCR) evaluated across a simulated downswing trajectory can trend toward drift-dominant values (DCR greater than 1) during the late downswing interval under the declared coordinates, input set, and norm. This trend, and its magnitude, are sensitive to the choice of weighting or kinetic-energy metric used to compare drift and input accelerations; changing the metric can change whether and when drift dominance appears. The trend does not establish that path-correction authority is actually lost at that instant for any physical golfer or golf-club system."
+          },
+          "title": "Drift-Control Ratio Trends and Their Dependence on the Chosen Kinetic-Energy Metric",
+          "uncertainty": {
+            "statement": "Sensitivity of the DCR trend to model-form, metric, and parameter choices is not quantified by a single reported trajectory.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The downswing trajectory, the admissible input set, and the weighting or kinetic-energy metric used to compute DCR are all declared.",
+            "DCR values compared across the trajectory use the same metric, coordinates, and normalization throughout."
+          ]
+        }
+      ],
+      "page_id": "ad-dcr-late-downswing",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "Because the swing's parts are coupled and the equations are nonlinear, adding up the separate effects of two inputs does not generally give the same result as applying both together in the declared model. A reproducible example trajectory shows this breakdown directly. This does not say which specific mechanical coupling caused a particular mismatch."
+          },
+          "claim_id": "ad-superpos-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is a declared coupled multibody counterexample trajectory and its executable regression tests.",
+          "evidence_class": "analytical_counterexample",
+          "falsifiers": [
+            "A declared coupled multibody model for which the summed response to two inputs equals the sum of the separate responses to within numerical tolerance for all tested input pairs.",
+            "The reported nonadditivity vanishes under independent re-integration of the same declared equations and initial conditions."
+          ],
+          "limitations": [
+            "The counterexample demonstrates nonadditivity for the declared model and chosen inputs; it does not bound the magnitude of nonadditivity for arbitrary inputs.",
+            "It does not, by itself, attribute the nonadditivity to a specific physiological or mechanical coupling term.",
+            "Not a participant-level golf validation or a coaching prescription."
+          ],
+          "next_validation_gate": "Run preregistered input-pair sweeps across declared multibody trajectories, reporting the distribution of superposition-error magnitudes.",
+          "population": "Declared coupled multibody models with configuration-dependent dynamics; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/double_pendulum_affine.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-superpos-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "For a declared coupled multibody swing model with configuration-dependent mass, Coriolis, and centrifugal terms, the response to a sum of two generalized-force inputs is not, in general, equal to the sum of the responses to each input applied separately; an explicit counterexample trajectory exhibiting this nonadditivity is reproducible from the declared equations. This failure of superposition is a structural property of the nonlinear coupled dynamics and does not by itself identify which physical coupling mechanism is responsible for a given discrepancy."
+          },
+          "title": "Linear Superposition Does Not Hold for Coupled Multibody Swing Dynamics",
+          "uncertainty": {
+            "statement": "The magnitude and practical significance of the superposition failure across the broader space of swing inputs is not quantified by a single counterexample trajectory.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The multibody model, its mass and inertia parameters, and the two generalized-force inputs being compared are declared.",
+            "The superposed and separately-simulated trajectories are integrated under identical initial conditions and numerical scheme."
+          ]
+        }
+      ],
+      "page_id": "ad-superposition-breakdown",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "In the declared chain model, the way segments are coupled through Coriolis and centripetal terms lets kinetic energy move from inner segments toward outer segments as the model is simulated, producing a speed-up ordering along the chain. This describes a property of the declared model and its equations, not a claim that every golfer's body moves this way or that this is the only contributor to clubhead speed."
+          },
+          "claim_id": "ad-pds-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is a declared multibody chain simulation and its executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "A declared chain model and parameter set for which the simulated peak-speed ordering does not follow the proximal-to-distal direction predicted by its Coriolis and centripetal coupling.",
+            "The reported energy-transfer ordering is not reproducible under independent re-integration of the same declared equations and conditions."
+          ],
+          "limitations": [
+            "The ordering is a property of the declared chain topology and coupling terms, not a biomechanical law assumed to hold for every golfer or swing style.",
+            "Coriolis and centripetal transfer is one contributor among several, including direct joint torque, to distal-segment speed in the declared model.",
+            "Not a participant-level golf validation or a coaching prescription."
+          ],
+          "next_validation_gate": "Run preregistered perturbation studies across declared chain topologies and parameters, reporting the stability of the proximal-to-distal ordering.",
+          "population": "Declared multibody chain models with specified coupling structure, mass, and inertia; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/rnea.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-pds-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "In a declared multibody chain model, the Coriolis and centripetal terms that couple proximal and distal segment states can transfer kinetic energy between segments along the chain during a simulated motion, producing a proximal-to-distal ordering of peak angular speed consistent with the declared model's coupling structure. This is a property of the declared equations of motion and initial or boundary conditions, not a claim that every human swing exhibits this exact ordering or that the transfer is the sole or dominant cause of distal-segment speed."
+          },
+          "title": "Proximal-to-Distal Sequencing Is an Energy-Transfer Property of Declared Coriolis and Centripetal Coupling Terms",
+          "uncertainty": {
+            "statement": "Sensitivity of the sequencing ordering to parameter and topology perturbations is not quantified by a single simulated trajectory.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The chain topology, segment mass and inertia parameters, and initial or boundary conditions used in the simulation are declared.",
+            "Peak angular speeds compared across segments are measured in the same coordinates and time base."
+          ]
+        }
+      ],
+      "page_id": "ad-proximal-distal-sequencing",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "In the declared model, constraint collapse means a planned, timed loosening of modeled restrictions, like fixed joint relationships, as the swing nears delivery, which changes what motions the model allows at that point. This describes a scheduled change in the model, not a measurement of what a golfer intends or decides to do."
+          },
+          "claim_id": "ad-icc-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is a declared constraint-relaxation schedule and its executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "A declared constraint-relaxation schedule for which the modeled reachable or admissible motion set does not change as constraints are relaxed.",
+            "The reported change in admissible motion is not reproducible under independent re-evaluation of the same declared schedule and model."
+          ],
+          "limitations": [
+            "The schedule is a declared modeling choice, not a measured neuromuscular timing strategy of any golfer.",
+            "Collapse describes a scheduled relaxation of modeled constraints, not a physical failure or loss of control by a golfer.",
+            "Not a participant-level golf validation or a coaching prescription."
+          ],
+          "next_validation_gate": "Run preregistered sweeps across declared constraint-relaxation schedules, reporting the sensitivity of the resulting admissible motion set to timing choices.",
+          "population": "Declared multibody models with a specified time-indexed constraint-relaxation schedule; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/golf_model.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-icc-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "In a declared multibody swing model, intentional constraint collapse refers to a specified, time-indexed schedule by which modeled holonomic or control constraints, for example fixed joint relationships or torque limits, are relaxed or removed approaching the declared delivery horizon, producing a corresponding change in the system's reachable or admissible motion set under that model. This is a property of the declared constraint schedule and model, not a claim about the neuromuscular intent, timing, or strategy of any human golfer."
+          },
+          "title": "Intentional Constraint Collapse Describes a Declared Schedule of Relaxing Modeled Constraints Toward Delivery",
+          "uncertainty": {
+            "statement": "Sensitivity of the resulting motion set to the exact relaxation schedule and timing is not quantified by a single declared schedule.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The constraint set, its relaxation schedule, and the declared delivery horizon are specified in advance.",
+            "Reachable or admissible motion sets are compared using the same declared model and constraint schedule."
+          ]
+        }
+      ],
+      "page_id": "ad-intentional-constraint-collapse",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "In the declared clubhead model, whether the clubface twists in a stable or unstable way around its secondary axis near impact depends on modeling choices like stiffness and inertia distribution, and small changes in those choices can change the predicted outcome. This describes sensitivity within the declared model, not a measurement of a specific real club or golfer's impact."
+          },
+          "claim_id": "ad-sas-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is a declared rigid-body clubhead and impact model and its executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "A declared clubhead and impact model for which secondary-axis rotation stability does not change under any tested variation of torsional stiffness or inertia distribution.",
+            "The reported sensitivity is not reproducible under independent re-simulation of the same declared parameters and impact interval."
+          ],
+          "limitations": [
+            "Sensitivity findings are properties of the declared rigid-body and impact model, not direct measurements of a specific club or golfer.",
+            "The analysis does not establish a stability threshold assumed to apply to every club design or impact condition.",
+            "Not a participant-level golf validation or an equipment-design prescription."
+          ],
+          "next_validation_gate": "Run preregistered parameter sweeps across declared torsional stiffness and inertia values, reporting the resulting secondary-axis stability boundary.",
+          "population": "Declared rigid-body clubhead and impact models with specified torsional and inertial parameters; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/golf_model_3d.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-sas-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "In a declared rigid-body clubhead model near impact, the stability of rotation about the secondary, non-grip axis depends on the declared torsional stiffness, moment of inertia distribution, and impact impulse parameters; small declared changes in these parameters can change whether the modeled secondary-axis rotation remains bounded or grows within the simulated impact interval. This sensitivity is a property of the declared rigid-body and impact model, not a measured clubface behavior for any specific club or golfer."
+          },
+          "title": "Secondary-Axis Stability Bounds Are Sensitive to Declared Torsional and Inertial Parameters Near Impact",
+          "uncertainty": {
+            "statement": "Parameter and model-form uncertainty in torsional stiffness and inertia estimates are not quantified by a single simulated sensitivity sweep.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The clubhead inertia tensor, torsional stiffness, and impact impulse model are declared.",
+            "Secondary-axis rotation is evaluated using the same declared coordinate frame and impact interval across compared parameter sets."
+          ]
+        }
+      ],
+      "page_id": "ad-secondary-axis-stability",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "The model treats the wrist as a joint with two independent rotation directions, similar to a mechanical two-axis joint, and how torque passes through each direction depends on the current joint angles in the declared model. This is a simplified mechanical model, not a full account of the wrist's ligaments, tendons, or soft tissue."
+          },
+          "claim_id": "ad-wuj-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is a declared idealized universal-joint model and its executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "A declared universal-joint configuration for which the computed output torque or motion about either axis does not match standard universal-joint kinematics.",
+            "The transmission relationship changes under independent re-evaluation of the same declared joint-angle configuration."
+          ],
+          "limitations": [
+            "The two-degree-of-freedom idealization omits wrist soft-tissue compliance, ligament laxity, and third-axis motion present in a real wrist.",
+            "Torque-transmission results are properties of the declared idealized joint, not a measurement of any specific golfer's wrist mechanics.",
+            "Not a participant-level golf validation or a clinical claim about wrist injury risk."
+          ],
+          "next_validation_gate": "Run preregistered comparisons between the declared two-degree-of-freedom model and a higher-fidelity wrist model that includes soft-tissue compliance.",
+          "population": "Declared two-degree-of-freedom universal-joint models of the wrist; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/tools/wrist_universal_joint/torque_calculator.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-wuj-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "In a declared universal-joint representation of the wrist, applied torque is transmitted through exactly two declared rotational degrees of freedom, for example flexion-extension and radial-ulnar deviation, and the resulting output torque or motion about each axis depends on the declared joint-angle configuration, consistent with standard universal-joint kinematics. This is a property of the declared idealized joint model, not a complete anatomical account of human wrist ligament, tendon, or soft-tissue mechanics."
+          },
+          "title": "The Wrist Universal-Joint Model Transmits Torque Through Two Declared Rotational Degrees of Freedom",
+          "uncertainty": {
+            "statement": "Model-form uncertainty from omitting soft-tissue compliance and third-axis motion is not quantified by the idealized two-degree-of-freedom construction.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The joint is declared as a two-degree-of-freedom universal joint with specified axis definitions and angle conventions.",
+            "Transmitted torque or motion is evaluated using the same declared joint-angle configuration and axis convention for every comparison."
+          ]
+        }
+      ],
+      "page_id": "ad-wrist-universal-joint",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "Near the declared idealized downswing path, small deviations from that path can shrink over certain stretches, according to the model's local linear approximation. This only describes behavior close to one declared path and does not show that the full nonlinear swing is stable everywhere or that a real golfer's swing resists all disturbances."
+          },
+          "claim_id": "ad-tsc-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is a declared nominal trajectory linearization and its executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "A declared nominal trajectory and linearization for which the reported contraction over a stated sub-interval does not reproduce under independent recomputation of the same eigenstructure or singular values.",
+            "A declared perturbation within the stated small-perturbation regime that grows where contraction was reported, under the same linearization and norm."
+          ],
+          "limitations": [
+            "Tangent-space contraction is a local, linearized property; it does not imply global nonlinear stability or basin-of-attraction size.",
+            "Results depend on the declared nominal trajectory, norm, and sub-interval, and are not coordinate- or trajectory-free.",
+            "Not a participant-level golf validation or a claim about a specific golfer's robustness to perturbation."
+          ],
+          "next_validation_gate": "Run preregistered finite-perturbation studies comparing linearized contraction predictions against full nonlinear re-simulation across declared sub-intervals.",
+          "population": "Declared nominal trajectories and their local linearizations within a specified multibody model; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/lqr.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-tsc-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "For a declared nominal downswing trajectory and its linearized, tangent-space dynamics, the evolution of small declared perturbations can exhibit contraction, decreasing perturbation magnitude, over specified sub-intervals, as determined by the eigenstructure or singular values of the declared linearization. This is a local, linearization-dependent property evaluated along one declared nominal trajectory; it does not establish global stability of the nonlinear system or robustness of any specific golfer's swing to arbitrary perturbations."
+          },
+          "title": "Tangent-Space Contraction Describes Local Linearized Sensitivity Along a Declared Nominal Trajectory",
+          "uncertainty": {
+            "statement": "The range of perturbation magnitudes for which the linear approximation remains valid is not quantified by the reported contraction result.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The nominal trajectory, the perturbation set, and the linearization point or interval are all declared.",
+            "Contraction is evaluated using the same declared norm and sub-interval across compared cases."
+          ]
+        }
+      ],
+      "page_id": "ad-tangent-space-contraction",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "Over the short time the clubhead and ball are in contact, how momentum and energy change is worked out from the declared contact model, meaning how springy the contact is, how long it lasts, and the force profile. If that contact model is not fully specified, the result is treated as unverified rather than assumed to follow any one simple collision rule."
+          },
+          "claim_id": "ad-impact-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is a declared finite-duration contact model and its executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "A declared contact model and interval for which the computed momentum or energy change does not reproduce under independent re-integration of the same declared force or impulse profile.",
+            "A reported impact outcome that is produced without a fully declared contact model yet is treated as verified rather than unqualified."
+          ],
+          "limitations": [
+            "The accounting is only as accurate as the declared contact model; an undeclared or incompletely declared contact model yields an unqualified, not a defaulted, result.",
+            "Finite-duration contact mechanics in this framework do not by themselves certify a specific coefficient of restitution for any real club-ball pair.",
+            "Not a participant-level golf validation or an equipment-performance guarantee."
+          ],
+          "next_validation_gate": "Run preregistered instrumented-impact studies that compare declared contact-model momentum and energy predictions against independently measured launch-monitor or force-plate impact data.",
+          "population": "Declared finite-duration impact models with specified contact parameters; no golfer or equipment population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/impact_contact_models.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-impact-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "For a declared finite impact interval from t0 to t1 with a specified contact force or impulse model, the change in system momentum and kinetic energy over the interval is determined by the declared contact model and boundary conditions, and is reproducible from those declarations by direct integration or impulse-momentum accounting. In the absence of a fully declared contact model, including coefficient of restitution, contact duration, and force profile, the energy or momentum accounting for the interval is treated as unqualified and does not default to an idealized, for example perfectly elastic or inelastic, assumption."
+          },
+          "title": "Finite-Duration Impact-Interval Energy and Momentum Accounting Is Fail-Closed Without Declared Contact Parameters",
+          "uncertainty": {
+            "statement": "Measurement and model-form uncertainty in a fitted coefficient of restitution or contact force profile are not quantified by the accounting identity itself.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The impact interval from t0 to t1, the contact force or impulse model, and the coefficient of restitution or equivalent are declared in advance.",
+            "Momentum and energy accounting use the same declared contact model and interval boundaries throughout."
+          ]
+        }
+      ],
+      "page_id": "ad-impact-interval-conservation",
+      "source_path": "articles/core-theses-registry.qmd"
     }
   ],
   "schema_version": "1.0.0"

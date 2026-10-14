@@ -327,10 +327,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #4554
 - **Branch:** claude/issue-4554-signature-graphic
-- **PR:** #4979
+- **PR:** #4979, #5051
 - **Paths:** see #4979
 - **Started:** 2026-10-06
-- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4554-web-08-2-drift-plus-control-signature-gr.md)
+- **Last verified:** 2026-10-14 (`ba494b66`; collated from changes/4554-add-accessible-theme-adaptive-drift-plus.md)
 - **Summary:** WEB-08.2: Drift Plus Control signature graphic, an inline theme-aware SVG generated from the SimplePendulum control-affine split, on the home page and theory Part 1 header
 - **Next step:** Owner confirms physical accuracy; decide OG card; reuse on Start Here and Big Idea when they land
 
@@ -678,10 +678,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** claude
 - **Issue:** #4494 (mechanical sub-task); epic #4496
 - **Branch:** claude/issue-4494
-- **PR:** #4909 (draft), #4979
+- **PR:** #4909 (draft), #4979, #5050
 - **Paths:** scripts/filters/laymans-terms.lua, _quarto.yml, styles.css, _templates/partials/laymans-terms.html, scripts/check_readability.py, articles/ (14 pages), tests/laymans-terms.test.js, tests/test_laymans_terms_component.py, tests/tools/test_check_readability.py
 - **Started:** 2026-10-04
-- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4494-web-01-9-lay-blocks-on-18-core-pages-rew.md)
+- **Last verified:** 2026-10-14 (`f35f0418`; collated from changes/4494-rewrite-plain-language-summaries-to-pass.md)
 - **Summary:** One Lua-filter component replaces 14 inline lay blocks; open by default, placed above the Abstract heading, native-button keyboard toggle. Wording unchanged; rewrite and page extension stay under #4494.
 - **Next step:** Owner: decide whether summary-plain pages (theory 2-5, superposition) should keep WEB-03.3 suppression of lay blocks
 
@@ -787,6 +787,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4522 · Register 12 Core Biomechanical and Control-Theoretic Theses in Claim_Registry.Json
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4522
+- **Branch:** merged via #5052
+- **PR:** #5052
+- **Paths:** see #5052
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`22dab862`; collated from changes/4522-register-12-core-biomechanical-and-contr.md)
+- **Summary:** Register 12 core biomechanical and control-theoretic theses in claim_registry.json
+- **Next step:** Shipped in PR #5052.
+
+### DL-#4088 · Withdraw the Synthetic Reader-Validation Study: Its Participant Data Was Generated, Not Collected; Remove the Generator, Schema, Published JSON and Partial
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4088
+- **Branch:** merged via #5054
+- **PR:** #5054
+- **Paths:** see #5054
+- **Started:** 2026-10-14
+- **Last verified:** 2026-10-14 (`d680d873`; collated from changes/4088-withdraw-the-synthetic-reader-validation.md)
+- **Summary:** Withdraw the synthetic reader-validation study: its participant data was generated, not collected; remove the generator, schema, published JSON and partial
+- **Next step:** Shipped in PR #5054.
+
 ### DL-#4993 · Retry Live Gate on Transient Subresource 5Xx
 
 - **State:** shipped
@@ -871,10 +897,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #4589
 - **Branch:** merged via #5012
-- **PR:** #5012
+- **PR:** #5012, #5053
 - **Paths:** see #5012
 - **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`a003c386`; collated from changes/4589-consolidate-pages-tools-qmd-scope-caveat.md)
+- **Last verified:** 2026-10-14 (`88bdf7f5`; collated from changes/4589-consolidate-repeated-inline-caveats-into.md)
 - **Summary:** Consolidate pages/tools.qmd scope caveats into the WEB-03.4 caveats block (Refs 4589, page 1)
 - **Next step:** Shipped in PR #5012.
 
