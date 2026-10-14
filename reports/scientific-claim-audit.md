@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 255
+- Reviewed: 257
 - Deferred: 0
 - Exempt: 3
 
@@ -229,12 +229,14 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
 | `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 6 |
 | `/pages/glossary.html` | `pages/glossary.qmd` | 7 |
+| `/pages/Golf_Control_Theory.html` | `pages/Golf_Control_Theory.qmd` | 1 |
 | `/pages/how-to-read.html` | `pages/how-to-read.qmd` | 5 |
 | `/pages/notation-quick-reference.html` | `pages/notation-quick-reference.qmd` | 2 |
 | `/pages/notation.html` | `pages/notation.qmd` | 4 |
 | `/pages/overview.html` | `pages/overview.qmd` | 3 |
 | `/pages/parameters.html` | `pages/parameters.qmd` | 2 |
 | `/pages/privacy-policy.html` | `pages/privacy-policy.qmd` | 1 |
+| `/pages/scope-and-limits.html` | `pages/scope-and-limits.qmd` | 2 |
 | `/pages/start-here.html` | `pages/start-here.qmd` | 6 |
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
@@ -491,12 +493,14 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-2ab60b171f5a` | `/pages/development-roadmap.html` | Reviewed | — | None | None | 1 |
 | `ad-route-ac0efed1b25f` | `/pages/drifter-manifesto.html` | Reviewed | — | None | None | 5 |
 | `ad-route-39185f792b9a` | `/pages/glossary.html` | Reviewed | — | None | None | 8 |
+| `ad-route-4d6c8960b9a5` | `/pages/Golf_Control_Theory.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c15406d82939` | `/pages/how-to-read.html` | Reviewed | — | None | None | 0 |
 | `ad-route-842027bd7c5a` | `/pages/notation-quick-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-4c6de352603b` | `/pages/notation.html` | Reviewed | — | None | None | 2 |
 | `ad-route-36ae7b392279` | `/pages/overview.html` | Reviewed | — | None | None | 2 |
 | `ad-route-dad0b4221d85` | `/pages/parameters.html` | Reviewed | — | None | None | 0 |
 | `ad-route-223cd7be3af2` | `/pages/privacy-policy.html` | Reviewed | — | None | None | 1 |
+| `ad-route-4aed8d5f88e6` | `/pages/scope-and-limits.html` | Reviewed | — | None | None | 0 |
 | `ad-route-48284a9d1eff` | `/pages/start-here.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |

@@ -465,6 +465,8 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/resources/educator-resources.html",
             "/repositories/tools.html",
             "/pages/validation-roadmap.html",
+            "/pages/Golf_Control_Theory.html",
+            "/pages/scope-and-limits.html",
         }
         and (
             record["route"] == "/"
@@ -532,6 +534,13 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     tools = _find_route(inventory, "/repositories/tools.html")
     assert tools["status"] == "reviewed"
     assert tools["review"]["source_path"] == "repositories/tools.qmd"
+    # Published pages for link resolution (#5065).
+    golf_theory = _find_route(inventory, "/pages/Golf_Control_Theory.html")
+    assert golf_theory["status"] == "reviewed"
+    assert golf_theory["review"]["source_path"] == "pages/Golf_Control_Theory.qmd"
+    scope_limits = _find_route(inventory, "/pages/scope-and-limits.html")
+    assert scope_limits["status"] == "reviewed"
+    assert scope_limits["review"]["source_path"] == "pages/scope-and-limits.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )
