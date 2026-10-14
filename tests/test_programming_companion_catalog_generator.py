@@ -134,6 +134,10 @@ def test_semantic_separation_of_support_tiers_and_validation(
     assert "Supported" in engines_qmd
     assert "Extended" in engines_qmd
     assert "Experimental" in engines_qmd
+    assert "Cross-Engine Mathematical Equivalency Tiers" in engines_qmd
+    assert "Tier 1: Rigid-Body Dynamics [MuJoCo, Pinocchio, Drake]" in engines_qmd
+    assert "Tier 2: Soft Contact & Impact Interval [MuJoCo, Putting Green, Simscape]" in engines_qmd
+    assert "Tier 3: Musculoskeletal Actuation [OpenSim, MyoSuite]" in engines_qmd
 
     # Authority boundary callouts must explicitly distinguish software from human validation
     for qmd in file_map.values():
