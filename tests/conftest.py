@@ -63,7 +63,6 @@ def trust_generation_root(tmp_path: Path) -> Path:
         "tests/fixtures/companion/manifest_v1_0_0_authoritative.json",
         "data/trust/proximal_distal_falsification_atlas.json",
         "schemas/evidence-presentation-v1.schema.json",
-        "schemas/reader-comprehension-study-v1.schema.json",
         "schemas/research-artifact-release-v1.schema.json",
     ):
         target = tmp_path / relative

@@ -221,7 +221,7 @@ Static website in `_site/`, public site manifest (`_site/public-site-manifest.js
 ## 11. Roadmap & Open Issues
 
 - **Active Development**: Maintain coverage above the `pyproject.toml` floor, refine affine swing optimization models, expand educational textbook materials.
-- **Current Priorities**: Complete programming companion consumer integration (#4022-#4030), maintain root hygiene allowlists (#4128), execute reader validation protocols (#4088).
+- **Current Priorities**: Complete programming companion consumer integration (#4022-#4030), maintain root hygiene allowlists (#4128).
 - **Known Boundaries**: Real-time simulation is delegated to UpstreamDrift; DDP backward pass is a gated mock; markerless mocap runtime capture is external.
 
 ## 12. Change Log
@@ -232,6 +232,9 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-14 | #5045 | Retry live gate on transient subresource 5xx |
+| 2026-10-14 | #5048 | Triage unknown critique severities in claim_critique_ledger.json and enforce non-unknown severity contract |
+| 2026-10-14 | #5049 | Publish AffineDrift adversarial audit, document 3-tier engine equivalency in companion catalog, and link Big Idea explainer |
 | 2026-10-13 | #5043 | Adjudicate historical screw-theory research outline (#4719) |
 | 2026-10-13 | #5026 | Generate tools capability catalog and golden-vector parity suite |
 | 2026-10-13 | #5038 | Disclose the Tools #5431 distributed-convention fix on the proximal-distal workbench and impact-optimality pages (historical numbers kept and labelled) |
