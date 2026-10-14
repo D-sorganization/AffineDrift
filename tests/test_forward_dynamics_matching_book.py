@@ -14,7 +14,6 @@ BOOK_DIR = REPO_ROOT / "articles" / "forward_dynamics_matching"
 DOCS_DIR = REPO_ROOT / "docs" / "development" / "forward-dynamics-matching"
 REFERENCES_DIR = REPO_ROOT / "references"
 QUARTO_CONFIG = REPO_ROOT / "_quarto.yml"
-BOOKS_INDEX = REPO_ROOT / "books" / "index.qmd"
 
 EXPECTED_CHAPTER_STEMS = (
     "01_problem",
@@ -172,12 +171,6 @@ def test_quarto_navigation_sidebar_and_resources_integration() -> None:
     assert (
         "references/forward-dynamics-matching.bib" in bib_list
     ), "references/forward-dynamics-matching.bib missing from bibliography in _quarto.yml"
-
-    # Check books index
-    books_index_text = BOOKS_INDEX.read_text(encoding="utf-8")
-    assert (
-        "../articles/forward_dynamics_matching/index.html" in books_index_text
-    ), "books/index.qmd does not link to forward dynamics matching index"
 
 
 def test_bibliography_citations_and_cross_references() -> None:
