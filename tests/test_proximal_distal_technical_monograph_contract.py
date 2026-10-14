@@ -22,12 +22,12 @@ MONOGRAPH_CSS = MONOGRAPH_DIR / "monograph.css"
 EXPECTED_CHAPTER_COUNT = 37
 EXPECTED_MIN_PAGE_COUNT = 181
 EXPECTED_MIN_WORD_COUNT = 69_000
-EXPECTED_SOURCE_COMMIT = "85cce4d3307bb7ad3953d9fc6e583e370803515c"
+EXPECTED_SOURCE_COMMIT = "b700e58941205af6f673f13ebbffcd30f8cca9d8"
 EXPECTED_RELEASE_MANIFEST_SHA256 = (
-    "829c31bb3d0a1c668b289d56244b6043fe3ab89ede0eff5ba2128638ccfe32a4"
+    "61e9ae4ed2f5ab743150daba63887c77bec0415d3c3c7d331aafc068872d09d1"
 )
-EXPECTED_CLAIM_REGISTRY_SHA256 = "ae03a4d945f21f0ba564a684620105742fb7ada82f06a83fe7dbf1e1549b596b"
-EXPECTED_PDF_SHA256 = "0527465cd0bf6b69c4ae4c541986b0aecad28d5c05dfdabdbda0d493433e19ec"
+EXPECTED_CLAIM_REGISTRY_SHA256 = "63df7e739680c4a85df0f10f36c3e36d73d758ea6d24e7b6c9cf43d7eb5e9947"
+EXPECTED_PDF_SHA256 = "d31845c18029151ab08aeefef4e7d067d7bd6605698ee5beb0895325cd45b76c"
 
 
 def test_technical_monograph_files_exist_and_are_complete() -> None:
@@ -79,7 +79,7 @@ def test_technical_monograph_declares_immutable_scientific_source() -> None:
     assert manifest["source"]["claim_registry"] == {
         "path": "docs/research/proximal_distal_energy_transfer/data/claim_audit_registry.json",
         "sha256": EXPECTED_CLAIM_REGISTRY_SHA256,
-        "bytes": 1_644_539,
+        "bytes": 1_651_744,
     }
     assert manifest["source"]["pdf_sha256"] == EXPECTED_PDF_SHA256
     assert manifest["publication"]["repository"] == "D-sorganization/AffineDrift"
@@ -168,3 +168,10 @@ def test_technical_monograph_article_index_registration() -> None:
     """Assert that the technical monograph is cataloged in resources/articles.qmd."""
     articles_catalog = (ROOT / "resources/articles.qmd").read_text(encoding="utf-8")
     assert "articles/proximal_distal_energy_transfer/index.html" in articles_catalog
+
+
+def test_koike_2016_primary_proceedings_title() -> None:
+    """Verify that references.bib projects the primary ISBS proceedings title for Koike (2016) (#4711)."""
+    bib_text = BIB_FILE.read_text(encoding="utf-8")
+    assert "Force and Moment Exerted by Each Hand on an Instrumented Golf Club" in bib_text
+    assert "34th International Conference on Biomechanics in Sports" in bib_text
