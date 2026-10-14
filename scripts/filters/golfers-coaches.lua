@@ -88,7 +88,7 @@ local function build_box_blocks(box_data, meta)
   -- Accessible container open
   table.insert(blocks, pandoc.RawBlock(
     "html",
-    '<aside class="golfers-coaches-box" role="note" aria-label="What This Means for Golfers and Coaches">'
+    '<aside class="golfers-coaches-box" role="note" aria-label="What This Means for Golfers and Coaches" style="color: var(--bs-body-color, #1a1a1a);">'
   ))
 
   -- Title Case Heading
