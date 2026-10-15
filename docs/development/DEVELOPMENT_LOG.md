@@ -787,6 +787,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4948 · Recover Forward Dynamics Matching Research Book From Cloud Session and Add Structure Verification Tests
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4948
+- **Branch:** merged via #5070
+- **PR:** #5070
+- **Paths:** see #5070
+- **Started:** 2026-10-15
+- **Last verified:** 2026-10-15 (`1acf8892`; collated from changes/4948-recover-forward-dynamics-matching-resear.md)
+- **Summary:** Recover Forward Dynamics Matching research book from cloud session and add structure verification tests
+- **Next step:** Shipped in PR #5070.
+
 ### DL-#4711 · Import Governed UpstreamDrift Proximal-Distal Release Fixing Koike (2016) Proceedings Metadata
 
 - **State:** shipped
