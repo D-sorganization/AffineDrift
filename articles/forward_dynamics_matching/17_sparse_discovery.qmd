@@ -1,0 +1,96 @@
+---
+description: "Sparse Discovery and Model Order Selection: forward dynamics matching research manuscript chapter (local draft; not peer reviewed or empirically validated)."
+---
+
+# Sparse Discovery and Model Order Selection
+
+## Discovery Is Conditional on A Library
+
+Sparse identification methods ask whether observed dynamics can be expressed using a small number of candidate functions. In the basic SINDy formulation, measurements of state $x(t)$ and derivative $\dot x(t)$ are assembled into
+
+$$
+\dot X=\Theta(X)\Xi,
+$$
+
+where $\Theta(X)$ is a library of candidate features and $\Xi$ contains coefficients. A sparse regression seeks a coefficient matrix with few active entries while explaining the derivative data. The method's “model order” is conditional on the chosen state, candidate library, scaling, derivative estimate, and threshold or prior. It does not automatically infer the anatomical dimension of the system.
+
+Brunton, Proctor, and Kutz introduced sparse identification of nonlinear dynamical systems as a way to discover governing equations from data. This foundational method is summarized by Brunton, Proctor, and Kutz [@brunton2016discovering]. A canonical DOI URL is https://doi.org/10.1073/pnas.1517384113; live validation is pending because network access was paused by repository instructions. SINDy is a useful equation-discovery baseline, but its assumptions should be made visible in any application.
+
+## A Mechanical Formulation
+
+For a second-order system, one can define a library over configuration, velocity, and known inputs:
+
+$$
+\ddot q = \Theta(q,\dot q,u)\Xi.
+$$
+
+A generic polynomial library may include constants, coordinate terms, velocity terms, products, and control interactions. For mechanics, a more defensible formulation separates known structure from unknown forces. For example, use a known mass matrix and gravity model, then represent only uncertain passive or actuator forces in a structured library. Alternatively, express inverse dynamics as $\tau=Y(q,\dot q,\ddot q)\pi$, then select among candidate force terms. The latter relies on known or measured net torque and suitable trajectory derivatives.
+
+Mechanical constraints can be built into the library: terms may be grouped by joint, actuator, symmetry pair, or physical force family. Coefficients for related coordinates can be tied. Positive inertia should be parameterized rather than encouraged by a penalty after the fact. Conservation or dissipativity constraints may be useful in appropriate regimes, but should not be imposed where active control or contact legitimately changes energy.
+
+## Why Support Recovery Is Difficult
+
+Sparse regression works best when active and inactive features are distinguishable in the data. If two columns of $\Theta(X)$ are highly correlated, many coefficient sets produce similar derivatives. For example, over a small angle range, $\sin q\approx q$; a linear restoring term and a gravitational term can be hard to distinguish. Similarly, a passive damping term and a feedback controller proportional to velocity can have identical observational effects if control is unmeasured. Thresholding one coefficient to zero may simply assign shared explanatory power to the other.
+
+Derivative estimation adds a second difficulty. Finite differences amplify noise, especially for second derivatives. Smoothing reduces variance but can attenuate sharp events. Weak-form methods integrate against test functions to avoid pointwise differentiation, though they introduce choices about test functions, window size, and boundary effects. In every case the derivative or integral estimator is part of the model-selection pipeline and should be included in synthetic recovery tests.
+
+Scaling is essential. If one feature has numerical values near 10^3 and another near 10^-3, coefficient penalties can favor one solely due to units. Normalize features, retain the transform for interpretation, and use physically meaningful coefficient units. Tune sparsity on held-out trajectories or conditions, not on random time points whose neighboring samples leak nearly identical states into training and validation.
+
+## Sparse Penalties and Bayesian Alternatives
+
+A common objective combines squared residual with an $\ell_1$ penalty:
+
+$$
+\min_\Xi \; \|\dot X-\Theta\Xi\|_2^2+\lambda\|\Xi\|_1.
+$$
+
+Sequential thresholded least squares alternates regression and coefficient removal. Group lasso can select whole feature families. Bayesian shrinkage, including ARD-style group precisions, can produce posterior uncertainty and relevance rankings. None removes the need for a meaningful feature library or informative experiment. Correlated features can lead to unstable support across data subsets; report selection frequency or posterior uncertainty rather than a single binary support.
+
+For discrete candidate models, marginal likelihood or reversible-jump sampling can compare different numbers of groups or states, but the result depends on priors and model definitions. A practical workflow uses sparse methods to screen a broad library, then compares a limited set of physical hypotheses in greater detail. The selected structure should survive prior and penalty sensitivity analyses.
+
+## Worked Example: Damping or Feedback?
+
+Suppose recorded motion obeys
+
+$$
+I\ddot q + b\dot q = u, \qquad u=-k\dot q.
+$$
+
+Then the observed equation is $I\ddot q+(b+k)\dot q=0$. If only $q(t)$ is measured and $u$ is unobserved, a regression library containing $\dot q$ can estimate an effective decay coefficient proportional to $b+k$, but cannot separate physical damping $b$ from feedback gain $k$. A sparse algorithm may select a damping term and report a compact model. That term is predictive under the same control policy, but its physiological interpretation is unsupported.
+
+If the input is measured, variation in $u$ can separate the terms, provided it is sufficiently rich and not exactly collinear with velocity. A perturbation protocol can also help: apply known torque disturbances or alter feedback conditions. The discovery method does not create information absent from its inputs.
+
+## Selecting Model Order Without Overclaiming
+
+A defensible procedure has several layers. First create a baseline physical model and identify candidate residual forces. Second fit a sequence of sparsity levels using trajectory-level folds. Third measure not only pointwise derivative error, but integrated rollout accuracy, constraint violations, and stability. Fourth examine support stability under resampling, noise, derivative estimators, and library variants. Fifth test synthetic recovery where the truth is known and test negative controls with observationally equivalent structures. Sixth report whether the selected order is stable and what it means: active terms in a fixed library, not “true system dimension” unless additional evidence warrants that interpretation.
+
+For hybrid motion, split continuous regimes or use a hybrid library with explicit mode indicators. A single polynomial approximation may approximate stance and flight over a narrow interval, but its coefficients can be uninterpretable and its transitions inaccurate. Impacts involve velocity reset maps and nonsmooth constraints; smooth regression of sampled acceleration is not a substitute for an impact law. The repository's hybrid dynamics materials should be reviewed alongside this chapter before specific implementation recommendations are finalized.
+
+## Failure Analysis
+
+A low training residual with many terms can signal an overcomplete library. A sparse model that changes support dramatically across seeds signals weakly determined structure. A small derivative error but poor rollout indicates accumulated integration error or noisy derivatives. Good rollouts in one task and failure under perturbation indicate policy/task confounding. Unexpected nonzero terms may expose missing variables, delay, or contact rather than new physical laws. Each symptom suggests a different correction; simply increasing the penalty is not a universal fix.
+
+## Limitations
+
+Sparse regression is not invariant to feature transformations. A nonlinear change of coordinates changes which terms are sparse. Threshold values have no universal scale. High-dimensional systems with short trajectories can have too many candidate terms relative to informative data. Hybrid events violate smoothness assumptions. Missing inputs and hidden states lead to effective rather than mechanistic equations. Interpretability depends on grouping and units as much as on sparsity.
+
+
+## Residual Discovery Around A Known Model
+
+A useful compromise is to preserve a trusted physical backbone and discover only the unexplained component. Let τ_known(q,qdot,qddot;θ) denote known or estimable mechanics, and let τ_res be the residual force. Then fit τ_res=Φ(q,qdot,u)β with group sparsity. This reduces the search space and makes a selected term easier to interpret. For example, if gravity and inertia are known, the candidate residual library might contain passive damping, joint elasticity, or a small set of actuator moment-arm corrections. The residual should be evaluated with its contribution plotted over the observed domain; a coefficient alone can hide a function that grows unbounded outside it.
+
+But a residual is not automatically “small physics.” If the known model has wrong coordinate definitions, sensor alignment, or contact semantics, the residual may become large and structured. A diagnostic should compare residual magnitude with sensor uncertainty and with the scale of each known force. If the residual cancels the main model terms, revisit the backbone before adding more library elements. Use held-out trajectory residuals to determine if a missing effect repeats consistently.
+
+Library design should be pre-registered or documented before selecting support. If many candidate terms are added after inspecting test errors, the test set has become part of training. Preserve an audit trail of feature transformations, normalization constants, group definitions, threshold search, and rejected candidates. The repository can make this easier by storing a machine-readable model-selection manifest alongside publication artifacts.
+
+## Exercises
+
+1. For a pendulum observed only over $|q|<0.1$, explain why a library containing both $q$ and $\sin q$ can have unstable support.
+2. Propose a grouped library design for a two-joint model with gravity, viscous damping, and two measured actuators.
+3. A discovered model uses more terms when the sample rate is reduced. List possible explanations and diagnostics.
+
+## Solution Sketches
+
+1. Over this range, $\sin q$ and $q$ are almost collinear, so the data cannot reliably allocate the restoring effect. Expand the angle range if safe, remove redundant parameterization, or impose known gravity structure.
+2. Keep known gravity features as one group; assign one damping feature per joint; represent each actuator through measured input channels and mechanically specified moment arms; group symmetric couplings if justified. Test whether the inputs excite both channels independently.
+3. Reduced sampling may worsen derivative estimates, alias high-frequency modes, miss contact transitions, or change effective delay. Compare smoothing/integral estimates, inspect event timing, use a controlled simulator, and evaluate rollouts at matched conditions.

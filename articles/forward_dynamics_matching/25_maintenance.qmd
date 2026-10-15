@@ -1,0 +1,81 @@
+---
+description: "Benchmarks, Reproducibility, and Publication Maintenance: forward dynamics matching research manuscript chapter (local draft; not peer reviewed or empirically v"
+---
+
+# Benchmarks, Reproducibility, and Publication Maintenance
+
+## A Benchmark Is a Protocol, Not a Score
+
+Forward matching benchmarks compare a complete inference procedure: data preparation, model, numerical integration, optimization, and independent evaluation. A table containing only marker RMSE and runtime is not enough to determine what was compared. Two runs can have the same engine label yet differ in contact law, interpolation, actuator mapping, initialization, control regularization, solver tolerance, and observation mask. A benchmark record must make these choices explicit and bind them to exact artifacts.
+
+Separate three questions. **Optimization performance:** did the method find a lower objective under a stated training protocol? **Predictive performance:** does the candidate predict held-out kinematics or forces? **Physical qualification:** does an independent forward replay satisfy dynamics, contacts, actuator limits, and event timing? A candidate may succeed at one and fail another. Publication should label each claim directly. Video is useful for gross visual review but cannot establish torque validity, hidden contact forces, or continuous-time accuracy.
+
+## Reproducible Protocol
+
+A run manifest should include source revision and dirty-tree status; code and configuration hashes; input file hashes; model asset hashes; engine and library versions; hardware; random seeds; thread counts; deterministic flags; time grid; integration method and tolerances; contact law and parameters; objective terms and weights; optimizer settings; parameter bounds; start state; observation/holdout split; and termination reason. Store the actual parameter vector and candidate state/control arrays, not only a path to transient optimizer memory.
+
+Reproducibility has levels. **Artifact reproducibility** means the exact files and code can be identified. **Computational reproducibility** means rerunning produces the same or tolerance-equivalent outputs. **Scientific reproducibility** means an independent implementation or evaluator supports the conclusion. A hash proves identity, not correctness; a deterministic rerun proves consistency, not model validity. Receipts need all three types of evidence without conflating them.
+
+Use immutable raw data and derived-data manifests. Record all filters, gap filling, coordinate transforms, resampling, and rejected samples. A useful transformation entry records code version, parameters, input/output hashes, and reason. If a marker gap is interpolated, the estimator's assumptions and uncertainty belong with the derived series. Leakage can occur when filtering or normalization uses the full trial before a train/test split; split by trial/person/session at the level appropriate to the generalization claim.
+
+## Benchmark Design
+
+Use layered benchmark suites. A synthetic suite has known dynamics and parameters, enabling recovery and identifiability checks. A canonical small physical fixture exercises contacts and engine adapters. A representative motion trial evaluates realistic complexity. A held-out cohort evaluates generalization. Every suite should report which parameters are identifiable under its excitation and sensors.
+
+Compare methods with matched conditions: same data and splits, equivalent objectives, comparable compute budgets, and identical endpoint conventions. If a method requires a different objective, provide both its native score and a common evaluation score. Repeat stochastic methods across seeds and report distributions with confidence intervals. Do not select the best seed as the headline number. Record failures and timeouts; excluding failed fits biases comparisons.
+
+Metrics should include position and orientation errors with physical units, normalized residuals, temporal alignment, peak and RMS error, event-time error, constraint violations, energy residuals, actuator effort, optimizer evaluations, wall and CPU time, memory, and convergence status. Report performance by body region and motion phase as well as pooled metrics. A low whole-body mean can hide a major wrist or contact failure. Include parameter uncertainty and sensitivity where parameter interpretation is claimed.
+
+A fair baseline suite should include kinematic playback (as a lower-bound fit reference, clearly labeled non-dynamic), inverse-dynamics or trajectory-optimization baselines where applicable, and multiple forward engines when the claim concerns engine robustness. For cross-engine parity, compare same-state forward kinematics first, then dynamics under matched forces and contact; do not attribute all discrepancy to the optimizer if the mechanics differ.
+
+## Ablations and Uncertainty
+
+Ablation removes one method component while preserving all else: contact model, residual weighting, adaptive dimension, regularization, control knots, or initialization. An ablation is informative only if the changed component is isolated and the objective is comparable. For adaptive dimension, compare fixed dimension against the selector using held-out predictive performance, parameter stability, and complexity. Also include an oracle dimension synthetic case to distinguish selector limitations from data nonidentifiability.
+
+Uncertainty can be approximated through bootstrap over trials or participants, profile likelihood, posterior sampling, or local curvature, depending on assumptions. Hessian-based intervals are unreliable near bounds, in multimodal fits, and across contact mode changes. Report that limitation. A confidence interval on marker error is not an uncertainty interval on mass or friction. Parameter uncertainty and prediction uncertainty are different quantities.
+
+## Repository Evidence and Interpretation
+
+The upstream repository stores many matched candidates beneath [evidence/matched](https://github.com/D-sorganization/UpstreamDrift/tree/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/evidence/matched), with receipts, candidate arrays, replay results, parity reports, and visual artifacts. This is a strong foundation for traceable comparison, but the existence of an evidence directory does not imply every candidate is equally qualified. For example, [evidence/matched/driver_full_mujoco_replay/README.md](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/evidence/matched/driver_full_mujoco_replay/README.md) explicitly reports a large marker change when the integrator is refined and documents the contact law used. It also notes that an earlier merged source receipt omits information such as armature, contact configuration, interpolation, and other replay details. This is direct evidence that provenance completeness and numerical sensitivity remain review dimensions.
+
+[AGENT_HANDOFF.md](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/AGENT_HANDOFF.md) distinguishes kinematic preview artifacts from forward-dynamics qualification and records open gaps such as all-axis torque coverage, moving contact, continuous interpolation, and independent replay for certain workstreams. That is important scientific discipline: selected pose validity or a visually plausible animation is not sufficient to claim a complete forward match. The book should link to exact receipts and handoff notes when making case-specific claims and date-stamp evolving evidence.
+
+A proposed benchmark receipt schema should make missing fields explicit rather than silently defaulting. It should include a qualification level and gates passed, plus warnings for absent force measurements, event mismatch, unverified interpolation, or unqualified solver exit. The report site should render a comparison table from receipts, not a hand-edited result table. This is a proposal; do not infer that upstream has this unified publication pipeline unless implementation is found and audited.
+
+## Publication Lifecycle
+
+A research review and textbook should separate durable derivations from changing repository findings. Put core equations and methods in chapters; place implementation status in a dated case study or evidence index. Every source claim should have a local repository citation or stable external reference. Include access/verification date for dynamic web references. A citation validator can confirm links resolve, but a live hyperlink's resolution does not prove that it supports the sentence.
+
+Maintain a claim ledger: claim text, evidence type, source location, version/date, independent reviewer, and status (supported, proposed, open, superseded). Keep hypotheses visibly labeled. When an implementation changes, update receipts and affected claims rather than rewriting history. Preserve previous candidate hashes and mark superseded records. A release should pin source revision, bibliography version, input hashes, and render toolchain.
+
+A publication quality gate can check Quarto rendering, code examples, internal anchors, bibliography keys, HTTP/local link resolution, title conventions, and stale evidence dates. Scientific review should separately inspect equations, assumptions, units, and whether empirical conclusions follow from the data. Formatting automation cannot replace scientific peer review. Code snippets in a textbook should either execute in a pinned environment or be labeled pseudocode; do not imply unrun code is tested.
+
+## Proposed Adaptive-Dimension Benchmark
+
+To evaluate an adaptive model that learns its dimensions, construct synthetic trials with known (d), varying excitation richness and observation noise. Include confounders: marker dropout, timing offset, contact-law mismatch, and unmodeled compliance. Measure dimension-selection accuracy, false expansion rate, held-out prediction, parameter coverage, runtime, and calibration of model probabilities. Test at least two kinds of split: held-out segment within a trial for interpolation and held-out trial/person for generalization. A geometric dimension chosen using one trial may reflect anatomy, calibration, or prior assumptions and needs independent validation; a population model should model participant variation separately.
+
+Define a compute-matched comparison against (a) a fixed low-dimensional model, (b) a fixed high-dimensional model with shrinkage, and (c) a model-selection baseline. Freeze the selection rule before looking at test results. Evaluate robustness across engine/integrator refinements: a dimension that appears only at coarse timestep is likely compensating numerical error. Likewise, if a dimension vanishes when contact parameters are calibrated, it may represent contact confounding. Report selection uncertainty and candidate dimensions, not just the winner.
+
+## Worked Benchmark Interpretation
+
+In this illustrative synthetic comparison, suppose method A has 8 mm training RMSE and method B has 9 mm, but on held-out trials A has 15 mm and B has 10 mm. A also requires 3x runtime and has 4% contact-constraint violation; B has 0.2%. The training score favors A, while predictive and physical evidence favors B. The right conclusion is not a single ranking: A optimizes the training objective more closely, B generalizes better and satisfies the stated contact gate. The intended use determines which method is preferable.
+
+## Exercises and Solutions
+
+**Exercise 1.** Why is an input hash insufficient for reproducibility? **Solution.** It identifies bytes but not the transformation, runtime, solver settings, randomness, or interpretation. Reproduction requires the full run manifest and recoverable environment.
+
+**Exercise 2.** A candidate has excellent marker RMSE and no measured ground reaction force. Can it claim accurate contact force? **Solution.** No. Kinematics constrain force only through assumed dynamics and parameters; force may be nonidentifiable. Report it as a model estimate and seek independent force measurement or sensitivity/uncertainty analysis.
+
+**Exercise 3.** An adaptive coordinate improves fit only under one integrator tolerance. What is the next test? **Solution.** Repeat with converged timestep/tolerance studies and identical contact settings, then use held-out data. Until stable under numerical refinement, treat the apparent dimension as unresolved discretization compensation.
+
+## Further Reading
+
+The AffineDrift bibliography includes [@gebru2021datasheets] on dataset documentation, [@olson2026residual_aware] on residual-aware approximation, and [@olson2026hybrid_tangent] on hybrid events. The upstream receipts and replay notes cited above serve as evolving case evidence; they should be rechecked at each publication release.
+
+## Statistical Reporting and Stopping Rules
+
+Choose sample size and evaluation units before comparing methods. Frames within one trial are serially correlated and are not independent replicates; confidence intervals based on frame count can be dramatically too narrow. Bootstrap at the trial or participant level, preserving the hierarchy of repeated trials. For paired method comparisons, resample paired units so each method sees the same subjects. Report the number of participants, trials, and valid frames after masking, not only the frame total.
+
+Predeclare the promotion rule. For example, a candidate may require held-out normalized error below a threshold, no constraint violation beyond tolerance, successful fresh-process replay, and complete receipt validation. If gates are tuned after seeing a candidate, label the result exploratory. A run that reaches an iteration limit is not converged merely because its final score is favorable. Record stopping reason, gradient norm, constraint residual, and whether the result satisfies KKT or other solver criteria.
+
+Benchmark maintenance should include a small smoke suite that runs on every supported environment and a heavier scheduled suite for full replay. The smoke test checks interfaces and numerical sanity, not publication claims. The release suite should preserve golden artifacts with versioned tolerances; avoid bitwise equality across hardware where floating-point reduction order differs. Use physical tolerances grounded in measurement precision and solver convergence, and retain the observed error distribution so tolerances do not expand without review.

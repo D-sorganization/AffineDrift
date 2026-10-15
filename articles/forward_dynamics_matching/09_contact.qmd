@@ -1,0 +1,98 @@
+---
+description: "Constraints, Contact, and Hybrid Events: forward dynamics matching research manuscript chapter (local draft; not peer reviewed or empirically validated)."
+---
+
+# Constraints, Contact, and Hybrid Events
+
+## The Mathematical Structure
+
+Rigid-body forward matching is not a smooth ODE everywhere. A model may move freely, enter sustained contact, slide, stick, release, or undergo an impulsive collision. Each mode has its own continuous equations and admissible state set. Treating those changes as incidental details of a simulator hides a major source of model mismatch.
+
+For holonomic constraints $g(q)=0$, the velocity constraint is $J(q)v=0$, where $J=\partial g/\partial q$. Acceleration consistency gives $J\dot v+\dot Jv=0$. The constrained acceleration and reaction force solve the saddle system
+$$
+\begin{bmatrix}M&-J^T\\J&0\end{bmatrix}\begin{bmatrix}\dot v\\\lambda\end{bmatrix}=\begin{bmatrix}\tau-h\\-\dot Jv\end{bmatrix}.
+$$
+Sign conventions vary; the invariant requirement is that the computed acceleration satisfy dynamics and constraint equations to tolerance. Redundant constraints make the KKT matrix singular unless dependencies are removed or a principled regularization is used. A penalty formulation instead adds approximately $-k g-d\dot g$ forces. It is easier to integrate but introduces stiffness, penetration, and a parameter-dependent approximation to ideal constraints.
+
+Unilateral contact is described by gap $\phi(q)\ge0$ and normal force $\lambda_n\ge0$ with complementarity $\phi\lambda_n=0$. Coulomb friction imposes a tangential force bounded by $\mu\lambda_n$, with sticking/sliding mode selection. Complementarity is nonsmooth. Solvers use complementarity problems, convex cones, regularized forces, or smoothed approximations. Each choice defines a different forward model and derivative. A soft-contact law may be useful for gradients and stable fitting, but fitted stiffness and damping partly encode discretization and are not automatically physical material constants.
+
+Impact is a reset map. If pre-impact velocity is $v^-$, impulse $p$ changes it to $v^+=v^-+M^{-1}J^Tp$. A Newton restitution rule sets post-impact normal velocity from pre-impact normal velocity; perfectly inelastic impact uses zero normal separation speed. The impact solution must respect nonnegative impulse and nonpenetration. The state jumps even though position is usually continuous. A single smooth integrator step across impact smears the event and can yield incorrect energy loss and timing.
+
+## Event Time Changes the Gradient
+
+Let an event occur when $g(x,t)=0$. A small perturbation $\delta x$ changes the event time. Linearization gives
+$$
+\delta t_e=-\frac{g_x\delta x^-}{g_t+g_x f^-},
+$$
+provided the denominator is nonzero (transversal crossing). After a time-independent reset $x^+=R(x^-)$, perturbations transported to a common post-event time are mapped by the saltation matrix
+$$
+\Xi=R_x+\frac{(f^+-R_x f^-)g_x}{g_t+g_x f^-}.
+$$
+This expression shows why differentiating only the reset map misses event-time sensitivity. Near grazing contact the denominator approaches zero and sensitivity can become very large; this is an intrinsic conditioning issue, not necessarily an AD bug. With multiple simultaneous contacts, event ordering and reset composition require explicit policy.
+
+The event map is often only piecewise differentiable. If perturbations change which event occurs first, the classical derivative may not exist. An optimizer can exploit mode switching, producing a lower training residual but an implausible or unstable trajectory. Report mode sequence and event times alongside the scalar fit score. For matching, contact timing may be part of the observed evidence, so event residuals should be first-class measurements rather than hidden implementation choices.
+
+## Formulations for Fitting
+
+There are four useful formulations, with different tradeoffs.
+
+1. **Penalty or compliant contact.** Replace constraints with smooth forces. Standard ODE solvers and AD can be applied, but stiffness limits step size and smooth approximations can bias impact. Include contact law, smoothing width, integrator, and tolerance in the model identity.
+2. **Complementarity or constrained time stepping.** Solve contact impulses/forces jointly at each step. This captures nonpenetration robustly but active-set changes make derivatives piecewise. Use a solver that exposes the actual discrete residual and, if differentiating, define a derivative for the selected active set.
+3. **Multiple shooting with mode schedule.** Optimize states and controls at segment boundaries while enforcing each segment's dynamics. Fix or enumerate contact modes during a local solve, then validate alternative schedules. This can improve conditioning and localize mismatch.
+4. **Hybrid trajectory optimization.** Optimize continuous phases, event times, and reset conditions explicitly. It is the most faithful representation when event timing matters, but introduces additional variables and transversality constraints.
+
+A fifth option is to fit a smooth surrogate first and use it only as an initializer for the physical hybrid model. The final candidate must be re-evaluated with the declared target law; surrogate objective success is not physical validation.
+
+## Contact-Aware Objective and Diagnostics
+
+A defensible objective separates kinematic fit from event and physical penalties:
+$$
+J=J_{markers}+w_qJ_{orientation}+w_tJ_{event-time}+w_cJ_{contact}+w_uJ_{effort}+w_pJ_{prior}.
+$$
+For measured contact onset $t_i$, $J_{event-time}=\sum_i((\hat t_i-t_i)/\sigma_{t_i})^2$. Contact consistency can penalize penetration, negative normal force, slip during inferred sticking, and energy creation at impact. Do not score an unobserved contact state as if it were measured: distinguish measured, inferred, and assumed mode labels. If force plates or instrumented surfaces exist, use their uncertainty model; if not, report contact as a model prediction.
+
+Useful diagnostics include maximum and RMS constraint violation, penetration depth, complementarity product, friction cone violation, impulse magnitude, event ordering, energy jump, and solver convergence. Report these per time interval. A low marker RMSE can hide substantial penetration or energy injection. Conversely, a contact law that is too stiff can worsen marker fit by making the numerical system unresolvable at the selected step size.
+
+## Repository Evidence
+
+The upstream evidence includes replay notes at [evidence/matched/driver_full_mujoco_replay/README.md](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/evidence/matched/driver_full_mujoco_replay/README.md), which state that a regularized Coulomb contact law is reused while stock MuJoCo contacts stay disabled in that replay. The README also records that integrator refinement changed marker positions substantially, a concrete warning that solver and contact details alter the result. The corresponding Crocoddyl replay README records the same shared contact-law approach for that candidate. The repository's MuJoCo contact implementation and tests are under [src/engines/physics_engines/mujoco/python/motion_matching](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/engines/physics_engines/mujoco/python/motion_matching) and [tests/unit/motion_matching/test_contact_law.py](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/tests/unit/motion_matching/test_contact_law.py) (the evidence README lists the qualification test command). These facts establish a particular replay configuration, not universal equivalence between engines or experimentally measured contact truth.
+
+The matching inventory spans Drake, MuJoCo, Pinocchio/Crocoddyl, OpenSim, MyoSuite and Simscape evidence. They do not share a single mathematical contact formulation. A parity comparison therefore needs a contact-law statement, not just an engine name. For the adaptive-dimension model proposed by the project, a newly activated latent coordinate should not be allowed to absorb contact-model error without a model comparison that separates those explanations.
+
+## Proposed Design for Adaptive Dimension Under Contact
+
+Treat model dimension $d$ as a discrete model index and continuous parameters $\theta_d$ as within-model variables. A proposed objective is
+$$
+J_d=J_{data,d}+\lambda_d d+\lambda_{event}J_{event,d}+\lambda_{phys}J_{phys,d},
+$$
+where the complexity penalty discourages adding dimensions merely to chase noise. Candidate dimensions should be compared on held-out trials, with the same observation masks, event law, and compute budget. Evidence for a new dimension should include improved predictive log likelihood or a predeclared information criterion, stable parameter estimates under resampling, and a mechanistic interpretation. Selection uncertainty should be retained rather than presenting one dimension as certain.
+
+For hybrid systems, dimension proposals should be localized by phase: an extra generalized coordinate may be warranted for free motion but redundant during a constrained phase. Any dimension change across a phase boundary must have a defined state embedding and velocity mapping that preserve physical quantities as appropriate. This is a research proposal; upstream code currently offers multiple fit configurations, not a general Bayesian or adaptive-dimension model selector.
+
+## Worked Impact Example
+
+In an illustrative unit-mass example, a mass approaches a rigid wall at $v^-=-2\,\mathrm{m/s}$. With restitution $e=0.5$, the reset gives $v^+=-e v^-=1\,\mathrm{m/s}$ (positive away from the wall under this sign convention). Kinetic energy changes from $2$ J to $0.5$ J; $1.5$ J is dissipated. A method that simply clips penetration without a velocity reset can report zero gap while retaining inward velocity, causing immediate re-penetration. This illustrates why position agreement alone cannot qualify contact handling.
+
+## Exercises and Solutions
+
+**Exercise 1.** Why can a penalty stiffness that improves penetration worsen the fit? **Solution.** Increasing stiffness reduces static penetration but increases the fastest natural frequency approximately as $\sqrt{k/m}$. A fixed time step then under-resolves the contact transient, creating phase and force errors. Damping and numerical dissipation also change the trajectory.
+
+**Exercise 2.** Which evidence is needed to claim the fitted contact coefficient is a physical friction coefficient? **Solution.** The force law and units, independent calibration or measured tangential/normal forces, identifiability analysis, sensitivity to timestep and regularization, and uncertainty intervals. Matching kinematics alone generally confounds friction with control, geometry, and actuator effects.
+
+**Exercise 3.** What does a small denominator in the saltation formula mean? **Solution.** The trajectory crosses the event surface nearly tangentially. Event time becomes highly sensitive to state perturbations; uncertainty and numerical error are amplified. The model may require finer event resolution or a probabilistic treatment.
+
+## Further Reading
+
+The AffineDrift bibliography includes [@olson2026hybrid_tangent] and [@goebel2012hybrid] for hybrid flow and reset concepts. See also the maintained contact and replay evidence paths above. Distinguish mathematical references from empirical validation of any particular candidate.
+
+## Numerical Choices and Conservation Checks
+
+Constraint stabilization controls drift in $g(q)$. Baumgarte stabilization modifies acceleration constraints with terms proportional to $\alpha$ and $\beta$, damping position and velocity error; excessive gains make the system stiff, while weak gains permit drift. Projection methods instead correct the state onto the constraint manifold after a step, but the projection itself changes the discrete map and must be differentiated if used in gradient fitting. Position projection without a compatible velocity projection can produce a state that is geometrically valid but dynamically inconsistent.
+
+For ideal bilateral constraints, verify residuals (\|g(q)\|), (\|Jv\|), and $\|J\dot v+\dot Jv\|$. For conservative free motion, monitor total energy and momentum. Energy drift should decrease predictably with step refinement for the selected integrator. With damping and impact, the expected energy balance includes dissipated work and impulse losses; “energy conservation” is then the wrong criterion. For contact, monitor the maximum penetration and complementarity residual, but also evaluate sensitivity to contact regularization. A model that meets a tolerance only at one hand-selected timestep is not numerically robust.
+
+Inter-engine comparison should be staged. First compare kinematics from the same generalized coordinates. Then compare unconstrained accelerations under identical force vectors. Next compare constrained accelerations in a simple fixture with analytically known contact. Only after those agree should a complex swing replay be compared. A discrepancy can come from joint-axis definitions, gravity sign, rotor armature, friction, actuator transmission, contact activation, integrator, or observation maps. Logging each stage makes the investigation falsifiable.
+
+When a contact mode is inferred from video or marker data, encode uncertainty in the event label. One approach is to compare candidate schedules and marginalize their likelihoods; another is to use a soft probability for contact onset while retaining a hard mechanics model within each hypothesis. A smooth probability does not make the physical state itself smooth, so report the approximation and validate the selected schedule with independent replay. For uncertain onset $t_c\sim p(t_c)$, event likelihood can be evaluated across plausible onset times instead of fixing one timestamp and overstating precision.
+
+A contact benchmark should vary approach speed, incidence angle, friction, and timestep independently. One easy normal collision is not enough to validate a frictional law. Include separation with zero force, low-speed grazing, stick-slip transition, and simultaneous contact cases; state clearly which are supported and which remain outside the qualified domain.

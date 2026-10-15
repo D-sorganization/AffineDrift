@@ -1,0 +1,74 @@
+---
+description: "References and Verification Ledger: forward dynamics matching research manuscript chapter (local draft; not peer reviewed or empirically validated)."
+---
+
+# References and Verification Ledger {#sec-fdm-references}
+
+## How References Were Reviewed
+
+This publication distinguishes bibliographic identity, successful page retrieval, full-text inspection, and validation of a scientific claim. These are separate checks. A DOI string or a search-index record does not establish that a live publisher page is reachable, and successful retrieval does not establish that a paper supports every application claim.
+
+Before the network stop, the literature helper retrieved the official Moco overview and archived repository README. It also obtained indexed PubMed, publisher, and official documentation records. Some publisher opens returned access errors, while some PubMed and PMC opens returned shell pages or access challenges. Those sources support bounded metadata and abstract-level statements rather than unrestricted full-text review.
+
+After GitHub returned an API quota error, the repository's network policy required stopping all network activity. New external URLs therefore remain pending live validation. Local repository links were checked against the audited checkout and are pinned to its commit. The machine-readable link ledger and source manifest in this directory preserve the distinction.
+
+## Core Mechanics and Trajectory Optimization
+
+The existing AffineDrift bibliography supplies mechanics and numerical foundations. Featherstone develops rigid-body algorithms; Betts treats nonlinear programming for optimal control and estimation; Kelly presents practical direct collocation [@featherstone2008rigid; @betts2010practical; @kelly2017introduction]. These references establish method context rather than success on the current golf models.
+
+- [Rigid Body Dynamics Algorithms](https://doi.org/10.1007/978-1-4899-7560-7): canonical mechanics reference; external endpoint validation pending in this session.
+- [Kelly's Direct Collocation Tutorial](https://doi.org/10.1137/16M1062569): method tutorial; external endpoint validation pending.
+- [Porsa, Lin, and Pandy's OpenSim Direct-Methods Study](https://doi.org/10.1007/s10439-015-1538-6): indexed metadata and abstract reviewed before the network stop; independent full-text and endpoint validation incomplete [@fdmPorsa2016Direct].
+
+The comparative study should not be used as a universal solver ranking. Performance depends on model size, transcription, constraints, derivatives, tolerances, and initialization. This book derives the relevant numerical distinctions and asks for fair comparisons on identical tasks.
+
+## OpenSim and Muscle-Driven Matching
+
+OpenSim provides the musculoskeletal framework; Moco supplies direct-collocation optimal control within that framework [@seth2018opensim; @dembia2020opensim]. Computed Muscle Control is an earlier forward tracking method with static optimization and feedforward/feedback components [@fdmThelen2003CMC; @fdmThelen2006Walking].
+
+| Reference | Stable Link | Review Status | Scope Used Here |
+|---|---|---|---|
+| Thelen, Anderson, and Delp, 2003 | [DOI](https://doi.org/10.1016/S0021-9290(02)00432-3) | Indexed metadata and method description; full-text retrieval incomplete | Computed Muscle Control architecture |
+| Thelen and Anderson, 2006 | [PubMed](https://pubmed.ncbi.nlm.nih.gov/16023125/) | Indexed metadata and abstract; publisher open blocked | Walking simulation and residual-elimination context |
+| Dembia and Colleagues, 2020 | [PLOS](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008493) | Indexed PLOS/PubMed metadata; full-text review incomplete | Moco formulation and supported problem families |
+| OpenSim Moco Overview | [Official Site](https://opensim-org.github.io/opensim-moco-site/) | Successfully opened by helper before network stop | Software overview |
+| Archived Moco Repository | [Official Repository](https://github.com/opensim-org/opensim-moco) | README successfully opened by helper before network stop | Development-location notice; API versions still require review |
+| MocoTrack Documentation | [Version 1.1 Documentation](https://opensim-org.github.io/opensim-moco-site/docs/1.1.0/html_user/mocotrack.html) | Indexed official documentation; endpoint validation incomplete | Tracking semantics; historical API reference |
+
+The muscle chapter also links broader reviews with bounded scope. References whose authors, dates, or publication details were uncertain in helper notes were excluded from the formal bibliography. They should be added only after authoritative metadata and relevant text are inspected.
+
+## Identification, Model Selection, and Learned Dynamics
+
+Hermann and Krener provide classical nonlinear observability context; Green supplies reversible-jump Bayesian model determination; MacKay develops evidence-based regularization [@fdmHermann1977Observability; @fdmGreen1995RJMCMC; @fdmMacKay1992Interpolation]. The URLs for these records remain pending live endpoint validation.
+
+Sparse discovery selects terms from a declared library rather than directly discovering anatomy [@brunton2016discovering]. Neural ODE and latent ODE methods define continuous learned states whose interpretation depends on their observation and initialization maps [@fdmChen2018NeuralODE; @fdmRubanova2019LatentODE]. Structured Hamiltonian and Lagrangian networks encode useful assumptions within their supported physical regimes [@greydanus2019hamiltonian; @cranmer2020lagrangian; @lutter2019deep].
+
+- [SINDy](https://doi.org/10.1073/pnas.1517384113): stable DOI; helper reported blocked automated publisher access.
+- [Neural Ordinary Differential Equations](https://arxiv.org/abs/1806.07366): stable preprint identifier; current endpoint validation pending.
+- [Latent ODEs for Irregularly-Sampled Time Series](https://arxiv.org/abs/1907.03907): stable preprint identifier; current endpoint validation pending.
+- [Hamiltonian Neural Networks](https://arxiv.org/abs/1906.01563): existing bibliography identity; current endpoint validation pending.
+- [Lagrangian Neural Networks](https://arxiv.org/abs/2003.04630): existing bibliography identity; current endpoint validation pending.
+- [Profile Likelihood and Practical Identifiability](https://doi.org/10.1093/bioinformatics/btp358): supplementary method link; full metadata and endpoint validation pending.
+
+No source is cited as proving the adaptive design proposed here. The synthesis uses these method families to formulate a testable engineering program and explicitly preserves identifiability limitations.
+
+## Repository Evidence
+
+The immutable source anchor is [UpstreamDrift Revision d7c7d07](https://github.com/D-sorganization/UpstreamDrift/tree/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0). The inventory and historical chapters link individual modules, tests, handoffs, and receipts at this revision. Their local targets were inspected without additional network requests.
+
+The source audit separates older neural stubs from modern shared implementations. It also preserves conflicts between model-card promotion prose and diagnostic artifact receipts. Resolving those conflicts requires checkpoint hashes, original logs, native replay evidence, and repeatable benchmark commands. This manuscript does not manufacture that missing evidence.
+
+Stored experimental values are reported as historical model results. They were not rerun in this session and do not establish empirical human validity. A stage marked not evaluated, unsupported, diagnostic, or rejected retains that status even when neighboring stages passed.
+
+## Reference Maintenance Procedure
+
+For each new source, record its exact identity, stable URL, access date, retrieved content level, relevant sections, and the claim it supports. Separate inaccessible full text from a broken endpoint. Publisher access restrictions can coexist with correct metadata and a valid DOI.
+
+When live access resumes, validate every unique external URL and preserve redirects and failures in the ledger. Then inspect the relevant primary text for substantive method claims. Do not replace an inaccessible primary source with an unsupported paraphrase from a search result.
+
+Before publication, run citation-key, bibliography metadata, internal-link, title, syntax, render, and visual checks. Review all equations in the rendered output. The reference list below is generated from the configured bibliography, while direct software and receipt links preserve version-specific evidence.
+
+## Bibliography
+
+::: {#refs}
+:::
