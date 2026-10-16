@@ -269,6 +269,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5074 · Adversarial Review 2026-10-16: 35 Findings With Draft PR Pitches Under Docs/Development/Adversarial-Review/
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5074
+- **Branch:** claude/adversarial-review-2026-10-16
+- **PR:** #5074
+- **Paths:** docs/development/adversarial-review/2026-10-16
+- **Started:** 2026-10-16
+- **Last verified:** 2026-10-16 (`bc1b4ecc`; collated from changes/5074-adversarial-review-2026-10-16.md)
+- **Summary:** Adversarial review 2026-10-16: 35 findings with draft PR pitches under docs/development/adversarial-review/
+- **Next step:** Triage Critical/High finding pages; each carries a paste-ready PR body.
+
 ### DL-#4719 · Adjudicate Historical Screw-Theory Research Outline (#4719)
 
 - **State:** in_review
