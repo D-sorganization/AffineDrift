@@ -13,10 +13,10 @@
 - Severity: Low  - Category: hygiene
 - Confidence: medium
 - Location: tests/test_stub_notebooks.py:14-16; requirements.txt:14-16
-- Evidence: collection needs `hypothesis`, `nbformat`, `nbclient`; `requirements.txt` has `jupyter==1.1.1`
+- Evidence: collection needs `hypothesis`, `nbformat`, `nbclient`; `requirements.txt` (the documented CI install) pins Hypothesis and installs Jupyter, but a plain `pip install -e .` gets none of them
   (which drags them in) — fine for CI but a developer with `pip install -e .` plus `pytest` gets a collection
   error, and `--co` dies on the first file so the count guard would report 0.
-- Proposed change: `pytest.importorskip("nbclient")` in that module, or list the three explicitly.
+- Proposed change: define a `test` extra in `pyproject.toml` (`hypothesis`, `nbformat`, `nbclient`) and document `pip install -e .[test]`; do **not** `importorskip` — that would turn a missing dependency into a silently skipped governed notebook test (and cannot guard the module-level `import nbformat` anyway).
 - Effort: S
 
 ## Draft Pull Request

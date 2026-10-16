@@ -19,7 +19,7 @@
   forbidden_claims = ("no amount of paddling will steer you", "locked into the path", ...)
   for claim in forbidden_claims: assert claim not in article
   ```
-- Failure scenario: 8,088 collected tests give a 92 % coverage number that is dominated by file-reading; the
+- Failure scenario: 8,088 collected tests make the suite *look* like deep kernel verification when two-thirds of files assert prose presence; whether the 92 % line-coverage figure depends on them is not established here — pytest-cov counts executed `src` lines, not assertion kinds — so measure `--cov` with and without `-m content_lint` and report the per-module delta before reorganising. The
   science kernel's behaviour is covered by ~800 tests. Rewording "locked into the path" to "locked onto the path"
   re-admits the forbidden claim; renaming a section breaks 20 tests that have nothing to do with correctness.
 - Why a newer engineer misses this: they *are* regression tests of editorial decisions, which is legitimate, but

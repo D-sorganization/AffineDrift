@@ -16,7 +16,7 @@
 - Evidence: regex over 396 .qmd: 0 `{python}`/`{ojs}`/`{javascript}` executable fences; 40 non-executable
   ```` ```python ```` listings. The ">20-line inline Python is forbidden" rule is vacuously satisfied; Quarto is
   being used as a Markdown renderer.
-- Proposed change: say so (it is a good decision: reproducibility comes from `src/` + tests, not from render-time
+- Proposed change: correct the CLAUDE.md claim (reproducibility comes from `src/` + tests, not from render-time cells) but **keep** the inline-code guard and its check: it is a forward-looking invariant that bites exactly when the first executable cell lands. Original wording follows for context: say so (it is a good decision: reproducibility comes from `src/` + tests, not from render-time
   execution). Delete the rule and the check that exists for it.
 - Effort: S
 

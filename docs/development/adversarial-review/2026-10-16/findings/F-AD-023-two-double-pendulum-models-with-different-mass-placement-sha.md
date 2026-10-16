@@ -21,7 +21,7 @@
   examples silently change.
 - Proposed change: rename the tool-side one `end_mass_double_pendulum_mass_matrix` (or parametrize mass fraction
   `c∈{0.5,1.0}` in the canonical one and derive both); document the convention in NOTATION.md.
-- Verification: a test asserting the two agree when the canonical model is given `com_fraction=1.0` and `m1→4m1`.
+- Verification: a test asserting the two agree when the canonical model is given `com_fraction=1.0` (that alone turns `M11` from `(m1/4 + m2)L1²` into `(m1 + m2)L1²`; no mass rescaling is needed or correct).
 - Effort: S
 
 ## Draft Pull Request
