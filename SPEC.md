@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-16 | #5074 | Adversarial review 2026-10-16: 35 findings with draft PR pitches under docs/development/adversarial-review/ |
 | 2026-10-15 | #5070 | Recover Forward Dynamics Matching research book from cloud session and add structure verification tests |
 | 2026-10-14 | #5068 | Import governed UpstreamDrift proximal-distal release fixing Koike (2016) proceedings metadata |
 | 2026-10-14 | #5066 | Add Golf_Control_Theory and scope-and-limits pages to fix broken link resolution on main |
