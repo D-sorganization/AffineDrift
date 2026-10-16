@@ -49,9 +49,16 @@ Two gates that sound like duplication and contract enforcement are substring gre
 A real duplication threshold may fail at first; set it to the measured value. Revert to roll back.
 
 ## Handoff
-Follow-ups: F-AD-007 (RK4 duplication).
+
+- **Branch, commit, and pull request:** `<branch>` @ `<commit>` — PR #<n> (fill in when opened)
+- **Validation:** the command(s) under *Verification* above, run locally and green; plus the repo's fast gates
+  (`ruff check`, `ruff format --check`, the relevant `-m unit` subset)
+- **Blockers:** none known at drafting time — record any that appear
+- **Next step:** open the PR against `main`, arm auto-merge with `scripts/automerge_guard.py`, end the session
+- **Follow-ups:** Follow-ups: F-AD-007 (RK4 duplication).
 
 Refs: adversarial review 2026-10-16, F-AD-019
 
+
 ---
-_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53f`. This is a proposal, not a verdict — verify the cited lines before acting._
+_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53fa`. This is a proposal, not a verdict — verify the cited lines before acting._

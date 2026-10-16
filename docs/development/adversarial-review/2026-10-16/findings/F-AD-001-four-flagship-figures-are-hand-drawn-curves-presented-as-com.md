@@ -67,9 +67,16 @@ Add a test that imports the figure builder, extracts the plotted arrays, and ass
 Changes are confined to figure scripts, captions and the tests; reverting the commit restores the old figures. Expect visibly different curves and legend numbers, which is the point.
 
 ## Handoff
-Follow-ups: deploy cache staleness (F-AD-010) so returning readers see the new SVGs; ledger regenerate for changed SVG digests.
+
+- **Branch, commit, and pull request:** `<branch>` @ `<commit>` — PR #<n> (fill in when opened)
+- **Validation:** the command(s) under *Verification* above, run locally and green; plus the repo's fast gates
+  (`ruff check`, `ruff format --check`, the relevant `-m unit` subset)
+- **Blockers:** none known at drafting time — record any that appear
+- **Next step:** open the PR against `main`, arm auto-merge with `scripts/automerge_guard.py`, end the session
+- **Follow-ups:** Follow-ups: deploy cache staleness (F-AD-010) so returning readers see the new SVGs; ledger regenerate for changed SVG digests.
 
 Refs: adversarial review 2026-10-16, F-AD-001
 
+
 ---
-_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53f`. This is a proposal, not a verdict — verify the cited lines before acting._
+_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53fa`. This is a proposal, not a verdict — verify the cited lines before acting._

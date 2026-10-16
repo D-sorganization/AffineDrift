@@ -62,9 +62,16 @@ Reviewer 2 will quote the paper and the supplementary site against each other, a
 Renames touch the contract, fixture and widget parity; the fixture digests will change. Revert the commit to roll back.
 
 ## Handoff
-Follow-ups: update the explorer widget and parity fixtures to match the chosen vocabulary.
+
+- **Branch, commit, and pull request:** `<branch>` @ `<commit>` — PR #<n> (fill in when opened)
+- **Validation:** the command(s) under *Verification* above, run locally and green; plus the repo's fast gates
+  (`ruff check`, `ruff format --check`, the relevant `-m unit` subset)
+- **Blockers:** none known at drafting time — record any that appear
+- **Next step:** open the PR against `main`, arm auto-merge with `scripts/automerge_guard.py`, end the session
+- **Follow-ups:** Follow-ups: update the explorer widget and parity fixtures to match the chosen vocabulary.
 
 Refs: adversarial review 2026-10-16, F-AD-002
 
+
 ---
-_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53f`. This is a proposal, not a verdict — verify the cited lines before acting._
+_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53fa`. This is a proposal, not a verdict — verify the cited lines before acting._

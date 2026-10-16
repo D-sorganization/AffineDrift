@@ -56,9 +56,16 @@ The headline coverage number is mostly measuring file reads. 413 of 611 test fil
 Mostly file moves and config; a mistake shows up as changed collection counts. Revert the commit to roll back.
 
 ## Handoff
-Follow-ups: update the test-count baseline (F-AD-017) once the split lands.
+
+- **Branch, commit, and pull request:** `<branch>` @ `<commit>` — PR #<n> (fill in when opened)
+- **Validation:** the command(s) under *Verification* above, run locally and green; plus the repo's fast gates
+  (`ruff check`, `ruff format --check`, the relevant `-m unit` subset)
+- **Blockers:** none known at drafting time — record any that appear
+- **Next step:** open the PR against `main`, arm auto-merge with `scripts/automerge_guard.py`, end the session
+- **Follow-ups:** Follow-ups: update the test-count baseline (F-AD-017) once the split lands.
 
 Refs: adversarial review 2026-10-16, F-AD-006
 
+
 ---
-_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53f`. This is a proposal, not a verdict — verify the cited lines before acting._
+_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53fa`. This is a proposal, not a verdict — verify the cited lines before acting._

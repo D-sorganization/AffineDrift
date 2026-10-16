@@ -53,9 +53,16 @@ This is a clean subtraction. 1,254 files and 11 MB of terminal transcripts sit u
 Deleting evidence files breaks the claim-audit gate until the ledgers stop citing them; sequence after F-AD-005 or update the ledgers in the same PR. Revert restores files.
 
 ## Handoff
-Follow-ups: F-AD-005 (ledger evidence paths) and F-AD-031 (PDFs).
+
+- **Branch, commit, and pull request:** `<branch>` @ `<commit>` — PR #<n> (fill in when opened)
+- **Validation:** the command(s) under *Verification* above, run locally and green; plus the repo's fast gates
+  (`ruff check`, `ruff format --check`, the relevant `-m unit` subset)
+- **Blockers:** none known at drafting time — record any that appear
+- **Next step:** open the PR against `main`, arm auto-merge with `scripts/automerge_guard.py`, end the session
+- **Follow-ups:** Follow-ups: F-AD-005 (ledger evidence paths) and F-AD-031 (PDFs).
 
 Refs: adversarial review 2026-10-16, F-AD-009
 
+
 ---
-_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53f`. This is a proposal, not a verdict — verify the cited lines before acting._
+_Generated 2026-10-16 from an adversarial review of `AffineDrift` @ `498f53fa`. This is a proposal, not a verdict — verify the cited lines before acting._
