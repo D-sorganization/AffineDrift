@@ -168,20 +168,6 @@ Next: finish and serve the clean build; compare visible-browser and headless Chr
 - **Paths:** pages/daydreams-doodles.qmd; scripts/optimize_images.py; static/images/A-Dead-Fish-Swims.webp; tests/test_optimize_images.py; _quarto.yml
 - **Started:** Not recorded in the inherited entry; PR #4892 opened 2026-10-04.
 
-### DL-#4868 · Title-Card Paint Investigation
-
-- **State:** in_progress
-- **Owner:** codex
-- **Issue:** #4868; epic #4009 / corpus #4021
-- **Branch:** fix/volume2-title-card-investigation
-- **Summary:** Establish a clean deployment baseline and distinguish a real title-card paint failure from a capture artifact before editing frontend source.
-- **Evidence:** Parent issue and preserved one-route screenshots; title-card-clean-build-directories.json and the observed build process; shared-nomenclature-remote-main-receipt.json records delivered parent scope.
-- **Next step:** Complete clean build and visible/headless desktop/mobile, light/dark pixel inspection. No source defect or correction is accepted yet.
-- **PR:** not recorded in the original entry; see governing issue
-- **Paths:** See #4868 and the original Evidence field
-- **Started:** 2026-10-04 (entry first present in the blamed source commit; actual work start not recorded)
-- **Last verified:** 2026-10-04 (metadata source date); Not recorded; metadata provenance `f10a0feff09d` (original entry, not a new scientific or CI validation)
-
 # Shared Nomenclature — Regular PR #4870
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4870 is open against main, attached, and guarded squash auto-merge is enabled. Never draft. Final accepted source a738be703d0f161c9a18896c274a8e671256e292 and all twelve bound source/PDF/report files are unchanged. The full offline suite at8068 passed 6,811 tests, 29 skipped and 210 deselected, with93.24% src coverage; the later one-sentence trajectory clarification has separate exact algebra, six native builds, 682-page text comparison, six changed-page inspections, 70 evidence/metadata tests and all17 publication gates. The22 turnover checks also pass. Source and delivery scopes remain distinct.
@@ -490,32 +476,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Correct platform, engine comparison and model construction contracts
 - **Next step:** Open regular PR against fix/golf-capstone-review; await protected parent delivery, retarget to main and verify accepted blobs
 
-### DL-#4921 · Correct Golf Capstone Acceleration Attribution and Synthetic Dynamics
-
-- **State:** in_progress
-- **Owner:** codex
-- **Issue:** #4921
-- **Branch:** fix/golf-capstone-review
-- **PR:** #4953
-- **Paths:** see #4953
-- **Started:** 2026-10-05
-- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4921-golf-capstone-review.md)
-- **Summary:** Correct golf capstone acceleration attribution and synthetic dynamics
-- **Next step:** Open regular PR against #4922 after the five pre-PR gates; protected delivery and fetched-main verification remain
-
-### DL-#4917 · Distinguish Action Effects, Rhythmic Generators and Motor-Learning Processes
-
-- **State:** in_progress
-- **Owner:** codex
-- **Issue:** #4917
-- **Branch:** fix/learning-rhythm-review
-- **PR:** #4953
-- **Paths:** see #4953
-- **Started:** 2026-10-05
-- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4917-learning-rhythm-review.md)
-- **Summary:** Distinguish action effects, rhythmic generators and motor-learning processes
-- **Next step:** Open a regular PR against #4919, then protected main delivery
-
 ### DL-#4915 · Separate Prediction, Passive Mechanics and Stochastic-Control Assumptions
 
 - **State:** in_review
@@ -528,19 +488,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4915-prediction-passive-control-review.md)
 - **Summary:** Separate prediction, passive mechanics and stochastic-control assumptions
 - **Next step:** Run pre-PR gates, push and open a regular PR against #4916; deliver through the protected dependency chain
-
-### DL-#4908 · Separate Neural Evidence From Dimensional and Controller Assumptions
-
-- **State:** in_progress
-- **Owner:** codex
-- **Issue:** #4908
-- **Branch:** fix/neural-architecture-review
-- **PR:** #4953
-- **Paths:** see #4953
-- **Started:** 2026-10-05
-- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4908-neural-architecture-review.md)
-- **Summary:** Separate neural evidence from dimensional and controller assumptions
-- **Next step:** Run central pre-PR gates, push and open regular PR against #4910; deliver after parent main merge
 
 ### DL-#4905 · Establish Checked Inference, Flexible-Beam and Control-Model Arguments
 
@@ -799,6 +746,105 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
+
+- **State:** shipped
+- **Owner:** local
+- **PR:** #4619
+- **Issue:** #4524
+- **Branch:** `fix/web-05-3-critique-annotations-4524`
+- **Paths:** `scripts/generate_claim_critique_ledger.py`, `data/trust/claim_critique_ledger.json`, `articles/zero-torque-counterfactual.qmd`, `articles/theory-part2.qmd`, `articles/proximal-distal-energy-transfer.qmd`, `data/trust/claim_audit_inventory.json`, `data/trust/proximal_distal_falsification_atlas.json`, `tests/test_claim_critique_ledger.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (d53290cd / SELF: 19/19 test_claim_critique_ledger.py tests pass, 18/18 test_claim_audit_inventory.py pass, 17/17 test_proximal_distal_falsification_atlas.py pass, all ledgers and reports verified)
+- **Summary:** Enforces that every critique maps to every page whose claim it targets and extends critique annotations to the ZTCF, Theory Part 2, and Proximal-Distal pages.
+- **Next step:** Critique annotations shipped in PR #4619; further claim validation remains separate.
+- **Shipped:** 2026-09-29 (PR #4619 merge 31572bc3; issue #4524 closed completed)
+
+### DL-#4588 · Keep Internal Governance Vocabulary Out of Reader Prose
+
+- **State:** shipped
+- **Owner:** claude
+- **PR:** #4652
+- **Issue:** #4588 (epic #4594)
+- **Branch:** `claude/issue-4588`
+- **Paths:** `scripts/check_governance_vocabulary.py`, `tests/test_check_governance_vocabulary.py`, `config/governance-vocabulary-baseline.json`, `pages/glossary.qmd`, `.github/workflows/ci-standard.yml`, plus prose edits across `pages/`, `resources/`, `books/`, and `models/`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: 52/52 tests pass across test_check_governance_vocabulary.py and test_check_terminology.py; lint clean against baseline); metadata provenance `382446d0dafe` (original entry, not new scientific or CI validation)
+- **Summary:** Adds a warn-mode CI lint for internal governance vocabulary ("governed", "qualified", "provenance", "protected", "fail-closed") in reader prose, a plain-language glossary page, and removes the vocabulary from the hub/entry reader pages. Full 75% corpus-wide reduction is blocked on the still-open prerequisite #4587 (editorial style guide) for the remaining `articles/` chapter corpus; see the HANDOFF.md Blocked section.
+- **Next step:** Reader-entry wording and CI lint shipped in PR #4652; the remaining article-corpus reduction awaits #4587 editorial guidance.
+- **Shipped:** 2026-09-30 (PR #4652 merge 382446d0; issue #4588 closed completed)
+
+### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
+
+- **State:** shipped
+- **Owner:** claude
+- **PR:** #4654
+- **Issue:** #4567 (epic #4569)
+- **Branch:** `claude/issue-4567`
+- **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 20/20 `test_validate_accessibility.py` tests pass; ruff and black clean; `--qmd-only` exits 0 across the full repo; `check_spec_changelog`, `check_module_size_budget`, `check_root_hygiene`, `check_workflow_action_pins` all pass); metadata provenance `6bbe237c7f6e` (original entry, not a new scientific or CI validation)
+- **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
+- **Next step:** Alt-text and long-description CI checks shipped in PR #4654; previously unwired CSS/JS checks remain separate.
+- **Shipped:** 2026-09-30 (PR #4654 merge 6bbe237c; issue #4567 closed completed)
+
+### DL-#4908 · Separate Neural Evidence From Dimensional and Controller Assumptions
+
+- **State:** shipped
+- **Owner:** codex
+- **Issue:** #4908
+- **Branch:** fix/neural-architecture-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4908-neural-architecture-review.md)
+- **Summary:** Separate neural evidence from dimensional and controller assumptions
+- **Next step:** Delivered in PR #4953; further model or human validation remains separate from this closed issue.
+- **Shipped:** 2026-10-05 (PR #4953 merge 76815ab5; issue #4908 closed completed)
+
+### DL-#4917 · Distinguish Action Effects, Rhythmic Generators and Motor-Learning Processes
+
+- **State:** shipped
+- **Owner:** codex
+- **Issue:** #4917
+- **Branch:** fix/learning-rhythm-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4917-learning-rhythm-review.md)
+- **Summary:** Distinguish action effects, rhythmic generators and motor-learning processes
+- **Next step:** Delivered in PR #4953; further model or human validation remains separate from this closed issue.
+- **Shipped:** 2026-10-05 (PR #4953 merge 76815ab5; issue #4917 closed completed)
+
+### DL-#4921 · Correct Golf Capstone Acceleration Attribution and Synthetic Dynamics
+
+- **State:** shipped
+- **Owner:** codex
+- **Issue:** #4921
+- **Branch:** fix/golf-capstone-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4921-golf-capstone-review.md)
+- **Summary:** Correct golf capstone acceleration attribution and synthetic dynamics
+- **Next step:** Delivered in PR #4953; further model or human validation remains separate from this closed issue.
+- **Shipped:** 2026-10-05 (PR #4953 merge 76815ab5; issue #4921 closed completed)
+
+### DL-#4868 · Title-Card Paint Investigation
+
+- **State:** shipped
+- **Owner:** codex
+- **Issue:** #4868; epic #4009 / corpus #4021
+- **Branch:** fix/volume2-title-card-investigation
+- **Summary:** Establish a clean deployment baseline and distinguish a real title-card paint failure from a capture artifact before editing frontend source.
+- **Evidence:** Parent issue and preserved one-route screenshots; title-card-clean-build-directories.json and the observed build process; shared-nomenclature-remote-main-receipt.json records delivered parent scope.
+- **Next step:** Title-card finding resolved by raw-pixel review in PR #4873; broader #4009/#4021 corpus work remains separate.
+- **PR:** #4873
+- **Paths:** See #4868 and the original Evidence field
+- **Started:** 2026-10-04 (entry first present in the blamed source commit; actual work start not recorded)
+- **Last verified:** 2026-10-04 (metadata source date); Not recorded; metadata provenance `f10a0feff09d` (original entry, not a new scientific or CI validation)
+- **Shipped:** 2026-10-04 (PR #4873 merge f10a0fef; issue #4868 closed completed)
 
 ### DL-#4948 · Recover Forward Dynamics Matching Research Book From Cloud Session and Add Structure Verification Tests
 
@@ -1450,19 +1496,6 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-30 (SELF: 13/13 tests pass across test_social_cards.py and test_image_budget.py; ruff and black --line-length 100 clean); metadata provenance `bbb08ac106f1` (original entry, not a new scientific or CI validation)
 - **Summary:** Generates one 1200x630 Open Graph card per book/series (title, badge, signature graphic) at build time instead of one site-wide card, checked in like the existing site-wide `logo/og-card.png`, and wires three representative landing pages to use theirs via per-page `open-graph`/`twitter-card` overrides.
 - **Next step:** After merge and deploy, run a social-card debugger against the three live page URLs to close out the issue's second acceptance criterion (see HANDOFF.md Blockers).
-### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
-
-- **State:** in_progress
-- **Owner:** claude
-- **PR:** not created
-- **Issue:** #4567 (epic #4569)
-- **Branch:** `claude/issue-4567`
-- **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: 20/20 `test_validate_accessibility.py` tests pass; ruff and black clean; `--qmd-only` exits 0 across the full repo; `check_spec_changelog`, `check_module_size_budget`, `check_root_hygiene`, `check_workflow_action_pins` all pass); metadata provenance `6bbe237c7f6e` (original entry, not a new scientific or CI validation)
-- **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
-- **Next step:** Open the draft PR referencing Closes #4567 and release the lease.
-
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review
@@ -1527,27 +1560,6 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Scheduled external-link check now upserts a single tracking issue (find-or-update, close on all-clear) instead of only logging, checks DOI links through their doi.org redirect, and attaches an archive.org fallback suggestion to each dead link.
 - **Next step:** Push branch, open draft PR referencing Closes #4596, and release the fleet lease.
 
-### DL-#4588 · Keep Internal Governance Vocabulary Out of Reader Prose
-
-- **State:** in_progress
-- **Owner:** claude
-- **PR:** not created
-- **Issue:** #4567 (epic #4569)
-- **Branch:** `claude/issue-4567`
-- **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: 20/20 `test_validate_accessibility.py` tests pass; ruff and black clean; `--qmd-only` exits 0 across the full repo; `check_spec_changelog`, `check_module_size_budget`, `check_root_hygiene`, `check_workflow_action_pins` all pass); metadata provenance `382446d0dafe` (original entry, not new scientific or CI validation)
-- **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
-- **Next step:** Open the draft PR referencing Closes #4567 and release the lease.
-
-- **Issue:** #4588 (epic #4594)
-- **Branch:** `claude/issue-4588`
-- **Paths:** `scripts/check_governance_vocabulary.py`, `tests/test_check_governance_vocabulary.py`, `config/governance-vocabulary-baseline.json`, `pages/glossary.qmd`, `.github/workflows/ci-standard.yml`, plus prose edits across `pages/`, `resources/`, `books/`, and `models/`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: 52/52 tests pass across test_check_governance_vocabulary.py and test_check_terminology.py; lint clean against baseline); metadata provenance `382446d0dafe` (original entry, not new scientific or CI validation)
-- **Summary:** Adds a warn-mode CI lint for internal governance vocabulary ("governed", "qualified", "provenance", "protected", "fail-closed") in reader prose, a plain-language glossary page, and removes the vocabulary from the hub/entry reader pages. Full 75% corpus-wide reduction is blocked on the still-open prerequisite #4587 (editorial style guide) for the remaining `articles/` chapter corpus; see the HANDOFF.md Blocked section.
-- **Next step:** Land #4587, then use its standard to rewrite the `articles/` chapter corpus and shrink the baseline.
-
 ### DL-#4563 · Restore the Ten Excluded Browser Tests
 
 - **State:** in_review
@@ -1573,19 +1585,6 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-29 (33/33 new pytest cases pass; ruff, black --line-length 100, and mypy clean on the new module.); metadata provenance `997243e95ea9` (original entry, not a new scientific or CI validation)
 - **Summary:** Advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages, wired into CI as a non-blocking step with a JSON report artifact; threshold (grade 10) taken from WEB-12.1's stated targets since the style guide itself (WEB-12.1) is still open.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
-### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
-
-- **State:** in_progress
-- **Owner:** local
-- **PR:** not created
-- **Issue:** #4524
-- **Branch:** `fix/web-05-3-critique-annotations-4524`
-- **Paths:** `scripts/generate_claim_critique_ledger.py`, `data/trust/claim_critique_ledger.json`, `articles/zero-torque-counterfactual.qmd`, `articles/theory-part2.qmd`, `articles/proximal-distal-energy-transfer.qmd`, `data/trust/claim_audit_inventory.json`, `data/trust/proximal_distal_falsification_atlas.json`, `tests/test_claim_critique_ledger.py`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (d53290cd / SELF: 19/19 test_claim_critique_ledger.py tests pass, 18/18 test_claim_audit_inventory.py pass, 17/17 test_proximal_distal_falsification_atlas.py pass, all ledgers and reports verified)
-- **Summary:** Enforces that every critique maps to every page whose claim it targets and extends critique annotations to the ZTCF, Theory Part 2, and Proximal-Distal pages.
-- **Next step:** Commit changes, push branch, open PR referencing Closes #4524, and release lease.
-
 ### DL-#4523 · Readable Claim Ledger Page
 
 - **State:** in_review
