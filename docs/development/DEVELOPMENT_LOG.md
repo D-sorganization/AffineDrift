@@ -747,6 +747,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5077 · Clarify That Positive-Dimensional Null-Space Families Remain Uncountable While Equality Elimination Reduces Independent Coordinates and Finite-Resolution Candidates; Add a Checked Optimization Example and Cross-Link.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5077
+- **Branch:** feat/nullspace-infinite-solution-explainer
+- **PR:** #5079
+- **Paths:** articles/degrees-of-freedom-and-dimensionality.qmd,articles/null-space-constraint-jacobian.qmd,tests/test_nullspace_infinity_explainer.py
+- **Started:** 2026-10-17
+- **Last verified:** 2026-10-17 (`0ea2920e`; collated from changes/5077-clarify-that-positive-dimensional-null-s.md)
+- **Summary:** Clarify that positive-dimensional null-space families remain uncountable while equality elimination reduces independent coordinates and finite-resolution candidates; add a checked optimization example and cross-link.
+- **Next step:** Shipped in PR #5079.
+
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** shipped
