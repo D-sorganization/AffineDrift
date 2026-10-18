@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5081 · Reconcile 71 Development-Log Review Entries With Merged Delivery and Outstanding Acceptance Evidence
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5081
+- **Branch:** chore/reconcile-review-development-log
+- **PR:** #5082
+- **Paths:** docs/development/DEVELOPMENT_LOG.md, docs/development/development-log-review-reconciliation-2026-10-17.md
+- **Started:** 2026-10-18
+- **Last verified:** 2026-10-18 (`bed09496`; collated from changes/5081-review-log-reconciliation.md)
+- **Summary:** Reconcile 71 development-log review entries with merged delivery and outstanding acceptance evidence
+- **Next step:** Merge the reviewed reconciliation PR; verify collated status and preserve the 17 pending acceptance rows.
+
 ### DL-#4533 · WEB-06.3 Drift vs Control Double-Pendulum Sandbox on Theory Part 1: Src/Affine_Control/double_pendulum_affine.py Split, Checked JS Mirror, Widget-Parity V1 Generator and Fixture, Jest/Pytest/Playwright Class A Checks
 
 - **State:** in_review
