@@ -326,6 +326,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5088 · Add Fleet Critic Review of the Recovered Forward Dynamics Matching Book: Unverified Cross-Repo Numeric Claims, Structure-Only Tests, Unguarded Editorial Policy (#5088)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5088
+- **Branch:** merged via #5076
+- **PR:** #5076
+- **Paths:** see #5076
+- **Started:** 2026-10-19
+- **Last verified:** 2026-10-19 (`e9584e29`; collated from changes/5088-fleet-critic-forward-dynamics-matching-review.md)
+- **Summary:** Add Fleet Critic review of the recovered Forward Dynamics Matching book: unverified cross-repo numeric claims, structure-only tests, unguarded editorial policy (#5088)
+- **Next step:** Shipped in PR #5076.
+
 ### DL-#4523 · Readable Claim Ledger Page
 
 - **State:** shipped
