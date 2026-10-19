@@ -326,6 +326,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5089 · Fix WCAG 2.5.3 Label-Content-Name-Mismatch on Reading-Time and Quarto TOC Landmarks
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5089
+- **Branch:** merged via #5090
+- **PR:** #5090
+- **Paths:** see #5090
+- **Started:** 2026-10-19
+- **Last verified:** 2026-10-19 (`b73193e3`; collated from changes/5089-fix-wcag-2-5-3-label-content-name-mismat.md)
+- **Summary:** Fix WCAG 2.5.3 label-content-name-mismatch on reading-time and Quarto TOC landmarks
+- **Next step:** Shipped in PR #5090.
+
 ### DL-#5088 · Add Fleet Critic Review of the Recovered Forward Dynamics Matching Book: Unverified Cross-Repo Numeric Claims, Structure-Only Tests, Unguarded Editorial Policy (#5088)
 
 - **State:** shipped
