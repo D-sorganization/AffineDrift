@@ -1,6 +1,6 @@
 ---
-issue: 5076
-summary: "Add Fleet Critic review of the recovered Forward Dynamics Matching book: unverified cross-repo numeric claims, structure-only tests, unguarded editorial policy (#5076)"
+issue: 5088
+summary: "Add Fleet Critic review of the recovered Forward Dynamics Matching book: unverified cross-repo numeric claims, structure-only tests, unguarded editorial policy (#5088)"
 ---
 
 Docs-only Fleet Critic pass on `articles/forward_dynamics_matching/`
