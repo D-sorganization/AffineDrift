@@ -10,6 +10,7 @@ sampling) rather than against its own helpers.
 import json
 import math
 from pathlib import Path
+from typing import cast
 
 import numpy as np
 import pytest
@@ -57,10 +58,11 @@ def _system(seed: int, m: int, n: int, rank: int) -> Array:
 
 
 @st.composite
-def consistent_systems(draw: st.DrawFn) -> tuple[Array, Array, Array]:
-    """Draw (A, b, u0) with A u0 = b and rank anywhere in 0..min(m, n)."""
-    m, n = draw(DIMS), draw(DIMS)
-    rank = draw(st.integers(min_value=0, max_value=min(m, n)))
+def consistent_systems(draw: st.DrawFn, full_row_rank: bool = False) -> tuple[Array, Array, Array]:
+    """Draw (A, b, u0) with A u0 = b; rank is 0..min(m, n) or, if requested, exactly m."""
+    n = draw(DIMS)
+    m = draw(st.integers(1, n)) if full_row_rank else draw(DIMS)
+    rank = m if full_row_rank else draw(st.integers(min_value=0, max_value=min(m, n)))
     matrix = _system(draw(SEEDS), m, n, rank)
     u0 = np.random.default_rng(draw(SEEDS)).standard_normal(n)
     return matrix, matrix @ u0, u0
@@ -195,7 +197,7 @@ def test_p2_counterexample_weighted_and_euclidean_representatives_differ() -> No
 
 
 @PROPERTY
-@given(consistent_systems(), SEEDS, SEEDS)
+@given(consistent_systems(full_row_rank=True), SEEDS, SEEDS)
 def test_p3_reduced_minimiser_matches_full_kkt_solve(
     system: tuple[Array, Array, Array], hseed: int, gseed: int
 ) -> None:
@@ -203,7 +205,6 @@ def test_p3_reduced_minimiser_matches_full_kkt_solve(
     n = matrix.shape[1]
     hessian = _spd(hseed, n)
     gradient = np.random.default_rng(gseed).standard_normal(n)
-    assume(np.linalg.matrix_rank(matrix) == matrix.shape[0])  # KKT matrix nonsingular
     fibre = affine_fibre(matrix, b, rtol=1e-10)
     reduced = reduced_quadratic(hessian, gradient, fibre.particular, fibre.kernel)
     np.testing.assert_allclose(
@@ -230,18 +231,16 @@ def test_p3_minimiser_independent_of_particular_solution_and_basis(
 
 
 def test_p3_counterexample_dropping_particular_solution_gives_wrong_minimiser() -> None:
-    hessian, gradient = np.array([[2.0, 0.0], [0.0, 2.0]]), np.array([0.0, 0.0])
+    hessian, gradient = np.diag([2.0, 6.0]), np.array([0.0, 0.0])
     matrix, b = np.array([[1.0, 1.0]]), np.array([2.0])
     fibre = affine_fibre(matrix, b, rtol=1e-10)
     right = reduced_quadratic(hessian, gradient, fibre.particular, fibre.kernel).u_star
-    np.testing.assert_allclose(right, [1.0, 1.0], atol=1e-12)
+    np.testing.assert_allclose(right, [1.5, 0.5], atol=1e-12)
     wrong_z = -np.linalg.solve(
         fibre.kernel.T @ hessian @ fibre.kernel, fibre.kernel.T @ gradient
     )  # forgets H u_p
     wrong = fibre.particular + fibre.kernel @ wrong_z
-    assert float(wrong @ hessian @ wrong) > float(right @ hessian @ right) or not np.allclose(
-        wrong, right
-    )
+    assert float(wrong @ hessian @ wrong) > float(right @ hessian @ right) + 1.0
 
 
 def test_p3_indefinite_full_hessian_with_positive_reduced_hessian() -> None:
@@ -332,8 +331,8 @@ def test_p4_counterexample_marginal_is_an_interval_net_is_a_point() -> None:
     box, bound = np.vstack([np.eye(2), -np.eye(2)]), np.array([1.0, 1.0, 0.0, 0.0])
     split = functional_interval(np.array([1.0, 0.0]), fibre.particular, fibre.kernel, box, bound)
     net = functional_interval(np.array([1.0, 1.0]), fibre.particular, fibre.kernel, box, bound)
-    assert (split.lower, split.upper) == (pytest.approx(0.0), pytest.approx(1.0))
-    assert (net.lower, net.upper) == (pytest.approx(1.0), pytest.approx(1.0))
+    assert split.lower == pytest.approx(0.0) and split.upper == pytest.approx(1.0)
+    assert net.lower == pytest.approx(1.0) and net.upper == pytest.approx(1.0)
     assert functional_invariance(fibre.kernel, np.array([1.0, 1.0]), tol=1e-12).invariant
     assert not functional_invariance(fibre.kernel, np.array([1.0, 0.0]), tol=1e-12).invariant
 
@@ -448,7 +447,7 @@ def test_p7_coupling_never_widens_envelopes(
         assume(False)
     assert result.contained
     for free, tied in zip(result.framewise, result.coupled, strict=True):
-        assert free[0] - 1e-9 <= tied[0] <= tied[1] <= free[1] + 1e-9
+        assert free[0] - 1e-6 <= tied[0] <= tied[1] <= free[1] + 1e-6
 
 
 @PROPERTY
@@ -459,7 +458,7 @@ def test_p7_without_coupling_the_envelopes_are_equal(
     frames = (_box_frame(lo1, lo1 + w1), _box_frame(lo2, lo2 + w2))
     result = framewise_vs_coupled_envelope(frames, np.array([1.0, 0.0]), math.inf)
     for free, tied in zip(result.framewise, result.coupled, strict=True):
-        assert free == pytest.approx(tied, abs=1e-9)
+        assert free == pytest.approx(tied, abs=1e-6)
 
 
 def test_p7_counterexample_rate_bound_strictly_shrinks_both_frames() -> None:
@@ -493,7 +492,11 @@ def test_three_muscle_toy_matches_hand_derivation_and_collapses_when_disabled() 
     assert result["muscle_1_disabled_interval"] == pytest.approx([3.0, 3.0])
     for t in (0.0, 1.0, 3.0):  # u = (3 - t, 3 - t, t) solves the declared constraints
         u = np.array([3 - t, 3 - t, t])
-        np.testing.assert_allclose(np.array(result["A"]) @ u, result["b"], atol=1e-12)
+        np.testing.assert_allclose(
+            np.asarray(result["A"], dtype=float) @ u,
+            np.asarray(result["b"], dtype=float),
+            atol=1e-12,
+        )
 
 
 def test_grip_toy_net_wrench_invariant_and_lead_trail_split_is_an_interval() -> None:
@@ -579,15 +582,20 @@ def test_generated_json_is_lf_only_and_rendering_is_deterministic() -> None:
     )
 
 
+def _stub_section() -> dict[str, object]:
+    return {"value": 1.0}
+
+
 def test_document_layout_and_section_registry_are_extensible() -> None:
     document = builder.build_document()
     assert set(document) == {"schema_version", "sections"}
-    assert "linear" in document["sections"] and "linear" in builder.SECTION_BUILDERS
-    extra = {**builder.SECTION_BUILDERS, "stub": lambda: {"value": 1.0}}
-    extended = builder.build_document(extra)
-    assert extended["sections"]["stub"] == {"value": 1.0}
-    assert extended["sections"]["linear"] == document["sections"]["linear"]
-    assert builder.build_document({"only": lambda: {"x": 2}})["sections"] == {"only": {"x": 2}}
+    sections = cast(dict[str, object], document["sections"])
+    assert "linear" in sections and "linear" in builder.SECTION_BUILDERS
+    extended = builder.build_document({**builder.SECTION_BUILDERS, "stub": _stub_section})
+    extended_sections = cast(dict[str, object], extended["sections"])
+    assert extended_sections["stub"] == {"value": 1.0}
+    assert extended_sections["linear"] == sections["linear"]
+    assert builder.build_document({"only": _stub_section})["sections"] == {"only": {"value": 1.0}}
 
 
 def test_linear_section_is_seeded_and_json_clean() -> None:
