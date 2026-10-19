@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-19 | #5076 | Add Fleet Critic review of the recovered Forward Dynamics Matching book: unverified cross-repo numeric claims, structure-only tests, unguarded editorial policy (#5088) |
 | 2026-10-18 | #5082 | Reconcile 71 development-log review entries with merged delivery and outstanding acceptance evidence |
 | 2026-10-17 | #5079 | Clarify that positive-dimensional null-space families remain uncountable while equality elimination reduces independent coordinates and finite-resolution candidates; add a checked optimization example and cross-link. |
 | 2026-10-16 | #5074 | Adversarial review 2026-10-16: 35 findings with draft PR pitches under docs/development/adversarial-review/ |
