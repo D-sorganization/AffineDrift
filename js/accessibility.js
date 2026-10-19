@@ -108,6 +108,20 @@ function applyDefaultAriaLabel(element, label) {
     }
 }
 
+/** WCAG 2.5.3: accessible name must include visible label text (#5089). */
+function syncAriaLabelWithVisibleHeading(landmark, headingSelector) {
+    const heading = landmark.querySelector(headingSelector);
+    const visible = heading?.textContent?.trim();
+    if (!visible) {
+        return;
+    }
+    const current = landmark.getAttribute("aria-label");
+    if (current && current.includes(visible)) {
+        return;
+    }
+    landmark.setAttribute("aria-label", visible);
+}
+
 function labelCardsFromHeading(cards, prefix) {
     for (const card of cards) {
         if (card.hasAttribute("aria-label")) continue;
@@ -132,6 +146,11 @@ export function initAriaLabels() {
             nav,
             resolveLabelFromClasses(nav, NAV_LABEL_RULES, "Navigation")
         );
+    }
+
+    const quartoToc = document.getElementById("TOC");
+    if (quartoToc) {
+        syncAriaLabelWithVisibleHeading(quartoToc, "#toc-title, h2, .sidebar-heading");
     }
 
     // Sidebar elements
@@ -383,11 +402,6 @@ export function initReadingTime() {
         fontSize: "0.95rem",
         fontWeight: "500",
     });
-
-    timeDiv.setAttribute(
-        "aria-label",
-        `Estimated reading time: ${minutes} minutes`
-    );
 
     const header =
         articleContent.querySelector(
