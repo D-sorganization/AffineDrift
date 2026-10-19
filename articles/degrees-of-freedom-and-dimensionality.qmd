@@ -4,18 +4,19 @@ description: "A cross-cutting treatment of the degrees-of-freedom problem and cu
 author: "Dieter Olson"
 date: "Date unverified"
 date-source: "unverified"
-date-modified: "2026-10-04"
-last-reviewed: "2026-10-04"
+date-modified: "2026-10-16"
+last-reviewed: "2026-10-16"
 canonical: "/articles/degrees-of-freedom-and-dimensionality.html"
 status: "available"
 audience-level: "intermediate"
 evidence-rung: "mathematical-identity"
 prerequisites:
   - "pages/how-to-read.html"
-summary-plain: "This article shows how joint limits and muscle choices lower the number of moving parts in a swing model. Fast math does not prove that a human brain uses a simple control rule."
-abstract: "This article distinguishes configuration, state, input, task and statistical dimensions in movement models. It relates mechanical constraints, passive dynamics, contraction, recursive dynamics algorithms and local trajectory optimization without treating them as equivalent reductions or evidence of a neural mechanism."
+summary-plain: "This article shows how constraints can reduce independent search coordinates even when infinitely many solutions remain. It distinguishes that count from computational speed and human motor control."
+abstract: "This article distinguishes configuration, state, input, task and statistical dimensions in movement models. It quantifies exact equality-constraint elimination and finite-resolution search without confusing dimension with the cardinality of an infinite solution set or guaranteeing solver speed. It also relates passive dynamics, contraction, recursive dynamics algorithms and local trajectory optimization."
 key-takeaways:
   - "A reduction must name the variables, assumptions and outcomes it preserves."
+  - "A positive-dimensional null-space family remains uncountable; rank reduction counts independent coordinates, not fewer real-number solutions."
   - "Fewer task outputs or input channels do not eliminate the remaining mechanical states."
   - "Low-dimensional recordings alone do not identify a neural coordination mechanism."
 caveats:
@@ -30,6 +31,8 @@ caveats:
     - "CRIT-003: Model assumes rigid linkages; soft-tissue deformation and muscle-tendon compliance are excluded."
   next-gate: "For a proposed human-control mechanism, compare explicit alternative models on independent perturbation data; this article supplies no such validation."
 changes:
+  - date: "2026-10-16"
+    description: "Distinguished infinite-set size from null-space dimension and quantified an exact equality-constrained search example (#5077)."
   - date: "2026-10-04"
     description: "Separated dimension categories, corrected dynamics and complexity claims, and checked a synthetic PCA example (#4885)."
   - date: "2026-09-10"
@@ -91,6 +94,44 @@ Joint coordinates absent from an impact penalty can still change moment arms, in
 For club delivery, use a state-dependent terminal map $y=g(x(T))$ when velocity or implement state matters.
 Its domain and Jacobian differ from those of a posture-only task.
 The [Volume IV treatment](../books/human-motor-control.html#book4-ch1) develops this distinction alongside force allocation.
+
+## Infinite Solution Sets and Finite Search {#infinite-solution-sets-and-finite-search}
+
+**Two meanings of “smaller” must be separated.** An equality constraint can reduce the number of independent real coordinates without changing the cardinality of an infinite solution family. The natural numbers form a countable infinity; a real interval is uncountable. Every nonempty finite-dimensional real affine space of positive dimension has the same cardinality as the real line, even though its geometric dimension can differ. Thus a line in $\mathbb R^3$ is one-dimensional and uncountable, while $\mathbb R^3$ is three-dimensional and also uncountable. Neither statement means that the line contains “one third as many” points. The empty set and a zero-dimensional affine solution set are different cases: respectively no solution and one point. See [Antieau's countability lectures](https://sites.math.northwestern.edu/~antieau/201403-313/lectures26-28.pdf) for the distinction between countable and uncountable sets.
+
+For a **consistent linear equality system** $Ax=b$ with $A\in\mathbb R^{p\times n}$ and rank $r$, choose a particular solution $x_p$ and a full-column-rank matrix $N$ spanning $\ker A$. Then
+
+$$
+\{x:Ax=b\}=\{x_p+Nz:z\in\mathbb R^{n-r}\}.
+$$
+
+The map from $z$ to $x$ is one-to-one and onto the feasible set. It uses $n-r$ independent coordinates in place of $n$ ambient coordinates **without discarding any feasible point**. Imposing $Ax=b$ on an originally unconstrained problem instead restricts its candidate set and can change its optimum. These are different operations. If $r=n$, a consistent system has one solution; if $Ax=b$ is inconsistent, it has none. [Boyd and Vandenberghe's equality-constrained minimization notes](https://see.stanford.edu/materials/lsocoee364a/11EqualityMin.pdf) derive the same elimination for optimization.
+
+### A Line of Solutions and One Optimum
+
+Consider $x=(x_1,x_2,x_3)$ with $x_1+x_2+x_3=1$ and $x_1-x_2=0$. The two rows of $A$ are independent, so $n=3$, $r=2$, and every feasible point is
+
+$$
+x(t)=(t,t,1-2t),\qquad t\in\mathbb R.
+$$
+
+There are uncountably many feasible points. A declared objective can still distinguish them. For $f(x)=\tfrac12\lVert x\rVert_2^2$, substitution gives $f(x(t))=3t^2-2t+\tfrac12$. Its second derivative is $6>0$, so its unique minimum occurs at $t=\tfrac13$, giving $x^*=(\tfrac13,\tfrac13,\tfrac13)$ and $f(x^*)=\tfrac16$. If $x_i\geq0$ is also required, the feasible parameter interval becomes $0\leq t\leq\tfrac12$ and still contains this optimum. Other objectives or bounds can select different points, several optima, or no attained optimum. In a movement model, effort, smoothness and robustness costs represent choices that require their own justification; null-space geometry does not choose a golfer's motion.
+
+For a general differentiable objective, optimize the reduced function $F(z)=f(x_p+Nz)$, whose gradient is $\nabla F(z)=N^\top\nabla f(x_p+Nz)$. Any additional inequality $h(x)\leq0$ remains $h(x_p+Nz)\leq0$; eliminating equalities does not erase it. A convex $f$ remains convex after this affine substitution, while a nonconvex objective may still have distinct local minima. This is why an optimizer can select among infinitely many feasible points without enumerating them.
+
+### What Shrinks in a Finite Search?
+
+Suppose a **bounded search** uses $g$ samples per independent coordinate. A full $n$-coordinate grid has $g^n$ candidates; an equality-reduced $n-r$-coordinate grid has $g^{n-r}$. Their *representation-size ratio* is $g^r$ under this declared sampling rule. For the example above, compare the ambient unit cube $[0,1]^3$ with its feasible line segment $0\leq t\leq\tfrac12$:
+
+| Measure | Ambient Cube $\rightarrow$ Feasible Line |
+|---|---:|
+| Independent coordinates | $3\rightarrow1$ |
+| Exact set size | Uncountable $\rightarrow$ uncountable |
+| Grid candidates ($g=100$) | $1{,}000{,}000\rightarrow100$ |
+
+The grid count falls by a factor of $100^2=10{,}000$ under that rule. In this dimensionless example, uniform endpoint-inclusive sampling gives both grids a covering radius of $1/198$ in the ambient maximum-coordinate norm: the cube spacing is $1/99$ per axis, while a $t$ step of $1/198$ changes $x_3$ by $1/99$. This makes the particular comparison equal in that approximation metric; other coordinate ranges, norms or objectives need their own error analysis. These are finite representations of different parameter spaces, not a ratio between the sizes of their infinite sets. An ambient grid also need not land exactly on $Ax=b$; the reduced parameterization enforces the equalities by construction.
+
+This count is not a runtime guarantee. Forming a stable null-space basis has a cost; $N$ can be dense; mapping each candidate back to $x$ and evaluating a coupled objective can dominate work. Inequalities, dynamics, conditioning and local minima remain. Nonlinear constraints yield an analogous local count $n-r$ only where the Jacobian has constant rank and a valid local chart; a singular linearization need not describe the true feasible set. For constraint-specific derivations and the distinction between tangent velocities and finite configurations, see [The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html).
 
 ## Passive Dynamics and Input Synergies
 
