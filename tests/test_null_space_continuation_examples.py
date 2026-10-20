@@ -216,3 +216,19 @@ def test_section_is_json_ready_and_makes_no_cubic_claim() -> None:
     assert section["rank_drop"]["jacobian_rank_at_origin"] == 0
     assert section["rank_drop"]["detected"] is True
     assert json.loads(text) == section
+
+
+def test_continuation_section_is_registered_in_the_shared_builder() -> None:
+    """P6 numbers ship through the one AD-1 build script and JSON (DRY, #5095)."""
+    import json
+    from pathlib import Path
+
+    from scripts import build_null_space_exploration_examples as builder
+    from src.tools.null_space_continuation_examples import build_continuation_section
+
+    assert builder.SECTION_BUILDERS["continuation"] is build_continuation_section
+    committed = json.loads(Path(builder.OUTPUT).read_text(encoding="utf-8"))
+    assert "continuation" in committed["sections"]
+    assert builder.render_document(builder.build_document()) == Path(builder.OUTPUT).read_text(
+        encoding="utf-8"
+    )
