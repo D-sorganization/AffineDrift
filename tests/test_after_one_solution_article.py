@@ -64,7 +64,7 @@ def clean(value: float) -> float:
 
 def tex(value: float, digits: int = 4) -> str:
     """Number as the article prints it: ``digits`` significant digits, LaTeX exponents."""
-    number = clean(value) if abs(value) < NEGLIGIBLE else float(value)
+    number = float(value)
     if number == 0.0:
         return "0"
     if 1e-3 <= abs(number) < 1e4:
@@ -79,17 +79,17 @@ def tex(value: float, digits: int = 4) -> str:
 
 def vec(values: list[float]) -> str:
     """``(a,\\,b)`` vector as written in the article."""
-    return "(" + ",\\,".join(tex(v) for v in values) + ")"
+    return "(" + ",\\,".join(tex(clean(v)) for v in values) + ")"
 
 
 def span(values: list[float]) -> str:
     """``[a,\\,b]`` interval as written in the article."""
-    return "[" + ",\\,".join(tex(v) for v in values) + "]"
+    return "[" + ",\\,".join(tex(clean(v)) for v in values) + "]"
 
 
 def mat(rows: list[list[float]]) -> str:
     """``bmatrix`` as written in the article."""
-    body = "\\\\".join("&".join(tex(v) for v in row) for row in rows)
+    body = "\\\\".join("&".join(tex(clean(v)) for v in row) for row in rows)
     return "\\begin{bmatrix}" + body + "\\end{bmatrix}"
 
 
@@ -173,6 +173,11 @@ def _toy_tokens(linear: dict[str, Any]) -> Tokens:
     ]
 
 
+def _residual_row(step: float, circle: float, fold: float) -> str:
+    cells = (tex(value, digits=5) for value in (step, circle, fold))
+    return "| " + " | ".join(f"${cell}$" for cell in cells) + " |"
+
+
 def _residual_tokens(cont: dict[str, Any]) -> Tokens:
     residual, corrector = cont["tangent_residual"], cont["corrector_convergence"]
     rows = zip(
@@ -181,9 +186,7 @@ def _residual_tokens(cont: dict[str, Any]) -> Tokens:
         residual["fold"]["residuals"],
         strict=True,
     )
-    tokens: Tokens = [
-        ("tangent residual row", f"| ${tex(h)}$ | ${tex(c)}$ | ${tex(f)}$ |") for h, c, f in rows
-    ]
+    tokens: Tokens = [("tangent residual row", _residual_row(h, c, f)) for h, c, f in rows]
     for name in ("circle", "fold"):
         slope = tex(residual[name]["fitted_slope"])
         tokens.append((f"slope {name}", rf"\hat p_{{\mathrm{{{name}}}}}={slope}"))
