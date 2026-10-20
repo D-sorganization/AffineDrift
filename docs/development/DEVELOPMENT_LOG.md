@@ -326,6 +326,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5102 · Apply Prettier to Files Already Drifted on Main; Ignore the Attested Companion Snapshot
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5102
+- **Branch:** merged via #5104
+- **PR:** #5104
+- **Paths:** see #5104
+- **Started:** 2026-10-20
+- **Last verified:** 2026-10-20 (`f09ccaa6`; collated from changes/5102-apply-prettier-to-files-already-drifted.md)
+- **Summary:** Apply prettier to files already drifted on main; ignore the attested companion snapshot
+- **Next step:** Shipped in PR #5104.
+
 ### DL-#5089 · Fix WCAG 2.5.3 Label-Content-Name-Mismatch on Reading-Time and Quarto TOC Landmarks
 
 - **State:** shipped
