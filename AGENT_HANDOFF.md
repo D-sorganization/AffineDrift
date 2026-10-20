@@ -8,6 +8,11 @@
 - All nine article assets, including the 39-page PDF, retain their recorded byte counts and SHA-256 digests. The scientific review in `reports/shot-pattern-publication/technical-review.md` remains scoped to its original source hash; this deployment follow-up changes delivery configuration only.
 - Next: independently review the log transition and deployment policy, then publish the #5019 repair through the protected queue. Preserve the upstream study, report and graphic bytes; UpstreamDrift's integration PR #12278 and empirical qualification remain separate.
 
+## Null-Space Exploration Article (Epic #5093)
+
+- Article `articles/after-one-solution-null-space-exploration.qmd` (propositions P1-P7 with proofs) and its examples are delivered as four draft PRs: AD-1 #5100 (`claude/nse-ad1-5094`, static examples), AD-2 #5101 (`claude/nse-ad2-5095`, continuation examples), AD-3 #5105 (`claude/nse-ad3-5096`, article and bibliography), AD-4 #5107 (`claude/nse-ad4-5097`, registration, claim-audit, links, `_quarto.yml`, companion pins). AD-3 is red only on checks AD-4 satisfies: merge #5105 and #5107 together (or merge #5107, which contains AD-3).
+- The UpstreamDrift companion code is in draft PRs #13475, #13470, #13467, #13493; AD-4 pins them `review-required` in `data/companion/pins.json`. AD-5 #5098 (final pins) is gated on the owner merging those UD PRs. Detail and next steps: `docs/development/HANDOFF.md`, section "Null-Space Exploration After One Solution".
+
 ## Other Current Boundaries
 
 - The accepted final technical-review evidence for epic #4009 is in `docs/development/technical-review/final-delivery/closing-review.md` and its public receipt. This handoff does not renew those acceptance claims.
