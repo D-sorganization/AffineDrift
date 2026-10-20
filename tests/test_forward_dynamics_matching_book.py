@@ -1,4 +1,9 @@
-"""Unit and contract tests verifying recovered Forward Dynamics Matching research book structure."""
+"""Structural-integrity tests for the recovered Forward Dynamics Matching book.
+
+These five tests verify directory layout, recovery documentation, chapter/manifest
+hashes, Quarto navigation, and bibliography keys. Claim-level provenance checks
+live in ``tests/test_forward_dynamics_matching_claims.py`` (issue #5088).
+"""
 
 from __future__ import annotations
 
@@ -51,8 +56,8 @@ def _compute_sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def test_book_directory_structure_and_artifacts() -> None:
-    """The book directory must contain the Quarto configuration, landing page, manifest, and PDF preview."""
+def test_structural_integrity_book_directory_and_artifacts() -> None:
+    """Structural integrity: Quarto config, landing page, manifest, and PDF preview exist."""
     assert BOOK_DIR.is_dir(), f"Book directory missing: {BOOK_DIR}"
 
     metadata_file = BOOK_DIR / "_metadata.yml"
@@ -85,8 +90,8 @@ def test_book_directory_structure_and_artifacts() -> None:
     assert link_val_file.is_file(), "Missing link_validation.json"
 
 
-def test_development_recovery_documentation() -> None:
-    """The development docs must preserve the cloud recovery receipt, validation log, and source audit."""
+def test_structural_integrity_development_recovery_documentation() -> None:
+    """Structural integrity: cloud recovery receipt, validation log, and source audit are present."""
     assert DOCS_DIR.is_dir(), f"Recovery docs directory missing: {DOCS_DIR}"
 
     receipt_file = DOCS_DIR / "recovery-receipt.json"
@@ -112,8 +117,8 @@ def test_development_recovery_documentation() -> None:
         assert p.stat().st_size > 0, f"Empty recovery doc: {doc_name}"
 
 
-def test_all_26_chapters_exist_with_valid_headings_and_manifest_hashes() -> None:
-    """All 26 chapters must exist, contain H1 titles, and match source_manifest.json hashes."""
+def test_structural_integrity_all_26_chapters_and_manifest_hashes() -> None:
+    """Structural integrity: 26 chapters with H1 titles match source_manifest.json body hashes."""
     manifest_file = BOOK_DIR / "source_manifest.json"
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest_map = {entry["path"]: entry["sha256"] for entry in manifest["files"]}
@@ -141,8 +146,8 @@ def test_all_26_chapters_exist_with_valid_headings_and_manifest_hashes() -> None
         ), f"Digest mismatch for {rel_posix}: expected {manifest_map[rel_posix]}, got {body_sha}"
 
 
-def test_quarto_navigation_sidebar_and_resources_integration() -> None:
-    """The root _quarto.yml must configure the forward-matching-nav sidebar, resources, and bibliography."""
+def test_structural_integrity_quarto_navigation_and_resources() -> None:
+    """Structural integrity: root _quarto.yml sidebar, resources, and bibliography for the book."""
     quarto_text = QUARTO_CONFIG.read_text(encoding="utf-8")
     cfg = yaml.safe_load(quarto_text)
 
@@ -173,8 +178,8 @@ def test_quarto_navigation_sidebar_and_resources_integration() -> None:
     ), "references/forward-dynamics-matching.bib missing from bibliography in _quarto.yml"
 
 
-def test_bibliography_citations_and_cross_references() -> None:
-    """Every citation in the recovered chapters must resolve against bibliography files."""
+def test_structural_integrity_bibliography_citations_resolve() -> None:
+    """Structural integrity: every @ citation in book chapters resolves in bibliography files."""
     bib_file = REFERENCES_DIR / "forward-dynamics-matching.bib"
     assert bib_file.is_file(), "Missing references/forward-dynamics-matching.bib"
     assert bib_file.stat().st_size > 0, "references/forward-dynamics-matching.bib is empty"
