@@ -14,10 +14,10 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
-Vector = NDArray[np.float64]
-Matrix = NDArray[np.float64]
-ResidualFn = Callable[[Vector], Vector]
-JacobianFn = Callable[[Vector], Matrix]
+type Vector = NDArray[np.float64]
+type Matrix = NDArray[np.float64]
+type ResidualFn = Callable[[Vector], Vector]
+type JacobianFn = Callable[[Vector], Matrix]
 
 RANK_RTOL = 1e-10  # relative singular-value cutoff for numerical rank
 SLOPE_STEPS = (0.4, 0.2, 0.1, 0.05, 0.025, 0.0125)  # step sizes for the log-log slope fit
