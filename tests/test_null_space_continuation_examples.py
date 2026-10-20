@@ -225,13 +225,14 @@ def test_continuation_section_is_registered_in_the_shared_builder() -> None:
 
     from scripts import build_null_space_exploration_examples as builder
     from src.tools.null_space_continuation_examples import build_continuation_section
+    from tests.test_null_space_exploration_examples import _assert_close
 
     assert builder.SECTION_BUILDERS["continuation"] is build_continuation_section
     committed = json.loads(Path(builder.OUTPUT).read_text(encoding="utf-8"))
     assert "continuation" in committed["sections"]
-    assert builder.render_document(builder.build_document()) == Path(builder.OUTPUT).read_text(
-        encoding="utf-8"
-    )
+    # Same comparison as AD-1's freshness test: roundoff-level entries (~1e-16) differ
+    # between Windows and Linux BLAS, so the committed file is compared numerically.
+    _assert_close(committed, builder.build_document())
 
 
 def test_builder_writes_prettier_normal_numbers_and_filled_number_arrays() -> None:
