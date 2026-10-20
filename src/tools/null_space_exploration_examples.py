@@ -165,7 +165,7 @@ def weighted_representative(A: object, b: object, W: object) -> WeightedRepresen
     lifted = np.linalg.solve(metric, matrix.T)
     gram_pinv = np.linalg.pinv(matrix @ lifted, rcond=PINV_RCOND, hermitian=True)
     u_w = lifted @ (gram_pinv @ rhs)
-    if np.linalg.norm(matrix @ u_w - rhs) > CONSISTENCY_RTOL * max(1.0, np.linalg.norm(rhs)):
+    if np.linalg.norm(matrix @ u_w - rhs) > CONSISTENCY_RTOL * max(1.0, float(np.linalg.norm(rhs))):
         raise ValueError("b is not in range(A): the fibre is empty")
     projector = np.eye(matrix.shape[1]) - lifted @ gram_pinv @ matrix
     return WeightedRepresentative(u_w=u_w, projector=projector)
@@ -219,8 +219,8 @@ def reduced_quadratic(H: object, g: object, u_p: object, Z: object) -> ReducedQu
         1.0, np.abs(reduced).max()
     ):
         raise ValueError("reduced Hessian Z^T H Z must be positive definite")
-    step = (
-        np.linalg.solve(reduced, -basis.T @ (hessian @ particular + gradient))
+    step: Array = (
+        np.asarray(np.linalg.solve(reduced, -basis.T @ (hessian @ particular + gradient)))
         if reduced.size
         else np.zeros(0)
     )
