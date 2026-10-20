@@ -20,21 +20,31 @@ from pathlib import Path
 
 import pytest
 
+from src.tools.utils.fdm_link_validation import (
+    UPSTREAM_EVIDENCE_COMMIT,
+    LinkValidationError,
+    load_link_validation,
+    upstream_artifact_entries,
+    validate_link_validation_document,
+)
+from src.tools.utils.fdm_promoted_speedup import lint_promoted_speedups
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BOOK_DIR = REPO_ROOT / "articles" / "forward_dynamics_matching"
 LINK_VALIDATION = BOOK_DIR / "link_validation.json"
-UPSTREAM_COMMIT = "d7c7d07add0d7407a5a3376d5fe4a97aee9112a0"
 QUALIFICATION_JSON = (
     "docs/development/simscape_tour_matching/native_evidence/"
     "two_window_fit_9967_102/simscape_replay_qualification.json"
 )
-SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 PROVENANCE_CAVEAT = "Cross-repo provenance caveat"
 
 
+def _link_data() -> dict:
+    return load_link_validation(LINK_VALIDATION)
+
+
 def _entries() -> list[dict]:
-    data = json.loads(LINK_VALIDATION.read_text(encoding="utf-8"))
-    return [e for e in data["links"] if "path" in e]
+    return upstream_artifact_entries(_link_data())
 
 
 def _chapter(name: str) -> str:
@@ -44,18 +54,40 @@ def _chapter(name: str) -> str:
 # --- 1. content digests for cited upstream artifacts -----------------------
 
 
+def test_link_validation_loader_rejects_malformed_json(tmp_path: Path) -> None:
+    bad = tmp_path / "link_validation.json"
+    bad.write_text("{not json", encoding="utf-8")
+    with pytest.raises(LinkValidationError, match="invalid JSON"):
+        load_link_validation(bad)
+
+
+def test_link_validation_loader_rejects_incomplete_upstream_row(tmp_path: Path) -> None:
+    payload = {
+        "links": [
+            {
+                "url": "https://example.com/x",
+                "path": "missing_fields.md",
+                "evidence_commit": UPSTREAM_EVIDENCE_COMMIT,
+            }
+        ],
+        "network_only_gaps": "digest_only pending_network_stop",
+    }
+    path = tmp_path / "link_validation.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(LinkValidationError):
+        load_link_validation(path)
+
+
 def test_every_cited_upstream_artifact_records_a_digest_status() -> None:
     entries = _entries()
     assert entries, "no UpstreamDrift artifacts found in link_validation.json"
     for entry in entries:
-        assert entry["evidence_commit"] == UPSTREAM_COMMIT, entry["path"]
+        assert entry["evidence_commit"] == UPSTREAM_EVIDENCE_COMMIT, entry["path"]
         kind = entry.get("kind")
         assert kind in {"blob", "tree"}, f"{entry['path']}: missing kind"
         if kind == "blob":
-            assert SHA256_RE.match(entry.get("content_sha256", "")), entry["path"]
             assert entry.get("snapshot_status") in {"vendored", "digest_only"}, entry["path"]
         else:
-            assert entry.get("content_sha256") is None, entry["path"]
             assert entry.get("snapshot_status") == "directory_not_digestible", entry["path"]
 
 
@@ -70,15 +102,19 @@ def test_vendored_snapshots_match_recorded_digests() -> None:
 
 
 def test_network_only_gaps_are_stated_explicitly() -> None:
-    data = json.loads(LINK_VALIDATION.read_text(encoding="utf-8"))
-    assert "network_only_gaps" in data
-    assert "digest_only" in data["network_only_gaps"]
-    assert "pending_network_stop" in data["network_only_gaps"]
+    data = _link_data()
+    gaps = data["network_only_gaps"]
+    assert "digest_only" in gaps
+    assert "pending_network_stop" in gaps
 
 
 def test_numeric_sources_are_vendored() -> None:
     by_path = {e["path"]: e for e in _entries()}
     assert by_path[QUALIFICATION_JSON]["snapshot_status"] == "vendored"
+
+
+def test_real_link_validation_document_passes_contract() -> None:
+    validate_link_validation_document(_link_data())
 
 
 # --- 2. verbatim regression assertions for gate numbers ---------------------
@@ -95,6 +131,7 @@ def test_gate_numbers_match_vendored_receipt_and_chapter() -> None:
 
     text = _chapter("03_historical_lessons.qmd")
     assert "40.303 mm" in text
+    assert "35 mm" in text
     assert "35 mm gate" in text
     assert "is_qualified: false" in text
 
@@ -117,36 +154,6 @@ def test_gate_numbers_are_attributed_not_bare() -> None:
 
 
 # --- 4. promoted-speedup policy lint ---------------------------------------
-
-QUALIFIERS = (
-    "diagnostic",
-    "unmeasured",
-    "synthetic-only",
-    "decline to repeat",
-    "declines to repeat",
-    "not consistent",
-    "discrepancy",
-    "inconsisten",
-    "per the cited",
-    "the cited",
-)
-TRIGGER_RE = re.compile(r"promot|speed-?up", re.IGNORECASE)
-FIGURE_RE = re.compile(r"\d")
-
-
-def lint_promoted_speedups(text: str) -> list[str]:
-    """Return sentences citing a promoted/speedup figure without a qualifier."""
-    flagged: list[str] = []
-    for para in re.split(r"\n\s*\n", text):
-        for sentence in re.split(r"(?<=[.!?])\s+", para):
-            if not (TRIGGER_RE.search(sentence) and FIGURE_RE.search(sentence)):
-                continue
-            if sentence.lstrip().startswith(("description:", "**Evidence")):
-                continue
-            lowered = sentence.lower()
-            if not any(q in lowered for q in QUALIFIERS):
-                flagged.append(sentence.strip())
-    return flagged
 
 
 def test_lint_flags_unqualified_promoted_speedup() -> None:
