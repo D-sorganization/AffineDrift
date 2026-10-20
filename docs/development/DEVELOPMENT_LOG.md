@@ -345,10 +345,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5088
 - **Branch:** merged via #5076
-- **PR:** #5076
+- **PR:** #5076, #5099
 - **Paths:** see #5076
 - **Started:** 2026-10-19
-- **Last verified:** 2026-10-19 (`e9584e29`; collated from changes/5088-fleet-critic-forward-dynamics-matching-review.md)
+- **Last verified:** 2026-10-20 (`c0c92c29`; collated from changes/5088-forward-dynamics-matching-book-sha-256-p.md)
 - **Summary:** Add Fleet Critic review of the recovered Forward Dynamics Matching book: unverified cross-repo numeric claims, structure-only tests, unguarded editorial policy (#5088)
 - **Next step:** Shipped in PR #5076.
 
