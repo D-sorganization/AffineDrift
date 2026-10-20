@@ -232,3 +232,14 @@ def test_continuation_section_is_registered_in_the_shared_builder() -> None:
     assert builder.render_document(builder.build_document()) == Path(builder.OUTPUT).read_text(
         encoding="utf-8"
     )
+
+
+def test_builder_writes_prettier_normal_numbers_and_filled_number_arrays() -> None:
+    """Small exponents and long number arrays must already be in prettier's form (#5095)."""
+    from scripts import build_null_space_exploration_examples as builder
+
+    text = builder.render_document({"key_for_a_long_number_array": [1.25e-07] * 9, "x": 3.5e-05})
+    assert "e-07" not in text and "e-05" not in text and "1.25e-7" in text and "3.5e-5" in text
+    filled = text.split("[", 1)[1].split("]", 1)[0].strip().splitlines()
+    assert 1 < len(filled) < 9  # broken, but packed several numbers per line (fill)
+    assert all(len(line) <= builder.LINE_WIDTH for line in text.splitlines())
