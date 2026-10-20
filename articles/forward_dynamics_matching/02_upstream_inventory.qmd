@@ -4,6 +4,8 @@ description: "The UpstreamDrift Method Inventory: forward dynamics matching rese
 
 # The UpstreamDrift Method Inventory
 
+**Cross-repo provenance caveat:** numbers in this chapter are quoted from UpstreamDrift files at the pinned commit, not recomputed here. Each cited artifact has a SHA-256 in `link_validation.json`; the numeric receipts are vendored under `upstream_snapshot/` and checked by the test suite, while code files are digest-only and external URLs are unverified (network-only gap).
+
 **Evidence snapshot:** UpstreamDrift commit [`d7c7d07add0d7407a5a3376d5fe4a97aee9112a0`](https://github.com/D-sorganization/UpstreamDrift/tree/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0). This chapter is a source and evidence inventory, not a claim that every method has been trained or physically qualified. Links below pin code and documentation to that immutable commit. No network retrieval or test execution was performed for this chapter.
 
 The phrase “match dynamics to kinematic data” hides several inverse problems with different unknowns. A motion-capture sequence may constrain joint angles, marker positions, club pose, or only a projected silhouette. A forward model maps a specified initial state, parameters, controls, contacts and environment to a trajectory. Matching asks which unknowns make that trajectory agree with measurements. Depending on what is unknown, the problem may be trajectory tracking, control reconstruction, parameter identification, shape calibration, or a combination. A solver can return a low residual while choosing a physically wrong combination of these variables. This chapter inventories the actual UpstreamDrift methods by these distinctions.
