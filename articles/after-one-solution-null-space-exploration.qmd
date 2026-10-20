@@ -209,7 +209,7 @@ c^\top x=-y^\top Gx-w^\top Ax\ge-h^\top y-b^\top w,
 $$ {#eq-weak-duality}
 so the dual value is a lower bound. The bound is for the *declared polyhedron* of @eq-feasible, which is the declared polygonal cone approximation of @sec-constraints, and it inherits that section's outer-versus-inner reading.
 
-**Hit-and-run samples under a declared measure.** Hit-and-run moves from a point $x\in\Omega$ along a random direction in $\ker A$ to a uniform point of the chord of $\Omega$ through $x$ [@smith1984hitandrun]. For a bounded $\Omega$ its stationary law is the uniform law on the affine hull of $\Omega$. That is a **declared measure**: Lebesgue measure on the true affine hull. A linear reparametrization of the reduced coordinates multiplies it by a constant, so uniform stays uniform. An unbounded set has no uniform law, and a different measure, for example Gaussian weighting, is a different declared choice. Mixing guarantees for hit-and-run exist for convex bodies [@lovasz2006hitandrun] under conditions on how the set is placed and rounded; they do not turn one finite chain into a certificate.
+**Hit-and-run samples under a declared measure.** Hit-and-run moves from a point $x\in\Omega$ along a random direction in $\ker A$ to a uniform point of the chord of $\Omega$ through $x$ [@smith1984hitandrun]. For a bounded $\Omega$ its stationary law is the uniform law on $\Omega$, taken with respect to Lebesgue measure on the true affine hull of $\Omega$. That is a **declared measure**. A linear reparametrization of the reduced coordinates multiplies it by a constant, so uniform stays uniform. An unbounded set has no uniform law, and a different measure, for example Gaussian weighting, is a different declared choice. Mixing guarantees for hit-and-run exist for convex bodies [@lovasz2006hitandrun] under conditions on how the set is placed and rounded; they do not turn one finite chain into a certificate.
 
 Two preconditions are easy to violate. First, the chain must start in the **relative interior** of $\Omega$ inside its true **affine hull**. A start on a facet, or directions drawn in the full fibre when the true hull is smaller (as when limits force implicit equalities), give chords of length zero, and the chain stays where it started even though it reports samples. The Chebyshev centre of @sec-constraints, computed in the true hull, is the usual start. Second, the diagnostics $\hat R$ and effective sample size are heuristics: they can be fine for a chain that never visited a region.
 
@@ -339,7 +339,7 @@ The ratios $r_{j+1}/r_j^{2}$ for the first two steps are 0.2294 and 0.2495, appr
 Given one solution and a null basis, the rest of the family is available. Each mechanism below has a condition under which it holds.
 
 1. **Add null directions.** Every $x_p+Nz$ with $z$ in the reduced polytope is dynamically equivalent to $x_p$. Condition: the balance is exactly satisfied by $x_p$ and $N$ is null to working precision (P1, P5).
-2. **Fibre dimension from the true affine hull.** The expected dimension of the feasible fibre is $\dim\ker A$, which for a stack of linear constraints $Gx\le h$ in activation coordinates is often quoted as $m-\operatorname{rank}G$ for $m$ activations. That formula holds when a strictly box-feasible point exists, and the condition is sufficient, not necessary. Otherwise limits force implicit equalities and the dimension is that of the true affine hull found by the linear programs of @sec-constraints.
+2. **Fibre dimension from the true affine hull.** The expected dimension of the feasible fibre is $\dim\ker A$, which for a balance written in $m$ activation coordinates is often quoted as $m-\operatorname{rank}A$. That formula holds when a strictly box-feasible point exists, and the condition is sufficient, not necessary. Otherwise limits force implicit equalities and the dimension is that of the true affine hull found by the linear programs of @sec-constraints.
 3. **A feasible set can be smaller than its null space.** In the three-muscle toy, disabling muscle three ($u_3\le0$) leaves $\ker A$ of dimension 1 but the feasible set is the single point $(3,\,3,\,0)$: muscle one has interval $[3,\,3]$ and muscle three $[0,\,0]$. The kernel dimension is 1 and the hull dimension is 0. A sampler asked for a one-dimensional family would report one point silently unless it checks the hull.
 4. **Level sub-fibres.** Fixing a non-invariant functional at a level $\ell$ gives $\Omega_\ell=\Omega\cap\{c^\top x=\ell\}$. If $\Omega$ has affine-hull dimension $d$, then $\dim\Omega_\ell=d-1$ if and only if $\ell$ lies strictly between the minimum and maximum of $c^\top x$ on $\Omega$. *Proof.* The image of the relative interior of a convex set under a nonconstant linear functional is the open interval $(\min,\max)$; a level strictly inside it meets the relative interior, and a hyperplane through the relative interior of a $d$-dimensional convex set cuts a section of dimension $d-1$. At $\ell=\min$ or $\max$ the section is a face of lower dimension, and outside the interval it is empty. $\square$
 5. **Parameter ensembles.** Repeating the construction for each member of a declared ensemble of parameters gives a family of envelopes. Their union is the envelope over the declared ensemble and their intersection is what every declared member agrees on. Both are statements about the declared members and not about a population.
@@ -359,19 +359,19 @@ The `loop_nullspace` package in UpstreamDrift implements the workflow, and a map
 
 This page does not pin a commit of that code and does not claim that the package passes any publication gate. What the package certifies is what P1 to P7 and @sec-constraints say: envelopes hold for the declared polygonal cone approximation only, and a sample or a trace is coverage evidence, not a proof.
 
-| Section | Article section | API in `loop_nullspace` |
-|---|---|---|
-| 1 | Setting | `admit`, `decompose`, `BalanceInconsistentError` |
-| 2 | Affine fibre and dimension accounting | `dimension_accounting`, `Decomposition` |
-| 3 | Metrics select representatives | `AllocationMetric`, `CharacteristicScales`, `min_metric_torque` |
-| 4 | Constraints, Phase-I, Chebyshev centre | `FeasibleSet`, `chebyshev_margin`, `interior_point` |
-| 5 | Optimizing in reduced coordinates | `allocate_trajectory`, `ObjectiveSpec`, `pareto_front` |
-| 6 | Exploring: envelopes and hit-and-run | `static_envelopes`, `x_functional_quantities`, `hit_and_run` |
-| 7 | What is identifiable | `classify_functional`, `FunctionalStatus`, `functional_record`, `attribution_quantities` |
-| 8 | Time coupling and warm starts | `trajectory_envelope`, `static_envelopes` with `warm_start` |
-| 9 | Nonlinear solution sets | `local_chart`, `predictor_corrector_step`, `ManifoldSingularityError`, `ManifoldConvergenceError` |
-| 10 | How one solution buys the rest | `ActivationFiber`, `hull_dimension`, `sample_result`, `level_subfibre_dimension` |
-| 11 | Using it in UpstreamDrift | the mapping note and its example script |
+| Article section | API in `loop_nullspace` |
+|---|---|
+| @sec-setting (Setting) | `admit`, `decompose`, `BalanceInconsistentError` |
+| @sec-fibre (Affine fibre and dimension accounting) | `dimension_accounting`, `Decomposition` |
+| @sec-metrics (Metrics select representatives) | `AllocationMetric`, `CharacteristicScales`, `min_metric_torque` |
+| @sec-constraints (Constraints, Phase-I, Chebyshev centre) | `FeasibleSet`, `chebyshev_margin`, `interior_point` |
+| @sec-optimizing (Optimizing in reduced coordinates) | `allocate_trajectory`, `ObjectiveSpec`, `pareto_front` |
+| @sec-exploring (Exploring: envelopes and hit-and-run) | `static_envelopes`, `x_functional_quantities`, `hit_and_run` |
+| @sec-identifiable (What is identifiable) | `classify_functional`, `FunctionalStatus`, `functional_record`, `attribution_quantities` |
+| @sec-time (Time coupling and warm starts) | `trajectory_envelope`, `static_envelopes` with `warm_start` |
+| @sec-nonlinear (Nonlinear solution sets) | `local_chart`, `predictor_corrector_step`, `ManifoldSingularityError`, `ManifoldConvergenceError` |
+| @sec-buys-the-rest (How one solution buys the rest) | `ActivationFiber`, `hull_dimension`, `sample_result`, `level_subfibre_dimension` |
+| @sec-upstreamdrift (Using it in UpstreamDrift) | the mapping note and its example script |
 
 The code in this repository that produced the numbers on this page is a smaller, self-contained companion: `src/tools/null_space_exploration_examples.py` for P1 to P5, P7 and the toys, and `src/tools/null_space_continuation_examples.py` for P6. Neither depends on UpstreamDrift.
 
