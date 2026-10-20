@@ -442,6 +442,7 @@ def _joint_region(frames: tuple[ForceFrame, ForceFrame], delta: float) -> _Polyh
     first, second = frames
 
     def stack(one: Array, two: Array) -> Array:
+        """Block-diagonal stack of two frames' constraint rows over ``(u1, u2)``."""
         out = np.zeros((one.shape[0] + two.shape[0], 2 * size))
         out[: one.shape[0], :size], out[one.shape[0] :, size:] = one, two
         return out
@@ -656,6 +657,7 @@ def _p7_section() -> dict[str, object]:
     """Two scalar frames ``[0, 1]`` and ``[0.5, 2]`` with a rate bound of 0.2."""
 
     def frame(low: float, high: float) -> ForceFrame:
+        """Scalar frame with no balance rows and the bounds ``low <= u <= high``."""
         return ForceFrame(
             np.zeros((0, 1)), np.zeros(0), np.array([[1.0], [-1.0]]), np.array([high, -low])
         )
