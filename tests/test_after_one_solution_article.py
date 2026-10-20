@@ -472,8 +472,10 @@ def test_upstreamdrift_section_marks_code_under_review_without_pinning() -> None
     assert "after_one_solution.md" in section
     assert not re.search(r"\b[0-9a-f]{40}\b", text), "no commit SHA may be pinned in this page"
     assert not re.search(r"UpstreamDrift/(blob|tree|commit)/", text)
-    rows = re.findall(r"^\|\s*(\d+)\s*\|", section, re.MULTILINE)
-    assert [int(row) for row in rows] == list(range(1, 12)), "one mapping row per section"
+    # Rows cross-reference the sections so the rendered numbers stay right even though the
+    # shared attribution include adds a numbered heading of its own.
+    rows = re.findall(r"^\|\s*@(sec-[a-z-]+)\b", section, re.MULTILINE)
+    assert rows == SECTION_IDS, "one mapping row per section, in order"
     for api in (
         "classify_functional",
         "FunctionalStatus",
