@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 284
+- Reviewed: 285
 - Deferred: 0
 - Exempt: 3
 
@@ -17,6 +17,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 |---|---|---:|
 | `/` | `index.qmd` | 4 |
 | `/articles/affine-nature-golf-swing.html` | `articles/affine-nature-golf-swing.qmd` | 7 |
+| `/articles/after-one-solution-null-space-exploration.html` | `articles/after-one-solution-null-space-exploration.qmd` | 9 |
 | `/articles/appendix-applications.html` | `articles/appendix-applications.qmd` | 1 |
 | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` | 1 |
 | `/articles/core-theses-registry.html` | `articles/core-theses-registry.qmd` | 14 |
@@ -307,6 +308,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-8a5edab28263` | `/` | Reviewed | — | None | None | 1 |
 | `ad-route-846c879e19c9` | `/404.html` | Exempt | — | None | None | 0 |
 | `ad-route-2cd844057893` | `/articles/affine-nature-golf-swing.html` | Reviewed | — | None | `crit-aerodynamics`, `crit-control-causality-mechanical`, `crit-drift-superposition`, `crit-effective-plant-fallacy`, `crit-geometric-stiffness-omission`, `crit-impact-evasion`, `crit-input-dependent-boundary-conditions`, `crit-muscle-physiology`, `crit-neuromuscular-control`, `crit-nullspace-interpretation`, `crit-parameter-causality-leakage`, `crit-passive-active-boundary-ambiguity`, `crit-passive-overshoot-artifact`, `crit-simulation-tautology`, `crit-static-fallacy-zvcf`, `crit-stretch-shortening-blindspot`, `crit-teleological-blindness`, `crit-ztcf-identifiability` | 0 |
+| `ad-route-8de89596499b` | `/articles/after-one-solution-null-space-exploration.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f6e740c6e376` | `/articles/appendix-applications.html` | Reviewed | — | None | None | 0 |
 | `ad-route-3953a6c17747` | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | Reviewed | — | None | None | 0 |
 | `ad-route-bdb06b93b8fa` | `/articles/core-theses-registry.html` | Reviewed | — | `ad-dcr-002`, `ad-decomp-001`, `ad-icc-001`, `ad-impact-001`, `ad-pds-001`, `ad-sas-001`, `ad-superpos-001`, `ad-tsc-001`, `ad-wuj-001`, `ad-ztcf-001`, `ad-zvcf-001` | None | 0 |
