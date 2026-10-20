@@ -44,17 +44,26 @@ def validate_link_validation_document(
     data: object, *, source: str = "link_validation.json"
 ) -> None:
     require(isinstance(data, dict), f"{source}: root must be a JSON object", data)
+    if not isinstance(data, dict):
+        return
     links = data.get("links")
     require(isinstance(links, list), f"{source}: links must be an array", links)
+    if not isinstance(links, list):
+        return
     gaps = data.get("network_only_gaps")
+    gaps_text = gaps.strip() if isinstance(gaps, str) else ""
     require(
-        isinstance(gaps, str) and gaps.strip(),
+        bool(gaps_text),
         f"{source}: network_only_gaps must be a non-empty string",
         gaps,
     )
-    require("digest_only" in gaps, f"{source}: network_only_gaps must mention digest_only", gaps)
     require(
-        "pending_network_stop" in gaps,
+        "digest_only" in gaps_text,
+        f"{source}: network_only_gaps must mention digest_only",
+        gaps,
+    )
+    require(
+        "pending_network_stop" in gaps_text,
         f"{source}: network_only_gaps must mention pending_network_stop",
         gaps,
     )
@@ -62,7 +71,7 @@ def validate_link_validation_document(
     for index, entry in enumerate(links):
         prefix = f"{source}: links[{index}]"
         require(isinstance(entry, dict), f"{prefix} must be an object", entry)
-        if "path" not in entry:
+        if not isinstance(entry, dict) or "path" not in entry:
             continue
         _validate_upstream_artifact_entry(entry, prefix=prefix)
 
@@ -78,19 +87,13 @@ def _validate_upstream_artifact_entry(entry: dict[str, Any], *, prefix: str) -> 
     status = entry.get("snapshot_status")
     if kind == "blob":
         digest = entry.get("content_sha256")
-        require(
-            isinstance(digest, str) and SHA256_RE.match(digest),
-            f"{prefix}: content_sha256 required for blob",
-            digest,
-        )
+        digest_ok = isinstance(digest, str) and SHA256_RE.fullmatch(digest) is not None
+        require(digest_ok, f"{prefix}: content_sha256 required for blob", digest)
         require(status in _BLOB_SNAPSHOT, f"{prefix}: invalid snapshot_status for blob", status)
         if status == "vendored":
             snap = entry.get("snapshot_path")
-            require(
-                isinstance(snap, str) and snap.strip(),
-                f"{prefix}: snapshot_path required when vendored",
-                snap,
-            )
+            snap_ok = isinstance(snap, str) and bool(snap.strip())
+            require(snap_ok, f"{prefix}: snapshot_path required when vendored", snap)
     else:
         require(
             entry.get("content_sha256") is None,
