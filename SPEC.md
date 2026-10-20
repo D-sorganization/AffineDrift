@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-20 | #5104 | Apply prettier to files already drifted on main; ignore the attested companion snapshot |
 | 2026-10-20 | #5099 | Forward Dynamics Matching book: SHA-256 provenance for cited UpstreamDrift artifacts, gate-number regression tests, promoted-speedup lint |
 | 2026-10-19 | #5090 | Fix WCAG 2.5.3 label-content-name-mismatch on reading-time and Quarto TOC landmarks |
 | 2026-10-19 | #5076 | Add Fleet Critic review of the recovered Forward Dynamics Matching book: unverified cross-repo numeric claims, structure-only tests, unguarded editorial policy (#5088) |
