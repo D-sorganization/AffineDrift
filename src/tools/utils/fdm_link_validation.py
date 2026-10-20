@@ -43,6 +43,11 @@ def upstream_artifact_entries(data: dict[str, Any]) -> list[dict[str, Any]]:
 def validate_link_validation_document(
     data: object, *, source: str = "link_validation.json"
 ) -> None:
+    """Require a link-validation document with digest and network-gap contracts.
+
+    Raises ``PreconditionError`` when ``data`` is not that document. Returns
+    without checking further when contract enforcement is off.
+    """
     require(isinstance(data, dict), f"{source}: root must be a JSON object", data)
     if not isinstance(data, dict):
         return
@@ -77,6 +82,7 @@ def validate_link_validation_document(
 
 
 def _validate_upstream_artifact_entry(entry: dict[str, Any], *, prefix: str) -> None:
+    """Require one UpstreamDrift artifact row to match the pinned evidence commit."""
     require(
         entry.get("evidence_commit") == UPSTREAM_EVIDENCE_COMMIT,
         f"{prefix}: evidence_commit mismatch",
