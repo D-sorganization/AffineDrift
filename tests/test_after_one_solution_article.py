@@ -49,6 +49,13 @@ SECTION_IDS = [
     "sec-upstreamdrift",
 ]
 PR_NUMBERS = ("13475", "13470", "13467", "13493")
+PINNED_HEADS = {
+    "13475": "c90dd9f43ad474c63ff9c17657cecc8b45a1624c",
+    "13470": "7b0edf463100cf55efc38132a08fedd5e8a40c36",
+    "13467": "cc0ec85463b942ca295f774e5f7cd45da36c0677",
+    "13493": "6706d3aac623bd6977cab970de81c222787bdb45",
+}
+ROUTE = "/articles/after-one-solution-null-space-exploration.html"
 NEGLIGIBLE = 1e-9  # LP and rounding noise in examples.json that the article quotes as zero.
 FENCE = re.compile(r"^\s*(```+|~~~+)")
 
@@ -470,8 +477,15 @@ def test_upstreamdrift_section_marks_code_under_review_without_pinning() -> None
         assert f"/pull/{number}" in section, number
     assert "12593" in section
     assert "after_one_solution.md" in section
-    assert not re.search(r"\b[0-9a-f]{40}\b", text), "no commit SHA may be pinned in this page"
-    assert not re.search(r"UpstreamDrift/(blob|tree|commit)/", text)
+    assert "under review" in section and "draft" in section
+    assert "may change" in section, "the page must still say the code may change"
+    # AD-4 (#5097) pins the four draft-PR heads; any other 40-hex string stays forbidden.
+    assert set(re.findall(r"\b[0-9a-f]{40}\b", text)) == set(PINNED_HEADS.values())
+    before_section = text[: text.index("{#sec-upstreamdrift}")]
+    assert not re.search(r"UpstreamDrift/(blob|tree|commit)/", before_section)
+    for number, sha in PINNED_HEADS.items():
+        bullet = next(line for line in section.splitlines() if f"/pull/{number}" in line)
+        assert re.search(rf"UpstreamDrift/(tree|blob)/{sha}\b", bullet), (number, "unpinned")
     # Rows cross-reference the sections so the rendered numbers stay right even though the
     # shared attribution include adds a numbered heading of its own.
     rows = re.findall(r"^\|\s*@(sec-[a-z-]+)\b", section, re.MULTILINE)
@@ -573,3 +587,92 @@ def test_loader_returns_independent_copies() -> None:
     first: dict[str, Any] = example_section("linear")
     first["p1"]["survey"].clear()
     assert example_section("linear")["p1"]["survey"]
+
+
+# ------------------------------------------------------------------ 5. registration (#5097)
+
+
+def test_pins_json_registers_each_head_as_review_required_for_this_route() -> None:
+    pins = json.loads((ROOT / "data/companion/pins.json").read_text(encoding="utf-8"))["pins"]
+    by_commit = {pin["commit"]: pin for pin in pins}
+    for number, sha in PINNED_HEADS.items():
+        pin = by_commit[sha]
+        assert pin["state"] == "review-required", sha
+        assert pin["last_reviewed"] is None and pin["review_due"] is None, sha
+        assert ROUTE in pin["routes"], sha
+        assert f"#{number}" in pin["note"] and "draft" in pin["note"], sha
+        assert "not yet reviewed" in pin["note"], sha
+
+
+def test_freshness_dashboard_lists_the_pinned_heads() -> None:
+    dashboard = (ROOT / "models/programming/freshness.qmd").read_text(encoding="utf-8")
+    for sha in PINNED_HEADS.values():
+        assert sha[:12] in dashboard, sha
+
+
+def test_claim_audit_inventory_has_a_reviewed_route_record() -> None:
+    path = ROOT / "data/trust/claim_audit_inventory.json"
+    inventory = json.loads(path.read_text(encoding="utf-8"))
+    records = [r for r in inventory["routes"] if r["route"] == ROUTE]
+    assert len(records) == 1
+    record = records[0]
+    assert record["status"] == "reviewed"
+    review = record["review"]
+    assert review["source_path"] == ARTICLE_REL
+    assert set(review["dimensions"]) == {
+        "evidence",
+        "uncertainty",
+        "falsifiers",
+        "audience_framing",
+    }
+    for evidence in (
+        ARTICLE_REL,
+        "tests/test_after_one_solution_article.py",
+        "tests/test_null_space_exploration_examples.py",
+        "tests/test_null_space_continuation_examples.py",
+    ):
+        assert evidence in review["evidence_paths"], evidence
+        assert (ROOT / evidence).is_file(), evidence
+
+
+def test_articles_listing_has_an_entry_for_the_article() -> None:
+    listing = (ROOT / "resources/articles.qmd").read_text(encoding="utf-8")
+    entry = "(../articles/after-one-solution-null-space-exploration.html)"
+    assert listing.count(entry) == 1
+    line = next(row for row in listing.splitlines() if entry in row)
+    assert line.startswith("- [After One Solution")
+
+
+@pytest.mark.parametrize(
+    "page",
+    [
+        "null-space-constraint-jacobian",
+        "degrees-of-freedom-and-dimensionality",
+        "inverse-dynamics",
+        "inverse-dynamics-inference",
+    ],
+)
+def test_related_pages_link_back_to_the_article(page: str) -> None:
+    text = (ROOT / "articles" / f"{page}.qmd").read_text(encoding="utf-8")
+    related = text[text.index("## Related Articles") :]
+    assert "(after-one-solution-null-space-exploration.html)" in related
+
+
+def test_quarto_project_registers_the_new_bibliography() -> None:
+    config = (ROOT / "_quarto.yml").read_text(encoding="utf-8")
+    assert config.count("  - references/null-space-exploration.bib\n") == 1
+
+
+def test_notation_defines_jacobian_pseudo_inverse_projector_and_basis_with_metrics() -> None:
+    notation = (ROOT / "NOTATION.md").read_text(encoding="utf-8")
+    start = notation.index("### J, J")
+    section = notation[start : notation.index("\n### ", start + 5)]
+    for token in ("J^+", "P_W", "ker", "metric", "Euclidean", "basis", "Z", "N"):
+        assert token in section, token
+    assert "not unique" in section
+
+
+def test_change_fragment_exists() -> None:
+    fragments = list((ROOT / "changes").glob("5097-*.md"))
+    assert len(fragments) == 1
+    assert "issue: 5097" in fragments[0].read_text(encoding="utf-8")
