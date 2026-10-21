@@ -53,15 +53,8 @@ jobs:
           while IFS= read -r f; do
             [ -z "$f" ] && continue
             [ ! -f "$f" ] && continue  # deleted file — skip
-            # RM #2195 reusable-workflow caller — job protections live in RM workflow
-            case "$(basename "$f")" in
-              conflict-disarm.yml)
-                echo "::notice::Skipping timeout/cancel-in-progress checks for $f (reusable-workflow caller)"
-                continue
-                ;;
-            esac
-            # Check timeout-minutes (anywhere in file)
-            if ! grep -q '^\s*timeout-minutes:' "$f"; then
+            # Check timeout-minutes (anywhere in file); RM #2195 reusable caller sets them upstream
+            if [ "$(basename "$f")" != "conflict-disarm.yml" ] && ! grep -q '^\s*timeout-minutes:' "$f"; then
               FAIL="${FAIL}\n  - $f: missing timeout-minutes"
             fi
             # Check concurrency block
@@ -72,7 +65,7 @@ jobs:
             # Exception allowlist — workflows where cancel-in-progress: false is legitimate
             # (publishes/releases should not be interrupted mid-stream)
             case "$(basename "$f")" in
-              publish-artifacts.yml|release.yml|publish.yml|deploy.yml|deploy-website.yml|nightly-publish.yml)
+              publish-artifacts.yml|release.yml|publish.yml|deploy.yml|deploy-website.yml|nightly-publish.yml|conflict-disarm.yml)
                 echo "::notice::Skipping cancel-in-progress check for $f (intentional exception)"
                 ;;
               *)
