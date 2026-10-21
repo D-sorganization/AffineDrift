@@ -7,15 +7,15 @@ multi-ecosystem-groups:
       day: monday
       time: "06:00"
       timezone: America/Los_Angeles
+    commit-message:
+      prefix: chore(deps)
+      include: scope
 
 updates:
   - package-ecosystem: pip
     directory: /
     schedule:
       interval: weekly
-      day: monday
-      time: "09:00"
-      timezone: UTC
     patterns: ["*"]
     multi-ecosystem-group: weekly-deps
     open-pull-requests-limit: 10
@@ -24,17 +24,11 @@ updates:
     labels:
       - dependencies
       - python
-    commit-message:
-      prefix: chore(deps)
-      include: scope
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
-      day: monday
-      time: "09:00"
-      timezone: UTC
     patterns: ["*"]
     multi-ecosystem-group: weekly-deps
     open-pull-requests-limit: 5
@@ -43,17 +37,11 @@ updates:
     labels:
       - dependencies
       - ci/cd
-    commit-message:
-      prefix: chore(deps)
-      include: scope
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
-      day: monday
-      time: "09:00"
-      timezone: UTC
     patterns: ["*"]
     multi-ecosystem-group: weekly-deps
     open-pull-requests-limit: 5
@@ -62,6 +50,3 @@ updates:
     labels:
       - dependencies
       - tooling
-    commit-message:
-      prefix: chore(deps)
-      include: scope
