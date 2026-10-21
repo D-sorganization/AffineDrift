@@ -21,9 +21,13 @@ describe("Quarto Callout Keyboard Activation (issue #4374)", () => {
 
   function buildCallout(options = {}) {
     const isExpanded = options.isExpanded || false;
+    const title = options.title === undefined ? "In Layman's Terms" : options.title;
+    const screenReaderLabel = options.screenReaderLabel || "Note";
+    const screenReaderTitle = `<span class="screen-reader-only">${screenReaderLabel}</span>`;
     const innerHtml = options.hasInnerLink
-      ? '<div class="callout-title-container"><a href="#test">Inner Link</a> Callout Title</div>'
-      : '<div class="callout-title-container">In Layman\'s Terms</div>';
+      ? `<div class="callout-title-container">${screenReaderTitle}<a href="#test">Inner Link</a> Callout Title</div>`
+      : `<div class="callout-title-container">${screenReaderTitle}${title}</div>`;
+    const ariaLabel = options.ariaLabel || "Toggle callout";
 
     document.body.innerHTML = `
       <div class="callout callout-style-default callout-note callout-titled">
@@ -31,6 +35,7 @@ describe("Quarto Callout Keyboard Activation (issue #4374)", () => {
              data-bs-toggle="collapse"
              data-bs-target=".callout-1-contents"
              aria-controls="callout-1-contents"
+             aria-label="${ariaLabel}"
              aria-expanded="${isExpanded}">
           ${innerHtml}
         </div>
@@ -67,6 +72,29 @@ describe("Quarto Callout Keyboard Activation (issue #4374)", () => {
 
     expect(header.getAttribute("role")).toBe("button");
     expect(header.getAttribute("tabindex")).toBe("0");
+  });
+
+  test("removes Quarto's generic label when the callout has a title", () => {
+    const { header } = buildCallout();
+    initAriaLabels();
+
+    expect(header.hasAttribute("aria-label")).toBe(false);
+    expect(header.textContent).toContain("In Layman's Terms");
+  });
+
+  test("preserves an authored callout label", () => {
+    const { header } = buildCallout({ ariaLabel: "Read the detailed explanation" });
+    initAriaLabels();
+
+    expect(header.getAttribute("aria-label")).toBe("Read the detailed explanation");
+  });
+
+  test("keeps Quarto's fallback label when the callout title is empty", () => {
+    const { header } = buildCallout({ title: "" });
+    initAriaLabels();
+
+    expect(header.querySelector(".screen-reader-only").textContent).toBe("Note");
+    expect(header.getAttribute("aria-label")).toBe("Toggle callout");
   });
 
   test("Enter key activates collapsible header matching click behavior", () => {
