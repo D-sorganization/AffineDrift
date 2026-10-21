@@ -93,7 +93,7 @@ jobs:
           python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           python -m pip install PyYAML==6.0.3 beautifulsoup4==4.14.3 requests==2.33.1 Markdown==3.10.2 pydantic==2.13.3 simpleeval==1.0.7 numpy==2.4.4 matplotlib==3.10.9 defusedxml==0.7.1 jsonschema==4.26.0
-          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
+          echo "$RUNNER_TEMP/ci-venv/bin" >> "$GITHUB_PATH"
 
       - name: Reject Raw Merge Conflict Markers
         run: |
@@ -108,6 +108,7 @@ jobs:
           if sudo -n true 2>/dev/null; then
             APT_READY=false
             for attempt in 1 2 3; do
+              echo "apt-get update attempt $attempt of 3"
               if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
                 APT_READY=true
                 break
@@ -443,6 +444,7 @@ jobs:
             sudo sed -i '/dl\.google\.com/d' /etc/apt/sources.list 2>/dev/null || true
             APT_READY=false
             for attempt in 1 2 3; do
+              echo "apt-get update attempt $attempt of 3"
               if sudo env DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::Lock::Timeout=300 update --fix-missing; then
                 APT_READY=true
                 break
@@ -466,7 +468,7 @@ jobs:
           python --version
           pip install --upgrade pip setuptools wheel build
           pip install --no-cache-dir -r requirements.txt pytest-timeout pytest-cov PyQt6
-          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
+          echo "$RUNNER_TEMP/ci-venv/bin" >> "$GITHUB_PATH"
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
@@ -477,8 +479,8 @@ jobs:
           PYTHONPATH: src
         run: |
           COUNT=$(python -m pytest tests/ --collect-only -q --override-ini="addopts=" 2>&1 | tail -3 | grep -oE "[0-9]+ tests collected" | grep -oE "^[0-9]+" | head -1)
-          echo "Collected $COUNT tests; baseline is ${{ env.BASELINE_TEST_COUNT }}"
-          [ "$COUNT" -ge "${{ env.BASELINE_TEST_COUNT }}" ] || (echo "::error::Test count $COUNT < baseline ${{ env.BASELINE_TEST_COUNT }}"; exit 1)
+          echo "Collected $COUNT tests; baseline is $BASELINE_TEST_COUNT"
+          [ "$COUNT" -ge "$BASELINE_TEST_COUNT" ] || (echo "::error::Test count $COUNT < baseline $BASELINE_TEST_COUNT"; exit 1)
       - name: Run Tests
         env:
           PYTHONPATH: src
@@ -577,16 +579,15 @@ jobs:
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Compute Quarto render cache key
-        # WEB-13.1 (#4595): the key is the content hash (git blob ids) of every
-        # tracked file except tests, workflows and developer docs. A hand-listed
-        # glob set silently misses render inputs (Lua filters, _includes/
-        # partials, JS resources under src/), which would restore a stale site.
+        # WEB-13.1 (#4595): hash the full Git index except paths proven not to
+        # participate in Quarto rendering: tests, workflows, developer docs,
+        # the root specification, and per-issue change fragments.
         id: quarto_cache_key
         if: steps.e2e_changes.outputs.run == 'true'
         shell: bash
         run: |
-          key=$(git ls-files -s -- . ':(exclude)tests/**' ':(exclude).github/**' ':(exclude)docs/development/**' | sha256sum | cut -c1-64)
-          echo "key=quarto-render-v2-${key}" >> "$GITHUB_OUTPUT"
+          key=$(python3 scripts/quarto_cache_key.py --repo-root .)
+          echo "key=$key" >> "$GITHUB_OUTPUT"
       - name: Restore cached Quarto render
         # Skip the render only on an exact key match. There is no restore-keys
         # fallback -- an inexact match must never restore a _site/ tree that does
@@ -618,7 +619,7 @@ jobs:
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
           pip install --no-cache-dir -r requirements.txt
-          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
+          echo "$RUNNER_TEMP/ci-venv/bin" >> "$GITHUB_PATH"
 
       - name: Reject Raw Merge Conflict Markers
         run: |
@@ -634,6 +635,7 @@ jobs:
           if sudo -n true 2>/dev/null; then
             APT_READY=false
             for attempt in 1 2 3; do
+              echo "apt-get update attempt $attempt of 3"
               if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
                 APT_READY=true
                 break
