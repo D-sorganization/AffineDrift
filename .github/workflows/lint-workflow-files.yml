@@ -53,6 +53,13 @@ jobs:
           while IFS= read -r f; do
             [ -z "$f" ] && continue
             [ ! -f "$f" ] && continue  # deleted file — skip
+            # RM #2195 reusable-workflow caller — job protections live in RM workflow
+            case "$(basename "$f")" in
+              conflict-disarm.yml)
+                echo "::notice::Skipping timeout/cancel-in-progress checks for $f (reusable-workflow caller)"
+                continue
+                ;;
+            esac
             # Check timeout-minutes (anywhere in file)
             if ! grep -q '^\s*timeout-minutes:' "$f"; then
               FAIL="${FAIL}\n  - $f: missing timeout-minutes"

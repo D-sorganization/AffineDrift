@@ -16,6 +16,20 @@ def test_find_unpinned_actions_flags_tag_refs(tmp_path):
     assert findings == [f"{workflow_dir / 'ci.yml'}:2: pin actions/checkout@v4 to a 40-char SHA"]
 
 
+def test_find_unpinned_actions_allows_rm_reusable_workflow_on_main(tmp_path):
+    workflow_dir = tmp_path / ".github" / "workflows"
+    workflow_dir.mkdir(parents=True)
+    (workflow_dir / "conflict-disarm.yml").write_text(
+        "jobs:\n"
+        "  disarm:\n"
+        "    uses: D-sorganization/Repository_Management/"
+        ".github/workflows/reusable-conflict-disarm.yml@main\n",
+        encoding="utf-8",
+    )
+
+    assert find_unpinned_actions(workflow_dir) == []
+
+
 def test_find_unpinned_actions_allows_local_and_docker_refs(tmp_path):
     workflow_dir = tmp_path / ".github" / "workflows"
     workflow_dir.mkdir(parents=True)
