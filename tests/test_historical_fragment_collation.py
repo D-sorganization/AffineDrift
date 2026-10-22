@@ -53,9 +53,7 @@ def _scratch_repo(root: Path, source_path: Path | None) -> tuple[Path, Path]:
     devlog.parent.mkdir(parents=True)
     spec_text = (REPO_ROOT / "SPEC.md").read_text(encoding="utf-8")
     spec_lines = [
-        line
-        for line in spec_text.splitlines()
-        if not (line.startswith("|") and "#5110" in line)
+        line for line in spec_text.splitlines() if not (line.startswith("|") and "#5110" in line)
     ]
     (root / "SPEC.md").write_text("\n".join(spec_lines) + "\n", encoding="utf-8")
     devlog.write_text(SHIPPED_ENTRY, encoding="utf-8", newline="\n")
