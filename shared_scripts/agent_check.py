@@ -298,7 +298,7 @@ def run_check(  # noqa: PLR0911
     )
     tool = spec.get("tool")
     if kind in ("detect-secrets", "repo-regen"):
-        pass
+        pass  # tool existence handled by dedicated runners
     elif tool == "ruff" and not _ruff_exe():
         return _result(check_id, "skip", "ruff not on PATH", files, 0)
     elif tool and tool != "ruff" and not shutil.which(str(tool)):
