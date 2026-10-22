@@ -165,10 +165,39 @@ def test_active_lock_commit_is_kept_even_without_routes() -> None:
 
 
 @pytest.mark.unit
-def test_cli_write_then_check_round_trips(tmp_path: Path) -> None:
+def test_reconcile_rejects_non_list_pin_collections() -> None:
+    with pytest.raises(ValueError, match="companion pins must be a list"):
+        pins.reconcile({"pins": "invalid"}, {}, None)
+
+
+@pytest.mark.unit
+def test_cli_write_rejects_malformed_pins_without_changing_file(tmp_path: Path) -> None:
+    root = _site(tmp_path)
+    pins_path = root / "data/companion/pins.json"
+    pins_path.parent.mkdir(parents=True)
+    original = b'{"pins": "invalid"}\n'
+    pins_path.write_bytes(original)
+
+    assert pins.main(["--root", str(root), "--pins", str(pins_path), "--write"]) == 1
+    assert pins_path.read_bytes() == original
+
+
+@pytest.mark.unit
+def test_cli_write_then_check_round_trips(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = _site(tmp_path)
     pins_path = root / "data/companion/pins.json"
     store = root / "data/companion"
+    calls: list[list[str]] = []
+
+    def unexpected_formatter(*args: object, **kwargs: object) -> None:
+        calls.append(list(args[0]))
+
+    monkeypatch.setattr(
+        pins.shutil,
+        "which",
+        lambda name: name if name in {"npx", "node"} else None,
+    )
+    monkeypatch.setattr(pins.subprocess, "run", unexpected_formatter)
     assert pins.main(["--root", str(root), "--pins", str(pins_path), "--store", str(store)]) == 1
     assert (
         pins.main(["--root", str(root), "--pins", str(pins_path), "--store", str(store), "--write"])
@@ -177,6 +206,63 @@ def test_cli_write_then_check_round_trips(tmp_path: Path) -> None:
     document = json.loads(pins_path.read_text(encoding="utf-8"))
     assert [pin["state"] for pin in document["pins"]] == ["review-required"] * 2
     assert pins.main(["--root", str(root), "--pins", str(pins_path), "--store", str(store)]) == 0
+    assert calls == []
+
+
+@pytest.mark.unit
+def test_local_prettier_runs_with_a_bounded_timeout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "project"
+    prettier = root / "node_modules/prettier/bin/prettier.cjs"
+    prettier.parent.mkdir(parents=True)
+    prettier.write_text("// local formatter fixture", encoding="utf-8")
+    target = tmp_path / "pins.json"
+    target.write_text("{}\n", encoding="utf-8")
+    calls: list[tuple[list[str], dict[str, object]]] = []
+
+    def record_run(args: list[str], **kwargs: object) -> pins.subprocess.CompletedProcess[str]:
+        calls.append((args, kwargs))
+        return pins.subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(pins.shutil, "which", lambda name: "node.exe" if name == "node" else None)
+    monkeypatch.setattr(pins.subprocess, "run", record_run)
+
+    pins._format_with_prettier(target, root)
+
+    assert len(calls) == 1
+    args, kwargs = calls[0]
+    assert args == ["node.exe", str(prettier), "--write", str(target)]
+    assert kwargs["timeout"] == pins._FORMAT_TIMEOUT_SECONDS
+    assert kwargs["check"] is False
+
+
+@pytest.mark.parametrize("failure", ["timeout", "oserror", "nonzero"])
+@pytest.mark.unit
+def test_local_prettier_failures_are_optional(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str
+) -> None:
+    root = tmp_path / "project"
+    prettier = root / "node_modules/prettier/bin/prettier.cjs"
+    prettier.parent.mkdir(parents=True)
+    prettier.write_text("// local formatter fixture", encoding="utf-8")
+    target = tmp_path / "pins.json"
+    original = b'{"pins": []}\n'
+    target.write_bytes(original)
+
+    def fail_run(args: list[str], **kwargs: object) -> pins.subprocess.CompletedProcess[str]:
+        Path(args[-1]).write_bytes(b"partial formatter output")
+        if failure == "timeout":
+            raise pins.subprocess.TimeoutExpired(args, kwargs["timeout"])
+        if failure == "oserror":
+            raise OSError("node unavailable")
+        return pins.subprocess.CompletedProcess(args, 17, "", "formatter failed")
+
+    monkeypatch.setattr(pins.shutil, "which", lambda name: "node.exe" if name == "node" else None)
+    monkeypatch.setattr(pins.subprocess, "run", fail_run)
+
+    pins._format_with_prettier(target, root)
+    assert target.read_bytes() == original
 
 
 @pytest.mark.unit
