@@ -51,7 +51,11 @@ def _scratch_repo(root: Path, source_path: Path | None) -> tuple[Path, Path]:
     """Build isolated collation inputs, falling back to durable historical fixtures."""
     devlog = root / DEVLOG_RELATIVE
     devlog.parent.mkdir(parents=True)
-    (root / "SPEC.md").write_bytes((REPO_ROOT / "SPEC.md").read_bytes())
+    spec_text = (REPO_ROOT / "SPEC.md").read_text(encoding="utf-8")
+    spec_lines = [
+        line for line in spec_text.splitlines() if not (line.startswith("|") and "#5110" in line)
+    ]
+    (root / "SPEC.md").write_text("\n".join(spec_lines) + "\n", encoding="utf-8")
     devlog.write_text(SHIPPED_ENTRY, encoding="utf-8", newline="\n")
     fragment = root / "changes" / FRAGMENT_NAME
     fragment.parent.mkdir()
