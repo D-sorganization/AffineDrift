@@ -342,7 +342,10 @@ def reconcile(
 ) -> tuple[dict[str, object], list[str]]:
     """Return the refreshed document and the findings the current one has."""
     findings: list[str] = []
-    pins = [dict(pin) for pin in document.get("pins", []) if isinstance(pin, dict)]
+    raw_pins = document.get("pins", [])
+    if not isinstance(raw_pins, list):
+        raise ValueError("companion pins must be a list")
+    pins = [dict(pin) for pin in raw_pins if isinstance(pin, dict)]
     by_commit = {str(pin.get("commit")): pin for pin in pins}
     for sha, routes in scanned.items():
         pin = by_commit.get(sha)
@@ -377,19 +380,36 @@ def dump(document: dict[str, object]) -> str:
     return json.dumps(document, indent=2, sort_keys=True) + "\n"
 
 
-def _format_with_prettier(path: Path) -> None:
-    """Format path with prettier if npx is available."""
-    npx = shutil.which("npx") or shutil.which("npx.cmd")
-    if npx and path.is_file():
-        try:
-            subprocess.run(
-                [npx, "prettier", "--write", str(path)],
-                check=False,
-                capture_output=True,
-                text=True,
-            )
-        except OSError:
-            pass
+_FORMAT_TIMEOUT_SECONDS = 10
+
+
+def _format_with_prettier(path: Path, project_root: Path = ROOT) -> None:
+    """Use an installed project-local Prettier without package resolution or network access."""
+    if not path.is_file():
+        return
+    prettier_candidates = (
+        project_root / "node_modules/prettier/bin/prettier.cjs",
+        project_root / "node_modules/prettier/bin-prettier.js",
+    )
+    prettier = next((candidate for candidate in prettier_candidates if candidate.is_file()), None)
+    node = shutil.which("node")
+    if prettier is None or node is None:
+        return
+
+    original = path.read_bytes()
+    try:
+        result = subprocess.run(
+            [node, str(prettier), "--write", str(path)],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=_FORMAT_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        path.write_bytes(original)
+        return
+    if result.returncode != 0:
+        path.write_bytes(original)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -409,13 +429,17 @@ def main(argv: list[str] | None = None) -> int:
         document = {"schema_version": PINS_SCHEMA, "provider": PROVIDER, "pins": []}
     active_commit = active_lock_commit(store)
     scanned, findings = scan_site_pins(args.root)
-    refreshed, drift = reconcile(document, scanned, active_commit)
+    try:
+        refreshed, drift = reconcile(document, scanned, active_commit)
+    except ValueError as error:
+        write_stderr(str(error))
+        return 1
     findings.extend(validate_pins(refreshed, active_commit))
 
     if args.write:
         pins_path.parent.mkdir(parents=True, exist_ok=True)
         pins_path.write_text(dump(refreshed), encoding="utf-8", newline="\n")
-        _format_with_prettier(pins_path)
+        _format_with_prettier(pins_path, args.root)
         for line in drift:
             write_stdout(f"updated: {line}")
     else:
