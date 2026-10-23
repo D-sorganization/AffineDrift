@@ -1,0 +1,387 @@
+---
+title: "After One Solution: Exploring Dynamically Equivalent Force Allocations"
+description: "All force allocations equivalent to one inverse-dynamics solution form an affine fibre; seven propositions say what that fibre determines."
+author: "Dieter Olson"
+date: "Date unverified"
+date-source: "unverified"
+date-modified: "2026-10-19"
+last-reviewed: "2026-10-19"
+canonical: "/articles/after-one-solution-null-space-exploration.html"
+status: "experimental"
+audience-level: "research"
+evidence-rung: "mathematical-identity"
+prerequisites:
+  - "articles/null-space-constraint-jacobian.html"
+summary-plain: "Many sets of forces can make the same motion. Finding one of them does not say which one the body used. This page keeps the whole family of answers in view. It proves what they all agree on and what they do not. Small examples show when the family is empty, one point, or endless."
+abstract: "An inverse-dynamics balance A x = b in joint torques, constraint multipliers and grip forces generally has infinitely many solutions. The article treats the solution set as an affine fibre and proves seven propositions: affine completeness and emptiness, metric-dependent representatives, reduced-Hessian optimization, exact invariance of functionals, bounded leakage of approximate null bases, local solution-manifold continuation, and temporal containment of envelopes. Every quoted number is read from a shared example file produced by companion code. The companion code is under review in draft pull requests and nothing here is a result about a golfer."
+key-takeaways:
+  - "A solved balance equation is one point of an affine fibre; the fibre, not the point, is the object to report."
+  - "A functional of the allocation is exactly invariant on the fibre if and only if it lies in the row space of the balance matrix; a small numerical residual is a different, weaker statement."
+  - "Envelopes computed from a declared polygonal cone bound the declared set only, and marginal extrema of different quantities cannot be attained together."
+  - "Selection criteria such as minimum norm or minimum stress choose a representative by convention and say nothing about what a muscle did."
+caveats:
+  evidence-level: "Mathematical identity with small manufactured fixtures"
+  establishes:
+    - "Seven stated propositions with hypotheses and proofs, and the exact conditions under which a functional of the force allocation is determined by the balance equation."
+    - "Worked fixtures whose every quoted number is read from data/null_space_exploration/examples.json."
+  does-not-establish:
+    - "Any property of a measured golfer, muscle activation, neural strategy or intent."
+    - "Certification of an exact second-order friction cone: envelopes certify only the declared polygonal approximation."
+    - "Coverage of a nonlinear solution set by continuation, or mixing of a finite sampling chain."
+  next-gate: "Review and merge of the UpstreamDrift companion pull requests, then comparison on a measured dataset with recorded provenance."
+changes:
+  - date: "2026-10-19"
+    description: "Added the article on exploring dynamically equivalent force allocations with propositions P1 to P7 (#5096)."
+bibliography:
+  - ../references/affine-drift.bib
+  - ../references/forward-dynamics-matching.bib
+  - ../references/null-space-exploration.bib
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+categories:
+  - theory-core
+  - inverse-dynamics
+---
+
+::: {.callout-note}
+## In Layman's Terms
+
+Inverse dynamics asks which joint torques and contact forces would produce a recorded motion. The honest answer is usually "many different sets of forces would". Picture two people lifting a table: the table's motion fixes how hard they lift together, but not how the effort is shared. This article keeps the whole family of ways to share the effort in view. It proves which questions have one answer for the whole family and which questions do not, so that a single solution is never mistaken for the truth.
+:::
+
+## The Setting: Balance as a Linear Equation {#sec-setting}
+
+Take a multibody model with generalized coordinates $q\in\mathbb R^{n_q}$, mass matrix $M(q)$ and bias forces $h(q,\dot q)$. At one instant the equations of motion read
+$$
+M\ddot q+h=S\tau+J_c^\top\lambda+J_g^\top f_g .
+$$
+Here $\tau$ are actuator torques, $\lambda$ are constraint multipliers of the closed-chain and contact constraints with Jacobian $J_c$, and $f_g$ are the grip or other external force components with Jacobian $J_g$. Collect the unknowns as $x=(\tau,\lambda,f_g)\in\mathbb R^{n}$. For a recorded or admitted motion the left side is known, so the instant is the linear system
+$$
+A\,x=b,\qquad A=\begin{bmatrix}S & J_c^\top & J_g^\top\end{bmatrix},\qquad b=M\ddot q+h .
+$$ {#eq-balance}
+
+The matrix $A\in\mathbb R^{m\times n}$ has more columns than independent rows whenever the model has redundant actuation, redundant contact or a closed loop. Then @eq-balance has no unique solution, and any solver returns one member of a family. The article calls that family the **fibre** over $b$ and writes $N$ for a matrix whose columns span $\ker A$. The Python companion in this repository writes $u$ and $Z$ for $x$ and $N$; the UpstreamDrift package uses $x$ and $N$ as this article does.
+
+Two cases need separating at the start. If $b$ is exact for the model, the fibre is an affine subspace (P1). If $b$ is fitted or noisy, for example because $\ddot q$ was differentiated from measurements, then $A x=b$ may have no solution and the object to report is a residual tube around the least-squares fibre (P1 again). The projector and pseudo-inverse algebra used throughout is developed in [The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html), and the point that an infinite solution set still allows a finite search is made in [Degrees of Freedom and Dimensionality](degrees-of-freedom-and-dimensionality.html#infinite-solution-sets-and-finite-search). This article links to those derivations and does not repeat them.
+
+::: {.callout-important}
+## Status of the Companion Code
+
+The numerical companion code is under review. It is split across draft pull requests in UpstreamDrift, listed with their review status in @sec-upstreamdrift, and across two example modules in this repository. Nothing here depends on the review outcome for its mathematics: the propositions are proved on this page and the code only reproduces the small numbers.
+:::
+
+### Seven Propositions and Where They Sit
+
+| Proposition | Section | One-line content |
+|---|---|---|
+| [P1](#prop-p1) | @sec-fibre | The solution set is an affine subspace when it is nonempty; emptiness is a rank test with a measurable residual. |
+| [P2](#prop-p2) | @sec-metrics | A weighted metric selects a representative; changing units moves the representative inside the same fibre. |
+| [P3](#prop-p3) | @sec-optimizing | A quadratic objective reduces to the reduced Hessian and agrees with the KKT solution. |
+| [P4](#prop-p4) | @sec-identifiable | A functional is exactly invariant if and only if it lies in the row space; bounds on a bounded domain. |
+| [P5](#prop-p5) | @sec-exploring | An approximately null basis leaks at most a linear amount along every step. |
+| [P6](#prop-p6) | @sec-nonlinear | Locally, a nonlinear solution set is a manifold; tangent steps leave $O(h^2)$ residual and Gauss-Newton correction contracts quadratically. |
+| [P7](#prop-p7) | @sec-time | Coupling between instants can only shrink envelopes. |
+
+The fixtures behind the quoted numbers are read from one shared file with a small loader, as this listing shows. Nothing in the file is typed into the prose by hand, and the page's contract tests compare every quoted number with it.
+
+```python
+from src.tools.null_space_article_data import example_section
+from src.tools.null_space_exploration_examples import weighted_representative
+
+linear = example_section("linear")
+print(linear["p2"]["u_weighted"])  # the weighted representative quoted in P2
+print(linear["p4"]["split_residual"])  # the residual quoted in P4
+```
+
+## The Affine Fibre and Its Dimension {#sec-fibre}
+
+::: {#prop-p1 .callout-note}
+## Proposition P1: Affine Completeness and Emptiness
+
+**Hypotheses.** $A\in\mathbb R^{m\times n}$, $b\in\mathbb R^{m}$, $A^{+}$ the Moore-Penrose pseudo-inverse, and $N\in\mathbb R^{n\times k}$ any matrix whose columns are a basis of $\ker A$, so $k=n-\operatorname{rank}A$.
+
+**Conclusion.** (i) The set $\mathcal F=\{x:Ax=b\}$ is nonempty if and only if $b\in\operatorname{range}(A)$, equivalently $AA^{+}b=b$. (ii) If $\mathcal F\neq\varnothing$ then $\mathcal F=x_p+\ker A=\{x_p+Nz:z\in\mathbb R^{k}\}$ for every $x_p\in\mathcal F$, an affine subspace of dimension $n-\operatorname{rank}A$, and $z\mapsto x_p+Nz$ is a bijection. (iii) If $\mathcal F=\varnothing$ then $\rho_{\mathrm{LS}}=\lVert(I-AA^{+})b\rVert>0$, every least-squares minimizer of $\lVert Ax-b\rVert$ has residual $\rho_{\mathrm{LS}}$, and the minimizers form the affine subspace $A^{+}b+\ker A$.
+:::
+
+*Proof.* (i) $AA^{+}$ is the orthogonal projector onto $\operatorname{range}(A)$, so $b\in\operatorname{range}(A)$ if and only if $AA^{+}b=b$, and a solution exists exactly then. (ii) If $x_p$ and $x$ both solve the system, $A(x-x_p)=b-b=0$, so $x-x_p\in\ker A$; conversely $x_p+w$ with $w\in\ker A$ solves it. Rank-nullity gives the dimension, and $z\mapsto Nz$ is injective because $N$ has independent columns. (iii) For any $x$ write $Ax-b=A(x-A^{+}b)-(I-AA^{+})b$. The first term lies in $\operatorname{range}(A)$ and the second is orthogonal to it, so
+$$
+\lVert Ax-b\rVert^{2}=\lVert A(x-A^{+}b)\rVert^{2}+\rho_{\mathrm{LS}}^{2}.
+$$ {#eq-pythagoras}
+The right side is minimal, equal to $\rho_{\mathrm{LS}}^2$, exactly when $A(x-A^{+}b)=0$. $\rho_{\mathrm{LS}}>0$ because $b\notin\operatorname{range}(A)$. $\blacksquare$
+
+@eq-pythagoras also describes the residual tube of a noisy balance. For $\varepsilon\ge\rho_{\mathrm{LS}}$ the set $\{x:\lVert Ax-b\rVert\le\varepsilon\}$ is the least-squares fibre thickened by a bounded ellipsoid in $\operatorname{range}(A^\top)$; it is unbounded along $\ker A$ exactly as the exact fibre is. The companion function `affine_fibre` returns the rank, a basis of $\ker A$, a particular solution, and the consistency flag with this residual.
+
+**Survey.** The companion draws seeded matrices of prescribed rank and records the dimensions that P1 predicts. Each system is consistent by construction.
+
+| $m$ | $n$ | rank | nullity |
+|---|---|---|---|
+| 3 | 5 | 3 | 2 |
+| 3 | 5 | 2 | 3 |
+| 4 | 4 | 4 | 0 |
+| 4 | 4 | 0 | 4 |
+| 2 | 3 | 1 | 2 |
+
+The first two rows have the same shape but different nullity: dimension is set by rank, not by the shape of $A$. The fourth row has $A=0$, so every vector is a solution of $0x=0$. The empty case is $A=\begin{bmatrix}1&1\\1&1\end{bmatrix}$ with $b=(1,\,2)$: the two rows demand $x_1+x_2=1$ and $x_1+x_2=2$ at once, and the least-squares residual is $\rho_{\mathrm{LS}}=0.7071$. A model that reports a solution in this situation has silently solved a different problem.
+
+### Dimension Accounting
+
+Not every null direction is a different movement of the body. Write $x=(\tau,y)$ with $y=(\lambda,f_g)$ and let $\Pi_\tau$ be the coordinate projection onto $\tau$. Rank-nullity applied to $\Pi_\tau$ restricted to $\ker A$ gives
+$$
+\dim\ker A=\dim\bigl(\ker A\cap\ker\Pi_\tau\bigr)+\dim\Pi_\tau(\ker A).
+$$ {#eq-accounting}
+The first term counts directions that move only the multipliers and grip forces while every torque stays fixed; this is the **multiplier gauge**. The second counts the independent torque changes that leave $b$ unchanged, the **attainable torque variation**. Only the second can change what an actuator does. A floating base is a consistency condition on the data, not a freedom: its rows of $A$ have no torque columns, so they read $\begin{bmatrix}J_c^\top&J_g^\top\end{bmatrix}_{\text{base}}y=b_{\text{base}}$ and can be satisfied only if the base part of $b$ is in the range of those columns, which is the test of P1(i) restricted to those rows.
+
+The counting in @eq-accounting is for the unconstrained fibre. Torque limits and unilateral contacts shrink the feasible part, and can lower its dimension, as @sec-constraints and @sec-buys-the-rest show.
+
+## Metrics Select Representatives, Not Fibres {#sec-metrics}
+
+A solver that returns one point must have a rule. The common rule is a quadratic metric: choose the point of the fibre closest to the origin in the norm $\lVert x\rVert_W^2=x^\top Wx$ with $W$ symmetric positive definite.
+
+::: {#prop-p2 .callout-note}
+## Proposition P2: Weighted Selection and the Projector
+
+**Hypotheses.** $A\in\mathbb R^{m\times n}$, $b\in\operatorname{range}(A)$, $W$ symmetric positive definite, and $\mathcal F=\{x:Ax=b\}$.
+
+**Conclusion.** (i) The problem $\min\tfrac12x^\top Wx$ over $\mathcal F$ has the unique solution $x_W=W^{-1}A^\top(AW^{-1}A^\top)^{+}b\in\mathcal F$. (ii) $P_W=I-W^{-1}A^\top(AW^{-1}A^\top)^{+}A$ is idempotent, has range $\ker A$, annihilates $x_W$, and is self-adjoint in the $W$ inner product: $WP_W=P_W^\top W$. (iii) For a unit change $x=Dv$ with $D$ diagonal and positive, the Euclidean minimum-norm solution in $v$ maps back to $x_{W}$ with $W=D^{-2}$; different $W$ give different points of the same fibre $\mathcal F$.
+:::
+
+*Proof.* Put $B=AW^{-1/2}$ and $y=W^{1/2}x$. Then $Ax=b$ is $By=b$, solvable because $\operatorname{range}(B)=\operatorname{range}(A)$, and $\tfrac12x^\top Wx=\tfrac12\lVert y\rVert^2$, so the minimizer is the minimum-norm solution $y=B^{+}b$, unique because the solution set is an affine subspace and the norm is strictly convex. The identity $B^{+}=B^\top(BB^\top)^{+}$ gives $x_W=W^{-1/2}B^\top(BB^\top)^{+}b=W^{-1}A^\top(AW^{-1}A^\top)^{+}b$, proving (i). For (ii), $P_W=W^{-1/2}(I-B^{+}B)W^{1/2}$ is a similarity transform of the orthogonal projector $I-B^{+}B$, hence idempotent. Since $AW^{-1}A^\top(AW^{-1}A^\top)^{+}$ is the orthogonal projector onto $\operatorname{range}(AW^{-1}A^\top)=\operatorname{range}(A)$, it fixes the columns of $A$, so $AP_W=0$ and $\operatorname{range}(P_W)\subseteq\ker A$; for $w\in\ker A$ the second term of $P_Ww$ vanishes, so $P_Ww=w$ and the range is all of $\ker A$. Also $P_Wx_W=0$ because $x_W=W^{-1}A^\top(\cdot)b$ lies in $W^{-1}\operatorname{range}(A^\top)$, which $P_W$ annihilates because $\ker(AW^{-1}A^\top)=\ker A^\top$. Finally $WP_W=W-A^\top(AW^{-1}A^\top)^{+}A$ is symmetric because the pseudo-inverse of a symmetric matrix is symmetric. (iii) With $x=Dv$ the balance is $(AD)v=b$ and the Euclidean minimum-norm solution minimizes $\tfrac12v^\top v=\tfrac12x^\top D^{-2}x$. $\blacksquare$
+
+**Worked example.** Take $A=\begin{bmatrix}1&1\end{bmatrix}$ and $b=2$, so the fibre is the line $x_1+x_2=2$. With $W=\operatorname{diag}(1,\,4)$ the weighted representative is $x_W=(1.6,\,0.4)$, whereas the Euclidean one is $(1,\,1)$. The same $(1.6,\,0.4)$ is obtained by rescaling the second coordinate by one half and then taking the Euclidean minimum-norm solution, which is part (iii): a change of units moved the representative along the fibre and left the fibre untouched. The projector onto $\ker A$ in the $W$ metric is
+$$
+P_W=\begin{bmatrix}0.2&-0.8\\-0.2&0.8\end{bmatrix},
+$$
+which is not symmetric, but $WP_W$ is. The companion functions are `weighted_representative` and `rescaled_representative`.
+
+**What a metric does not do.** A metric chooses a point. The set of dynamically equivalent allocations is identical for every $W$. An inertia-weighted metric is not Gauss's principle: Gauss's principle of least constraint minimizes the $M$-weighted deviation of the *acceleration* from the unconstrained acceleration over the accelerations the constraints permit [@udwadia1996analytical], whereas weighting the allocation $x$ by an inertia-like $W$ picks a representative of a force fibre and carries no such dynamical meaning. Using $W=M^{-1}$, for instance, is a convention that happens to resemble the constraint measure.
+
+## Physical Constraints, Feasibility, and Certificates {#sec-constraints}
+
+Actuators saturate, contact forces cannot pull, and friction cones bound tangential force. Write the declared feasible set as
+$$
+\Omega=\{x\in\mathbb R^{n}:Ax=b,\;Gx\le h\},
+$$ {#eq-feasible}
+where the rows of $G$ encode torque limits, unilateral contact and facets of a friction cone. A Coulomb cone is a second-order cone, so any linear $G$ describes it by a polygonal cone. The cone that the model actually uses is the **declared polygonal approximation**, and everything certified below holds for it.
+
+**Outer and inner approximation.** A polygonal cone $K_{\mathrm{in}}$ inscribed in the true cone $K$ and one $K_{\mathrm{out}}$ circumscribed about it satisfy $K_{\mathrm{in}}\subseteq K\subseteq K_{\mathrm{out}}$. Write $\Omega_{\mathrm{in}}\subseteq\Omega\subseteq\Omega_{\mathrm{out}}$ for the corresponding feasible sets. Then, for any functional $c$:
+
+- if $\Omega_{\mathrm{out}}$ is empty, so is $\Omega$; if $\Omega_{\mathrm{in}}$ is nonempty, so is $\Omega$;
+- the extrema satisfy $\min_{\Omega_{\mathrm{out}}}c^\top x\le\min_{\Omega}c^\top x\le\min_{\Omega_{\mathrm{in}}}c^\top x$, and the reverse chain for maxima.
+
+Both statements are inclusion arguments. An outer approximation therefore gives certified outer bounds on the exact set, and an inner approximation gives inner bounds only. Neither is an exact statement about the second-order cone, and the companion code makes no such promise. In a plane the Coulomb cone is generated by two rays, so the two-facet polygon used in the grip example below is exact there; in space it is not.
+
+**Certificates of emptiness.** By Farkas's lemma either $\Omega\neq\varnothing$ or there are $y\ge0$ and $w$ with $G^\top y+A^\top w=0$ and $h^\top y+b^\top w<0$, never both [@boyd2004convex]. A Phase-I linear program, minimizing a uniform slack $s$ in $Gx\le h+s\mathbf 1$ subject to $Ax=b$, either returns $s\le0$ with a feasible point or returns multipliers that are such a certificate. A minimal subset of rows that is still infeasible, an irreducible infeasible subsystem, names the conflicting limits [@gleeson1990iis].
+
+**The Chebyshev centre in reduced coordinates.** Write $x=x_p+Nz$ with $N$ having orthonormal columns. The largest ball in $z$ that fits inside $\Omega$ solves the linear program
+$$
+\max_{z,r}\;r\quad\text{subject to}\quad g_i^\top Nz+r\lVert N^\top g_i\rVert\le h_i-g_i^\top x_p\ \text{ for all rows }i,\quad r\ge0 ,
+$$ {#eq-chebyshev}
+whose optimal $r^\star$ is an inscribed radius. It measures the margin to the limits and is a different quantity from the enclosing radius used for bounds in @sec-identifiable. A row with $N^\top g_i=0$ is constant on the fibre and cannot limit $r$.
+
+If $r^\star>0$ the set $\Omega$ has nonempty interior relative to the fibre, so its dimension is $\dim\ker A$. If $r^\star=0$ and $\Omega\ne\varnothing$ then some limits hold with equality on all of $\Omega$ and the true affine hull of $\Omega$ is smaller than the fibre. Those implicit equalities are found by one linear program per row (row $i$ is an implicit equality if the maximum of $h_i-g_i^\top x$ over $\Omega$ is zero); adding them to $Ax=b$ and recomputing $N$ gives the correct hull and the correct dimension. @sec-buys-the-rest returns to this with a concrete failure.
+
+## Optimizing in Reduced Coordinates {#sec-optimizing}
+
+Selection by optimization is the historical way to resolve redundancy: minimize a cost of the muscle or joint forces subject to balance, with criteria ranging from sums of squared stresses to endurance-motivated powers [@crowninshield1981criterion] and graphical treatments of the redundant problem [@chao1978redundant]. The redundancy itself is the degrees-of-freedom problem of motor control [@bernstein1967coordination; @latash2008synergy]. These criteria are conventions, not physiology: each ranks the members of the fibre by a stated cost, and none of them shows that a nervous system minimizes that cost.
+
+::: {#prop-p3 .callout-note}
+## Proposition P3: Reduction and the Reduced Hessian
+
+**Hypotheses.** $A\in\mathbb R^{m\times n}$ has full row rank, $b\in\mathbb R^{m}$, $x_p$ solves $Ax_p=b$, the columns of $N$ are a basis of $\ker A$, $H$ is symmetric (possibly indefinite), $g\in\mathbb R^{n}$, and the reduced Hessian $N^\top HN$ is positive definite.
+
+**Conclusion.** (i) The problem $\min\tfrac12x^\top Hx+g^\top x$ over $Ax=b$ has the unique minimizer $x^\star=x_p+Nz^\star$ with $z^\star=-(N^\top HN)^{-1}N^\top(Hx_p+g)$, and $x^\star$ does not depend on the choice of $x_p$ or of $N$. (ii) The KKT matrix $\begin{bmatrix}H&A^\top\\A&0\end{bmatrix}$ is nonsingular, and its solution has first block $x^\star$.
+:::
+
+*Proof.* (i) On the fibre the objective is the function $\phi(z)=\tfrac12z^\top N^\top HNz+z^\top N^\top(Hx_p+g)+\text{const}$, strictly convex because $N^\top HN\succ0$, with the stated stationary point. Replacing $x_p$ by $x_p+Nd$ or $N$ by $NT$ with $T$ invertible reparametrizes $z$ and leaves the set of points $x$ and the objective on them unchanged, so the minimizer is the same point. (ii) Suppose $(v,w)$ solves the homogeneous system $Hv+A^\top w=0$, $Av=0$. Then $v=Nz$ and multiplying the first equation by $N^\top$ gives $N^\top HNz=0$, so $z=0$ and $v=0$; then $A^\top w=0$ forces $w=0$ because $A$ has full row rank. Hence the KKT matrix is nonsingular. Its solution satisfies $Ax=b$ and $Hx+g+A^\top\mu=0$ for some multiplier $\mu$, and multiplying by $N^\top$ removes $\mu$ and gives the reduced stationarity condition, so $x=x^\star$. $\blacksquare$
+
+The hypothesis is on the *reduced* Hessian, not on $H$. Take $H=\operatorname{diag}(1,\,-1)$, $g=(-1,\,0)$, and the single constraint $x_2=3$. The matrix $H$ is indefinite, yet $N^\top HN=\begin{bmatrix}1\end{bmatrix}$ because $\ker A$ is the $x_1$-axis; the reduced solve and the full KKT solve both return $x^\star=(1,\,3)$. The companion functions are `reduced_quadratic` and `kkt_minimiser`. Problems that mix several objectives are solved the same way after choosing a scalarization or an $\varepsilon$-constraint ordering, and the choice is again a convention.
+
+## Exploring the Feasible Set {#sec-exploring}
+
+A representative answers "what is one allocation". Exploration answers "what range of allocations is possible". Two tools do this, with different guarantees.
+
+**Linear-programming envelopes carry certificates.** For a functional $c$, $\min c^\top x$ over $\Omega$ is a linear program. Weak duality supplies a checkable certificate: if $y\ge0$ and $w$ satisfy $c+G^\top y+A^\top w=0$ then, for every $x\in\Omega$,
+$$
+c^\top x=-y^\top Gx-w^\top Ax\ge-h^\top y-b^\top w,
+$$ {#eq-weak-duality}
+so the dual value is a lower bound. The bound is for the *declared polyhedron* of @eq-feasible, which is the declared polygonal cone approximation of @sec-constraints, and it inherits that section's outer-versus-inner reading.
+
+**Hit-and-run samples under a declared measure.** Hit-and-run moves from a point $x\in\Omega$ along a random direction in $\ker A$ to a uniform point of the chord of $\Omega$ through $x$ [@smith1984hitandrun]. For a bounded $\Omega$ its stationary law is the uniform law on $\Omega$, taken with respect to Lebesgue measure on the true affine hull of $\Omega$. That is a **declared measure**. A linear reparametrization of the reduced coordinates multiplies it by a constant, so uniform stays uniform. An unbounded set has no uniform law, and a different measure, for example Gaussian weighting, is a different declared choice. Mixing guarantees for hit-and-run exist for convex bodies [@lovasz2006hitandrun] under conditions on how the set is placed and rounded; they do not turn one finite chain into a certificate.
+
+Two preconditions are easy to violate. First, the chain must start in the **relative interior** of $\Omega$ inside its true **affine hull**. A start on a facet, or directions drawn in the full fibre when the true hull is smaller (as when limits force implicit equalities), give chords of length zero, and the chain stays where it started even though it reports samples. The Chebyshev centre of @sec-constraints, computed in the true hull, is the usual start. Second, the diagnostics $\hat R$ and effective sample size are heuristics: they can be fine for a chain that never visited a region.
+
+::: {#prop-p5 .callout-note}
+## Proposition P5: Leakage of an Approximate Null Basis
+
+**Hypotheses.** $A\in\mathbb R^{m\times n}$, $b\in\mathbb R^{m}$, $x_p\in\mathbb R^{n}$ with residual $r_0=\lVert Ax_p-b\rVert$, a matrix $\hat N\in\mathbb R^{n\times k}$ that spans $\ker A$ only approximately, with $\gamma=\lVert A\hat N\rVert_2$ its spectral leakage, and $z\in\mathbb R^{k}$.
+
+**Conclusion.** For every $z$, however long, $\lVert A(x_p+\hat Nz)-b\rVert\le r_0+\gamma\lVert z\rVert$. The bound is tight: equality holds whenever $Ax_p-b=0$ and $z$ is the top right-singular direction of $A\hat N$.
+:::
+
+*Proof.* The residual is $(Ax_p-b)+A\hat Nz$. The triangle inequality and $\lVert A\hat Nz\rVert\le\gamma\lVert z\rVert$ give the bound. If $Ax_p=b$ and $z$ is a top right-singular vector, $\lVert A\hat Nz\rVert=\gamma\lVert z\rVert$ exactly. $\blacksquare$
+
+The leakage grows linearly with the step, so a chord that is harmless at unit length can violate balance at the length of a long chord. Take a $1\times1$ system with $A=[\varepsilon]$, $\varepsilon=0.001$, and the basis $\hat N=[1]$, which is null only to $\varepsilon$. Starting from an exact solution, the measured leakage meets the bound at every step:
+
+| step $\lVert z\rVert$ | actual leakage | bound |
+|---|---|---|
+| $1$ | $0.001$ | $0.001$ |
+| $1000$ | $1$ | $1$ |
+| $10^{6}$ | $1000$ | $1000$ |
+
+A chord of length $10^{6}$ leaves the balance equation violated by $1000$ in the units of $b$. Sampling should therefore use a basis that is null to working precision, re-project after long moves, or check the residual of the sample and discard it when it exceeds a declared tolerance. The companion function is `leakage_bound`.
+
+## What Is Identifiable {#sec-identifiable}
+
+A *functional* of the allocation, a number $c^\top x$ such as a joint torque, a grip-force component, or one source's contribution to an induced acceleration, is **identifiable from the balance** only if it takes one value on the whole fibre. P4 states exactly when that holds.
+
+::: {#prop-p4 .callout-note}
+## Proposition P4: Exact Invariance of a Functional
+
+**Hypotheses.** $A\in\mathbb R^{m\times n}$, $b\in\operatorname{range}(A)$, $N$ has orthonormal columns spanning $\ker A$, $x_p$ solves the balance, $c\in\mathbb R^{n}$, and $\Omega=\{x\in x_p+\ker A:Gx\le h\}$ is nonempty.
+
+**Conclusion.** (i) Exact invariance on the fibre: $c^\top x$ is constant on $x_p+\ker A$ if and only if $N^\top c=0$, if and only if $c\in\operatorname{range}(A^\top)$; then $c^\top x=w^\top b$ for any $w$ with $A^\top w=c$. (ii) On $\Omega$, $c^\top x$ is constant if and only if $c\perp\operatorname{span}(\Omega-\Omega)$, a subspace of $\ker A$; so fibre invariance implies invariance on $\Omega$ but not conversely. (iii) If $\Omega$ is a compact polyhedron the attainable values of $c^\top x$ form a closed interval whose end points are attained at vertices, of zero width exactly in the case of (ii). (iv) Enclosing-radius bound: let $x_0\in\Omega$ and let $R$ be an enclosing radius, $R\ge\max_{x\in\Omega}\lVert x-x_0\rVert$. Then $|c^\top(x-x_0)|\le\|N^\top c\|\,R$ for all $x\in\Omega$, and the full width of the attainable interval is at most $2\|N^\top c\|\,R$.
+:::
+
+*Proof.* (i) Every fibre point is $x_p+Nz$, so $c^\top x=c^\top x_p+(N^\top c)^\top z$ is constant in $z$ if and only if $N^\top c=0$. Since $\operatorname{range}(N)=\ker A$, this says $c\perp\ker A$, that is $c\in(\ker A)^\perp=\operatorname{range}(A^\top)$, and then $c=A^\top w$ gives $c^\top x=w^\top Ax=w^\top b$. (ii) If $c\perp\operatorname{span}(\Omega-\Omega)$ then $c^\top(x-x')=0$ for $x,x'\in\Omega$; conversely, constancy gives $c\perp(x-x')$ for every pair and hence for their span. Because $\operatorname{span}(\Omega-\Omega)\subseteq\ker A$, $(\ker A)^\perp\subseteq\operatorname{span}(\Omega-\Omega)^\perp$, which is the stated implication. (iii) A linear function on a nonempty compact polyhedron attains its extrema at vertices; $\Omega$ is connected, so the image is the interval between them. (iv) For $x\in\Omega$, $x-x_0\in\ker A$, so $x-x_0=N(z-z_0)$ and $c^\top(x-x_0)=(N^\top c)^\top(z-z_0)$. Cauchy-Schwarz and $\lVert z-z_0\rVert=\lVert x-x_0\rVert\le R$ (orthonormality of $N$) give the bound; the width bound follows from applying it to two points. $\blacksquare$
+
+**Numerical versus exact invariance.** P4(i) is the exact theorem: *exact invariance* means $N^\top c=0$. A program cannot evaluate that identity in floating point; it evaluates the normalized residual
+$$
+\rho=\frac{\lVert N^\top c\rVert}{\lVert s_x\odot c\rVert}\in[0,1] ,
+$$ {#eq-rho}
+where $s_x$ is the declared variable scale (the companion calls the functional $s$ and the scale `variable_scale`). A functional is **numerically invariant at a declared tolerance** when $\rho\le\mathrm{tol}$, and the verdict must be reported with $\rho$ and the tolerance. That is weaker than the theorem and is not interchangeable with it: on an unbounded fibre any $\rho>0$, however small, permits unbounded variation. The quantity $\rho$ is for classification only. The bound in P4(iv) uses $\lVert N^\top c\rVert$, not $\rho$, and it needs an enclosing radius: the farthest feasible point from the chosen centre. The Chebyshev radius of @sec-constraints is an inscribed radius; using it as $R$ would shrink the domain and under-state the width. The basis $N$ already carries `variable_scale`, so the scale must not be applied to it a second time.
+
+**The planar example.** Let $A=\begin{bmatrix}1&1\end{bmatrix}$, $b=1$ and the box $0\le x_i\le1$. The net force $x_1+x_2$ has $c=(1,\,1)\in\operatorname{range}(A^\top)$, so its interval is $[1,\,1]$. The split $x_1$ has $c=(1,\,0)$, $\rho=0.7071$ and attainable interval $[0,\,1]$; without the box limits it is unbounded. The invariant is the sum, not the split.
+
+**Marginal extrema are not jointly attainable.** Each functional has its own interval, and the rectangle of intervals is larger than what is attainable together. In the three-muscle toy, with muscle forces $u_1,u_2,u_3$ in $[0,3]$ and balance
+$$
+A=\begin{bmatrix}1&-1&0\\1&0&1\end{bmatrix},\qquad b=(0,\,3),
+$$
+the fibre is $u=(3-t,\,3-t,\,t)$ for $t\in[0,3]$. Muscles one and three each have the interval $[0,\,3]$, but $u_1+u_3=3$ on the fibre, so the corner where both equal three is unattainable. Only the rows of $A$, the net quantities, are invariant. The companion functions are `functional_invariance`, `functional_interval` and `three_muscle_example`.
+
+**A two-hand grip.** The planar grip has four unknowns, the lead and trail hand forces in $x$ and $y$, hands $0.1\,\mathrm{m}$ either side of the club centre, a declared net wrench with no horizontal force, a vertical load of $40\,\mathrm{N}$ and no torque, and a friction polygon with $\mu=0.5$ per hand. The achieved net wrench is $(0,\,40,\,0)$ on every member of the fibre. The lead hand's vertical force is $[20,\,20]$, also invariant, because the torque balance fixes it. The lead hand's horizontal force is the squeeze mode: it has interval $[-10,\,10]$ and is not invariant. A report of "the lead hand pushed with this horizontal force" is a statement about a representative, not about the hand. The companion function is `grip_example`.
+
+**Induced-acceleration attribution.** Because $Ax=M\ddot q+h$ on the whole fibre, the *total* induced acceleration $M^{-1}(Ax-h)$ is the same for every member. A per-source contribution is a functional $c_k$ of block $k$ of $x$, and by P4(i) it is exactly invariant if and only if $c_k\in\operatorname{range}(A^\top)$. The attribution contract below governs how such quantities may be reported.
+
+{{< include ../_includes/induced-acceleration-attribution-contract.qmd >}}
+
+A fibre member keeps $b$ fixed. A counterfactual such as the [zero-torque counterfactual](zero-torque-counterfactual.html) changes the right-hand side and re-solves, so it is not a point of the fibre, and neither a fibre member nor an envelope substitutes for it. Muscle contributions to joint and segment accelerations have a long history [@zajac1989determining], and related treatments appear in the [chapter on induced acceleration](The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html) and in the [induced-acceleration analysis of biomechanics](The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html). The parallel question of which inertial parameters a regression can identify [@gautier1990inertial] has the same shape: a parameter combination is identifiable exactly when it lies in the row space of the regressor.
+
+## Time Coupling and Warm Starts {#sec-time}
+
+A trajectory is a sequence of instants, and the allocations at neighbouring instants are not independent: forces cannot jump arbitrarily between frames. Let $\Omega_1,\Omega_2$ be the feasible sets of two instants and let the coupling be $C=\{(x_1,x_2):\lVert x_2-x_1\rVert_\infty\le\delta\}$ for a declared rate bound $\delta$ (a rate bound written as a bound on change per frame).
+
+::: {#prop-p7 .callout-note}
+## Proposition P7: Temporal Containment of Envelopes
+
+**Hypotheses.** $\Omega_1,\Omega_2$ are nonempty compact polyhedra, $C$ is any coupling set, $c\in\mathbb R^{n}$, and $\mathcal E_t=\{c^\top x:x\in\Omega_t\}$ is the frame-wise envelope at instant $t$. The coupled envelope $\mathcal E_t^{C}$ is the set of values $c^\top x_t$ over pairs $(x_1,x_2)\in(\Omega_1\times\Omega_2)\cap C$.
+
+**Conclusion.** $\mathcal E_t^{C}\subseteq\mathcal E_t$ for $t=1,2$, with equality when $C\supseteq\Omega_1\times\Omega_2$ (in particular with no coupling, $\delta=\infty$). The coupled envelope may be empty if the coupling is too tight to link the instants.
+:::
+
+*Proof.* The coupled feasible set is a subset of $\Omega_1\times\Omega_2$, and the coupled envelope is the image of that subset under the coordinate map $(x_1,x_2)\mapsto c^\top x_t$, a subset of the image of the whole product, which is $\mathcal E_t$. If $C\supseteq\Omega_1\times\Omega_2$ the two feasible sets coincide. $\blacksquare$
+
+Take two scalar instants with feasible intervals $[0,\,1]$ and $[0.5,\,2]$ and rate bound $\delta=0.2$. The frame-wise envelopes are $[0,\,1]$ and $[0.5,\,2]$. With coupling they become $[0.3,\,1]$ and $[0.5,\,1.2]$: at the first instant $x_1\ge x_2-0.2\ge0.3$, and at the second $x_2\le x_1+0.2\le1.2$. Coupling shrank both and shrank the *envelope*, which is a statement about the declared sets and not about the values a person would use. The companion function is `framewise_vs_coupled_envelope`.
+
+**Warm starts.** Reusing the previous solution or basis as the start of the next solve changes the path of the solver, not the optimum, provided the solver converges. The danger is the *basis*: an orthonormal null basis $N_{t-1}$ of the previous matrix $A_{t-1}$ is only approximately null for $A_t=A_{t-1}+\Delta A$. Then $\gamma=\lVert A_tN_{t-1}\rVert\le\lVert\Delta A\rVert$ and P5 says the leakage along a step $z$ is at most $r_0+\lVert\Delta A\rVert\lVert z\rVert$. A stale basis is acceptable only for short steps or after a refresh.
+
+## Nonlinear Solution Sets {#sec-nonlinear}
+
+When the balance is nonlinear in the unknowns, $F(x)=0$ with $F:\mathbb R^{n}\to\mathbb R^{m}$, the fibre is a solution set of a nonlinear map. The right local picture is a manifold, and it holds only where the Jacobian keeps full row rank.
+
+::: {#prop-p6 .callout-note}
+## Proposition P6: Local Chart, Tangent Residual, and Corrector Contraction
+
+**Hypotheses.** $F:U\to\mathbb R^{m}$ is $C^{1}$ on an open convex set $U\subseteq\mathbb R^{n}$ with a Jacobian $DF$ that is $L$-Lipschitz, $F(x_\star)=0$, and $DF$ has full row rank $m$ at every point considered with $\lVert DF(x)^{+}\rVert\le\kappa$.
+
+**Conclusion.** (i) Chart: near $x_\star$ the set $F^{-1}(0)$ is an embedded $(n-m)$-dimensional manifold with tangent space $\ker DF(x_\star)$. (ii) Tangent predictor: for $F(x)=0$ and a unit $t\in\ker DF(x)$, $\lVert F(x+ht)\rVert\le\tfrac12Lh^{2}$, which is $O(h^2)$. (iii) Corrector: the minimum-norm Gauss-Newton step $x^{+}=x-DF(x)^{+}F(x)$ satisfies $\lVert F(x^{+})\rVert\le\tfrac12L\kappa^{2}\lVert F(x)\rVert^{2}$ whenever the segment from $x$ to $x^{+}$ lies in $U$; hence if $\tfrac12L\kappa^2\lVert F(x_0)\rVert<1$ and the iterates stay in the region where the hypotheses hold, the residuals tend to zero with local quadratic convergence of the residual.
+:::
+
+*Proof.* (i) Permute coordinates so that $DF(x_\star)=\begin{bmatrix}D_1&D_2\end{bmatrix}$ with $D_1\in\mathbb R^{m\times m}$ invertible, which full row rank allows. The implicit function theorem gives a $C^{1}$ map $\phi$ near the last $n-m$ coordinates of $x_\star$ with $F(\phi(y),y)=0$, so the zero set is the graph of $\phi$, an $(n-m)$-manifold; differentiating $F(\phi(y),y)=0$ gives $DF\,\begin{bmatrix}D\phi\\I\end{bmatrix}=0$, so the tangent space is $\ker DF(x_\star)$ [@allgower1990continuation]. (ii) Since $F(x)=0$ and $DF(x)t=0$,
+$$
+F(x+ht)=\int_0^1\bigl(DF(x+sht)-DF(x)\bigr)\,ht\,ds ,
+$$
+whose norm is at most $\int_0^1Ls\,h^{2}ds=\tfrac12Lh^{2}$. (iii) Put $s=-DF(x)^{+}F(x)$, so $\lVert s\rVert\le\kappa\lVert F(x)\rVert$ and, by full row rank, $DF(x)s=-F(x)$. Then $F(x+s)=F(x)+\int_0^1DF(x+\theta s)s\,d\theta=\int_0^1\bigl(DF(x+\theta s)-DF(x)\bigr)s\,d\theta$, which has norm at most $\tfrac12L\lVert s\rVert^{2}\le\tfrac12L\kappa^{2}\lVert F(x)\rVert^{2}$. If $r_j=\lVert F(x_j)\rVert$ and $c=\tfrac12L\kappa^2$ then $r_{j+1}\le cr_j^{2}$, and $cr_0<1$ gives $cr_{j+1}\le(cr_j)^2$, a doubly exponential decay. $\blacksquare$
+
+**Tangent residual.** Two sets illustrate (ii): the circle $F(u)=\lVert u\rVert^2-1$ from $(1,\,0)$ in the tangent direction, and the fold $F(u)=u_2-u_1^2$ from $(1,\,1)$ along its tangent. For both, $DF$ is $2$-Lipschitz, so (ii) bounds the residual by $h^2$; the actual values are below.
+
+| $h$ | circle | fold |
+|---|---|---|
+| $0.4$ | $0.16$ | $0.032$ |
+| $0.2$ | $0.04$ | $0.008$ |
+| $0.1$ | $0.01$ | $0.002$ |
+| $0.05$ | $0.0025$ | $5\times10^{-4}$ |
+| $0.025$ | $6.25\times10^{-4}$ | $1.25\times10^{-4}$ |
+| $0.0125$ | $1.5625\times10^{-4}$ | $3.125\times10^{-5}$ |
+
+The fitted log-log slopes are $\hat p_{\mathrm{circle}}=2$ and $\hat p_{\mathrm{fold}}=2$: residual $h^2$ for the circle (equality in the bound) and $h^2/5$ for the fold. No higher order is claimed. The companion function is `tangent_step_residual`.
+
+**Corrector.** Starting from the predictor $(1,\,0.3)$ on the circle, the corrector reaches the tolerance in 4 corrector iterations:
+
+| iteration $j$ | residual $\lVert F(x_j)\rVert$ |
+|---|---|
+| 0 | $0.09$ |
+| 1 | $0.001858$ |
+| 2 | $8.613\times10^{-7}$ |
+| 3 | $1.854\times10^{-13}$ |
+| 4 | $2.22\times10^{-16}$ |
+
+The ratios $r_{j+1}/r_j^{2}$ for the first two steps are 0.2294 and 0.2495, approaching the constant $\tfrac12L\kappa^2=\tfrac14$ of (iii) as $x_j$ approaches the circle. The companion function is `predictor_corrector_step`, and `trace_manifold` chains such steps.
+
+**The corrector is not a nearest-point projection.** On the fold, start from $(0,\,1)$. There $DF=[0,\,1]$, so the minimum-norm step moves straight down to $(0,\,0)$, a distance $d_{\mathrm{GN}}=1$, and stops because $F=0$. The nearest point of the curve is $(-0.7071,\,0.5)$ (and its mirror image) at distance $d_\star=0.866$. The corrector reaches the solution set but not the closest point of it, so it must not be described as a nearest-point projection.
+
+**Where the chart fails.** For $F(u)=u_1u_2$ at the origin the Jacobian is $DF(0)=[0,\,0]$, so $\operatorname{rank}DF(0)=0<1$ and $\dim\ker DF(0)=2$ although the generic dimension is $n-m=1$. The zero set is the two coordinate axes, which cross at the origin: no chart exists there. The companion code raises `RankChangeError` when the rank drops at the start, at a predictor or at any corrector iterate. Away from such points, tracing the fold from $(-1,\,1)$ with step $0.25$ for 14 steps passes the vertex, where the smallest second coordinate is $5.579\times10^{-6}$, with a worst manifold error of $2.97\times10^{-15}$. A successful trace follows one branch. It does not certify that other components of the solution set were found or that the connected component was covered.
+
+## How One Solution Buys the Rest {#sec-buys-the-rest}
+
+Given one solution and a null basis, the rest of the family is available. Each mechanism below has a condition under which it holds.
+
+1. **Add null directions.** Every $x_p+Nz$ with $z$ in the reduced polytope is dynamically equivalent to $x_p$. Condition: the balance is exactly satisfied by $x_p$ and $N$ is null to working precision (P1, P5).
+2. **Fibre dimension from the true affine hull.** The expected dimension of the feasible fibre is $\dim\ker A$, which for a balance written in $m$ activation coordinates is often quoted as $m-\operatorname{rank}A$. That formula holds when a strictly box-feasible point exists, and the condition is sufficient, not necessary. Otherwise limits force implicit equalities and the dimension is that of the true affine hull found by the linear programs of @sec-constraints.
+3. **A feasible set can be smaller than its null space.** In the three-muscle toy, disabling muscle three ($u_3\le0$) leaves $\ker A$ of dimension 1 but the feasible set is the single point $(3,\,3,\,0)$: muscle one has interval $[3,\,3]$ and muscle three $[0,\,0]$. The kernel dimension is 1 and the hull dimension is 0. A sampler asked for a one-dimensional family would report one point silently unless it checks the hull.
+4. **Level sub-fibres.** Fixing a non-invariant functional at a level $\ell$ gives $\Omega_\ell=\Omega\cap\{c^\top x=\ell\}$. If $\Omega$ has affine-hull dimension $d$, then $\dim\Omega_\ell=d-1$ if and only if $\ell$ lies strictly between the minimum and maximum of $c^\top x$ on $\Omega$. *Proof.* The image of the relative interior of a convex set under a nonconstant linear functional is the open interval $(\min,\max)$; a level strictly inside it meets the relative interior, and a hyperplane through the relative interior of a $d$-dimensional convex set cuts a section of dimension $d-1$. At $\ell=\min$ or $\max$ the section is a face of lower dimension, and outside the interval it is empty. $\square$
+5. **Parameter ensembles.** Repeating the construction for each member of a declared ensemble of parameters gives a family of envelopes. Their union is the envelope over the declared ensemble and their intersection is what every declared member agrees on. Both are statements about the declared members and not about a population.
+6. **Variability and structure.** Splitting measured variability into components along and across the null space is the idea of the uncontrolled-manifold analysis [@scholz1999ucm]. A null space of the balance equation shows what is *available*; whether a nervous system uses a low-dimensional set of synergies to exploit it is a separate empirical question with its own identification problems [@kutch2012synergy].
+
+Chapters on the inverse problem and identifiability give the surrounding context: [the inverse-methods chapter](forward_dynamics_matching/05_inverse_methods.html), [the identifiability chapter](forward_dynamics_matching/15_identifiability.html), and in the books [Degrees-of-Freedom Problem](../books/human-motor-control.html#book4-ch1) and [Inverse Problems](../books/biomechanics-biology-to-systems.html#book3-ch6). An established muscle-driven simulation workflow resolves the redundancy with a static optimization or computed-muscle-control step [@fdmThelen2003CMC], which is a choice of representative in the sense of @sec-metrics.
+
+## Using It in UpstreamDrift {#sec-upstreamdrift}
+
+The `loop_nullspace` package in UpstreamDrift implements the workflow, and a mapping note in that repository (`docs/research/loop_nullspace/after_one_solution.md`) lists the same eleven sections against its API. **The companion code is under review.** It lives in draft pull requests, so names, signatures and numbers may change:
+
+- NSE-UD-1: [UpstreamDrift #13475](https://github.com/D-sorganization/UpstreamDrift/pull/13475) (functional identifiability); pinned head [`c90dd9f4`](https://github.com/D-sorganization/UpstreamDrift/tree/c90dd9f43ad474c63ff9c17657cecc8b45a1624c);
+- NSE-UD-2: [UpstreamDrift #13470](https://github.com/D-sorganization/UpstreamDrift/pull/13470) (manifold continuation); pinned head [`7b0edf46`](https://github.com/D-sorganization/UpstreamDrift/tree/7b0edf463100cf55efc38132a08fedd5e8a40c36);
+- NSE-UD-3: [UpstreamDrift #13467](https://github.com/D-sorganization/UpstreamDrift/pull/13467) (activation fibre); pinned head [`cc0ec854`](https://github.com/D-sorganization/UpstreamDrift/tree/cc0ec85463b942ca295f774e5f7cd45da36c0677);
+- NSE-UD-4a: [UpstreamDrift #13493](https://github.com/D-sorganization/UpstreamDrift/pull/13493) (the mapping note); pinned head [`6706d3aa`](https://github.com/D-sorganization/UpstreamDrift/blob/6706d3aac623bd6977cab970de81c222787bdb45/docs/research/loop_nullspace/after_one_solution.md);
+- the parent epic NSX: [UpstreamDrift #12593](https://github.com/D-sorganization/UpstreamDrift/issues/12593).
+
+Each pinned head is the tip of an open draft pull request in UpstreamDrift, registered in the site's companion-pin ledger as `review-required`: it has not yet been reviewed against the active pin, and the code under review may change before or after merge. The links identify the exact revisions this page was written against; they are not a statement that any of them is released or reviewed. This page does not claim that the package passes any publication gate. What the package certifies is what P1 to P7 and @sec-constraints say: envelopes hold for the declared polygonal cone approximation only, and a sample or a trace is coverage evidence, not a proof.
+
+| Article section | API in `loop_nullspace` |
+|---|---|
+| @sec-setting (Setting) | `admit`, `decompose`, `BalanceInconsistentError` |
+| @sec-fibre (Affine fibre and dimension accounting) | `dimension_accounting`, `Decomposition` |
+| @sec-metrics (Metrics select representatives) | `AllocationMetric`, `CharacteristicScales`, `min_metric_torque` |
+| @sec-constraints (Constraints, Phase-I, Chebyshev centre) | `FeasibleSet`, `chebyshev_margin`, `interior_point` |
+| @sec-optimizing (Optimizing in reduced coordinates) | `allocate_trajectory`, `ObjectiveSpec`, `pareto_front` |
+| @sec-exploring (Exploring: envelopes and hit-and-run) | `static_envelopes`, `x_functional_quantities`, `hit_and_run` |
+| @sec-identifiable (What is identifiable) | `classify_functional`, `FunctionalStatus`, `functional_record`, `attribution_quantities` |
+| @sec-time (Time coupling and warm starts) | `trajectory_envelope`, `static_envelopes` with `warm_start` |
+| @sec-nonlinear (Nonlinear solution sets) | `local_chart`, `predictor_corrector_step`, `ManifoldSingularityError`, `ManifoldConvergenceError` |
+| @sec-buys-the-rest (How one solution buys the rest) | `ActivationFiber`, `hull_dimension`, `sample_result`, `level_subfibre_dimension` |
+| @sec-upstreamdrift (Using it in UpstreamDrift) | the mapping note and its example script |
+
+The code in this repository that produced the numbers on this page is a smaller, self-contained companion: `src/tools/null_space_exploration_examples.py` for P1 to P5, P7 and the toys, and `src/tools/null_space_continuation_examples.py` for P6. Neither depends on UpstreamDrift.
+
+## Related Articles {.unnumbered}
+
+- [The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html): projector and pseudo-inverse algebra.
+- [Degrees of Freedom and Dimensionality](degrees-of-freedom-and-dimensionality.html#infinite-solution-sets-and-finite-search): an infinite solution set and a finite search.
+- [Zero-Torque Counterfactual](zero-torque-counterfactual.html): a counterfactual changes the right-hand side; a fibre member does not.
+
+## References {.unnumbered}
+
+::: {#refs}
+:::

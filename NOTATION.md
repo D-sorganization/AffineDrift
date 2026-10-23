@@ -353,6 +353,21 @@ use uppercase $G(q)$ for gravity. When a source convention must be quoted,
 identify it as source notation and translate immediately to the canonical
 symbols.
 
+### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
+
+| Symbol    | Meaning                                                                    | Metric                                                        | Rule                                                                                           |
+| --------- | -------------------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **$J$**   | Constraint (or task) Jacobian, rows are constraints                        | None: a linear map between coordinate spaces                  | In the allocation problem $A x = b$ the balance matrix $A$ plays the role of $J$               |
+| **$J^+$** | Moore-Penrose pseudo-inverse of $J$                                        | Euclidean in both spaces                                      | Weighted version $W^{-1}J^\top(JW^{-1}J^\top)^{+}$ must name its weight $W$                    |
+| **$P_W$** | Projector onto $\ker J$ along the $W$-orthogonal complement                | The $W$ inner product; self-adjoint there ($WP_W=P_W^\top W$) | Not symmetric unless $W$ is a multiple of $I$; $P_I=I-J^+J$ is the Euclidean case              |
+| **$N$**   | Matrix whose columns are a basis of $\ker J$                               | None: any basis of $\ker J$ serves                            | A basis is not unique; $N$ is not $P_W$, and a result must not depend on which basis is chosen |
+| **$Z$**   | The same null-space basis, written $Z$ in the AffineDrift Python companion | None                                                          | The companion writes $u$ and $Z$ where the UpstreamDrift package writes $x$ and $N$            |
+
+**Disambiguation rule:** A projector $P$ is a square matrix that depends on a metric; a basis $N$ or
+$Z$ is a tall matrix that does not. Name the metric whenever a projector or pseudo-inverse is used,
+and note that $u$ here is an allocation variable, not the control input of the control-affine
+dynamics.
+
 ### F (Force, Frame, Frequency)
 
 | Context            | Meaning          | Units       | Example                          |
