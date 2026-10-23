@@ -60,9 +60,10 @@ RUN npm ci --no-audit --no-fund
 COPY . /src
 WORKDIR /src
 
-# Make the tree usable by the unprivileged sandbox user (uid 65532): tests write caches
-# and temporary output under the checkout.
-RUN chmod -R a+rwX /src
+# COPY leaves files world-readable, so the unprivileged sandbox user (uid 65532) can read
+# the tree. Open only the top-level directory for writes. A recursive chmod over
+# node_modules copies every file up through overlayfs and takes tens of minutes.
+RUN chmod a+rwx /src
 
 # Cheap tests, so the image is known to work. Failures never abort the build.
 # pytest uses the default offline lane from pyproject.toml (slow, network, e2e and
