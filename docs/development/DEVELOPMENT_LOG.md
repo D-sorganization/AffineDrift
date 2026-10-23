@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5094 · Add Null-Space Exploration Companion Examples and Property Tests for Propositions P1-P5 and P7 (AD-1 Of #5093)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5094
+- **Branch:** claude/nse-ad1-5094
+- **PR:** #5100
+- **Paths:** see #5100
+- **Started:** 2026-10-23
+- **Last verified:** 2026-10-23 (`2bf7c02f`; collated from changes/5094-add-null-space-exploration-companion-exa.md)
+- **Summary:** Add null-space exploration companion examples and property tests for propositions P1-P5 and P7 (AD-1 of #5093)
+- **Next step:** Draft PR; AD-2 adds the continuation section to the same builder registry
+
 ### DL-#5116 · Filter CI Render Cache Inputs Without Reducing Validation
 
 - **State:** in_progress
