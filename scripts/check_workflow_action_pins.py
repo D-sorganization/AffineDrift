@@ -14,6 +14,19 @@ from scripts.cli_output import write_stderr, write_stdout
 WORKFLOW_DIR = Path(".github/workflows")
 USES_PATTERN = re.compile(r"^\s*(?:-\s*)?uses:\s*([^\s#]+)")
 FULL_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
+RM_REUSABLE_WORKFLOW_PREFIX = "D-sorganization/Repository_Management/.github/workflows/"
+
+
+def _is_rm_reusable_workflow_ref(reference: str) -> bool:
+    """Fleet reusable workflows from RM are referenced by branch ref, not action SHA."""
+    if not reference.startswith(RM_REUSABLE_WORKFLOW_PREFIX):
+        return False
+    if "/.github/workflows/" not in reference:
+        return False
+    if "@" not in reference:
+        return False
+    ref = reference.rsplit("@", 1)[1]
+    return ref == "main"
 
 
 def find_unpinned_actions(workflow_dir: Path = WORKFLOW_DIR) -> list[str]:
@@ -31,6 +44,8 @@ def find_unpinned_actions(workflow_dir: Path = WORKFLOW_DIR) -> list[str]:
 
             reference = match.group(1)
             if reference.startswith("./") or reference.startswith("docker://"):
+                continue
+            if _is_rm_reusable_workflow_ref(reference):
                 continue
 
             if "@" not in reference:
