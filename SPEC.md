@@ -232,6 +232,13 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-22 | #5117 | Synchronize patched dependencies and repair accessible control names |
+| 2026-10-22 | #5118 | Document CI Standard PR Job-Timing Profile |
+| 2026-10-22 | #5119 | Protect the Pinned Shot-Pattern Review from Prettier; Filter CI Render Cache Inputs Without Reducing Validation; Keep companion pin writes offline by using only an installed local formatter with a bounded timeout. |
+| 2026-10-22 | #5110 | Lock prettier drift contracts for shot-pattern and companion snapshots |
+| 2026-10-22 | #5111 | Close FDM book provenance guards: link_validation contract, speedup lint helper, structural-integrity test labels (#5088) |
+| 2026-10-20 | #5104 | Apply prettier to files already drifted on main; ignore the attested companion snapshot |
+| 2026-10-20 | #5099 | Forward Dynamics Matching book: SHA-256 provenance for cited UpstreamDrift artifacts, gate-number regression tests, promoted-speedup lint |
 | 2026-10-19 | #5090 | Fix WCAG 2.5.3 label-content-name-mismatch on reading-time and Quarto TOC landmarks |
 | 2026-10-19 | #5076 | Add Fleet Critic review of the recovered Forward Dynamics Matching book: unverified cross-repo numeric claims, structure-only tests, unguarded editorial policy (#5088) |
 | 2026-10-18 | #5082 | Reconcile 71 development-log review entries with merged delivery and outstanding acceptance evidence |

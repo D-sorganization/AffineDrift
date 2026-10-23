@@ -241,6 +241,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5116 · Filter CI Render Cache Inputs Without Reducing Validation
+
+- **State:** in_progress
+- **Owner:** unassigned
+- **Issue:** #5116
+- **Branch:** fix/ci-render-cache-5116
+- **PR:** #5119
+- **Paths:** .github/workflows/ci-standard.yml, scripts/quarto_cache_key.py, tests/test_quarto_cache_key.py, tests/test_deployment_integrity.py, docs/development/ci-profiles/render-cache-inputs-5116.md
+- **Started:** 2026-10-22
+- **Last verified:** 2026-10-22 (`295ff41e`; collated from changes/5116-render-cache-inputs.md)
+- **Summary:** Filter CI Render Cache Inputs Without Reducing Validation
+- **Next step:** Validate the source fix, merge through protected checks, then observe normal runs for seven days and at least ten eligible completions.
+
+### DL-#5115 · Document CI Standard PR Job-Timing Profile
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5115
+- **Branch:** docs/ci-job-profile-5115
+- **PR:** #5118
+- **Paths:** docs/development/ci-profiles/ci-standard-pr-20261021.md, docs/development/ci-profiles/ci-standard-pr-20261021.csv, docs/development/ci-profiles/ci-standard-pr-20261021-provenance.json
+- **Started:** 2026-10-22
+- **Last verified:** 2026-10-22 (`20584d47`; collated from changes/5115-ci-standard-job-profile.md)
+- **Summary:** Document CI Standard PR Job-Timing Profile
+- **Next step:** Review the bounded historical profile; keep render and accessibility optimization work separate under #5116.
+
 ### DL-#5081 · Reconcile 71 Development-Log Review Entries With Merged Delivery and Outstanding Acceptance Evidence
 
 - **State:** in_review
@@ -326,6 +352,45 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5121 · Keep Companion Pin Writes Offline by Using Only an Installed Local Formatter With a Bounded Timeout.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5121
+- **Branch:** merged via #5119
+- **PR:** #5119
+- **Paths:** see #5119
+- **Started:** 2026-10-22
+- **Last verified:** 2026-10-22 (`295ff41e`; collated from changes/5121-keep-companion-formatting-offline.md)
+- **Summary:** Keep companion pin writes offline by using only an installed local formatter with a bounded timeout.
+- **Next step:** Shipped in PR #5119.
+
+### DL-#5117 · Synchronize Patched Dependencies and Repair Accessible Control Names
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5117
+- **Branch:** merged via #5117
+- **PR:** #5117
+- **Paths:** see #5117
+- **Started:** 2026-10-22
+- **Last verified:** 2026-10-22 (`9ddb4d96`; collated from changes/5117-sync-dependency-lock.md)
+- **Summary:** Synchronize patched dependencies and repair accessible control names
+- **Next step:** Shipped in PR #5117.
+
+### DL-#5102 · Apply Prettier to Files Already Drifted on Main; Ignore the Attested Companion Snapshot
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5102
+- **Branch:** merged via #5104
+- **PR:** #5104, #5110, #5119
+- **Paths:** see #5104
+- **Started:** 2026-10-20
+- **Last verified:** 2026-10-22 (`295ff41e`; collated from changes/5102-protect-pinned-review-formatting.md)
+- **Summary:** Apply prettier to files already drifted on main; ignore the attested companion snapshot
+- **Next step:** Preserve the review bytes and inventory pin; future content changes require separate review and attestation.
+
 ### DL-#5089 · Fix WCAG 2.5.3 Label-Content-Name-Mismatch on Reading-Time and Quarto TOC Landmarks
 
 - **State:** shipped
@@ -345,10 +410,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5088
 - **Branch:** merged via #5076
-- **PR:** #5076
+- **PR:** #5076, #5099, #5111
 - **Paths:** see #5076
 - **Started:** 2026-10-19
-- **Last verified:** 2026-10-19 (`e9584e29`; collated from changes/5088-fleet-critic-forward-dynamics-matching-review.md)
+- **Last verified:** 2026-10-22 (`8a002f89`; collated from changes/5088-close-fdm-book-provenance-guards-link-va.md)
 - **Summary:** Add Fleet Critic review of the recovered Forward Dynamics Matching book: unverified cross-repo numeric claims, structure-only tests, unguarded editorial policy (#5088)
 - **Next step:** Shipped in PR #5076.
 
