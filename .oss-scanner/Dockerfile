@@ -69,6 +69,7 @@ RUN chmod a+rwx /src
 # pytest uses the default offline lane from pyproject.toml (slow, network, e2e and
 # live-simulation markers are deselected); coverage is not measured here.
 RUN (timeout 1500 python -m pytest tests -q -p no:cacheprovider --maxfail=20 \
+        --continue-on-collection-errors \
         || echo "WARNING: pytest reported failures or timed out") \
     && (timeout 600 npx --no-install jest --ci --silent \
         || echo "WARNING: jest reported failures or timed out")
