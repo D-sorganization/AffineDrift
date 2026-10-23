@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-23 | #5100 | Add null-space exploration companion examples and property tests for propositions P1-P5 and P7 (AD-1 of #5093) |
 | 2026-10-22 | #5117 | Synchronize patched dependencies and repair accessible control names |
 | 2026-10-22 | #5118 | Document CI Standard PR Job-Timing Profile |
 | 2026-10-22 | #5119 | Protect the Pinned Shot-Pattern Review from Prettier; Filter CI Render Cache Inputs Without Reducing Validation; Keep companion pin writes offline by using only an installed local formatter with a bounded timeout. |
