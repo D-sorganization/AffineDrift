@@ -308,6 +308,14 @@ describe("Metrics Module", () => {
   });
 
   describe("renderStatsWidget", () => {
+    test("clear button accessible name contains its visible text", () => {
+      document.body.innerHTML = '<div id="metrics-widget"></div>';
+      window.AffineDriftMetrics.renderStatsWidget("metrics-widget");
+      const clearButton = document.querySelector("#metrics-widget .clear-btn");
+      expect(clearButton.textContent).toBe("Clear data");
+      expect(clearButton.getAttribute("aria-label")).toBe("Clear data");
+    });
+
     test("uses an H3 after the bibliography sidebar H2", () => {
       document.body.innerHTML = `
         <aside>

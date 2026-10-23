@@ -118,7 +118,8 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "schemas",
         "scripts",
         # Fleet-shared modules synced from Repository_Management
-        # (Repository_Management#1520).
+        # (Repository_Management#1520, Repository_Management#2333).
+        "fleet-hooks",
         "shared_scripts",
         "src",
         "static",
@@ -178,7 +179,9 @@ PERMITTED_LOCAL_CACHES: frozenset[str] = frozenset(
         ".pytest_cache",
         ".quarto",
         ".ruff_cache",
+        ".venv",
         "_site",
+        "affinedrift.egg-info",
         "coverage.json",
         "coverage.xml",
         "node_modules",
