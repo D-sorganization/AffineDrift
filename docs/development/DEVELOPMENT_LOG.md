@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#2195 · Add Conflict-Disarm Caller Workflow (Dry-Run) for RM Rollout
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #2195
+- **Branch:** cursor/conflict-disarm-caller-e475
+- **PR:** #5114
+- **Paths:** see #5114
+- **Started:** 2026-10-23
+- **Last verified:** 2026-10-23 (`5d25835f`; collated from changes/2195-add-conflict-disarm-caller-workflow-dry.md)
+- **Summary:** Add conflict-disarm caller workflow (dry-run) for RM rollout
+- **Next step:** Merge when quality-gate is green.
+
 ### DL-#5094 · Add Null-Space Exploration Companion Examples and Property Tests for Propositions P1-P5 and P7 (AD-1 Of #5093)
 
 - **State:** in_review
@@ -364,6 +377,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5095 · Add Nonlinear Solution-Manifold Continuation Examples (Tangent Predictor, Gauss-Newton Corrector, Rank-Drop Counterexample) and Tests for the Null-Space Exploration Section (P6)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5095
+- **Branch:** merged via #5101
+- **PR:** #5101
+- **Paths:** see #5101
+- **Started:** 2026-10-23
+- **Last verified:** 2026-10-23 (`5a3ea5a6`; collated from changes/5095-add-nonlinear-solution-manifold-continua.md)
+- **Summary:** Add nonlinear solution-manifold continuation examples (tangent predictor, Gauss-Newton corrector, rank-drop counterexample) and tests for the null-space exploration section (P6)
+- **Next step:** Shipped in PR #5101.
 
 ### DL-#5121 · Keep Companion Pin Writes Offline by Using Only an Installed Local Formatter With a Bounded Timeout.
 
