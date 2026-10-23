@@ -87,6 +87,8 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         ".gaai",
         ".github",
         ".jules",
+        # Fleet security-scanner contract (Runner_Dashboard#2566).
+        ".oss-scanner",
         ".vscode",
         "_extensions",
         "_includes",
