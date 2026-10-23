@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 
 import pytest
+import yaml
 
 pytestmark = pytest.mark.content_lint
 
@@ -206,13 +207,18 @@ def test_e2e_quarto_render_is_cached_and_skipped_only_on_exact_source_hash_match
     """
     content = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
 
-    # The key hashes every tracked file's blob id (minus tests, workflows and
-    # developer docs), so no render input -- Lua filter, _includes/ partial,
-    # JS resource -- can change without missing the cache.
+    # The helper hashes Git's complete index payload, excluding only paths
+    # proven not to participate in Quarto rendering.
     _, after_key_id = content.split("id: quarto_cache_key\n", maxsplit=1)
     key_step, _ = after_key_id.split("- name:", maxsplit=1)
-    assert "git ls-files -s" in key_step
+    assert "python3 scripts/quarto_cache_key.py --repo-root ." in key_step
     assert "hashFiles(" not in key_step
+    helper = (ROOT_DIR / "scripts" / "quarto_cache_key.py").read_text(encoding="utf-8")
+    assert '["git", "ls-files", "-s", "-z", "--", "."]' in helper
+    for excluded in ("tests/", ".github/", "docs/development/", "SPEC.md", "changes/"):
+        assert excluded in helper
+    e2e_job = content.split("  e2e-tests:", maxsplit=1)[1]
+    assert e2e_job.index("Compute Quarto render cache key") < e2e_job.index("actions/setup-python@")
 
     assert "id: quarto_cache\n" in content
     _, after_cache_id = content.split("id: quarto_cache\n", maxsplit=1)
@@ -226,6 +232,19 @@ def test_e2e_quarto_render_is_cached_and_skipped_only_on_exact_source_hash_match
 
     # Deploy always does a clean full render; criterion 3 stays untouched.
     assert "actions/cache@" not in WORKFLOW_PATH.read_text(encoding="utf-8")
+
+
+@pytest.mark.integration
+def test_quarto_render_and_resource_declarations_avoid_metadata_exclusions() -> None:
+    """Current Quarto inputs must not overlap the SPEC.md or changes exclusions."""
+    config = yaml.safe_load((ROOT_DIR / "_quarto.yml").read_text(encoding="utf-8"))
+    project = config["project"]
+    declarations = [*project["render"], *project["resources"]]
+
+    assert declarations
+    assert all(isinstance(value, str) for value in declarations)
+    assert not any(value.lstrip("!") == "SPEC.md" for value in declarations)
+    assert not any(value.lstrip("!").startswith("changes/") for value in declarations)
 
 
 def test_requirements_integrity() -> None:

@@ -304,6 +304,11 @@ export function initAriaLabels() {
     // and enable keyboard activation (Enter, Space) to match click behavior (issue #4374)
     const calloutToggles = document.querySelectorAll(".callout-header[data-bs-toggle='collapse']");
     for (const toggle of calloutToggles) {
+        const title = toggle.querySelector(".callout-title-container")?.cloneNode(true);
+        title?.querySelectorAll(".screen-reader-only").forEach((label) => label.remove());
+        if (toggle.getAttribute("aria-label") === "Toggle callout" && title?.textContent.trim()) {
+            toggle.removeAttribute("aria-label");
+        }
         if (!toggle.hasAttribute("role")) {
             toggle.setAttribute("role", "button");
         }

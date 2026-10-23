@@ -29,6 +29,26 @@
 
 - N/A
 
+## Handoff
+
+Required per fleet durable-handoffs (RM-5 / Repository_Management#1894). Replace every placeholder before merge.
+
+- **Branch, commit, and pull request:** `<branch>` @ `<commit>` — PR #`<n>` (`https://github.com/D-sorganization/AffineDrift/pull/<n>`)
+- **Governing issue and objective:** #`<issue>` — `<one-sentence objective>`
+- **Decisions:**
+  - `<material design or scope decision, or "N/A — no material decisions">`
+- **Validation (commands and results):**
+  1. `<exact command>`
+     - Result: `<pass | fail | pending CI — brief evidence>`
+  2. `<additional command as needed>`
+     - Result: `<pass | fail | pending CI — brief evidence>`
+- **Blockers and risks:**
+  - Blockers: `<none | list each blocker>`
+  - Risks: `<low | medium | high — note, or "see Risk and Rollback above">`
+- **Next steps (ordered):**
+  1. `<first step after this PR>`
+  2. `<second step>`
+
 ---
 
 ## Optional Reviewer Checklist

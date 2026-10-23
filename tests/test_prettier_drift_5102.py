@@ -2,8 +2,7 @@
 
 Running ``pre-commit run prettier --all-files`` must not rewrite
 ``validation-environment.json`` or attested companion snapshot manifests.
-``technical-review.md`` stays sha256-pinned and intentionally drifted (not in
-``.prettierignore``); owners re-attest or reformat it separately.
+``technical-review.md`` stays sha256-pinned and byte-identical under Prettier.
 """
 
 from __future__ import annotations
@@ -101,14 +100,12 @@ def test_companion_snapshot_manifest_is_prettier_ignored() -> None:
     assert COMPANION_MANIFEST.read_bytes() == before
 
 
-def test_technical_review_is_not_prettierignored_and_stays_attested() -> None:
-    assert TECHNICAL_REVIEW_REL not in _prettierignore_entries()
-    assert not any(
-        TECHNICAL_REVIEW_REL.startswith(entry.rstrip("/") + "/")
-        for entry in _prettierignore_entries()
-        if entry.endswith("/")
-    )
+@pytest.mark.integration
+def test_technical_review_is_prettier_ignored_and_stays_attested() -> None:
+    assert TECHNICAL_REVIEW_REL in _prettierignore_entries()
     pinned = _inventory_pin(TECHNICAL_REVIEW_REL)
     assert _file_sha256(TECHNICAL_REVIEW) == pinned
-    drift = _run_prettier("--check", TECHNICAL_REVIEW_REL)
-    assert drift.returncode != 0, "pinned review must remain intentionally prettier-drifted"
+    before = TECHNICAL_REVIEW.read_bytes()
+    result = _run_prettier("--check", TECHNICAL_REVIEW_REL)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert TECHNICAL_REVIEW.read_bytes() == before
