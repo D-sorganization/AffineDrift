@@ -9,7 +9,6 @@ from scripts.build_null_space_exploration_examples import render_document
 from scripts.build_slack_management_data import DATA, build_document
 from src.tools.slack_management_studies import (
     PUBLISHED_IMPULSES_NMS,
-    REPRESENTATIONS,
     reproduction_section,
     unequal_lag_section,
 )
@@ -28,6 +27,7 @@ from src.tools.slack_transmission import (
     simulate,
 )
 
+RIGID = Representation("rigid", Shape.DEAD_ZONE, 0.0)
 DEAD_ZONE = Representation("dead_zone", Shape.DEAD_ZONE, 0.012)
 SMOOTH = Representation("smooth", Shape.SMOOTH, 0.012)
 PUBLISHED_WINDOW = Horizon(duration_s=0.12)
@@ -58,12 +58,17 @@ def test_shared_linear_channels_cannot_separate_programs(
     assert abs(relative_advantage(rep)) < 1e-12
 
 
-def test_unequal_lags_separate_programs_without_any_gap() -> None:
+def test_unequal_lags_favour_persistent_direction_without_any_gap() -> None:
+    rep = Representation("unequal", Shape.DEAD_ZONE, 0.0, 0.018, wrist_time_constant_s=0.036)
+    assert rep.time_constants_s == (0.018, 0.036)
+    assert relative_advantage(rep) > 1.0
+
+
+def test_unequal_lag_transient_matches_closed_form() -> None:
     section = unequal_lag_section()
     assert section["exact_min_difference_nm"] == pytest.approx(-3.5, abs=1e-12)
     assert section["exact_min_time_s"] == pytest.approx(0.036 * np.log(2.0), abs=1e-15)
     assert section["simulated_min_difference_nm"] == pytest.approx(-3.5, abs=0.01)
-    assert relative_advantage(REPRESENTATIONS[-1]) > 1.0
 
 
 def test_dead_zone_and_smooth_both_favour_persistent_direction() -> None:
@@ -82,7 +87,7 @@ def test_smooth_characteristic_is_odd_monotone_and_soft_at_zero() -> None:
     assert small / 1e-6 < 1e-3 * SMOOTH.stiffness_nm_rad
 
 
-@pytest.mark.parametrize("rep", [DEAD_ZONE, SMOOTH, REPRESENTATIONS[0]])
+@pytest.mark.parametrize("rep", [DEAD_ZONE, SMOOTH, RIGID])
 @pytest.mark.parametrize("torque", [-16.0, -0.5, 0.0, 3.0, 30.0])
 def test_command_deflection_inverts_characteristic(rep: Representation, torque: float) -> None:
     deflection = command_deflection(torque, rep)
