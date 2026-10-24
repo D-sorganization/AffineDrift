@@ -36,6 +36,22 @@ TRAIN_STIFFNESS = 50.0
 TRAIN_DAMPING = 2.0
 TRAIN_DRIVE = 1.0
 
+# Toy B, SI units, manufactured. The 0.012 rad and 600 N m/rad magnitudes reuse the record's
+# synthetic dead-zone definition; they are not identified tissue properties.
+HAND_INERTIA = 0.01  # kg m^2
+CLUB_INERTIA = 0.05  # kg m^2
+HAND_GAP = 0.012  # rad, half-width of the open band
+HAND_STIFFNESS = 600.0  # N m/rad
+HAND_DAMPING = 2.0  # N m s/rad, acting only while engaged
+HAND_DRIVE = 10.0  # N m, total drive shared by the two hands
+TIMING_NOISE = 0.5e-3  # s, declared one-sigma event-time jitter
+PRELOAD_MAX = 5.0  # N m, internal squeeze couple before the drive
+NOMINAL_SPLIT = 0.6  # lead share of the drive at the sensitivity point
+
+# Declared prior half-ranges for the sensitivity scaling, in parameter order.
+PARAMETERS = ("split", "gap_lead", "gap_trail", "state_lead", "state_trail", "k_lead", "k_trail")
+HALF_RANGES = (0.3, 0.5 * HAND_GAP, 0.5 * HAND_GAP, 0.8 * HAND_GAP, 0.8 * HAND_GAP, 300.0, 300.0)
+
 
 @dataclass(frozen=True)
 class Chain:
@@ -63,6 +79,7 @@ class Clock:
 
 
 TRAIN_CLOCK = Clock(step=1e-3, horizon=30.0)
+HAND_CLOCK = Clock(step=1e-5, horizon=0.06)
 
 
 def _validate(chain: Chain, clock: Clock) -> None:
@@ -156,6 +173,73 @@ def train_order_accuracy(rng: np.random.Generator, trials: int, taut: bool) -> d
     return {"accuracy": float(np.mean(guess == front)), "with_events": float(np.mean(both))}
 
 
+@dataclass(frozen=True)
+class HandDraw:
+    """Per-trial Toy B parameters, each of shape ``(trials,)``."""
+
+    split: Array
+    gap: Array  # (trials, 2): lead, trail
+    state: Array  # (trials, 2): initial stretch inside the band
+    stiffness: Array  # (trials, 2)
+    preload: Array
+
+
+def hand_chain(draw: HandDraw) -> Chain:
+    """Lead hand, club, trail hand; the lead hand receives ``split`` of the drive.
+
+    A preload ``P`` is an internal squeeze: the lead hand adds ``+P``, the trail hand ``-P``,
+    and both couplers start engaged at the matching static stretch.
+    """
+    trials = draw.split.size
+    forces = np.zeros((trials, 3))
+    forces[:, 0] = draw.split * HAND_DRIVE + draw.preload
+    forces[:, 2] = (1.0 - draw.split) * HAND_DRIVE - draw.preload
+    loaded = draw.preload > 0
+    squeeze = draw.gap + draw.preload[:, None] / draw.stiffness
+    offset = np.where(loaded[:, None], squeeze, draw.state)
+    inertia = np.array([HAND_INERTIA, CLUB_INERTIA, HAND_INERTIA])
+    return Chain(inertia, forces, draw.gap, draw.stiffness, offset, HAND_DAMPING)
+
+
+def draw_hands(rng: np.random.Generator, trials: int, regime: str) -> HandDraw:
+    """Sample a regime: ``known``, ``uncertain``, ``preloaded`` or ``smooth`` (no gap)."""
+    if regime not in {"known", "uncertain", "preloaded", "smooth"}:
+        raise ValueError(f"unknown regime {regime!r}")
+    lead = np.arange(trials) % 2 == 0
+    split = np.where(lead, rng.uniform(0.6, 0.8, trials), rng.uniform(0.2, 0.4, trials))
+    ones = np.ones((trials, 2))
+    gap, state, stiffness = HAND_GAP * ones, 0.0 * ones, HAND_STIFFNESS * ones
+    if regime != "known":
+        gap = HAND_GAP * rng.uniform(0.5, 1.5, (trials, 2))
+        state = gap * rng.uniform(-0.8, 0.8, (trials, 2))
+        stiffness = HAND_STIFFNESS * rng.uniform(0.5, 1.5, (trials, 2))
+    if regime == "smooth":
+        gap, state = 0.0 * ones, 0.0 * ones
+    preload = rng.uniform(0.0, PRELOAD_MAX, trials) if regime == "preloaded" else 0.0 * split
+    return HandDraw(split, gap, state, stiffness, preload)
+
+
+def _predict(events: Array, threshold: float, rng: np.random.Generator) -> Array:
+    """Lead-source guess: lag rule if both events exist, the lone event, else a coin flip."""
+    lead, trail = events[:, 0], events[:, 1]
+    guess = np.where(np.isnan(lead) & np.isnan(trail), rng.random(lead.size) < 0.5, False)
+    guess = np.where(~np.isnan(lead) & np.isnan(trail), True, guess)
+    both = ~np.isnan(lead) & ~np.isnan(trail)
+    return np.where(both, (trail - lead) > threshold, guess)
+
+
+def _fit_threshold(events: Array, labels: Mask) -> float:
+    """Training-set lag threshold that maximizes accuracy; zero if no trial has both events."""
+    lag = events[:, 1] - events[:, 0]
+    usable = ~np.isnan(lag)
+    if not np.any(usable):
+        return 0.0
+    values = np.sort(lag[usable])
+    candidates = np.concatenate(([values[0] - 1.0], 0.5 * (values[1:] + values[:-1])))
+    scores = [np.mean((lag[usable] > c) == labels[usable]) for c in candidates]
+    return float(candidates[int(np.argmax(scores))])
+
+
 def wilson_interval(successes: int, trials: int) -> tuple[float, float]:
     """Wilson score 95% interval for a binomial proportion."""
     if trials <= 0 or not 0 <= successes <= trials:
@@ -165,3 +249,26 @@ def wilson_interval(successes: int, trials: int) -> tuple[float, float]:
     half = WILSON_Z * np.sqrt(share * (1 - share) / trials + z2 / (4 * trials**2))
     half /= 1 + z2 / trials
     return float(centre - half), float(centre + half)
+
+
+def classify_regime(rng: np.random.Generator, regime: str) -> dict[str, float | bool]:
+    """Fit the lag threshold on training trials and score held-out trials of one regime."""
+    scored = {}
+    for name, trials in (("train", TRAIN_TRIALS), ("test", TEST_TRIALS)):
+        draw = draw_hands(rng, trials, regime)
+        events, _ = simulate(hand_chain(draw), HAND_CLOCK)
+        events = events + rng.normal(0.0, TIMING_NOISE, events.shape)
+        scored[name] = (events, draw.split > 0.5)
+    threshold = _fit_threshold(*scored["train"])
+    events, labels = scored["test"]
+    correct = int(np.sum(_predict(events, threshold, rng) == labels))
+    low, high = wilson_interval(correct, TEST_TRIALS)
+    both = ~np.isnan(events).any(axis=1)
+    return {
+        "accuracy": correct / TEST_TRIALS,
+        "wilson_low": low,
+        "wilson_high": high,
+        "both_events": float(np.mean(both)),
+        "no_events": float(np.mean(np.isnan(events).all(axis=1))),
+        "passes": bool(low > 0.5 + PASS_MARGIN),
+    }
