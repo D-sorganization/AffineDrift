@@ -232,6 +232,9 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-24 | #5133 | Bump pypdf to 6.21.2 to clear CVE-2026-115572/115580/115585 failing pip-audit |
+| 2026-10-24 | #5128 | Add .oss-scanner/ security-scan contract (project.yaml, offline audit Dockerfile, threat model) for the fleet scanner pilot |
+| 2026-10-24 | #5107 | Add the After One Solution article on exploring dynamically equivalent force allocations (propositions P1-P7, shared-example loader, verified bibliography); Register the After One Solution article: claim-audit route record, articles listing, reciprocal links, notation entries, bibliography registration and review-required UpstreamDrift draft-PR pins |
 | 2026-10-23 | #5101 | Add nonlinear solution-manifold continuation examples (tangent predictor, Gauss-Newton corrector, rank-drop counterexample) and tests for the null-space exploration section (P6) |
 | 2026-10-23 | #5114 | Add conflict-disarm caller workflow (dry-run) for RM rollout |
 | 2026-10-23 | #5100 | Add null-space exploration companion examples and property tests for propositions P1-P5 and P7 (AD-1 of #5093) |

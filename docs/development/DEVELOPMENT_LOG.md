@@ -378,6 +378,58 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5131 · Bump Pypdf to 6.21.2 to Clear CVE-2026-115572/115580/115585 Failing Pip-Audit
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5131
+- **Branch:** merged via #5133
+- **PR:** #5133
+- **Paths:** see #5133
+- **Started:** 2026-10-24
+- **Last verified:** 2026-10-24 (`e32fefe6`; collated from changes/5131-bump-pypdf-to-6-21-2-to-clear-cve-2026-1.md)
+- **Summary:** Bump pypdf to 6.21.2 to clear CVE-2026-115572/115580/115585 failing pip-audit
+- **Next step:** Shipped in PR #5133.
+
+### DL-#5127 · Add .oss-scanner/ Security-Scan Contract (project.yaml, Offline Audit Dockerfile, Threat Model) for the Fleet Scanner Pilot
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5127
+- **Branch:** merged via #5128
+- **PR:** #5128
+- **Paths:** see #5128
+- **Started:** 2026-10-24
+- **Last verified:** 2026-10-24 (`b328c5b8`; collated from changes/5127-add-oss-scanner-security-scan-contract-p.md)
+- **Summary:** Add .oss-scanner/ security-scan contract (project.yaml, offline audit Dockerfile, threat model) for the fleet scanner pilot
+- **Next step:** Shipped in PR #5128.
+
+### DL-#5097 · Register the After One Solution Article: Claim-Audit Route Record, Articles Listing, Reciprocal Links, Notation Entries, Bibliography Registration and Review-Required UpstreamDrift Draft-PR Pins
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5097
+- **Branch:** merged via #5107
+- **PR:** #5107
+- **Paths:** see #5107
+- **Started:** 2026-10-24
+- **Last verified:** 2026-10-24 (`e2e393be`; collated from changes/5097-register-the-after-one-solution-article.md)
+- **Summary:** Register the After One Solution article: claim-audit route record, articles listing, reciprocal links, notation entries, bibliography registration and review-required UpstreamDrift draft-PR pins
+- **Next step:** Shipped in PR #5107.
+
+### DL-#5096 · Add the After One Solution Article on Exploring Dynamically Equivalent Force Allocations (Propositions P1-P7, Shared-Example Loader, Verified Bibliography)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5096
+- **Branch:** merged via #5107
+- **PR:** #5107
+- **Paths:** see #5107
+- **Started:** 2026-10-24
+- **Last verified:** 2026-10-24 (`e2e393be`; collated from changes/5096-add-the-after-one-solution-article-on-ex.md)
+- **Summary:** Add the After One Solution article on exploring dynamically equivalent force allocations (propositions P1-P7, shared-example loader, verified bibliography)
+- **Next step:** Shipped in PR #5107.
+
 ### DL-#5095 · Add Nonlinear Solution-Manifold Continuation Examples (Tangent Predictor, Gauss-Newton Corrector, Rank-Drop Counterexample) and Tests for the Null-Space Exploration Section (P6)
 
 - **State:** shipped
