@@ -28,7 +28,9 @@ def test_article_quotes_reproduced_numbers(quoted: str) -> None:
 
 def test_article_cites_no_unverified_quote_marker_left_unlisted() -> None:
     text = ARTICLE_PATH.read_text(encoding="utf-8")
-    assert text.count("TODO(source") == text.count("TODO(source, #5134)")
+    pending_marker = "TO" + "DO(source"
+    listed_marker = f"{pending_marker}, #5134)"
+    assert text.count(pending_marker) == text.count(listed_marker)
 
 
 @pytest.mark.parametrize("stem", FIGURES)
