@@ -1,0 +1,177 @@
+---
+title: "The Firm Lead Wrist as Preload: Backlash, Internal Wrench, and the Heavy Hit"
+description: "A hypothesis, not a finding: loading two torque channels one way helps only if the body has play like a gear; a muscle model nearly erases it."
+author: "Dieter Olson"
+date: "Date unverified"
+date-source: "unverified"
+date-modified: "2026-10-24"
+last-reviewed: "2026-10-24"
+canonical: "/articles/firm-lead-wrist-preload.html"
+status: "experimental"
+audience-level: "intermediate"
+evidence-rung: "manufactured-fixture"
+summary-plain: "Golfers talk about a firm lead wrist. One idea is that it keeps the wrist and arms pulling the same way so no slack opens up. A model with built-in slack strongly favours that. A model with muscles barely does, and sometimes favours the opposite. This page explains why and how to test it."
+abstract: "The firm-lead-wrist feel is examined as a hypothesis: that keeping an arm-drive channel and a lead-wrist-resistance channel loaded in fixed directions avoids zero-transmission gaps. Two synthetic models are compared side by side. A two-channel dead-zone transmission gives an integrated tracking error of 0.0717 N m s for persistent direction against 0.1954 N m s for role reversal. A reduced Hill-type activation and series-force model gives 0.08998 against 0.09084 N m s at the published step, about 0.4% apart at the step-converged limit, and reverses sign for a larger delivery target. The page connects the idea to two-hand internal loads and to the heavy-hit analysis, and lists falsifiers and measurements. No human data are analysed."
+key-takeaways:
+  - "The persistent-direction advantage is a property of the dead-zone model, not an established fact about wrists."
+  - "In a reduced muscle model the advantage shrinks to about 0.4% when the integration step is refined, and reverses for a larger delivery target."
+  - "Two hands can load each other without changing what the club feels; that internal load costs effort and can change stiffness, but it adds no mass to the strike."
+  - "Co-contraction can make a joint stiff with no slack at all, so firmness and preload are different claims that need different measurements."
+caveats:
+  evidence-level: "Synthetic models with declared parameters; no participant data"
+  establishes:
+    - "Reproduced numbers for two published UpstreamDrift models, and their sensitivity to model family, integration step and delivery target."
+  does-not-establish:
+    - "That the human wrist, forearm or grip contains backlash-like slack, or how large it is."
+    - "That a firm lead wrist corresponds to persistent-direction loading, or changes sound, feel, face angle, dispersion or speed."
+  next-gate: "Panel review, Fleet-Critic review, then bilateral grip-wrench measurement on participants."
+changes:
+  - date: "2026-10-24"
+    description: "Draft for panel review (#5134)."
+categories:
+  - motor-control
+  - impact-ball-flight
+---
+
+::: {.callout-note}
+## In Layman's Terms
+
+A bicycle chain with a loose link goes slack for a moment whenever you stop pedalling and start again, and the wheel gets nothing during that moment. If you keep a little pressure on the pedals, the chain stays tight and the wheel responds at once. Some golfers describe a "firm lead wrist" that might work like that steady pedal pressure. This page tests that idea in two computer models. In a model built with a loose link, steady pressure helps a lot. In a model built from muscles, which have no loose link, it hardly matters, and in one case the opposite strategy wins. So the idea is a hypothesis to measure, not a fact.
+:::
+
+::: {.callout-important}
+## Status of This Draft
+
+This is a draft for panel review under [AffineDrift #5134](https://github.com/D-sorganization/AffineDrift/issues/5134). It analyses two synthetic models and proposes measurements. It is not coaching advice and it reports no human data. The blockers listed in @sec-scope are scoped out here, not resolved.
+:::
+
+## What Players Describe {#sec-feel}
+
+Teachers and players often speak of a lead wrist that is "firm", "flat" or "bowed" through the late downswing, and of "holding off" the release. The words describe a feel. They do not say which muscles fire, which way each hand pushes, or how much give there is between the forearm and the club.
+<!-- TODO(source, #5134): sourced player and teacher descriptions (Hogan, Nicklaus, Kelley / The Golfing Machine) with page references; none are verified, so no quotation appears here. -->
+
+The question on this page is narrow. Suppose two torque channels act on the club: an *arm drive* that pushes the club around, and a *lead-wrist resistance* that pushes back. A **torque** is a twisting push, measured in newton metres (N m). Does keeping each channel pushing the same way throughout, rather than letting them swap roles, help the club get the torque it is asked for?
+
+## Three Things That Get Called "Firm" {#sec-three-meanings}
+
+"Firm" can mean at least three physically different things, and they lead to different predictions.
+
+| Meaning | Plain picture | What it predicts |
+|---|---|---|
+| **Backlash (dead zone)** | A gear with play: the input turns a little before the output moves | Reversing direction costs a gap during which nothing is transmitted |
+| **Preload** | Keeping the gear pressed against one side of its play | No gap, as long as the direction never reverses |
+| **Stiffness** | A stiff spring: a small twist gives a large restoring torque | Faster, smaller deflections; says nothing on its own about gaps |
+
+The general mathematics of backlash and dead zones is developed in [Classic Sources of Nonlinearity](sources-of-nonlinearity.html#backlash-mechanical-play) and is not repeated here.
+
+The three are easy to conflate, but they come apart in a joint spanned by muscles. A gear has one gap per mesh. A wrist is crossed by muscles that pull in opposite directions, and both sets can be tensed at once. That **co-contraction** can hold the net torque at zero while both tendons stay taut, which gives the joint high short-range stiffness with no dead zone at all [@hu2011ShortRange; @hogan1985impedance]. A firm-feeling wrist therefore need not be a preloaded one, and a preloaded one need not feel firm. A sentence like "create more negative wrist torque" is under-specified for the same reason: it does not say whether it means a larger net torque, more co-contraction, or a sign that never changes.
+
+## Two Hands, One Club: The Internal Load {#sec-internal-wrench}
+
+The club responds only to the *net* push from both hands. Two hands can also push against each other, the way two people can squeeze a box between them without moving it. That part of the hand load cancels on the club. In matrix language, the set of hand-load combinations that produce zero net load on the club is the null space of the grasp map, written $\ker\mathcal G$; [Intentional Constraint Collapse](intentional-constraint-collapse.html#constraints-internal-forces-and-acceleration) develops it.
+
+![Same Net Torque, Different Internal Load](figures/lead_wrist_preload/fig_internal_wrench.svg){#fig-internal-wrench fig-alt="Horizontal arrows: arm drive plus 16 and lead-wrist resistance minus 6 newton metres on one row; net plus 10 on the club on the next; an internal pair of plus 6 and minus 6 that cancels on the club on the last."}
+
+@fig-internal-wrench uses the numbers of the model in @sec-models. After the transition in the persistent program, an arm drive of +16 N m and a lead-wrist resistance of −6 N m give the club a net +10 N m. The same hand loads can be split into that net torque plus an equal and opposite ±6 N m pair that cancels on the club. The internal pair is invisible to the club's motion, so club kinematics alone cannot reveal it. It is not free: it costs muscular effort, it loads skin and tissue, and through co-contraction it can raise the stiffness the club meets at the grip. Measuring it needs force sensors in the grip. Koike instrumented a club to separate the force and moment of each hand [@koike2016instrumented], and Choi and Park combined a measured internal grip force with upper-limb kinetics [@koike2020]. Neither study tested the firm-lead-wrist idea.
+
+The muscle evidence that exists is compatible with several stories. Scapular muscles show phase-dependent activity in golfers [@kao1995], and lead and trail wrist extensor activity differs by side and phase [@robinson2023]. Neither establishes the direction of either hand's push or the presence of an internal pair.
+
+## What the Two Models Say {#sec-models}
+
+Both models come from the UpstreamDrift research code and are re-implemented here so every number can be rerun (@sec-reproduce). Both compare two programs that ask for the same net torque: 6 N m before a transition at time zero and 10 N m after it.
+
+- **Persistent direction.** The arm channel goes from +10 to +16 N m and the wrist channel from −4 to −6 N m. Neither changes sign.
+- **Complete role reversal.** The arm channel goes from −4 to +16 N m and the wrist channel from +10 to −6 N m. Both change sign.
+
+The score is the **integrated tracking error** after the transition,
+$$
+J=\int_0^{0.12\,\mathrm s}\bigl|\tau^{*}(t)-\tau(t)\bigr|\,dt ,
+$$ {#eq-tracking-error}
+where $\tau^{*}$ is the desired net torque, $\tau$ the net torque actually transmitted, and $t$ time. $J$ is measured in N m s and is smaller when tracking is better. It adds up the size of the shortfall and of any overshoot. It is *not* an angular impulse, which would let overshoot cancel shortfall, and it is not work. The source code calls it an "error impulse"; this page does not.
+
+**The dead-zone model.** Each channel has a gap of half-width $\delta=0.012$ rad, a stiffness $k=600$ N m rad$^{-1}$ outside the gap, and a lag with time constant $T=18$ ms. Inside the gap it transmits nothing. These are synthetic values, not measured tissue properties.
+
+**The muscle model.** Each channel is a pair of opposing Hill-type muscles. Each muscle's activation $a$ (from 0, relaxed, to 1, fully on) follows its neural command $u$ with a rise time of about 10 ms and a decay time of about 40 ms, a standard asymmetry in muscle models [@thelen2003adjustment]. The force then passes through a tendon with a 12 ms lag. There is no gap anywhere. Both programs start relaxed and are prepared for 180 ms before the transition, and nothing is reset at time zero.
+
+![Persistent Direction Versus Role Reversal in Two Models](figures/lead_wrist_preload/fig_preload_two_models.svg){#fig-two-models fig-alt="Two panels of net torque against time after the transition. In the dead-zone panel the reversal curve falls to zero for several milliseconds before recovering, while the persistent curve rises smoothly. In the muscle panel the reversal curve rises faster and overshoots ten newton metres, peaking near 45 milliseconds."}
+
+| Model and condition | Persistent $J$ (N m s) | Reversal $J$ (N m s) | Reversal minus persistent |
+|---|---|---|---|
+| Dead zone, loaded start | 0.0717 (no gap) | 0.1954 (gaps 11.5 ms arm, 22.0 ms wrist) | about 172% worse |
+| Dead zone, relaxed start | 0.2011 | 0.2011 | none |
+| Muscle model, 0.2 ms step (published) | 0.08998 | 0.09084 | 0.94% of the reversal value |
+| Muscle model, step-converged estimate | 0.0920 | 0.0924 | about 0.4% |
+| Muscle model, delivery target 14 N m, converged | 0.1918 | 0.1505 | reversal about 22% *better* |
+
+: Integrated tracking error for the two programs. The dead-zone gaps are counts of zero-torque samples on a 0.1 ms grid. {#tbl-models}
+
+In @fig-two-models, the left panel is the dead-zone model from a loaded start: role reversal drops to zero transmitted torque while each channel crosses its gap. The right panel is the muscle model at the published 0.2 ms step: role reversal rises faster and overshoots the target, while persistent direction rises smoothly.
+
+**Read the two rows together.** The dead-zone model says reversal is roughly 172% worse. That large difference exists because the model was built with a gap: reversing a channel forces it through the gap, and the club receives nothing from that channel meanwhile. From a relaxed start both programs must take up slack anyway, and the difference disappears. Across a grid of four gap widths and three time constants, all three zero-gap cases are equivalent and all nine positive-gap cases favour persistent direction (@fig-robustness, right). The advantage is therefore a structural consequence of the assumed gap, not evidence that wrists have one.
+
+**The muscle model nearly erases the difference.** At the published 0.2 ms step, the gap between programs is 0.94% of the reversal value. That number is not settled: refining the step from 1.0 ms to 0.05 ms shrinks the difference from 0.00277 to 0.000514 N m s, and an extrapolation to an infinitely fine step leaves about 0.4% (@fig-robustness, left). The step changes the absolute $J$ values too, by about 10% across that range, so neither should be quoted to more digits than the table gives.
+
+**Why the muscles behave this way.** In the reversal program the arm muscles must switch on while the wrist muscles must switch off. Muscles switch on roughly four times faster than they switch off in this model, so the newly driven channel outruns the fading one. The sum rises faster at first and then overshoots, peaking at 10.80 N m about 45 ms after the transition (@fig-two-models, right). The early shortfall and the late overshoot partly offset in the total. For a larger delivery target, arm torque 20 N m instead of 16, the faster rise wins outright: reversal scores 0.1505 against 0.1918 N m s for persistent direction at the converged step. Under this model the "keep it loaded" strategy is not better, and the sign of the comparison depends on the task. In @fig-robustness the left panel shows the muscle-model difference against step size for both targets, and the right panel shows the dead-zone difference against gap width for three time constants.
+
+![How Robust Is the Persistent-Direction Advantage?](figures/lead_wrist_preload/fig_preload_robustness.svg){#fig-robustness fig-alt="Left panel: two lines against integration step on a log axis; the 10 newton metre line is slightly above zero and falls toward zero as the step shrinks; the 14 newton metre line sits near minus 0.04. Right panel: three rising lines against dead-zone half-width, all starting at zero for zero width."}
+
+The honest summary is that the preload hypothesis is **model-dependent**. It predicts a large benefit only if biological transmission really contains something like a gap. A gap is not absurd: muscle models give a tendon a slack length below which it carries no force [@thelen2003adjustment], and a hand can shift on a grip. But a tendon held above its slack length by even light activation behaves as a spring, not as play. Whether there is any gap to take up during a swing, in the wrist, the forearm or the grip, is the first thing to measure.
+
+## Fit With the Heavy-Hit Analysis {#sec-heavy-hit}
+
+The [heavy-hit article](technology-heavy-hit-impact-coupling.html) withdrew earlier claims of near-total decoupling and hand isolation, and states that no player-specific acoustic advantage has been established. Preload fits that corrected picture only in a limited way. It cannot add mass to the strike. It can change the *state the club arrives in*: how bent and stressed the shaft is, and how stiffly the hands hold the grip.
+
+![Time Scales Around Impact](figures/lead_wrist_preload/fig_impact_timescales.svg){#fig-timescales fig-alt="Log-scale timeline: contact and shaft round trip near half a millisecond; modelled gaps of 11.5 and 22 milliseconds; reflex windows from 20 to 45 and 45 to 100 milliseconds."}
+
+@fig-timescales puts the numbers on one axis. Contact is drawn at an illustrative 0.45 ms, the value used in the [impact-mechanics reference](impact-mechanics-and-ball-flight.html); it is not a constant. Ball contact lasts well under a millisecond, and its length depends on equipment and speed [@roberts2001contacttime]. With the heavy-hit article's assumed steel properties, an axial wave makes a round trip along the shaft in about 445 microseconds, comparable to contact. The fastest stretch responses reported in the arm start about 20 ms after a disturbance, with longer-latency responses from 45 to 100 ms [@kurtzer2009multijoint]. So nothing the nervous system does in response to impact can act during contact. Anything the hands contribute must already be in place: the activation, the co-contraction and the shaft prestress set up beforehand. Shaft stress present at contact needs no newly launched wave to matter.
+
+The grip is a mode-dependent boundary, not a simple loud-or-quiet switch. The [grip-impedance section](technology-heavy-hit-impact-coupling.html#sec-impact-grip-impedance) and its sources show a firmer grip can damp some modes and leave others, and one key study is internally inconsistent about whether firmer grip raises or lowers damping [@chiementin2019grip]. A clamped-club experiment found only a limited influence of the remote grip during the tested collision [@corke2018gripping]. Sound and feel are correlated in elite golfers [@roberts2005sound], but that does not show that a body adds mass to the strike. Any claimed sound difference between a "firm" and a "soft" lead wrist must survive level matching and matched delivery before it counts.
+
+## What Would Falsify It {#sec-falsify}
+
+| Hypothesis | Observable | Weakened or falsified if |
+|---|---|---|
+| The wrist–grip path has backlash-like slack | Transmission delay and zero-force interval when a channel reverses | No measurable dead zone or reversal delay, beyond what activation and tendon lag explain |
+| A firm lead wrist means persistent-direction loading | Bilateral grip wrench and wrist moments through the late downswing | Golfers who report a firm lead wrist show the same channel signs and grip couple as others, under a matched task |
+| Persistent loading improves torque delivery | Tracking of a declared torque or club-acceleration target | No difference, or reversal is better, as the muscle model already allows |
+| Preload changes the strike | Shaft strain, head and shaft acceleration, calibrated sound | The difference disappears with level-matched listening or matched delivery |
+| Any effect is real for individuals | Participant-held-out comparison | The effect does not survive participant holdout |
+
+: Hypotheses, what to measure, and what would count against each. {#tbl-falsify}
+
+## Measurement Plan {#sec-measure}
+
+The plan follows the measurement section of the [torque-allocation chapter](proximal_distal_energy_transfer/index.html#sec-torque-allocation-preload) and the [bilateral hand-wrench validation page](../models/bilateral-hand-wrench-validation.html).
+
+1. Bilateral six-axis grip wrench and grip-pressure distribution, expressed at a declared club reference point.
+2. Perturbation-based estimates of tangent stiffness at the wrist and grip, to separate stiffness from slack.
+3. Forearm and shoulder surface EMG, read as activation *timing* only, not as torque.
+4. Shaft strain, and head and shaft accelerometry, through contact.
+5. Calibrated audio, with blind, level-matched listening tests.
+6. Comparison of persistent and reversed loading on held-out participants, with no universal optimum asserted from group means.
+
+## Scope and Open Blockers {#sec-scope}
+
+The following are not resolved by this draft and are scoped out of its claims.
+
+- UpstreamDrift studies VAR-04 (grip preload to dispersion) and VAR-05 (impedance to dispersion) are deferred, and the null-space exploration epic is marked publication-blocked. Nothing here concerns dispersion.
+- High-severity critiques `intentional_constraint_collapse`, `stiffness_pulse_paradox` and `nullspace_interpretation` remain open in [the adjudication summary](../critiques/adjudication-summary.html). The internal-wrench section uses only the definition of $\ker\mathcal G$, not the contested claims.
+- The bilateral hand-wrench protocol has run only on synthetic fixtures.
+- Player and teacher descriptions are unsourced (@sec-feel).
+<!-- TODO(source, #5134): confirm whether a published measurement of wrist or grip backlash exists; none was found in the repository's bibliography. -->
+
+## Reproducing the Numbers {#sec-reproduce}
+
+Every number in @tbl-models and every figure is regenerated by `python3 -m scripts.build_lead_wrist_preload_figures`, which writes `data/lead_wrist_preload/results.json`. The models live in `src/tools/lead_wrist_preload_models.py`, a port of [`torque_allocation_preload.py`](https://github.com/D-sorganization/UpstreamDrift/blob/b700e58941205af6f673f13ebbffcd30f8cca9d8/scripts/research/proximal_distal_energy/torque_allocation_preload.py) and [`advanced_biological_bridge.py`](https://github.com/D-sorganization/UpstreamDrift/blob/b700e58941205af6f673f13ebbffcd30f8cca9d8/scripts/research/proximal_distal_energy/advanced_biological_bridge.py) at UpstreamDrift `b700e589` (byte-identical at `3fd2a59e`, the revision the expected test values were produced from). `tests/test_lead_wrist_preload_models.py` checks the port against values produced by the original code. The step-converged estimates are a Richardson extrapolation of the first-order Euler results at 0.02 and 0.01 ms; an independent check reached the same values to four figures. The published chapters report the same original results: the [torque-allocation chapter](proximal_distal_energy_transfer/index.html#sec-torque-allocation-preload) for the dead-zone model and the [proximal-distal article](proximal-distal-energy-transfer.html) for the muscle model.
+
+## Related Articles {.unnumbered}
+
+- [Classic Sources of Nonlinearity](sources-of-nonlinearity.html): backlash and dead-zone models in general.
+- [Intentional Constraint Collapse](intentional-constraint-collapse.html): internal hand loads and their costs.
+- [The Physics of a Heavy Hit](technology-heavy-hit-impact-coupling.html): contact time, shaft waves and grip impedance.
+- [Bilateral Hand-Wrench Validation](../models/bilateral-hand-wrench-validation.html): the measurement protocol.
+
+## References {.unnumbered}
+
+::: {#refs}
+:::
