@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5161 · Add Cursor Cloud Environment.Json Fleet Bootstrap (RM Cursor-Cloud-Bootstrap).
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5161
+- **Branch:** cursor/cursor-cloud-environment-e0f5
+- **PR:** #5162
+- **Paths:** see #5162
+- **Started:** 2026-10-24
+- **Last verified:** 2026-10-24 (`2be33b30`; collated from changes/5161-add-cursor-cloud-environment-json-fleet.md)
+- **Summary:** Add Cursor Cloud environment.json fleet bootstrap (RM cursor-cloud-bootstrap).
+- **Next step:** Merge after CI green.
+
 ### DL-#2195 · Add Conflict-Disarm Caller Workflow (Dry-Run) for RM Rollout
 
 - **State:** in_review
