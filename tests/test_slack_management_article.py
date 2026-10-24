@@ -13,6 +13,14 @@ from typing import Any
 
 import pytest
 
+from src.tools.slack_transmission import (
+    PERSISTENT,
+    ROLE_REVERSAL,
+    Horizon,
+    Representation,
+    Shape,
+    simulate,
+)
 from src.tools.utils.frontmatter import split_frontmatter
 from src.tools.utils.frontmatter_schema import validate_article_frontmatter
 
@@ -25,6 +33,8 @@ REPS = SECTIONS["representations"]["representations"]
 FLIP = SECTIONS["flip"]
 SPLIT = SECTIONS["split"]["representations"]
 PAIRS = SECTIONS["split"]["internal_pair_grid_nm"]
+COMPANION_WINDOW = Horizon(duration_s=0.12)
+LAG_GRID_S = (0.008, 0.018, 0.035)
 
 
 def fixed(value: float, places: int) -> str:
@@ -122,6 +132,22 @@ def test_smooth_spring_overtakes_the_dead_zone_only_below_about_6_mrad() -> None
     assert 0.0059 < max(larger) < 0.0061 and "below about 6 mrad" in TEXT
 
 
+def _companion_window_errors(time_constant: float) -> tuple[float, float]:
+    rep = Representation("dead_zone", Shape.DEAD_ZONE, 0.012, time_constant)
+    persistent = simulate(PERSISTENT, rep, grid=COMPANION_WINDOW).error_impulse_nms
+    return persistent, simulate(ROLE_REVERSAL, rep, grid=COMPANION_WINDOW).error_impulse_nms
+
+
+def test_lag_reconciliation_numbers_match_a_fresh_0_12_s_run() -> None:
+    errors = [_companion_window_errors(lag) for lag in LAG_GRID_S]
+    differences = ", ".join(fixed(rev - per, 4) for per, rev in errors[:2])
+    assert f"{differences} and {fixed(errors[2][1] - errors[2][0], 4)} N m s" in TEXT
+    ratios = [f"{100 * (rev - per) / per:.1f}%" for per, rev in errors]
+    assert f"from {ratios[0]} and {ratios[1]} to {ratios[2]} at 35 ms" in TEXT
+    scaled = (errors[0][1] - errors[0][0]) * LAG_GRID_S[2] / LAG_GRID_S[0]
+    assert f"\\approx{scaled:.3f}$" in TEXT
+
+
 def test_front_matter_is_valid_and_registers_the_bibliography() -> None:
     front, _ = split_frontmatter(TEXT)
     assert validate_article_frontmatter(front, "articles/slack-management-linked-systems.qmd") == []
@@ -147,7 +173,10 @@ def test_front_matter_is_valid_and_registers_the_bibliography() -> None:
         "10 mrad stretch produced by the final 6 N m wrist torque",
         "**Integrated tracking error** $J$",
         "*advantage $A$, relative to persistent*",
-        "calls *the switch*",
+        "from 6 N m before *the switch* to 10 N m after it",
+        "over its 0.12 s delivery window",
+        "as #5134 reports for the same 0.12 s window",
+        "cdd6f20cf5074b12ec5d862bac783a330e56cacd/articles/firm-lead-wrist-preload.qmd#L100-L129",
         "*preparation shift* $c$",
         "*channel lag mismatch*",
         "[The Firm Lead Wrist as Preload](firm-lead-wrist-preload.qmd)",
@@ -172,6 +201,9 @@ def test_scope_and_review_findings_are_stated(required: str) -> None:
         "slack, backlash or play",
         "rigid and series-elastic",
         "Gears and couplings",
+        "8a9e33165854fdfb23f5b629385c33bb143358b0",
+        "a muscle whose force builds with",
+        "figures label it the transition",
     ],
 )
 def test_removed_or_contradicted_figures_are_absent(forbidden: str) -> None:
