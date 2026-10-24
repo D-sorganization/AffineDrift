@@ -111,9 +111,9 @@ def test_every_quoted_number_matches_the_data(quoted: str) -> None:
     assert quoted in TEXT
 
 
-def test_muscle_margin_is_quoted_to_two_decimals() -> None:
+def test_muscle_margin_is_quoted_as_about_0_95_percent() -> None:
     value = 100 * SECTIONS["muscle_margin"]["relative_advantage"]
-    assert f"{value:.2f}%" == "0.96%" and "0.96%" in TEXT
+    assert f"{value:.3f}%" == "0.952%" and f"an advantage $A$ of about {value:.2f}%" in TEXT
 
 
 def test_best_splits_and_floors_match_the_data() -> None:
@@ -174,8 +174,6 @@ def test_front_matter_is_valid_and_registers_the_bibliography() -> None:
         "**Integrated tracking error** $J$",
         "*advantage $A$, relative to persistent*",
         "from 6 N m before *the switch* to 10 N m after it",
-        "over its 0.12 s delivery window",
-        "as #5134 reports for the same 0.12 s window",
         "cdd6f20cf5074b12ec5d862bac783a330e56cacd/articles/firm-lead-wrist-preload.qmd#L100-L129",
         "*preparation shift* $c$",
         "*channel lag mismatch*",
@@ -202,6 +200,7 @@ def test_scope_and_review_findings_are_stated(required: str) -> None:
         "rigid and series-elastic",
         "Gears and couplings",
         "8a9e33165854fdfb23f5b629385c33bb143358b0",
+        "0.96%",
         "a muscle whose force builds with",
         "figures label it the transition",
     ],
