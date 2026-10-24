@@ -73,3 +73,6 @@ RUN (timeout 1500 python -m pytest tests -q -p no:cacheprovider --maxfail=20 \
         || echo "WARNING: pytest reported failures or timed out") \
     && (timeout 600 npx --no-install jest --ci --silent \
         || echo "WARNING: jest reported failures or timed out")
+
+# Phase B runs as uid 65532 (sandbox-forced); never root.
+USER 65532:65532

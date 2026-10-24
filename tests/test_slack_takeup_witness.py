@@ -25,6 +25,25 @@ def rebuilt(tmp_path_factory: pytest.TempPathFactory) -> tuple[dict[str, Any], P
     return build(target / "results.json", target), target
 
 
+def test_first_takeup_of_a_front_driven_train_matches_the_closed_form() -> None:
+    """Before any coupler engages, the front car under force F closes gap g at sqrt(2 m g / F)."""
+    ones = np.ones((1, witness.TRAIN_CARS - 1))
+    forces = np.zeros((1, witness.TRAIN_CARS))
+    forces[0, 0] = witness.TRAIN_DRIVE
+    chain = witness.Chain(
+        np.ones(witness.TRAIN_CARS),
+        forces,
+        ones * witness.TRAIN_GAP,
+        ones * witness.TRAIN_STIFFNESS,
+        0.0 * ones,
+        witness.TRAIN_DAMPING,
+    )
+    events, _ = witness.simulate(chain, witness.TRAIN_CLOCK)
+    expected = math.sqrt(2 * witness.TRAIN_GAP / witness.TRAIN_DRIVE)
+    assert events[0, 0] == pytest.approx(expected, rel=5e-3)
+    assert np.all(np.diff(events[0]) > 0)
+
+
 def test_first_takeup_of_a_free_hand_matches_the_closed_form() -> None:
     """Before any coupler engages, a hand under torque u closes gap g at sqrt(2 j g / u)."""
     draw = witness.HandDraw(
