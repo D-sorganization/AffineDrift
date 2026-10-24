@@ -83,7 +83,7 @@ def figure_robustness(results: dict[str, Any]) -> None:
         xscale="log",
         xlabel="Integration Step (ms)",
         ylabel="J(Reversal) − J(Persistent) (N m s)",
-        title="Muscle Model: Gap Versus Step Size",
+        title="Muscle Model: Difference Versus Step Size",
     )
     axes[0].legend(fontsize=9)
     grid = results["dead_zone_sensitivity"]["difference_nms"]
@@ -95,7 +95,7 @@ def figure_robustness(results: dict[str, Any]) -> None:
     axes[1].set(
         xlabel="Dead-Zone Half-Width (rad)",
         ylabel="J(Reversal) − J(Persistent) (N m s)",
-        title="Dead-Zone Model: Gap Versus Dead-Zone Width",
+        title="Dead-Zone Model: Difference Versus Dead-Zone Width",
     )
     axes[1].legend(fontsize=9)
     _save(figure, "fig_preload_robustness")
