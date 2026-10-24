@@ -53,7 +53,7 @@ def _plot_pair(axis: Axes, traces: tuple[dict[str, Any], ...], title: str) -> No
     axis.plot(
         time_ms, trace["desired_net_nm"][after], color=DESIRED, ls="--", lw=1.4, label="Desired"
     )
-    axis.set(title=title, xlabel="Time After Transition (ms)", ylabel="Net Torque (N m)")
+    axis.set(title=title, xlabel="Time After the Switch (ms)", ylabel="Net Torque (N m)")
     axis.legend(loc="lower right", fontsize=9)
 
 
@@ -139,7 +139,7 @@ def figure_internal_wrench() -> None:
         yticks=[0, 1, 2],
         yticklabels=["Cancels on Club", "Club Feels", "Two Channels"],
     )
-    axis.set_title("Same Net Torque, Different Internal Load (Persistent Program After Transition)")
+    axis.set_title("Same Net Torque, Different Internal Load (Persistent Program After the Switch)")
     _save(figure, "fig_internal_wrench")
 
 
