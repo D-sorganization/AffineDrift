@@ -87,6 +87,7 @@ def _quoted_values() -> list[str]:
         f"by {1000 * FLIP['reference_stretch_rad']:.0f} mrad",
         *(f"{1000 * curve[index_12]:.1f}" for curve in zero_12),
         ms(REPS["dead_zone"]["role_reversal"]["recovery_delay_s"][1]),
+        f"still gives an advantage of {percent(lags['swapped_lags_relative_advantage'])}",
         fixed(at_pair("dead_zone", "error_impulse_nms", 9.0), 4),
         fixed(at_pair("dead_zone", "error_impulse_nms", 10.0), 4),
         fixed(at_pair("smooth_stiffening", "error_impulse_nms", 9.0), 4),
@@ -144,6 +145,12 @@ def test_front_matter_is_valid_and_registers_the_bibliography() -> None:
         "stiffness and gap held fixed",
         "it is not an angular impulse",
         "10 mrad stretch produced by the final 6 N m wrist torque",
+        "**Integrated tracking error** $J$",
+        "*advantage $A$, relative to persistent*",
+        "calls *the switch*",
+        "*preparation shift* $c$",
+        "*channel lag mismatch*",
+        "[The Firm Lead Wrist as Preload](firm-lead-wrist-preload.qmd)",
     ],
 )
 def test_scope_and_review_findings_are_stated(required: str) -> None:
@@ -161,6 +168,10 @@ def test_scope_and_review_findings_are_stated(required: str) -> None:
         "error impulse**",
         "Co-contraction or over-tightening",
         "deflection the torque change produces",
+        "Play (backlash)",
+        "slack, backlash or play",
+        "rigid and series-elastic",
+        "Gears and couplings",
     ],
 )
 def test_removed_or_contradicted_figures_are_absent(forbidden: str) -> None:
