@@ -155,6 +155,25 @@ def activation_time_constants(activation: npt.ArrayLike) -> tuple[FloatArray, Fl
     return TAU_ACTIVATION_S * scale, TAU_DEACTIVATION_S / scale
 
 
+def switch_time_constants_ms(program: Program = REVERSAL) -> dict[str, float]:
+    """Activation time constant (ms) of each muscle at t = 0, rising or decaying as commanded.
+
+    Assumes the preparation window has settled each activation at its pre-switch target, which
+    holds for the published programs. Muscle order is (arm+, arm-, wrist+, wrist-).
+    """
+    pre = _activation_targets(program.arm_pre_nm, program.wrist_pre_nm)
+    post = _activation_targets(program.arm_post_nm, program.wrist_post_nm)
+    rise, decay = activation_time_constants(pre)
+    tau_ms = 1e3 * np.where(post > pre, rise, decay)
+    names = ("arm_positive", "arm_negative", "wrist_positive", "wrist_negative")
+    rows = zip(names, post > pre, tau_ms, np.isclose(post, pre), strict=True)
+    return {
+        f"{name}_{'rise' if rising else 'decay'}": float(tau)
+        for name, rising, tau, unchanged in rows
+        if not unchanged
+    }
+
+
 def _activation_step(excitation: FloatArray, activation: FloatArray, step_s: float) -> FloatArray:
     """One Euler step of first-order activation with faster rise than decay."""
     rise, decay = activation_time_constants(activation)
@@ -282,6 +301,7 @@ def build_results() -> dict[str, Any]:
         "muscle_step_audit": muscle_step_audit(),
         "muscle_step_audit_net_14": muscle_step_audit((PERSISTENT_LARGE, REVERSAL_LARGE)),
         "shaft_round_trip_s": shaft_round_trip_s(),
+        "switch_time_constants_ms": switch_time_constants_ms(),
         "decay_to_rise_ratio": {
             f"activation_{level:g}": float(ratio)
             for level, ratio in zip(
