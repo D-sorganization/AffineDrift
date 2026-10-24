@@ -175,7 +175,7 @@ def test_front_matter_is_valid_and_registers_the_bibliography() -> None:
         "*advantage $A$, relative to persistent*",
         "at its 0.2 ms step over its 0.12 s delivery window",
         "For a 14 N m delivery target, on the same 0.12 s window",
-        "leaves the wrist at the centre of its gap",
+        "leaves the wrist torque at zero, the centre of its gap: $c=10$",
         "per-channel error $J_\\text{ch}$ (0.646",
         "are recomputed by `tests/test_slack_management_article.py`",
         "from 6 N m before *the switch* to 10 N m after it",
