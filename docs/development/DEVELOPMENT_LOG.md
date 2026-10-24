@@ -1368,12 +1368,12 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** shipped
 - **Owner:** claude
-- **PR:** #4652
+- **PR:** #4652, #5157
 - **Issue:** #4588 (epic #4594)
 - **Branch:** `claude/issue-4588`
 - **Paths:** `scripts/check_governance_vocabulary.py`, `tests/test_check_governance_vocabulary.py`, `config/governance-vocabulary-baseline.json`, `pages/glossary.qmd`, `.github/workflows/ci-standard.yml`, plus prose edits across `pages/`, `resources/`, `books/`, and `models/`
 - **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: 52/52 tests pass across test_check_governance_vocabulary.py and test_check_terminology.py; lint clean against baseline); metadata provenance `382446d0dafe` (original entry, not new scientific or CI validation)
+- **Last verified:** 2026-10-24 (`67b71248`; collated from changes/4588-refresh-governance-vocabulary-baseline-a.md)
 - **Summary:** Adds a warn-mode CI lint for internal governance vocabulary ("governed", "qualified", "provenance", "protected", "fail-closed") in reader prose, a plain-language glossary page, and removes the vocabulary from the hub/entry reader pages. Full 75% corpus-wide reduction is blocked on the still-open prerequisite #4587 (editorial style guide) for the remaining `articles/` chapter corpus; see the HANDOFF.md Blocked section.
 - **Next step:** Reader-entry wording and CI lint shipped in PR #4652; the remaining article-corpus reduction awaits #4587 editorial guidance.
 - **Shipped:** 2026-09-30 (PR #4652 merge 382446d0; issue #4588 closed completed)
