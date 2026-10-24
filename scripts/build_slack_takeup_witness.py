@@ -90,30 +90,35 @@ def _train_figure() -> Figure:
     return figure
 
 
-def _nullity_figure(results: dict[str, Any]) -> Figure:
-    """Unresolved dimensions before and after event observations in Toys B and C."""
-    split = results["split_visibility"]
-    names = [
-        "B: Rigid Grip (1 Unknown)",
-        "B: Slack, Nuisance Known (1 Unknown)",
-        f"B: Slack, Nuisance Free ({split['unknowns']} Unknowns)",
+def _blind_counts(results: dict[str, Any]) -> tuple[list[tuple[str, int, int]], ...]:
+    """(label, blind directions, unknowns) rows for Toy B and for Toy C."""
+    split, flow = results["split_visibility"], results["first_order"]
+    toy_b = [
+        ("Rigid Grip", 1, 1),
+        ("Slack, Nuisance Known", 1 - min(1, split["rank_all"]), 1),
+        ("Slack, Nuisance Free", split["unknowns"] - split["rank_all"], split["unknowns"]),
+        ("First-Order Take-Up", flow["unknowns"] - flow["rank"], flow["unknowns"]),
     ]
-    values = [1, 1 - min(1, split["rank_all"]), split["unknowns"] - split["rank_all"]]
-    flow = results["first_order"]
-    names.append(f"B': First-Order Take-Up ({flow['unknowns']} Unknowns)")
-    values.append(flow["unknowns"] - flow["rank"])
-    names += ["C: " + row["channel"].title() for row in results["grasp"]]
-    values += [row["nullity"] for row in results["grasp"]]
-    figure, axis = plt.subplots(figsize=(8, 4.2), layout="constrained")
-    colors = ["#4c72b0"] * 4 + ["#dd8452"] * len(results["grasp"])
-    axis.barh(names[::-1], values[::-1], color=colors[::-1])
-    for index, value in enumerate(values[::-1]):
-        axis.text(value + 0.08, index, str(value), va="center")
-    axis.set(
-        xlabel="Unresolved Dimensions After Observation",
-        title="Nullity Counts (Toy C Kernel Has 6 Dimensions)",
-    )
-    axis.grid(axis="x", alpha=0.25)
+    toy_c = [(row["channel"].title(), row["nullity"], 6) for row in results["grasp"]]
+    return toy_b, toy_c
+
+
+def _nullity_figure(results: dict[str, Any]) -> Figure:
+    """Noise-free blind-direction counts, Toy B and Toy C on separate panels."""
+    figure, axes = plt.subplots(2, 1, figsize=(8, 5.2), layout="constrained")
+    titles = ("Toy B: One Rotation Axis", "Toy C: Six-Dimensional Grasp Kernel")
+    for axis, rows, title, color in zip(
+        axes, _blind_counts(results), titles, ("#4c72b0", "#dd8452"), strict=True
+    ):
+        names, blind, unknowns = zip(*rows[::-1], strict=True)
+        axis.barh(names, unknowns, color="none", edgecolor=color, label="Unknowns")
+        axis.barh(names, blind, color=color, label="Blind After Observation")
+        for index, (value, total) in enumerate(zip(blind, unknowns, strict=True)):
+            axis.text(total + 0.08, index, f"{value} of {total}", va="center")
+        axis.set(title=title, xlim=(0, 8))
+        axis.grid(axis="x", alpha=0.25)
+    axes[0].legend(loc="lower right", fontsize=8)
+    axes[1].set_xlabel("Directions (Noise-Free Rank Count)")
     return figure
 
 
@@ -150,6 +155,10 @@ def _pair_figure(results: dict[str, Any]) -> Figure:
         axes[1].plot(time, positions[:, trial, 1], style, color="black", label=who)
     for moment in pair["target_times"] + pair["matched_times"]:
         axes[0].axvline(moment * 1e3, color="gray", linewidth=0.8, linestyle=":")
+    edges = ((witness.HAND_GAP, "--", "Band Edge"), (pair["nuisance"][0], "-.", "Wide Trail Edge"))
+    for edge, style, label in edges:
+        axes[0].axhline(edge, color="gray", linewidth=0.8, linestyle=style, label=label)
+        axes[0].axhline(-edge, color="gray", linewidth=0.8, linestyle=style)
     axes[0].set(
         xlabel="Time (ms)",
         ylabel="Coupler Stretch (rad)",
@@ -159,7 +168,8 @@ def _pair_figure(results: dict[str, Any]) -> Figure:
     axes[1].set(xlabel="Time (ms)", ylabel="Club Angle (rad)", title="Net Club Rotation")
     for axis in axes:
         axis.grid(alpha=0.25)
-        axis.legend(fontsize=8)
+    axes[0].legend(fontsize=7, ncol=2, loc="upper center", bbox_to_anchor=(0.5, -0.2))
+    axes[1].legend(fontsize=8)
     return figure
 
 
