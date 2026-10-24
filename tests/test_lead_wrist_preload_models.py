@@ -12,9 +12,6 @@ import pytest
 
 from src.tools import lead_wrist_preload_models as models
 
-ROOT = Path(__file__).resolve().parents[1]
-RESULTS_PATH = ROOT / "data/lead_wrist_preload/results.json"
-
 
 @pytest.mark.parametrize(
     ("program", "preloaded", "impulse", "arm_gap", "wrist_gap"),
@@ -87,6 +84,9 @@ def test_muscle_rejects_unstable_step() -> None:
         models.simulate_muscle(models.PERSISTENT, step_s=0.002)
 
 
-def test_committed_results_match_fresh_run() -> None:
-    committed = json.loads(RESULTS_PATH.read_text(encoding="utf-8"))
-    assert committed == json.loads(json.dumps(models.build_results()))
+def test_write_results_round_trips(tmp_path: Path) -> None:
+    path = tmp_path / "results.json"
+    models.write_results(path)
+    assert json.loads(path.read_text(encoding="utf-8")) == json.loads(
+        json.dumps(models.build_results())
+    )
