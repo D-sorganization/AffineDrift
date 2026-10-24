@@ -10,8 +10,8 @@
 
 ## Null-Space Exploration Article (Epic #5093)
 
-- Article `articles/after-one-solution-null-space-exploration.qmd` (propositions P1-P7 with proofs) and its examples are delivered as four draft PRs: AD-1 #5100 (`claude/nse-ad1-5094`, static examples), AD-2 #5101 (`claude/nse-ad2-5095`, continuation examples), AD-3 #5105 (`claude/nse-ad3-5096`, article and bibliography), AD-4 #5107 (`claude/nse-ad4-5097`, registration, claim-audit, links, `_quarto.yml`, companion pins). AD-3 is red only on checks AD-4 satisfies: merge #5105 and #5107 together (or merge #5107, which contains AD-3).
-- The UpstreamDrift companion code is in draft PRs #13475, #13470, #13467, #13493; AD-4 pins them `review-required` in `data/companion/pins.json`. AD-5 #5098 (final pins) is gated on the owner merging those UD PRs. Detail and next steps: `docs/development/HANDOFF.md`, section "Null-Space Exploration After One Solution".
+- AD-1 through AD-4 are on `main` (merged PRs #5100, #5101, #5107; superseded AD-3 branch #5105 closed after #5141 restored the pending #5095 change fragment). Article: `articles/after-one-solution-null-space-exploration.qmd` with contract tests in `tests/test_after_one_solution_article.py`; content correction #5137 is merged.
+- UpstreamDrift companion code remains in draft PRs #13475, #13470, #13467, #13493; `data/companion/pins.json` keeps those heads `review-required`. AD-5 #5098 (finalize pins after owner merge of the UD PRs) is the remaining AffineDrift checkpoint. `_quarto.yml` menu entry for the article is an owner decision, not automated.
 
 ## Other Current Boundaries
 
