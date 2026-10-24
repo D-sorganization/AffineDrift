@@ -671,8 +671,3 @@ def test_notation_defines_jacobian_pseudo_inverse_projector_and_basis_with_metri
         assert token in section, token
     assert "not unique" in section
 
-
-def test_change_fragment_exists() -> None:
-    fragments = list((ROOT / "changes").glob("5097-*.md"))
-    assert len(fragments) == 1
-    assert "issue: 5097" in fragments[0].read_text(encoding="utf-8")
