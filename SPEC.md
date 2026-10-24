@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-24 | #5162 | Add Cursor Cloud environment.json fleet bootstrap (RM cursor-cloud-bootstrap). |
 | 2026-10-24 | #5157 | Refresh governance-vocabulary baseline after NSE and FDM reader-prose additions |
 | 2026-10-24 | #5154 | Refresh NSE AD-3 agent handoff after article delivery on main |
 | 2026-10-24 | #5152 | Correct the false if-and-only-if in the After One Solution level sub-fibre claim: end levels may be facets |
