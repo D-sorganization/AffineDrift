@@ -378,6 +378,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5137 · Correct the False If-and-Only-If in the After One Solution Level Sub-Fibre Claim: End Levels May Be Facets
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5137
+- **Branch:** merged via #5152
+- **PR:** #5152
+- **Paths:** see #5152
+- **Started:** 2026-10-24
+- **Last verified:** 2026-10-24 (`84d64373`; collated from changes/5137-correct-the-false-if-and-only-if-in-the.md)
+- **Summary:** Correct the false if-and-only-if in the After One Solution level sub-fibre claim: end levels may be facets
+- **Next step:** Shipped in PR #5152.
+
 ### DL-#5131 · Bump Pypdf to 6.21.2 to Clear CVE-2026-115572/115580/115585 Failing Pip-Audit
 
 - **State:** shipped
