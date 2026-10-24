@@ -114,3 +114,21 @@ def test_root_hygiene_allows_devcontainer_directory() -> None:
     from scripts.check_root_hygiene import ALLOWED_TRACKED_ROOT_DIRECTORIES
 
     assert ".devcontainer" in ALLOWED_TRACKED_ROOT_DIRECTORIES
+
+
+def test_root_hygiene_allows_cursor_directory() -> None:
+    """The root-hygiene allowlist must permit the .cursor directory."""
+    from scripts.check_root_hygiene import ALLOWED_TRACKED_ROOT_DIRECTORIES
+
+    assert ".cursor" in ALLOWED_TRACKED_ROOT_DIRECTORIES
+
+
+def test_cursor_cloud_environment_bootstraps_via_repository_management() -> None:
+    """Cursor Cloud install must shallow-clone RM and run fleet bootstrap.sh."""
+    env_path = REPO_ROOT / ".cursor" / "environment.json"
+    data = json.loads(env_path.read_text(encoding="utf-8"))
+    install = data["install"]
+    assert "FLEET_RM_ROOT" in install
+    assert "git clone --depth 1" in install
+    assert "Repository_Management" in install
+    assert "scripts/cursor/bootstrap.sh" in install

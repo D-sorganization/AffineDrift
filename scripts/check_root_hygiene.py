@@ -83,6 +83,7 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
     {
         ".benchmarks",
         ".claude",
+        ".cursor",
         ".devcontainer",
         ".gaai",
         ".github",
