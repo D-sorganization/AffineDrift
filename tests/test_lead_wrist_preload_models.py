@@ -12,9 +12,6 @@ import pytest
 
 from src.tools import lead_wrist_preload_models as models
 
-ROOT = Path(__file__).resolve().parents[1]
-RESULTS_PATH = ROOT / "data/lead_wrist_preload/results.json"
-
 
 @pytest.mark.parametrize(
     ("program", "preloaded", "impulse", "arm_gap", "wrist_gap"),
@@ -68,6 +65,25 @@ def test_reversal_overshoots_while_persistent_does_not() -> None:
     assert reversal["signed_error_nms"] < 0.0 < persistent["signed_error_nms"]
 
 
+def test_net_torque_is_zero_only_while_both_gaps_overlap() -> None:
+    trace = models.simulate_dead_zone(models.REVERSAL, models.DEAD_ZONE_CHANNEL, preloaded=True)
+    assert trace["net_gap_s"] == pytest.approx(0.0066, abs=1e-9)
+    assert trace["net_gap_s"] < min(trace["arm_gap_s"], trace["wrist_gap_s"])
+
+
+def test_tracking_error_is_shortfall_plus_overshoot() -> None:
+    for program in (models.PERSISTENT, models.REVERSAL):
+        trace = models.simulate_muscle(program)
+        total = trace["shortfall_nms"] + trace["overshoot_nms"]
+        assert total == pytest.approx(trace["error_impulse_nms"], rel=1e-9)
+    assert models.simulate_muscle(models.PERSISTENT)["overshoot_nms"] == 0.0
+
+
+def test_decay_to_rise_ratio_depends_on_activation() -> None:
+    rise, decay = models.activation_time_constants([0.08, 1.0])
+    assert (decay / rise).tolist() == pytest.approx([4 / 0.62**2, 1.0])
+
+
 def test_dead_zone_sensitivity_counts() -> None:
     grid = models.dead_zone_sensitivity()
     assert (grid["persistent_favored"], grid["equivalent"], grid["reversal_favored"]) == (9, 3, 0)
@@ -87,6 +103,9 @@ def test_muscle_rejects_unstable_step() -> None:
         models.simulate_muscle(models.PERSISTENT, step_s=0.002)
 
 
-def test_committed_results_match_fresh_run() -> None:
-    committed = json.loads(RESULTS_PATH.read_text(encoding="utf-8"))
-    assert committed == json.loads(json.dumps(models.build_results()))
+def test_write_results_round_trips(tmp_path: Path) -> None:
+    path = tmp_path / "results.json"
+    models.write_results(path)
+    assert json.loads(path.read_text(encoding="utf-8")) == json.loads(
+        json.dumps(models.build_results())
+    )

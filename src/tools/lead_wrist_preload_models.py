@@ -44,6 +44,7 @@ MAX_FORCES_N = np.array([1000.0, 1000.0, 500.0, 500.0])
 CAPACITIES_NM = (40.0, 15.0)
 BASELINE_ACTIVATION = 0.08
 MIN_ACTIVATION = 0.001
+ACTIVATION_RATIO_LEVELS = (MIN_ACTIVATION, BASELINE_ACTIVATION, 1.0)
 TAU_ACTIVATION_S = 0.010
 TAU_DEACTIVATION_S = 0.040
 TAU_TENDON_S = 0.012
@@ -132,6 +133,9 @@ def simulate_dead_zone(
         "error_impulse_nms": _tracking_error(post.sum(), torque.sum(axis=1), time),
         "arm_gap_s": float(gaps[0]),
         "wrist_gap_s": float(gaps[1]),
+        "net_gap_s": float(
+            np.count_nonzero(np.abs(torque.sum(axis=1)) <= ZERO_TORQUE_TOLERANCE_NM) * step_s
+        ),
     }
 
 
@@ -145,11 +149,16 @@ def _activation_targets(arm_nm: float, wrist_nm: float) -> FloatArray:
     return targets
 
 
+def activation_time_constants(activation: npt.ArrayLike) -> tuple[FloatArray, FloatArray]:
+    """Rise and decay time constants (s); both scale with the current activation."""
+    scale = 0.5 + 1.5 * np.asarray(activation, dtype=float)
+    return TAU_ACTIVATION_S * scale, TAU_DEACTIVATION_S / scale
+
+
 def _activation_step(excitation: FloatArray, activation: FloatArray, step_s: float) -> FloatArray:
     """One Euler step of first-order activation with faster rise than decay."""
-    rising = excitation > activation
-    scale = 0.5 + 1.5 * activation
-    tau = np.where(rising, TAU_ACTIVATION_S * scale, TAU_DEACTIVATION_S / scale)
+    rise, decay = activation_time_constants(activation)
+    tau = np.where(excitation > activation, rise, decay)
     return np.clip(activation + step_s * (excitation - activation) / tau, MIN_ACTIVATION, 1.0)
 
 
@@ -187,6 +196,12 @@ def simulate_muscle(program: Program, *, step_s: float = MUSCLE_STEP_S) -> dict[
         "transmitted_net_nm": transmitted,
         "error_impulse_nms": _tracking_error(desired[after], transmitted[after], time[after]),
         "signed_error_nms": float(np.trapezoid((desired - transmitted)[after], time[after])),
+        "shortfall_nms": float(
+            np.trapezoid(np.maximum(desired - transmitted, 0.0)[after], time[after])
+        ),
+        "overshoot_nms": float(
+            np.trapezoid(np.maximum(transmitted - desired, 0.0)[after], time[after])
+        ),
     }
 
 
@@ -267,6 +282,14 @@ def build_results() -> dict[str, Any]:
         "muscle_step_audit": muscle_step_audit(),
         "muscle_step_audit_net_14": muscle_step_audit((PERSISTENT_LARGE, REVERSAL_LARGE)),
         "shaft_round_trip_s": shaft_round_trip_s(),
+        "decay_to_rise_ratio": {
+            f"activation_{level:g}": float(ratio)
+            for level, ratio in zip(
+                ACTIVATION_RATIO_LEVELS,
+                np.divide(*activation_time_constants(ACTIVATION_RATIO_LEVELS)[::-1]),
+                strict=True,
+            )
+        },
     }
 
 
