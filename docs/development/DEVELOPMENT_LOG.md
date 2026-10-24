@@ -436,12 +436,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5096
 - **Branch:** merged via #5107
-- **PR:** #5107
+- **PR:** #5107, #5154
 - **Paths:** see #5107
 - **Started:** 2026-10-24
-- **Last verified:** 2026-10-24 (`e2e393be`; collated from changes/5096-add-the-after-one-solution-article-on-ex.md)
+- **Last verified:** 2026-10-24 (`00877e1d`; collated from changes/5096-refresh-nse-ad-3-agent-handoff-after-art.md)
 - **Summary:** Add the After One Solution article on exploring dynamically equivalent force allocations (propositions P1-P7, shared-example loader, verified bibliography)
-- **Next step:** Shipped in PR #5107.
+- **Next step:** AD-5 #5098 after UpstreamDrift owner merge
 
 ### DL-#5095 · Add Nonlinear Solution-Manifold Continuation Examples (Tangent Predictor, Gauss-Newton Corrector, Rank-Drop Counterexample) and Tests for the Null-Space Exploration Section (P6)
 
