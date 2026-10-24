@@ -85,7 +85,7 @@ def _ladder() -> Figure:
     right.plot(position * MRAD, play_operator(position, DECLARED_GAP_RAD) * MRAD, label="Play")
     right.plot(position * MRAD, position * MRAD, ":", color="gray", label="No Gap")
     right.set(xlabel="Input Position (mrad)", ylabel="Output Position (mrad)")
-    right.set_title("Backlash (Play) Remembers Its Last Contact")
+    right.set_title("Play Remembers Its Last Contact")
     for axis in (left, right):
         axis.grid(alpha=0.25)
         axis.legend(fontsize=9)
@@ -107,7 +107,7 @@ def _traces() -> Figure:
         axis.grid(alpha=0.25)
     axes[0, 2].tick_params(labelbottom=True)
     for axis in (*axes[1], axes[0, 2]):
-        axis.set_xlabel("Time After Transition (ms)")
+        axis.set_xlabel("Time After the Switch (ms)")
     for axis in axes[:, 0]:
         axis.set_ylabel("Net Transmitted Torque (N m)")
     axes[0, 0].legend(fontsize=9)
@@ -163,9 +163,9 @@ def _split(split: dict[str, Any]) -> Figure:
         axis.axvline(split["persistent_internal_pair_nm"], color="gray", ls=":")
         axis.grid(alpha=0.25)
         axis.legend(fontsize=9)
-    axes[0].set(ylabel="Net Error (N m s)", title="Shifting the Preparation Split")
-    axes[1].set(ylabel="Per-Channel Error (N m s)")
-    axes[2].set(xlabel="Internal Pair c (N m)", ylabel="Overshoot or Norm (N m)")
+    axes[0].set(ylabel="Tracking Error J (N m s)", title="Shifting the Preparation Split")
+    axes[1].set(ylabel="Per-Channel J (N m s)")
+    axes[2].set(xlabel="Preparation Shift c (N m)", ylabel="Overshoot or Norm (N m)")
     return figure
 
 

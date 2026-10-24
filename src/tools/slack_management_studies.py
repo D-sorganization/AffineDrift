@@ -7,6 +7,8 @@ and draws the figures.  All parameters are synthetic sensitivity values.
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 import numpy as np
 from scipy.optimize import brentq
 
@@ -151,12 +153,14 @@ def unequal_lag_section() -> dict[str, object]:
     jump = PERSISTENT.pre_nm[0] - ROLE_REVERSAL.pre_nm[0]
     exact_time = np.log(wrist_lag / arm_lag) * arm_lag * wrist_lag / (wrist_lag - arm_lag)
     exact = jump * (np.exp(-exact_time / arm_lag) - np.exp(-exact_time / wrist_lag))
+    swapped = replace(rep, time_constant_s=wrist_lag, wrist_time_constant_s=arm_lag)
     return {
         "lags_s": list(UNEQUAL_LAGS_S),
         "simulated_min_difference_nm": float(difference[worst]),
         "simulated_min_time_s": float(persistent.time_s[worst]),
         "exact_min_difference_nm": float(exact),
         "exact_min_time_s": float(exact_time),
+        "swapped_lags_relative_advantage": relative_advantage(swapped, STUDY_HORIZON),
     }
 
 
