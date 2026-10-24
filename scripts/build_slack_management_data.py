@@ -47,13 +47,15 @@ MS = 1000.0
 TRACE_WINDOW_S = 0.08
 PLAY_SAMPLES = 400
 REFERENCE_PERIOD = "18ms"
+INSET_BOUNDS = (0.55, 0.07, 0.42, 0.36)  # Axes fraction: empty lower right.
+INSET_YLIM_PERCENT = 15.0
 SPLIT_METRICS = ("error_impulse_nms", "channel_error_impulse_nms", "peak_overshoot_nm")
 LABELS = {
-    "rigid": "Rigid (No Slack)",
+    "rigid": "No Slack (Stiff Spring)",
     "dead_zone": "Dead Zone",
     "smooth_stiffening": "Smooth Stiffening Spring",
-    "series_elastic_activation": "Series Elastic + Activation Lag",
-    "rigid_unequal_lags": "Rigid, Unequal Lags (18 / 36 ms)",
+    "series_elastic_activation": "Spring + Second Linear Lag",
+    "rigid_unequal_lags": "No Slack, Unequal Lags (18 / 36 ms)",
 }
 
 SECTIONS: dict[str, Callable[[], dict[str, Any]]] = {
@@ -126,13 +128,27 @@ def _flip(flip: dict[str, Any]) -> Figure:
     for margin in EQUIVALENCE_MARGINS:
         left.axhline(100 * margin, color="gray", lw=0.7, ls=":")
     left.set(xlabel="Gap or Softening Length (mrad)", ylabel="Persistent Advantage (%)")
-    left.set_title("Error-Impulse Advantage")
+    left.set_title("Tracking-Error Advantage")
+    _margin_inset(left, flip)
     right.set(xlabel="Gap or Softening Length (mrad)", ylabel="Longest Zero Transmission (ms)")
     right.set_title("Zero-Transmission Time (Role Reversal)")
     for axis in (left, right):
         axis.grid(alpha=0.25)
-        axis.legend(fontsize=8)
+        axis.legend(fontsize=8, loc="upper left")
     return figure
+
+
+def _margin_inset(axis: Any, flip: dict[str, Any]) -> None:
+    zoom = axis.inset_axes(INSET_BOUNDS)
+    gap = np.asarray(flip["inset_gap_grid_rad"]) * MRAD
+    for index, curve in enumerate(flip["inset_relative_advantage"].values()):
+        zoom.plot(gap, 100 * np.asarray(curve), ("-", "--")[index], color=f"C{index}")
+    for margin in EQUIVALENCE_MARGINS:
+        zoom.axhline(100 * margin, color="gray", lw=0.7, ls=":")
+        zoom.annotate(f"{margin:.0%}", (gap[-1], 100 * margin), fontsize=7, va="bottom", ha="right")
+    zoom.set_ylim(0.0, INSET_YLIM_PERCENT)
+    zoom.set_title("Margins Near Zero", fontsize=8)
+    zoom.tick_params(labelsize=7)
 
 
 def _split(split: dict[str, Any]) -> Figure:
