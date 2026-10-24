@@ -670,4 +670,3 @@ def test_notation_defines_jacobian_pseudo_inverse_projector_and_basis_with_metri
     for token in ("J^+", "P_W", "ker", "metric", "Euclidean", "basis", "Z", "N"):
         assert token in section, token
     assert "not unique" in section
-
