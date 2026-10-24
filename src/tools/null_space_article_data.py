@@ -8,6 +8,9 @@ and a number cannot be typed into prose without the data agreeing.
 
 The JSON layout is ``{"schema_version": 1, "sections": {"<name>": {...}}}``; the sections are
 ``"linear"`` (propositions P1-P5 and P7 and the toy examples) and ``"continuation"`` (P6).
+
+AD-3 acceptance for issue #5096 is satisfied on ``main``; the article source and contract tests
+are the authoritative delivery surface.
 """
 
 import copy
