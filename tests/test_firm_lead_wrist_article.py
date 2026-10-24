@@ -1,11 +1,16 @@
 """Contract tests for the firm-lead-wrist preload article (#5134)."""
 
+import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
+from src.tools import lead_wrist_preload_models as models
+
 ROOT = Path(__file__).resolve().parents[1]
 ARTICLE_PATH = ROOT / "articles/firm-lead-wrist-preload.qmd"
+RESULTS_PATH = ROOT / "data/lead_wrist_preload/results.json"
 FIGURE_DIR = ROOT / "articles/figures/lead_wrist_preload"
 FIGURES = ("fig_preload_two_models", "fig_preload_robustness", "fig_internal_wrench")
 FIGURES += ("fig_impact_timescales",)
@@ -36,3 +41,26 @@ def test_dead_zone_result_is_not_presented_alone() -> None:
     text = ARTICLE_PATH.read_text(encoding="utf-8")
     assert text.index("0.08998") - text.index("0.1954") < 2000
     assert "@jobe1995" not in text
+
+
+def _results() -> dict[str, Any]:
+    return json.loads(RESULTS_PATH.read_text(encoding="utf-8"))
+
+
+def test_committed_results_match_fresh_run() -> None:
+    assert _results() == json.loads(json.dumps(models.build_results()))
+
+
+def test_review_numbers_are_quoted_from_results() -> None:
+    results, text = _results(), ARTICLE_PATH.read_text(encoding="utf-8")
+    reversal = results["muscle"]["complete_role_reversal"]
+    gap = results["dead_zone"]["complete_role_reversal_preloaded"]["net_gap_s"]
+    quoted = [
+        f"{gap * 1000:.1f} ms",
+        f"{reversal['shortfall_nms']:.4f}",
+        f"{reversal['overshoot_nms']:.4f}",
+        f"{results['muscle']['persistent_direction']['shortfall_nms']:.4f}",
+        f"about {results['decay_to_rise_ratio']['activation_0.08']:.0f} times",
+    ]
+    for value in quoted:
+        assert value in text, value
