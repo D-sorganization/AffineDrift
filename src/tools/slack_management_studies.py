@@ -24,6 +24,8 @@ from src.tools.slack_transmission import (
 
 STUDY_HORIZON = Horizon(duration_s=0.5)  # >= 14 time constants for the slowest channel (35 ms).
 REPRODUCTION_HORIZON = Horizon(duration_s=0.12)  # The window the published values imply.
+PUBLISHED_GRID_GAPS_RAD = (0.0, 0.004, 0.012, 0.024)
+PUBLISHED_EQUIVALENCE_NMS = 1e-10
 DECLARED_GAP_RAD = 0.012
 ACTIVATION_LAG_S = 0.010
 UNEQUAL_LAGS_S = (0.018, 0.036)  # Arm, wrist; the counterexample in Argon's review (PR #5140).
@@ -80,6 +82,23 @@ def _summary(program: Program, rep: Representation, grid: Horizon) -> dict[str, 
     }
 
 
+def _published_grid_verdicts() -> dict[str, int]:
+    """Re-count the published 4-gap x 3-time-constant grid under its 1e-10 N m s tolerance."""
+    counts = {"persistent_favoured": 0, "equivalent": 0, "reversal_favoured": 0}
+    for gap in PUBLISHED_GRID_GAPS_RAD:
+        for time_constant in TIME_CONSTANTS_S:
+            rep = Representation("grid", Shape.DEAD_ZONE, gap, time_constant)
+            persistent = simulate(PERSISTENT, rep, grid=REPRODUCTION_HORIZON).error_impulse_nms
+            reversal = simulate(ROLE_REVERSAL, rep, grid=REPRODUCTION_HORIZON).error_impulse_nms
+            if abs(reversal - persistent) <= PUBLISHED_EQUIVALENCE_NMS:
+                counts["equivalent"] += 1
+            elif reversal > persistent:
+                counts["persistent_favoured"] += 1
+            else:
+                counts["reversal_favoured"] += 1
+    return counts
+
+
 def reproduction_section() -> dict[str, object]:
     """Re-run the published dead-zone case on the published window and record the deviation."""
     rep = REPRESENTATIONS[1]
@@ -91,6 +110,7 @@ def reproduction_section() -> dict[str, object]:
     }
     deviation = max(abs(ours[key] - PUBLISHED_IMPULSES_NMS[key]) for key in ours)
     return {
+        "grid_verdicts": _published_grid_verdicts(),
         "source": UPSTREAM_STUDY_URL,
         "horizon_s": grid.duration_s,
         "published_nms": dict(PUBLISHED_IMPULSES_NMS),

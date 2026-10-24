@@ -37,6 +37,8 @@ def test_reproduces_published_dead_zone_impulses() -> None:
     section = reproduction_section()
     assert section["max_abs_deviation_nms"] < 1e-12
     assert section["reproduced_nms"].keys() == PUBLISHED_IMPULSES_NMS.keys()
+    verdicts = {"persistent_favoured": 9, "equivalent": 3, "reversal_favoured": 0}
+    assert section["grid_verdicts"] == verdicts
 
 
 def test_reproduces_published_zero_transmission_and_delays() -> None:
