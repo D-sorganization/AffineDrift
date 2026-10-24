@@ -360,6 +360,21 @@ def test_forbidden_claims_are_absent() -> None:
     assert "m - \\operatorname{rank} g" not in lower or "strictly" in lower
 
 
+def test_level_subfibre_claim_is_one_way_and_handles_end_levels() -> None:
+    """#5137: dim = d-1 at an end level is possible (facet), so no "if and only if" on interior."""
+    text = ARTICLE.read_text(encoding="utf-8")
+    start = text.index("**Level sub-fibres.**")
+    item = text[start : text.index(r"$\square$", start)]
+    assert "if and only if" not in item
+    assert "exactly when that face is a facet" in item
+    assert "\\{0\\}\times[0,1]" in item  # the [0,1]^2, c=(1,0) end-level facet counterexample
+    # Numeric check of the counterexample: the min face of c.x on the unit square is a facet.
+    vertices = [(0, 0), (0, 1), (1, 0), (1, 1)]
+    for c, face_size in (((1, 0), 2), ((1, 1), 1)):
+        values = [c[0] * x + c[1] * y for x, y in vertices]
+        assert sum(v == min(values) for v in values) == face_size  # 2 vertices: edge; 1: vertex
+
+
 def test_attribution_contract_is_embedded_in_the_identifiability_section() -> None:
     text = _text()
     include = text.index(INCLUDE)
