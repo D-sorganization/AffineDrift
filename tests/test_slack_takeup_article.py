@@ -23,7 +23,9 @@ def _quoted(results: dict[str, Any]) -> list[str]:
         row = hands[regime]
         pct += [f"{100 * row[key]:.1f}%" for key in ("accuracy", "wilson_low", "wilson_high")]
     pct.append(f"{100 * hands['preloaded']['no_events']:.1f}%")
+    pct.append(f"{100 * hands['preloaded']['both_events']:.1f}%")
     times = [f"{1e3 * value:.2f} ms" for value in pair["target_times"] + pair["matched_times"]]
+    times += [f"{1e3 * value:.1f} mrad" for value in pair["nuisance"]]
     flow = results["first_order"]
     times += [f"{1e3 * value:.2f} ms" for value in flow["preload_flip"]["trail_led_times"]]
     times += [
@@ -45,6 +47,7 @@ def _quoted(results: dict[str, Any]) -> list[str]:
             f"{pair['max_club_difference']:.4f} rad",
             f"{split['split_residual']:.2f}",
             f"{split['split_column_norm']:.2f}",
+            "{:.1f} and {:.1f}".format(*split["singular_values"]),
         ]
     )
 
