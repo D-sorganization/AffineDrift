@@ -31,6 +31,7 @@ ACTIVATION_LAG_S = 0.010
 UNEQUAL_LAGS_S = (0.018, 0.036)  # Arm, wrist; the counterexample in Argon's review (PR #5140).
 EQUIVALENCE_MARGINS = (0.01, 0.05, 0.10)
 GAP_GRID_RAD = tuple(float(value) for value in np.linspace(0.0, 0.03, 31))
+INSET_GAP_GRID_RAD = tuple(float(value) for value in np.linspace(0.0, 0.0006, 25))
 TIME_CONSTANTS_S = (0.008, 0.018, 0.035)
 INTERNAL_PAIR_GRID_NM = tuple(float(value) for value in np.arange(0.0, 24.5, 1.0))
 PERSISTENT_INTERNAL_PAIR_NM = 14.0
@@ -190,10 +191,19 @@ def flip_section() -> dict[str, object]:
         }
         for shape in Shape
     }
+    inset = {
+        shape.value: [
+            relative_advantage(Representation("inset", shape, gap), STUDY_HORIZON)
+            for gap in INSET_GAP_GRID_RAD
+        ]
+        for shape in Shape
+    }
     stiffness = REPRESENTATIONS[1].stiffness_nm_rad
     return {
         "gap_grid_rad": list(GAP_GRID_RAD),
         "curves": curves,
+        "inset_gap_grid_rad": list(INSET_GAP_GRID_RAD),
+        "inset_relative_advantage": inset,
         "gap_thresholds_rad": thresholds,
         "reference_stretch_rad": abs(ROLE_REVERSAL.post_nm[1]) / stiffness,
     }
