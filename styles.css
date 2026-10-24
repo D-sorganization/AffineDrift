@@ -311,7 +311,6 @@ main.content .reading-time-estimate span,
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 0 2rem;
-  column-gap: var(--sidebar-gap);
 }
 
 #quarto-content.page-layout-article main.content {
@@ -1192,6 +1191,19 @@ blockquote,
   #quarto-content.page-layout-article {
     padding-right: 0;
     padding-left: 0;
+  }
+
+  /* Quarto's default screen gutters are slightly wider than 1.5rem at our 17px
+     root; after column-gap removal (#5164), tighten them so the body track
+     matches the epic's ~1.5rem mobile gutter target. */
+  #quarto-content.page-layout-article.page-columns {
+    grid-template-columns:
+      [screen-start] 1.5rem
+      [screen-start-inset page-start page-start-inset body-start-outset body-start body-content-start]
+      minmax(0, 1fr)
+      [body-content-end body-end body-end-outset page-end-inset page-end screen-end-inset]
+      1.5rem
+      [screen-end] !important;
   }
 
   #title-block-header.quarto-title-block {
