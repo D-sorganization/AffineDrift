@@ -352,6 +352,24 @@ def test_p4_unbounded_infeasible_and_singleton_are_explicit() -> None:
     assert not shifted.feasible and math.isnan(shifted.lower) and math.isnan(shifted.upper)
 
 
+def _end_level_section_width(c: Array) -> float:
+    """Width of the [0,1]^2 section at the minimum level of ``c . u`` along its one free axis."""
+    box, bound = np.vstack([np.eye(2), -np.eye(2)]), np.array([1.0, 1.0, 0.0, 0.0])
+    whole = affine_fibre(np.zeros((0, 2)), np.zeros(0), rtol=1e-10)
+    level = functional_interval(c, whole.particular, whole.kernel, box, bound).lower
+    section = affine_fibre(c.reshape(1, 2), np.array([level]), rtol=1e-10)
+    axis = section.kernel[:, 0]
+    span = functional_interval(axis, section.particular, section.kernel, box, bound)
+    assert span.feasible
+    return span.upper - span.lower
+
+
+def test_p4_end_level_section_is_a_face_of_dimension_at_most_d_minus_one() -> None:
+    """Article item 4 (#5137): an end level gives a facet or a lower-dimensional face."""
+    assert _end_level_section_width(np.array([1.0, 0.0])) == pytest.approx(1.0)  # facet, dim 1
+    assert _end_level_section_width(np.array([1.0, 1.0])) == pytest.approx(0.0, abs=1e-9)
+
+
 def test_p4_zero_nullity_interval_is_the_particular_value() -> None:
     fibre = affine_fibre(np.eye(2), np.array([1.0, 2.0]), rtol=1e-10)
     inside = functional_interval(
