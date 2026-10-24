@@ -87,6 +87,7 @@ def _quoted_values() -> list[str]:
         f"by {1000 * FLIP['reference_stretch_rad']:.0f} mrad",
         *(f"{1000 * curve[index_12]:.1f}" for curve in zero_12),
         ms(REPS["dead_zone"]["role_reversal"]["recovery_delay_s"][1]),
+        fixed(at_pair("dead_zone", "error_impulse_nms", 9.0), 4),
         fixed(at_pair("dead_zone", "error_impulse_nms", 10.0), 4),
         fixed(at_pair("smooth_stiffening", "error_impulse_nms", 9.0), 4),
         fixed(at_pair("dead_zone", "peak_overshoot_nm", 10.0), 2) + " N m",
@@ -112,6 +113,14 @@ def test_best_splits_and_floors_match_the_data() -> None:
     assert max(plateau) - min(plateau) < 1e-9 and "from 11 to 24 N m" in TEXT
 
 
+def test_smooth_spring_overtakes_the_dead_zone_only_below_about_6_mrad() -> None:
+    smooth = FLIP["curves"]["smooth_18ms"]["relative_advantage"]
+    dead = FLIP["curves"]["dead_zone_18ms"]["relative_advantage"]
+    rows = zip(FLIP["gap_grid_rad"], smooth, dead, strict=True)
+    larger = [gap for gap, smooth_value, dead_value in rows if smooth_value > dead_value]
+    assert 0.0059 < max(larger) < 0.0061 and "below about 6 mrad" in TEXT
+
+
 def test_front_matter_is_valid_and_registers_the_bibliography() -> None:
     front, _ = split_frontmatter(TEXT)
     assert validate_article_frontmatter(front, "articles/slack-management-linked-systems.qmd") == []
@@ -128,12 +137,31 @@ def test_front_matter_is_valid_and_registers_the_bibliography() -> None:
         "1.96% in normalized output RMSE",
         "`maximum_transition_count = 0`",
         "TODO(source)",
+        "may have it too; whether they do has not been measured",
+        "its 0% holds by construction and is not evidence about muscles",
+        "about $-22\\%$",
+        "not a robust optimum",
+        "stiffness and gap held fixed",
+        "it is not an angular impulse",
+        "10 mrad stretch produced by the final 6 N m wrist torque",
     ],
 )
 def test_scope_and_review_findings_are_stated(required: str) -> None:
     assert required in TEXT
 
 
-@pytest.mark.parametrize("forbidden", ["Bosch", "15–40 ms", "15-40 ms", "11 of 12"])
+@pytest.mark.parametrize(
+    "forbidden",
+    [
+        "Bosch",
+        "15–40 ms",
+        "15-40 ms",
+        "11 of 12",
+        "| Rigid",
+        "error impulse**",
+        "Co-contraction or over-tightening",
+        "deflection the torque change produces",
+    ],
+)
 def test_removed_or_contradicted_figures_are_absent(forbidden: str) -> None:
     assert forbidden not in TEXT
