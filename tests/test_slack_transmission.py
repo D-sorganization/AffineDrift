@@ -11,6 +11,7 @@ from src.tools.slack_management_studies import (
     PUBLISHED_IMPULSES_NMS,
     REPRESENTATIONS,
     reproduction_section,
+    unequal_lag_section,
 )
 from src.tools.slack_transmission import (
     PERSISTENT,
@@ -53,6 +54,14 @@ def test_shared_linear_channels_cannot_separate_programs(
 ) -> None:
     rep = Representation("linear", Shape.DEAD_ZONE, 0.0, time_constant, 600.0, activation_lag)
     assert abs(relative_advantage(rep)) < 1e-12
+
+
+def test_unequal_lags_separate_programs_without_any_gap() -> None:
+    section = unequal_lag_section()
+    assert section["exact_min_difference_nm"] == pytest.approx(-3.5, abs=1e-12)
+    assert section["exact_min_time_s"] == pytest.approx(0.036 * np.log(2.0), abs=1e-15)
+    assert section["simulated_min_difference_nm"] == pytest.approx(-3.5, abs=0.01)
+    assert relative_advantage(REPRESENTATIONS[-1]) > 1.0
 
 
 def test_dead_zone_and_smooth_both_favour_persistent_direction() -> None:
@@ -107,6 +116,7 @@ def test_overshoot_appears_only_when_the_reversing_channel_starts_unloaded() -> 
         {"name": "x", "shape": Shape.DEAD_ZONE, "dead_zone_rad": -0.1},
         {"name": "x", "shape": Shape.DEAD_ZONE, "dead_zone_rad": 0.0, "time_constant_s": 0.0},
         {"name": "x", "shape": Shape.SMOOTH, "dead_zone_rad": 0.0, "stiffness_nm_rad": np.inf},
+        {"name": "x", "shape": Shape.SMOOTH, "dead_zone_rad": 0.0, "wrist_time_constant_s": -1.0},
     ],
 )
 def test_representation_rejects_invalid_parameters(kwargs: dict[str, object]) -> None:

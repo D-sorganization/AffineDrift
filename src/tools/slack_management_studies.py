@@ -26,6 +26,7 @@ STUDY_HORIZON = Horizon(duration_s=0.5)  # >= 14 time constants for the slowest 
 REPRODUCTION_HORIZON = Horizon(duration_s=0.12)  # The window the published values imply.
 DECLARED_GAP_RAD = 0.012
 ACTIVATION_LAG_S = 0.010
+UNEQUAL_LAGS_S = (0.018, 0.036)  # Arm, wrist; the counterexample in Argon's review (PR #5140).
 EQUIVALENCE_MARGINS = (0.01, 0.05, 0.10)
 GAP_GRID_RAD = tuple(float(value) for value in np.linspace(0.0, 0.03, 31))
 TIME_CONSTANTS_S = (0.008, 0.018, 0.035)
@@ -57,6 +58,13 @@ REPRESENTATIONS = (
         Shape.DEAD_ZONE,
         0.0,
         activation_time_constant_s=ACTIVATION_LAG_S,
+    ),
+    Representation(
+        "rigid_unequal_lags",
+        Shape.DEAD_ZONE,
+        0.0,
+        UNEQUAL_LAGS_S[0],
+        wrist_time_constant_s=UNEQUAL_LAGS_S[1],
     ),
 )
 
@@ -104,6 +112,31 @@ def representation_section() -> dict[str, object]:
             "relative_advantage": relative_advantage(rep, STUDY_HORIZON),
         }
     return {"horizon_s": STUDY_HORIZON.duration_s, "representations": rows}
+
+
+def unequal_lag_section() -> dict[str, object]:
+    """Zero gap, unequal lags: the persistent-minus-reversal net torque, simulated and exact.
+
+    For linear lags the difference is ``d(t) = D (exp(-t/Ta) - exp(-t/Tw))`` with
+    ``D = 14 N m`` (the change in each channel's preparation), minimised at
+    ``t* = ln(Tw/Ta) Ta Tw / (Tw - Ta)``.
+    """
+    rep = REPRESENTATIONS[-1]
+    persistent = simulate(PERSISTENT, rep, grid=STUDY_HORIZON)
+    reversal = simulate(ROLE_REVERSAL, rep, grid=STUDY_HORIZON)
+    difference = persistent.transmitted_nm.sum(axis=1) - reversal.transmitted_nm.sum(axis=1)
+    worst = int(np.argmin(difference))
+    arm_lag, wrist_lag = UNEQUAL_LAGS_S
+    jump = PERSISTENT.pre_nm[0] - ROLE_REVERSAL.pre_nm[0]
+    exact_time = np.log(wrist_lag / arm_lag) * arm_lag * wrist_lag / (wrist_lag - arm_lag)
+    exact = jump * (np.exp(-exact_time / arm_lag) - np.exp(-exact_time / wrist_lag))
+    return {
+        "lags_s": list(UNEQUAL_LAGS_S),
+        "simulated_min_difference_nm": float(difference[worst]),
+        "simulated_min_time_s": float(persistent.time_s[worst]),
+        "exact_min_difference_nm": float(exact),
+        "exact_min_time_s": float(exact_time),
+    }
 
 
 def _gap_threshold(shape: Shape, margin: float) -> float:

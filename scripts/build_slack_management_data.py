@@ -28,6 +28,7 @@ from src.tools.slack_management_studies import (
     representation_section,
     reproduction_section,
     split_section,
+    unequal_lag_section,
 )
 from src.tools.slack_transmission import (
     PERSISTENT,
@@ -52,6 +53,7 @@ LABELS = {
     "dead_zone": "Dead Zone",
     "smooth_stiffening": "Smooth Stiffening Spring",
     "series_elastic_activation": "Series Elastic + Activation Lag",
+    "rigid_unequal_lags": "Rigid, Unequal Lags (18 / 36 ms)",
 }
 
 SECTIONS: dict[str, Callable[[], dict[str, Any]]] = {
@@ -59,6 +61,7 @@ SECTIONS: dict[str, Callable[[], dict[str, Any]]] = {
     "representations": representation_section,
     "flip": flip_section,
     "split": split_section,
+    "unequal_lags": unequal_lag_section,
     "muscle_margin": muscle_margin_section,
 }
 
@@ -88,8 +91,9 @@ def _ladder() -> Figure:
 
 
 def _traces() -> Figure:
-    figure, axes = plt.subplots(2, 2, figsize=(10, 6.5), sharex=True, sharey=True)
-    for axis, rep in zip(axes.flat, REPRESENTATIONS, strict=True):
+    figure, axes = plt.subplots(2, 3, figsize=(13, 6.5), sharex=True, sharey=True)
+    axes.flat[-1].set_visible(False)
+    for axis, rep in zip(axes.flat, REPRESENTATIONS, strict=False):
         for program, style in ((PERSISTENT, "-"), (ROLE_REVERSAL, "--")):
             trace = simulate(program, rep, grid=STUDY_HORIZON)
             keep = trace.time_s <= TRACE_WINDOW_S
@@ -99,7 +103,8 @@ def _traces() -> Figure:
         axis.axhline(sum(PERSISTENT.post_nm), color="black", lw=0.8, label="Desired Net")
         axis.set_title(LABELS[rep.name], fontsize=11)
         axis.grid(alpha=0.25)
-    for axis in axes[1]:
+    axes[0, 2].tick_params(labelbottom=True)
+    for axis in (*axes[1], axes[0, 2]):
         axis.set_xlabel("Time After Transition (ms)")
     for axis in axes[:, 0]:
         axis.set_ylabel("Net Transmitted Torque (N m)")

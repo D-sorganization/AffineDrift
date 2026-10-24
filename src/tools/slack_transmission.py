@@ -38,6 +38,8 @@ class Representation:
 
     ``dead_zone_rad`` is the gap (dead zone) or the softening length (smooth spring).  A positive
     ``activation_time_constant_s`` inserts a linear activation lag ahead of the deflection lag.
+    ``wrist_time_constant_s`` (if given) gives the wrist channel its own deflection lag; otherwise
+    both channels share ``time_constant_s``.
     """
 
     name: str
@@ -46,6 +48,17 @@ class Representation:
     time_constant_s: float = 0.018
     stiffness_nm_rad: float = 600.0
     activation_time_constant_s: float = 0.0
+    wrist_time_constant_s: float | None = None
+
+    @property
+    def time_constants_s(self) -> tuple[float, float]:
+        """Deflection lags of the (arm, wrist) channels."""
+        wrist = (
+            self.time_constant_s
+            if self.wrist_time_constant_s is None
+            else self.wrist_time_constant_s
+        )
+        return (self.time_constant_s, wrist)
 
     def __post_init__(self) -> None:
         if not self.name:
@@ -53,7 +66,7 @@ class Representation:
         values = (self.dead_zone_rad, self.activation_time_constant_s)
         if not all(math.isfinite(value) and value >= 0.0 for value in values):
             raise ValueError("dead zone and activation time constant must be finite and >= 0")
-        for positive in (self.time_constant_s, self.stiffness_nm_rad):
+        for positive in (*self.time_constants_s, self.stiffness_nm_rad):
             if not math.isfinite(positive) or positive <= 0.0:
                 raise ValueError("time constant and stiffness must be finite and positive")
 
@@ -146,7 +159,7 @@ def _integrate(
     """Euler-integrate deflection (and activation, if declared) toward ``target``; rows are samples."""
     lags = 2 if rep.activation_time_constant_s > 0.0 else 1
     gains = (
-        grid.step_s / rep.time_constant_s,
+        grid.step_s / np.asarray(rep.time_constants_s),
         grid.step_s / max(rep.activation_time_constant_s, grid.step_s),
     )
     deflection = np.empty((grid.intervals + 1, 2), dtype=np.float64)
