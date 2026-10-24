@@ -7,7 +7,7 @@ Enforces:
 4. BibTeX download works (standalone `.bib` file + accessible download link).
 5. Validated with Google Scholar metadata checker on three sample pages.
 6. Print stylesheet handles citation block with `break-inside: avoid`.
-7. Project-wide `_quarto.yml` configuration includes citation and google-scholar.
+7. Project-wide `_quarto.yml` enables citations; scholar exports are scoped to articles.
 """
 
 from __future__ import annotations
@@ -76,7 +76,7 @@ def _render_quarto_page(
 class TestCitationConfig:
     """Validate project-wide Quarto configuration."""
 
-    def test_quarto_yml_enables_citation_and_scholar(self) -> None:
+    def test_quarto_yml_enables_citation_and_scopes_scholar(self) -> None:
         assert QUARTO_YML.is_file()
         data = yaml.safe_load(QUARTO_YML.read_text(encoding="utf-8"))
 
@@ -84,9 +84,14 @@ class TestCitationConfig:
             data.get("citation") is True
         ), "citation: true must be set project-wide in _quarto.yml"
         format_html = data.get("format", {}).get("html", {})
-        assert (
-            format_html.get("google-scholar") is True
-        ), "google-scholar: true must be set under format.html in _quarto.yml"
+        assert format_html.get("google-scholar") is False, (
+            "google-scholar must default to false in _quarto.yml (#5165)"
+        )
+        articles_meta = yaml.safe_load(
+            (ROOT / "articles" / "_metadata.yml").read_text(encoding="utf-8")
+        )
+        assert articles_meta.get("google-scholar") is True
+        assert articles_meta["format"]["html"].get("google-scholar") is True
 
     def test_quarto_yml_registers_post_render_citations(self) -> None:
         assert QUARTO_YML.is_file()
