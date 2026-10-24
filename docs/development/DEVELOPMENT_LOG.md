@@ -436,10 +436,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5095
 - **Branch:** merged via #5101
-- **PR:** #5101
+- **PR:** #5101, #5141
 - **Paths:** see #5101
 - **Started:** 2026-10-23
-- **Last verified:** 2026-10-23 (`5a3ea5a6`; collated from changes/5095-add-nonlinear-solution-manifold-continua.md)
+- **Last verified:** 2026-10-24 (`83beecb8`; collated from changes/5095-add-nonlinear-solution-manifold-continua.md)
 - **Summary:** Add nonlinear solution-manifold continuation examples (tangent predictor, Gauss-Newton corrector, rank-drop counterexample) and tests for the null-space exploration section (P6)
 - **Next step:** Shipped in PR #5101.
 
