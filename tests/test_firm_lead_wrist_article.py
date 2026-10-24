@@ -64,3 +64,21 @@ def test_review_numbers_are_quoted_from_results() -> None:
     ]
     for value in quoted:
         assert value in text, value
+
+
+def test_table_percentages_share_the_persistent_baseline() -> None:
+    results, text = _results(), ARTICLE_PATH.read_text(encoding="utf-8")
+    dead = results["dead_zone"]
+    muscle = results["muscle"]
+
+    def relative(persistent: float, reversal: float) -> float:
+        return 100.0 * (reversal - persistent) / persistent
+
+    quoted = [
+        f"+{relative(dead['persistent_direction_preloaded']['error_impulse_nms'], dead['complete_role_reversal_preloaded']['error_impulse_nms']):.0f}%",
+        f"+{relative(muscle['persistent_direction']['error_impulse_nms'], muscle['complete_role_reversal']['error_impulse_nms']):.2f}%",
+        f"+{100.0 * results['muscle_step_audit']['limit_relative_difference']:.2f}%",
+        f"−{-100.0 * results['muscle_step_audit_net_14']['limit_relative_difference']:.0f}%",
+    ]
+    for value in quoted:
+        assert value in text, value
