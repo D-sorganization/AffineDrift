@@ -47,12 +47,12 @@ PUBLISHED_IMPULSES_NMS = {  # torque_allocation_preload_study.json, transmission
     "role_reversal_preloaded": 0.19540693388776567,
     "relaxed": 0.20107138073005523,
 }
-MUSCLE_MODEL_SOURCE = (
-    "articles/proximal-distal-energy-transfer.qmd"
-    "#preparation-history-with-activation-and-series-force-dynamics @ 20584d4"
+MUSCLE_MODEL_SOURCE = (  # Unrounded values behind the published 0.08998 / 0.09084 N m s.
+    "AffineDrift@cdd6f20cf5074b12ec5d862bac783a330e56cacd:data/lead_wrist_preload/results.json"
+    "#muscle (#5143, port of the published 0.2 ms-step reduced muscle model)"
 )
-MUSCLE_PERSISTENT_NMS = 0.08998
-MUSCLE_REVERSAL_NMS = 0.09084
+MUSCLE_PERSISTENT_NMS = 0.08998329105737461
+MUSCLE_REVERSAL_NMS = 0.09083992071979846
 
 REPRESENTATIONS = (
     Representation("rigid", Shape.DEAD_ZONE, 0.0),
