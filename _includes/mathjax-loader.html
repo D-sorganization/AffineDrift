@@ -113,15 +113,46 @@
   // never pay for it. Quarto renders TeX into `.math` spans (and display math
   // into `mjx-container` once typeset); the raw delimiters survive in the
   // initial HTML, so a cheap source scan is a reliable pre-typeset signal.
+  function adNodeInsideClosedDetails(node) {
+    return Boolean(node.closest && node.closest('details:not([open])'));
+  }
+
+  function adVisibleMathNodes() {
+    const nodes = document.querySelectorAll('.math, mjx-container, [data-qmd-math]');
+    return Array.prototype.filter.call(nodes, function (node) {
+      return !adNodeInsideClosedDetails(node);
+    });
+  }
+
+  function adCollectTextSkippingClosedDetails(root) {
+    if (!root) {
+      return '';
+    }
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        var parent = node.parentElement;
+        if (parent && parent.closest('details:not([open])')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var chunks = [];
+    while (walker.nextNode()) {
+      chunks.push(walker.currentNode.textContent);
+    }
+    return chunks.join('');
+  }
+
   function adPageHasMath() {
-    if (document.querySelector('.math, mjx-container, [data-qmd-math]')) {
+    if (adVisibleMathNodes().length > 0) {
       return true;
     }
     // Fall back to a raw-delimiter scan for inline/display TeX that has not yet
-    // been wrapped in a `.math` span.
+    // been wrapped in a `.math` span. Ignore math hidden in closed <details>.
     const content =
       document.querySelector('main, #quarto-document-content, .content, body');
-    const text = content ? content.textContent : '';
+    const text = adCollectTextSkippingClosedDetails(content);
     return (
       text.indexOf('\\(') !== -1 ||
       text.indexOf('\\[') !== -1 ||
@@ -129,13 +160,34 @@
     );
   }
 
-  function adLoadMathJax() {
+  function adDetailsHoldsMath(details) {
+    if (details.querySelector('.math, mjx-container, [data-qmd-math], .math-showcase')) {
+      return true;
+    }
+    var text = details.textContent || '';
+    return text.indexOf('$$') !== -1 || text.indexOf('\\(') !== -1 || text.indexOf('\\[') !== -1;
+  }
+
+  function adBindCollapsedMathDetails() {
+    document.querySelectorAll('details:not([open])').forEach(function (details) {
+      if (!adDetailsHoldsMath(details)) {
+        return;
+      }
+      details.addEventListener('toggle', function () {
+        if (details.open) {
+          adLoadMathJax(true);
+        }
+      });
+    });
+  }
+
+  function adLoadMathJax(force) {
     // Idempotent: never inject twice.
     if (document.getElementById('MathJax-script') ||
         document.querySelector('script[src*="mathjax"]')) {
       return;
     }
-    if (!adPageHasMath()) {
+    if (!force && !adPageHasMath()) {
       return;
     }
 
@@ -170,10 +222,15 @@
   // DOMContentLoaded (or run immediately if the document is already parsed).
   // MathJax.startup.defaultReady() in the startup.ready callback above handles
   // the initial typeset once the script loads.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', adQueueMathJaxLoad, { once: true });
-  } else {
+  function adInitMathJaxGate() {
+    adBindCollapsedMathDetails();
     adQueueMathJaxLoad();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', adInitMathJaxGate, { once: true });
+  } else {
+    adInitMathJaxGate();
   }
   window.AffineDriftMathJax = { hasMath: adPageHasMath, load: adLoadMathJax };
 </script>
