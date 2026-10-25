@@ -84,9 +84,9 @@ class TestCitationConfig:
             data.get("citation") is True
         ), "citation: true must be set project-wide in _quarto.yml"
         format_html = data.get("format", {}).get("html", {})
-        assert format_html.get("google-scholar") is False, (
-            "google-scholar must default to false in _quarto.yml (#5165)"
-        )
+        assert (
+            format_html.get("google-scholar") is False
+        ), "google-scholar must default to false in _quarto.yml (#5165)"
         articles_meta = yaml.safe_load(
             (ROOT / "articles" / "_metadata.yml").read_text(encoding="utf-8")
         )
