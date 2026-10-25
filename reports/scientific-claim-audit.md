@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 286
+- Reviewed: 287
 - Deferred: 0
 - Exempt: 3
 
