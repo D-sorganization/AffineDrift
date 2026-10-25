@@ -70,15 +70,38 @@ $$
 r(t)=\int_{t_0}^{t}\Phi(t,s)R_2(s)\,ds.
 $$
 
-Suppose on an interval of length $T=t-t_0$ that $\|\Phi(t,s)\|\le K e^{L(t-s)}$ with Lipschitz constant $L\ge0$ for the variational flow, and $\|\Delta z(t)\|\le C_0(T)\epsilon$ on $[t_0,t]$. The tube constant $C_0(T)$ is not independent of the horizon: for the forced linear prediction $\dot{\hat\xi}=A(t)\hat\xi+B(t)\Delta u$ with $\|\hat\xi(t_0)\|\le C_{0,0}\epsilon$ and bounded $\Delta u$, Gronwall gives $\|\hat\xi(t)\|\le C_{0,0}e^{LT}\epsilon$, so $C_0(T)$ typically scales like $e^{LT}$. Then $\|R_2(t)\|\le\frac12 HC_0(T)^2\epsilon^2$ and
+Fix a horizon $T=t-t_0$ and a perturbation scale $\epsilon>0$. Write $z=(x,u)$ and $\Delta z=(\Delta x,\Delta u)$ as above. Assume the nominal and perturbed trajectories stay in a region where $\|D^2f\|\le H$, $\|\Phi(t,s)\|\le K e^{L(t-s)}$ with growth rate $L\ge0$ for the variational flow, and $f$ is Lipschitz in state with the same growth rate $L$ on that tube. Require an $\epsilon$-scaled experiment: $\|\Delta x(t_0)\|\le c_x\epsilon$, $\|\Delta u(t)\|\le c_u\epsilon$, and $\|\Delta z(t)\|\le C_0(T)\epsilon$ on $[t_0,t]$.
+
+The tube constant $C_0(T)$ must come from the **actual** deviation, not from replacing $\Delta z$ by the linear prediction $\hat\xi$. Along the nonlinear increment,
 
 $$
-\|r(t)\|\le\frac12 KHC_0(T)^2\frac{e^{LT}-1}{L}\epsilon^2,
+\dot{\Delta x}=f(\bar x+\Delta x,\bar u+\Delta u)-f(\bar x,\bar u)
+   =A(t)\Delta x+B(t)\Delta u+R_f(t),
 $$
 
-with the $L=0$ limit $\frac{e^{LT}-1}{L}\to T$. The factor $(e^{LT}-1)/L$ integrates $\int_{t_0}^t e^{L(t-s)}\,ds$ instead of replacing the kernel by $e^{LT}$. When $C_0(T)=O(e^{LT})$, the overall growth is $O\!\left(\frac{e^{3LT}}{L}\epsilon^2\right)$ for large $LT$.
+with $\|R_f(t)\|\le\frac H2\|\Delta z(t)\|^2$. At leading order in $\epsilon$, the Lipschitz bound gives $\|\dot{\Delta x}\|\le L\|\Delta x\|+G\epsilon$ when $\|B(t)\Delta u(t)\|\le G\epsilon$ (the input push is $O(\epsilon)$, not zero). Gronwall is the familiar compound-interest picture: homogeneous growth $e^{LT}$ plus accumulation of a steady $O(\epsilon)$ push; it assumes that push persists over the horizon. Thus
 
-This is a finite-horizon upper bound, with explicit dependence on amplification and tube size. Under bounded derivatives, a bounded input perturbation and sufficiently small initial perturbation, continuous dependence of ODE solutions supplies such a tube over a fixed interval. The perturbation must remain inside the region where the derivative and Hessian bounds apply. An initial prediction mismatch would add $\Phi(t,t_0)r(t_0)$.
+$$
+\|\Delta x(t)\|\le\left(c_x e^{LT}+\frac{G}{L}\bigl(e^{LT}-1\bigr)\right)\epsilon,
+$$
+
+with the $L\to0$ limit giving $\|\Delta x(t)\|\le(c_x+GT)\epsilon$. Absorbing $\|\Delta u\|\le c_u\epsilon$ yields $C_0(T)=O(e^{LT})$.
+
+The same forcing appears in the linear prediction $\dot{\hat\xi}=A\hat\xi+B\Delta u$: variation of constants gives
+
+$$
+\|\hat\xi(t)\|\le K c_x e^{LT}\epsilon+K\frac{G}{L}\bigl(e^{LT}-1\bigr)\epsilon,
+$$
+
+so zero initial data with a nonzero $\epsilon$-scaled push does not stay zero. Then $\|R_2(t)\|\le\frac12 HC_0(T)^2\epsilon^2$ and
+
+$$
+\|r(t)\|\le\frac12 KHC_0(T)^2\frac{e^{LT}-1}{L}\epsilon^2.
+$$
+
+The $L=0$ limit $\frac{e^{LT}-1}{L}\to T$ integrates $\int_{t_0}^t e^{L(t-s)}\,ds$ instead of replacing the kernel by $e^{LT}$. With $C_0(T)=O(e^{LT})$, the **worst-case bound** scales as $O\!\left(\frac{e^{3LT}}{L}\epsilon^2\right)$ for large $LT$; that is a certificate on $\|r\|$, not a claim that the residual itself grows like $e^{3LT}$.
+
+This is a finite-horizon upper bound, with explicit dependence on amplification and tube size. An initial prediction mismatch would add $\Phi(t,t_0)r(t_0)$.
 
 The familiar notation $O(\epsilon^2)$ hides these constants. It is not a guarantee that one linear approximation remains accurate over an arbitrarily long swing or simulation horizon.
 

@@ -46,6 +46,12 @@ class TestDefinitions:
         defined, _, _ = scan(write(tmp_path, "::: {#fig-swing}\n![](a.png)\n:::\n"))
         assert "fig-swing" in defined
 
+    def test_a_callout_div_id_defines(self, tmp_path: Path) -> None:
+        text = "::: {#wrn-example .callout-warning}\n## Title\nBody.\n:::\n"
+        defined, _, stranded = scan(write(tmp_path, text))
+        assert "wrn-example" in defined
+        assert stranded == []
+
 
 class TestCalloutTitles:
     """The trap: a callout is a div, so its `##` is a title, not a section.

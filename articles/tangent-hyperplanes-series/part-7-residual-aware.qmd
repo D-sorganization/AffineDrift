@@ -30,19 +30,25 @@ honest.
 ## Quantitative Bound
 
 [Part 4](./part-4-residuals-curvature.html) gives the propagated remainder bound.
-On a horizon of length $T$ with Lipschitz constant $L$ for the variational flow,
-Hessian bound $H$, state transition bound $K$, and tube constant $C_0(T)$ for
-$\|\Delta z(t)\|\le C_0(T)\epsilon$,
+Fix horizon length $T$, growth rate $L$ for the variational flow, bounds $H$ on
+$\|D^2f\|$, $K$ on $\|\Phi\|$, and an $\epsilon$-scaled perturbation family with
+$z=(x,u)$, $\Delta z=(\Delta x,\Delta u)$, $\|\Delta x(t_0)\|\le c_x\epsilon$,
+and $\|\Delta u(t)\|\le c_u\epsilon$. While nominal and perturbed trajectories
+remain in the region where those bounds hold, Part 4 derives a tube constant
+$C_0(T)$ from the **actual** deviation (Lipschitz propagation of $f$ with an
+$O(\epsilon)$ input push), not from substituting the linear prediction for
+$\Delta z$. Then
 
 $$
 \|r(t)\|\le\frac12 KHC_0(T)^2\frac{e^{LT}-1}{L}\epsilon^2,
 $$
 
-with $\frac{e^{LT}-1}{L}\to T$ as $L\to0$. The constant $C_0(T)$ grows with $T$
-through Gronwall on the linearized deviation, so the honest horizon scaling is
-about $e^{3LT}$ once $C_0(T)^2$ and the integrated kernel are combined. State
-and input norms need declared scales. A sampled Hessian is an estimate, not a
-certified bound over a neighborhood.
+with $\frac{e^{LT}-1}{L}\to T$ as $L\to0$. Combining $C_0(T)=O(e^{LT})$ with the
+integrated kernel yields a **worst-case certificate** of order
+$O\!\left(\frac{e^{3LT}}{L}\epsilon^2\right)$ at large $LT$—that is how large
+the bound can become, not the residual’s intrinsic growth rate. State and input
+norms need declared scales. A sampled Hessian is an estimate, not a certified
+bound over a neighborhood.
 
 More explicitly, define actual deviation $e$, first-order comparison $\eta$,
 and remainder $r=e-\eta$ using the same input experiment. Then
