@@ -79,7 +79,7 @@ def test_volume_i_chapter_read_links_name_targets_and_match_topics() -> None:
         },
         6: {
             "href_name": "Contraction_Tangent_Unification.html",
-            "text_tokens": ("Stability", "Optimality"),
+            "text_tokens": ("Scope Limits",),
             "forbidden_hrefs": ("part-4-residuals-curvature.html",),
         },
         7: {
@@ -111,8 +111,7 @@ def test_volume_i_chapter_read_links_name_targets_and_match_topics() -> None:
                 word in link_text for word in topic_words
             ), f"Ch.{chapter} link text should reflect target title {title!r}"
         elif basename == "Contraction_Tangent_Unification.html":
-            assert "Contraction" in link_text or "Tangent Spaces" in link_text
-            assert _ADVANCED_DUALITY_TITLE.split(":")[0] in link_text or "Stability" in link_text
+            assert _ADVANCED_DUALITY_TITLE in link_text
         elif basename == "Tangent_Hyperplanes_Unified_Thesis.html":
             assert "Counterfactual" in link_text
             assert _MANUSCRIPT_TITLE  # referenced for future extensions
@@ -133,6 +132,14 @@ def test_tangent_summaries_do_not_overstate_linear_superposition() -> None:
         assert phrase not in book, f"books/tangent-space-methods.qmd still contains {phrase!r}"
         assert phrase not in hub, f"pages/tangent-hyperplanes.qmd still contains {phrase!r}"
 
+    core_claim = (
+        "at fixed state, time, and mode, perturbations map linearly to the first variation "
+        "of the state rate"
+    )
     for text, label in ((book, "book Ch.1"), (hub, "hub intro")):
+        assert core_claim in text, f"{label} must state the first-variation claim verbatim"
         assert "control-affine" in text.lower(), f"{label} must name the control-affine assumption"
         assert "affine" in text.lower(), f"{label} must describe the map as affine"
+        assert (
+            "perturbations map linearly to rate increments" not in text
+        ), f"{label} must not drop 'first variation' from the rate-increment claim"
