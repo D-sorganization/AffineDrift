@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Post-render HTML performance fixes for UX slice 2 (#5165).
 
-- Make alternate (dark) theme stylesheets non-render-blocking.
-  (Quarto ``quarto-color-scheme-extra`` links must stay — removing them breaks theme JS.)
+- Set alternate (dark) theme links to ``rel="disabled-stylesheet"`` (Quarto-native; no
+  ``media=print`` / ``onload`` — that races the theme toggle). ``quarto-color-scheme-extra``
+  links must stay — removing them breaks theme JS.
 - Remove Quarto dev-only ``axe-check.js`` from production output.
 - Prune ``citation_reference`` meta tags to bibliography entries rendered on-page.
 - Defer non-critical head scripts that Quarto emits synchronously.
@@ -45,8 +46,6 @@ DEFER_HEAD_SCRIPTS = (
     "tippy.umd.min.js",
     "anchor.min.js",
 )
-
-NON_BLOCKING_ALTERNATE_ATTRS = ' media="print" onload="this.media=\'all\'"'
 
 
 def _strip_html_tags(fragment: str) -> str:
@@ -92,17 +91,26 @@ def prune_citation_reference_meta(content: str) -> str:
 
 
 def make_alternate_stylesheets_non_blocking(content: str) -> str:
-    """Defer dark/alternate Quarto stylesheets so only the active light theme blocks."""
+    """Use Quarto's disabled alternate stylesheets so dark CSS does not block or race toggles."""
 
     def replace_link(match: re.Match[str]) -> str:
         tag = match.group(0)
-        if 'rel="stylesheet"' not in tag.lower():
-            return tag
         if "quarto-color-alternate" not in tag:
             return tag
-        if "media=" in tag.lower():
+        lowered = tag.lower()
+        if 'rel="stylesheet"' in lowered:
+            tag = re.sub(
+                r'\srel="stylesheet"',
+                ' rel="disabled-stylesheet"',
+                tag,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        elif 'rel="disabled-stylesheet"' not in lowered:
             return tag
-        return tag[:-1] + NON_BLOCKING_ALTERNATE_ATTRS + ">"
+        tag = re.sub(r'\smedia="[^"]*"', "", tag, flags=re.IGNORECASE)
+        tag = re.sub(r'\sonload="[^"]*"', "", tag, flags=re.IGNORECASE)
+        return tag
 
     return LINK_TAG_RE.sub(replace_link, content)
 

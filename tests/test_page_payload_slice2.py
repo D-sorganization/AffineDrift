@@ -62,6 +62,17 @@ class TestPostRenderHeadPerformance:
         assert "quarto-color-scheme-extra" in head
         assert head.count("bootstrap-light.min.css") == 2
 
+    def test_dark_color_scheme_links_use_disabled_stylesheet_without_print_onload(self) -> None:
+        polluted = self.SAMPLE_HEAD.replace(
+            "quarto-color-alternate",
+            'quarto-color-alternate" media="print" onload="this.media=\'all\'"',
+            1,
+        )
+        head = _head(process_html_head_performance(polluted))
+        for tag in re.findall(r"<link\b[^>]*quarto-color-alternate[^>]*>", head, re.I):
+            low = tag.lower()
+            assert 'rel="disabled-stylesheet"' in low and "media=" not in low and "onload=" not in low
+
     def test_strips_axe_check_from_production_html(self) -> None:
         out = process_html_head_performance(self.SAMPLE_HEAD)
         assert "axe-check.js" not in out
