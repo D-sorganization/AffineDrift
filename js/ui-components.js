@@ -50,7 +50,31 @@ function prefersReducedMotion() {
 /**
  * Initialize fade-in animations for sections
  */
+function isArticleLayoutPage() {
+    const quartoContent = document.getElementById("quarto-content");
+    return (
+        quartoContent !== null &&
+        quartoContent.classList.contains("page-layout-article")
+    );
+}
+
+function revealAllSections() {
+    const allSections = document.getElementsByTagName("section");
+    for (const section of allSections) {
+        section.style.opacity = "1";
+        section.style.transform = "none";
+        section.style.visibility = "visible";
+        section.style.transition = "";
+    }
+}
+
 export function initFadeAnimations() {
+    if (isArticleLayoutPage()) {
+        // Long-form articles: skip scroll reveal to avoid CLS on wide sections (#5164).
+        revealAllSections();
+        return;
+    }
+
     const NAV_BREAKPOINT = 768;
     const isMobile = window.innerWidth <= NAV_BREAKPOINT;
     const prefersReducedMotion = window.matchMedia(
@@ -65,7 +89,6 @@ export function initFadeAnimations() {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = "1";
-                    entry.target.style.transform = "translateY(0)";
                     observer.unobserve(entry.target);
                 }
             }
@@ -89,22 +112,14 @@ export function initFadeAnimations() {
         for (const { section, top } of animationStates) {
             if (top > windowHeight) {
                 section.style.opacity = "0";
-                section.style.transform = "translateY(20px)";
-                section.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+                section.style.transition = "opacity 0.4s ease";
                 observer.observe(section);
             } else {
                 section.style.opacity = "1";
-                section.style.transform = "translateY(0)";
             }
         }
     } else {
-        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
-        const allSections = document.getElementsByTagName("section");
-        for (const section of allSections) {
-            section.style.opacity = "1";
-            section.style.transform = "translateY(0)";
-            section.style.visibility = "visible";
-        }
+        revealAllSections();
     }
 }
 
