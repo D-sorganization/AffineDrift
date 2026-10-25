@@ -4,7 +4,8 @@ const MOBILE_VIEWPORT = { width: 375, height: 812 };
 const DESKTOP_VIEWPORT = { width: 1440, height: 900 };
 /** Removing column-gap restores ~322px at 375px (design review #5173). */
 const MIN_MOBILE_ARTICLE_COLUMN_PX = 320;
-const MAX_PROSE_PARAGRAPH_PX = 720;
+/** ~68ch body measure at 1440px (design review: prose ~772px after slice 1). */
+const MAX_PROSE_PARAGRAPH_PX = 780;
 
 const ARTICLE_ROUTES = [
   '/articles/theory-part1.html',
