@@ -79,7 +79,7 @@ equals the correlation $\rho(\delta v, \delta \phi)$ of first-order speed and fa
 
 ## Introduction {#sec-intro}
 
-AffineDrift already treats downswings as **increment dynamics**: a nominal trajectory $\bar x(t)$, variational equation $\dot\Phi = A(t)\Phi$, and affine propagation $\delta x(t) = \Phi(t,t_0)\delta x_0$ for small perturbations in a fixed contact mode ([Part 2](../articles/tangent-hyperplanes-series/part-2-dynamics.html)). Hybrid impact adds an event-time correction and saltation when the guard is transverse ([Part 6](../articles/tangent-hyperplanes-series/part-6-hybrid.html)). This article connects that machinery to motor abundance [@scholz1999ucm], goal-equivalent manifolds [@cusumano2006gem], and golf-specific Jacobian structure already computed in [Transmission Robustness](../articles/proximal_distal_energy_transfer/chapters/_ch07c_transmission_robustness.qmd), [Proximal–Distal Energy Transfer](../articles/proximal-distal-energy-transfer.html), and [Constraint Torques at the Wrist](../articles/wrist-universal-joint.html#the-null-space-of-performance).
+AffineDrift already treats downswings as **increment dynamics**: a nominal trajectory $\bar x(t)$, variational equation $\dot\Phi = A(t)\Phi$, and affine propagation $\delta x(t) = \Phi(t,t_0)\delta x_0$ for small perturbations in a fixed contact mode ([Part 2](../articles/tangent-hyperplanes-series/part-2-dynamics.html)). Hybrid impact adds an event-time correction and saltation when the guard is transverse ([Part 6](../articles/tangent-hyperplanes-series/part-6-hybrid.html)). This article connects that machinery to motor abundance [@scholz1999ucm], goal-equivalent manifolds [@cusumano2006gem], and golf-specific Jacobian structure already computed in [Transmission Robustness](../articles/proximal_distal_energy_transfer/index.html#sec-transmission-robustness), [Proximal–Distal Energy Transfer](../articles/proximal-distal-energy-transfer.html), and [Constraint Torques at the Wrist](../articles/wrist-universal-joint.html).
 
 Parent review: [AffineDrift #5180](https://github.com/D-sorganization/AffineDrift/issues/5180). Worked example delivery: [#5187](https://github.com/D-sorganization/AffineDrift/issues/5187). Lie-group face chart: [#5186](https://github.com/D-sorganization/AffineDrift/issues/5186). Part 4 finite-horizon bound quotes await [#5184](https://github.com/D-sorganization/AffineDrift/issues/5184).
 
@@ -127,7 +127,7 @@ Signal-dependent torque noise motivates structured $\Sigma_0$ [@harris1998signal
 
 ## Speed Versus Face: Σ Metric, Timing Trap, and Coupling {#sec-speed-face}
 
-Two task rows $J_v$ and $J_\phi$ define speed and face. Each has its own null space; the intersection $\ker J_v \cap \ker J_\phi$ is the joint abundance subspace. Weight face and path heavily and speed lightly when reporting scalar summaries, as in [_ch07c transmission robustness_](../articles/proximal_distal_energy_transfer/chapters/_ch07c_transmission_robustness.qmd) (8 inputs, speed / face-path / hand-force Jacobian, rank 3, nullity 5).
+Two task rows $J_v$ and $J_\phi$ define speed and face. Each has its own null space; the intersection $\ker J_v \cap \ker J_\phi$ is the joint abundance subspace. Weight face and path heavily and speed lightly when reporting scalar summaries, as in [transmission robustness](../articles/proximal_distal_energy_transfer/index.html#sec-transmission-robustness) (8 inputs, speed / face-path / hand-force Jacobian, rank 3, nullity 5).
 
 ### Block-Orthogonality Trap {#sec-block-trap}
 
@@ -217,14 +217,17 @@ Stochastic trajectory optimization (iLQG-style costs on $\mathrm{tr}(Q_y\Sigma_y
 
 Hip-timing versus wrist-release negative covariance remains a **site hunch**, not a published golf result—mark unverified if used.
 
-## Related AffineDrift Material {#sec-related}
+## Related Articles {#sec-related}
 
-- [Part 2: Dynamics](../articles/tangent-hyperplanes-series/part-2-dynamics.html) — $\Phi$, variational equation
-- [Part 6: Hybrid Systems](../articles/tangent-hyperplanes-series/part-6-hybrid.html) — event-time correction
-- [After One Solution](../articles/after-one-solution-null-space-exploration.html) — null-space fibres
-- [Null Space of the Constraint Jacobian](../articles/null-space-constraint-jacobian.html)
-- [Shot Pattern Analysis](../articles/shot-pattern-analysis.html) — dispersion
-- [Core Theses Registry](../articles/core-theses-registry.html) — register the decoupling claim when the gate clears
+::: {.callout-note title="See Also"}
+
+- **[Part 2: Dynamics](tangent-hyperplanes-series/part-2-dynamics.html)** — State transition matrix $\Phi$ and variational dynamics
+- **[Part 6: Hybrid Systems](tangent-hyperplanes-series/part-6-hybrid.html)** — Event-time correction and saltation
+- **[Proximal–Distal Energy Transfer](proximal-distal-energy-transfer.html)** — Clock- versus state-triggered timing coupling
+- **[Transmission Robustness](proximal_distal_energy_transfer/index.html#sec-transmission-robustness)** — Speed, face-path, and hand-force Jacobian nullity
+- **[Passive Stabilization (ch09b)](The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html)** — UCM split and impedance framing
+- **[After One Solution](after-one-solution-null-space-exploration.html)** — Null-space fibres in redundant control
+:::
 
 ## References {#sec-refs}
 
