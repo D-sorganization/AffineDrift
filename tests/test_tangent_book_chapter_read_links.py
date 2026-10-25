@@ -22,19 +22,15 @@ _SERIES_PART_TITLES: dict[str, str] = {
         (REPO_ROOT / "articles/tangent-hyperplanes-series" / part).read_text(encoding="utf-8")
     )["title"]
     for part in (
+        "part-1-geometry.qmd",
+        "part-2-dynamics.qmd",
         "part-3-control.qmd",
         "part-4-residuals-curvature.qmd",
         "part-5-contraction.qmd",
         "part-6-hybrid.qmd",
+        "part-7-residual-aware.qmd",
     )
 }
-
-_ADVANCED_DUALITY_TITLE = parse_front_matter(
-    (
-        REPO_ROOT
-        / "articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.qmd"
-    ).read_text(encoding="utf-8")
-)["title"]
 
 _MANUSCRIPT_TITLE = parse_front_matter(
     (
@@ -64,9 +60,19 @@ def _href_basename(href: str) -> str:
 
 
 def test_volume_i_chapter_read_links_name_targets_and_match_topics() -> None:
-    """Ch.4–Ch.7 read links must open on-topic material and say what they open."""
+    """Ch.1–Ch.8 read links must open on-topic material and say what they open."""
     blocks = _chapter_blocks()
     expectations: dict[int, dict[str, object]] = {
+        1: {
+            "href_name": "part-1-geometry.html",
+            "text_tokens": ("Part 1", "Geometry"),
+            "forbidden_hrefs": (),
+        },
+        2: {
+            "href_name": "part-2-dynamics.html",
+            "text_tokens": ("Part 2", "Dynamics"),
+            "forbidden_hrefs": (),
+        },
         4: {
             "href_name": "part-5-contraction.html",
             "text_tokens": ("Part 5", "Contraction"),
@@ -79,14 +85,20 @@ def test_volume_i_chapter_read_links_name_targets_and_match_topics() -> None:
         },
         6: {
             "href_name": "Contraction_Tangent_Unification.html",
-            "text_tokens": ("Scope Limits",),
+            "fragment": "riccati-value-functions-and-contraction",
+            "text_tokens": ("Riccati Value Functions and Contraction",),
             "forbidden_hrefs": ("part-4-residuals-curvature.html",),
         },
         7: {
             "href_name": "Tangent_Hyperplanes_Unified_Thesis.html",
             "fragment": "counterfactual-decomposition",
             "text_tokens": ("Counterfactual", "manuscript"),
-            "forbidden_hrefs": ("part-6-hybrid.html",),
+            "forbidden_hrefs": (),
+        },
+        8: {
+            "href_name": "part-7-residual-aware.html",
+            "text_tokens": ("Part 7", "Residual-Aware"),
+            "forbidden_hrefs": (),
         },
     }
 
@@ -110,11 +122,21 @@ def test_volume_i_chapter_read_links_name_targets_and_match_topics() -> None:
             assert any(
                 word in link_text for word in topic_words
             ), f"Ch.{chapter} link text should reflect target title {title!r}"
-        elif basename == "Contraction_Tangent_Unification.html":
-            assert _ADVANCED_DUALITY_TITLE in link_text
         elif basename == "Tangent_Hyperplanes_Unified_Thesis.html":
             assert "Counterfactual" in link_text
             assert _MANUSCRIPT_TITLE  # referenced for future extensions
+
+    ch7_block = blocks[7]
+    assert "part-6-hybrid.html" in ch7_block, "Ch.7 should include a secondary Part 6 hybrid link"
+
+
+def test_volume_i_chapter_link_explainer_precedes_chapter_one() -> None:
+    """The book page must explain compact-series links before any chapter section."""
+    text = BOOK_PAGE.read_text(encoding="utf-8")
+    explainer = text.index("## Reading the Chapter Links")
+    chapter_one = text.index("## Chapter 1:")
+    assert explainer < chapter_one
+    assert "No Volume I chapter has its own web page yet" in text
 
 
 def test_tangent_summaries_do_not_overstate_linear_superposition() -> None:
@@ -136,10 +158,15 @@ def test_tangent_summaries_do_not_overstate_linear_superposition() -> None:
         "at fixed state, time, and mode, perturbations map linearly to the first variation "
         "of the state rate"
     )
+    disclaimer = "do not establish biological intent"
     for text, label in ((book, "book Ch.1"), (hub, "hub intro")):
+        assert "for a differentiable model" in text, f"{label} must name differentiability"
         assert core_claim in text, f"{label} must state the first-variation claim verbatim"
+        assert disclaimer in text, f"{label} must carry the manuscript intent disclaimer"
         assert "control-affine" in text.lower(), f"{label} must name the control-affine assumption"
         assert "affine" in text.lower(), f"{label} must describe the map as affine"
         assert (
             "perturbations map linearly to rate increments" not in text
         ), f"{label} must not drop 'first variation' from the rate-increment claim"
+
+    assert "first variations also propagate linearly" in hub

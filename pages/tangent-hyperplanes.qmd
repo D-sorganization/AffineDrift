@@ -14,12 +14,16 @@ categories:
   <p class="page-subtitle">Exploratory series on tangent-space and tangent-hyperplane formulations for nonlinear dynamics and control</p>
 </div>
 ```
-This section gathers the AffineDrift tangent-space series on nonlinear dynamics, contraction-style reasoning, and related control questions. It is exploratory work. Some legacy page titles and file names still use the older "Tangent Hyperplane" label; this landing page uses "Tangent-Space Series" as the broader editorial label for the same material. The core thesis: at fixed state, time, and mode, perturbations map linearly to the first variation of the state rate; in control-affine models, finite input increments produce exactly linear rate increments, and the instantaneous force-to-acceleration map is affine in the declared input. In plain terms, that map is like a taxi fare: a fixed flag-drop plus a per-mile rate, so extra push adds proportionally—but only at one frozen instant and posture; change the state and the rate card updates, so this does not make the whole motion linear. Finite-time conclusions require additional assumptions, residual bounds, and empirical validation where the argument is applied to measured movement.
+This section gathers the AffineDrift tangent-space series on nonlinear dynamics, contraction-style reasoning, and related control questions. It is exploratory work. Some legacy page titles and file names still use the older "Tangent Hyperplane" label; this landing page uses "Tangent-Space Series" as the broader editorial label for the same material.
+
+Multi-joint motion such as a golf swing is plainly nonlinear, yet this series calls some statements about it exact. The resolution is that each exact statement is either about one frozen instant or about first-order (vanishingly small) changes along one reference motion. The core thesis: for a differentiable model, at fixed state, time, and mode, perturbations map linearly to the first variation of the state rate. If the model is also control-affine, $\dot x=f_0(x,t)+G(x,t)u$, then a finite input increment $v$ changes the state rate by exactly $G(x,t)v$ while state, time and mode stay fixed, and the instantaneous force-to-acceleration map is affine in the declared input. In words: at that instant, the change in state rate is the input map times the change in input, however large the input change is. A taxi fare is a useful picture, with limits. A fare is a flag-drop plus a rate times the miles. Here the flag-drop is the acceleration that gravity and velocity-dependent forces produce with no input, and the rate card is the map from input to added acceleration. Because of the flag-drop, doubling the input need not double the acceleration, but extra input adds exactly the rate card times the extra input. Unlike a fare, the rate card is a matrix, so a push at one joint can change acceleration at others. And the picture holds only at one frozen instant and state (posture and velocity): when the state changes, both the flag-drop and the rate card change, so this does not make the whole motion linear. These are properties of the model and its derivatives; they do not establish biological intent, individual muscle recruitment, or optimal swing technique.
+
+Here *mode* means the contact and constraint mode: which contacts and constraints are active, for example whether the clubhead is touching the ball. Within one mode the equations are smooth. Mode changes such as impacts, and other non-smooth events such as actuator saturation or friction transitions, need separate analysis; Part 6 treats impacts and mode changes. Finite-time conclusions require additional assumptions, residual bounds, and empirical validation where the argument is applied to measured movement.
 
 ::: {.callout-warning}
 ## Origin and Status
 
-**State: Experimental.** This series is original AffineDrift synthesis and has not been peer reviewed. Affine instantaneous maps and linear increments apply to the first variation and declared control-affine force-to-acceleration description under fixed state, constraints, and contact mode; they do not make the nonlinear finite-time flow linear. Claims about force attribution, accumulation over time, and control design remain in-development arguments.
+**State: Experimental.** This series is original AffineDrift synthesis and has not been peer reviewed. The exact instantaneous statements concern a single frozen instant, with state, time, constraints and contact mode held fixed. There, the first variation of the state rate is linear in the perturbation, and in control-affine models the force-to-acceleration map is affine in the input, so input increments add exactly. Along one reference motion, first variations also propagate linearly. None of this makes the nonlinear motion over a finite time (the finite-time flow) linear. Claims about force attribution, accumulation over time, and control design remain in-development arguments.
 :::
 
 ## How to Read This Material
@@ -56,7 +60,7 @@ These named articles develop specific advanced topics in depth. They are source-
 
 These standalone articles develop the mathematical machinery the series uses, treated at textbook length:
 
-- [Superposition in Affine Control Systems](../articles/superposition.html): the fixed-state affine force-to-acceleration map (linear in input increments for control-affine models) that the series linearizes around.
+- [Superposition in Affine Control Systems](../articles/superposition.html): for control-affine models, the fixed-state force-to-acceleration map is affine, so input increments add exactly; the series' local statements build on this.
 - [The Null Space of the Constraint Jacobian](../articles/null-space-constraint-jacobian.html): how constrained dynamics decompose into constrained and internal motion.
 - [Force and Mobility Ellipsoids](../articles/force-mobility-matrices.html): the geometric reading of the state-dependent input map.
 - [Degrees of Freedom and the Curse of Dimensionality](../articles/degrees-of-freedom-and-dimensionality.html): how constraints and structure collapse effective dimensionality.
@@ -82,6 +86,6 @@ The old articles/tangent-hyperplane-contraction/ textbook workspace and Drafts_O
 
 ## Related Articles
 
-- [Superposition in Affine Control Systems](../articles/superposition.html) — The fixed-state affine force-to-acceleration map (linear input increments in control-affine models)
+- [Superposition in Affine Control Systems](../articles/superposition.html) — For control-affine models, the fixed-state affine force-to-acceleration map, in which input increments add exactly
 - [Drifter Manifesto](drifter-manifesto.html) — The core AffineDrift control-affine theory series
 - [Critiques and Responses](../critiques/index.html) — Limitations and objections to the framework
