@@ -142,3 +142,43 @@ test.describe('Article section reveal CLS guard (#5164)', () => {
     expect(sectionStyles.inlineOpacity).not.toBe('0');
   });
 });
+
+test.describe('Programming companion catalog (#5164 round 2)', () => {
+  const route = '/models/programming/programs.html';
+
+  test('catalog page keeps title, gutters, and no page-level overflow at 375px', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto(route, { waitUntil: 'load' });
+    await waitForStableLayout(page);
+
+    await expect(page.locator('#title-block-header')).toBeVisible();
+    await expect(page.locator('#title-block-header h1.title')).toBeVisible();
+
+    const layout = await page.evaluate(() => {
+      const main = document.querySelector('main#quarto-document-content');
+      const rect = main ? main.getBoundingClientRect() : null;
+      return {
+        mainLeft: rect ? rect.left : 0,
+        pageLayoutFull: document
+          .getElementById('quarto-content')
+          ?.classList.contains('page-layout-full'),
+        overflows: document.documentElement.scrollWidth > window.innerWidth,
+      };
+    });
+
+    expect(layout.pageLayoutFull).toBe(false);
+    expect(layout.mainLeft).toBeGreaterThan(0);
+    expect(layout.overflows).toBe(false);
+  });
+
+  test('catalog page shows margin TOC at 1440px', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(route, { waitUntil: 'load' });
+    await waitForStableLayout(page);
+
+    await expect(page.locator('#quarto-margin-sidebar')).toBeVisible();
+    await expect(page.locator('#title-block-header h1.title')).toBeVisible();
+  });
+});

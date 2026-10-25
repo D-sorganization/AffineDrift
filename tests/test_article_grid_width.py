@@ -17,6 +17,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 STYLES_CSS = ROOT / "styles.css"
 TYPOGRAPHY_TOKENS = ROOT / "css" / "tokens" / "typography.css"
+PROGRAMMING_CATALOG_CSS = ROOT / "css" / "components" / "programming-catalog.css"
+PROGRAMMING_META = ROOT / "models" / "programming" / "_metadata.yml"
 
 _ARTICLE_LAYOUT_RULE = re.compile(
     r"#quarto-content\.page-layout-article[^{]*\{([^}]*)\}",
@@ -46,11 +48,13 @@ def test_prose_width_targets_about_68ch_for_slice_1() -> None:
     assert int(match.group(1)) == 68
 
 
-def test_programming_catalog_uses_full_page_layout() -> None:
-    """Wide companion tables must not use the article grid that #5164 tightens."""
-    import yaml
+def test_programming_catalog_stays_on_article_layout_with_scrollable_tables() -> None:
+    """Companion catalogs must not use page-layout full (#5164 round 2)."""
+    assert PROGRAMMING_CATALOG_CSS.is_file()
+    catalog_css = PROGRAMMING_CATALOG_CSS.read_text(encoding="utf-8")
+    assert "overflow-x" in catalog_css
 
-    meta_path = ROOT / "models" / "programming" / "_metadata.yml"
-    assert meta_path.is_file(), "models/programming/_metadata.yml is required"
-    data = yaml.safe_load(meta_path.read_text(encoding="utf-8"))
-    assert data.get("page-layout") == "full"
+    assert PROGRAMMING_META.is_file()
+    meta = yaml.safe_load(PROGRAMMING_META.read_text(encoding="utf-8")) or {}
+    assert meta.get("page-layout") != "full"
+    assert "programming-catalog.css" in str(meta.get("format", {}).get("html", {}).get("css", ""))
