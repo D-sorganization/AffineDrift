@@ -1,18 +1,23 @@
 /**
  * Programming companion catalog pages — wide parity tables (#5164).
- * Article layout is kept for title, margin TOC, and gutters; tables scroll
- * inside the global .table-wrapper contract (see styles.css).
+ * Article layout keeps title, margin TOC, and gutters; wide tables scroll in-section.
  */
 
 #quarto-content.page-layout-article #quarto-document-content {
-  min-width: 0;
+  overflow-x: clip;
   max-width: 100%;
 }
 
-@media (max-width: 767.98px) {
-  #quarto-content.page-layout-article.page-columns,
-  #quarto-content.page-layout-article main.content {
-    min-width: 0;
-    max-width: 100%;
-  }
+#quarto-content.page-layout-article #quarto-document-content section:has(table) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  contain: layout;
+}
+
+#quarto-content.page-layout-article #quarto-document-content section:has(table) table {
+  display: table;
+  width: auto;
 }
