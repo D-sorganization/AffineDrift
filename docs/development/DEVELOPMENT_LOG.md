@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5179 · Exclude Test HTML Fixtures From Repository Link Scan so Deploy Website Passes
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5179
+- **Branch:** cursor/fix-deploy-check-links-skip-fixtures-9d63
+- **PR:** #5199
+- **Paths:** see #5199
+- **Started:** 2026-10-25
+- **Last verified:** 2026-10-25 (`5485e8d8`; collated from changes/5179-exclude-test-html-fixtures-from-reposito.md)
+- **Summary:** Exclude test HTML fixtures from repository link scan so Deploy Website passes
+- **Next step:** Merge after CI green.
+
 ### DL-#5161 · Add Cursor Cloud Environment.Json Fleet Bootstrap (RM Cursor-Cloud-Bootstrap).
 
 - **State:** in_review
