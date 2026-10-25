@@ -71,7 +71,9 @@ class TestPostRenderHeadPerformance:
         head = _head(process_html_head_performance(polluted))
         for tag in re.findall(r"<link\b[^>]*quarto-color-alternate[^>]*>", head, re.I):
             low = tag.lower()
-            assert 'rel="disabled-stylesheet"' in low and "media=" not in low and "onload=" not in low
+            assert (
+                'rel="disabled-stylesheet"' in low and "media=" not in low and "onload=" not in low
+            )
 
     def test_strips_axe_check_from_production_html(self) -> None:
         out = process_html_head_performance(self.SAMPLE_HEAD)
