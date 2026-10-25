@@ -1,0 +1,228 @@
+---
+title: "Camera vs Radar: What Launch Monitors Measure Versus Infer"
+subtitle: "Observed Signals, Reconstructed States, and Why Derived Ratios Like Smash Factor Are Fragile"
+description: "How camera and Doppler-radar launch monitors turn raw optical frames or radio echoes into ball and club numbers, and why derived ratios lose reliability."
+author: "Dieter Olson"
+date: "Date unverified"
+date-source: "unverified"
+date-modified: "2026-10-25"
+last-reviewed: "2026-10-25"
+canonical: "/articles/camera-vs-radar-launch-monitors/index.html"
+status: "experimental"
+audience-level: "intermediate"
+evidence-rung: "mathematical-identity"
+prerequisites:
+  - "articles/technology-launch-monitors.html"
+  - "articles/launch-monitor-vendor-reference.html"
+  - "articles/reference-point-problem.html"
+summary-plain: "No launch monitor reads ball speed, spin, or club path straight off a dial. Camera monitors take fast photos beside the ball. Radar monitors bounce radio waves from behind the golfer. Both measure a few signals directly and calculate the rest using models. Small errors in two measurements can combine to make ratios like smash factor noisy."
+abstract: "Launch monitors are often grouped into camera systems (such as the Foresight Sports GC2) and Doppler-radar or radar-plus-camera systems (such as the Rapsodo MLM2PRO and MLM2XPRO). In both families, every displayed metric sits on a chain from raw sensor observables to reconstructed state variables and model-derived outputs. This article separates what each architecture observes from what it infers for ball speed, launch angle, spin rate and spin axis, club path, face angle, smash factor, and carry distance, distinguishing manufacturer claims from independent validation. It then examines the repeated-measures study of Bright et al. (2026) in sub-elite male golfers (n = 28, TrackMan 4 Indoor Mode), where between-session relative reliability was high for clubhead speed (ICC = 0.98) and moderate for ball speed (ICC = 0.81), yet poor for smash factor (ICC = 0.24). A first-order Jacobian and variance-propagation analysis shows why ratios and model inversions amplify input errors and why range restriction in homogeneous cohorts collapses between-session rank ordering."
+key-takeaways:
+  - "Neither camera nor radar sensors receive ready-made golf numbers; both observe physical signals (pixel coordinates or frequency and phase shifts) and reconstruct three-dimensional state variables through calibration and models."
+  - "Manufacturer documentation for systems such as the Foresight GC2 (with HMT) and Rapsodo MLM2PRO/MLM2XPRO labels specific ball and club outputs as measured under declared ball, marker, and environment conditions, while carry distance and smash factor are calculated."
+  - "In Bright et al. (2026), sub-elite golfers tested across two sessions one week apart showed high relative reliability for clubhead speed (ICC = 0.98 [0.96, 0.99]) and moderate reliability for ball speed (ICC = 0.81 [0.71, 0.90]), but poor relative reliability for smash factor (ICC = 0.24 [0.00, 0.57])."
+  - "First-order Jacobian propagation shows that a derived ratio or inverted angle inherits noise from both inputs; when between-golfer spread is narrow (SD = 0.04 in smash factor), propagated measurement and strike variation dominates between-session rank order."
+caveats:
+  evidence-level: "Published empirical literature, manufacturer documentation, and first-order error-propagation identities; no new hardware testing"
+  establishes:
+    - "A side-by-side map of raw observables, state reconstructions, manufacturer claims, and model inferences for camera and radar launch monitor architectures."
+    - "First-order Jacobian sensitivity and variance-decomposition equations explaining why smash factor and inverted face angles are fragile."
+  does-not-establish:
+    - "Undisclosed proprietary firmware algorithms or internal filter weights shipped inside commercial launch monitors."
+    - "Independent metrological certification of the Rapsodo MLM2PRO or MLM2XPRO, or head-to-head error bounds beyond published study protocols."
+  next-gate: "Publication gate: Karl (lay readability), Feynman (prose), 4-seat panel, Fleet-Critic, and Dieter sign-off."
+changes:
+  - date: "2026-10-25"
+    description: "First full draft for publication gate (Newton research watch, Article Ideas Tracker)."
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+categories:
+  - technology
+  - impact-ball-flight
+bibliography:
+  - ../../references/affine-drift.bib
+  - references.bib
+---
+
+::: {.callout-note}
+## In Layman's Terms
+
+When you hit a golf ball in front of a launch monitor, the screen fills with numbers in a second: ball speed, launch angle, spin, club path, smash factor, and carry distance. All of those numbers look equally solid on the screen. They are not.
+
+A launch monitor is either a fast camera sitting beside the ball, a radar unit sitting behind you, or a mix of both. A camera takes rapid pictures of the ball and club through a small window at impact. A radar bounces radio waves off the moving club and ball, the same way a police speed gun checks a car. Neither machine has a "smash factor sensor" or a "carry sensor." Each machine measures a few basic things and uses math models to work out the rest. When a number is built by dividing one measurement by another—like smash factor, which divides ball speed by club speed—small wobbles in either measurement get magnified. That is why a player can look consistent in club speed from week to week while their smash factor ranking jumps around.
+:::
+
+::: {.callout-important}
+## Status: Pending Draft Under Review
+
+This article is an unpublished first draft prepared for the AffineDrift publication gate (Karl $\to$ Feynman $\to$ panel $\to$ Fleet-Critic $\to$ Dieter). It synthesizes peer-reviewed literature [@Leach2017LaunchMonitor; @Wood2018FacePathLaunch; @Bright2026CMJDriving] and public manufacturer documentation. Hardware descriptions attributed to vendors are explicitly marked as **manufacturer claims** and do not constitute independent metrological validation. This article is neutral and is not a product endorsement.
+:::
+
+## Observed Signals Versus Inferred State {#sec-observed-vs-inferred}
+
+In everyday golf conversation, launch monitors are split into a binary: "cameras measure at impact; radar tracks the flight." In control theory and metrology, the boundary is more precise. Following the International Vocabulary of Metrology, every instrument converts raw sensor signals $\mathbf{z}$ into a reported state estimate $\hat{\mathbf{x}}$ through a calibration and measurement model $\mathcal{M}$ ([Launch Monitor Vendor Reference](../launch-monitor-vendor-reference.html)):
+
+$$
+\mathbf{z} = h(\mathbf{x}, \mathbf{c}) + \boldsymbol{\epsilon}, \qquad \hat{\mathbf{y}} = g(\mathbf{z}, \hat{\mathbf{c}}, \mathcal{M}).
+$$ {#eq-measurement-chain}
+
+Here $\mathbf{x}$ is the true physical state of the clubhead and ball, $\mathbf{c}$ collects calibration parameters (camera intrinsics, stereo baseline, radar tilt, target-line alignment), $\boldsymbol{\epsilon}$ is sensor noise, and $\hat{\mathbf{y}}$ is the vector of numbers printed on the display. Rather than asking whether a monitor "calculates" a number—every digital instrument calculates—an engineer asks three questions:
+
+1. **What is the raw physical observable $\mathbf{z}$?** Is the device recording two-dimensional pixel intensities over microsecond exposures, or radio-frequency phase and frequency shifts over milliseconds?
+2. **Is the state map $h(\mathbf{x},\mathbf{c})$ directly invertible from the sensors alone, or does $g$ rely on a prior physical model?** Recovering 3D ball velocity from calibrated stereo image pairs is a direct geometric reconstruction. Recovering clubface angle from ball launch direction and club path without observing the face requires inverting an impact model. Predicting 270 yards of carry from 8 feet of indoor flight requires integrating an aerodynamic differential equation under assumed wind and air density.
+3. **How do errors propagate through $g$?** When $\hat{\mathbf{y}}$ is a nonlinear ratio or an ill-conditioned inversion, the Jacobian $\partial g / \partial \mathbf{z}$ can amplify small sensor uncertainties into large output swings.
+
+This distinction between **observed outputs** and **inferred internal state** runs throughout AffineDrift's research programme, from [Launch Monitor Technology](../technology-launch-monitors.html) and [The Reference-Point Problem](../reference-point-problem.html) to [Interpretation of Inverse Dynamics](../inverse-dynamics.html).
+
+## How the Two Architectures Sense the Shot {#sec-architectures}
+
+### Stereoscopic Camera Monitors (For Example, Foresight GC2 and HMT) {#sec-camera-architecture}
+
+A photometric launch monitor sits beside the ball, looking across the target line at a compact capture box.
+
+- **Hardware and raw observables:** As documented in Foresight Sports' product specifications (**manufacturer claim**; [What We Measure](https://www.foresightsports.com/pages/what-we-measure); [2023 Ball & Club Data Guide](https://support.foresightsports.com/sites/default/files/downloads/2023/2023%20Ball%20%26%20Club%20Data%20Doc.pdf)), the **Foresight GC2** uses two high-speed stereoscopic cameras ("Smart Camera System") to image the golf ball immediately after separation. The optional **HMT** (Head Measurement Technology) unit adds two further high-speed cameras aimed at the impact window to track reflective markers placed on the clubface.
+- **State reconstruction:** Calibrated stereo correspondence locates the ball center in three dimensions across successive exposures. Dividing the 3D displacement $\Delta \mathbf{p}$ by the inter-frame clock interval $\Delta t$ yields the initial velocity vector (ball speed, vertical launch angle, and horizontal azimuth). To obtain total spin and spin-tilt axis, the optical algorithm registers surface features or dimple/marking patterns across frames to estimate a relative rotation matrix $\Delta R \in \mathrm{SO}(3)$ and converts the rotation angle $\theta = \arccos((\operatorname{tr}\Delta R - 1)/2)$ and axis into revolutions per minute ([Launch Monitor Technology](../technology-launch-monitors.html#photometric-camera-systems)).
+- **Clubhead reconstruction:** With HMT attached and multiple reflective markers applied to the clubface (**manufacturer claim**), the stereo cameras reconstruct the 3D positions of the markers across pre-impact frames, fitting a rigid plane for face orientation (dynamic loft, face angle, lie angle) and differentiating marker trajectories to report clubhead speed, angle of attack, club path, closure rate, and impact location on the face. Without HMT, a base GC2 observes only the ball.
+
+### Doppler Radar and Hybrid Monitors (For Example, Rapsodo MLM2PRO and MLM2XPRO) {#sec-radar-architecture}
+
+A Doppler radar monitor sits behind the golfer—typically 6.5 to 8.5 feet behind the ball for portable units—looking down the target line.
+
+- **Hardware and raw observables:** A monostatic radar transmits a microwave carrier of wavelength $\lambda = c/f_c$ and records the frequency shift $f_d = 2\dot{d}/\lambda$ of echoes returning from the moving clubhead and ball, where $\dot{d}$ is radial range rate along the sightline ([Launch Monitor Technology](../technology-launch-monitors.html#doppler-radar)). Phase differences $\Delta\varphi = (2\pi/\lambda)\mathbf{d}^{\mathsf T}\hat{\mathbf{u}} + \varphi_{\mathrm{cal}}$ across receiver baselines constrain angular direction $\hat{\mathbf{u}}$.
+- **Hybrid optical-radar fusion (manufacturer claims):** Modern personal monitors frequently pair radar with high-speed optical cameras. According to Rapsodo's product documentation and FAQ (**manufacturer claim**; [Rapsodo Golf FAQ](https://rapsodo.com/pages/frequently-asked-golf-questions-faq), placed 7.5 feet behind the ball), the **Rapsodo MLM2PRO** and **MLM2XPRO** combine Doppler radar processing with dual optical cameras (high-speed Impact Vision at 240 fps plus Shot Vision). Rapsodo states that the MLM2PRO and MLM2XPRO provide 15 metrics, of which **8 are labeled as measured** (**manufacturer claim**): ball speed, club speed, launch angle, launch direction, spin rate, spin axis, club path, and angle of attack (vertical direction of the clubhead's geometric center).
+- **Conditions on spin and face angle (manufacturer claims):** Rapsodo's documentation states that spin rate and spin axis are measured optically only when using specially patterned Callaway or Titleist **RPT** (Rapsodo Precision Technology) balls (and, per the current MLM2XPRO FAQ, in the Net environment with an active membership; **manufacturer claim**). Notably, **face angle is not among the 15 metrics** reported by the MLM2PRO or MLM2XPRO (**manufacturer claim**). On pure radar systems that do report face angle or spin axis without marked balls, spin axis is typically inferred from the aerodynamic curvature (lift-induced cross-acceleration $\mathbf{L} = \mathbf{a} - \mathbf{g} - \mathbf{D}$) of the tracked flight or resolved from phase structure across the ball, while face angle is either constrained by radar scattering features or inferred by inverting a ball-launch relationship ([Launch Monitor Technology](../technology-launch-monitors.html#spin-axis-from-flight)).
+
+## Metric-by-Metric Breakdown: Measured Versus Inferred {#sec-metric-breakdown}
+
+@tbl-camera-vs-radar summarizes how eight core parameters are obtained across a stereoscopic camera system (exemplified by Foresight GC2 / GC2+HMT) and a rear-mounted Doppler-radar / hybrid system (exemplified by Rapsodo MLM2PRO / MLM2XPRO and radar-only architectures).
+
+| Metric | Camera Monitor (e.g., Foresight GC2 / GC2+HMT) | Radar / Hybrid Monitor (e.g., Rapsodo MLM2PRO / MLM2XPRO; Rear Radar) | Primary Error & Fragility Sources |
+|---|---|---|---|
+| **Ball Speed** | **Direct geometric reconstruction** from 3D ball positions across calibrated high-speed stereo frames just after separation (**manufacturer claim**). | **Direct Doppler / hybrid reconstruction** from post-impact radial velocity $f_d = 2\dot{d}/\lambda$ and initial sightline angle (**manufacturer claim**). | Camera: stereo scale calibration, exposure blur, trigger timing. Radar: cosine angle projection ($\dot{d} = \hat{\mathbf{u}}^{\mathsf T}\mathbf{v}$), short indoor window before net impact. |
+| **Launch Angle & Direction** | **Direct geometric reconstruction** of initial velocity vector elevation and azimuth relative to the unit's housing and ground reference (**manufacturer claim**). | **Direct reconstruction** from radar receiver-array phase differences $\Delta\varphi$ and optical camera tracking (**manufacturer claim**). | Unit tilt (roll/pitch leveling) and horizontal target-line alignment offset map 1-to-1 into launch angle and direction bias. |
+| **Spin Rate & Spin Axis** | **Direct optical reconstruction** by registering ball surface features/dimples across exposures to solve for $\Delta R \in \mathrm{SO}(3)$ (**manufacturer claim**). | **MLM2PRO/2XPRO:** optically measured *only* with RPT-marked balls (**manufacturer claim**). **Pure radar:** spin rate from spectral harmonics; spin axis often **inferred** from flight lift curvature or phase-resolved returns. | Camera: dimple symmetry aliasing at high rpm, smudges, moisture. Radar (indoor net): insufficient flight duration to observe Magnus curvature; harmonic ambiguity. |
+| **Club Speed** | **With HMT:** reconstructed by differentiating 3D face-marker positions just before impact (**manufacturer claim**). **Base GC2:** inferred or unavailable. | **Direct Doppler / hybrid reconstruction** from radar echoes off the clubhead through impact (**manufacturer claim**). | Reference-point mismatch (geometric center vs face center vs brightest radar scatterer); pre-impact vs impact-window timing. |
+| **Club Path & Attack Angle** | **With HMT:** reconstructed from 3D velocity vector of tracked face markers (**manufacturer claim**). | **MLM2PRO/2XPRO:** labeled as measured (geometric center) via radar + optical tracking (**manufacturer claim**). **Single-station Doppler:** instantaneous range-rate matrix has rank $\le 3$ for 6-DOF rigid motion, requiring geometric priors or multiple views. | Reference-point velocity shift $\mathbf{v}_P = \mathbf{v}_O + \boldsymbol{\omega}\times\mathbf{r}$ (~$2.5^\circ$–$3^\circ$ path difference between head center and face center on a rotating driver); target-line alignment. |
+| **Face Angle** | **With HMT:** reconstructed from 3D plane fit to multiple clubface markers (**manufacturer claim**). | **MLM2PRO/2XPRO:** not reported (**manufacturer claim**). **Other rear radars:** often **inferred** by inverting horizontal launch $\ell \approx w f + (1-w)p$ or constrained via specular/head-model fits. | Marker placement relative to curved bulge/roll face normal; if inferred from launch, off-center gear effect and $1/w$ error amplification corrupt the estimate. |
+| **Smash Factor** | **Derived ratio** $s = v_{\mathrm{ball}} / v_{\mathrm{club}}$ (**calculated** on all systems). | **Derived ratio** $s = v_{\mathrm{ball}} / v_{\mathrm{club}}$ (**calculated** on all systems). | Compounds measurement error from both speeds; denominator noise is scaled by $s/v_{\mathrm{club}}$; tightly clustered in skilled players. |
+| **Carry Distance** | **Inferred (simulated)** by integrating an aerodynamic flight model from initial launch and spin (**manufacturer claim**: calculated). | **Inferred (simulated)** indoors/net from launch and spin; outdoors, even full-flight radar extrapolates or normalizes landing unless the bounce is directly resolved (**manufacturer claim**: calculated). | Highly nonlinear sensitivity to spin-rate and spin-axis errors, drag/lift model coefficients, and unmeasured wind, temperature, or altitude. |
+
+: Comparison of measurement and inference chains across camera and radar launch monitors. Vendor capabilities are labeled as manufacturer claims; physical and algebraic constraints follow [Launch Monitor Technology](../technology-launch-monitors.html). {#tbl-camera-vs-radar}
+
+### Independent Benchmark Context {#sec-independent-benchmarks}
+
+Manufacturer labels of "measured" do not guarantee equal uncertainty across parameters. In the traceable benchmark study by @Leach2017LaunchMonitor—comparing a stereoscopic camera system (Foresight GC2+HMT) and a Doppler radar system (TrackMan Pro IIIe) simultaneously against a calibrated high-speed GOM optical reference across 240 shots (8 golfers, driver, 7-iron, utility wedge)—both systems agreed much more closely with the benchmark on **ball parameters** (ball speed, launch angle, launch direction, spin rate) than on **clubhead parameters** (club speed, path, attack angle, face angle). For example, within the authors' $\pm 1\text{ mph}$ median-centered band for clubhead speed, TrackMan fell inside on 54% of shots and Foresight on 29%; within $\pm 1^\circ$ for club direction, TrackMan achieved 45% and Foresight 58%; within $\pm 1^\circ$ for face angle, TrackMan achieved 66% and Foresight 26% ([Launch Monitor Vendor Reference](../launch-monitor-vendor-reference.html#iv.1-the-traceable-benchmark-study-located)). Similarly, Rapsodo's own published comparison of the MLM2PRO against a Foresight GCQuad across 1,021 shots (**manufacturer claim**) reported mean absolute differences of $1.05^\circ$ for attack angle and $1.19^\circ$ for club path—useful comparative evidence, though not an independent metrological calibration against a primary standard.
+
+## Why Derived Metrics Are Fragile: The Bright et al. (2026) Finding {#sec-bright-study}
+
+A striking demonstration of how a derived metric can fail even when its underlying measurements look respectable appears in a recent study by @Bright2026CMJDriving, published in *Sports* ([doi:10.3390/sports14100439](https://doi.org/10.3390/sports14100439)).
+
+### Study Design and Method {#sec-bright-method}
+
+@Bright2026CMJDriving investigated whether countermovement jump (CMJ) force–time variables predict golf driving performance across the performance distribution (25th, 50th, 75th, and 90th percentiles) and whether those relationships hold across repeated testing sessions:
+
+- **Participants:** $n = 28$ sub-elite male golfers (age $19.9 \pm 1.0\text{ years}$, stature $1.80 \pm 0.06\text{ m}$, body mass $76.6 \pm 13.9\text{ kg}$, handicap $0.8 \pm 1.9$).
+- **Protocol:** Two identical testing sessions separated by one week at the same time of day in a private indoor swing studio. In each session, participants performed three valid maximal CMJs on a dual force platform (Bertec 5060-06 at $1000\text{ Hz}$, processed via Hawkin Dynamics software) to obtain jump height ($v_{\mathrm{to}}^2 / (2g)$), jump momentum ($m v_{\mathrm{to}}$), and peak propulsive power.
+- **Launch monitor setup:** Participants hit maximal-effort drives using their own custom-fitted drivers and Titleist Pro V1 balls off artificial turf into an indoor net. A **TrackMan 4** (Indoor Mode) was positioned $2.7\text{ m}$ behind the golfer, level with the hitting surface and aligned to the target. Three valid shots per golfer per session were retained ($168$ total observations), with strike validity judged from auditory, tactile, and ball-flight feedback rather than objective face-impact tape or optical impact-location tracking.
+- **Statistical model:** Between-session reliability was estimated using Bayesian variance-components models (`brms` in R: $\text{variable} \sim 1 + \text{session} + (1 \mid \text{participant})$), reporting the intraclass correlation coefficient ($\mathrm{ICC} = \sigma_{\mathrm{between}}^2 / (\sigma_{\mathrm{between}}^2 + \sigma_{\mathrm{within}}^2)$) for relative reliability and the coefficient of variation ($\mathrm{CV}\% = \sigma_{\mathrm{residual}} / \text{grand mean} \times 100$) for absolute reliability, with posterior medians and 95% credible intervals (CrI). Predictor–outcome relationships were modeled via Bayesian quantile regression (asymmetric Laplace likelihood).
+
+### Empirical Results: High Speed Reliability, Poor Smash Factor Reliability {#sec-bright-results}
+
+@tbl-bright-reliability reproduces the between-session reliability and descriptive findings from Tables 1 and 2 of @Bright2026CMJDriving.
+
+| Variable | Session 1 Mean $\pm$ SD | Session 2 Mean $\pm$ SD | Relative Reliability: ICC [95% CrI] | Absolute Reliability: CV% [95% CrI] | Reliability Rating (by CrI Bound) |
+|---|---|---|---|---|---|
+| **Clubhead Speed** (mph) | $112.33 \pm 6.15$ | $112.34 \pm 6.35$ | $0.98\;[0.96, 0.99]$ | $0.90\;[0.80, 1.02]$ | Excellent ICC, Excellent CV |
+| **Ball Speed** (mph) | $162.40 \pm 9.01$ | $162.22 \pm 8.87$ | $0.81\;[0.71, 0.90]$ | $2.42\;[2.15, 2.73]$ | Moderate ICC, Excellent CV |
+| **Smash Factor** ($v_b / v_c$) | $1.45 \pm 0.04$ | $1.44 \pm 0.04$ | $0.24\;[0.00, 0.57]$ | $1.72\;[1.33, 2.21]$ | **Poor ICC**, Excellent CV |
+| **Jump Height** (m) | $0.29 \pm 0.07$ | $0.29 \pm 0.06$ | $0.98\;[0.96, 0.99]$ | $3.40\;[3.03, 3.83]$ | Excellent ICC, Excellent CV |
+| **Jump Momentum** ($\mathrm{kg\cdot m/s}$) | $181.16 \pm 31.94$ | $180.69 \pm 29.92$ | $0.98\;[0.96, 0.99]$ | $1.84\;[1.64, 2.07]$ | Excellent ICC, Excellent CV |
+| **Peak Propulsive Power** (W) | $3414.70 \pm 590.03$ | $3406.71 \pm 550.74$ | $0.99\;[0.99, 1.00]$ | $2.80\;[2.48, 3.19]$ | Excellent ICC, Excellent CV |
+
+: Between-session reliability and descriptive statistics across two sessions one week apart in $n = 28$ sub-elite male golfers ($168$ trials), reproduced from Tables 1 and 2 of @Bright2026CMJDriving. Ratings follow the authors' criteria on the 95% CrI lower bound for ICC and upper bound for CV%. {#tbl-bright-reliability}
+
+The results reveal a sharp contrast:
+
+1. **Clubhead speed was rock-solid:** Between-session relative reliability was excellent ($\mathrm{ICC} = 0.98\;[0.96, 0.99]$) with a tiny within-participant residual variation ($\mathrm{CV} = 0.90\%$). Jump momentum and peak propulsive power showed consistent positive associations with clubhead speed across all quantiles and both sessions (whereas the jump-height slope decreased in session two at the 50th, 75th, and 90th quantiles with 98–99% posterior probability, partly because jump height does not carry the stable body-mass factor shared by momentum, power, and clubhead speed).
+2. **Ball speed dropped to moderate relative reliability:** $\mathrm{ICC} = 0.81\;[0.71, 0.90]$ ($\mathrm{CV} = 2.42\%$), and 95% credible intervals for CMJ associations with ball speed spanned zero at every quantile.
+3. **Smash factor collapsed in relative reliability:** Despite a small percentage spread ($\mathrm{CV} = 1.72\%\;[1.33, 2.21]$), the between-session intraclass correlation was **poor**: $\mathrm{ICC} = 0.24$ with a 95% credible interval of $[0.00, 0.57]$ reaching all the way to zero. Quantile regression slopes against smash factor were uniformly trivial ($-0.005$ to $0.005$) and Bayesian correlations were negligible and sign-inconsistent across sessions ($r = -0.30$ to $0.08$).
+
+Why does a ratio built from two variables with $\mathrm{ICC} = 0.98$ and $\mathrm{ICC} = 0.81$ end up with $\mathrm{ICC} = 0.24$? @Bright2026CMJDriving identify the two interacting mechanisms—error propagation in a derived ratio [@Atkinson1998Reliability] and range restriction in a homogeneous skilled cohort [@Hopkins2009ProgressiveStatistics]—which we can write down explicitly in AffineDrift's sensitivity framework.
+
+## Error Propagation and the Jacobian of Derived Metrics {#sec-error-propagation}
+
+### First-Order Sensitivity of Smash Factor {#sec-smash-jacobian}
+
+Let $v_b$ be ball speed and $v_c$ be clubhead speed, and define smash factor as the nonlinear mapping $s(v_b, v_c) = v_b / v_c$. Expanding $s$ to first order around a nominal operating point $(\bar{v}_b, \bar{v}_c)$ with $\bar{s} = \bar{v}_b / \bar{v}_c$ gives the tangent (Jacobian) approximation:
+
+$$
+\delta s \approx J_s \begin{bmatrix} \delta v_b \\ \delta v_c \end{bmatrix} = \begin{bmatrix} \dfrac{\partial s}{\partial v_b} & \dfrac{\partial s}{\partial v_c} \end{bmatrix} \begin{bmatrix} \delta v_b \\ \delta v_c \end{bmatrix} = \frac{1}{\bar{v}_c}\,\delta v_b - \frac{\bar{v}_b}{\bar{v}_c^2}\,\delta v_c = \bar{s}\left(\frac{\delta v_b}{\bar{v}_b} - \frac{\delta v_c}{\bar{v}_c}\right).
+$$ {#eq-smash-jacobian}
+
+Evaluating @eq-smash-jacobian at the Session 1 mean of @Bright2026CMJDriving ($\bar{v}_c = 112.33\text{ mph}$, $\bar{v}_b = 162.40\text{ mph}$, $\bar{s} \approx 1.4457$):
+
+$$
+\frac{\partial s}{\partial v_b} = \frac{1}{112.33} \approx +0.00890\text{ mph}^{-1}, \qquad \frac{\partial s}{\partial v_c} = -\frac{162.40}{112.33^2} \approx -0.01287\text{ mph}^{-1}.
+$$ {#eq-smash-gradients}
+
+Notice the opposite signs and the $1.45\times$ steeper sensitivity to clubhead speed: a $+1.0\text{ mph}$ error in ball speed combined with a $-1.0\text{ mph}$ error in clubhead speed shifts reported smash factor by $\delta s \approx +0.022$ (for example, from $1.45$ to $1.472$)—more than half of the entire between-golfer standard deviation ($0.04$) in the sub-elite sample! Moreover, as noted in [Part IIb](#sec-metric-breakdown), if a monitor's clubhead-speed reference point shifts or its pre-impact window catches head deceleration differently from shot to shot, $\delta v_c$ enters $s$ with gain $-0.0129\text{ mph}^{-1}$.
+
+For within-participant perturbation covariance $\Sigma_{v} = \operatorname{Cov}(\delta v_b, \delta v_c)$, first-order variance propagation ($\sigma_s^2 \approx J_s \Sigma_v J_s^{\mathsf T}$) yields the relative variance identity:
+
+$$
+\mathrm{CV}_s^2 \approx \mathrm{CV}_{v_b}^2 + \mathrm{CV}_{v_c}^2 - 2\rho_{bc}\,\mathrm{CV}_{v_b}\,\mathrm{CV}_{v_c}.
+$$ {#eq-smash-cv}
+
+Because $s = v_b / v_c$ divides out the common swing-speed factor that differentiates faster players from slower players, the **between-participant variance** $\sigma_{\mathrm{between}}^2(s)$ shrinks dramatically in a skilled group where everyone strikes the ball near the center of the face (total $\mathrm{SD} = 0.04$ across all $28$ golfers in @Bright2026CMJDriving, with quantile means spanning only $1.40$ to $1.50$). Meanwhile, the **within-participant residual variance** $\sigma_{\mathrm{within}}^2(s)$ retains every uncancelled fluctuation:
+
+- **Strike-location and face-control variation** ($\delta v_b$ at fixed $v_c$): small millimeter shifts across the clubface change ball speed via the coefficient of restitution and off-center gear effect [@Betzler2014DriverPresentation] without changing pre-impact clubhead speed. (In @Bright2026CMJDriving, strike location was judged subjectively rather than recorded with impact tape or optical face markers.)
+- **Sensor and reference-point noise** ($\boldsymbol{\epsilon}_b, \boldsymbol{\epsilon}_c$): independent radar or camera estimation errors in $v_b$ and $v_c$ do not cancel in @eq-smash-cv; they add in quadrature ($\sigma_{\epsilon,s}^2 = \bar{v}_c^{-2}\sigma_{\epsilon,b}^2 + \bar{s}^2\bar{v}_c^{-2}\sigma_{\epsilon,c}^2$).
+
+In the intraclass correlation formula,
+
+$$
+\mathrm{ICC}(s) = \frac{\sigma_{\mathrm{between}}^2(s)}{\sigma_{\mathrm{between}}^2(s) + \sigma_{\mathrm{within}}^2(s)},
+$$ {#eq-icc-collapse}
+
+dividing $v_b$ by $v_c$ strips away the large, stable between-athlete signal ($\sigma_{\mathrm{between}}^2(v_c)$ that gave clubhead speed an $\mathrm{ICC}$ of $0.98$) while concentrating the unshared within-session strike and measurement noise into $\sigma_{\mathrm{within}}^2(s)$. When $\sigma_{\mathrm{within}}(s) \approx 0.025$ ($1.72\%$ of $1.45$) is comparable to the total sample spread ($\mathrm{SD} = 0.04$), $\mathrm{ICC}(s)$ inevitably collapses ($\mathrm{ICC} = 0.24\;[0.00, 0.57]$). An low $\mathrm{CV}\%$ ($1.72\%$) only says that the ratio stays near $1.45$ in absolute terms; it does **not** mean the ratio can reliably rank golfers or track training changes from one week to the next.
+
+### Jacobian Amplification in Model-Inferred Angles {#sec-angle-jacobian}
+
+The same Jacobian mechanism explains why **model-inferred club angles** are more fragile than directly observed ball launch angles. As derived in [Launch Monitor Technology](../technology-launch-monitors.html#face-inference-from-a-declared-launch-model), suppose a rear-mounted system without direct face-plane visibility infers horizontal face angle $f$ from measured horizontal ball launch direction $\ell$ and measured club path $p$ using the empirical centered-strike linear law $\ell \approx w f + (1-w)p$ [@Wood2018FacePathLaunch; @Henrikson2020TangentialCompliance], where $w \approx 0.76$ ($\pm 0.08$ 95% CI) for a driver:
+
+$$
+f(\ell, p, w) = p + \frac{\ell - p}{w}, \qquad \nabla f = \begin{bmatrix} \dfrac{\partial f}{\partial \ell} & \dfrac{\partial f}{\partial p} & \dfrac{\partial f}{\partial w} \end{bmatrix} = \begin{bmatrix} \dfrac{1}{w} & 1 - \dfrac{1}{w} & -\dfrac{\ell - p}{w^2} \end{bmatrix}.
+$$ {#eq-face-inversion}
+
+At $w = 0.76$, any error in launch direction is multiplied by $1/w \approx 1.316$, any error in the assumed model weight $w$ scales with face-to-path separation $-(\ell - p)/w^2$, and—crucially—an unmodeled off-center strike (horizontal gear effect shifting $\ell$ and spin axis) is misattributed by the inverse formula as a change in clubface angle $f$. A camera system with face markers (such as GC2+HMT) avoids inverting @eq-face-inversion, but substitutes a different Jacobian: the sensitivity of the 3D marker-plane fit to marker placement, lens calibration, and the local curvature (bulge and roll) between the marker plane and the actual contact normal ([Launch Monitor Vendor Reference](../launch-monitor-vendor-reference.html#iii.3-centers-of-mass-surface-points-and-shape-models)).
+
+## Connection to AffineDrift: Sensitivity and Inferred Versus Observed State {#sec-affinedrift-connection}
+
+Launch monitor literacy is the measurement-side mirror of AffineDrift's core mechanical theme:
+
+1. **Inferred state is only as good as the observation operator and the prior model:** Just as net joint torques from [inverse dynamics](../inverse-dynamics.html) cannot uniquely identify individual muscle forces or two-hand internal grip wrenches in the null space of the grasp map ([After One Solution](../after-one-solution-null-space-exploration.html)), a launch monitor's raw observables ($\mathbf{z}$) leave an unobservable null space unless extra views, markers (HMT club stickers, RPT ball patterns), or model priors close the equations. When a vendor closes that gap with a model prior, the output moves from an *observed state* to an *inferred state*.
+2. **Tangent-space sensitivity ($\Phi$ and $J$) governs what survives noise:** In our downswing dynamics series ([Part 2: Dynamics](../tangent-hyperplanes-series/part-2-dynamics.html)), small state increments propagate through the state-transition matrix $\Phi$ and task Jacobian $J$ as $\Sigma_y = J \Sigma_x J^{\mathsf T}$. At the launch monitor boundary, the exact same covariance-propagation law governs derived metrics. Whether a practitioner is coaching a swing change or a researcher is regressing jump metrics against driving performance [@Bright2026CMJDriving], treating a high-sensitivity derived ratio like smash factor or a model-inferred angle as a direct, noise-free state measurement mistakes model amplification for golfer behavior.
+
+### Practical Checklist for Golfers and Engineers {#sec-practical-checklist}
+
+- **Separate the sensor's native observables from its model outputs:** Use ball speed and launch angles as the primary high-reliability anchors; check whether spin and club metrics on your specific unit require marked balls (such as RPT balls on the MLM2PRO/MLM2XPRO; **manufacturer claim**) or clubhead attachments (such as HMT on the GC2; **manufacturer claim**).
+- **Match reference points before comparing devices:** A head-center club path on a radar unit and a face-center path on a camera unit can differ by $2^\circ$–$3^\circ$ on the exact same physical swing ([The Reference-Point Problem](../reference-point-problem.html)).
+- **Do not use smash factor alone as a longitudinal training outcome:** As @Bright2026CMJDriving demonstrated ($\mathrm{ICC} = 0.24$), track clubhead speed and ball speed directly alongside objective impact-location feedback rather than relying on their ratio across sessions.
+
+## Related Articles {#sec-related}
+
+::: {.callout-note title="See Also"}
+
+- **[Launch Monitor Technology: Measurement and Inference](../technology-launch-monitors.html)** — Full mathematical treatment of Doppler radar, stereoscopic vision, screw-axis observability, and error budgets.
+- **[Launch Monitor Vendor Reference](../launch-monitor-vendor-reference.html)** — Device-by-device catalogue of reference points, closure-rate conventions, and validation studies.
+- **[The Reference-Point Problem in Club Delivery Data](../reference-point-problem.html)** — Why geometric center and face center produce different reported club paths on the same rigid clubhead motion.
+- **[Impact Mechanics and Ball Flight: A Reference Treatment](../impact-mechanics-and-ball-flight.html)** — Rigid-body collision mechanics, off-center gear effect, and ball-flight aerodynamics.
+- **[Interpretation of Inverse Dynamics](../inverse-dynamics.html)** — Why inferring hidden internal quantities from terminal observations requires declared models and priors.
+:::
+
+## References {#sec-references}
+
+All empirical numbers and manufacturer descriptions are cited to the primary sources listed below.
