@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-25 | #5199 | Exclude test HTML fixtures from repository link scan so Deploy Website passes |
 | 2026-10-25 | #5179 | Scope Google Scholar exports, post-render head performance fixes, and deferred theme/search scripts for UX slice 2. |
 | 2026-10-24 | #5162 | Add Cursor Cloud environment.json fleet bootstrap (RM cursor-cloud-bootstrap). |
 | 2026-10-24 | #5157 | Refresh governance-vocabulary baseline after NSE and FDM reader-prose additions |
