@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5164 · UX Slice 1: Remove Article Page Grid Column-Gap and Restore Mobile Reading Width
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5164
+- **Branch:** cursor/fix-article-grid-width-5164-6ba7
+- **PR:** #5173
+- **Paths:** see #5173
+- **Started:** 2026-10-25
+- **Last verified:** 2026-10-25 (`0283b29e`; collated from changes/5164-ux-slice-1-remove-article-page-grid-colu.md)
+- **Summary:** UX slice 1: remove article page grid column-gap and restore mobile reading width
+- **Next step:** Designer re-review after CI green.
+
 ### DL-#5179 · Exclude Test HTML Fixtures From Repository Link Scan so Deploy Website Passes
 
 - **State:** in_review
