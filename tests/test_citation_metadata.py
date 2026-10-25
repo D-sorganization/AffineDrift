@@ -90,7 +90,6 @@ class TestCitationConfig:
         articles_meta = yaml.safe_load(
             (ROOT / "articles" / "_metadata.yml").read_text(encoding="utf-8")
         )
-        assert articles_meta.get("google-scholar") is True
         assert articles_meta["format"]["html"].get("google-scholar") is True
 
     def test_quarto_yml_registers_post_render_citations(self) -> None:

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Post-render HTML performance fixes for UX slice 2 (#5165).
 
-- Drop Quarto's duplicate ``quarto-color-scheme-extra`` stylesheets.
 - Make alternate (dark) theme stylesheets non-render-blocking.
+  (Quarto ``quarto-color-scheme-extra`` links must stay — removing them breaks theme JS.)
 - Remove Quarto dev-only ``axe-check.js`` from production output.
 - Prune ``citation_reference`` meta tags to bibliography entries rendered on-page.
 - Defer non-critical head scripts that Quarto emits synchronously.
@@ -17,6 +17,8 @@ import sys
 from html import unescape
 from pathlib import Path
 
+from bs4 import BeautifulSoup
+
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -26,10 +28,6 @@ SCRIPT_OPEN_RE = re.compile(r"<script\b([^>]*)>", re.IGNORECASE)
 META_CITATION_REFERENCE_RE = re.compile(
     r'\s*<meta\s+name="citation_reference"\s+content="([^"]*)"\s*/?>\s*',
     re.IGNORECASE,
-)
-REFS_SECTION_RE = re.compile(
-    r'<section[^>]*\bid="refs"[^>]*>(.*?)</section>',
-    re.IGNORECASE | re.DOTALL,
 )
 CITATION_TITLE_IN_META_RE = re.compile(r"citation_title=([^;,]+)", re.IGNORECASE)
 AXE_CHECK_SCRIPT_RE = re.compile(
@@ -57,10 +55,12 @@ def _strip_html_tags(fragment: str) -> str:
 
 
 def _refs_plain_text(content: str) -> str:
-    match = REFS_SECTION_RE.search(content)
-    if not match:
+    """Plain text of Pandoc/Quarto's ``<div id="refs">`` bibliography block."""
+
+    refs = BeautifulSoup(content, "html.parser").find(id="refs")
+    if refs is None:
         return ""
-    return _strip_html_tags(match.group(1))
+    return _strip_html_tags(str(refs))
 
 
 def _citation_reference_matches_refs(meta_content: str, refs_text: str) -> bool:
@@ -89,18 +89,6 @@ def prune_citation_reference_meta(content: str) -> str:
         return ""
 
     return META_CITATION_REFERENCE_RE.sub(replace_meta, content)
-
-
-def remove_quarto_color_scheme_extra_links(content: str) -> str:
-    """Remove duplicate light-theme links Quarto emits as ``quarto-color-scheme-extra``."""
-
-    def replace_link(match: re.Match[str]) -> str:
-        tag = match.group(0)
-        if "quarto-color-scheme-extra" in tag:
-            return ""
-        return tag
-
-    return LINK_TAG_RE.sub(replace_link, content)
 
 
 def make_alternate_stylesheets_non_blocking(content: str) -> str:
@@ -145,7 +133,6 @@ def defer_noncritical_head_scripts(content: str) -> str:
 
 def process_html_head_performance(content: str) -> str:
     updated = content
-    updated = remove_quarto_color_scheme_extra_links(updated)
     updated = make_alternate_stylesheets_non_blocking(updated)
     updated = strip_axe_check_script(updated)
     updated = prune_citation_reference_meta(updated)

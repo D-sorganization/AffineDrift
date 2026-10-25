@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import yaml
@@ -13,6 +14,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def _head(html: str) -> str:
     return html.split("</head>", maxsplit=1)[0]
+
+
+def _citation_reference_count(html: str) -> int:
+    return len(re.findall(r'name="citation_reference"', html))
 
 
 class TestQuartoScholarScope:
@@ -30,6 +35,7 @@ class TestQuartoScholarScope:
     def test_articles_metadata_enables_scholar_for_research_pages(self) -> None:
         data = yaml.safe_load((ROOT / "articles" / "_metadata.yml").read_text(encoding="utf-8"))
         assert data["format"]["html"].get("google-scholar") is True
+        assert "google-scholar" not in data
 
     def test_pages_metadata_disables_scholar_for_site_chrome(self) -> None:
         path = ROOT / "pages" / "_metadata.yml"
@@ -43,17 +49,18 @@ class TestPostRenderHeadPerformance:
 
     SAMPLE_HEAD = """<!DOCTYPE html><html><head>
 <link href="site_libs/bootstrap/bootstrap-light.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap">
-<link href="site_libs/bootstrap/bootstrap-light.min.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-bootstrap">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap-dark">
+<link href="site_libs/bootstrap/bootstrap-light.min.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-bootstrap-extra">
 <script src="site_libs/quarto-html/axe/axe-check.js"></script>
 <meta name="citation_reference" content="citation_title=Noise;,citation_author=Nobody;">
-<section id="refs"><div id="ref-smith2020">Smith 2020</div></section>
-</head><body><p>Hello</p></body></html>"""
+</head><body><div id="refs"><div id="ref-smith2020">Smith 2020</div></div><p>Hello</p></body></html>"""
 
-    def test_removes_duplicate_quarto_color_scheme_extra_stylesheets(self) -> None:
+    def test_preserves_quarto_color_scheme_extra_stylesheets(self) -> None:
+        """Removing quarto-color-scheme-extra breaks Quarto theme JS (#5179 review)."""
         out = process_html_head_performance(self.SAMPLE_HEAD)
         head = _head(out)
-        assert head.count("bootstrap-light.min.css") == 1
+        assert "quarto-color-scheme-extra" in head
+        assert head.count("bootstrap-light.min.css") == 2
 
     def test_strips_axe_check_from_production_html(self) -> None:
         out = process_html_head_performance(self.SAMPLE_HEAD)
@@ -61,14 +68,29 @@ class TestPostRenderHeadPerformance:
 
     def test_prunes_citation_reference_tags_not_present_in_refs_section(self) -> None:
         out = process_html_head_performance(self.SAMPLE_HEAD)
-        assert 'name="citation_reference"' not in out
+        assert _citation_reference_count(out) == 0
 
-    def test_keeps_citation_reference_when_title_matches_refs_section(self) -> None:
+    def test_keeps_citation_reference_when_title_matches_pandoc_refs_div(self) -> None:
         html = """<!DOCTYPE html><html><head>
 <meta name="citation_reference" content="citation_title=Smith 2020;,citation_author=Smith;">
-</head><body><section id="refs"><div id="ref-smith2020">Smith 2020</div></section></body></html>"""
+<meta name="citation_reference" content="citation_title=Unrelated global bib entry;,citation_author=Nobody;">
+</head><body><div id="refs" class="references csl-bib-body"><div id="ref-smith2020" class="csl-entry">Smith 2020</div></div></body></html>"""
         out = process_html_head_performance(html)
-        assert 'name="citation_reference"' in out
+        assert _citation_reference_count(out) == 1
+        assert "Smith 2020" in out
+        assert "Unrelated global" not in out
+
+    def test_quarto_fixture_prunes_global_scholar_bloat_but_keeps_cited_work(self) -> None:
+        """Fixture HTML is Quarto-rendered; only on-page #refs entries keep citation_reference meta."""
+        html = (ROOT / "tests" / "fixtures" / "page-payload-article-scholar.html").read_text(
+            encoding="utf-8"
+        )
+        assert '<div id="refs"' in html
+        assert _citation_reference_count(html) > 1
+        out = process_html_head_performance(html)
+        assert _citation_reference_count(out) == 1
+        assert "mathematical introduction to robotic manipulation" in out.lower()
+        assert "global noise entry" not in out.lower()
 
     def test_non_research_fixture_stays_under_citation_meta_byte_budget(self) -> None:
         """Navigation-style pages must not ship the full 995-entry scholar bibliography."""
