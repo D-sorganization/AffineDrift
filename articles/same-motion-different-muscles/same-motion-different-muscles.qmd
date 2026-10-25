@@ -1,0 +1,200 @@
+---
+title: "Same Motion, Different Muscles: What Parity Actually Needs to Check"
+subtitle: "Why Matching Joint Angles Across Simulators or Against a Human Leaves Torques, Contact Wrenches, and Muscle Recruitment Unchecked"
+description: "Matching kinematics across engines or against human motion leaves torques, grip wrenches, and muscles undetermined; a five-tier parity checklist states why."
+author: "Dieter Olson"
+date: "Date unverified"
+date-source: "unverified"
+date-modified: "2026-10-25"
+last-reviewed: "2026-10-25"
+canonical: "/articles/same-motion-different-muscles/same-motion-different-muscles.html"
+draft: true
+draft-mode: unlinked
+status: "experimental"
+audience-level: "intermediate"
+evidence-rung: "mathematical-identity"
+prerequisites:
+  - "articles/after-one-solution-null-space-exploration.html"
+  - "pages/validation-roadmap.html"
+summary-plain: "Two computer models can produce the same motion while using very different joint torques and muscles. So can a model and a real person. Many force and muscle patterns add up to the same push on the bones. This page explains why motion matching is only step one and sets out a five-step parity checklist."
+abstract: "Kinematic agreement across simulation engines or between a simulation and a human does not establish agreement in joint torques, closed-chain contact wrenches, or muscle activations. Because the mapping from muscle forces and contact wrenches to generalized accelerations is many-to-one, kinematic parity is necessary but not sufficient. We examine the recent motion-imitation benchmark of Ahmad, Borden, and Tucker (2026, arXiv:2609.21909), connect its findings to UpstreamDrift's cross-engine parity architecture across MuJoCo, Drake, Pinocchio, OpenSim, and MyoSuite, and map both onto AffineDrift's four-rung Model-to-Human Validation Roadmap. We then propose a five-tier parity checklist—kinematics, net moments and contact wrenches, muscle activations, mechanical energy flow, and local sensitivity Jacobians—stating what each tier can and cannot rule out."
+key-takeaways:
+  - "Matching joint angles and velocities fixes only the left-hand side of the equations of motion; closed-loop wrenches and redundant muscles can still vary across an affine null space without changing the motion."
+  - "In Ahmad, Borden, and Tucker (2026), two 2D motion-imitation pipelines tracked the same human walking clip with comparable joint-angle correlation (r = 0.89 vs. r = 0.76), yet one aligned better with surface EMG (r = 0.40) while the other left three major walking muscles completely silent."
+  - "UpstreamDrift's same-input parity gate (#11605) proves that MuJoCo, Drake, Pinocchio, OpenSim, and MyoSuite integrate the same forward rigid-body equations when handed identical torques; it does not imply that inverse or imitation fits across engines recover the same torques or muscle forces."
+  - "A complete parity audit requires five distinct tiers—kinematics, torques and wrenches, muscle activations, energy flow, and sensitivity Jacobians—each ruling out a specific class of false agreement."
+caveats:
+  evidence-level: "Mathematical redundancy identities combined with published walking benchmarks and software-consistency receipts; no golfer muscle measurements"
+  establishes:
+    - "Why kinematic agreement is necessary but insufficient for torque, contact-wrench, or muscle-activation agreement."
+    - "An accurate summary of the Ahmad, Borden, and Tucker (2026) walking benchmark and its scope limits."
+    - "A five-tier parity checklist linking UpstreamDrift cross-engine tests to AffineDrift's Model-to-Human Validation Roadmap."
+  does-not-establish:
+    - "Which specific simulator difference in Ahmad et al. (2026)—tendon elasticity, reward weights, actuator count, or RL optimizer—caused the observed EMG gap."
+    - "Any empirical muscle-activation or split-grip measurement in a human golf swing."
+  next-gate: "Publication gate review by Karl, Feynman, the four-seat panel, Fleet-Critic, and Dieter before removing the draft flag; follow-up figures in a subsequent pass."
+changes:
+  - date: "2026-10-25"
+    description: "First full pending draft from the Article Ideas Tracker (Newton research watch; arXiv:2609.21909)."
+bibliography:
+  - references.bib
+  - ../../references/affine-drift.bib
+  - ../../references/null-space-exploration.bib
+  - ../../references/proximal-distal-energy.bib
+  - ../../articles/proximal_distal_energy_transfer/references.bib
+  - ../../articles/The_Physics_of_Golf/golf_physics.bib
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+categories:
+  - inverse-dynamics
+  - motor-control
+  - models
+---
+
+::: {.callout-note}
+## In Layman's Terms
+
+Picture two people carrying a heavy table up a flight of stairs. If you film the table, its path and speed tell you the total lift the pair gave it. The film cannot tell you whether the front person did most of the lifting, whether both shared the load evenly, or whether they were shoving against each other while lifting. The human body works the same way. Two hands hold one golf club, and several muscles cross each joint. Because many different combinations of muscle pulls and hand pushes produce the exact same bone and club motion, matching the motion in a computer simulation does not mean the computer found the real forces or muscle work. Watching motion is step one, not the finish line.
+:::
+
+::: {.callout-important}
+## Status: Pending Draft Under Review
+
+This article is an unpublished first draft prepared for the AffineDrift publication gate (Karl $\to$ Feynman $\to$ panel $\to$ Fleet-Critic $\to$ Dieter). It is marked `draft: true` so it does not appear in site listings or search, and its pull request carries the `do-not-merge` label. Quantitative figures from external preprints and `UpstreamDrift` software-consistency receipts are cited from their primary sources; no new human golfer measurements are reported here.
+:::
+
+## The Plain Idea: Motion Only Fixes the Sum {#sec-plain-idea}
+
+When a biomechanical model or reinforcement-learning policy reproduces a recorded human movement—walking across a lab floor or swinging a golf club—it is tempting to treat the internal variables of the simulation as a window into the person's body. If the model's hip, knee, shoulder, and wrist angles match the camera data within a few degrees, didn't the simulator have to use the right joint torques and muscle pulls to get there?
+
+The mechanical answer is **no**. Matching the motion only means the simulator produced the right *net* push on each body segment at each instant. Whenever more than one force source can supply that net push, the problem is **redundant**: infinitely many internal force patterns produce the exact same motion [@bernstein1967coordination; @crowninshield1981criterion; @chao1978redundant].
+
+In human movement and golf biomechanics, that redundancy enters at two distinct physical layers before a single bone moves differently:
+
+1. **Across joints and contacts (closed loops):** When two hands grip one club or two feet press against the ground, the limbs and equipment form a closed mechanical loop. One hand can pull while the other pushes along the handle; both forces cancel inside the grip while the clubhead accelerates identically ([After One Solution](../after-one-solution-null-space-exploration.html)).
+2. **Inside each joint (multiple muscles and passive tissues):** Multiple muscles cross the same joint, often alongside opposing (antagonist) muscles and stretchy ligaments. A joint needs a specific net turning push (torque), say $20\,\text{N}\cdot\text{m}$ of flexion. It can get $20\,\text{N}\cdot\text{m}$ from one prime mover pulling at $20\,\text{N}\cdot\text{m}$ with its opponent relaxed, or from the prime mover pulling at $60\,\text{N}\cdot\text{m}$ while its opponent braces back at $40\,\text{N}\cdot\text{m}$, or by shifting load among neighbouring muscles that share the same leverage [@zajac1989determining; @crowninshield1981criterion].
+
+### The Mathematical Structure of Both Null Spaces {#sec-null-spaces}
+
+Both layers are described by the same linear algebra at each instant. For an articulated body with generalized coordinates $q \in \mathbb{R}^{n_q}$, mass matrix $M(q)$, and velocity- and gravity-dependent bias terms $h(q, \dot{q})$, the equations of motion relate generalized accelerations $\ddot{q}$ to net joint torques $\tau$, closed-loop constraint multipliers $\lambda$ (with constraint Jacobian $J_c$), and external contact or grip wrenches $f_g$ (with Jacobian $J_g$):
+
+$$
+M(q)\ddot{q} + h(q, \dot{q}) = S\tau + J_c(q)^\top \lambda + J_g(q)^\top f_g .
+$$ {#eq-eom-balance}
+
+When kinematics $(q(t), \dot{q}(t), \ddot{q}(t))$ are fixed by motion capture or a reference trajectory, the left-hand side $b = M(q)\ddot{q} + h(q, \dot{q})$ is fixed. Stacking the unknown internal and contact loads into $x = (\tau, \lambda, f_g)$ turns @eq-eom-balance into $A(q)\,x = b$. As proved in [After One Solution](../after-one-solution-null-space-exploration.html) and [The Null Space of the Constraint Jacobian](../null-space-constraint-jacobian.html), any shift $\Delta x \in \ker A(q)$ satisfies $A(q)(x + \Delta x) = b$ and leaves $\ddot{q}$ identically unchanged.
+
+Now add muscles. In a musculoskeletal model with $m$ muscle-tendon units ($m > n_q$), active muscle forces $f_m(a, l_m, \dot{l}_m) \in \mathbb{R}^m$ (driven by neural activations $a \in [0,1]^m$, fiber lengths $l_m$, and fiber velocities $\dot{l}_m$) combine with passive joint and tissue torques $\tau_{\text{pass}}(q, \dot{q})$ through the moment-arm matrix $R(q) \in \mathbb{R}^{n_q \times m}$ [@zajac1989determining; @seth2018opensim]:
+
+$$
+\tau = R(q)\,f_m(a, l_m, \dot{l}_m) + \tau_{\text{pass}}(q, \dot{q}) .
+$$ {#eq-muscle-torque}
+
+Even if net joint torque $\tau$ were uniquely known, the muscle-force equation @eq-muscle-torque is underdetermined whenever $m > \operatorname{rank} R(q)$. Every muscle-force increment $\Delta f_m \in \ker R(q)$ produces zero net joint torque ($\Delta \tau = 0$) and zero change in acceleration ($\Delta \ddot{q} = 0$), while changing individual muscle activations, tendon strain energy, metabolic cost, and bone-on-bone joint contact force. Kinematic parity checks $\ddot{q}$ and $q(t)$; it is blind to both $\ker A(q)$ and $\ker R(q)$.
+
+## Case Study: What "Beyond Kinematics" Actually Shows {#sec-beyond-kinematics}
+
+A recent benchmark by Ahmad, Borden, and Tucker [@ahmad2026beyond], *Beyond Kinematics: Benchmarking Simulation Fidelity for Muscle-Driven Imitation Learning*, puts numbers on this exact gap in human locomotion. Because it is easy to overread a benchmark title, it is worth stating carefully both what the authors tested and what their study does and does not establish.
+
+### What Ahmad, Borden, and Tucker Tested {#sec-ahmad-setup}
+
+The authors compared two motion-imitation reinforcement learning (MIRL) pipelines trained to imitate the same 140-second treadmill walking clip from a single able-bodied participant (subject AB08 in the open dataset of Scherpereel et al. [@scherpereel2023dataset], spanning five walking speeds from $0.6\,\text{m/s}$ to $2.2\,\text{m/s}$, converted to overground walking) [@ahmad2026beyond]:
+
+- **HyFyDy-IL** (built on SCONE [@geijtenbeek2019scone] and HyFyDy, following Choi et al. [@choi2026musculoskeletal]): a CPU-based Soft Actor-Critic (SAC) policy driving a Millard musculotendon model [@millard2013flexing] with **elastic tendons**, variable pennation angles, and an error-controlled integrator running near $7000\,\text{Hz}$. Its DeepMimic-style reward [@peng2018deepmimic] combines joint-angle, joint-velocity, and pelvis-position tracking with explicit penalties on squared muscle activation ($\sum e_i^2$) and excitation rate ($\sum (e_{i,\text{curr}} - e_{i,\text{prev}})^2$).
+- **MuscleMimic** (built on GPU-parallelized JAX and MuJoCo [@todorov2012mujoco] with MyoSim models [@wang2022myosim], following Li et al. [@li2026musclemimic]): an on-policy Proximal Policy Optimization (PPO) controller driving a simplified Hill-type muscle model with **completely inelastic (rigid) tendons** at a fixed $1000\,\text{Hz}$ step. Its baseline reward tracks joint positions, joint velocities, root motion, and 17 retargeted anatomical mimic sites without a muscle-effort penalty.
+
+To align the two simulators for a planar comparison, the authors compared `H1090` (HyFyDy, 2D, $10\,\text{DoF}$, $90$ muscle actuators) against `MM240-2D` (MuscleMimic, 2D, $10\,\text{DoF}$, $240$ muscle actuators representing the same primary lower-limb muscle groups, where MyoFullBody subdivides muscles such as gluteus maximus into multiple lines of action). They also trained a subject-scaled 2D HyFyDy model (`H-AB08`, scaling bone geometry, mass, and inertia from OpenSim while leaving muscle parameters unscaled) and 3D counterparts (`H2190` with $21\,\text{DoF}$ and `MM240-3D` with $23\,\text{DoF}$) [@ahmad2026beyond].
+
+### The Reported Numbers: Similar Kinematics, Divergent Muscles {#sec-ahmad-results}
+
+Across speed-binned gait cycles, the authors evaluated joint-angle predictions (hip, knee, ankle) and muscle-activation waveforms (against surface EMG on eight major lower-limb muscles) using Root Mean Squared Error (RMSE) and Pearson correlation $r$ [@ahmad2026beyond]:
+
+| Model / Pipeline | Configuration | Pooled Joint Kinematics (RMSE, Pearson $r$) | Pooled Muscle Activation vs. sEMG (RMSE, Pearson $r$) | Notable Behavioral Finding |
+| :--- | :--- | :--- | :--- | :--- |
+| **`H1090`** (HyFyDy-IL) | 2D, $10\,\text{DoF}$, $90$ muscles | $11.88^\circ$, $r = 0.89$ | $0.164$, $r = 0.40$ | Best overall EMG alignment (e.g., medial gastrocnemius $r = 0.81$), but still negative $r$ on biceps femoris ($-0.27$) and adductor longus ($-0.08$). |
+| **`MM240-2D`** (MuscleMimic) | 2D, $10\,\text{DoF}$, $240$ muscles | $14.65^\circ$, $r = 0.76$ | $0.344$, $r = 0.11$ (Table II / Abstract; $0.312$, $r = 0.16$ in §IV-A text) | Tracked hip ($r = 0.76$) and knee ($r = 0.70$) angles while **never activating three major walking muscles** (gluteus medius, vastus lateralis, gluteus maximus). |
+| **`H-AB08`** (HyFyDy-IL scaled) | 2D, $10\,\text{DoF}$, $90$ muscles | $16.68^\circ$, $r = 0.80$ | $0.192$, $r = 0.20$ | Scaling skeletal geometry and inertia without re-tuning muscle-tendon operating lengths worsened both kinematics and EMG relative to `H1090`. |
+| **`H2190`** (HyFyDy-IL 3D) | 3D, $21\,\text{DoF}$, $90$ muscles | $12.85^\circ$, $r = 0.88$ | $0.240$, $r = 0.26$ | Matched 2D kinematic tracking ($r = 0.88$), but muscle-activation RMSE worsened on all 8 muscles compared to 2D `H1090`. |
+| **`MM240-3D`** (MuscleMimic 3D) | 3D, $23\,\text{DoF}$, $240$ muscles | Excluded (completed $\approx 18\,\text{s}$ of $140\,\text{s}$) | Excluded | Could not walk stably through the full reference clip after $36\,\text{h}$ on an A100 GPU. |
+
+: Summary of kinematic and electromyographic benchmark results reported in Table II and Section IV of Ahmad, Borden, and Tucker [@ahmad2026beyond]. {#tbl-beyond-kinematics}
+
+Three findings in @tbl-beyond-kinematics speak directly to model validation:
+
+1. **High kinematic correlation coexists with silent prime movers.** In `MM240-2D`, the policy achieved hip correlation $r = 0.76$ and knee correlation $r = 0.70$ over the walking clip while leaving the gluteus maximus, gluteus medius, and vastus lateralis completely inactive [@ahmad2026beyond]. With $240$ muscle actuators spanning $10$ planar degrees of freedom, the optimizer exploited $\ker R(q)$ to generate the required joint moments using other actuators.
+2. **Adding degrees of freedom widened the null space.** Moving from 2D (`H1090`, $10\,\text{DoF}$) to 3D (`H2190`, $21\,\text{DoF}$) left pooled kinematic correlation essentially unchanged ($r = 0.89$ vs. $0.88$), yet degraded muscle-activation RMSE on every single recorded muscle (pooled $r$ dropping from $0.40$ to $0.26$) [@ahmad2026beyond].
+3. **Partial personalization can hurt when muscle-tendon lengths shift.** Scaling bone lengths and inertias to subject AB08 (`H-AB08`) without recalibrating muscle-tendon slack and fiber lengths degraded pooled EMG correlation from $0.40$ to $0.20$ [@ahmad2026beyond].
+
+### What Not to Overstate {#sec-ahmad-limits}
+
+Scientific honesty requires stating what Ahmad et al. [@ahmad2026beyond] **cannot** tell us:
+
+- **Confounded pipeline differences:** HyFyDy-IL and MuscleMimic did not differ only in tendon elasticity. They differed simultaneously in musculotendon formulation (Millard elastic tendon at $\approx 7000\,\text{Hz}$ vs. rigid-tendon Hill model at $1000\,\text{Hz}$), actuator count ($90$ vs. $240$), RL algorithm (SAC vs. PPO), kinematic retargeting (OpenSim IK vs. GMR-fit mimic sites), and baseline reward function (effort penalty vs. no effort penalty). When the authors added HyFyDy-IL's effort-penalty terms to `MM240-2D` under three weightings and trained for $24\,\text{h}$ (§IV-D), the policy failed to take a single step [@ahmad2026beyond]. Consequently, the benchmark does not isolate how much of `H1090`'s advantage came from elastic tendons versus effort regularization.
+- **Modest ceiling even for the stronger pipeline:** A pooled EMG correlation of $r = 0.40$ (with negative correlations in two of eight muscles, and no policy reaching walking speeds above $2.0\,\text{m/s}$) is an encouraging step, not ground-truth neuromuscular prediction.
+- **Internal reporting discrepancy:** Table II and the abstract report `MM240-2D` pooled activation statistics as $(\text{RMSE}, r) = (0.344, 0.11)$, whereas the prose in §IV-A quotes $(0.312, 0.16)$ [@ahmad2026beyond]. Both pairs support the same qualitative conclusion, so we record both rather than silently choosing one.
+
+## Tying the Lesson to UpstreamDrift and AffineDrift {#sec-fleet-connection}
+
+The distinction between **forward-dynamics engine consistency** and **inverse or imitation solution uniqueness** is already built into the division of labor between `UpstreamDrift` and `AffineDrift`.
+
+### What UpstreamDrift's Cross-Engine Parity Proves—And What It Leaves Open {#sec-upstreamdrift-parity}
+
+In `UpstreamDrift`, the Same-Input Cross-Engine Dynamics Parity program ([UpstreamDrift #11605](https://github.com/D-sorganization/UpstreamDrift/issues/11605), documented in `manuals/upstreamdrift/chapters/16-same-input-parity.qmd` and `docs/research/same_input_parity/same_input_parity.tex`) tests a 44-coordinate full-body golfer model with a closed-loop dual-hand grip weld ($D(q)v = 0$) and shared Hunt–Crossley ground contact across MuJoCo, Drake, Pinocchio, OpenSim ([#11611](https://github.com/D-sorganization/UpstreamDrift/issues/11611)), and MyoSuite ([#11612](https://github.com/D-sorganization/UpstreamDrift/issues/11612)). Its four acceptance levels (L0–L3) verify the **forward map** from a fixed input bundle (`same-input-bundle/v1`) to motion:
+
+- **L0 (Model identity):** Total mass, segment frames, $44 \times 44$ mass matrix $M(q)$ ($\le 9 \times 10^{-13}$ between MuJoCo and Pinocchio; $\le 2.0 \times 10^{-16}$ relative between OpenSim/Simbody and Pinocchio), and bias vector $h(q,v)$ ($\le 8 \times 10^{-10}\,\text{N}\cdot\text{m}$) agree at shared states.
+- **L1 (Pointwise constrained accelerations):** At states projected onto the grip-closure manifold ($r(q^*) = 0$, $v^* = v - D^+ D v$), solving the exact unregularized KKT system
+  $$
+  \begin{bmatrix} M(q) & D(q)^\top \\ D(q) & 0 \end{bmatrix}
+  \begin{bmatrix} a \\ \lambda \end{bmatrix}
+  =
+  \begin{bmatrix} \tau - h(q,v) \\ -\dot{D}(q,v)\,v \end{bmatrix}
+  $$ {#eq-kkt-parity}
+  yields accelerations $a$ agreeing within $10^{-6} + 10^{-8}\max|a|$ across MuJoCo, Drake, Pinocchio, and OpenSim across all 31 sampled swing frames (worst relative difference $1.6 \times 10^{-9}$). Crucially, before projecting out $50\text{--}65\,\mu\text{m}$ of off-manifold grip-closure drift and zeroing MuJoCo's default $10^{-6}$ KKT Tikhonov regularization, raw-state accelerations disagreed by up to $0.62\text{--}41.8\,\text{rad/s}^2$.
+- **L2 & L3 (Open-loop and closed-loop trajectories):** Replaying the same zero-order-held torque sequence ($\Delta t = 1\,\text{ms}$ with 8 RK4 substeps) matches joint trajectories to $\le 1.1 \times 10^{-9}\,\text{rad}$ in Drake and Pinocchio and $\le 7.4 \times 10^{-12}\,\text{rad}$ in OpenSim over $50\,\text{ms}$ windows.
+
+Why does `UpstreamDrift` also enforce a separate **3-Tier Cross-Engine Mathematical Equivalency Contract** ([UpstreamDrift #11709](https://github.com/D-sorganization/UpstreamDrift/issues/11709), implemented in [`src/engines/tiers.py`](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/src/engines/tiers.py) and summarized on [Engines and Runtime Support](../../models/programming/engines.html))? Because L0–L3 parity in OpenSim ([#11611](https://github.com/D-sorganization/UpstreamDrift/issues/11611)) and MyoSuite ([#11612](https://github.com/D-sorganization/UpstreamDrift/issues/11612)) drives those engines as **stripped Tier 1 rigid-body proxies** with direct generalized torques $\tau$, bypassing their Tier 3 Hill-type muscles and tendons. Calling `assert_valid_parity_pair("mujoco", "opensim")` raises a `ValueError` unless `allow_stripped_rigid_proxy=True` is explicitly declared.
+
+Even within Tier 1, [The UpstreamDrift Method Inventory](../forward_dynamics_matching/02_upstream_inventory.html) notes that when OpenSim (`fit_swing_opensim`) and Drake (`SLSQP` / AutoDiff) solve the *inverse* trajectory-matching problem from motion capture, their default torque bounds and regularizers differ—meaning two engines that agree to $10^{-9}\,\text{rad}$ when handed the *same* torques can still converge to *different* torque profiles when asked to fit the same recorded swing.
+
+### Connection to the Model-to-Human Validation Roadmap {#sec-validation-roadmap}
+
+AffineDrift's [Model-to-Human Validation Roadmap](../../pages/validation-roadmap.html) separates evidence into four epistemic rungs—**Rung 1 (Theory)**, **Rung 2 (Multi-Tier Simulation: Tier 1 Rigid Body, Tier 2 Compliant Contact, Tier 3 Musculoskeletal)**, **Rung 3 (Mechanical Bench Rigs)**, and **Rung 4 (In Vivo Human Biomechanics)**—backed by three falsification atlases:
+
+- The **Proximal–Distal Falsification Atlas** ([Proximal–Distal Atlas](../proximal-distal-falsification-atlas.html)) flags *Endpoint Equifinality* and *Bilateral Hand Ambiguity* (internal hand forces exceeding $15\%$ of resultant wrench with zero net club-wrench change).
+- The **forward Zero Torque Counterfactual (ZTCF) Atlas** ([Zero-Torque Counterfactual](../zero-torque-counterfactual.html)) flags *Passive Element Torque Leakage*: setting active muscle torque $\tau_{\text{act}} = 0$ leaves passive joint and ligamentous elasticity $\tau_{\text{pass}}(q,\dot{q}) \ne 0$, which a torque-only model misattributes to inertial drift.
+- The **Drift-Control Ratio (DCR) Atlas** ([Controllability and Drift-Control Ratio](../drift-control-ratio.html)) flags *Reflex Feedback Confounding*, where $30\text{--}60\,\text{ms}$ spinal stretch reflexes generate state-dependent muscular torques $u_{\text{reflex}}(q,\dot{q})$ indistinguishable from intrinsic stiffness on a single unperturbed rollout.
+
+## A Concrete Five-Tier Parity Checklist {#sec-checklist}
+
+Whether comparing two simulation engines (e.g., MuJoCo/MyoSuite vs. OpenSim/HyFyDy) or comparing a model against a human participant, a parity audit should report which of the following five tiers have been checked—and stop claiming validation for tiers above the highest one tested:
+
+| Parity Tier | Quantities Checked | What Passing Rules Out | What Passing **Cannot** Rule Out |
+| :--- | :--- | :--- | :--- |
+| **1. Kinematics** | Joint coordinates $q(t)$, rates $\dot{q}(t)$, accelerations $\ddot{q}(t)$, marker/clubhead poses, and loop-closure residuals $r(q) = 0, D(q)v = 0$ at matched filter cutoffs. | Frame/axis sign errors, retargeting failures, gross geometry mismatches, off-manifold weld drift, and policies that fail to complete the motion (`MM240-3D` in @tbl-beyond-kinematics). | Non-physical net torques, artificial base-energy injection, closed-loop internal grip squeeze/shear ($\ker A$), passive-vs-active torque swaps, or silent prime-mover muscles (`MM240-2D`). |
+| **2. Joint Torques & Contact Wrenches** | Net generalized moments $\tau(t)$, KKT multipliers $\lambda(t)$, per-foot ground-reaction wrenches and CoP ([UpstreamDrift #11708](https://github.com/D-sorganization/UpstreamDrift/issues/11708)), and split-grip bilateral wrenches $(w_{\text{lead}}, w_{\text{trail}})$ under a declared hold policy. | Mass/inertia mismatches ($M(q), h(q,\dot{q})$), KKT regularization drift, foot-slip artifacts from coarse effort holds, and—when split-grip sensors are present—6D closed-loop hand-sharing ambiguity [@koike2016instrumented]. | How net joint moment $\tau$ is split between passive tissue elasticity $\tau_{\text{pass}}$ and active muscle force, or how multiple muscles crossing the same joint share the load across $\ker R(q)$. |
+| **3. Muscle Activations & Tendon State** | Normalized excitations/activations $a_i(t)$ vs. multi-channel sEMG (amplitude RMSE and waveform correlation $r$), fiber operating lengths $l_m/l_o^M$, and series-elastic tendon strain. | Silent prime movers (`MM240-2D`), pathological agonist–antagonist co-contraction from missing effort costs, and bone-scaling artifacts that push fibers off their force–length curve (`H-AB08`) [@ahmad2026beyond; @millard2013flexing]. | Activity in deep muscles inaccessible to surface electrodes, absolute in vivo tendon force (sEMG is electrical excitation, not force [@vigotsky2018EMG; @hermens2000semg]), or feedforward vs. reflex origin ($u_{\text{reflex}}$). |
+| **4. Mechanical Energy Flow** | Joint powers $P_j = \tau_j \dot{q}_j$, segment-to-segment constraint/grip work transfer, series-elastic tendon storage/recoil vs. fiber work, and closed energy balance $\Delta E = \int (P_{\text{in}} - P_{\text{diss}})\,dt$. | Hidden non-conservative energy injection from prescribed pelvis/torso kinematics, sign errors in proximal-to-distal work ledgers, and rigid-tendon artifacts that misassign elastic tendon recoil to instantaneous fiber work. | Zero-work internal forces orthogonal to motion ($w^\top v = 0$, such as isometric grip squeeze or co-contraction that loads joints without doing net mechanical work), or local stability around the trajectory. |
+| **5. Sensitivity & Jacobians** | Moment-arm matrix $R(q)$, constraint Jacobian $J_c(q)$, linearized derivatives $(A(t), B(t))$, finite-horizon state transition $\Phi(t_f, t_0)$, event-time impact Jacobians, and parameter partials $\partial y / \partial \theta$ ([#5187](https://github.com/D-sorganization/AffineDrift/issues/5187), [UpstreamDrift #13789](https://github.com/D-sorganization/UpstreamDrift/issues/13789)). | Models that agree on one nominal path $\bar{x}(t)$ only because co-contraction or impedance $(-K\delta q - D\delta\dot{q})$ cancels on the reference trajectory, yet diverge under state perturbations $\delta x_0$, feedback delays, or impact-timing shifts $\delta t_e$ [@hogan1985impedance; @scholz1999ucm]. | Global nonlinear behavior outside the local tangent tube (where second-order curvature requires Monte Carlo rollouts) or true human trial-to-trial covariance $\Sigma_0$ without multi-swing empirical recordings. |
+
+: Five-tier parity checklist for cross-engine and model-to-human validation, ordered by what each layer constrains. {#tbl-parity-checklist}
+
+### Why Tier 4 and Tier 5 Catch What Tiers 1–3 Miss {#sec-tier4-tier5}
+
+Even when kinematics (Tier 1), net joint moments (Tier 2), and surface EMG envelopes (Tier 3) look reasonable, two failure modes remain:
+
+- **Elastic storage versus fiber work (Tier 4):** In a fast stretch-shortening movement, an elastic tendon can store mechanical energy during eccentric loading and release it rapidly at low metabolic cost, whereas a rigid-tendon model (`MM240-2D` in @tbl-beyond-kinematics) forces the contractile element itself to undergo the full muscle-tendon velocity $\dot{l}_{mt} = R(q)^\top \dot{q}$, altering where mechanical work is generated and absorbed [@millard2013flexing; @zajac1989determining]. Checking the energy ledger separates series-elastic recoil from active contractile work.
+- **Impedance and perturbation response (Tier 5):** Co-contraction in $\ker R(q)$ and internal grip preload in $\ker J_g^\top$ cancel out of the nominal acceleration $\ddot{q}$, but they change the linearized stiffness $K = -\partial \tau / \partial q$ and damping $D = -\partial \tau / \partial \dot{q}$—and through geometric stiffness terms $(\partial J_c^\top / \partial q)\lambda$, they alter the variational matrix $A(t)$ and the finite-horizon state-transition matrix $\Phi(t_f, t_0)$ [@hogan1985impedance]. Two controllers that produce the exact same nominal swing can therefore have completely different sensitivity Jacobians at impact.
+
+## Related Articles {#sec-related}
+
+::: {.callout-note title="See Also"}
+
+- **[Model-to-Human Validation Roadmap](../../pages/validation-roadmap.html)** — The four-rung epistemic validation ladder and falsification atlases
+- **[After One Solution: Exploring Dynamically Equivalent Force Allocations](../after-one-solution-null-space-exploration.html)** — Affine fibres of force allocations that produce identical accelerations
+- **[The Null Space of the Constraint Jacobian](../null-space-constraint-jacobian.html)** — Closed-chain constraint projectors and unobservable internal forces
+- **[Inverse Dynamics Inference](../inverse-dynamics-inference.html)** — Identifiability limits when inferring forces and torques from motion
+- **[The UpstreamDrift Method Inventory](../forward_dynamics_matching/02_upstream_inventory.html)** — Cross-engine forward-dynamics matching in MuJoCo, Drake, Pinocchio, and OpenSim
+:::

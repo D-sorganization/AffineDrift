@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 285
+- Reviewed: 286
 - Deferred: 0
 - Exempt: 3
 
@@ -77,6 +77,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/rotation-converter.html` | `articles/rotation-converter.qmd` | 1 |
 | `/articles/rotation-induced-spin.html` | `articles/rotation-induced-spin.qmd` | 1 |
 | `/articles/rotation-representations-reference.html` | `articles/rotation-representations-reference.qmd` | 1 |
+| `/articles/same-motion-different-muscles/same-motion-different-muscles.html` | `articles/same-motion-different-muscles/same-motion-different-muscles.qmd` | 2 |
 | `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 5 |
 | `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 8 |
 | `/articles/shot-pattern-analysis.html` | `articles/shot-pattern-analysis.qmd` | 13 |
@@ -368,6 +369,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-e7072902cc8a` | `/articles/rotation-converter.html` | Reviewed | — | None | None | 0 |
 | `ad-route-66b021768f26` | `/articles/rotation-induced-spin.html` | Reviewed | — | None | None | 0 |
 | `ad-route-934aea328ade` | `/articles/rotation-representations-reference.html` | Reviewed | — | None | None | 0 |
+| `ad-route-880e34491e59` | `/articles/same-motion-different-muscles/same-motion-different-muscles.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Reviewed | — | None | None | 7 |
 | `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 6 |
 | `ad-route-98afce2d9c4b` | `/articles/shot-pattern-analysis.html` | Reviewed | — | None | None | 0 |
