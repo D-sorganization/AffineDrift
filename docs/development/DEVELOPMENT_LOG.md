@@ -391,6 +391,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5165 · Scope Google Scholar Exports, Post-Render Head Performance Fixes, and Deferred Theme/Search Scripts for UX Slice 2.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5165
+- **Branch:** merged via #5179
+- **PR:** #5179
+- **Paths:** see #5179
+- **Started:** 2026-10-25
+- **Last verified:** 2026-10-25 (`bd48564e`; collated from changes/5165-scope-google-scholar-exports-post-render.md)
+- **Summary:** Scope Google Scholar exports, post-render head performance fixes, and deferred theme/search scripts for UX slice 2.
+- **Next step:** Shipped in PR #5179.
+
 ### DL-#5137 · Correct the False If-and-Only-If in the After One Solution Level Sub-Fibre Claim: End Levels May Be Facets
 
 - **State:** shipped
