@@ -12,6 +12,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 STYLES_CSS = ROOT / "styles.css"
 TYPOGRAPHY_TOKENS = ROOT / "css" / "tokens" / "typography.css"
@@ -42,3 +44,13 @@ def test_prose_width_targets_about_68ch_for_slice_1() -> None:
     match = re.search(r"--prose-width:\s*(\d+)ch;", tokens)
     assert match, "--prose-width token not found in css/tokens/typography.css"
     assert int(match.group(1)) == 68
+
+
+def test_programming_catalog_uses_full_page_layout() -> None:
+    """Wide companion tables must not use the article grid that #5164 tightens."""
+    import yaml
+
+    meta_path = ROOT / "models" / "programming" / "_metadata.yml"
+    assert meta_path.is_file(), "models/programming/_metadata.yml is required"
+    data = yaml.safe_load(meta_path.read_text(encoding="utf-8"))
+    assert data.get("page-layout") == "full"
