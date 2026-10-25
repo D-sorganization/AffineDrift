@@ -1,23 +1,18 @@
 /**
  * Programming companion catalog pages — wide parity tables (#5164).
- * Keeps the normal article grid (title, TOC, gutters) while tables scroll horizontally.
+ * Article layout is kept for title, margin TOC, and gutters; tables scroll
+ * inside the global .table-wrapper contract (see styles.css).
  */
 
-#quarto-document-content {
+#quarto-content.page-layout-article #quarto-document-content {
   min-width: 0;
   max-width: 100%;
 }
 
-#quarto-document-content section:has(table) {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-#quarto-document-content section:has(table) > table {
-  display: table;
-  width: max-content;
-  min-width: 100%;
-  max-width: none;
+@media (max-width: 767.98px) {
+  #quarto-content.page-layout-article.page-columns,
+  #quarto-content.page-layout-article main.content {
+    min-width: 0;
+    max-width: 100%;
+  }
 }

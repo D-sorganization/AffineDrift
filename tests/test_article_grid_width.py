@@ -52,7 +52,8 @@ def test_programming_catalog_stays_on_article_layout_with_scrollable_tables() ->
     """Companion catalogs must not use page-layout full (#5164 round 2)."""
     assert PROGRAMMING_CATALOG_CSS.is_file()
     catalog_css = PROGRAMMING_CATALOG_CSS.read_text(encoding="utf-8")
-    assert "overflow-x" in catalog_css
+    assert "max-content" not in catalog_css, "tables must scroll inside wrappers, not widen the page"
+    assert "min-width: 0" in catalog_css
 
     assert PROGRAMMING_META.is_file()
     meta = yaml.safe_load(PROGRAMMING_META.read_text(encoding="utf-8")) or {}
