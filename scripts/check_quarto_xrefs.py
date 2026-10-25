@@ -36,9 +36,7 @@ BOOKS = (
 )
 
 # Standalone Quarto manuscripts outside the book projects (one file each).
-STANDALONE = (
-    Path("articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.qmd"),
-)
+STANDALONE = (Path("articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.qmd"),)
 
 PREFIXES = ("sec", "eq", "fig", "tbl", "thm", "lst", "wrn")
 _ALT = "|".join(PREFIXES)
