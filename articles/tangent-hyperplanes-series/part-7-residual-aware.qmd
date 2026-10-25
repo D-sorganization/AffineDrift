@@ -29,17 +29,19 @@ honest.
 
 ## Quantitative Bound
 
-For a smooth system, the second-order Taylor remainder gives a local bound of
-the form
+[Part 4](./part-4-residuals-curvature.html) gives the propagated remainder bound.
+On a horizon of length $T$ with Lipschitz constant $L$ for the variational flow,
+Hessian bound $H$, state transition bound $K$, and tube constant $C_0(T)$ for
+$\|\Delta z(t)\|\le C_0(T)\epsilon$,
 
 $$
-\|r(t)\| \leq C\left(\|\delta x(t_0)\|^2 + \|\delta u\|_\infty^2\right)
+\|r(t)\|\le\frac12 KHC_0(T)^2\frac{e^{LT}-1}{L}\epsilon^2,
 $$
 
-over a fixed finite horizon, provided the perturbation family stays in a common
-smooth domain. State and input norms need declared scales. The constant $C$
-depends on regional Hessian bounds, the actual deviation enclosure, and propagation
-through the variational dynamics. A sampled Hessian is an estimate, not a
+with $\frac{e^{LT}-1}{L}\to T$ as $L\to0$. The constant $C_0(T)$ grows with $T$
+through Gronwall on the linearized deviation, so the honest horizon scaling is
+about $e^{3LT}$ once $C_0(T)^2$ and the integrated kernel are combined. State
+and input norms need declared scales. A sampled Hessian is an estimate, not a
 certified bound over a neighborhood.
 
 More explicitly, define actual deviation $e$, first-order comparison $\eta$,

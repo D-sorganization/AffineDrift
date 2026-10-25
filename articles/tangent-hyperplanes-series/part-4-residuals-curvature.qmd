@@ -70,11 +70,13 @@ $$
 r(t)=\int_{t_0}^{t}\Phi(t,s)R_2(s)\,ds.
 $$
 
-Suppose on an interval of length $T$ that $\|\Phi(t,s)\|\le K e^{L(t-s)}$ with $L\ge0$, and $\|\Delta z(t)\|\le C_0\epsilon$. Then
+Suppose on an interval of length $T=t-t_0$ that $\|\Phi(t,s)\|\le K e^{L(t-s)}$ with Lipschitz constant $L\ge0$ for the variational flow, and $\|\Delta z(t)\|\le C_0(T)\epsilon$ on $[t_0,t]$. The tube constant $C_0(T)$ is not independent of the horizon: for the forced linear prediction $\dot{\hat\xi}=A(t)\hat\xi+B(t)\Delta u$ with $\|\hat\xi(t_0)\|\le C_{0,0}\epsilon$ and bounded $\Delta u$, Gronwall gives $\|\hat\xi(t)\|\le C_{0,0}e^{LT}\epsilon$, so $C_0(T)$ typically scales like $e^{LT}$. Then $\|R_2(t)\|\le\frac12 HC_0(T)^2\epsilon^2$ and
 
 $$
-\|r(t)\|\le\frac12 KHC_0^2 T e^{LT}\epsilon^2.
+\|r(t)\|\le\frac12 KHC_0(T)^2\frac{e^{LT}-1}{L}\epsilon^2,
 $$
+
+with the $L=0$ limit $\frac{e^{LT}-1}{L}\to T$. The factor $(e^{LT}-1)/L$ integrates $\int_{t_0}^t e^{L(t-s)}\,ds$ instead of replacing the kernel by $e^{LT}$. When $C_0(T)=O(e^{LT})$, the overall growth is $O\!\left(\frac{e^{3LT}}{L}\epsilon^2\right)$ for large $LT$.
 
 This is a finite-horizon upper bound, with explicit dependence on amplification and tube size. Under bounded derivatives, a bounded input perturbation and sufficiently small initial perturbation, continuous dependence of ODE solutions supplies such a tube over a fixed interval. The perturbation must remain inside the region where the derivative and Hessian bounds apply. An initial prediction mismatch would add $\Phi(t,t_0)r(t_0)$.
 
