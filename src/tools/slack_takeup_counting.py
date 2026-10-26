@@ -118,6 +118,7 @@ def matched_pair(lead_split: float = 0.7) -> dict[str, Any]:
     trail_split = 1.0 - lead_split
 
     def residual(nuisance: Array) -> Array:
+        """Scaled timing mismatch between matched and nominal lead-led take-up."""
         mismatch: Array = event_times(_with_nuisance(trail_split, nuisance))[0] - target
         return mismatch / TIMING_NOISE
 
