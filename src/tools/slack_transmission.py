@@ -61,6 +61,7 @@ class Representation:
         return (self.time_constant_s, wrist)
 
     def __post_init__(self) -> None:
+        """Validate representation parameters at construction."""
         if not self.name:
             raise ValueError("representation name must be non-empty")
         values = (self.dead_zone_rad, self.activation_time_constant_s)
@@ -80,6 +81,7 @@ class Program:
     post_nm: tuple[float, float]
 
     def __post_init__(self) -> None:
+        """Validate program name and torque values."""
         if not self.name or not all(map(math.isfinite, (*self.pre_nm, *self.post_nm))):
             raise ValueError("program name must be non-empty and torques finite")
 
@@ -96,11 +98,13 @@ class Horizon:
     step_s: float = 1e-4
 
     def __post_init__(self) -> None:
+        """Validate horizon duration and step size."""
         if not (0.0 < self.step_s <= self.duration_s) or not math.isfinite(self.duration_s):
             raise ValueError("step must be positive and no longer than a finite duration")
 
     @property
     def intervals(self) -> int:
+        """Number of Euler steps in the post-transition interval."""
         return int(round(self.duration_s / self.step_s))
 
 
@@ -141,6 +145,7 @@ def command_deflection(torque_nm: float, rep: Representation) -> float:
         return math.copysign(rep.dead_zone_rad + target / rep.stiffness_nm_rad, torque_nm)
 
     def residual(deflection: float) -> float:
+        """Signed error between transmitted torque at deflection and the target."""
         return float(channel_torque(np.array([deflection]), rep)[0]) - target
 
     upper = target / rep.stiffness_nm_rad + rep.dead_zone_rad
@@ -150,6 +155,7 @@ def command_deflection(torque_nm: float, rep: Representation) -> float:
 
 
 def _targets(torques: tuple[float, float], rep: Representation) -> FloatArray:
+    """Steady deflection targets for arm and wrist torques under ``rep``."""
     return np.array([command_deflection(value, rep) for value in torques], dtype=np.float64)
 
 
@@ -175,6 +181,7 @@ def _integrate(
 
 
 def _recovery(time: FloatArray, torque: FloatArray, target: float) -> float:
+    """First time transmitted torque reaches the delay fraction of ``target``."""
     hits = np.flatnonzero(
         (np.sign(torque) == np.sign(target)) & (np.abs(torque) >= DELAY_FRACTION * abs(target))
     )
