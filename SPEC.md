@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-26 | #5221 | Switch page-feedback mailto fallback to dashboard@affinedrift.com |
 | 2026-10-26 | #5218 | Archive old terminal development-log entries |
 | 2026-10-26 | #5219 | Guard unguarded split on head closing tag in post-render scripts |
 | 2026-10-26 | #5210 | Preregister simulation-only correction-authority analysis contract and edge-case oracles. |
