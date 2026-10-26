@@ -5,9 +5,13 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
 import yaml
 
-from scripts.post_render_page_performance import process_html_head_performance
+from scripts.post_render_page_performance import (
+    defer_noncritical_head_scripts,
+    process_html_head_performance,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -115,3 +119,31 @@ class TestPostRenderHeadPerformance:
             len(line) for line in _head(out).splitlines() if 'name="citation_reference"' in line
         )
         assert meta_bytes < 5000
+
+    def test_handles_html_without_head_tag_gracefully(self) -> None:
+        """HTML lacking </head> must be left unchanged without raising (#5191)."""
+        html_without_head = '<div><p>Fragment without head tag</p><script src="site_libs/quarto-search/fuse.min.js"></script></div>'
+        out = process_html_head_performance(html_without_head)
+        assert out == html_without_head
+
+    def test_defer_noncritical_head_scripts_preserves_html_when_head_missing(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """defer_noncritical_head_scripts logs a warning and leaves content intact when </head> missing (#5191)."""
+        import logging
+
+        html_snippet = "<p>Simple body content</p>"
+        with caplog.at_level(logging.WARNING):
+            res = defer_noncritical_head_scripts(html_snippet)
+        assert res == html_snippet
+        assert any("</head>" in record.message for record in caplog.records)
+
+    def test_defer_noncritical_head_scripts_handles_case_insensitive_head(self) -> None:
+        """defer_noncritical_head_scripts matches </HEAD> case-insensitively and preserves closing tag (#5191)."""
+        html_upper = (
+            '<html><head><script src="site_libs/quarto-search/fuse.min.js"></script></HEAD>'
+            "<body>Content</body></html>"
+        )
+        res = defer_noncritical_head_scripts(html_upper)
+        assert 'src="site_libs/quarto-search/fuse.min.js" defer>' in res
+        assert "</HEAD>" in res
