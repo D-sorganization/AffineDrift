@@ -34,6 +34,7 @@ class HorizonSweepDeclaration:
     sweep_max: float
 
     def __post_init__(self) -> None:
+        """Validate that the horizon sweep is finite, positive, and ordered."""
         values = (self.nominal, self.sweep_min, self.sweep_max)
         if not all(isfinite(value) for value in values):
             raise ValueError("horizon sweep values must be finite")
@@ -49,6 +50,7 @@ class BaselineDetectorDeclaration:
     tracking_error_threshold: float
 
     def __post_init__(self) -> None:
+        """Validate that the detector definition and threshold are well formed."""
         if not self.definition.strip():
             raise ValueError("baseline detector definition must be declared")
         if not isfinite(self.tracking_error_threshold) or self.tracking_error_threshold <= 0.0:
@@ -67,6 +69,7 @@ class CorrectionAuthorityDeclaration:
     kappa_max: float
 
     def __post_init__(self) -> None:
+        """Validate that every contract field is declared and kappa_max is positive."""
         for value, label in (
             (self.failure_definition, "failure definition"),
             (self.effort_definition, "effort measure"),
@@ -121,6 +124,7 @@ def double_integrator_position_interval(
 def _margin_to_target(
     interval: tuple[float, float], target: float, tolerance: float, required_task_error: float
 ) -> float:
+    """Return signed clearance from the reachable interval to the correction target."""
     lower, upper = interval
     if target < lower - tolerance or target > upper + tolerance:
         return min(target - upper, lower - target)

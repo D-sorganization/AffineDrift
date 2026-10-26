@@ -279,6 +279,7 @@ def _continuous_controllability_gramian(
     input_matrix: NDArray[np.float64],
     horizon: float,
 ) -> NDArray[np.float64]:
+    """Integrate the continuous-time controllability Gramian over [0, H]."""
     if horizon <= 0.0:
         raise ReachabilityIllConditionedError("singular controllability Gramian at zero horizon")
     if not np.any(input_matrix):
