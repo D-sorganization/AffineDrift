@@ -92,11 +92,31 @@ describe('page-feedback.js', () => {
     initPageFeedback();
     await flushMicrotasks();
     const email = document.querySelector('.page-feedback__email-link');
-    const decoded = decodeURIComponent(email.getAttribute('href'));
+    const href = email.getAttribute('href');
+    const decoded = decodeURIComponent(href);
 
+    expect(href).toMatch(/^mailto:dashboard@affinedrift\.com\?/);
+    expect(href).not.toContain('dieterolson@gmail.com');
     expect(decoded).toContain(window.location.href);
     expect(decoded).toContain('abc1234');
-    expect(email.getAttribute('href')).not.toContain('+');
+    expect(href).not.toContain('+');
+  });
+
+  test('all mailto links in js/ target the affinedrift.com domain', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const jsDir = path.resolve(__dirname, '../js');
+    const jsFiles = fs.readdirSync(jsDir).filter((f) => f.endsWith('.js'));
+    const mailtoRegex = /mailto:([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+
+    for (const file of jsFiles) {
+      const content = fs.readFileSync(path.join(jsDir, file), 'utf8');
+      let match;
+      while ((match = mailtoRegex.exec(content)) !== null) {
+        const address = match[1];
+        expect(address.toLowerCase()).toMatch(/@affinedrift\.com$/);
+      }
+    }
   });
 
   test('never calls a third-party endpoint — only same-origin fetch', async () => {
