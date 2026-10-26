@@ -217,6 +217,7 @@ def verify_train_witness_claims(delta_m: float = 0.06) -> dict[str, Any]:
     j_aug = np.hstack([j_s, j_nuis])
 
     def _t_eng(tau_star: float, x0: float) -> float:
+        """Return engagement time for nominal torque tau_star and initial slack x0."""
         return float(t_c * np.log(1.0 + k_c * (d_c - x0) / tau_star))
 
     t_pos = (_t_eng(3.0, 0.0), _t_eng(7.0, 0.0))
@@ -239,6 +240,7 @@ class TestProposalVerifications(unittest.TestCase):
     """Automated verification suite for proposals #5134, #5135, and #5136."""
 
     def test_issue_5134_dead_zone_and_muscle_bridge(self) -> None:
+        """Check dead-zone impulses and muscle-bridge tracking errors for #5134."""
         pers = simulate_dead_zone_pair((10.0, -4.0))
         rev = simulate_dead_zone_pair((-4.0, 10.0))
         rel = simulate_dead_zone_pair((0.0, 0.0))
@@ -257,6 +259,7 @@ class TestProposalVerifications(unittest.TestCase):
         self.assertLess(m_rev_hi["net_error_impulse_nms"], m_pers_hi["net_error_impulse_nms"])
 
     def test_issue_5135_slack_management(self) -> None:
+        """Check play hysteresis, unequal lags, and closure nullities for #5135."""
         res = verify_slack_management_claims()
         self.assertGreater(res["play_hysteresis_diff"], 0.009)
         self.assertGreater(res["max_unequal_tau_diff_nm"], 3.4)
@@ -264,6 +267,7 @@ class TestProposalVerifications(unittest.TestCase):
         self.assertEqual(res["closure_nullities"], expected)
 
     def test_issue_5136_train_witness(self) -> None:
+        """Check grasp kernel ranks and preload-reversal witness for #5136."""
         res = verify_train_witness_claims()
         self.assertAlmostEqual(res["grasp_kernel_residual"], 0.0, places=14)
         self.assertEqual(res["rotational_observation_rank"], 5)
