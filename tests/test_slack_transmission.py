@@ -5,6 +5,13 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from scripts.build_null_space_exploration_examples import render_document
+from scripts.build_slack_management_data import DATA, build_document
+from src.tools.slack_management_studies import (
+    PUBLISHED_IMPULSES_NMS,
+    reproduction_section,
+    unequal_lag_section,
+)
 from src.tools.slack_transmission import (
     PERSISTENT,
     ROLE_REVERSAL,
@@ -24,6 +31,14 @@ RIGID = Representation("rigid", Shape.DEAD_ZONE, 0.0)
 DEAD_ZONE = Representation("dead_zone", Shape.DEAD_ZONE, 0.012)
 SMOOTH = Representation("smooth", Shape.SMOOTH, 0.012)
 PUBLISHED_WINDOW = Horizon(duration_s=0.12)
+
+
+def test_reproduces_published_dead_zone_impulses() -> None:
+    section = reproduction_section()
+    assert section["max_abs_deviation_nms"] < 1e-12
+    assert section["reproduced_nms"].keys() == PUBLISHED_IMPULSES_NMS.keys()
+    verdicts = {"persistent_favoured": 9, "equivalent": 3, "reversal_favoured": 0}
+    assert section["grid_verdicts"] == verdicts
 
 
 def test_reproduces_published_zero_transmission_and_delays() -> None:
@@ -47,6 +62,13 @@ def test_unequal_lags_favour_persistent_direction_without_any_gap() -> None:
     rep = Representation("unequal", Shape.DEAD_ZONE, 0.0, 0.018, wrist_time_constant_s=0.036)
     assert rep.time_constants_s == (0.018, 0.036)
     assert relative_advantage(rep) > 1.0
+
+
+def test_unequal_lag_transient_matches_closed_form() -> None:
+    section = unequal_lag_section()
+    assert section["exact_min_difference_nm"] == pytest.approx(-3.5, abs=1e-12)
+    assert section["exact_min_time_s"] == pytest.approx(0.036 * np.log(2.0), abs=1e-15)
+    assert section["simulated_min_difference_nm"] == pytest.approx(-3.5, abs=0.01)
 
 
 def test_dead_zone_and_smooth_both_favour_persistent_direction() -> None:
@@ -114,3 +136,8 @@ def test_program_and_horizon_reject_invalid_inputs() -> None:
         Program("bad", (np.nan, 0.0), (0.0, 0.0))
     with pytest.raises(ValueError):
         Horizon(duration_s=0.01, step_s=0.1)
+
+
+def test_committed_results_match_a_fresh_build() -> None:
+    committed = DATA.read_text(encoding="utf-8")
+    assert render_document(build_document()) == committed
