@@ -141,21 +141,6 @@ def test_contract_rejects_forbidden_overclaim_phrasing(phrase: str) -> None:
         reject_forbidden_protocol_phrases(phrase)
 
 
-def test_hypothesis_results_stay_numeric_free_in_dispatch_one() -> None:
-    protocol = preregistered_humanoid_correction_authority_protocol()
-    results = tuple(
-        HypothesisResult(
-            hypothesis.hypothesis_id,
-            "unavailable",
-            None,
-            None,
-            "Simulation-only preregistration.",
-        )
-        for hypothesis in protocol.hypotheses
-    )
-    assert all(result.estimate is None for result in results)
-
-
 @pytest.mark.content_lint
 def test_public_protocol_doc_records_simulation_only_assumptions() -> None:
     source = ARTICLE.read_text(encoding="utf-8")

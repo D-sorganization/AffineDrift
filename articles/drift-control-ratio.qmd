@@ -514,15 +514,11 @@ orchestration layer `src/affine_control/reachability_protocol.py`.
 
 ### Correction-Authority Analysis Contract (Simulation-Only)
 
-Option A preregisters a machine-checkable **correction-authority** contract for the deterministic
-MuJoCo swing-and-recovery fixture before any evaluator or fixture numbers exist. The contract
-declares failure (terminal task-space error after horizon `H` exceeds tolerance under bounded
-input), horizon `H` and its sweep range, effort measure `∫‖u‖² dt` on successful trials, a
-tracking-error **baseline detector**, lead-time versus that baseline, input bounds, coordinates,
-and `κ_max` for `cond(W_c)` and drift-Jacobian gates. Ill-conditioned systems raise
-`ReachabilityIllConditionedError` or return indeterminate outcomes; **no reachability tube** is
-published in that regime. Outcomes are recorded as `HypothesisResult` only; this dispatch carries
-**no uncalibrated numbers**. Closed-form edge-case oracles live in
+Option A preregisters a simulation-only **correction-authority** contract for the deterministic
+MuJoCo swing-and-recovery fixture: failure after horizon `H`, horizon sweep, effort measure
+`∫‖u‖² dt` on successful trials, tracking-error **baseline detector**, lead-time, coordinates,
+input bounds, and `κ_max` gates (`ReachabilityIllConditionedError` or indeterminate; no tube).
+Outcomes are `HypothesisResult` only with **no uncalibrated numbers**; oracles live in
 `src/affine_control/correction_authority_contract.py`.
 
 ### Analytic and Deterministic Regression Matrix
