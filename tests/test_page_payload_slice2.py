@@ -115,3 +115,44 @@ class TestPostRenderHeadPerformance:
             len(line) for line in _head(out).splitlines() if 'name="citation_reference"' in line
         )
         assert meta_bytes < 5000
+
+
+class TestPageContainerMinHeightCLS:
+    """Mobile article layout shift (CLS ~0.13) from inline min-height (#5211)."""
+
+    def test_quarto_theme_css_neutralizes_quarto_content_min_height(self) -> None:
+        css = (ROOT / "css" / "components" / "quarto-theme.css").read_text(encoding="utf-8")
+        match = re.search(r"#quarto-content[^{]*\{([^}]*)\}", css, re.DOTALL)
+        assert match, "Missing #quarto-content rule in css/components/quarto-theme.css"
+        block = match.group(1)
+        assert "min-height" in block and "!important" in block
+
+    def test_site_head_mobile_declares_quarto_content_min_height_auto(self) -> None:
+        head_html = (ROOT / "_includes" / "site-head.html").read_text(encoding="utf-8")
+        assert "min-height: auto !important;" in head_html
+
+    def test_strip_inline_page_container_min_height(self) -> None:
+        from scripts.post_render_page_performance import strip_inline_page_container_min_height
+
+        html_with_inline = '<div id="quarto-content" class="quarto-container" style="min-height: calc(100vh - 60px); color: red;"><p>Content</p></div>'
+        cleaned = strip_inline_page_container_min_height(html_with_inline)
+        assert "min-height" not in cleaned
+        assert "color: red" in cleaned
+        assert "quarto-content" in cleaned
+
+    def test_neutralize_nav_min_height(self, tmp_path: Path) -> None:
+        from scripts.post_render_page_performance import neutralize_nav_min_height
+
+        sample_nav = """
+        const mainContainer = window.document.querySelector(".quarto-container");
+        if (mainContainer) {
+          mainContainer.style.minHeight = "calc(100vh - " + bodyOffset + "px)";
+        }
+        """
+        nav_file = tmp_path / "quarto-nav.js"
+        nav_file.write_text(sample_nav, encoding="utf-8")
+        modified = neutralize_nav_min_height(nav_file)
+        assert modified is True
+        result = nav_file.read_text(encoding="utf-8")
+        assert 'mainContainer.style.minHeight = "calc' not in result
+        assert "neutralized for CLS" in result
