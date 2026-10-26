@@ -63,6 +63,7 @@ class DeadZoneChannel:
     time_constant_s: float
 
     def __post_init__(self) -> None:
+        """Validate channel parameters at construction."""
         if not self.stiffness_nm_rad > 0.0:
             raise ValueError("stiffness_nm_rad must be positive")
         if not self.dead_zone_rad >= 0.0:
@@ -90,16 +91,19 @@ REVERSAL_LARGE = Program("complete_role_reversal_net_14", -4.0, 10.0, 20.0, -6.0
 
 
 def _command_deflection(torque: FloatArray, channel: DeadZoneChannel) -> FloatArray:
+    """Map commanded torque to shaft deflection including the dead zone."""
     magnitude = channel.dead_zone_rad + np.abs(torque) / channel.stiffness_nm_rad
     return np.where(torque == 0.0, 0.0, np.sign(torque) * magnitude)
 
 
 def _engaged_torque(deflection: FloatArray, channel: DeadZoneChannel) -> FloatArray:
+    """Return transmitted torque after slack is taken up in the dead zone."""
     slack = np.maximum(np.abs(deflection) - channel.dead_zone_rad, 0.0)
     return channel.stiffness_nm_rad * np.sign(deflection) * slack
 
 
 def _tracking_error(desired: object, transmitted: object, time: object) -> float:
+    """Integrate absolute net-torque tracking error over time (N m s)."""
     shortfall = np.asarray(desired, dtype=float) - np.asarray(transmitted, dtype=float)
     return float(np.trapezoid(np.abs(shortfall), np.asarray(time, dtype=float)))
 
@@ -215,6 +219,7 @@ def muscle_step_audit(
     """
 
     def errors(step: float) -> list[float]:
+        """Return persistent and reversal tracking errors at the given step size."""
         return [simulate_muscle(program, step_s=step)["error_impulse_nms"] for program in programs]
 
     grid = np.array([errors(step) for step in AUDIT_STEPS_S])
@@ -257,6 +262,7 @@ def shaft_round_trip_s() -> float:
 
 
 def _scalar_summary(trace: dict[str, Any]) -> dict[str, float]:
+    """Keep only float-valued entries from a simulation trace."""
     return {key: value for key, value in trace.items() if isinstance(value, float)}
 
 
