@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5192 · Add Intrinsic Dimensions and Aspect-Ratio CSS to Home Hero Graphic to Reduce Home Page CLS < 0.1
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5192
+- **Branch:** fix/5192-home-page-cls
+- **PR:** #5223
+- **Paths:** see #5223
+- **Started:** 2026-10-26
+- **Last verified:** 2026-10-26 (`95f54f1e`; collated from changes/5192-fix-home-page-cls.md)
+- **Summary:** Add intrinsic dimensions and aspect-ratio CSS to home hero graphic to reduce home page CLS < 0.1
+- **Next step:** Merge the PR.
+
 ### DL-#5191 · Guard Unguarded Split on Head Closing Tag in Post-Render Scripts
 
 - **State:** in_review
@@ -455,6 +468,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5211 · Neutralize Dynamic Page Container Inline Min-Height in Post-Render and CSS to Eliminate Mobile Article CLS
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5211
+- **Branch:** merged via #5222
+- **PR:** #5222
+- **Paths:** see #5222
+- **Started:** 2026-10-26
+- **Last verified:** 2026-10-26 (`6d12b90a`; collated from changes/5211-fix-mobile-article-cls-min-height.md)
+- **Summary:** Neutralize dynamic page container inline min-height in post-render and CSS to eliminate mobile article CLS
+- **Next step:** Shipped in PR #5222.
 
 ### DL-#5202 · Switch Page-Feedback Mailto Fallback to Dashboard@affinedrift.com
 
