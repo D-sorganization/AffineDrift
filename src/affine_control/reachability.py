@@ -10,6 +10,7 @@ from scipy.linalg import expm
 from src.affine_control.reachability_protocol import ReachabilityIllConditionedError
 
 _GRAMIAN_SAMPLES = 32
+_GRAMIAN_OPS_PER_STEP = 2
 
 
 def _require_finite(values: tuple[float, ...], label: str) -> None:
