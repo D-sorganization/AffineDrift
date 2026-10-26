@@ -50,7 +50,7 @@ from collections.abc import Iterator
 from difflib import SequenceMatcher
 from pathlib import Path
 
-UA = "AffineDrift-bib-audit/2.0 (mailto:dieterolson@gmail.com)"
+UA = "AffineDrift-bib-audit/2.0 (mailto:dashboard@affinedrift.com)"
 CROSSREF_HOST = "api.crossref.org"
 CROSSREF_ENDPOINT = f"https://{CROSSREF_HOST}/works"
 TITLE_FLOOR = 0.93
