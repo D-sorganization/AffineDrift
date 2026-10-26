@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5191 · Guard Unguarded Split on Head Closing Tag in Post-Render Scripts
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5191
+- **Branch:** fix/5191-guard-head-split
+- **PR:** #5219
+- **Paths:** see #5219
+- **Started:** 2026-10-26
+- **Last verified:** 2026-10-26 (`cf33bf8a`; collated from changes/5191-guard-unguarded-split-on-head-closing-ta.md)
+- **Summary:** Guard unguarded split on head closing tag in post-render scripts
+- **Next step:** Merge the PR.
+
 ### DL-#5207 · Preregister Simulation-Only Correction-Authority Analysis Contract and Edge-Case Oracles.
 
 - **State:** in_review
@@ -442,6 +455,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5217 · Archive Old Terminal Development-Log Entries
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5217
+- **Branch:** merged via #5218
+- **PR:** #5218
+- **Paths:** see #5218
+- **Started:** 2026-10-26
+- **Last verified:** 2026-10-26 (`99169233`; collated from changes/5217-archive-development-log.md)
+- **Summary:** Archive old terminal development-log entries
+- **Next step:** Shipped in PR #5218.
 
 ### DL-#5134 · Port the Lead-Wrist Preload Dead-Zone and Muscle Models With Reproduction Tests
 
