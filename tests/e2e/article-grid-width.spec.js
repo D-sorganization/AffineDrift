@@ -141,6 +141,33 @@ test.describe('Article section reveal CLS guard (#5164)', () => {
     expect(sectionStyles.inlineTransform).not.toContain('translateY');
     expect(sectionStyles.inlineOpacity).not.toBe('0');
   });
+
+  test('page container does not apply layout-shifting inline min-height (#5211)', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto('/articles/theory-part1.html', { waitUntil: 'load' });
+    await waitForStableLayout(page);
+
+    const containerStyle = await page.evaluate(() => {
+      const container = document.getElementById('quarto-content');
+      if (!container) {
+        return null;
+      }
+      return {
+        inlineMinHeight: container.style.minHeight,
+        computedMinHeight: getComputedStyle(container).minHeight,
+      };
+    });
+
+    expect(containerStyle).toBeTruthy();
+    // Inline min-height should either be empty or overridden to avoid CLS
+    expect(
+      !containerStyle.inlineMinHeight ||
+        containerStyle.inlineMinHeight === 'auto' ||
+        containerStyle.computedMinHeight === '0px'
+    ).toBe(true);
+  });
 });
 
 test.describe('Programming companion catalog (#5164 round 2)', () => {

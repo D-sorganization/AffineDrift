@@ -145,12 +145,65 @@ def defer_noncritical_head_scripts(content: str) -> str:
     return head + closing_tag + tail
 
 
+PAGE_CONTAINER_DIV_RE = re.compile(
+    r'<div\b([^>]*\bid=["\']quarto-content["\'][^>]*)>',
+    re.IGNORECASE,
+)
+
+
+def strip_inline_page_container_min_height(content: str) -> str:
+    """Strip inline min-height from #quarto-content to prevent CLS (#5211)."""
+
+    def replace_div(match: re.Match[str]) -> str:
+        attrs = match.group(1)
+        style_match = re.search(r'style=["\']([^"\']*)["\']', attrs, re.IGNORECASE)
+        if not style_match:
+            return match.group(0)
+        style_val = style_match.group(1)
+        new_style = re.sub(r"min-height\s*:[^;]+;?", "", style_val, flags=re.IGNORECASE).strip()
+        new_style = re.sub(r";\s*;", ";", new_style).strip(" ;")
+        if new_style:
+            quote = style_match.group(0)[6]
+            attrs = (
+                attrs[: style_match.start(0)]
+                + f"style={quote}{new_style}{quote}"
+                + attrs[style_match.end(0) :]
+            )
+        else:
+            attrs = attrs[: style_match.start(0)].rstrip() + attrs[style_match.end(0) :]
+        return f"<div{attrs}>"
+
+    return PAGE_CONTAINER_DIV_RE.sub(replace_div, content)
+
+
+def neutralize_nav_min_height(nav_js_path: Path) -> bool:
+    """Neutralize mainContainer.style.minHeight in quarto-nav.js to prevent mobile CLS (#5211)."""
+    if not nav_js_path.is_file():
+        return False
+    original = nav_js_path.read_text(encoding="utf-8")
+    pattern = re.compile(
+        r"mainContainer\.style\.minHeight\s*=[^;\n]+;?",
+        re.MULTILINE,
+    )
+    if not pattern.search(original):
+        return False
+    updated = pattern.sub(
+        "/* mainContainer.style.minHeight neutralized for CLS (#5211) */",
+        original,
+    )
+    if updated != original:
+        nav_js_path.write_text(updated, encoding="utf-8")
+        return True
+    return False
+
+
 def process_html_head_performance(content: str) -> str:
     updated = content
     updated = make_alternate_stylesheets_non_blocking(updated)
     updated = strip_axe_check_script(updated)
     updated = prune_citation_reference_meta(updated)
     updated = defer_noncritical_head_scripts(updated)
+    updated = strip_inline_page_container_min_height(updated)
     return updated
 
 
@@ -168,6 +221,10 @@ def process_site(docs_dir: Path) -> int:
     if not docs_dir.is_dir():
         logger.warning("Output directory %s does not exist; skipping.", docs_dir)
         return changed
+    for nav_js in docs_dir.rglob("quarto-nav.js"):
+        if neutralize_nav_min_height(nav_js):
+            changed += 1
+            logger.info("Neutralized dynamic minHeight in %s", nav_js)
     for html_file in sorted(docs_dir.rglob("*.html")):
         if process_html_file(html_file):
             changed += 1
