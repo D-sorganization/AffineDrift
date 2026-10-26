@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-26 | #5148 | Add the core slack-representation transmission model (dead-zone, smooth-spring, activation and unequal-lag channels, play operator, preparation split) with its tests for the Managing Slack in Linked Systems article |
+| 2026-10-26 | #5142 | Port the lead-wrist preload dead-zone and muscle models with reproduction tests |
 | 2026-10-26 | #5149 | Add the shared dead-zone chain core, the Toy A train study and the Toy C grasp-kernel counts for #5136 |
 | 2026-10-25 | #5173 | UX slice 1: remove article page grid column-gap and restore mobile reading width |
 | 2026-10-25 | #5199 | Exclude test HTML fixtures from repository link scan so Deploy Website passes |
