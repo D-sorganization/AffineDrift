@@ -241,18 +241,31 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5207 · Preregister Simulation-Only Correction-Authority Analysis Contract and Edge-Case Oracles.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5207
+- **Branch:** cursor/correction-authority-contract-5207-0c0c
+- **PR:** #5210
+- **Paths:** see #5210
+- **Started:** 2026-10-26
+- **Last verified:** 2026-10-26 (`10ea2344`; collated from changes/5207-preregister-simulation-only-correction-a.md)
+- **Summary:** Preregister simulation-only correction-authority analysis contract and edge-case oracles.
+- **Next step:** Merge after CI green; dispatch 3 evaluator consumes contract.
+
 ### DL-#5135 · Add the Core Slack-Representation Transmission Model (Dead-Zone, Smooth-Spring, Activation and Unequal-Lag Channels, Play Operator, Preparation Split) With Its Tests for the Managing Slack in Linked Systems Article
 
 - **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5135
 - **Branch:** cursor/slack-transmission-core-7958
-- **PR:** #5148
+- **PR:** #5148, #5144
 - **Paths:** see #5148
 - **Started:** 2026-10-26
-- **Last verified:** 2026-10-26 (`41f8f79c`; collated from changes/5135-add-the-slack-transmission-core-model.md)
+- **Last verified:** 2026-10-26 (`72890746`; collated from changes/5135-add-the-slack-representation-transmissio.md)
 - **Summary:** Add the core slack-representation transmission model (dead-zone, smooth-spring, activation and unequal-lag channels, play operator, preparation split) with its tests for the Managing Slack in Linked Systems article
-- **Next step:** Review the stacked studies PR #5144 and article PR #5145; do not merge before Dieter's sign-off.
+- **Next step:** Panel review of the stacked article PR; do not merge before Dieter's sign-off.
 
 ### DL-#5164 · UX Slice 1: Remove Article Page Grid Column-Gap and Restore Mobile Reading Width
 
@@ -449,10 +462,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5136
 - **Branch:** merged via #5149
-- **PR:** #5149
+- **PR:** #5149, #5150
 - **Paths:** see #5149
 - **Started:** 2026-10-26
-- **Last verified:** 2026-10-26 (`e637716d`; collated from changes/5136-add-the-shared-dead-zone-chain-core-the.md)
+- **Last verified:** 2026-10-26 (`e1eeac3f`; collated from changes/5136-add-the-toy-b-two-hand-take-up-study-its.md)
 - **Summary:** Add the shared dead-zone chain core, the Toy A train study and the Toy C grasp-kernel counts for #5136
 - **Next step:** Shipped in PR #5149.
 
