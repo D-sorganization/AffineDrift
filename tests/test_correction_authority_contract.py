@@ -24,7 +24,6 @@ from src.affine_control.reachability import (
     scalar_linear_reachable_interval,
 )
 from src.affine_control.reachability_protocol import (
-    HypothesisResult,
     ReachabilityIllConditionedError,
     reject_forbidden_protocol_phrases,
 )
