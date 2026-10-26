@@ -121,22 +121,28 @@ def strip_axe_check_script(content: str) -> str:
 
 def defer_noncritical_head_scripts(content: str) -> str:
     """Add ``defer`` to known non-critical Quarto head scripts."""
+    match = re.search(r"</head>", content, flags=re.IGNORECASE)
+    if not match:
+        logger.warning("No </head> tag found in HTML content; skipping script deferral.")
+        return content
 
-    head, tail = content.split("</head>", maxsplit=1)
+    head = content[: match.start()]
+    closing_tag = match.group(0)
+    tail = content[match.end() :]
 
-    def replace_script_open(match: re.Match[str]) -> str:
-        attrs = match.group(1)
+    def replace_script_open(match_script: re.Match[str]) -> str:
+        attrs = match_script.group(1)
         lowered = attrs.lower()
         if "defer" in lowered or 'type="module"' in lowered:
-            return match.group(0)
+            return match_script.group(0)
         if not any(name in lowered for name in DEFER_HEAD_SCRIPTS):
-            return match.group(0)
+            return match_script.group(0)
         if lowered.strip().endswith("/"):
             return f"<script{attrs} defer>"
         return f"<script{attrs} defer>"
 
     head = SCRIPT_OPEN_RE.sub(replace_script_open, head)
-    return head + "</head>" + tail
+    return head + closing_tag + tail
 
 
 PAGE_CONTAINER_DIV_RE = re.compile(
