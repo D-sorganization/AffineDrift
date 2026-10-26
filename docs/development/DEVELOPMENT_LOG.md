@@ -456,6 +456,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5202 · Switch Page-Feedback Mailto Fallback to Dashboard@affinedrift.com
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5202
+- **Branch:** merged via #5221
+- **PR:** #5221
+- **Paths:** see #5221
+- **Started:** 2026-10-26
+- **Last verified:** 2026-10-26 (`eaf25036`; collated from changes/5202-switch-page-feedback-mailto-fallback-to.md)
+- **Summary:** Switch page-feedback mailto fallback to dashboard@affinedrift.com
+- **Next step:** Shipped in PR #5221.
+
 ### DL-#5217 · Archive Old Terminal Development-Log Entries
 
 - **State:** shipped
