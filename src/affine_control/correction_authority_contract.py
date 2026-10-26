@@ -27,6 +27,8 @@ from src.affine_control.reachability_protocol import (
 
 @dataclass(frozen=True)
 class HorizonSweepDeclaration:
+    """Nominal horizon and sweep bounds for sensitivity analysis."""
+
     nominal: float
     sweep_min: float
     sweep_max: float
@@ -41,6 +43,8 @@ class HorizonSweepDeclaration:
 
 @dataclass(frozen=True)
 class BaselineDetectorDeclaration:
+    """Tracking-error threshold detector used for lead-time comparison."""
+
     definition: str
     tracking_error_threshold: float
 
@@ -53,6 +57,8 @@ class BaselineDetectorDeclaration:
 
 @dataclass(frozen=True)
 class CorrectionAuthorityDeclaration:
+    """Machine-checkable correction-authority analysis contract fields."""
+
     failure_definition: str
     horizon: HorizonSweepDeclaration
     effort_definition: str
@@ -74,6 +80,8 @@ class CorrectionAuthorityDeclaration:
 
 @dataclass(frozen=True)
 class CorrectionAuthorityProtocol:
+    """Reachability protocol extended with preregistered correction-authority fields."""
+
     base: ReachabilityProtocol
     authority: CorrectionAuthorityDeclaration
     hypotheses: tuple[Hypothesis, ...]
@@ -81,11 +89,14 @@ class CorrectionAuthorityProtocol:
 
 @dataclass(frozen=True)
 class CorrectionAuthorityOracleResult:
+    """Closed-form authority margin without returning a reachability tube."""
+
     recoverable: bool
     margin: float
 
 
 def validate_correction_authority_protocol(protocol: CorrectionAuthorityProtocol) -> None:
+    """Fail closed when any required contract field is missing or invalid."""
     reject_forbidden_protocol_phrases(protocol.base.protocol_id)
     for hypothesis in protocol.hypotheses:
         reject_forbidden_protocol_phrases(hypothesis.statement)
@@ -97,6 +108,7 @@ def validate_correction_authority_protocol(protocol: CorrectionAuthorityProtocol
 def double_integrator_position_interval(
     position: float, velocity: float, input_bound: float, horizon: float
 ) -> tuple[float, float]:
+    """Return the exact position envelope for a fully actuated double integrator."""
     if not all(isfinite(value) for value in (position, velocity, input_bound, horizon)):
         raise ValueError("double-integrator inputs must be finite")
     if input_bound < 0.0 or horizon < 0.0:
@@ -124,6 +136,7 @@ def evaluate_double_integrator_correction_authority(
     horizon: float,
     tolerance: float,
 ) -> CorrectionAuthorityOracleResult:
+    """Return whether a double integrator can clear the declared task error."""
     interval = double_integrator_position_interval(position, velocity, input_bound, horizon)
     target = position - required_task_error
     margin = _margin_to_target(interval, target, tolerance, required_task_error)
@@ -136,6 +149,7 @@ def evaluate_scalar_correction_authority(
     horizon: float,
     tolerance: float,
 ) -> CorrectionAuthorityOracleResult:
+    """Return whether bounded input can eliminate the declared scalar task error."""
     interval = scalar_linear_reachable_interval(system, horizon)
     target = system.initial_state - required_task_error
     margin = _margin_to_target(interval, target, tolerance, required_task_error)
@@ -147,6 +161,7 @@ def evaluate_planar_rank_deficient_authority(
     system: PlanarRankDeficientSystem,
     tolerance: float,
 ) -> CorrectionAuthorityOracleResult:
+    """Return authority on a rank-deficient planar model; uncontrollable axes have zero gain."""
     if required_task_error[1] != 0.0:
         return CorrectionAuthorityOracleResult(recoverable=False, margin=0.0)
     box = rank_deficient_reachable_box(system)
@@ -157,6 +172,7 @@ def evaluate_planar_rank_deficient_authority(
 
 
 def preregistered_humanoid_correction_authority_protocol() -> CorrectionAuthorityProtocol:
+    """Return the simulation-only swing-and-recovery contract without numeric results."""
     coordinates = CoordinateDeclaration(
         ("task_position", "task_velocity"), ("m", "m/s"), (1.0, 0.5), "weighted_l2"
     )
