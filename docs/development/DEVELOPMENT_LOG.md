@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5135 · Add the Core Slack-Representation Transmission Model (Dead-Zone, Smooth-Spring, Activation and Unequal-Lag Channels, Play Operator, Preparation Split) With Its Tests for the Managing Slack in Linked Systems Article
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5135
+- **Branch:** cursor/slack-transmission-core-7958
+- **PR:** #5148
+- **Paths:** see #5148
+- **Started:** 2026-10-26
+- **Last verified:** 2026-10-26 (`41f8f79c`; collated from changes/5135-add-the-slack-transmission-core-model.md)
+- **Summary:** Add the core slack-representation transmission model (dead-zone, smooth-spring, activation and unequal-lag channels, play operator, preparation split) with its tests for the Managing Slack in Linked Systems article
+- **Next step:** Review the stacked studies PR #5144 and article PR #5145; do not merge before Dieter's sign-off.
+
 ### DL-#5164 · UX Slice 1: Remove Article Page Grid Column-Gap and Restore Mobile Reading Width
 
 - **State:** in_review
@@ -416,6 +429,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5134 · Port the Lead-Wrist Preload Dead-Zone and Muscle Models With Reproduction Tests
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5134
+- **Branch:** merged via #5142
+- **PR:** #5142
+- **Paths:** see #5142
+- **Started:** 2026-10-26
+- **Last verified:** 2026-10-26 (`9c22501e`; collated from changes/5134-lead-wrist-preload-models.md)
+- **Summary:** Port the lead-wrist preload dead-zone and muscle models with reproduction tests
+- **Next step:** Shipped in PR #5142.
 
 ### DL-#5136 · Add the Shared Dead-Zone Chain Core, the Toy A Train Study and the Toy C Grasp-Kernel Counts For #5136
 
