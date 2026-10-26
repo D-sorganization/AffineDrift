@@ -417,6 +417,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5136 · Add the Shared Dead-Zone Chain Core, the Toy A Train Study and the Toy C Grasp-Kernel Counts For #5136
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5136
+- **Branch:** merged via #5149
+- **PR:** #5149
+- **Paths:** see #5149
+- **Started:** 2026-10-26
+- **Last verified:** 2026-10-26 (`e637716d`; collated from changes/5136-add-the-shared-dead-zone-chain-core-the.md)
+- **Summary:** Add the shared dead-zone chain core, the Toy A train study and the Toy C grasp-kernel counts for #5136
+- **Next step:** Shipped in PR #5149.
+
 ### DL-#5165 · Scope Google Scholar Exports, Post-Render Head Performance Fixes, and Deferred Theme/Search Scripts for UX Slice 2.
 
 - **State:** shipped
