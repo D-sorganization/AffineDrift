@@ -512,6 +512,15 @@ cases call the protected #4013 `constant_additive_drift_interval` API rather tha
 competing reachability calculation. Protocol and hypothesis records live in the separate
 orchestration layer `src/affine_control/reachability_protocol.py`.
 
+### Correction-Authority Analysis Contract (Simulation-Only)
+
+Option A preregisters a simulation-only **correction-authority** contract for the deterministic
+MuJoCo swing-and-recovery fixture: failure after horizon `H`, horizon sweep, effort measure
+`∫‖u‖² dt` on successful trials, tracking-error **baseline detector**, lead-time, coordinates,
+input bounds, and `κ_max` gates (`ReachabilityIllConditionedError` or indeterminate; no tube).
+Outcomes are `HypothesisResult` only with **no uncalibrated numbers**; oracles live in
+`src/affine_control/correction_authority_contract.py`.
+
 ### Analytic and Deterministic Regression Matrix
 
 The regression suite fixes six systems before any positive interpretation:
