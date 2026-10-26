@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-26 | #5149 | Add the shared dead-zone chain core, the Toy A train study and the Toy C grasp-kernel counts for #5136 |
 | 2026-10-25 | #5173 | UX slice 1: remove article page grid column-gap and restore mobile reading width |
 | 2026-10-25 | #5199 | Exclude test HTML fixtures from repository link scan so Deploy Website passes |
 | 2026-10-25 | #5179 | Scope Google Scholar exports, post-render head performance fixes, and deferred theme/search scripts for UX slice 2. |
