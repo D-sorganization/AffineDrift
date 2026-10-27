@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-27 | #5220 | Dedupe citation_reference meta tags in post-render performance and validate single emission |
 | 2026-10-26 | #5222 | Neutralize dynamic page container inline min-height in post-render and CSS to eliminate mobile article CLS |
 | 2026-10-26 | #5223 | Add intrinsic dimensions and aspect-ratio CSS to home hero graphic to reduce home page CLS < 0.1 |
 | 2026-10-26 | #5221 | Switch page-feedback mailto fallback to dashboard@affinedrift.com |
