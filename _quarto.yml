@@ -3,6 +3,8 @@ project:
   output-dir: _site
   post-render:
     - python3 scripts/post_render_citations.py
+    # UX slice 2 (#5165): dedupe theme CSS, defer head scripts, prune scholar bloat.
+    - python3 scripts/post_render_page_performance.py
     # Moves the static skip link ahead of the navbar (#4566); Quarto places
     # include-before-body content inside <main>.
     - python3 scripts/move_skip_link.py
@@ -373,7 +375,7 @@ citation: true
 
 format:
   html:
-    google-scholar: true
+    google-scholar: false
     theme:
       light: [cosmo, custom.scss]
       dark: [darkly, custom.scss]

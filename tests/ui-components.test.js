@@ -120,6 +120,21 @@ describe('ui-components.js', () => {
       };
       expect(() => initFadeAnimations()).not.toThrow();
     });
+
+    test('skips scroll reveal on Quarto article layout pages', () => {
+      document.body.innerHTML = `
+        <div id="quarto-content" class="page-layout-article">
+          <section id="chapter"><p>Body</p></section>
+        </div>`;
+      const section = document.getElementById('chapter');
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+
+      initFadeAnimations();
+
+      expect(section.style.opacity).toBe('1');
+      expect(section.style.transform).toBe('none');
+    });
   });
 
   describe('initPrintMathTypesetting', () => {

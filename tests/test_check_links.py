@@ -41,6 +41,7 @@ def test_normalize_internal_url_decodes_paths() -> None:
     [
         ("CONTRIBUTING.md", False),
         ("archive/page.qmd", False),
+        ("tests/fixtures/page-payload-about-head.html", False),
         ("pages/page.qmd", True),
     ],
 )

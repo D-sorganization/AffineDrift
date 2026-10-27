@@ -134,6 +134,20 @@ def validate_page_metadata(
                     f"{html_path.name}: Generated .bib file does not start with '@' entry"
                 )
 
+    # 5. Duplicate citation_reference tags check (#5190)
+    citation_refs = meta.get("citation_reference", [])
+    seen_citation_titles: set[str] = set()
+    for ref in citation_refs:
+        title_match = re.search(r"citation_title=([^;,]+)", ref, re.IGNORECASE)
+        title_key = (
+            re.sub(r"\s+", " ", title_match.group(1)).strip().lower().rstrip(".,;")
+            if title_match
+            else ref.strip().lower()
+        )
+        if title_key in seen_citation_titles:
+            errors.append(f"{html_path.name}: Duplicate citation_reference tag for '{title_key}'")
+        seen_citation_titles.add(title_key)
+
     return errors
 
 

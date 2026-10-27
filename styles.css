@@ -97,7 +97,7 @@
   --scroll-offset: 100px;
 
   /* Typography limits */
-  --prose-width: 75ch;
+  --prose-width: 68ch;
 
   /* Fluid Typography (Phase 3: responsive scaling with clamp())
      Benefits: Scales smoothly between breakpoints, eliminates hardcoded media queries for font sizes,
@@ -311,7 +311,6 @@ main.content .reading-time-estimate span,
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 0 2rem;
-  column-gap: var(--sidebar-gap);
 }
 
 #quarto-content.page-layout-article main.content {
@@ -1192,6 +1191,12 @@ blockquote,
   #quarto-content.page-layout-article {
     padding-right: 0;
     padding-left: 0;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #quarto-content.page-layout-article.page-columns {
+    min-width: 0;
   }
 
   #title-block-header.quarto-title-block {
