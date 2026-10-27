@@ -286,12 +286,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5135
 - **Branch:** cursor/slack-transmission-core-7958
-- **PR:** #5148, #5144
+- **PR:** #5148, #5144, #5145
 - **Paths:** see #5148
 - **Started:** 2026-10-26
-- **Last verified:** 2026-10-26 (`72890746`; collated from changes/5135-add-the-slack-representation-transmissio.md)
+- **Last verified:** 2026-10-27 (`9677a22a`; collated from changes/5135-draft-the-managing-slack-in-linked-syste.md)
 - **Summary:** Add the core slack-representation transmission model (dead-zone, smooth-spring, activation and unequal-lag channels, play operator, preparation split) with its tests for the Managing Slack in Linked Systems article
-- **Next step:** Panel review of the stacked article PR; do not merge before Dieter's sign-off.
+- **Next step:** Four-seat panel review, revision round, Fleet-Critic review and Dieter's sign-off before merge.
 
 ### DL-#5164 · UX Slice 1: Remove Article Page Grid Column-Gap and Restore Mobile Reading Width
 
