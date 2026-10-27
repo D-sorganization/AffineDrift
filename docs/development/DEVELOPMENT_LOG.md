@@ -469,6 +469,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5190 · Dedupe Citation_Reference Meta Tags in Post-Render Performance and Validate Single Emission
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5190
+- **Branch:** merged via #5220
+- **PR:** #5220
+- **Paths:** see #5220
+- **Started:** 2026-10-27
+- **Last verified:** 2026-10-27 (`875909ea`; collated from changes/5190-dedupe-citation-reference-meta-tags-in-p.md)
+- **Summary:** Dedupe citation_reference meta tags in post-render performance and validate single emission
+- **Next step:** Shipped in PR #5220.
+
 ### DL-#5211 · Neutralize Dynamic Page Container Inline Min-Height in Post-Render and CSS to Eliminate Mobile Article CLS
 
 - **State:** shipped
