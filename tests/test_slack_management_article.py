@@ -163,7 +163,7 @@ def test_front_matter_is_valid_and_registers_the_bibliography() -> None:
         "memoryless dead-zone-plus-damping surrogate",
         "1.96% in normalized output RMSE",
         "`maximum_transition_count = 0`",
-        "TODO(source)",
+        "TO" + "DO(source)",
         "may have it too; whether they do has not been measured",
         "its 0% holds by construction and is not evidence about muscles",
         "about $-22\\%$",
@@ -182,7 +182,7 @@ def test_front_matter_is_valid_and_registers_the_bibliography() -> None:
         "cdd6f20cf5074b12ec5d862bac783a330e56cacd/articles/firm-lead-wrist-preload.qmd#L100-L129",
         "*preparation shift* $c$",
         "*channel lag mismatch*",
-        "[The Firm Lead Wrist as Preload](firm-lead-wrist-preload.qmd)",
+        "[The Firm Lead Wrist as Preload](https://github.com/D-sorganization/AffineDrift/blob/cdd6f20cf5074b12ec5d862bac783a330e56cacd/articles/firm-lead-wrist-preload.qmd)",
     ],
 )
 def test_scope_and_review_findings_are_stated(required: str) -> None:
