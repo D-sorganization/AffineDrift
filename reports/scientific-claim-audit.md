@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 285
+- Reviewed: 286
 - Deferred: 0
 - Exempt: 3
 
@@ -25,6 +25,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 7 |
 | `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 16 |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
+| `/articles/firm-lead-wrist-preload.html` | `articles/firm-lead-wrist-preload.qmd` | 1 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
 | `/articles/forward_dynamics_matching/01_problem.html` | `articles/forward_dynamics_matching/01_problem.qmd` | 1 |
 | `/articles/forward_dynamics_matching/02_upstream_inventory.html` | `articles/forward_dynamics_matching/02_upstream_inventory.qmd` | 1 |
@@ -316,6 +317,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 4 |
 | `ad-route-4a8ccbe60039` | `/articles/drift-control-ratio.html` | Reviewed | — | `ad-dcr-001` | `crit-dimensional-inconsistency-dcr`, `crit-lie-bracket-formalism-overreach`, `crit-normative-ambiguity-drift`, `crit-planar-dcr-blindness`, `crit-precision-gross-control` | 3 |
 | `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Reviewed | — | None | None | 0 |
+| `ad-route-39a88e0860f5` | `/articles/firm-lead-wrist-preload.html` | Reviewed | — | None | None | 0 |
 | `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Reviewed | — | None | None | 6 |
 | `ad-route-6a107a9826c5` | `/articles/forward_dynamics_matching/01_problem.html` | Reviewed | — | None | None | 0 |
 | `ad-route-08fa2a4f6759` | `/articles/forward_dynamics_matching/02_upstream_inventory.html` | Reviewed | — | None | None | 0 |
