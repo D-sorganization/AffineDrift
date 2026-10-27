@@ -92,6 +92,34 @@ class TestCitationConfig:
         )
         assert articles_meta["format"]["html"].get("google-scholar") is True
 
+
+class TestCitationReferenceDeduplicationValidator:
+    """Ensure validate_page_metadata rejects duplicate citation_reference tags (#5190)."""
+
+    def test_rejects_duplicate_citation_reference_tags(self, tmp_path: Path) -> None:
+        html = """<!DOCTYPE html><html><head>
+<meta name="citation_title" content="Test Article">
+<meta name="citation_author" content="Test Author">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch;">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch & Park;">
+</head><body><article></article></body></html>"""
+        page = tmp_path / "article.html"
+        page.write_text(html, encoding="utf-8")
+        errs = validate_page_metadata(page, is_unverified=True)
+        assert any("Duplicate citation_reference tag" in err for err in errs)
+
+    def test_accepts_distinct_citation_reference_tags(self, tmp_path: Path) -> None:
+        html = """<!DOCTYPE html><html><head>
+<meta name="citation_title" content="Test Article">
+<meta name="citation_author" content="Test Author">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch;">
+<meta name="citation_reference" content="citation_title=A mathematical introduction to robotic manipulation;,citation_author=Murray;">
+</head><body><article></article></body></html>"""
+        page = tmp_path / "article.html"
+        page.write_text(html, encoding="utf-8")
+        errs = validate_page_metadata(page, is_unverified=True)
+        assert not any("Duplicate citation_reference tag" in err for err in errs)
+
     def test_quarto_yml_registers_post_render_citations(self) -> None:
         assert QUARTO_YML.is_file()
         data = yaml.safe_load(QUARTO_YML.read_text(encoding="utf-8"))
@@ -296,7 +324,8 @@ class TestUnverifiedDatePresentation:
         )
         assert published is None
         assert reviewed is not None and "2026" in reviewed.get_text()
-        assert "Invalid Date" in soup.find("code").get_text()
+        code_el = soup.find("code")
+        assert code_el is not None and "Invalid Date" in code_el.get_text()
         assert "citation_publication_date" not in extract_citation_meta(content)
 
     def test_cleanup_is_scoped_to_the_title_date_and_idempotent(self) -> None:
@@ -329,7 +358,8 @@ class TestUnverifiedDatePresentation:
         published = soup.select_one(".page-header-item--published")
         if verified:
             assert published is None
-            assert "2026" in soup.select_one("#title-block-header .date").get_text()
+            date_el = soup.select_one("#title-block-header .date")
+            assert date_el is not None and "2026" in date_el.get_text()
             assert extract_citation_meta(content)["citation_publication_date"] == ["2026-03-10"]
         else:
             assert published is None

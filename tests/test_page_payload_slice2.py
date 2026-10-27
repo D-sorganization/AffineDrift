@@ -148,6 +148,45 @@ class TestPostRenderHeadPerformance:
         assert 'src="site_libs/quarto-search/fuse.min.js" defer>' in res
         assert "</HEAD>" in res
 
+    def test_deduplicates_duplicate_citation_reference_meta_tags(self) -> None:
+        """Theory Part 1 (#5190): duplicate citation_reference meta tags for the same title must be deduped."""
+        html = """<!DOCTYPE html><html><head>
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Kevin M. Lynch and Frank C. Park;,citation_publication_date=2017;">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch, Kevin M. and Park, Frank C.;,citation_publication_date=2017;">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch, K. M. and Park, F. C.;,citation_publication_date=2017;,citation_publisher=Cambridge University Press;">
+</head><body><div id="refs" class="references csl-bib-body"><div id="ref-lynch2017modern" class="csl-entry">Lynch, Kevin M. and Frank C. Park. 2017. <em>Modern Robotics: Mechanics, Planning, and Control</em>.</div></div></body></html>"""
+        out = process_html_head_performance(html)
+        assert _citation_reference_count(out) == 1
+        assert "citation_title=Modern Robotics: Mechanics, Planning, and Control" in out
+
+    def test_deduplicates_citation_reference_with_whitespace_and_punctuation_variants(
+        self,
+    ) -> None:
+        html = """<!DOCTYPE html><html><head>
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch;">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control.;,citation_author=Lynch;">
+<meta name="citation_reference" content="citation_title=  Modern  Robotics: Mechanics, Planning, and Control ;,citation_author=Lynch;">
+</head><body><div id="refs" class="references csl-bib-body"><div id="ref-1" class="csl-entry">Modern Robotics: Mechanics, Planning, and Control</div></div></body></html>"""
+        out = process_html_head_performance(html)
+        assert _citation_reference_count(out) == 1
+
+    def test_keeps_distinct_citation_references_while_deduplicating(self) -> None:
+        html = """<!DOCTYPE html><html><head>
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch 1;">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch 2;">
+<meta name="citation_reference" content="citation_title=A mathematical introduction to robotic manipulation;,citation_author=Murray 1;">
+<meta name="citation_reference" content="citation_title=A mathematical introduction to robotic manipulation;,citation_author=Murray 2;">
+<meta name="citation_reference" content="citation_title=Unrelated work;,citation_author=Nobody;">
+</head><body><div id="refs" class="references csl-bib-body">
+<div id="ref-lynch" class="csl-entry">Modern Robotics: Mechanics, Planning, and Control</div>
+<div id="ref-murray" class="csl-entry">A mathematical introduction to robotic manipulation</div>
+</div></body></html>"""
+        out = process_html_head_performance(html)
+        assert _citation_reference_count(out) == 2
+        assert "Modern Robotics" in out
+        assert "robotic manipulation" in out
+        assert "Unrelated work" not in out
+
 
 class TestPageContainerMinHeightCLS:
     """Mobile article layout shift (CLS ~0.13) from inline min-height (#5211)."""

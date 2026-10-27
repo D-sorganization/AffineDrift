@@ -77,15 +77,27 @@ def _citation_reference_matches_refs(meta_content: str, refs_text: str) -> bool:
 
 
 def prune_citation_reference_meta(content: str) -> str:
-    """Keep scholar reference meta only for works listed in the page ``#refs`` section."""
+    """Keep scholar reference meta only for works listed in the page ``#refs`` section.
+
+    Deduplicates repeated citation_reference tags so each unique work is emitted at most once.
+    """
 
     refs_text = _refs_plain_text(content)
+    seen_keys: set[str] = set()
 
     def replace_meta(match: re.Match[str]) -> str:
         meta_content = match.group(1)
-        if _citation_reference_matches_refs(meta_content, refs_text):
-            return match.group(0)
-        return ""
+        if not _citation_reference_matches_refs(meta_content, refs_text):
+            return ""
+        title_match = CITATION_TITLE_IN_META_RE.search(meta_content)
+        if title_match:
+            key = re.sub(r"\s+", " ", unescape(title_match.group(1))).strip().lower().rstrip(".,;")
+        else:
+            key = meta_content.strip().lower()
+        if key in seen_keys:
+            return ""
+        seen_keys.add(key)
+        return match.group(0)
 
     return META_CITATION_REFERENCE_RE.sub(replace_meta, content)
 
