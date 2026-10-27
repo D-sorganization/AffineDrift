@@ -469,6 +469,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5208 · Add Offline LTV Correction-Authority Evaluator With Backward Gramian Recursion and Condition-Number Gate
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5208
+- **Branch:** merged via #5214
+- **PR:** #5214
+- **Paths:** see #5214
+- **Started:** 2026-10-27
+- **Last verified:** 2026-10-27 (`545aeebf`; collated from changes/5208-offline-ltv-correction-authority-evaluator.md)
+- **Summary:** Add offline LTV correction-authority evaluator with backward Gramian recursion and condition-number gate
+- **Next step:** Shipped in PR #5214.
+
 ### DL-#5190 · Dedupe Citation_Reference Meta Tags in Post-Render Performance and Validate Single Emission
 
 - **State:** shipped
