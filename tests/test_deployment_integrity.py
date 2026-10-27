@@ -257,6 +257,7 @@ def test_requirements_integrity() -> None:
     bs4_present = "beautifulsoup4" in reqs
     assert bs4_present, "beautifulsoup4 missing from requirements (needed for health check)"
     assert "pytest==9." in reqs, "pytest should be pinned to a modern 9.x release"
+    assert "9.1.1" in reqs, "pytest must stay below 9.2.0 until upstream fixes benchmark/approx"
 
 
 def test_check_scripts_exist() -> None:

@@ -193,7 +193,7 @@ AffineDrift follows a test pyramid: fast unit tests, integration tests, property
 - Quarto 1.8.26, pinned once in `.quarto-version` (CI, deploy-website.yml, and the Dockerfile read it; #4126).
 
 - **Runtime**: `numpy>=2.0.0`, `scipy>=1.14.0`, `matplotlib>=3.9.0`, `pydantic>=2.8.0`, `PyYAML>=6.0.1`, `requests>=2.32.0`, `beautifulsoup4>=4.12.0`.
-- **Development**: `pytest>=8.0.0`, `pytest-cov>=5.0.0`, `hypothesis>=6.100.0`, `ruff>=0.5.0`, `black>=24.0.0`, `mypy>=1.10.0`.
+- **Development**: `pytest>=9.0.3,<9.2.0` (9.2.0 breaks pytest-benchmark 5.3.0 and nested `pytest.approx`), `pytest-cov>=5.0.0`, `hypothesis>=6.100.0`, `ruff>=0.5.0`, `black>=24.0.0`, `mypy>=1.10.0`.
 - **Fleet Dependencies**: UpstreamDrift (governed evidence provider for executable models, companion manifests, and benchmark releases).
 
 ## 10. Deployment & Operations
