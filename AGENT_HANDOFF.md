@@ -11,7 +11,7 @@
 ## Null-Space Exploration Article (Epic #5093)
 
 - AD-1 through AD-4 are on `main` (merged PRs #5100, #5101, #5107; superseded AD-3 branch #5105 closed after #5141 restored the pending #5095 change fragment). Article: `articles/after-one-solution-null-space-exploration.qmd` with contract tests in `tests/test_after_one_solution_article.py`; content correction #5137 is merged.
-- UpstreamDrift companion code remains in draft PRs #13475, #13470, #13467, #13493; `data/companion/pins.json` keeps those heads `review-required`. AD-5 #5098 (finalize pins after owner merge of the UD PRs) is the remaining AffineDrift checkpoint. `_quarto.yml` menu entry for the article is an owner decision, not automated.
+- UpstreamDrift companion code is merged in PRs #13475, #13470, #13467, and #13493; `data/companion/pins.json` records their reviewed merge commits as `pinned` for the article. The next article gate is comparison on a measured dataset with recorded provenance. `_quarto.yml` menu entry for the article remains an owner decision, not automated.
 
 ## Other Current Boundaries
 
