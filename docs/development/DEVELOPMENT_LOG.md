@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5098
+- **Branch:** fix/5098-merged-companion-pins
+- **PR:** #5231
+- **Paths:** see #5231
+- **Started:** 2026-10-28
+- **Last verified:** 2026-10-28 (`c66939ba`; collated from changes/5098-pin-merged-upstreamdrift-companion-commi.md)
+- **Summary:** Pin merged UpstreamDrift companion commits and refresh article status
+- **Next step:** Compare the merged companion code against a measured dataset with recorded provenance.
+
 ### DL-#5192 · Add Intrinsic Dimensions and Aspect-Ratio CSS to Home Hero Graphic to Reduce Home Page CLS < 0.1
 
 - **State:** in_review
