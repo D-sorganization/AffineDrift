@@ -170,3 +170,20 @@ def test_horizon_sensitivity_reports_monotonicity() -> None:
         kappa_max=_KAPPA,
     )
     assert sweep.monotone_nondecreasing_margin and sweep.violations == ()
+
+
+def test_evaluation_does_not_solve_a_discarded_riccati_recursion(monkeypatch) -> None:
+    """The removed stabilisability probe discarded its result at ~0.4 s per call (#5209)."""
+
+    def _forbidden(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("evaluator must not run an LQR value iteration")
+
+    monkeypatch.setattr(
+        "src.affine_control.correction_authority_evaluator.discrete_lqr", _forbidden, raising=False
+    )
+    monkeypatch.setattr("src.affine_control.lqr.discrete_lqr", _forbidden)
+
+    steps = _double_integrator_steps(1.0, 8)
+    out = _evaluate(steps, np.zeros(2), 1.0, 0.1, 0.01)
+
+    assert len(out) == 8
