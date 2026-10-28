@@ -55,6 +55,8 @@ export function initSmoothScroll() {
     });
 }
 
+const MAIN_NAV_LABEL = "Main navigation";
+
 /**
  * Initialize navbar collapse behavior with unified mobile navigation
  *
@@ -83,15 +85,25 @@ export function initNavbarCollapse() {
         }
     }
 
-    // Ensure Quarto navbar has proper ARIA attributes
+    // Name the navbar landmark. <nav> already is the landmark, so the collapse
+    // wrapper must not repeat it with role="navigation" (landmark-unique).
+    const navbar = document.querySelector("nav.navbar");
+    if (navbar && !navbar.hasAttribute("aria-label")) {
+        navbar.setAttribute("aria-label", MAIN_NAV_LABEL);
+    }
     if (navbarCollapse) {
-        navbarCollapse.setAttribute("role", "navigation");
-        if (!navbarCollapse.getAttribute("aria-label")) {
-            navbarCollapse.setAttribute("aria-label", "Site navigation");
+        if (navbarCollapse.getAttribute("role") === "navigation") {
+            navbarCollapse.removeAttribute("role");
+        }
+        if (!navbarCollapse.hasAttribute("role")) {
+            navbarCollapse.removeAttribute("aria-label");
         }
     }
 
     if (navbarToggler) {
+        // Quarto emits role="menu" on the toggler; it is a disclosure button
+        // controlling a link list, so the role is invalid there (aria-allowed-role).
+        navbarToggler.removeAttribute("role");
         // Set initial ARIA state on toggle button
         navbarToggler.setAttribute("aria-controls", "navbarCollapse");
         if (!navbarToggler.getAttribute("aria-label") || navbarToggler.getAttribute("aria-label") === "Toggle navigation menu") {
