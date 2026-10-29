@@ -50,7 +50,8 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: python -m pip install pytest pytest-asyncio pytest-timeout
+        # TODO: lift pytest<9.2.0 once pytest-benchmark / nested approx work on 9.2.0+
+        run: python -m pip install "pytest>=9.0.3,<9.2.0" pytest-asyncio pytest-timeout
 
       - name: Validate C4 Architecture Map
         run: python scripts/architecture_map_contract.py --path docs/architecture/C4.md

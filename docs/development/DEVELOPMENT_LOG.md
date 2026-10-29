@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5098
+- **Branch:** fix/5098-merged-companion-pins
+- **PR:** #5231
+- **Paths:** see #5231
+- **Started:** 2026-10-28
+- **Last verified:** 2026-10-28 (`c66939ba`; collated from changes/5098-pin-merged-upstreamdrift-companion-commi.md)
+- **Summary:** Pin merged UpstreamDrift companion commits and refresh article status
+- **Next step:** Compare the merged companion code against a measured dataset with recorded provenance.
+
 ### DL-#5192 · Add Intrinsic Dimensions and Aspect-Ratio CSS to Home Hero Graphic to Reduce Home Page CLS < 0.1
 
 - **State:** in_review
@@ -286,12 +299,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5135
 - **Branch:** cursor/slack-transmission-core-7958
-- **PR:** #5148, #5144
+- **PR:** #5148, #5144, #5145
 - **Paths:** see #5148
 - **Started:** 2026-10-26
-- **Last verified:** 2026-10-26 (`72890746`; collated from changes/5135-add-the-slack-representation-transmissio.md)
+- **Last verified:** 2026-10-27 (`9677a22a`; collated from changes/5135-draft-the-managing-slack-in-linked-syste.md)
 - **Summary:** Add the core slack-representation transmission model (dead-zone, smooth-spring, activation and unequal-lag channels, play operator, preparation split) with its tests for the Managing Slack in Linked Systems article
-- **Next step:** Panel review of the stacked article PR; do not merge before Dieter's sign-off.
+- **Next step:** Four-seat panel review, revision round, Fleet-Critic review and Dieter's sign-off before merge.
 
 ### DL-#5164 · UX Slice 1: Remove Article Page Grid Column-Gap and Restore Mobile Reading Width
 
@@ -468,6 +481,32 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5209 · Option A-4 Prerequisite: Drop the Discarded Discrete_Lqr Stabilisability Probe From the #5208 Correction-Authority Evaluator (0.38 s per Call, Result Never Used); Red-Then-Green Regression Test
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5209
+- **Branch:** merged via #5236
+- **PR:** #5236
+- **Paths:** see #5236
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`45322bd1`; collated from changes/5209-option-a-4a-drop-discarded-lqr-probe.md)
+- **Summary:** Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test
+- **Next step:** Shipped in PR #5236.
+
+### DL-#5234 · Record Redirect for Unpublished Slack Article to Restore URL Stability Check in Deploy Workflow
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5234
+- **Branch:** merged via #5239
+- **PR:** #5239
+- **Paths:** see #5239
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`a82e307e`; collated from changes/5234-record-redirect-for-unpublished-slack-ar.md)
+- **Summary:** Record redirect for unpublished Slack article to restore URL stability check in deploy workflow
+- **Next step:** Shipped in PR #5239.
 
 ### DL-#5208 · Add Offline LTV Correction-Authority Evaluator With Backward Gramian Recursion and Condition-Number Gate
 

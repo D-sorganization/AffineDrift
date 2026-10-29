@@ -193,7 +193,7 @@ AffineDrift follows a test pyramid: fast unit tests, integration tests, property
 - Quarto 1.8.26, pinned once in `.quarto-version` (CI, deploy-website.yml, and the Dockerfile read it; #4126).
 
 - **Runtime**: `numpy>=2.0.0`, `scipy>=1.14.0`, `matplotlib>=3.9.0`, `pydantic>=2.8.0`, `PyYAML>=6.0.1`, `requests>=2.32.0`, `beautifulsoup4>=4.12.0`.
-- **Development**: `pytest>=8.0.0`, `pytest-cov>=5.0.0`, `hypothesis>=6.100.0`, `ruff>=0.5.0`, `black>=24.0.0`, `mypy>=1.10.0`.
+- **Development**: `pytest>=9.0.3,<9.2.0` (9.2.0 breaks pytest-benchmark 5.3.0 and nested `pytest.approx`), `pytest-cov>=5.0.0`, `hypothesis>=6.100.0`, `ruff>=0.5.0`, `black>=24.0.0`, `mypy>=1.10.0`.
 - **Fleet Dependencies**: UpstreamDrift (governed evidence provider for executable models, companion manifests, and benchmark releases).
 
 ## 10. Deployment & Operations
@@ -232,6 +232,10 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-29 | #5236 | Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test |
+| 2026-10-29 | #5239 | Record redirect for unpublished Slack article to restore URL stability check in deploy workflow |
+| 2026-10-28 | #5231 | Pin merged UpstreamDrift companion commits and refresh article status |
+| 2026-10-27 | #5145 | Draft the Managing Slack in Linked Systems article for panel review, with verified bibliography and number-pinning contract tests |
 | 2026-10-27 | #5214 | Add offline LTV correction-authority evaluator with backward Gramian recursion and condition-number gate |
 | 2026-10-27 | #5220 | Dedupe citation_reference meta tags in post-render performance and validate single emission |
 | 2026-10-26 | #5222 | Neutralize dynamic page container inline min-height in post-render and CSS to eliminate mobile article CLS |

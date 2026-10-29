@@ -20,7 +20,7 @@ from scipy.optimize import brentq
 
 type FloatArray = NDArray[np.float64]
 
-ZERO_TOLERANCE_NM = 1e-12  # Torque magnitude counted as "zero transmission".
+ZERO_TOLERANCE_NM = 1e-12  # Torque magnitude counted as "zero transmission" (#5135).
 DELAY_FRACTION = 0.1  # Recovery = transmitted torque reaches 10% of target with the right sign.
 BRACKET_GROWTH = 2.0  # Factor by which the inverse-characteristic bracket is widened.
 
