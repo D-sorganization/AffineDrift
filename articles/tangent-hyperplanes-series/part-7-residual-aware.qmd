@@ -29,27 +29,39 @@ honest.
 
 ## Quantitative Bound
 
-For a smooth system, the second-order Taylor remainder gives a local bound of
-the form
+[Part 4](./part-4-residuals-curvature.html) gives the propagated remainder bound.
+Fix horizon length $T$, growth rate $L$ for the variational flow, a bound $H$ on
+$\|D^2f\|$, a prefactor $K$ with $\|\Phi(t,s)\|\le Ke^{L(t-s)}$, and an $\epsilon$-scaled perturbation family with
+$z=(x,u)$, $\Delta z=(\Delta x,\Delta u)$, $\|\Delta x(t_0)\|\le c_x\epsilon$,
+and $\|\Delta u(t)\|\le c_u\epsilon$. While nominal and perturbed trajectories
+remain in the region where those bounds hold, Part 4 derives a tube constant
+$C_0(T)$ from the **actual** deviation (Lipschitz propagation of $f$ with an
+$O(\epsilon)$ input push), not from substituting the linear prediction for
+$\Delta z$. Then
 
 $$
-\|r(t)\| \leq C\left(\|\delta x(t_0)\|^2 + \|\delta u\|_\infty^2\right)
+\|r(t)\|\le\frac12 KHC_0(T)^2\frac{e^{LT}-1}{L}\epsilon^2,
 $$
 
-over a fixed finite horizon, provided the perturbation family stays in a common
-smooth domain. State and input norms need declared scales. The constant $C$
-depends on regional Hessian bounds, the actual deviation enclosure, and propagation
-through the variational dynamics. A sampled Hessian is an estimate, not a
-certified bound over a neighborhood.
+with $\frac{e^{LT}-1}{L}\to T$ as $L\to0$. In words: the gap between the real motion and
+the tangent-space prediction is controlled by three things: the curvature bound
+$H$, the squared size of the actual deviation, and how much the linearized
+dynamics can amplify errors over the horizon. Combining $C_0(T)=O(e^{LT})$ with the
+integrated kernel yields a **worst-case certificate** of order
+$O\!\left(\frac{e^{3LT}}{L}\epsilon^2\right)$ at large $LT$—that is how large
+the bound can become, not the residual’s intrinsic growth rate. State and input
+norms need declared scales. A sampled Hessian is an estimate, not a certified
+bound over a neighborhood.
 
 More explicitly, define actual deviation $e$, first-order comparison $\eta$,
-and remainder $r=e-\eta$ using the same input experiment. Then
+and remainder $r=e-\eta$ using the same input experiment (in [Part 4](./part-4-residuals-curvature.html)
+notation, $e=\Delta x$, $\eta=\hat\xi$, $N=R_2$). Then
 
 $$
 \dot r=Ar+N,\qquad r(t)=\int_{t_0}^t\Phi(t,s)N(s)\,ds.
 $$
 
-The Taylor forcing $N$ depends on the actual joined state/input deviation.
+The Taylor forcing $N=R_2$ depends on the actual joined state/input deviation.
 Dropping its propagation or replacing that deviation with a linear prediction
 requires additional justification. The advanced article gives an exact scalar
 counterexample where the unpropagated expression fails.
