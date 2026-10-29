@@ -482,6 +482,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5209 · Option A-4 Prerequisite: Drop the Discarded Discrete_Lqr Stabilisability Probe From the #5208 Correction-Authority Evaluator (0.38 s per Call, Result Never Used); Red-Then-Green Regression Test
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5209
+- **Branch:** merged via #5236
+- **PR:** #5236
+- **Paths:** see #5236
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`45322bd1`; collated from changes/5209-option-a-4a-drop-discarded-lqr-probe.md)
+- **Summary:** Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test
+- **Next step:** Shipped in PR #5236.
+
 ### DL-#5234 · Record Redirect for Unpublished Slack Article to Restore URL Stability Check in Deploy Workflow
 
 - **State:** shipped
