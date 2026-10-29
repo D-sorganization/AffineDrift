@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-29 | #5239 | Record redirect for unpublished Slack article to restore URL stability check in deploy workflow |
 | 2026-10-28 | #5231 | Pin merged UpstreamDrift companion commits and refresh article status |
 | 2026-10-27 | #5145 | Draft the Managing Slack in Linked Systems article for panel review, with verified bibliography and number-pinning contract tests |
 | 2026-10-27 | #5214 | Add offline LTV correction-authority evaluator with backward Gramian recursion and condition-number gate |
