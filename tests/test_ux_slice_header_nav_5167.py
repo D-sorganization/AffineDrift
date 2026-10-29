@@ -38,12 +38,19 @@ def test_native_quarto_color_scheme_toggle_stays_hidden() -> None:
 
 
 def test_phone_header_drops_vertical_padding_and_keeps_one_row() -> None:
-    css = HEADER_CSS.read_text(encoding="utf-8")
-    phone = re.search(PHONE_MEDIA, css, re.S)
-    assert phone, "phone media block missing"
+    header_css = HEADER_CSS.read_text(encoding="utf-8")
+    phone = re.search(PHONE_MEDIA, header_css, re.S)
+    assert phone, "phone media block missing in header-nav.css"
     block = phone.group(1)
-    assert re.search(r"#quarto-header \{[^}]*padding:\s*0", block)
     assert re.search(r"\.navbar-brand-container \{[^}]*min-width:\s*0", block)
+    # Outer header padding clears in styles.css (after the fixed #quarto-header rule) so the
+    # bundled CSS keeps position: fixed in the first header block (see test_css_bundle).
+    styles_css = STYLES_CSS.read_text(encoding="utf-8")
+    assert re.search(
+        r"@media \(max-width: 991\.98px\) \{\s*#quarto-header \{[^}]*padding:\s*0",
+        styles_css,
+        re.S,
+    )
 
 
 def test_page_header_card_is_not_a_landmark_region() -> None:
