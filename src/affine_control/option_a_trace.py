@@ -80,6 +80,7 @@ class OptionATrace:
 
 
 def _sha256(data: bytes) -> str:
+    """Return the lowercase SHA-256 hex digest of the given byte string."""
     return hashlib.sha256(data).hexdigest()
 
 
@@ -101,6 +102,7 @@ def _payload_sha256(bundle: Mapping[str, Any], metadata: list[Any]) -> str:
 
 
 def _read_provenance(path: Path) -> dict[str, Any]:
+    """Load and validate the JSON provenance record beside the vendored trace."""
     record = json.loads(path.read_text(encoding="utf-8"))
     missing = [key for key in _PROVENANCE_KEYS if key not in record]
     if missing or record["schema_version"] != PROVENANCE_SCHEMA_VERSION:
@@ -109,15 +111,18 @@ def _read_provenance(path: Path) -> dict[str, Any]:
 
 
 def _check_digests(raw: bytes, record: Mapping[str, Any]) -> None:
+    """Ensure the on-disk NPZ bytes match the ``npz_sha256`` field in provenance."""
     if _sha256(raw) != record["npz_sha256"]:
         raise TraceProvenanceError("trace file sha256 differs from the recorded provenance")
 
 
 def _per_trial(array: Array, trials: int) -> Array:
+    """Reshape a flat trace array into ``[trial, step, ...]``."""
     return np.asarray(array, dtype=np.float64).reshape(trials, -1, *array.shape[1:])
 
 
 def _to_trace(bundle: Mapping[str, Any], record: Mapping[str, Any]) -> OptionATrace:
+    """Build an ``OptionATrace`` after schema, grouping, and finiteness checks."""
     if str(bundle["schema_version"]) != TRACE_SCHEMA_VERSION:
         raise TraceProvenanceError("unsupported trace schema")
     index = np.asarray(bundle["trial_index"])
