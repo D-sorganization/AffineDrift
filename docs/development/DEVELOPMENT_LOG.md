@@ -482,6 +482,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5234 · Record Redirect for Unpublished Slack Article to Restore URL Stability Check in Deploy Workflow
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5234
+- **Branch:** merged via #5239
+- **PR:** #5239
+- **Paths:** see #5239
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`a82e307e`; collated from changes/5234-record-redirect-for-unpublished-slack-ar.md)
+- **Summary:** Record redirect for unpublished Slack article to restore URL stability check in deploy workflow
+- **Next step:** Shipped in PR #5239.
+
 ### DL-#5208 · Add Offline LTV Correction-Authority Evaluator With Backward Gramian Recursion and Condition-Number Gate
 
 - **State:** shipped
