@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-29 | #5238 | UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast |
 | 2026-10-29 | #5237 | Option A-4 prerequisite: vendor the UpstreamDrift Option A reference trace with sha256 and recomputed payload-digest verification, and a verified loader |
 | 2026-10-29 | #5189 | Tighten Part 4/7 residual Gronwall bound; de-emphasize fixed-trajectory integral naming in thesis |
 | 2026-10-29 | #5188 | Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links |
