@@ -37,6 +37,7 @@
 @import url("css/components/drift-plus-control.css");
 @import url("css/components/swing-viewer.css");
 @import url("css/components/quarto-theme.css");
+@import url("css/components/header-nav.css");
 @import url("css/utilities/spacing.css");
 
 /* Native cross-document view transitions (issue #3334): a free same-origin
@@ -718,6 +719,12 @@ table caption,
   z-index: 1000;
   box-shadow: 0 4px 12px var(--shadow-color);
   display: block;
+}
+
+@media (max-width: 991.98px) {
+  #quarto-header {
+    padding: 0;
+  }
 }
 
 nav .container {
@@ -3003,36 +3010,9 @@ h1.title,
    per-file dark block here.
    ============================================================= */
 
-/* =============================================================
-   Dark Mode Toggle Button
-   ============================================================= */
-
-#theme-toggle {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 9999;
-  background: var(--bg-alt);
-  border: 1px solid var(--border-color);
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
-  font-size: var(--fs-base);
-  cursor: pointer;
-  box-shadow: var(--shadow-md);
-  transition: background 0.2s, border-color 0.2s;
-}
-
-#theme-toggle:hover {
-  background: var(--accent-blue);
-  color: #fff;
-}
-
 /* theme.dark is now configured (#4556), which makes Quarto auto-inject its
    own native color-scheme toggle switch into the navbar. Hide it: the site
-   already ships the tested, accessible toggle above with its own design
+   already ships the tested, accessible toggle (css/components/header-nav.css) with its own design
    tokens, and two independent, out-of-sync theme controls would confuse
    readers. */
 .quarto-color-scheme-toggle {
