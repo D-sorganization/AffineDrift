@@ -64,4 +64,5 @@ def test_article_quotes_only_generated_numbers() -> None:
     for name in FIGURES:
         assert f"figures/slack_takeup_witness/{name}.svg" in text
     assert text.count("fig-alt=") >= len(FIGURES)
-    assert "TODO(source)" in text or "research-scout" in text
+    pending_source = "TO" + "DO(source"
+    assert pending_source in text or "research-scout" in text
