@@ -9,7 +9,6 @@ from typing import Literal
 import numpy as np
 from numpy.typing import NDArray
 
-from src.affine_control.lqr import discrete_lqr
 from src.affine_control.reachability import (
     _GRAMIAN_OPS_PER_STEP,
     LinearScalarSystem,
@@ -154,18 +153,6 @@ def _task_output_interval(
     return (center - radius, center + radius)
 
 
-def _assert_stabilisable_lti_segment(step: LTVLinearizationStep) -> None:
-    """Probe single-step LQR stabilisability without failing on unstabilisable steps."""
-    if not np.any(step.input_matrix):
-        return
-    q = np.eye(step.state_matrix.shape[0], dtype=np.float64)
-    r = np.eye(step.input_matrix.shape[1], dtype=np.float64)
-    try:
-        discrete_lqr(step.state_matrix, step.input_matrix, q, r)
-    except ValueError:
-        return
-
-
 def _handle_ill_conditioned(
     error: ReachabilityIllConditionedError, mode: IllConditionedMode
 ) -> Indeterminate:
@@ -245,7 +232,6 @@ def evaluate_correction_authority_along_trajectory(
     if initial.shape[0] != direction.shape[0]:
         raise ValueError("initial_state must match the state dimension")
 
-    _assert_stabilisable_lti_segment(steps[0])
     target = float(direction @ initial) - required_task_error
     gramians = _backward_controllability_gramians(steps)
     return tuple(
