@@ -495,6 +495,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5167 · UX Slice 4: Labelled In-Header Theme Toggle, One-Row Phone Header, Unique Nav Landmarks, No First-Visit Update Toast
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5167
+- **Branch:** merged via #5238
+- **PR:** #5238
+- **Paths:** see #5238
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`2238eb2b`; collated from changes/5167-ux-slice-4-labelled-in-header-theme-togg.md)
+- **Summary:** UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast
+- **Next step:** Shipped in PR #5238.
+
 ### DL-#5209 · Option A-4 Prerequisite: Drop the Discarded Discrete_Lqr Stabilisability Probe From the #5208 Correction-Authority Evaluator (0.38 s per Call, Result Never Used); Red-Then-Green Regression Test
 
 - **State:** shipped
