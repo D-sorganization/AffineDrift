@@ -90,6 +90,20 @@ def test_known_windows_only_lock_entries_carry_windows_marker() -> None:
     )
 
 
+def test_pytest_pinned_below_9_2_for_benchmark_and_approx_compat() -> None:
+    """pytest 9.2.0 breaks pytest-benchmark 5.3.0 and nested pytest.approx."""
+    pins = _top_level_requirements()
+    pytest_pin = pins.get("pytest")
+    assert pytest_pin is not None, "pytest must be exactly pinned in requirements.txt"
+    major, minor, _patch = (int(part) for part in pytest_pin.split("."))
+    assert (major, minor) < (9, 2), f"pytest pin {pytest_pin} must stay below 9.2.0"
+
+    arch_workflow = (ROOT / ".github/workflows/architecture-map-contract.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "<9.2.0" in arch_workflow, "architecture-map-contract CI must cap pytest below 9.2.0"
+
+
 def test_lock_covers_every_top_level_requirement() -> None:
     locked: dict[str, set[str]] = {}
     for name, version, _ in _lock_entries():

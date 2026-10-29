@@ -132,4 +132,23 @@ describe('gated MathJax loader (#3332-A)', () => {
     expect(typeof window.AffineDriftMathJax.hasMath).toBe('function');
     expect(typeof window.AffineDriftMathJax.load).toBe('function');
   });
+
+  test('does NOT inject MathJax when math is only inside a closed <details> (#5165)', async () => {
+    document.body.innerHTML =
+      '<main><details class="math-toggle"><summary>Show</summary><p>$$x^2$$</p></details></main>';
+    await runLoader();
+    expect(mathjaxScriptCount()).toBe(0);
+    expect(window.AffineDriftMathJax.hasMath()).toBe(false);
+  });
+
+  test('loads MathJax when a collapsed math <details> is opened', async () => {
+    document.body.innerHTML =
+      '<main><details class="math-toggle"><summary>Show</summary><p>$$x^2$$</p></details></main>';
+    await runLoader();
+    const details = document.querySelector('details');
+    details.open = true;
+    details.dispatchEvent(new Event('toggle'));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(mathjaxScriptCount()).toBe(1);
+  });
 });

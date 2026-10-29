@@ -3,6 +3,15 @@
 from dataclasses import dataclass, replace
 from math import exp, isfinite, sqrt
 
+import numpy as np
+from numpy.typing import NDArray
+from scipy.linalg import expm
+
+from src.affine_control.reachability_protocol import ReachabilityIllConditionedError
+
+_GRAMIAN_SAMPLES = 32
+_GRAMIAN_OPS_PER_STEP = 2
+
 
 def _require_finite(values: tuple[float, ...], label: str) -> None:
     """Reject nonfinite numeric inputs at the calculation boundary."""
@@ -264,6 +273,44 @@ class ParameterEnvelope:
 
     center_interval: tuple[float, float]
     width_interval: tuple[float, float]
+
+
+def _continuous_controllability_gramian(
+    state_matrix: NDArray[np.float64],
+    input_matrix: NDArray[np.float64],
+    horizon: float,
+) -> NDArray[np.float64]:
+    """Integrate the continuous-time controllability Gramian over [0, H]."""
+    if horizon <= 0.0:
+        raise ReachabilityIllConditionedError("singular controllability Gramian at zero horizon")
+    if not np.any(input_matrix):
+        raise ReachabilityIllConditionedError("singular controllability Gramian")
+    gramian = np.zeros((state_matrix.shape[0], state_matrix.shape[0]), dtype=np.float64)
+    for index in range(_GRAMIAN_SAMPLES):
+        time = horizon * index / (_GRAMIAN_SAMPLES - 1)
+        transition = expm(state_matrix * time)
+        response = transition @ input_matrix
+        gramian += response @ response.T
+    gramian *= horizon / (_GRAMIAN_SAMPLES - 1)
+    return gramian
+
+
+def assert_controllability_gramian_well_conditioned(
+    state_matrix: NDArray[np.float64],
+    input_matrix: NDArray[np.float64],
+    horizon: float,
+    kappa_max: float,
+) -> float:
+    """Return cond(W_c) or raise before any reachability tube is produced."""
+    gramian = _continuous_controllability_gramian(state_matrix, input_matrix, horizon)
+    if not np.any(gramian):
+        raise ReachabilityIllConditionedError("singular controllability Gramian")
+    condition = float(np.linalg.cond(gramian))
+    if not isfinite(condition):
+        raise ReachabilityIllConditionedError("singular controllability Gramian")
+    if condition > kappa_max:
+        raise ReachabilityIllConditionedError("controllability Gramian exceeds kappa_max")
+    return condition
 
 
 def parameter_reachability_envelope(

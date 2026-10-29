@@ -193,7 +193,7 @@ AffineDrift follows a test pyramid: fast unit tests, integration tests, property
 - Quarto 1.8.26, pinned once in `.quarto-version` (CI, deploy-website.yml, and the Dockerfile read it; #4126).
 
 - **Runtime**: `numpy>=2.0.0`, `scipy>=1.14.0`, `matplotlib>=3.9.0`, `pydantic>=2.8.0`, `PyYAML>=6.0.1`, `requests>=2.32.0`, `beautifulsoup4>=4.12.0`.
-- **Development**: `pytest>=8.0.0`, `pytest-cov>=5.0.0`, `hypothesis>=6.100.0`, `ruff>=0.5.0`, `black>=24.0.0`, `mypy>=1.10.0`.
+- **Development**: `pytest>=9.0.3,<9.2.0` (9.2.0 breaks pytest-benchmark 5.3.0 and nested `pytest.approx`), `pytest-cov>=5.0.0`, `hypothesis>=6.100.0`, `ruff>=0.5.0`, `black>=24.0.0`, `mypy>=1.10.0`.
 - **Fleet Dependencies**: UpstreamDrift (governed evidence provider for executable models, companion manifests, and benchmark releases).
 
 ## 10. Deployment & Operations
@@ -232,6 +232,28 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-29 | #5236 | Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test |
+| 2026-10-29 | #5239 | Record redirect for unpublished Slack article to restore URL stability check in deploy workflow |
+| 2026-10-28 | #5231 | Pin merged UpstreamDrift companion commits and refresh article status |
+| 2026-10-27 | #5145 | Draft the Managing Slack in Linked Systems article for panel review, with verified bibliography and number-pinning contract tests |
+| 2026-10-27 | #5214 | Add offline LTV correction-authority evaluator with backward Gramian recursion and condition-number gate |
+| 2026-10-27 | #5220 | Dedupe citation_reference meta tags in post-render performance and validate single emission |
+| 2026-10-26 | #5222 | Neutralize dynamic page container inline min-height in post-render and CSS to eliminate mobile article CLS |
+| 2026-10-26 | #5223 | Add intrinsic dimensions and aspect-ratio CSS to home hero graphic to reduce home page CLS < 0.1 |
+| 2026-10-26 | #5221 | Switch page-feedback mailto fallback to dashboard@affinedrift.com |
+| 2026-10-26 | #5218 | Archive old terminal development-log entries |
+| 2026-10-26 | #5219 | Guard unguarded split on head closing tag in post-render scripts |
+| 2026-10-26 | #5210 | Preregister simulation-only correction-authority analysis contract and edge-case oracles. |
+| 2026-10-26 | #5150 | Add the Toy B two-hand take-up study, its event-time observability counts, the matched pair and the first-order check from PR #5140 for #5136 |
+| 2026-10-26 | #5144 | Add the slack-representation sensitivity studies, counter-pair sweep, data builder and figures for the Managing Slack in Linked Systems article |
+| 2026-10-26 | #5148 | Add the core slack-representation transmission model (dead-zone, smooth-spring, activation and unequal-lag channels, play operator, preparation split) with its tests for the Managing Slack in Linked Systems article |
+| 2026-10-26 | #5142 | Port the lead-wrist preload dead-zone and muscle models with reproduction tests |
+| 2026-10-26 | #5149 | Add the shared dead-zone chain core, the Toy A train study and the Toy C grasp-kernel counts for #5136 |
+| 2026-10-25 | #5173 | UX slice 1: remove article page grid column-gap and restore mobile reading width |
+| 2026-10-25 | #5199 | Exclude test HTML fixtures from repository link scan so Deploy Website passes |
+| 2026-10-25 | #5179 | Scope Google Scholar exports, post-render head performance fixes, and deferred theme/search scripts for UX slice 2. |
+| 2026-10-24 | #5162 | Add Cursor Cloud environment.json fleet bootstrap (RM cursor-cloud-bootstrap). |
+| 2026-10-24 | #5157 | Refresh governance-vocabulary baseline after NSE and FDM reader-prose additions |
 | 2026-10-24 | #5154 | Refresh NSE AD-3 agent handoff after article delivery on main |
 | 2026-10-24 | #5152 | Correct the false if-and-only-if in the After One Solution level sub-fibre claim: end levels may be facets |
 | 2026-10-24 | #5141 | Add nonlinear solution-manifold continuation examples (tangent predictor, Gauss-Newton corrector, rank-drop counterexample) and tests for the null-space exploration section (P6) |

@@ -40,12 +40,18 @@
 <link rel="modulepreload" href="/js/main.js">
 <link rel="modulepreload" href="/js/utils.js">
 
-<!-- Dark Mode: Apply theme before first paint to avoid flash. This is the only
-     synchronous head script we keep: it sets data-theme pre-paint to prevent a
-     flash of the wrong theme (FOUC). Fast first paint is the premium signal —
-     the former splash overlay and its parser-blocking startup launcher were
-     removed (issue #3329). -->
-<script src="/js/dark-mode-toggle.js"></script>
+<!-- Dark Mode: inline pre-paint theme only (#5165). Full toggle UI loads deferred
+     from site-after-body so the head stays parser-light. -->
+<script>
+(function () {
+  var storageKey = 'affinedrift-theme';
+  var root = document.documentElement;
+  var stored = localStorage.getItem(storageKey);
+  var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  root.setAttribute('data-theme', theme);
+  root.setAttribute('data-bs-theme', theme);
+})();
+</script>
 
 <!-- PWA and Mobile Optimization -->
 <link rel="manifest" href="/manifest.json">
@@ -99,6 +105,7 @@
     #quarto-document-content {
       min-width: 0;
       max-width: 100%;
+      min-height: auto !important;
     }
   }
 </style>

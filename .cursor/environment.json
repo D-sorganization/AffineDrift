@@ -1,0 +1,12 @@
+{
+  "name": "AffineDrift",
+  "repositoryDependencies": [
+    "github.com/D-sorganization/Repository_Management",
+    "github.com/D-sorganization/Tools",
+    "github.com/D-sorganization/Tools_Private",
+    "github.com/D-sorganization/UpstreamDrift",
+    "github.com/D-sorganization/Runner_Dashboard",
+    "github.com/D-sorganization/Gasification_Model"
+  ],
+  "install": "set -euo pipefail\nexport FLEET_RM_ROOT=\"${FLEET_RM_ROOT:-$HOME/Repository_Management}\"\nif [ ! -f \"$FLEET_RM_ROOT/scripts/cursor/bootstrap.sh\" ]; then\n  git clone --depth 1 https://github.com/D-sorganization/Repository_Management.git \"$FLEET_RM_ROOT\"\nfi\nbash \"$FLEET_RM_ROOT/scripts/cursor/bootstrap.sh\""
+}
