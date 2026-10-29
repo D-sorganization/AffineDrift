@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5180 · Tangent-Space Review PR A: Affine Hub/Book Summaries and Volume I Chapter Read Links
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5180
+- **Branch:** cursor/tangent-review-pr-a-d406
+- **PR:** #5188, #5189
+- **Paths:** see #5188
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`4355300b`; collated from changes/5180-tighten-part-4-7-residual-gronwall-bound.md)
+- **Summary:** Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links
+- **Next step:** Publication gate review (Karl through Dieter).
+
 ### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
 
 - **State:** in_review
@@ -488,10 +501,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5209
 - **Branch:** merged via #5236
-- **PR:** #5236
+- **PR:** #5236, #5237
 - **Paths:** see #5236
 - **Started:** 2026-10-29
-- **Last verified:** 2026-10-29 (`45322bd1`; collated from changes/5209-option-a-4a-drop-discarded-lqr-probe.md)
+- **Last verified:** 2026-10-29 (`13988747`; collated from changes/5209-option-a-4b-vendor-reference-trace.md)
 - **Summary:** Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test
 - **Next step:** Shipped in PR #5236.
 
