@@ -70,13 +70,55 @@ $$
 r(t)=\int_{t_0}^{t}\Phi(t,s)R_2(s)\,ds.
 $$
 
-Suppose on an interval of length $T$ that $\|\Phi(t,s)\|\le K e^{L(t-s)}$ with $L\ge0$, and $\|\Delta z(t)\|\le C_0\epsilon$. Then
+Fix a horizon $T=t-t_0$ and a perturbation scale $\epsilon>0$. Write $z=(x,u)$ and $\Delta z=(\Delta x,\Delta u)$ as above. Assume the nominal and perturbed trajectories stay in a region where $\|D^2f\|\le H$, $\|\Phi(t,s)\|\le K e^{L(t-s)}$ with growth rate $L\ge0$ for the variational flow, and $f$ is Lipschitz in state on that region with Lipschitz constant at most the same $L$. Require an $\epsilon$-scaled experiment: $\|\Delta x(t_0)\|\le c_x\epsilon$ and $\|\Delta u(t)\|\le c_u\epsilon$.
+
+The argument has three steps. First, bound how far the real motion can drift from the nominal one; that drift defines a tube of radius $C_0(T)\epsilon$. Second, inside that tube the curvature term $R_2$ is at most $\frac H2$ times the tube radius squared. Third, the linearized dynamics carry the error that curvature injects at each instant forward to time $t$, amplifying it by at most $Ke^{L(t-s)}$; adding those contributions bounds $r$.
+
+The tube constant $C_0(T)$ must come from the **actual** deviation, not from replacing $\Delta z$ by the linear prediction $\hat\xi$. Along the nonlinear increment,
 
 $$
-\|r(t)\|\le\frac12 KHC_0^2 T e^{LT}\epsilon^2.
+\dot{\Delta x}=f(\bar x+\Delta x,\bar u+\Delta u)-f(\bar x,\bar u)
+   =A(t)\Delta x+B(t)\Delta u+R_2(t),
 $$
 
-This is a finite-horizon upper bound, with explicit dependence on amplification and tube size. Under bounded derivatives, a bounded input perturbation and sufficiently small initial perturbation, continuous dependence of ODE solutions supplies such a tube over a fixed interval. The perturbation must remain inside the region where the derivative and Hessian bounds apply. An initial prediction mismatch would add $\Phi(t,t_0)r(t_0)$.
+with $\|R_2(t)\|\le\frac H2\|\Delta z(t)\|^2$ from the Taylor expansion above. Split
+
+$$
+f(\bar x+\Delta x,\bar u+\Delta u)-f(\bar x,\bar u)
+=[f(\bar x+\Delta x,\bar u+\Delta u)-f(\bar x,\bar u+\Delta u)]+[f(\bar x,\bar u+\Delta u)-f(\bar x,\bar u)].
+$$
+
+The first (state) part is bounded by $L\|\Delta x\|$, using the state Lipschitz bound at the perturbed input $\bar u+\Delta u$. The second (input) part is exactly $B(t)\Delta u(t)$ for control-affine $f$ when evaluated at the nominal state $\bar x$, or bounded by $L_u\|\Delta u(t)\|$ in general. With $\|\Delta u(t)\|\le c_u\epsilon$, the input part has norm at most $G\epsilon$, with $G=\sup_t\|B(t)\|c_u$ for control-affine $f$ (or $G=L_u c_u$ in the non-affine case). Thus
+
+$$
+\|\dot{\Delta x}(t)\|\le L\|\Delta x(t)\|+G\epsilon.
+$$
+
+No Taylor remainder enters this step. The split bounds the whole difference, so the inequality is exact, not a leading-order approximation, and it does not use the tube bound derived next. Gronwall on it is the familiar compound-interest picture: homogeneous growth $e^{LT}$ plus accumulation of forcing—**budgeting for the push running at full strength throughout** (a worst case). We now show
+
+$$
+\|\Delta x(t)\|\le\left(c_x e^{LT}+\frac{G}{L}\bigl(e^{LT}-1\bigr)\right)\epsilon,
+$$
+
+with the $L\to0$ limit giving $\|\Delta x(t)\|\le(c_x+GT)\epsilon$. In words: the real deviation is at most the initial offset compounded at rate $L$ over the whole horizon, plus each instant's push compounded for the time that remains. Because $L$ is the largest growth rate allowed and $G\epsilon$ the largest push, this is a ceiling, not a forecast; the true deviation can be much smaller, for example when the dynamics contract or the push changes direction. With $\|\Delta u\|\le c_u\epsilon$, this gives $\|\Delta z(t)\|\le C_0(T)\epsilon$ and $C_0(T)=O(e^{LT})$.
+
+The same forcing appears in the linear prediction $\dot{\hat\xi}=A\hat\xi+B\Delta u$: variation of constants gives
+
+$$
+\|\hat\xi(t)\|\le K c_x e^{LT}\epsilon+K\frac{G}{L}\bigl(e^{LT}-1\bigr)\epsilon,
+$$
+
+so zero initial data with a nonzero $\epsilon$-scaled push does not stay zero. The linear prediction follows the same compound-interest arithmetic, with the extra prefactor $K$ from the propagator bound. Then $\|R_2(t)\|\le\frac12 HC_0(T)^2\epsilon^2$ and
+
+$$
+\|r(t)\|\le\frac12 KHC_0(T)^2\frac{e^{LT}-1}{L}\epsilon^2.
+$$
+
+In words: at each instant, curvature injects error at a rate of at most $\frac12 HC_0(T)^2\epsilon^2$; the linearized dynamics carry that error forward and can amplify it by up to $Ke^{L(t-s)}$ by time $t$; the bound adds up those contributions. Because $C_0$, $K$, $H$ and $L$ do not depend on $\epsilon$, halving $\epsilon$ divides this certificate by four. That is a statement about the bound, not a measured scaling of $r$.
+
+The factor $\frac{e^{LT}-1}{L}$ is the exact integral $\int_{t_0}^t e^{L(t-s)}\,ds$, rather than the cruder $Te^{LT}$ obtained by replacing the kernel by its largest value $e^{LT}$; as $L\to0$ it tends to $T$. Think of a savings plan: an error deposited late in the horizon has less time to compound than one deposited at the start, so not every deposit earns the full factor $e^{LT}$. With $C_0(T)=O(e^{LT})$, the **worst-case bound** scales as $O\!\left(\frac{e^{3LT}}{L}\epsilon^2\right)$ for large $LT$; that is a certificate on $\|r\|$, not a claim that the residual itself grows like $e^{3LT}$.
+
+This is a finite-horizon upper bound, with explicit dependence on amplification and tube size. An initial prediction mismatch would add $\Phi(t,t_0)r(t_0)$.
 
 The familiar notation $O(\epsilon^2)$ hides these constants. It is not a guarantee that one linear approximation remains accurate over an arbitrarily long swing or simulation horizon.
 
