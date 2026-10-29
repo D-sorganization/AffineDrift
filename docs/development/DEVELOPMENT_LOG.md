@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5166 · UX Slice 3: One Heading Face Token, Strict H1-H4 Scale, 1Rem Body Floor, No Mid-Word Breaks, Custom.Scss Mirrors Tokens
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5166
+- **Branch:** claude/ad-5166-1
+- **PR:** #5235
+- **Paths:** see #5235
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`56ff179a`; collated from changes/5166-ux-slice-3-one-heading-face-token-strict.md)
+- **Summary:** UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens
+- **Next step:** Run the Lighthouse/axe/screenshot protocol on a built site, then merge.
+
 ### DL-#5180 · Tangent-Space Review PR A: Affine Hub/Book Summaries and Volume I Chapter Read Links
 
 - **State:** in_review
