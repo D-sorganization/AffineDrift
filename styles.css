@@ -97,19 +97,10 @@
   --header-offset: 80px;
   --scroll-offset: 100px;
 
-  /* Typography limits */
-  --prose-width: 68ch;
-
-  /* Fluid Typography (Phase 3: responsive scaling with clamp())
-     Benefits: Scales smoothly between breakpoints, eliminates hardcoded media queries for font sizes,
-     improves readability at all viewport sizes */
+  /* Fluid Typography (Phase 3: responsive scaling with clamp()).
+     --prose-width and the h1-h6 scale (--font-size-h*) live only in
+     css/tokens/typography.css (#5166). */
   --fs-body: clamp(16px, 1rem + 0.2vw, 18px);
-  --fs-h1: clamp(2rem, 4vw + 1rem, 2.75rem);
-  --fs-h2: clamp(1.75rem, 3vw + 0.5rem, 2.25rem);
-  --fs-h3: clamp(1.35rem, 2vw + 0.5rem, 1.75rem);
-  --fs-h4: clamp(1.15rem, 1.5vw + 0.5rem, 1.35rem);
-  --fs-h5: clamp(1rem, 1.2vw + 0.4rem, 1.25rem);
-  --fs-h6: clamp(0.95rem, 1vw + 0.3rem, 1.1rem);
   --fs-large: clamp(1.1rem, 1.2vw + 0.3rem, 1.35rem);
   --fs-base: clamp(1rem, 1vw + 0.2rem, 1.15rem);
   --fs-small: clamp(0.85rem, 0.8vw + 0.1rem, 0.95rem);
@@ -194,7 +185,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-family: var(--font-family-heading);
   font-weight: 700;
   line-height: 1.25;
   color: var(--text-primary);
@@ -202,24 +193,23 @@ h6 {
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw + 1rem, 2.75rem);
+  font-size: var(--font-size-h1);
   letter-spacing: -0.02em;
 }
 
 h2 {
-  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.25rem);
+  font-size: var(--font-size-h2);
   letter-spacing: -0.01em;
   margin-top: 2rem;
 }
 
 h3 {
-  font-size: clamp(1.35rem, 2vw + 0.5rem, 1.75rem);
+  font-size: var(--font-size-h3);
   margin-top: 1.5rem;
-  color: var(--color-link);
 }
 
 h4 {
-  font-size: clamp(1.15rem, 1.5vw + 0.5rem, 1.35rem);
+  font-size: var(--font-size-h4);
 }
 
 a {
@@ -760,7 +750,7 @@ nav .container {
 
 #quarto-header .navbar-brand {
   color: var(--pure-white);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   font-weight: 700;
   font-size: var(--fs-large);
 }
@@ -841,7 +831,7 @@ nav .container {
   gap: 0.75rem;
   color: var(--pure-white);
   font-weight: 700;
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   font-size: var(--fs-large);
   text-decoration: none;
 }
@@ -1006,7 +996,7 @@ nav .container {
   font-size: var(--fs-base);
   font-weight: 600;
   color: var(--text-primary);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
 }
 
 .accordion-header:hover {
@@ -1230,23 +1220,6 @@ blockquote,
     overflow-wrap: anywhere;
   }
 
-  /* Mobile typography scaling for better readability on small screens */
-  h1 {
-    font-size: var(--fs-large);
-  }
-
-  h2 {
-    font-size: var(--fs-large);
-  }
-
-  h3 {
-    font-size: 1.25rem;
-  }
-
-  h4 {
-    font-size: var(--fs-base);
-  }
-
   .page-columns.page-full .standard-page-layout,
   .ad-page-container .standard-page-layout,
   .standard-page-layout {
@@ -1333,7 +1306,7 @@ blockquote,
   color: var(--pure-white);
   padding: 1.5rem 2rem;
   background: linear-gradient(to top, rgb(0 0 0 / 0.9), transparent);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   font-size: var(--fs-base);
   line-height: 1.4;
   pointer-events: none;
@@ -1714,7 +1687,7 @@ h3:hover .anchor-link,
   margin: 0;
   font-size: var(--fs-base);
   color: var(--pure-white);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1922,7 +1895,7 @@ form.contact-form .form-group label {
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
 }
 
 .contact-form .form-group input,
@@ -2044,7 +2017,7 @@ form.contact-form .form-group textarea {
    --- */
 
 .home-sidebar h3 {
-  color: var(--color-link);
+  color: var(--text-primary);
   font-size: var(--fs-small);
   font-weight: 600;
   text-transform: uppercase;
@@ -2104,12 +2077,12 @@ form.contact-form .form-group textarea {
 }
 
 .welcome-header h1 {
-  color: var(--color-link);
+  color: var(--text-primary);
   font-size: 3rem;
   margin-bottom: 0.5rem;
   margin-top: 0;
   font-weight: 700;
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   line-height: 1.1;
 }
 
@@ -2117,7 +2090,7 @@ form.contact-form .form-group textarea {
   color: var(--text-light);
   font-size: 1.3rem;
   font-style: italic;
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
 }
 
 .home-text p {
@@ -2125,7 +2098,6 @@ form.contact-form .form-group textarea {
   line-height: 1.8;
   color: var(--text-dark);
   font-size: var(--fs-base);
-  font-family: "Playfair Display", serif;
 }
 
 .math-showcase {
@@ -2479,7 +2451,7 @@ h1.title,
   margin: 0;
   font-size: var(--fs-base);
   color: white;
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -3183,14 +3155,20 @@ input:focus:not(:focus-visible) {
 
 /* Public-site mobile containment: prose paths and URLs may be arbitrarily long. */
 #quarto-document-content :not(pre) > code,
-#quarto-document-content a,
+#quarto-document-content a {
+  overflow-wrap: anywhere;
+}
+
+/* Normal words never split mid-word (#5166): headings and list text wrap at
+   spaces and break only a token too long for the line. */
 #quarto-document-content h1,
 #quarto-document-content h2,
 #quarto-document-content h3,
 #quarto-document-content h4,
 #quarto-document-content li {
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: manual;
 }
 
 #quarto-document-content :not(pre) > code {
