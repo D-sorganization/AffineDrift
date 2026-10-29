@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5180 · Tangent-Space Review PR A: Affine Hub/Book Summaries and Volume I Chapter Read Links
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5180
+- **Branch:** cursor/tangent-review-pr-a-d406
+- **PR:** #5188, #5189
+- **Paths:** see #5188
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`4355300b`; collated from changes/5180-tighten-part-4-7-residual-gronwall-bound.md)
+- **Summary:** Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links
+- **Next step:** Publication gate review (Karl through Dieter).
+
 ### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
 
 - **State:** in_review
