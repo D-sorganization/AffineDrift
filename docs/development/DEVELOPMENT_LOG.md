@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5250 · Measure 60-Day AGENT_HANDOFF.md and _quarto.yml Conflict Frequency and Recommend No-Go on .agent/state Split (#5250)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5250
+- **Branch:** feat/5250-measure-handoff-quarto-conflicts
+- **PR:** #5259
+- **Paths:** see #5259
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`0cbd0533`; collated from changes/5250-measure-agent-handoff-md-quarto-yml-merge-co.md)
+- **Summary:** Measure 60-day AGENT_HANDOFF.md and _quarto.yml conflict frequency and recommend no-go on .agent/state split (#5250)
+- **Next step:** Merge the PR.
+
 ### DL-#5252 · Audit Self-Hosted Assets, SRI, and CSP Against ADR 0002 With Post-Render SRI Check (#5252)
 
 - **State:** in_review
