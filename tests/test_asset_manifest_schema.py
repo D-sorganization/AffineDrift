@@ -5,7 +5,7 @@ from __future__ import annotations
 import copy
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import jsonschema
 import pytest
@@ -17,11 +17,11 @@ SPEC_DOC_PATH = REPO_ROOT / "docs" / "audits" / "asset-manifest-provenance-spec-
 
 
 def _load_schema() -> dict[str, Any]:
-    return json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    return cast(dict[str, Any], json.loads(SCHEMA_PATH.read_text(encoding="utf-8")))
 
 
 def _load_manifest() -> dict[str, Any]:
-    return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    return cast(dict[str, Any], json.loads(MANIFEST_PATH.read_text(encoding="utf-8")))
 
 
 def test_current_asset_manifest_validates_against_schema() -> None:
