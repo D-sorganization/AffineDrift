@@ -241,6 +241,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5255 · Specify and Implement Versioned, Bounded #State= URL-Hash State Contract for Dcr-Visualizer (#5255)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5255
+- **Branch:** feat/5255-widget-url-hash-state
+- **PR:** #5261
+- **Paths:** see #5261
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`0a5e0a40`; collated from changes/5255-spec-url-hash-state-contract-for-widgets.md)
+- **Summary:** Specify and implement versioned, bounded #state= URL-hash state contract for dcr-visualizer (#5255)
+- **Next step:** Merge the PR.
+
+### DL-#5251 · Draft JSON Schema and Provenance Field Spec for Asset_Manifest.Json (#5251)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5251
+- **Branch:** feat/5251-asset-manifest-provenance-spec
+- **PR:** #5260
+- **Paths:** see #5260
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`69671261`; collated from changes/5251-spec-asset-manifest-provenance-fields.md)
+- **Summary:** Draft JSON Schema and provenance field spec for asset_manifest.json (#5251)
+- **Next step:** Merge the PR.
+
 ### DL-#5250 · Measure 60-Day AGENT_HANDOFF.md and _quarto.yml Conflict Frequency and Recommend No-Go on .agent/state Split (#5250)
 
 - **State:** in_review
