@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-30 | #5260 | Draft JSON Schema and provenance field spec for asset_manifest.json (#5251) |
+| 2026-10-30 | #5259 | Measure 60-day AGENT_HANDOFF.md and _quarto.yml conflict frequency and recommend no-go on .agent/state split (#5250) |
 | 2026-10-30 | #5258 | Audit self-hosted assets, SRI, and CSP against ADR 0002 with post-render SRI check (#5252) |
 | 2026-10-30 | #5257 | Audit CI workflow permissions, untrusted run interpolations, and action SHA pins (#5249) |
 | 2026-10-29 | #5235 | UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens |
