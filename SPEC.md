@@ -232,6 +232,16 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-30 | #5261 | Specify and implement versioned, bounded #state= URL-hash state contract for dcr-visualizer (#5255) |
+| 2026-10-30 | #5260 | Draft JSON Schema and provenance field spec for asset_manifest.json (#5251) |
+| 2026-10-30 | #5259 | Measure 60-day AGENT_HANDOFF.md and _quarto.yml conflict frequency and recommend no-go on .agent/state split (#5250) |
+| 2026-10-30 | #5258 | Audit self-hosted assets, SRI, and CSP against ADR 0002 with post-render SRI check (#5252) |
+| 2026-10-30 | #5257 | Audit CI workflow permissions, untrusted run interpolations, and action SHA pins (#5249) |
+| 2026-10-29 | #5235 | UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens |
+| 2026-10-29 | #5238 | UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast |
+| 2026-10-29 | #5237 | Option A-4 prerequisite: vendor the UpstreamDrift Option A reference trace with sha256 and recomputed payload-digest verification, and a verified loader |
+| 2026-10-29 | #5189 | Tighten Part 4/7 residual Gronwall bound; de-emphasize fixed-trajectory integral naming in thesis |
+| 2026-10-29 | #5188 | Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links |
 | 2026-10-29 | #5236 | Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test |
 | 2026-10-29 | #5239 | Record redirect for unpublished Slack article to restore URL stability check in deploy workflow |
 | 2026-10-28 | #5231 | Pin merged UpstreamDrift companion commits and refresh article status |

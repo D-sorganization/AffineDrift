@@ -1,7 +1,7 @@
 ---
 title: "Full Reference Manuscript: Exact Instantaneous Superposition in Nonlinear Dynamics"
 description: "Reference manuscript for the tangent-space series. Use the compact seven-part series as the canonical reading path."
-subtitle: "Reference Derivations for Tangent Space Linearization and Integral Accumulation"
+subtitle: "Reference Derivations for Tangent Space Linearization and Fixed-Trajectory Integrals"
 author: "Dieter Olson"
 date: "2026-01-01"
 date-source: "initial-publication-record"
@@ -478,7 +478,7 @@ This is an interaction diagnostic, not a stability or optimality certificate. Se
 
 ## Part II: Integral Superposition and Transport {.unnumbered}
 
-## Fundamentals of Integral Accumulation
+## Integrals Along a Fixed Trajectory
 
 ### Integration Preserves Linearity
 
@@ -798,7 +798,7 @@ Again, **exact** additivity due to integral linearity.
 
 The velocity history is the same combined-motion history in both work terms. For a unit mass initially at rest, two constant unit forces over a unit interval produce velocity $2t$, final kinetic energy 2 and work 1 from each force. Running either force alone gives velocity $t$ and work $1/2$. The separate-run works sum to 1, not 2. This interaction occurs even with linear force-to-velocity dynamics because power multiplies force by velocity.
 
-::: {.callout-warning}
+::: {#wrn-variation-vs-causation .callout-warning}
 ## Variation vs. Causation
 
 The force-work terms add along the same combined trajectory, providing a valid signed energy budget when all terms are included. Those terms are not the works obtained by running each input alone, and normalized work fractions do not uniquely identify physiological causation or efficiency. Negative work and an initial energy store can also make naive percentage interpretations misleading.
@@ -806,29 +806,23 @@ The force-work terms add along the same combined trajectory, providing a valid s
 Work accounting and first-variation transport are distinct linear operations. Neither automatically assigns a unique fraction of an observed outcome to a physical cause.
 :::
 
-## General Principle: Integral Accumulation
+## Linearity of Integrals Along a Fixed Trajectory
 
-Both impulse and work illustrate a general principle:
-
-::: {.callout-important}
-## Integral Accumulation Principle
-
-**Along a fixed trajectory** $x(t)$, for any quantity defined as an integral of a linear function of inputs:
+The work superposition in @eq-work-superposition is the main lesson: along one combined motion history, force-work terms add exactly, yet those terms are not the works obtained by running each input alone (@wrn-variation-vs-causation). The same bookkeeping applies to impulse and to any quantity
 
 $$
 \Psi = \int_{t_0}^{t_1} g(x(t), u(t), t) \, dt
 $$
 
-where $g$ is linear in $u$ with $x(t)$ held fixed, the contributions from different inputs superpose exactly:
+with $g$ linear in $u$ while $x(t)$ is held fixed.
 
-$$
-\Psi(u_1 + u_2) = \Psi(u_1) + \Psi(u_2)
-$$
+::: {.callout-note}
+## Fixed-Trajectory Integral Identity
 
-**Important caveat:** This integral identity holds for any such input histories evaluated along the same fixed trajectory $x(t)$; the histories need not be infinitesimal. If $x(t)$ itself depends nonlinearly on $u$ (as it generally does in closed-loop or trajectory optimization settings), then the principle does not hold globally — changing $u$ changes the trajectory, and the two contributions cannot be evaluated independently.
+For such $g$, $\Psi(u_1+u_2)=\Psi(u_1)+\Psi(u_2)$ along the same fixed trajectory $x(t)$; the input histories need not be infinitesimal. If $x(t)$ depends nonlinearly on $u$ (as it generally does in closed-loop control or trajectory optimization), changing $u$ changes the trajectory and the contributions cannot be evaluated independently.
 :::
 
-Impulse and work are special cases where $g = u$ and $g = u^T \dot{q}$ respectively. The linearity of integration ensures exact additivity of these quantities, even as the underlying dynamics remain nonlinear.
+Impulse and work are the familiar cases $g=u$ and $g=u^T\dot q$. Integration is linear; the dynamics need not be.
 
 \newpage
 

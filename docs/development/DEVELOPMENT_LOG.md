@@ -241,6 +241,97 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5255 · Specify and Implement Versioned, Bounded #State= URL-Hash State Contract for Dcr-Visualizer (#5255)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5255
+- **Branch:** feat/5255-widget-url-hash-state
+- **PR:** #5261
+- **Paths:** see #5261
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`0a5e0a40`; collated from changes/5255-spec-url-hash-state-contract-for-widgets.md)
+- **Summary:** Specify and implement versioned, bounded #state= URL-hash state contract for dcr-visualizer (#5255)
+- **Next step:** Merge the PR.
+
+### DL-#5251 · Draft JSON Schema and Provenance Field Spec for Asset_Manifest.Json (#5251)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5251
+- **Branch:** feat/5251-asset-manifest-provenance-spec
+- **PR:** #5260
+- **Paths:** see #5260
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`69671261`; collated from changes/5251-spec-asset-manifest-provenance-fields.md)
+- **Summary:** Draft JSON Schema and provenance field spec for asset_manifest.json (#5251)
+- **Next step:** Merge the PR.
+
+### DL-#5250 · Measure 60-Day AGENT_HANDOFF.md and _quarto.yml Conflict Frequency and Recommend No-Go on .agent/state Split (#5250)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5250
+- **Branch:** feat/5250-measure-handoff-quarto-conflicts
+- **PR:** #5259
+- **Paths:** see #5259
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`0cbd0533`; collated from changes/5250-measure-agent-handoff-md-quarto-yml-merge-co.md)
+- **Summary:** Measure 60-day AGENT_HANDOFF.md and _quarto.yml conflict frequency and recommend no-go on .agent/state split (#5250)
+- **Next step:** Merge the PR.
+
+### DL-#5252 · Audit Self-Hosted Assets, SRI, and CSP Against ADR 0002 With Post-Render SRI Check (#5252)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5252
+- **Branch:** feat/5252-audit-sri-csp
+- **PR:** #5258
+- **Paths:** see #5258
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`8c23dbfb`; collated from changes/5252-audit-self-hosted-assets-sri-and-csp-vs-adr.md)
+- **Summary:** Audit self-hosted assets, SRI, and CSP against ADR 0002 with post-render SRI check (#5252)
+- **Next step:** Merge the PR.
+
+### DL-#5249 · Audit CI Workflow Permissions, Untrusted Run Interpolations, and Action SHA Pins (#5249)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5249
+- **Branch:** feat/5249-audit-workflows
+- **PR:** #5257
+- **Paths:** see #5257
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`af37d2ad`; collated from changes/5249-audit-ci-workflow-hardening-gap-inventory.md)
+- **Summary:** Audit CI workflow permissions, untrusted run interpolations, and action SHA pins (#5249)
+- **Next step:** Merge the PR.
+
+### DL-#5166 · UX Slice 3: One Heading Face Token, Strict H1-H4 Scale, 1Rem Body Floor, No Mid-Word Breaks, Custom.Scss Mirrors Tokens
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5166
+- **Branch:** claude/ad-5166-1
+- **PR:** #5235
+- **Paths:** see #5235
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`56ff179a`; collated from changes/5166-ux-slice-3-one-heading-face-token-strict.md)
+- **Summary:** UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens
+- **Next step:** Run the Lighthouse/axe/screenshot protocol on a built site, then merge.
+
+### DL-#5180 · Tangent-Space Review PR A: Affine Hub/Book Summaries and Volume I Chapter Read Links
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5180
+- **Branch:** cursor/tangent-review-pr-a-d406
+- **PR:** #5188, #5189
+- **Paths:** see #5188
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`4355300b`; collated from changes/5180-tighten-part-4-7-residual-gronwall-bound.md)
+- **Summary:** Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links
+- **Next step:** Publication gate review (Karl through Dieter).
+
 ### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
 
 - **State:** in_review
@@ -482,16 +573,29 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5167 · UX Slice 4: Labelled In-Header Theme Toggle, One-Row Phone Header, Unique Nav Landmarks, No First-Visit Update Toast
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5167
+- **Branch:** merged via #5238
+- **PR:** #5238
+- **Paths:** see #5238
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`2238eb2b`; collated from changes/5167-ux-slice-4-labelled-in-header-theme-togg.md)
+- **Summary:** UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast
+- **Next step:** Shipped in PR #5238.
+
 ### DL-#5209 · Option A-4 Prerequisite: Drop the Discarded Discrete_Lqr Stabilisability Probe From the #5208 Correction-Authority Evaluator (0.38 s per Call, Result Never Used); Red-Then-Green Regression Test
 
 - **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5209
 - **Branch:** merged via #5236
-- **PR:** #5236
+- **PR:** #5236, #5237
 - **Paths:** see #5236
 - **Started:** 2026-10-29
-- **Last verified:** 2026-10-29 (`45322bd1`; collated from changes/5209-option-a-4a-drop-discarded-lqr-probe.md)
+- **Last verified:** 2026-10-29 (`13988747`; collated from changes/5209-option-a-4b-vendor-reference-trace.md)
 - **Summary:** Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test
 - **Next step:** Shipped in PR #5236.
 
