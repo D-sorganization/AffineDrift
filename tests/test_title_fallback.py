@@ -5,6 +5,8 @@ Enforces:
    from the document's first level-1 heading, instead of rendering empty
    (axe `empty-heading`).
 2. A page that already sets `title:` is left untouched.
+3. The promoted heading is removed from the body, so the page renders
+   exactly one visible H1 (not two).
 """
 
 from __future__ import annotations
@@ -52,6 +54,11 @@ def test_missing_title_falls_back_to_first_heading() -> None:
     assert '<h1 class="title">' in html
     assert "A Derived Title From The Body" in html
     assert '<h1 class="title"></h1>' not in html
+
+
+def test_promoted_heading_is_not_duplicated_in_body() -> None:
+    html = _render_html("", "# A Derived Title From The Body\n\nBody paragraph.\n")
+    assert html.count("<h1") == 1
 
 
 def test_explicit_title_is_left_untouched() -> None:
