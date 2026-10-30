@@ -5,14 +5,21 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
-from jsonschema import Draft202012Validator
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_PATH = REPO_ROOT / "schemas" / "widget-url-state-v1.schema.json"
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.tools.utils.widget_url_state_schema import (  # noqa: E402
+    load_widget_url_state_schema,
+    validate_widget_url_state_payload,
+)
+
 DCR_JS_PATH = REPO_ROOT / "js" / "dcr-visualizer.js"
 
 
@@ -34,29 +41,29 @@ def _run_node_eval(expr: str) -> dict[str, Any]:
 
 def test_widget_url_state_schema_validates_envelope_and_rejects_invalid() -> None:
     """JSON schema enforces version 1, widget id pattern, and bounded numeric parameters."""
-    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
-    validator = Draft202012Validator(schema)
+    schema = load_widget_url_state_schema()
+    assert schema["properties"]["v"]["const"] == 1
 
     valid_payload = {
         "v": 1,
         "w": "dcr-visualizer",
         "p": {"x0": 1.5, "ubar": 2.0, "horizon": 1.0, "phase": 0.25},
     }
-    assert list(validator.iter_errors(valid_payload)) == []
+    assert validate_widget_url_state_payload(valid_payload) == []
 
     wrong_version = {
         "v": 2,
         "w": "dcr-visualizer",
         "p": {"x0": 1.0, "ubar": 1.0, "horizon": 1.0, "phase": 0.5},
     }
-    assert list(validator.iter_errors(wrong_version)) != []
+    assert validate_widget_url_state_payload(wrong_version) != []
 
     extra_prop = {
         "v": 1,
         "w": "dcr-visualizer",
         "p": {"x0": 1.0, "ubar": 1.0, "horizon": 1.0, "phase": 0.5, "extra": 1},
     }
-    assert list(validator.iter_errors(extra_prop)) != []
+    assert validate_widget_url_state_payload(extra_prop) != []
 
 
 def test_round_trip_encode_decode_in_dcr_visualizer() -> None:
