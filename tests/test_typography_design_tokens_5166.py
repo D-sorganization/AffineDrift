@@ -296,3 +296,18 @@ def test_text_safe_status_colour_tokens_pass_aa() -> None:
         assert contrast_ratio(values[0], "#ffffff") >= WCAG_AA_TEXT
         for dark_value in values[1:]:
             assert contrast_ratio(dark_value, "#0d0d1a") >= WCAG_AA_TEXT
+
+
+def test_physics_book_toc_numbers_and_captions_use_text_color() -> None:
+    rules = parse_rules(PHYSICS_BOOK_TYPOGRAPHY.read_text(encoding="utf-8"))
+    text_safe_rule = next(
+        (
+            decls
+            for selectors, decls in rules
+            if ".header-section-number" in selectors
+            and "figcaption" in selectors
+            and ".figure-caption" in selectors
+        ),
+        {},
+    )
+    assert text_safe_rule.get("color") == "var(--text-primary)"
