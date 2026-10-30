@@ -22,9 +22,7 @@ COLORS_CSS = ROOT / "css" / "tokens" / "colors.css"
 SUMMARY_CSS = ROOT / "css" / "components" / "summary-takeaways.css"
 CUSTOM_SCSS = ROOT / "custom.scss"
 PHYSICS_BOOK_CONFIG = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "_quarto.yml"
-PHYSICS_BOOK_TYPOGRAPHY = (
-    ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "typography.css"
-)
+PHYSICS_BOOK_TYPOGRAPHY = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "typography.css"
 
 ROOT_FONT_PX = 16.0
 VIEWPORTS_PX = (375, 768, 1440)
@@ -207,19 +205,13 @@ def test_physics_book_uses_the_shared_heading_tokens() -> None:
             (
                 decls
                 for selectors, decls in rules
-                if f"h{level}" in selectors
-                and f".h{level}" in selectors
-                and "font-size" in decls
+                if f"h{level}" in selectors and f".h{level}" in selectors and "font-size" in decls
             ),
             {},
         )
         assert heading_rule.get("font-size") == f"var(--font-size-h{level})"
     prose_rule = next(
-        (
-            decls
-            for selectors, decls in rules
-            if selectors == ["#quarto-document-content p"]
-        ),
+        (decls for selectors, decls in rules if selectors == ["#quarto-document-content p"]),
         {},
     )
     assert prose_rule.get("max-width") == "var(--prose-width)"
