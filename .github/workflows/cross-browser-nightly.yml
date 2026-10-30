@@ -72,6 +72,21 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
         with:
           version: ${{ steps.quarto.outputs.version }}
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        with:
+          python-version: "3.12"
+      - name: Bootstrap Python venv
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        timeout-minutes: 40
+        env:
+          PIP_DEFAULT_TIMEOUT: "60"
+        run: |
+          python -m venv "$RUNNER_TEMP/ci-venv"
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install --no-cache-dir -r requirements.txt
+          echo "$RUNNER_TEMP/ci-venv/bin" >> "$GITHUB_PATH"
       - name: Remove .env.example
         if: steps.quarto_cache.outputs.cache-hit != 'true'
         run: rm -f .env.example
