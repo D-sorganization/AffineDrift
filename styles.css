@@ -318,6 +318,18 @@ main.content .reading-time-estimate span,
   max-width: var(--prose-width);
 }
 
+/* Hub pages (page-layout: full) skip the article-layout rule above, but
+   their top-level intro prose is just as prone to an overlong measure.
+   Scope to direct children / known text-only wrappers so grid and card
+   content (already bounded by their own grid tracks) keeps its width
+   (issue #5169). */
+#quarto-content.page-layout-full #quarto-document-content > p,
+#quarto-content.page-layout-full #quarto-document-content > ul,
+#quarto-content.page-layout-full #quarto-document-content > ol,
+#quarto-content.page-layout-full .about-text > p {
+  max-width: var(--prose-width);
+}
+
 /* Publication title shell. The title, description, and metadata stack in one
    readable flow at every viewport; they never compete for narrow flex tracks. */
 #quarto-content.page-layout-article #title-block-header.quarto-title-block {
