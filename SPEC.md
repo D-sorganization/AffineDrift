@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-30 | #5258 | Audit self-hosted assets, SRI, and CSP against ADR 0002 with post-render SRI check (#5252) |
+| 2026-10-30 | #5257 | Audit CI workflow permissions, untrusted run interpolations, and action SHA pins (#5249) |
 | 2026-10-29 | #5235 | UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens |
 | 2026-10-29 | #5238 | UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast |
 | 2026-10-29 | #5237 | Option A-4 prerequisite: vendor the UpstreamDrift Option A reference trace with sha256 and recomputed payload-digest verification, and a verified loader |

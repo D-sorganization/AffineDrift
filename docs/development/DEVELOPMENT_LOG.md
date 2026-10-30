@@ -241,6 +241,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5252 · Audit Self-Hosted Assets, SRI, and CSP Against ADR 0002 With Post-Render SRI Check (#5252)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5252
+- **Branch:** feat/5252-audit-sri-csp
+- **PR:** #5258
+- **Paths:** see #5258
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`8c23dbfb`; collated from changes/5252-audit-self-hosted-assets-sri-and-csp-vs-adr.md)
+- **Summary:** Audit self-hosted assets, SRI, and CSP against ADR 0002 with post-render SRI check (#5252)
+- **Next step:** Merge the PR.
+
+### DL-#5249 · Audit CI Workflow Permissions, Untrusted Run Interpolations, and Action SHA Pins (#5249)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5249
+- **Branch:** feat/5249-audit-workflows
+- **PR:** #5257
+- **Paths:** see #5257
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`af37d2ad`; collated from changes/5249-audit-ci-workflow-hardening-gap-inventory.md)
+- **Summary:** Audit CI workflow permissions, untrusted run interpolations, and action SHA pins (#5249)
+- **Next step:** Merge the PR.
+
 ### DL-#5166 · UX Slice 3: One Heading Face Token, Strict H1-H4 Scale, 1Rem Body Floor, No Mid-Word Breaks, Custom.Scss Mirrors Tokens
 
 - **State:** in_review
