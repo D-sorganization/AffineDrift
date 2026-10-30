@@ -58,7 +58,17 @@
     return DV.instantaneousScalarDcr(DV.linearScalarSystem(driveState, gradient, 0, controlBound));
   }
 
-  function update() {
+  function applyHashStateIfPresent() {
+    if (typeof window === 'undefined' || !window.location || !window.location.hash) return;
+    if (typeof DV.decodeWidgetStateHash !== 'function') return;
+    const decoded = DV.decodeWidgetStateHash(window.location.hash, DV.DCR_STATE_DEFAULTS);
+    byId('dcrviz-x0').value = String(decoded.state.x0);
+    byId('dcrviz-ubar').value = String(decoded.state.ubar);
+    byId('dcrviz-horizon').value = String(decoded.state.horizon);
+    byId('dcrviz-phase').value = String(decoded.state.phase);
+  }
+
+  function update(syncHash) {
     try {
       const x0 = readNumber('dcrviz-x0', 'Initial state');
       const ubar = readNumber('dcrviz-ubar', 'Control bound');
@@ -94,6 +104,13 @@
       byId('dcrviz-width-b').textContent = format(hiB - loB);
       byId('dcrviz-interval-a').textContent = `[${format(loA)}, ${format(hiA)}]`;
       byId('dcrviz-interval-b').textContent = `[${format(loB)}, ${format(hiB)}]`;
+      if (syncHash && typeof window !== 'undefined' && window.history && typeof DV.encodeWidgetStateHash === 'function') {
+        try {
+          window.history.replaceState(null, '', DV.encodeWidgetStateHash({x0, ubar, horizon, phase: phaseFraction}));
+        } catch (_err) {
+          // Ignore out-of-hash-range inputs while keeping computed view live.
+        }
+      }
       status('Computed from the declared LinearScalarSystem, instantaneous_scalar_dcr, and '
         + 'scalar_linear_reachable_interval formulas.', true);
     } catch (error) {
@@ -104,10 +121,11 @@
   function boot() {
     if (!byId('dcrviz-app') || byId('dcrviz-app').dataset.ready) return;
     byId('dcrviz-app').dataset.ready = 'true';
+    applyHashStateIfPresent();
     ['dcrviz-x0', 'dcrviz-ubar', 'dcrviz-horizon', 'dcrviz-phase'].forEach(id => {
-      byId(id).addEventListener('input', update);
+      byId(id).addEventListener('input', () => update(true));
     });
-    update();
+    update(false);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
