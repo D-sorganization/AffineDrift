@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/schemas/widgets/widget-url-state-v1.schema.json",
+  "title": "Widget URL-Hash State Envelope v1",
+  "description": "Versioned, bounded, validated URL-hash state contract (#state=<urlencoded-json>) for single-widget state persistence without cross-widget bus coupling (#5255).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["v", "w", "p"],
+  "properties": {
+    "v": {
+      "const": 1,
+      "description": "Schema version (must be integer 1)."
+    },
+    "w": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,40}$",
+      "description": "Target widget identifier (for example, 'dcr-visualizer')."
+    },
+    "p": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x0", "ubar", "horizon", "phase"],
+      "properties": {
+        "x0": {
+          "type": "number",
+          "minimum": -100,
+          "maximum": 100,
+          "not": { "const": 0 },
+          "description": "Initial scalar state x0 in [-100, 100] \\ {0}."
+        },
+        "ubar": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "description": "Control bound u_bar in (0, 100]."
+        },
+        "horizon": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 20,
+          "description": "Time horizon T in [0, 20]."
+        },
+        "phase": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Normalized phase fraction in [0, 1]."
+        }
+      }
+    }
+  }
+}
