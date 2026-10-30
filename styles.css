@@ -315,6 +315,18 @@ main.content .reading-time-estimate span,
   max-width: var(--prose-width);
 }
 
+/* Hub pages (page-layout: full) skip the article-layout rule above, but
+   their top-level intro prose is just as prone to an overlong measure.
+   Scope to direct children / known text-only wrappers so grid and card
+   content (already bounded by their own grid tracks) keeps its width
+   (issue #5169). */
+#quarto-content.page-layout-full #quarto-document-content > p,
+#quarto-content.page-layout-full #quarto-document-content > ul,
+#quarto-content.page-layout-full #quarto-document-content > ol,
+#quarto-content.page-layout-full .about-text > p {
+  max-width: var(--prose-width);
+}
+
 /* Publication title shell. Compact, calm header: title, description, and
    metadata stack in one readable flow at every viewport, on a quiet surface
    consistent with the page-header-card/summary-takeaways/caveats cards
@@ -377,11 +389,12 @@ main.content .reading-time-estimate span,
   overflow-wrap: break-word;
 }
 
-/* Quarto's bundled theme dims this label to 0.8 opacity at a higher
-   specificity (`#title-block-header.quarto-title-block.default
-   .quarto-title-meta-heading`), which drops --text-secondary below AA
-   contrast on the calm surface (#5168); match its specificity to win. */
-#title-block-header.quarto-title-block.default .quarto-title-meta-heading {
+/* Quarto's bundled theme dims these labels at a higher specificity
+   (`#title-block-header.quarto-title-block.default ...`), which drops
+   --text-secondary below AA contrast on the calm surface (#5168); match
+   its specificity to win for both the meta heading and abstract title. */
+#title-block-header.quarto-title-block.default .quarto-title-meta-heading,
+#title-block-header.quarto-title-block.default .abstract .block-title {
   opacity: 1;
 }
 
@@ -412,12 +425,6 @@ main.content .reading-time-estimate span,
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-secondary);
-}
-
-/* Same specificity-match as the meta-heading rule above, to beat Quarto's
-   bundled 0.8-opacity default for `.abstract .block-title` (#5168). */
-#title-block-header.quarto-title-block.default .abstract .block-title {
-  opacity: 1;
 }
 
 /* Reset Quarto's margin-sidebar and sidebar columns on full-layout pages only */
