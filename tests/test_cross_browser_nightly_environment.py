@@ -16,12 +16,12 @@ def test_cross_browser_nightly_bootstraps_python_requirements_before_render() ->
         index for index, step in enumerate(steps) if step.get("name") == "Build site for E2E"
     )
     python_setup_index = next(
-        index for index, step in enumerate(steps)
+        index
+        for index, step in enumerate(steps)
         if step.get("uses", "").startswith("actions/setup-python@")
     )
     bootstrap_index = next(
-        index for index, step in enumerate(steps)
-        if step.get("name") == "Bootstrap Python venv"
+        index for index, step in enumerate(steps) if step.get("name") == "Bootstrap Python venv"
     )
 
     assert python_setup_index < bootstrap_index < render_index
