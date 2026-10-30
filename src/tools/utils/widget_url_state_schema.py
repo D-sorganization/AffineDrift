@@ -1,6 +1,6 @@
 """Widget URL-hash state schema loader and validator (#5255).
 
-Loads and enforces schemas/widget-url-state-v1.schema.json for single-widget
+Loads and enforces schemas/widgets/widget-url-state-v1.schema.json for single-widget
 URL-hash state envelopes (#state=<urlencoded-json>).
 """
 
@@ -15,7 +15,7 @@ import jsonschema
 from src.core.contracts import require
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = REPO_ROOT / "schemas" / "widget-url-state-v1.schema.json"
+SCHEMA_PATH = REPO_ROOT / "schemas" / "widgets" / "widget-url-state-v1.schema.json"
 MAX_HASH_LENGTH = 512
 
 

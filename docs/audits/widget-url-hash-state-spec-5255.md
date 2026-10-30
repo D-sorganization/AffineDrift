@@ -4,7 +4,7 @@
 
 Defines the versioned, bounded, validated URL-hash state contract (`#state=<url-encoded-json>`) for interactive widgets under epic `#5171` (panel `th_0692a05b4cc8`, Idea 10). Each hash envelope targets a single named widget (`w`) and is strictly isolated: no shared cross-widget event bus is introduced.
 
-## 2. Envelope Specification (`schemas/widget-url-state-v1.schema.json`)
+## 2. Envelope Specification (`schemas/widgets/widget-url-state-v1.schema.json`)
 
 - **Prefix**: `#state=` (or `state=` when normalized without the leading `#`).
 - **Maximum raw hash length**: `512` characters (`MAX_STATE_HASH_LENGTH = 512`), checked **before** URI decoding or JSON parsing so oversized hashes are rejected in $O(1)$ time without throwing.
