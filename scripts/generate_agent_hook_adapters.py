@@ -16,7 +16,7 @@ def main(argv: list[str] | None = None) -> int:
     repo_root = Path(__file__).resolve().parents[1]
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
-    from shared_scripts.agent_hook_adapters import (  # noqa: PLC0415
+    from shared_scripts.agent_hook_adapters import (  # noqa: PLC0415 -- deferred import after sys.path manipulation
         SUPPORTED_TARGETS,
         check_adapters,
         generate_adapters,
