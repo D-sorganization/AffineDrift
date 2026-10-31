@@ -77,3 +77,18 @@ test('a polite, atomic live readout announces the intervention time and differen
   expect(readout.textContent).toContain(`t = ${text('ztx-step-value')} s`);
   expect(readout.textContent).toContain(`${text('ztx-speed-difference')} m/s`);
 });
+
+test('the widget creates its own live readout right after the status line', () => {
+  const readout = document.getElementById('ztx-readout');
+  expect(readout.previousElementSibling.id).toBe('ztx-status');
+  expect(document.querySelectorAll('#ztx-readout')).toHaveLength(1);
+});
+
+test('setParam fails closed when the engine throws, keeping the last valid state', () => {
+  window.ZTCFExplorer.explore = () => { throw new Error('engine failed'); };
+  expect(() => controller().setParam('interventionStep', 100)).toThrow(/engine failed/);
+  expect(() => controller().step(1)).toThrow(/engine failed/);
+  expect(controller().getState().interventionStep).toBe(50);
+  expect(document.getElementById('ztx-step').value).toBe('50');
+  expect(document.getElementById('ztx-status').dataset.valid).toBe('false');
+});

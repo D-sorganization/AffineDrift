@@ -135,10 +135,3 @@ def test_widget_links_every_ledger_critique_of_the_page() -> None:
     for critique in affecting:
         href = "../" + critique["source_path"].removesuffix(".md") + ".html"
         assert f'href="{href}"' in block, critique["critique_id"]
-
-
-def test_widget_has_a_polite_atomic_live_readout() -> None:
-    readout = re.search(r'<p id="ztx-readout"[^>]*>', _widget_block())
-    assert readout is not None, "the live readout of the controller state is required (#5254)"
-    assert 'aria-live="polite"' in readout.group(0)
-    assert 'aria-atomic="true"' in readout.group(0)
