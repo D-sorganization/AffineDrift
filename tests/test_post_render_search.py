@@ -10,18 +10,12 @@ from scripts import post_render_search as search
 
 
 def entry(href: str, text: str = "Article body") -> dict[str, str]:
-    return {
-        "objectID": href,
-        "href": href,
-        "title": "Article title",
-        "section": "A section",
-        "text": text,
-    }
+    return dict(objectID=href, href=href, title="Article title", section="A section", text=text)
 
 
 def test_index_keeps_article_book_sections_but_drops_utility_and_skip_text() -> None:
     rows = [
-        entry("articles/chapter.html#intro", "Skip to main content\n" + "double pendulum " * 300),
+        entry("articles/chapter.html#intro", "Skip to main content\n" + "x" * 1_201 + "tailmarker"),
         entry("/books/volume/chapter.html#model"),
         entry("resources/articles.html"),
         entry("critiques/generated-assessment.html"),
@@ -31,7 +25,7 @@ def test_index_keeps_article_book_sections_but_drops_utility_and_skip_text() -> 
     assert [row["href"] for row in result] == [rows[0]["href"], rows[1]["href"]]
     assert all("Skip to main content" not in row["text"] for row in result)
     assert len(result[0]["text"]) <= search.MAX_SEARCH_TEXT_CHARS
-    assert "double pendulum" in result[0]["text"]
+    assert "tailmarker" in result[0]["text"]
 
 
 def test_index_rejects_malformed_entries() -> None:

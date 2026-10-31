@@ -25,9 +25,7 @@ SRC_RE = re.compile(r"\bsrc\s*=\s*(['\"])(.*?)\1", re.I | re.S)
 
 def _searchable_route(href: str) -> bool:
     path = urlsplit(href).path.lstrip("/")
-    return bool(
-        path and not re.search(r"(?:^|/)\.\.(?:/|$)", path) and path.startswith(SEARCHABLE_PREFIXES)
-    )
+    return path.startswith(SEARCHABLE_PREFIXES) and ".." not in path.split("/")
 
 
 def bound_search_index(entries: list[object]) -> list[dict[str, str]]:
@@ -43,7 +41,12 @@ def bound_search_index(entries: list[object]) -> list[dict[str, str]]:
             )
         if _searchable_route(entry["href"]):
             text = re.sub(r"\s+", " ", SKIP_LINK_TEXT_RE.sub(" ", entry["text"])).strip()
-            result.append({**entry, "text": text[:MAX_SEARCH_TEXT_CHARS].rstrip()})
+            if len(text) > MAX_SEARCH_TEXT_CHARS:
+                head = MAX_SEARCH_TEXT_CHARS // 3
+                text = (
+                    text[:head].rstrip() + " " + text[-MAX_SEARCH_TEXT_CHARS + head + 1 :].lstrip()
+                )
+            result.append({**entry, "text": text})
     if not result:
         raise ValueError("search index contains no article or book entries")
     return result
@@ -102,8 +105,7 @@ def process_site(site_dir: Path) -> bool:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--site-dir", type=Path, default=Path("_site"))
-    args = parser.parse_args(argv)
-    process_site(args.site_dir)
+    process_site(parser.parse_args(argv).site_dir)
     return 0
 
 
