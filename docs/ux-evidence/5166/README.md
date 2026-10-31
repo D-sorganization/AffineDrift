@@ -42,6 +42,6 @@ benchmark.
 | ch03, before | 61ch | 47 / 198 | 74 | 79 |
 | ch03, after | 55ch | 47 / 216 | 67 | 70 |
 
-Both after medians are within the requested 65–71 character band. Existing
-screenshots above predate this width correction and should not be treated as
-screenshots of the updated 55ch layout.
+Both after medians are within the requested 65–71 character band. The screenshots
+above show the updated 55ch layout captured from the live DOM with the follow-up
+CSS injected; they are not local Quarto branch renders.
