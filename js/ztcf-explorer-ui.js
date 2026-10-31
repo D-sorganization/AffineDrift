@@ -12,7 +12,9 @@
   const TABLE_EVERY = 10;
   const {q0, qd0, torque, horizon, steps} = ZE.DEFAULTS;
   const model = ZE.makeModel(ZE.DEFAULTS.params);
+  const PARAMS = Object.freeze(['interventionStep']);
   let run = null;
+  let current = null;
 
   function status(message, valid) {
     const element = byId('ztx-status');
@@ -99,6 +101,23 @@
     }).join('');
   }
 
+  /** Frozen snapshot of what the widget currently shows, as displayed numbers. */
+  function snapshot(step) {
+    return Object.freeze({
+      interventionStep: step,
+      interventionTime: Number(format(run.actual[step].t)),
+      speedActual: Number(format(run.actual[steps].speed)),
+      speedBranch: Number(format(run.branch[run.branch.length - 1].speed)),
+      speedDifference: Number(format(run.difference.clubheadSpeed)),
+      dq: Object.freeze(run.difference.q.map(value => Number(format(value)))),
+    });
+  }
+
+  function announce(state) {
+    byId('ztx-readout').textContent = `Intervention at t = ${format(state.interventionTime)} s: `
+      + `run minus zero-torque branch is ${format(state.speedDifference)} m/s at the horizon.`;
+  }
+
   function update() {
     try {
       const step = Number(byId('ztx-step').value);
@@ -107,11 +126,35 @@
       drawScene(step);
       drawChart(step);
       renderResults();
+      current = snapshot(step);
+      announce(current);
       status('Computed in your browser by the checked mirror of '
         + 'src/affine_control/ztcf_explorer.py.', true);
     } catch (error) {
       status(`${error.message}. Showing the last valid result.`, false);
     }
+  }
+
+  /** Precondition: name is a declared parameter and value an integer sample index. */
+  function setParam(name, value) {
+    if (!PARAMS.includes(name)) throw new Error(`[ztcf-explorer] unknown parameter "${name}"`);
+    if (!Number.isInteger(value) || value < 0 || value >= steps) {
+      throw new Error(`[ztcf-explorer] ${name} must be an integer in [0, ${steps - 1}]`);
+    }
+    byId('ztx-step').value = String(value);
+    update();
+    return current;
+  }
+
+  /** Moves the intervention by delta samples, clamped to the slider range. */
+  function step(delta = 1) {
+    const target = Number(byId('ztx-step').value) + delta;
+    return setParam('interventionStep', Math.min(steps - 1, Math.max(0, target)));
+  }
+
+  function register() {
+    const registry = window.AffineDriftWidgets || (window.AffineDriftWidgets = {});
+    registry['ztcf-explorer'] = Object.freeze({getState: () => current, setParam, step});
   }
 
   function boot() {
@@ -121,6 +164,7 @@
     performance.mark('ztx-boot');
     byId('ztx-step').addEventListener('input', update);
     update();
+    register();
     app.dataset.widgetReady = 'true';
     performance.mark('ztx-ready');
   }
