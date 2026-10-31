@@ -40,6 +40,17 @@ _FORBIDDEN_AUTHORITY_PHRASES = (
 )
 
 
+class ReachabilityIllConditionedError(RuntimeError):
+    """Raised when a controllability Gramian or drift Jacobian is ill-conditioned."""
+
+
+def reject_forbidden_protocol_phrases(text: str) -> None:
+    """Reject protocol prose that exceeds the declared authority boundary."""
+    lowered = text.casefold()
+    if any(phrase in lowered for phrase in _FORBIDDEN_AUTHORITY_PHRASES):
+        raise ValueError("protocol text exceeds the authority boundary")
+
+
 def _require_text(value: str, label: str) -> None:
     """Reject an empty or whitespace-only declaration field."""
     if not value.strip():

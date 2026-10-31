@@ -10,7 +10,7 @@
  */
 
 const GITHUB_REPO = "D-sorganization/AffineDrift";
-const FALLBACK_EMAIL = "dieterolson@gmail.com";
+const FALLBACK_EMAIL = "dashboard@affinedrift.com";
 const MANIFEST_URL = "/public-site-manifest.json";
 const UNKNOWN_REVISION = "unknown";
 

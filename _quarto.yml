@@ -3,6 +3,8 @@ project:
   output-dir: _site
   post-render:
     - python3 scripts/post_render_citations.py
+    # UX slice 2 (#5165): dedupe theme CSS, defer head scripts, prune scholar bloat.
+    - python3 scripts/post_render_page_performance.py
     # Moves the static skip link ahead of the navbar (#4566); Quarto places
     # include-before-body content inside <main>.
     - python3 scripts/move_skip_link.py
@@ -361,6 +363,7 @@ bibliography:
   - references/forward-dynamics-matching.bib
   - references/impact-acoustics.bib
   - references/null-space-exploration.bib
+  - references/slack-takeup-witness.bib
   - references/proximal-distal-energy.bib
   - articles/The_Physics_of_Golf/golf_physics.bib
   - articles/The_Geometry_of_Motion/geometry_of_motion.bib
@@ -372,7 +375,7 @@ citation: true
 
 format:
   html:
-    google-scholar: true
+    google-scholar: false
     theme:
       light: [cosmo, custom.scss]
       dark: [darkly, custom.scss]
@@ -380,6 +383,7 @@ format:
       - styles.css
       - css/search-metrics.css
     filters:
+      - scripts/filters/title-fallback.lua
       - scripts/filters/page-header-card.lua
       - scripts/filters/summary-takeaways.lua
       - scripts/filters/laymans-terms.lua

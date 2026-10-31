@@ -120,6 +120,7 @@ def _should_scan_file(file_path: Path) -> bool:
         or "archive" in str(file_path)
         or "docs" in str(file_path)
         or "content" in str(file_path)
+        or "tests" in file_path.parts
         or "_templates" in str(file_path)
         or ".jules" in str(file_path)
         or file_path.name in SKIP_FILES

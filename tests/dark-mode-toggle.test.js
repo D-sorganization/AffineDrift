@@ -108,4 +108,50 @@ describe('dark-mode-toggle', () => {
     // Button falls back to document.body.
     expect(document.getElementById('theme-toggle')).not.toBeNull();
   });
+
+  describe('header placement and accessibility (#5167)', () => {
+    function mount(html, options) {
+      document.body.innerHTML = html;
+      const result = loadModule(options || { prefersDark: false });
+      document.dispatchEvent(new Event('DOMContentLoaded'));
+      return { btn: document.getElementById('theme-toggle'), ...result };
+    }
+
+    test('is a real button with a stable name and aria-pressed state', () => {
+      const { btn } = mount('<nav class="navbar"></nav>');
+      expect(btn.tagName).toBe('BUTTON');
+      expect(btn.getAttribute('type')).toBe('button');
+      expect(btn.getAttribute('aria-label')).toBe('Dark mode');
+      expect(btn.getAttribute('aria-pressed')).toBe('false');
+      expect(btn.querySelector('svg')).not.toBeNull();
+
+      btn.click();
+      expect(btn.getAttribute('aria-pressed')).toBe('true');
+      expect(btn.getAttribute('aria-label')).toBe('Dark mode');
+    });
+
+    test('reflects a stored dark preference in aria-pressed on load', () => {
+      localStorage.setItem('affinedrift-theme', 'dark');
+      const { btn } = mount('<nav class="navbar"></nav>');
+      expect(btn.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    test('sits in the navbar row next to the menu toggler', () => {
+      mount(
+        '<nav class="navbar"><div class="navbar-container">' +
+          '<button class="navbar-toggler"></button></div></nav>'
+      );
+      // Earlier tests leave DOMContentLoaded listeners behind, so assert on the
+      // element adjacent to the toggler rather than the first #theme-toggle.
+      const toggler = document.querySelector('.navbar-toggler');
+      expect(toggler.previousElementSibling.id).toBe('theme-toggle');
+    });
+
+    test('OS preference change refreshes aria-pressed', () => {
+      const { btn, changeHandlers } = mount('<nav class="navbar"></nav>');
+      localStorage.clear();
+      changeHandlers[0]({ matches: true });
+      expect(btn.getAttribute('aria-pressed')).toBe('true');
+    });
+  });
 });

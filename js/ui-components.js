@@ -5,6 +5,8 @@
 
 import { debounce, CRITICS_CORNER_PADDING_OFFSET, MATHJAX_RENDER_DELAY_MS } from "./utils.js";
 
+export { initFadeAnimations } from "./section-fade.js";
+
 const SCROLL_THRESHOLD = 300;
 
 // ⚡ Bolt Optimization: Batch scroll event listeners to prevent layout thrashing
@@ -45,67 +47,6 @@ function prefersReducedMotion() {
         typeof window.matchMedia === "function" &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches
     );
-}
-
-/**
- * Initialize fade-in animations for sections
- */
-export function initFadeAnimations() {
-    const NAV_BREAKPOINT = 768;
-    const isMobile = window.innerWidth <= NAV_BREAKPOINT;
-    const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (!isMobile && !prefersReducedMotion) {
-        // Long textbook sections may never fit 10% of their area in a viewport.
-        // Reveal on any intersection, including anchors into nested subsections.
-        const observerOptions = { threshold: 0, rootMargin: "0px 0px 0px 0px" };
-        const observer = new IntersectionObserver(function (entries) {
-            for (const entry of entries) {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = "1";
-                    entry.target.style.transform = "translateY(0)";
-                    observer.unobserve(entry.target);
-                }
-            }
-        }, observerOptions);
-
-        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1)) and manual filtering instead of global querySelectorAll (O(N))
-        const allSections = document.getElementsByTagName("section");
-        const animationStates = [];
-
-        // ⚡ Bolt Optimization: Batch DOM reads (getBoundingClientRect) and writes (style changes) to prevent Layout Thrashing
-        for (const section of allSections) {
-            if (!section.classList.contains("page-header") && !section.classList.contains("article-section")) {
-                animationStates.push({
-                    section,
-                    top: section.getBoundingClientRect().top
-                });
-            }
-        }
-
-        const windowHeight = window.innerHeight;
-        for (const { section, top } of animationStates) {
-            if (top > windowHeight) {
-                section.style.opacity = "0";
-                section.style.transform = "translateY(20px)";
-                section.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-                observer.observe(section);
-            } else {
-                section.style.opacity = "1";
-                section.style.transform = "translateY(0)";
-            }
-        }
-    } else {
-        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
-        const allSections = document.getElementsByTagName("section");
-        for (const section of allSections) {
-            section.style.opacity = "1";
-            section.style.transform = "translateY(0)";
-            section.style.visibility = "visible";
-        }
-    }
 }
 
 /**

@@ -50,10 +50,10 @@ SECTION_IDS = [
 ]
 PR_NUMBERS = ("13475", "13470", "13467", "13493")
 PINNED_HEADS = {
-    "13475": "c90dd9f43ad474c63ff9c17657cecc8b45a1624c",
-    "13470": "7b0edf463100cf55efc38132a08fedd5e8a40c36",
-    "13467": "cc0ec85463b942ca295f774e5f7cd45da36c0677",
-    "13493": "6706d3aac623bd6977cab970de81c222787bdb45",
+    "13475": "eb00e09690917b0e1200f98e519f12b13c7d6d20",
+    "13470": "dbd723793fbdeee3ef290ad0848c481f99578f8a",
+    "13467": "43911da1b429287407d11d2c0d947e9c856e169c",
+    "13493": "ed446ef480147110cc2d3058b707525507f4cb86",
 }
 ROUTE = "/articles/after-one-solution-null-space-exploration.html"
 NEGLIGIBLE = 1e-9  # LP and rounding noise in examples.json that the article quotes as zero.
@@ -340,7 +340,7 @@ BINDING_PATTERNS = {
     "inertia metric is not Gauss": r"Gauss's principle",
     "conventions not physiology": r"conventions?[^.]*not[^.]*physiolog",
     "declared measure": r"declared measure",
-    "under review": r"under review",
+    "under review": r"merged companion commits",
     "corrector is not the nearest point": r"nearest-point",
     "quadratic tangent residual": r"O\(h\^2\)",
 }
@@ -492,9 +492,9 @@ def test_upstreamdrift_section_marks_code_under_review_without_pinning() -> None
         assert f"/pull/{number}" in section, number
     assert "12593" in section
     assert "after_one_solution.md" in section
-    assert "under review" in section and "draft" in section
-    assert "may change" in section, "the page must still say the code may change"
-    # AD-4 (#5097) pins the four draft-PR heads; any other 40-hex string stays forbidden.
+    assert "merged" in section and "pinned" in section
+    assert "may change" not in section, "the page must cite stable merged revisions"
+    # AD-5 (#5098) pins the four merged commit heads; any other 40-hex string stays forbidden.
     assert set(re.findall(r"\b[0-9a-f]{40}\b", text)) == set(PINNED_HEADS.values())
     before_section = text[: text.index("{#sec-upstreamdrift}")]
     assert not re.search(r"UpstreamDrift/(blob|tree|commit)/", before_section)
@@ -612,11 +612,15 @@ def test_pins_json_registers_each_head_as_review_required_for_this_route() -> No
     by_commit = {pin["commit"]: pin for pin in pins}
     for number, sha in PINNED_HEADS.items():
         pin = by_commit[sha]
-        assert pin["state"] == "review-required", sha
-        assert pin["last_reviewed"] is None and pin["review_due"] is None, sha
+        assert pin["state"] == "pinned", sha
+        assert (
+            pin["last_reviewed"] is not None
+            and pin["review_due"] is not None
+            and pin["review_due"] > pin["last_reviewed"]
+        ), sha
         assert ROUTE in pin["routes"], sha
-        assert f"#{number}" in pin["note"] and "draft" in pin["note"], sha
-        assert "not yet reviewed" in pin["note"], sha
+        assert f"#{number}" in pin["note"] and "merged" in pin["note"], sha
+        assert "Reviewed merged commit" in pin["note"], sha
 
 
 def test_freshness_dashboard_lists_the_pinned_heads() -> None:
@@ -685,3 +689,7 @@ def test_notation_defines_jacobian_pseudo_inverse_projector_and_basis_with_metri
     for token in ("J^+", "P_W", "ker", "metric", "Euclidean", "basis", "Z", "N"):
         assert token in section, token
     assert "not unique" in section
+
+
+def test_article_does_not_describe_companion_as_draft() -> None:
+    assert "draft pull requests" not in _text()
