@@ -351,12 +351,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5166
 - **Branch:** claude/ad-5166-1
-- **PR:** #5235, #5272
+- **PR:** #5235, #5272, #5280
 - **Paths:** see #5235
 - **Started:** 2026-10-29
-- **Last verified:** 2026-10-31 (`1dba1a37`; collated from changes/5166-apply-shared-typography-tokens-to-render.md)
+- **Last verified:** 2026-10-31 (`0599ad10`; collated from changes/5166-measured-page-reading-width-follow-up.md)
 - **Summary:** UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens
-- **Next step:** Merge the typography follow-up PR.
+- **Next step:** Validate the focused typography correction.
 
 ### DL-#5180 · Tangent-Space Review PR A: Affine Hub/Book Summaries and Volume I Chapter Read Links
 
