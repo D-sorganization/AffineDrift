@@ -53,6 +53,25 @@ def test_phone_header_drops_vertical_padding_and_keeps_one_row() -> None:
     )
 
 
+def test_phone_search_button_fits_in_the_primary_header_row() -> None:
+    header_css = HEADER_CSS.read_text(encoding="utf-8")
+    phone = re.search(PHONE_MEDIA, header_css, re.S)
+    assert phone, "phone media block missing in header-nav.css"
+    block = phone.group(1)
+    search = re.search(r"#quarto-header \.navbar-container #quarto-search \{([^}]+)\}", block, re.S)
+    assert search, "search container must get a compact phone rule"
+    assert re.search(r"flex:\s*0 0 44px", search.group(1))
+    assert re.search(r"min-width:\s*44px", search.group(1))
+    button = re.search(
+        r"#quarto-header #quarto-search \.aa-DetachedSearchButton \{([^}]+)\}",
+        block,
+        re.S,
+    )
+    assert button, "search button must have a compact phone rule"
+    assert re.search(r"width:\s*44px", button.group(1))
+    assert re.search(r"min-width:\s*44px", button.group(1))
+
+
 def test_page_header_card_is_not_a_landmark_region() -> None:
     lua = HEADER_LUA.read_text(encoding="utf-8")
     assert '<header class="page-header-card"' in lua
