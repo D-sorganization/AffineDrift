@@ -82,7 +82,7 @@ test.describe("Search Functionality", () => {
     }
   });
 
-  test("finds the version-pinned proximal-distal technical monograph", async ({
+  test("finds the proximal-distal energy transfer article", async ({
     page,
   }) => {
     await page.goto("/");
@@ -98,10 +98,10 @@ test.describe("Search Functionality", () => {
     await expect(searchInput).toBeVisible();
     await searchInput.fill("proximal distal energy transfer");
 
-    const monographResult = page
-      .locator('a[href*="articles/proximal_distal_energy_transfer/index.html"]')
+    const articleResult = page
+      .locator('a[href*="articles/proximal-distal-energy-transfer.html"]')
       .first();
-    await expect(monographResult).toBeVisible();
+    await expect(articleResult).toBeVisible();
   });
 
   // No page carries a `status`/`maturity` front-matter field yet, so the
