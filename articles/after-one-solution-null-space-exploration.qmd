@@ -13,7 +13,7 @@ evidence-rung: "mathematical-identity"
 prerequisites:
   - "articles/null-space-constraint-jacobian.html"
 summary-plain: "Many sets of forces can make the same motion. Finding one of them does not say which one the body used. This page keeps the whole family of answers in view. It proves what they all agree on and what they do not. Small examples show when the family is empty, one point, or endless."
-abstract: "An inverse-dynamics balance A x = b in joint torques, constraint multipliers and grip forces generally has infinitely many solutions. The article treats the solution set as an affine fibre and proves seven propositions: affine completeness and emptiness, metric-dependent representatives, reduced-Hessian optimization, exact invariance of functionals, bounded leakage of approximate null bases, local solution-manifold continuation, and temporal containment of envelopes. Every quoted number is read from a shared example file produced by companion code. The companion code is under review in draft pull requests and nothing here is a result about a golfer."
+abstract: "An inverse-dynamics balance A x = b in joint torques, constraint multipliers and grip forces generally has infinitely many solutions. The article treats the solution set as an affine fibre and proves seven propositions: affine completeness and emptiness, metric-dependent representatives, reduced-Hessian optimization, exact invariance of functionals, bounded leakage of approximate null bases, local solution-manifold continuation, and temporal containment of envelopes. Every quoted number is read from a shared example file produced by companion code. The companion code is pinned to merged upstream revisions; nothing here is a result about a golfer."
 key-takeaways:
   - "A solved balance equation is one point of an affine fibre; the fibre, not the point, is the object to report."
   - "A functional of the allocation is exactly invariant on the fibre if and only if it lies in the row space of the balance matrix; a small numerical residual is a different, weaker statement."
@@ -28,7 +28,7 @@ caveats:
     - "Any property of a measured golfer, muscle activation, neural strategy or intent."
     - "Certification of an exact second-order friction cone: envelopes certify only the declared polygonal approximation."
     - "Coverage of a nonlinear solution set by continuation, or mixing of a finite sampling chain."
-  next-gate: "Review and merge of the UpstreamDrift companion pull requests, then comparison on a measured dataset with recorded provenance."
+  next-gate: "Compare the merged companion code against a measured dataset with recorded provenance."
 changes:
   - date: "2026-10-19"
     description: "Added the article on exploring dynamically equivalent force allocations with propositions P1 to P7 (#5096)."
@@ -70,7 +70,7 @@ Two cases need separating at the start. If $b$ is exact for the model, the fibre
 ::: {.callout-important}
 ## Status of the Companion Code
 
-The numerical companion code is under review. It is split across draft pull requests in UpstreamDrift, listed with their review status in @sec-upstreamdrift, and across two example modules in this repository. Nothing here depends on the review outcome for its mathematics: the propositions are proved on this page and the code only reproduces the small numbers.
+The numerical companion code is pinned to the merged commits listed in @sec-upstreamdrift and to two example modules in this repository. The propositions are proved on this page; the code reproduces the small numbers.
 :::
 
 ### Seven Propositions and Where They Sit
@@ -349,15 +349,15 @@ Chapters on the inverse problem and identifiability give the surrounding context
 
 ## Using It in UpstreamDrift {#sec-upstreamdrift}
 
-The `loop_nullspace` package in UpstreamDrift implements the workflow, and a mapping note in that repository (`docs/research/loop_nullspace/after_one_solution.md`) lists the same eleven sections against its API. **The companion code is under review.** It lives in draft pull requests, so names, signatures and numbers may change:
+The `loop_nullspace` package in UpstreamDrift implements the workflow, and its mapping note (`docs/research/loop_nullspace/after_one_solution.md`) lists the same eleven sections against its API. The four merged companion commits are pinned below.
 
-- NSE-UD-1: [UpstreamDrift #13475](https://github.com/D-sorganization/UpstreamDrift/pull/13475) (functional identifiability); pinned head [`c90dd9f4`](https://github.com/D-sorganization/UpstreamDrift/tree/c90dd9f43ad474c63ff9c17657cecc8b45a1624c);
-- NSE-UD-2: [UpstreamDrift #13470](https://github.com/D-sorganization/UpstreamDrift/pull/13470) (manifold continuation); pinned head [`7b0edf46`](https://github.com/D-sorganization/UpstreamDrift/tree/7b0edf463100cf55efc38132a08fedd5e8a40c36);
-- NSE-UD-3: [UpstreamDrift #13467](https://github.com/D-sorganization/UpstreamDrift/pull/13467) (activation fibre); pinned head [`cc0ec854`](https://github.com/D-sorganization/UpstreamDrift/tree/cc0ec85463b942ca295f774e5f7cd45da36c0677);
-- NSE-UD-4a: [UpstreamDrift #13493](https://github.com/D-sorganization/UpstreamDrift/pull/13493) (the mapping note); pinned head [`6706d3aa`](https://github.com/D-sorganization/UpstreamDrift/blob/6706d3aac623bd6977cab970de81c222787bdb45/docs/research/loop_nullspace/after_one_solution.md);
+- NSE-UD-1: [UpstreamDrift PR #13475](https://github.com/D-sorganization/UpstreamDrift/pull/13475) (functional identifiability, merged); pinned merge commit [`eb00e096`](https://github.com/D-sorganization/UpstreamDrift/tree/eb00e09690917b0e1200f98e519f12b13c7d6d20);
+- NSE-UD-2: [UpstreamDrift PR #13470](https://github.com/D-sorganization/UpstreamDrift/pull/13470) (manifold continuation, merged); pinned merge commit [`dbd72379`](https://github.com/D-sorganization/UpstreamDrift/tree/dbd723793fbdeee3ef290ad0848c481f99578f8a);
+- NSE-UD-3: [UpstreamDrift PR #13467](https://github.com/D-sorganization/UpstreamDrift/pull/13467) (activation fibre, merged); pinned merge commit [`43911da1`](https://github.com/D-sorganization/UpstreamDrift/tree/43911da1b429287407d11d2c0d947e9c856e169c);
+- NSE-UD-4a: [UpstreamDrift PR #13493](https://github.com/D-sorganization/UpstreamDrift/pull/13493) (the mapping note, merged); pinned merge commit [`ed446ef4`](https://github.com/D-sorganization/UpstreamDrift/tree/ed446ef480147110cc2d3058b707525507f4cb86);
 - the parent epic NSX: [UpstreamDrift #12593](https://github.com/D-sorganization/UpstreamDrift/issues/12593).
 
-Each pinned head is the tip of an open draft pull request in UpstreamDrift, registered in the site's companion-pin ledger as `review-required`: it has not yet been reviewed against the active pin, and the code under review may change before or after merge. The links identify the exact revisions this page was written against; they are not a statement that any of them is released or reviewed. This page does not claim that the package passes any publication gate. What the package certifies is what P1 to P7 and @sec-constraints say: envelopes hold for the declared polygonal cone approximation only, and a sample or a trace is coverage evidence, not a proof.
+The links identify the exact merged revisions this page cites. This page does not claim that the package passes any publication gate. What the package certifies is what P1 to P7 and @sec-constraints say: envelopes hold for the declared polygonal cone approximation only, and a sample or a trace is coverage evidence, not a proof.
 
 | Article section | API in `loop_nullspace` |
 |---|---|

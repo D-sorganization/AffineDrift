@@ -325,7 +325,7 @@ Part I: Geometric Foundations and Local Dynamics
 └─ Chapter 4: Residuals, Curvature, and Validity (Package 1, Article 04 + quantitative analysis)
 
 Part II: Integral Superposition and Transport
-├─ Chapter 5: Fundamentals of Integral Accumulation (Package 2, Article 01)
+├─ Chapter 5: Integrals Along a Fixed Trajectory (Package 2, Article 01)
 ├─ Chapter 6: Variational Dynamics and State Transition (Package 2, Article 02)
 ├─ Chapter 7: Physical Interpretations (Package 2, Article 03)
 └─ Chapter 8: Global Residuals and Error Analysis (Package 2, Article 04 + bounds)

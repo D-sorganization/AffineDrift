@@ -102,6 +102,16 @@ function resolveLabelFromClasses(element, rules, fallbackLabel) {
     return fallbackLabel;
 }
 
+/** Return `base`, or `base 2`, `base 3`... so landmark names stay unique (#5167). */
+function uniqueLabel(base, used) {
+    let label = base;
+    for (let n = 2; used.has(label); n += 1) {
+        label = `${base} ${n}`;
+    }
+    used.add(label);
+    return label;
+}
+
 function applyDefaultAriaLabel(element, label) {
     if (!element.hasAttribute("aria-label")) {
         element.setAttribute("aria-label", label);
@@ -141,11 +151,16 @@ export function initAriaLabels() {
 
     // Navigation elements
     const navElements = document.getElementsByTagName("nav");
+    const usedNavLabels = new Set();
     for (const nav of navElements) {
-        applyDefaultAriaLabel(
-            nav,
-            resolveLabelFromClasses(nav, NAV_LABEL_RULES, "Navigation")
-        );
+        if (nav.hasAttribute("aria-label")) {
+            usedNavLabels.add(nav.getAttribute("aria-label"));
+        }
+    }
+    for (const nav of navElements) {
+        if (nav.hasAttribute("aria-label")) continue;
+        const base = resolveLabelFromClasses(nav, NAV_LABEL_RULES, "Navigation");
+        nav.setAttribute("aria-label", uniqueLabel(base, usedNavLabels));
     }
 
     const quartoToc = document.getElementById("TOC");
@@ -335,12 +350,8 @@ export function initAriaLabels() {
         if (!mathBlock.hasAttribute("tabindex")) {
             mathBlock.setAttribute("tabindex", "0");
         }
-        if (!mathBlock.hasAttribute("role")) {
-            mathBlock.setAttribute("role", "region");
-        }
-        if (!mathBlock.hasAttribute("aria-label")) {
-            mathBlock.setAttribute("aria-label", "Mathematical equation");
-        }
+        // No role="region" / shared aria-label: dozens of identical landmarks
+        // fail landmark-unique and flood the landmark list (#5167).
     }
 }
 

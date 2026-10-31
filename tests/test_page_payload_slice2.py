@@ -5,9 +5,13 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
 import yaml
 
-from scripts.post_render_page_performance import process_html_head_performance
+from scripts.post_render_page_performance import (
+    defer_noncritical_head_scripts,
+    process_html_head_performance,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -115,3 +119,111 @@ class TestPostRenderHeadPerformance:
             len(line) for line in _head(out).splitlines() if 'name="citation_reference"' in line
         )
         assert meta_bytes < 5000
+
+    def test_handles_html_without_head_tag_gracefully(self) -> None:
+        """HTML lacking </head> must be left unchanged without raising (#5191)."""
+        html_without_head = '<div><p>Fragment without head tag</p><script src="site_libs/quarto-search/fuse.min.js"></script></div>'
+        out = process_html_head_performance(html_without_head)
+        assert out == html_without_head
+
+    def test_defer_noncritical_head_scripts_preserves_html_when_head_missing(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """defer_noncritical_head_scripts logs a warning and leaves content intact when </head> missing (#5191)."""
+        import logging
+
+        html_snippet = "<p>Simple body content</p>"
+        with caplog.at_level(logging.WARNING):
+            res = defer_noncritical_head_scripts(html_snippet)
+        assert res == html_snippet
+        assert any("</head>" in record.message for record in caplog.records)
+
+    def test_defer_noncritical_head_scripts_handles_case_insensitive_head(self) -> None:
+        """defer_noncritical_head_scripts matches </HEAD> case-insensitively and preserves closing tag (#5191)."""
+        html_upper = (
+            '<html><head><script src="site_libs/quarto-search/fuse.min.js"></script></HEAD>'
+            "<body>Content</body></html>"
+        )
+        res = defer_noncritical_head_scripts(html_upper)
+        assert 'src="site_libs/quarto-search/fuse.min.js" defer>' in res
+        assert "</HEAD>" in res
+
+    def test_deduplicates_duplicate_citation_reference_meta_tags(self) -> None:
+        """Theory Part 1 (#5190): duplicate citation_reference meta tags for the same title must be deduped."""
+        html = """<!DOCTYPE html><html><head>
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Kevin M. Lynch and Frank C. Park;,citation_publication_date=2017;">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch, Kevin M. and Park, Frank C.;,citation_publication_date=2017;">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch, K. M. and Park, F. C.;,citation_publication_date=2017;,citation_publisher=Cambridge University Press;">
+</head><body><div id="refs" class="references csl-bib-body"><div id="ref-lynch2017modern" class="csl-entry">Lynch, Kevin M. and Frank C. Park. 2017. <em>Modern Robotics: Mechanics, Planning, and Control</em>.</div></div></body></html>"""
+        out = process_html_head_performance(html)
+        assert _citation_reference_count(out) == 1
+        assert "citation_title=Modern Robotics: Mechanics, Planning, and Control" in out
+
+    def test_deduplicates_citation_reference_with_whitespace_and_punctuation_variants(
+        self,
+    ) -> None:
+        html = """<!DOCTYPE html><html><head>
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch;">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control.;,citation_author=Lynch;">
+<meta name="citation_reference" content="citation_title=  Modern  Robotics: Mechanics, Planning, and Control ;,citation_author=Lynch;">
+</head><body><div id="refs" class="references csl-bib-body"><div id="ref-1" class="csl-entry">Modern Robotics: Mechanics, Planning, and Control</div></div></body></html>"""
+        out = process_html_head_performance(html)
+        assert _citation_reference_count(out) == 1
+
+    def test_keeps_distinct_citation_references_while_deduplicating(self) -> None:
+        html = """<!DOCTYPE html><html><head>
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch 1;">
+<meta name="citation_reference" content="citation_title=Modern Robotics: Mechanics, Planning, and Control;,citation_author=Lynch 2;">
+<meta name="citation_reference" content="citation_title=A mathematical introduction to robotic manipulation;,citation_author=Murray 1;">
+<meta name="citation_reference" content="citation_title=A mathematical introduction to robotic manipulation;,citation_author=Murray 2;">
+<meta name="citation_reference" content="citation_title=Unrelated work;,citation_author=Nobody;">
+</head><body><div id="refs" class="references csl-bib-body">
+<div id="ref-lynch" class="csl-entry">Modern Robotics: Mechanics, Planning, and Control</div>
+<div id="ref-murray" class="csl-entry">A mathematical introduction to robotic manipulation</div>
+</div></body></html>"""
+        out = process_html_head_performance(html)
+        assert _citation_reference_count(out) == 2
+        assert "Modern Robotics" in out
+        assert "robotic manipulation" in out
+        assert "Unrelated work" not in out
+
+
+class TestPageContainerMinHeightCLS:
+    """Mobile article layout shift (CLS ~0.13) from inline min-height (#5211)."""
+
+    def test_quarto_theme_css_neutralizes_quarto_content_min_height(self) -> None:
+        css = (ROOT / "css" / "components" / "quarto-theme.css").read_text(encoding="utf-8")
+        match = re.search(r"#quarto-content[^{]*\{([^}]*)\}", css, re.DOTALL)
+        assert match, "Missing #quarto-content rule in css/components/quarto-theme.css"
+        block = match.group(1)
+        assert "min-height" in block and "!important" in block
+
+    def test_site_head_mobile_declares_quarto_content_min_height_auto(self) -> None:
+        head_html = (ROOT / "_includes" / "site-head.html").read_text(encoding="utf-8")
+        assert "min-height: auto !important;" in head_html
+
+    def test_strip_inline_page_container_min_height(self) -> None:
+        from scripts.post_render_page_performance import strip_inline_page_container_min_height
+
+        html_with_inline = '<div id="quarto-content" class="quarto-container" style="min-height: calc(100vh - 60px); color: red;"><p>Content</p></div>'
+        cleaned = strip_inline_page_container_min_height(html_with_inline)
+        assert "min-height" not in cleaned
+        assert "color: red" in cleaned
+        assert "quarto-content" in cleaned
+
+    def test_neutralize_nav_min_height(self, tmp_path: Path) -> None:
+        from scripts.post_render_page_performance import neutralize_nav_min_height
+
+        sample_nav = """
+        const mainContainer = window.document.querySelector(".quarto-container");
+        if (mainContainer) {
+          mainContainer.style.minHeight = "calc(100vh - " + bodyOffset + "px)";
+        }
+        """
+        nav_file = tmp_path / "quarto-nav.js"
+        nav_file.write_text(sample_nav, encoding="utf-8")
+        modified = neutralize_nav_min_height(nav_file)
+        assert modified is True
+        result = nav_file.read_text(encoding="utf-8")
+        assert 'mainContainer.style.minHeight = "calc' not in result
+        assert "neutralized for CLS" in result
