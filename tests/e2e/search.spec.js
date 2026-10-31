@@ -173,14 +173,13 @@ test.describe("Search Functionality", () => {
     const panel = page.locator(".aa-DetachedContainer .aa-Panel");
     await expect(panel).toBeVisible();
 
-    const geometry = await page.evaluate(() => {
-      const form = document.querySelector(".aa-DetachedFormContainer").getBoundingClientRect();
-      const panelRect = document.querySelector(".aa-DetachedContainer .aa-Panel").getBoundingClientRect();
-      return { formBottom: form.bottom, panelTop: panelRect.top, panelBottom: panelRect.bottom, width: panelRect.width };
-    });
-    expect(geometry.panelTop).toBeGreaterThanOrEqual(geometry.formBottom - 1);
-    expect(geometry.panelBottom).toBeGreaterThanOrEqual(811);
-    expect(geometry.width).toBeGreaterThanOrEqual(374);
+    const [form, panelBox] = await Promise.all([
+      page.locator(".aa-DetachedFormContainer").boundingBox(),
+      panel.boundingBox(),
+    ]);
+    expect(panelBox.y).toBeGreaterThanOrEqual(form.y + form.height - 1);
+    expect(panelBox.y + panelBox.height).toBeGreaterThanOrEqual(811);
+    expect(panelBox.width).toBeGreaterThanOrEqual(374);
 
     await page.keyboard.press("Escape");
     await expect(page.locator("body")).not.toHaveClass(/aa-Detached/);

@@ -16,7 +16,6 @@
     trigger.className = "aa-DetachedSearchButton";
     trigger.setAttribute("aria-label", "Search");
     trigger.setAttribute("aria-haspopup", "dialog");
-    trigger.title = "Search";
     trigger.textContent = "Search";
     fallbackTrigger = trigger;
     searchRoot.appendChild(trigger);

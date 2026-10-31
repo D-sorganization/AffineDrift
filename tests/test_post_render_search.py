@@ -1,5 +1,3 @@
-"""Generated search-index and lazy-runtime contracts (#5170)."""
-
 from __future__ import annotations
 
 import gzip
