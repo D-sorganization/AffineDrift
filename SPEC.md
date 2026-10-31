@@ -232,6 +232,21 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-31 | #5285 | Unblock Collate Change Fragments: drop the two re-added #5136 fragments and retarget the in-review slack take-up article fragment to #5284 (owner ruling, option a); Draft the Slack Take-Up as a Witness article (synthetic study, figures, Argon verification from PR #5140), revised with Feynman's prose pass and Karl's lay-review accuracy fixes; unpublished, do-not-merge pending the publication gate |
+| 2026-10-31 | #5278 | Measure passive RK4 energy drift in ztcf-explorer and drift-control-sandbox; keep RK4 in both, enforced by a headless Jest threshold test |
+| 2026-10-31 | #5283 | Expose the ZTCF explorer through a window.AffineDriftWidgets controller (getState/setParam/step) with a polite live readout, keyboard and axe e2e coverage |
+| 2026-10-31 | #5281 | Run the Cross-Browser Nightly failure reporter as `python3 -m scripts.report_e2e_browser_failures` so its `scripts.*` import resolves, with a test that flags any workflow running a `scripts.*` importer by path |
+| 2026-10-31 | #5265 | Bootstrap Python requirements before the nightly Quarto render |
+| 2026-10-31 | #5277 | Close-out: hub and book Ch.1 summaries match manuscript affine wording (#5188 area). |
+| 2026-10-31 | #5269 | Outline three humanoid launch series with rights and publication gates |
+| 2026-10-31 | #5268 | Document humanoid audiences and planning metadata contract with UX handoff |
+| 2026-10-31 | #5266 | Add phase-zero humanoid rights ledger with five pending artifact reviews and AMASS hold |
+| 2026-10-31 | #5267 | Record proposed humanoid expansion scope, upstream boundary and phase gates |
+| 2026-10-31 | #5276 | Reduce the site-search index, remove chrome text, rank the double-pendulum chapter, and fit the phone search panel to the viewport |
+| 2026-10-31 | #5271 | Home hero first, balanced hero column, figure capped near design size, hub prose capped to reading measure |
+| 2026-10-31 | #5273 | UX slice 5: compact article opening (title card, abstract, summary/takeaways/caveats cards) and a title-fallback filter for empty title headings |
+| 2026-10-31 | #5272 | Apply shared typography tokens to rendered pages and the Physics of Golf book; update the PDF dependency baseline. |
+| 2026-10-31 | #5275 | Bump pypdf to 6.21.4 to clear pip-audit CVE-2026-119203–119209 blocking CI.; Close-out: Volume I book chapter read links verified on main (#5188); no further content change. |
 | 2026-10-30 | #5261 | Specify and implement versioned, bounded #state= URL-hash state contract for dcr-visualizer (#5255) |
 | 2026-10-30 | #5260 | Draft JSON Schema and provenance field spec for asset_manifest.json (#5251) |
 | 2026-10-30 | #5259 | Measure 60-day AGENT_HANDOFF.md and _quarto.yml conflict frequency and recommend no-go on .agent/state split (#5250) |
