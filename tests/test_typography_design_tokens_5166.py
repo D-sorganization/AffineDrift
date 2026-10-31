@@ -23,7 +23,7 @@ SUMMARY_CSS = ROOT / "css" / "components" / "summary-takeaways.css"
 CUSTOM_SCSS = ROOT / "custom.scss"
 PHYSICS_BOOK_CONFIG = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "_quarto.yml"
 PHYSICS_BOOK_TYPOGRAPHY = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "typography.css"
-READING_WIDTHS_CSS = ROOT / "css" / "reading-widths.css"
+READING_WIDTHS_CSS = TYPOGRAPHY_CSS
 
 ROOT_FONT_PX = 16.0
 VIEWPORTS_PX = (375, 768, 1440)
