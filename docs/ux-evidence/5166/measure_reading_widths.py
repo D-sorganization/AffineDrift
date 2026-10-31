@@ -89,6 +89,7 @@ class DevTools:
     """Minimal synchronous Chrome DevTools Protocol client."""
 
     def __init__(self, websocket_url: str) -> None:
+        """Connect to a Chrome DevTools WebSocket endpoint."""
         self.connection = websocket.create_connection(
             websocket_url,
             timeout=90,
@@ -97,6 +98,7 @@ class DevTools:
         self.next_id = 0
 
     def call(self, method: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+        """Send one CDP command and return its result or raise its error."""
         self.next_id += 1
         request_id = self.next_id
         self.connection.send(
@@ -110,6 +112,7 @@ class DevTools:
                 return message.get("result", {})
 
     def evaluate(self, expression: str, *, await_promise: bool = False) -> Any:
+        """Evaluate JavaScript in the current page and return its value."""
         result = self.call(
             "Runtime.evaluate",
             {
@@ -143,6 +146,7 @@ def width_rules() -> str:
 
 
 def add_style(devtools: DevTools, css: str) -> None:
+    """Replace the measurement stylesheet in the current page."""
     script = (
         "(() => {let style=document.getElementById('ad5166-width-measure');"
         "if(!style){style=document.createElement('style');"
@@ -153,6 +157,7 @@ def add_style(devtools: DevTools, css: str) -> None:
 
 
 def collect(port: int) -> dict[str, Any]:
+    """Measure all configured pages using a local Chrome debugging port."""
     connection = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
     connection.request("PUT", "/json/new?about:blank")
     response = connection.getresponse()
@@ -203,6 +208,7 @@ def collect(port: int) -> dict[str, Any]:
 
 
 def main() -> None:
+    """Parse CLI options and print the rendered page measurements as JSON."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--chrome-port", type=int, default=9227)
     args = parser.parse_args()
