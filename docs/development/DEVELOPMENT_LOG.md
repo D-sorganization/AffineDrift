@@ -761,10 +761,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5167
 - **Branch:** merged via #5238
-- **PR:** #5238
+- **PR:** #5238, #5279
 - **Paths:** see #5238
 - **Started:** 2026-10-29
-- **Last verified:** 2026-10-29 (`2238eb2b`; collated from changes/5167-ux-slice-4-labelled-in-header-theme-togg.md)
+- **Last verified:** 2026-10-31 (`94824961`; collated from changes/5167-phone-search-control-one-row.md)
 - **Summary:** UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast
 - **Next step:** Shipped in PR #5238.
 
