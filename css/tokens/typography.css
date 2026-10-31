@@ -112,8 +112,8 @@
 
   /* ========== Prose Width ========== */
 
-  /* Reading measure: 61ch lands near 68 real characters per line at 1440px
-     (measured on Theory Part 1 and ch03, #5166). Defined only here. */
+  /* Shared default stays within the site's 60–75ch reading-comfort rule.
+     The two measured #5166 pages override this token in their page CSS. */
   --prose-width: 61ch;
 
   /* ========== Text Transform ========== */
@@ -121,4 +121,9 @@
   --text-transform-lowercase: lowercase;
   --text-transform-capitalize: capitalize;
   --text-transform-none: none;
+}
+
+/* Match the measured 65–71 real-character target on Theory Part 1. */
+html:has(link[rel="canonical"][href$="/articles/theory-part1.html"]) {
+  --prose-width: 55ch;
 }
