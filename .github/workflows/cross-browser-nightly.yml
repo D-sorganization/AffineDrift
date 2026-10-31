@@ -132,7 +132,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 scripts/report_e2e_browser_failures.py \
+          python3 -m scripts.report_e2e_browser_failures \
             --report reports/playwright-report-firefox.json \
             --report reports/playwright-report-webkit.json \
             --repo "${{ github.repository }}" \

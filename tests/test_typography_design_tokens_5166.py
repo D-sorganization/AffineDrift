@@ -21,6 +21,8 @@ TYPOGRAPHY_CSS = ROOT / "css" / "tokens" / "typography.css"
 COLORS_CSS = ROOT / "css" / "tokens" / "colors.css"
 SUMMARY_CSS = ROOT / "css" / "components" / "summary-takeaways.css"
 CUSTOM_SCSS = ROOT / "custom.scss"
+PHYSICS_BOOK_CONFIG = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "_quarto.yml"
+PHYSICS_BOOK_TYPOGRAPHY = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "typography.css"
 
 ROOT_FONT_PX = 16.0
 VIEWPORTS_PX = (375, 768, 1440)
@@ -174,6 +176,47 @@ def test_base_heading_rules_consume_the_scale_tokens_at_every_width(styles: str)
     assert seen == {"h1": 1, "h2": 1, "h3": 1, "h4": 1}, seen
 
 
+def test_quarto_page_title_uses_the_h1_scale_token(styles: str) -> None:
+    for selectors, decls in parse_rules(styles):
+        if selectors == ["#title-block-header .title"]:
+            assert decls.get("font-size") == "var(--font-size-h1)", decls
+            return
+    pytest.fail("Quarto page title rule not found in styles.css")
+
+
+def test_physics_book_uses_the_shared_heading_tokens() -> None:
+    config = PHYSICS_BOOK_CONFIG.read_text(encoding="utf-8")
+    assert "typography.css" in config, "the book must load its typography overrides"
+
+    css = PHYSICS_BOOK_TYPOGRAPHY.read_text(encoding="utf-8")
+    assert '@import url("../../../css/tokens/typography.css")' in css
+    rules = parse_rules(css)
+    shared_family = next(
+        (
+            decls
+            for selectors, decls in rules
+            if all(f"h{level}" in selectors for level in range(1, 7))
+        ),
+        {},
+    )
+    assert shared_family.get("font-family") == "var(--font-family-heading)"
+    for level in range(1, 7):
+        heading_rule = next(
+            (
+                decls
+                for selectors, decls in rules
+                if f"h{level}" in selectors and f".h{level}" in selectors and "font-size" in decls
+            ),
+            {},
+        )
+        assert heading_rule.get("font-size") == f"var(--font-size-h{level})"
+    prose_rule = next(
+        (decls for selectors, decls in rules if selectors == ["#quarto-document-content p"]),
+        {},
+    )
+    assert prose_rule.get("max-width") == "var(--prose-width)"
+
+
 def test_summary_box_titles_sit_below_h4_on_the_scale(typography: str) -> None:
     css = SUMMARY_CSS.read_text(encoding="utf-8")
     sizes = [
@@ -241,7 +284,7 @@ def test_text_selectors_have_no_midword_break_policy() -> None:
 
 def test_prose_width_is_defined_once_at_the_reading_measure(typography: str, styles: str) -> None:
     """61-62ch lands near 68 real characters per line at 1440px (issue follow-up)."""
-    assert 61 <= int(re.fullmatch(r"(\d+)ch", token(typography, "--prose-width")).group(1)) <= 62
+    assert int(re.fullmatch(r"(\d+)ch", token(typography, "--prose-width")).group(1)) == 61
     assert "--prose-width:" not in strip_comments(styles)
 
 
@@ -253,3 +296,18 @@ def test_text_safe_status_colour_tokens_pass_aa() -> None:
         assert contrast_ratio(values[0], "#ffffff") >= WCAG_AA_TEXT
         for dark_value in values[1:]:
             assert contrast_ratio(dark_value, "#0d0d1a") >= WCAG_AA_TEXT
+
+
+def test_physics_book_toc_numbers_and_captions_use_text_color() -> None:
+    rules = parse_rules(PHYSICS_BOOK_TYPOGRAPHY.read_text(encoding="utf-8"))
+    text_safe_rule = next(
+        (
+            decls
+            for selectors, decls in rules
+            if ".header-section-number" in selectors
+            and "figcaption" in selectors
+            and ".figure-caption" in selectors
+        ),
+        {},
+    )
+    assert text_safe_rule.get("color") == "var(--text-primary)"
