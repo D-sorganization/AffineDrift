@@ -49,8 +49,12 @@
       script.src = `${base}site_libs/quarto-search/${file}`;
       script.async = false;
       script.dataset.lazySearchAsset = file;
-      script.onload = resolve;
-      script.onerror = () => reject(new Error(`Unable to load search asset: ${file}`));
+      script.addEventListener("load", resolve, { once: true });
+      script.addEventListener(
+        "error",
+        () => reject(new Error(`Unable to load search asset: ${file}`)),
+        { once: true },
+      );
       document.head.appendChild(script);
     });
   }
