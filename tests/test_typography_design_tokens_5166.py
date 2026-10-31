@@ -283,9 +283,25 @@ def test_text_selectors_have_no_midword_break_policy() -> None:
 
 
 def test_prose_width_is_defined_once_at_the_reading_measure(typography: str, styles: str) -> None:
-    """61-62ch lands near 68 real characters per line at 1440px (issue follow-up)."""
+    """The shared default stays in range; only target pages may override it."""
     assert int(re.fullmatch(r"(\d+)ch", token(typography, "--prose-width")).group(1)) == 61
-    assert "--prose-width:" not in strip_comments(styles)
+    assert not re.search(r":root\s*\{[^}]*--prose-width:", strip_comments(styles), re.S)
+
+
+def test_measured_pages_use_their_browser_verified_prose_measure(styles: str) -> None:
+    """The two pages measured for #5166 use the 55ch override, not a global change."""
+    book_css = PHYSICS_BOOK_TYPOGRAPHY.read_text(encoding="utf-8")
+    for title, stylesheet in (
+        ("Theory Series, Part 1", styles),
+        ("The Double Pendulum:", book_css),
+    ):
+        css = strip_comments(stylesheet)
+        selector = (
+            r'html:has\(meta\[property="og:title"\]'
+            rf'\[content\^="{re.escape(title)}"\]\)'
+            r"\s*\{\s*--prose-width:\s*55ch;\s*\}"
+        )
+        assert re.search(selector, css), f"missing 55ch reading-measure override for {title}"
 
 
 def test_text_safe_status_colour_tokens_pass_aa() -> None:
