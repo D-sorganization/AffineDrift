@@ -23,6 +23,7 @@ SUMMARY_CSS = ROOT / "css" / "components" / "summary-takeaways.css"
 CUSTOM_SCSS = ROOT / "custom.scss"
 PHYSICS_BOOK_CONFIG = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "_quarto.yml"
 PHYSICS_BOOK_TYPOGRAPHY = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "typography.css"
+READING_WIDTHS_CSS = TYPOGRAPHY_CSS
 
 ROOT_FONT_PX = 16.0
 VIEWPORTS_PX = (375, 768, 1440)
@@ -283,9 +284,25 @@ def test_text_selectors_have_no_midword_break_policy() -> None:
 
 
 def test_prose_width_is_defined_once_at_the_reading_measure(typography: str, styles: str) -> None:
-    """61-62ch lands near 68 real characters per line at 1440px (issue follow-up)."""
+    """The shared default stays in range; only target pages may override it."""
     assert int(re.fullmatch(r"(\d+)ch", token(typography, "--prose-width")).group(1)) == 61
-    assert "--prose-width:" not in strip_comments(styles)
+    assert not re.search(r":root\s*\{[^}]*--prose-width:", strip_comments(styles), re.S)
+
+
+def test_measured_pages_use_their_browser_verified_prose_measure(styles: str) -> None:
+    """The two pages measured for #5166 use the 55ch override, not a global change."""
+    book_css = PHYSICS_BOOK_TYPOGRAPHY.read_text(encoding="utf-8")
+    for route, stylesheet in (
+        ("/articles/theory-part1.html", READING_WIDTHS_CSS.read_text(encoding="utf-8")),
+        ("/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html", book_css),
+    ):
+        css = strip_comments(stylesheet)
+        selector = (
+            r'html:has\(link\[rel="canonical"\]'
+            rf'\[href\$="{re.escape(route)}"\]\)'
+            r"\s*\{\s*--prose-width:\s*55ch;\s*\}"
+        )
+        assert re.search(selector, css), f"missing 55ch reading-measure override for {route}"
 
 
 def test_text_safe_status_colour_tokens_pass_aa() -> None:
