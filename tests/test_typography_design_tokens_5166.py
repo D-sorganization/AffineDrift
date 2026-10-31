@@ -23,6 +23,7 @@ SUMMARY_CSS = ROOT / "css" / "components" / "summary-takeaways.css"
 CUSTOM_SCSS = ROOT / "custom.scss"
 PHYSICS_BOOK_CONFIG = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "_quarto.yml"
 PHYSICS_BOOK_TYPOGRAPHY = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "typography.css"
+READING_WIDTHS_CSS = ROOT / "css" / "reading-widths.css"
 
 ROOT_FONT_PX = 16.0
 VIEWPORTS_PX = (375, 768, 1440)
@@ -292,7 +293,7 @@ def test_measured_pages_use_their_browser_verified_prose_measure(styles: str) ->
     """The two pages measured for #5166 use the 55ch override, not a global change."""
     book_css = PHYSICS_BOOK_TYPOGRAPHY.read_text(encoding="utf-8")
     for title, stylesheet in (
-        ("Theory Series, Part 1", styles),
+        ("Theory Series, Part 1", READING_WIDTHS_CSS.read_text(encoding="utf-8")),
         ("The Double Pendulum:", book_css),
     ):
         css = strip_comments(stylesheet)
