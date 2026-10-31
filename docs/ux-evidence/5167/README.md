@@ -16,16 +16,17 @@ captures, not local Quarto renders.
 ## axe-core WCAG 2.x A/AA scans
 
 axe-core 4.10.3 ran after fonts settled at 375×812 and 1440×900, with each
-page scanned once using `origin/main` CSS and once using the PR CSS.
+page scanned once using `origin/main` CSS and once using the PR CSS. Tags
+included WCAG 2.0, 2.1, and 2.2 A/AA, including the 2.2 target-size rule.
 
 | Page | Viewport | Main passes / violations | PR passes / violations |
 | --- | --- | ---: | ---: |
-| Home | 375×812 | 27 / 0 | 27 / 0 |
-| Home | 1440×900 | 26 / 0 | 26 / 0 |
-| Theory Part 1 | 375×812 | 41 / 0 | 41 / 0 |
-| Theory Part 1 | 1440×900 | 40 / 0 | 40 / 0 |
-| Physics of Golf, ch03 | 375×812 | 28 / 0 | 28 / 0 |
-| Physics of Golf, ch03 | 1440×900 | 28 / 0 | 28 / 0 |
+| Home | 375×812 | 28 / 0 | 28 / 0 |
+| Home | 1440×900 | 27 / 0 | 27 / 0 |
+| Theory Part 1 | 375×812 | 42 / 0 | 42 / 0 |
+| Theory Part 1 | 1440×900 | 41 / 0 | 41 / 0 |
+| Physics of Golf, ch03 | 375×812 | 29 / 0 | 29 / 0 |
+| Physics of Golf, ch03 | 1440×900 | 29 / 0 | 29 / 0 |
 
 ## Remaining measurement
 
