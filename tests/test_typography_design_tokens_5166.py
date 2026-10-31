@@ -292,17 +292,17 @@ def test_prose_width_is_defined_once_at_the_reading_measure(typography: str, sty
 def test_measured_pages_use_their_browser_verified_prose_measure(styles: str) -> None:
     """The two pages measured for #5166 use the 55ch override, not a global change."""
     book_css = PHYSICS_BOOK_TYPOGRAPHY.read_text(encoding="utf-8")
-    for title, stylesheet in (
-        ("Theory Series, Part 1", READING_WIDTHS_CSS.read_text(encoding="utf-8")),
-        ("The Double Pendulum:", book_css),
+    for route, stylesheet in (
+        ("/articles/theory-part1.html", READING_WIDTHS_CSS.read_text(encoding="utf-8")),
+        ("/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html", book_css),
     ):
         css = strip_comments(stylesheet)
         selector = (
-            r'html:has\(meta\[property="og:title"\]'
-            rf'\[content\^="{re.escape(title)}"\]\)'
+            r'html:has\(link\[rel="canonical"\]'
+            rf'\[href\$="{re.escape(route)}"\]\)'
             r"\s*\{\s*--prose-width:\s*55ch;\s*\}"
         )
-        assert re.search(selector, css), f"missing 55ch reading-measure override for {title}"
+        assert re.search(selector, css), f"missing 55ch reading-measure override for {route}"
 
 
 def test_text_safe_status_colour_tokens_pass_aa() -> None:
