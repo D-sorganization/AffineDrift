@@ -612,6 +612,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5293 · Fence the GAAI Ci-Watch-and-Fix Skill in Project Rules and Collapse the Duplicated CI Watch Section (RM #2567).
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5293
+- **Branch:** merged via #5294
+- **PR:** #5294
+- **Paths:** see #5294
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`e1b3ff17`; collated from changes/5293-gaai-fence.md)
+- **Summary:** Fence the GAAI ci-watch-and-fix skill in project rules and collapse the duplicated CI Watch section (RM #2567).
+- **Next step:** Shipped in PR #5294.
+
 ### DL-#5289 · Docs: Root REVIEW.md With AffineDrift Review Rules (RM #2565 Rollout)
 
 - **State:** shipped
