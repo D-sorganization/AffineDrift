@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5300 · Conflict Disarm App Token Scoped to AffineDrift and Repository_Management With Contents Read, Pull-Requests Write and Issues Write
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5300
+- **Branch:** merged via #5303
+- **PR:** #5303
+- **Paths:** see #5303
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`8b156ea9`; collated from changes/5300-conflict-disarm-app-token-scoped-to-affi.md)
+- **Summary:** Conflict Disarm App token scoped to AffineDrift and Repository_Management with contents read, pull-requests write and issues write
+- **Next step:** Shipped in PR #5303.
+
 ### DL-#5166 · UX Slice 3: One Heading Face Token, Strict H1-H4 Scale, 1Rem Body Floor, No Mid-Word Breaks, Custom.Scss Mirrors Tokens
 
 - **State:** shipped
