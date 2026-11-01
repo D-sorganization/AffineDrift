@@ -20,7 +20,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/after-one-solution-null-space-exploration.html` | `articles/after-one-solution-null-space-exploration.qmd` | 9 |
 | `/articles/appendix-applications.html` | `articles/appendix-applications.qmd` | 1 |
 | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` | 1 |
-| `/articles/camera-vs-radar-launch-monitors/index.html` | `articles/camera-vs-radar-launch-monitors/index.qmd` | 2 |
 | `/articles/core-theses-registry.html` | `articles/core-theses-registry.qmd` | 14 |
 | `/articles/degrees-of-freedom-and-dimensionality.html` | `articles/degrees-of-freedom-and-dimensionality.qmd` | 1 |
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 7 |
@@ -81,6 +80,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 5 |
 | `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 8 |
 | `/articles/shot-pattern-analysis.html` | `articles/shot-pattern-analysis.qmd` | 13 |
+| `/articles/slack-takeup-identifiability.html` | `articles/slack-takeup-identifiability.qmd` | 8 |
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
 | `/articles/superposition.html` | `articles/superposition.qmd` | 4 |
@@ -312,7 +312,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-8de89596499b` | `/articles/after-one-solution-null-space-exploration.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f6e740c6e376` | `/articles/appendix-applications.html` | Reviewed | — | None | None | 0 |
 | `ad-route-3953a6c17747` | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | Reviewed | — | None | None | 0 |
-| `ad-route-7f2e47ba6deb` | `/articles/camera-vs-radar-launch-monitors/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-bdb06b93b8fa` | `/articles/core-theses-registry.html` | Reviewed | — | `ad-dcr-002`, `ad-decomp-001`, `ad-icc-001`, `ad-impact-001`, `ad-pds-001`, `ad-sas-001`, `ad-superpos-001`, `ad-tsc-001`, `ad-wuj-001`, `ad-ztcf-001`, `ad-zvcf-001` | None | 0 |
 | `ad-route-746e90148b98` | `/articles/degrees-of-freedom-and-dimensionality.html` | Reviewed | — | None | None | 0 |
 | `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 4 |
@@ -373,6 +372,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Reviewed | — | None | None | 7 |
 | `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 6 |
 | `ad-route-98afce2d9c4b` | `/articles/shot-pattern-analysis.html` | Reviewed | — | None | None | 0 |
+| `ad-route-49e059f4029d` | `/articles/slack-takeup-identifiability.html` | Reviewed | — | None | None | 0 |
 | `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |
 | `ad-route-0cd531e060c5` | `/articles/superposition.html` | Reviewed | — | None | None | 4 |
