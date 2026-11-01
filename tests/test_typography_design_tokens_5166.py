@@ -328,3 +328,35 @@ def test_physics_book_toc_numbers_and_captions_use_text_color() -> None:
         {},
     )
     assert text_safe_rule.get("color") == "var(--text-primary)"
+
+
+COMPONENT_HEADING_RULES: tuple[tuple[Path, str, str], ...] = (
+    (ROOT / "css" / "components" / "home-hero.css", ".home-hero h1", "--font-size-h1"),
+    (ROOT / "css" / "components" / "home-hero.css", ".pathway-card h3", "--font-size-h4"),
+    (
+        ROOT / "css" / "components" / "home-hero.css",
+        ".featured-works-grid .work-card h3",
+        "--font-size-h4",
+    ),
+    (ROOT / "css" / "components" / "where-next.css", ".where-next-title", "--font-size-h4"),
+    (
+        ROOT / "css" / "components" / "scientific-trust-panel.css",
+        ".scientific-trust-panel > h2",
+        "--font-size-h2",
+    ),
+    (
+        ROOT / "css" / "components" / "scientific-trust-panel.css",
+        ".scientific-trust-panel h3",
+        "--font-size-h3",
+    ),
+)
+
+
+@pytest.mark.parametrize(("path", "selector", "token_name"), COMPONENT_HEADING_RULES)
+def test_component_headings_use_the_shared_scale_tokens(
+    path: Path, selector: str, token_name: str
+) -> None:
+    rules = parse_rules(path.read_text(encoding="utf-8"))
+    match = next((decls for selectors, decls in rules if selector in selectors), None)
+    assert match is not None, f"{selector} not found in {path.name}"
+    assert match.get("font-size") == f"var({token_name})"

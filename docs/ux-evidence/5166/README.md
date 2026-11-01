@@ -24,6 +24,39 @@ Quarto could not render locally because its dotenv profile requires an absent
 - [768×1024](ch03-768.jpg)
 - [1440×900](ch03-1440.jpg)
 
+## axe-core WCAG 2.x A/AA scans
+
+axe-core 4.14.0 (via `@axe-core/playwright`) ran 2026-11-01 after
+`document.fonts.ready` on the live public site at 375×812 and 1440×900.
+Tags included WCAG 2.0, 2.1, and 2.2 A/AA. Reproduce with
+`node scripts/ux-evidence/5166/capture_axe.js` after `npm ci`.
+
+| Page | Viewport | Passes | Violations |
+| --- | --- | ---: | ---: |
+| Home | 375×812 | 27 | 0 |
+| Home | 1440×900 | 27 | 0 |
+| Theory Part 1 | 375×812 | 42 | 0 |
+| Theory Part 1 | 1440×900 | 41 | 0 |
+| Physics of Golf, ch03 | 375×812 | 29 | 0 |
+| Physics of Golf, ch03 | 1440×900 | 29 | 0 |
+
+## Lighthouse metrics (post-merge baseline)
+
+Typography tokens landed on production through #5235, #5272, and #5280. Each row
+below is one Lighthouse 12.8.2 navigation on 2026-11-01 against the live public
+site (typography slice already deployed). #5235 recorded before/after medians for
+the initial token rollout; this closeout re-confirms accessibility stays at 100
+on the three test pages.
+
+| Page | View | Perf | A11y | BP | SEO | FCP | LCP | TBT | CLS |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Home | Mobile | 98 | 100 | 100 | 100 | 1.7 s | 2.1 s | 20 ms | 0.021 |
+| Theory Part 1 | Mobile | 89 | 100 | 100 | 100 | 1.8 s | 2.6 s | 310 ms | 0.057 |
+| Physics of Golf ch03 | Mobile | 82 | 100 | 100 | 100 | 2.8 s | 3.4 s | 250 ms | 0.046 |
+| Home | Desktop | 100 | 100 | 100 | 100 | 0.4 s | 0.4 s | 0 ms | 0.041 |
+| Theory Part 1 | Desktop | 100 | 100 | 100 | 100 | 0.6 s | 0.6 s | 0 ms | 0.025 |
+| Physics of Golf ch03 | Desktop | 99 | 100 | 100 | 100 | 0.6 s | 0.7 s | 0 ms | 0.043 |
+
 ## 1440px reading measure follow-up
 
 The script requires the Python `websocket-client` package and headless Chrome.
