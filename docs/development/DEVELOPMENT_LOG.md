@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5301 · Cross-Browser Nightly Renders the Site Once in a Build-Site Job; the Firefox and Webkit Legs Download It Instead of Each Rendering Under a 45-Minute Timeout
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5301
+- **Branch:** merged via #5305
+- **PR:** #5305
+- **Paths:** see #5305
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`2785ee80`; collated from changes/5301-cross-browser-nightly-renders-the-site-o.md)
+- **Summary:** Cross-Browser Nightly renders the site once in a build-site job; the firefox and webkit legs download it instead of each rendering under a 45-minute timeout
+- **Next step:** Shipped in PR #5305.
+
 ### DL-#5300 · Conflict Disarm App Token Scoped to AffineDrift and Repository_Management With Contents Read, Pull-Requests Write and Issues Write
 
 - **State:** shipped
