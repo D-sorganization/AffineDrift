@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-01 | #5290 | docs: root REVIEW.md with AffineDrift review rules (RM #2565 rollout) |
 | 2026-10-31 | #5279 | Keep the phone search control in the single-row navigation header |
 | 2026-10-31 | #5280 | Meet the measured reading-width target on Theory Part 1 and chapter 3. |
 | 2026-10-31 | #5285 | Unblock Collate Change Fragments: drop the two re-added #5136 fragments and retarget the in-review slack take-up article fragment to #5284 (owner ruling, option a); Draft the Slack Take-Up as a Witness article (synthetic study, figures, Argon verification from PR #5140), revised with Feynman's prose pass and Karl's lay-review accuracy fixes; unpublished, do-not-merge pending the publication gate |

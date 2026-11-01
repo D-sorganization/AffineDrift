@@ -612,6 +612,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5289 · Docs: Root REVIEW.md With AffineDrift Review Rules (RM #2565 Rollout)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5289
+- **Branch:** merged via #5290
+- **PR:** #5290
+- **Paths:** see #5290
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`ae2229f5`; collated from changes/5289-review-md.md)
+- **Summary:** docs: root REVIEW.md with AffineDrift review rules (RM #2565 rollout)
+- **Next step:** Shipped in PR #5290.
+
 ### DL-#5282 · Unblock Collate Change Fragments: Drop the Two Re-Added #5136 Fragments and Retarget the In-Review Slack Take-Up Article Fragment to #5284 (Owner Ruling, Option A)
 
 - **State:** shipped
