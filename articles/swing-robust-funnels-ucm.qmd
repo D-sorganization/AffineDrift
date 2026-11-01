@@ -1,0 +1,234 @@
+---
+title: "A Swing Can't Be Stable, but It Can Be Robust"
+subtitle: "Funnels, Helpful Covariance, and Speed–Face Decoupling in the Last 150 ms"
+description: "Finite-time funneling, helpful covariance, and a falsifiable speed–face correlation at impact; planar #5187 example illustrates, not tests, face on SO(3)."
+author: "Dieter Olson"
+date: "Date unverified"
+date-source: "unverified"
+date-modified: "2026-10-25"
+last-reviewed: "2026-10-25"
+canonical: "/articles/swing-robust-funnels-ucm.html"
+status: "experimental"
+audience-level: "research"
+evidence-rung: "mathematical-identity"
+prerequisites:
+  - "articles/tangent-hyperplanes-series/part-2-dynamics.html"
+  - "articles/tangent-hyperplanes-series/part-6-hybrid.html"
+  - "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html"
+summary-plain: "A downswing is not Lyapunov stable; it can still funnel errors before impact. This draft states a testable speed–face decoupling claim in covariance form and separates what a planar 3DOF example proves from what it only illustrates."
+abstract: "Asymptotic stability belongs to closed-loop motion, not to a single forward transient. For golf, the operative question is finite-time growth of state increments by impact and whether scatter piles into task-null directions. Dieter's speed–face decoupling idea is restated as the correlation of speed and face errors at the impact event under a declared perturbation covariance, using event-time-corrected sensitivity maps. The planar triple-pendulum worked example tied to AffineDrift #5187 is mandatory for Φ, FTLE, cross-engine Jacobians, and Monte Carlo checks on linear outcome covariance; it does not test face orientation on SO(3). A minimum 3D model with pronation, wrist degrees of freedom, and a face chart is deferred to #5186."
+key-takeaways:
+  - "Forward dynamics over one downswing do not admit an attracting set; robustness is finite-horizon funneling and helpful covariance, not Lyapunov stability."
+  - "The primary falsifiable claim is |ρ(δv, δφ)| at impact, with ρ the Σ-metric cosine of speed and face gradients under event-time-corrected Φ; compare skilled groups to an isotropic or shuffled Σ₀ null."
+  - "At fixed clock time, face depends mainly on q and speed on q̇, so block orthogonality is expected; real coupling runs through impact timing and the event-time Jacobian."
+  - "The #5187 planar model illustrates sensitivity machinery and where linear Σ_y fails; Monte Carlo against linear propagation is required, not optional."
+  - "A face-angle test needs a 3D chain, wrist DOFs, SO(3) face chart, and event-time Jacobians at contact (#5186 or follow-up)."
+caveats:
+  evidence-level: "Theory and declared simulation protocol; no new golfer measurements in this draft"
+  establishes:
+    - "Definitions of finite-time sensitivity, outcome covariance, Σ-metric speed–face correlation, and the block-orthogonality timing trap."
+    - "Scope split between #5187 illustration and the minimum model capabilities required for a real face test."
+  does-not-establish:
+    - "That skilled golfers show smaller |ρ| than less-skilled golfers, or any human effect size."
+    - "That a planar path or lean proxy equals face angle, or that σ_max ≈ 124 is reviewed fleet truth."
+  next-gate: "Karl (lay readability), Feynman (prose), panel, Fleet-Critic, Dieter; label do-not-merge until sign-off."
+changes:
+  - date: "2026-10-25"
+    description: "First full draft for publication gate (Refs #5187, #5180)."
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+categories:
+  - theory-core
+  - motor-control
+series: "Tangent-Space Series"
+bibliography:
+  - ../references/affine-drift.bib
+  - ../references/null-space-exploration.bib
+  - ../references/proximal-distal-energy.bib
+  - ../references/swing-robust-funnels.bib
+---
+
+::: {.callout-note}
+## In Layman's Terms
+
+A golf swing is over in a third of a second. That is too fast for the brain to steer the club through impact the way you steer a car. What good players may have instead is a motion planned earlier, with wrists and arms set so that small wobbles in the body cancel before they reach the ball—or land in directions that barely change speed and face together. This page names that idea in maths, states one sharp test about whether speed and face errors stay uncorrelated at impact, and is honest about what a simple computer model can and cannot prove.
+:::
+
+::: {.callout-important}
+## Thesis and Scope
+
+**Dynamics claim (established in prior AffineDrift material, recapped here).** A downswing is a one-shot transient. Without sustained feedback, asymptotic stability concepts do not apply over a horizon of order one local Lyapunov time. Robustness means a *finite-time funnel*: increments that may grow in some directions are steered, by nominal motion and passive impedance, so that task-relevant outcome scatter stays small.
+
+**Falsifiable hypothesis (not yet tested here).** Let $v$ be clubhead speed and $\phi$ a declared face-angle chart at the *impact event* $t_e$. Perturb the pre-impact state with covariance $\Sigma_0$. Propagate with the event-time-corrected state-transition map $\Phi_e$ to $\Sigma_e = \Phi_e \Sigma_0 \Phi_e^{\mathsf T}$. Define task gradients $\nabla v$ and $\nabla \phi$ at $t_e$ (full state $(q,\dot q)$, event-time Jacobian). The **Σ-metric cosine**
+
+$$
+\cos_\Sigma \theta = \frac{\nabla v^{\mathsf T} \Sigma_e \nabla \phi}{\|\nabla v\|_\Sigma \|\nabla \phi\|_\Sigma}
+$$
+
+equals the correlation $\rho(\delta v, \delta \phi)$ of first-order speed and face errors under $\Sigma_e$. **Prediction:** $|\rho|$ is smaller in skilled golfers than in less-skilled golfers, with $\sigma_v$, $\sigma_\phi$, and protocol preregistered; falsified if the gap vanishes against a structural null that keeps the same model but uses isotropic or column-shuffled $\Sigma_0$ (so that only $\Sigma_0$ shape, not scale, is tested).
+
+**Proves versus illustrates (#5187).** The planar 3DOF worked example *proves* (within its model) statements about $\Phi$, FTLE, $\varepsilon^2$ residual scaling, cross-engine Jacobians, event-time versus fixed-time maps, and agreement between linear $\Sigma_y$ and Monte Carlo spread. It *illustrates only* funnel language and timing sensitivity; it does **not** test $\phi$ on SO(3) or Dieter's skill-group prediction. In-plane “direction” outputs are path or lean proxies, never face angle.
+
+**Mechanism-only diagnostic.** The mass-matrix cosine on velocity blocks, $\cos_M \theta$ built from $M^{-1}$, asks whether the generalized impulse that most efficiently changes speed also rotates face; report it beside $\rho$, not as the skill test.
+
+**Windowed report.** Plot $\rho(t)$ or $\cos_\Sigma\theta(t)$ over the last 150 ms aligned to impact; Morrison et al. found orientation variability controlled more early in the downswing [@morrison2016].
+:::
+
+## Introduction {#sec-intro}
+
+AffineDrift already treats downswings as **increment dynamics**: a nominal trajectory $\bar x(t)$, variational equation $\dot\Phi = A(t)\Phi$, and affine propagation $\delta x(t) = \Phi(t,t_0)\delta x_0$ for small perturbations in a fixed contact mode ([Part 2](../articles/tangent-hyperplanes-series/part-2-dynamics.html)). Hybrid impact adds an event-time correction and saltation when the guard is transverse ([Part 6](../articles/tangent-hyperplanes-series/part-6-hybrid.html)). This article connects that machinery to motor abundance [@scholz1999ucm], goal-equivalent manifolds [@cusumano2006gem], and golf-specific Jacobian structure already computed in [Transmission Robustness](../articles/proximal_distal_energy_transfer/index.html#sec-transmission-robustness), [Proximal–Distal Energy Transfer](../articles/proximal-distal-energy-transfer.html), and [Constraint Torques at the Wrist](../articles/wrist-universal-joint.html).
+
+Parent review: [AffineDrift #5180](https://github.com/D-sorganization/AffineDrift/issues/5180). Worked example delivery: [#5187](https://github.com/D-sorganization/AffineDrift/issues/5187). Lie-group face chart: [#5186](https://github.com/D-sorganization/AffineDrift/issues/5186). Part 4 finite-horizon bound quotes await [#5184](https://github.com/D-sorganization/AffineDrift/issues/5184).
+
+## Why “Stable” Is the Wrong Word {#sec-stability}
+
+Lyapunov stability asks whether trajectories that start near a reference still converge to it as $t\to\infty$. A downswing ends at impact in roughly 250–350 ms—far below any correction loop that could enforce asymptotic convergence ([Drift, Control Capacity](../articles/drift-control-ratio.html)). **Liouville's theorem** applies to the *passive* conservative skeleton: Hamiltonian flow preserves phase volume, so there is no smooth attracting set without dissipation or feedback. Muscles inject non-conservative power; the relevant object is still a **finite-time** map to the impact event, not a limit cycle.
+
+AffineDrift's [Drift, Control Capacity and Golf-Swing Correction](../articles/drift-control-ratio.html) and [Precision vs Gross Control](../critiques/precision_vs_gross_control.html) develop the correction-time argument. This section does not re-derive them; it only fixes vocabulary so “robust” means *funnel width at $t_e$*, not eigenvalues at infinity.
+
+## Finite-Time Sensitivity and FTLE {#sec-ftle}
+
+For variational dynamics $\dot\Phi = A(t)\Phi$,
+
+$$
+\delta x(t_f) = \Phi(t_f,t_0)\,\delta x_0,
+\qquad
+\mathrm{FTLE}(T) = \frac{1}{T}\ln \sigma_{\max}(\Phi(t_0+T,t_0)).
+$$
+
+[Part 2: Dynamics](../articles/tangent-hyperplanes-series/part-2-dynamics.html) derives $\Phi$ and warns that impact time moves under perturbation. An open UpstreamDrift sensitivity study ([#13789](https://github.com/D-sorganization/UpstreamDrift/issues/13789), **unreviewed, provisional**) reports $\sigma_{\max}\approx 124$ at impact and most growth in the last ~150 ms for one planar 3DOF model—useful as a scale hint, not fleet-validated evidence.
+
+::: {#fig-sigma-max placeholder="true"}
+*Figure 1 (placeholder).* $\sigma_{\max}(\Phi(t))$ over the downswing with the last 150 ms shaded and a voluntary-response latency band (e.g. 100–150 ms) overlaid. Source: #5187 rollouts when available.
+:::
+
+## Below the Feedback Horizon {#sec-feedback}
+
+Voluntary corrections incur sensorimotor delay often quoted above 100 ms for gross limb adjustments. When less than ~150 ms remains before impact, a closed-loop correction cannot close before contact. Robustness must come from **open-loop plan** (nominal trajectory chosen earlier) plus **passive impedance** ($-K\,\delta q - D\,\delta\dot q$ in the variational channel) as in [Passive Stabilization](../articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html) and [Intentional Constraint Collapse](../articles/intentional-constraint-collapse.html). That is compatible with funnel language without claiming infinite-time stability.
+
+## Funnels Without Feedback {#sec-funnels}
+
+A **funnel** is a tube of states around the nominal swing whose image at $t_e$ is narrow in task coordinates. AffineDrift uses the term at several evidence levels; Volume II funnel synthesis carries a guardrail that a numerical funnel certifies only the model and controller that produced it. Here the funnel claim is **path-shaping language**: choose nominal motion and impedance so directions of large $\sigma_{\max}$ growth align, where possible, with task-null directions of the impact Jacobian $J$.
+
+## Helpful Covariance and the Uncontrolled Manifold {#sec-ucm}
+
+Let $y = h(x)$ be task outputs and $J = \partial h / \partial x$ at the linearization point. Outcome covariance under affine propagation is
+
+$$
+\Sigma_y = J \Phi \Sigma_0 \Phi^{\mathsf T} J^{\mathsf T}.
+$$
+
+Motor abundance asks that trial-to-trial scatter have large variance *parallel* to $J$ (unchanging $y$) and small variance *orthogonal* to it [@scholz1999ucm; @muller2004decomposition]. [ch09b](../articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html) defines $V_\parallel$ and $V_\perp$ with declared scaling $S$ and notes that **speed requires velocities in the state**. Morrison, McGrath, and Wallace [@morrison2016] applied UCM to the golf swing: higher skill associated with proportionally more variance in the UCM for clubhead orientation, with orientation variance **rising** near impact while location variability narrowed—so a “face funnel narrowing at impact” is **not** supported by that paper, though it neither confirms nor denies speed–face decoupling.
+
+Signal-dependent torque noise motivates structured $\Sigma_0$ [@harris1998signal]. Goal-equivalent manifolds address metric choice directly [@cusumano2006gem; @sternad2011neuromotor].
+
+## Speed Versus Face: Σ Metric, Timing Trap, and Coupling {#sec-speed-face}
+
+Two task rows $J_v$ and $J_\phi$ define speed and face. Each has its own null space; the intersection $\ker J_v \cap \ker J_\phi$ is the joint abundance subspace. Weight face and path heavily and speed lightly when reporting scalar summaries, as in [transmission robustness](../articles/proximal_distal_energy_transfer/index.html#sec-transmission-robustness) (8 inputs, speed / face-path / hand-force Jacobian, rank 3, nullity 5).
+
+### Block-Orthogonality Trap {#sec-block-trap}
+
+At a **fixed clock time** $t$, face angle depends primarily on configuration $q$ while clubhead speed depends primarily on $\dot q$. Gradients with respect to the stacked state $(q,\dot q)$ are therefore nearly **block-orthogonal** in many coordinate choices—even before skill enters. A raw gradient-angle claim can be true by construction. **Real coupling runs through impact timing:** perturbations that shift $t_e$ multiply the face-closing rate and every quantity that moves the event. The event-time correction in [Part 6](../articles/tangent-hyperplanes-series/part-6-hybrid.html#derive-the-event-time-correction) is where the hypothesis is actually tested:
+
+$$
+\delta t_e = -\frac{n^{\mathsf T}\xi^-}{\gamma},
+\qquad
+\xi^+ = \Xi\,\xi^- \text{ with saltation } \Xi \text{ when post-impact states matter.}
+$$
+
+Pre-impact speed and face at the event use the **event-time Jacobian**; saltation is for post-contact outputs such as launch, not for pre-impact $v$ and $\phi$.
+
+[Proximal–Distal Energy Transfer](../articles/proximal-distal-energy-transfer.html) compares **clock-triggered** and **state-triggered** perturbation responses; timing is the coupling channel that fixed-time analyses miss.
+
+### Σ-Metric Correlation (Primary Test) {#sec-sigma-metric}
+
+With $\Sigma_e$ at the impact event, $\cos_\Sigma\theta = \rho(\delta v,\delta\phi)$ as in the thesis box. Report $\sigma_v$, $\sigma_\phi$, and $\rho(t)$ over the final 150 ms. Compare skill groups to the **structural null**: same model and gradients, $\Sigma_0$ isotropic or column-shuffled. If skilled golfers' smaller $|\rho|$ disappears under that null, the decoupling claim fails (scale-free $\rho$ still depends on $\Sigma_0$ shape).
+
+### $M^{-1}$ Cosine (Mechanism Only) {#sec-m-cosine}
+
+On velocity coordinates,
+
+$$
+\cos_M\theta = \frac{(\partial_{\dot q} v)^{\mathsf T} M^{-1} (\partial_{\dot q}\phi)}{\| \partial_{\dot q} v \|_{M^{-1}} \| \partial_{\dot q}\phi \|_{M^{-1}}}.
+$$
+
+This is coordinate-free on the velocity block but does not use the noise geometry; present it as mechanical explanation, not the skill test. Mixing $q$ and $\dot q$ in one angle requires a declared time scale (e.g. 150 ms window).
+
+::: {#fig-cov-ellipse placeholder="true"}
+*Figure 2 (placeholder).* Speed–face error ellipse from $\Sigma_y$ at $t_e$ with principal axes and $\rho$ annotated; axes declared in physical units.
+:::
+
+::: {#fig-event-vs-fixed placeholder="true"}
+*Figure 3 (placeholder).* Side-by-side sensitivities $\partial v/\partial \delta x$ and $\partial\phi/\partial\delta x$ at fixed $t_{\mathrm{nom}}$ versus event-time $t_e$; timing shift highlighted.
+:::
+
+## Worked Example: Planar 3DOF (#5187) {#sec-worked-example}
+
+The #5187 scope is explicit:
+
+1. Pin a canonical planar triple pendulum once shared specs land (UpstreamDrift #13790–#13791).
+2. Integrate $\Phi$; plot $\sigma_{\max}(t)$ and FTLE; vary solver tolerance to exhibit $\varepsilon^2$ residual scaling.
+3. Build **event-time** impact Jacobians for speed and an in-plane direction proxy (path angle or shaft lean—**not** face).
+4. **Mandatory Monte Carlo:** sample $\Sigma_0$ and signal-dependent torque noise; compare linear $\Sigma_y$ to simulated spread; record tolerance where they diverge.
+5. Optional secondary: $V_\parallel/V_\perp$ with declared $S$ (general UCM, not speed–face specific).
+
+::: {#fig-mc-linear placeholder="true"}
+*Figure 4 (placeholder).* Linear $\Sigma_y$ versus Monte Carlo clouds at impact; divergence band marked where $|\delta x|$ exceeds the validated linear regime.
+:::
+
+Linear propagation fails when second-order flow curvature and Part 4 residuals dominate; the Monte Carlo map is the validity certificate. Do not quote Part 4 bounds until #5184 lands; until then, cite Part 4 qualitatively only.
+
+Cross-engine Jacobian parity and provisional $\sigma_{\max}$ figures cite [#13789](https://github.com/D-sorganization/UpstreamDrift/issues/13789) as **provisional**.
+
+## Minimum Model for a Real Face Test {#sec-minimum-model}
+
+Capability requirements, not a fixed DOF count:
+
+- **3D kinematic chain** with shoulder, forearm pronation/supination, and wrist flexion/extension (and radial/ulnar deviation as needed).
+- **Face-angle chart** on $\mathrm{SO}(3)$ relative to target line and path, not a planar proxy.
+- **Event-time Jacobians** at the contact guard with transversality checked.
+- **Declared $\Sigma_0$** per participant or justified population, with signal-dependent noise [@harris1998signal].
+- **Monte Carlo validation** of linear $\Sigma_y$ in the perturbation regime used for inference.
+
+Deliver in [#5186](https://github.com/D-sorganization/AffineDrift/issues/5186) or a follow-up issue; do not expand this article's scope to full 3D implementation.
+
+Human protocol (deferred): apply the same $\rho$ and windowed $\rho(t)$ to motion capture across skill bins, preregistered, following Morrison et al.'s UCM machinery where compatible [@morrison2016].
+
+## Outlook: Shaping the Funnel {#sec-outlook}
+
+Stochastic trajectory optimization (iLQG-style costs on $\mathrm{tr}(Q_y\Sigma_y)$) is the natural design tool once $\Sigma_y$ is trusted. Compare nominal iLQR to robust costs heavy on face and path; report $\Sigma_y$ ellipses and $\rho$, not only open-loop nominal paths. Details belong in Part 3 control material and a future simulation PR—not this draft's proof burden.
+
+## What Would Break This Story {#sec-critique}
+
+| Risk | Consequence |
+|------|-------------|
+| Metric or units undeclared | $\rho$ and gradient angles are empty labels |
+| Fixed-time Jacobian only | Answers the wrong impact-time question |
+| Block $(q,\dot q)$ orthogonality ignored | False support from coordinate choice |
+| Large task gains with small $\rho$ | Orthogonal rows can still spray the ball |
+| Morrison orientation rise near impact | Body-frame face funnel may not narrow; timing may compensate |
+| Smaller $\Sigma_0$ alone in skilled players | Tighter impact without geometric decoupling |
+| Linear $\Sigma_y$ without Monte Carlo | Invalid funnel claims when $\sigma_{\max}$ is large |
+| UCM structure from feedback | Cannot separate passive mechanics from late corrections [ch09b] |
+| Planar proxy called “face” | Invalid test of Dieter's hypothesis |
+
+Hip-timing versus wrist-release negative covariance remains a **site hunch**, not a published golf result—mark unverified if used.
+
+## Related Articles {#sec-related}
+
+::: {.callout-note title="See Also"}
+
+- **[Part 2: Dynamics](tangent-hyperplanes-series/part-2-dynamics.html)** — State transition matrix $\Phi$ and variational dynamics
+- **[Part 6: Hybrid Systems](tangent-hyperplanes-series/part-6-hybrid.html)** — Event-time correction and saltation
+- **[Proximal–Distal Energy Transfer](proximal-distal-energy-transfer.html)** — Clock- versus state-triggered timing coupling
+- **[Transmission Robustness](proximal_distal_energy_transfer/index.html#sec-transmission-robustness)** — Speed, face-path, and hand-force Jacobian nullity
+- **[Passive Stabilization (ch09b)](The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html)** — UCM split and impedance framing
+- **[After One Solution](after-one-solution-null-space-exploration.html)** — Null-space fibres in redundant control
+:::
+
+## References {#sec-refs}
+
+Bibliography entries are drawn from verified sources cited in text. UpstreamDrift #13789 numbers remain provisional until that issue is reviewed. Claim-audit inventory registers this route for rendered-site coverage pending Fleet-Critic review.
