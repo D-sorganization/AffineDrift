@@ -79,7 +79,7 @@ def test_table_percentages_share_the_persistent_baseline() -> None:
 
     quoted = [
         f"+{relative(dead['persistent_direction_preloaded']['error_impulse_nms'], dead['complete_role_reversal_preloaded']['error_impulse_nms']):.0f}%",
-        f"about +{relative(muscle['persistent_direction']['error_impulse_nms'], muscle['complete_role_reversal']['error_impulse_nms']):.2f}%",
+        f"about +{relative(muscle['persistent_direction']['error_impulse_nms'], muscle['complete_role_reversal']['error_impulse_nms']):.3f}%",
         f"+{100.0 * results['muscle_step_audit']['limit_relative_difference']:.2f}%",
         f"−{-100.0 * results['muscle_step_audit_net_14']['limit_relative_difference']:.0f}%",
     ]
@@ -107,7 +107,7 @@ def test_companion_split_vocabulary() -> None:
     assert "Advantage $A$, relative to persistent" in text
     assert "does not by itself add mass" in text and "cannot add mass" not in text
     assert text.lower().count("delay") == 1 and "a *lag* is a delay" in text
-    assert "about 0.95%" in text
+    assert "about 0.952%" in text
 
 
 @pytest.mark.parametrize("program", [models.PERSISTENT, models.REVERSAL])
