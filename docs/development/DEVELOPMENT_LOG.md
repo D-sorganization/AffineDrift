@@ -241,6 +241,123 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5284 · Slack Take-Up as a Witness Article Draft
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5284
+- **Branch:** cursor/slack-takeup-witness-article-fd73
+- **PR:** #5285
+- **Paths:** see #5285
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`83625712`; collated from changes/5284-draft-the-slack-take-up-as-a-witness-art.md)
+- **Summary:** Draft the Slack Take-Up as a Witness article (synthetic study, figures, Argon verification from PR #5140), revised with Feynman's prose pass and Karl's lay-review accuracy fixes; unpublished, do-not-merge pending the publication gate
+- **Next step:** 4-seat panel review, revision round, Fleet-Critic review with nullspace_interpretation adjudication, Dieter sign-off
+
+### DL-#5178 · Outline Three Humanoid Launch Series With Rights and Publication Gates
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5178
+- **Branch:** codex/5178-launch-outlines
+- **PR:** #5269
+- **Paths:** see #5269
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`7eebe724`; collated from changes/5178-outline-three-humanoid-launch-series-wit.md)
+- **Summary:** Outline three humanoid launch series with rights and publication gates
+- **Next step:** Review Phase 0 planning outputs before authorizing article work
+
+### DL-#5177 · Document Humanoid Audiences and Planning Metadata Contract With UX Handoff
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5177
+- **Branch:** codex/5177-audience-metadata
+- **PR:** #5268
+- **Paths:** see #5268
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`1d5a0543`; collated from changes/5177-document-humanoid-audiences-and-planning.md)
+- **Summary:** Document humanoid audiences and planning metadata contract with UX handoff
+- **Next step:** Consume planning contracts in #5171 and #5178; preserve publication gates
+
+### DL-#5255 · Specify and Implement Versioned, Bounded #State= URL-Hash State Contract for Dcr-Visualizer (#5255)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5255
+- **Branch:** feat/5255-widget-url-hash-state
+- **PR:** #5261
+- **Paths:** see #5261
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`0a5e0a40`; collated from changes/5255-spec-url-hash-state-contract-for-widgets.md)
+- **Summary:** Specify and implement versioned, bounded #state= URL-hash state contract for dcr-visualizer (#5255)
+- **Next step:** Merge the PR.
+
+### DL-#5251 · Draft JSON Schema and Provenance Field Spec for Asset_Manifest.Json (#5251)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5251
+- **Branch:** feat/5251-asset-manifest-provenance-spec
+- **PR:** #5260
+- **Paths:** see #5260
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`69671261`; collated from changes/5251-spec-asset-manifest-provenance-fields.md)
+- **Summary:** Draft JSON Schema and provenance field spec for asset_manifest.json (#5251)
+- **Next step:** Merge the PR.
+
+### DL-#5250 · Measure 60-Day AGENT_HANDOFF.md and _quarto.yml Conflict Frequency and Recommend No-Go on .agent/state Split (#5250)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5250
+- **Branch:** feat/5250-measure-handoff-quarto-conflicts
+- **PR:** #5259
+- **Paths:** see #5259
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`0cbd0533`; collated from changes/5250-measure-agent-handoff-md-quarto-yml-merge-co.md)
+- **Summary:** Measure 60-day AGENT_HANDOFF.md and _quarto.yml conflict frequency and recommend no-go on .agent/state split (#5250)
+- **Next step:** Merge the PR.
+
+### DL-#5252 · Audit Self-Hosted Assets, SRI, and CSP Against ADR 0002 With Post-Render SRI Check (#5252)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5252
+- **Branch:** feat/5252-audit-sri-csp
+- **PR:** #5258
+- **Paths:** see #5258
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`8c23dbfb`; collated from changes/5252-audit-self-hosted-assets-sri-and-csp-vs-adr.md)
+- **Summary:** Audit self-hosted assets, SRI, and CSP against ADR 0002 with post-render SRI check (#5252)
+- **Next step:** Merge the PR.
+
+### DL-#5249 · Audit CI Workflow Permissions, Untrusted Run Interpolations, and Action SHA Pins (#5249)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5249
+- **Branch:** feat/5249-audit-workflows
+- **PR:** #5257
+- **Paths:** see #5257
+- **Started:** 2026-10-30
+- **Last verified:** 2026-10-30 (`af37d2ad`; collated from changes/5249-audit-ci-workflow-hardening-gap-inventory.md)
+- **Summary:** Audit CI workflow permissions, untrusted run interpolations, and action SHA pins (#5249)
+- **Next step:** Merge the PR.
+
+### DL-#5180 · Tangent-Space Review PR A: Affine Hub/Book Summaries and Volume I Chapter Read Links
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5180
+- **Branch:** cursor/tangent-review-pr-a-d406
+- **PR:** #5188, #5189
+- **Paths:** see #5188
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-29 (`4355300b`; collated from changes/5180-tighten-part-4-7-residual-gronwall-bound.md)
+- **Summary:** Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links
+- **Next step:** Publication gate review (Karl through Dieter).
+
 ### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
 
 - **State:** in_review
@@ -482,16 +599,263 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5182 · Retire Remaining 'Hyperplane' Display Text in the Manuscript Terminology Heading and the Book Ch.4 Blurb; Mathematical Object Names Were Already Disambiguated
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5182
+- **Branch:** merged via #5270
+- **PR:** #5270
+- **Paths:** see #5270
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`89bef879`; collated from changes/5182-retire-remaining-hyperplane-display-text.md)
+- **Summary:** Retire remaining 'hyperplane' display text in the manuscript terminology heading and the book Ch.4 blurb; mathematical object names were already disambiguated
+- **Next step:** Shipped in PR #5270.
+
+### DL-#5301 · Cross-Browser Nightly Renders the Site Once in a Build-Site Job; the Firefox and Webkit Legs Download It Instead of Each Rendering Under a 45-Minute Timeout
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5301
+- **Branch:** merged via #5305
+- **PR:** #5305
+- **Paths:** see #5305
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`2785ee80`; collated from changes/5301-cross-browser-nightly-renders-the-site-o.md)
+- **Summary:** Cross-Browser Nightly renders the site once in a build-site job; the firefox and webkit legs download it instead of each rendering under a 45-minute timeout
+- **Next step:** Shipped in PR #5305.
+
+### DL-#5300 · Conflict Disarm App Token Scoped to AffineDrift and Repository_Management With Contents Read, Pull-Requests Write and Issues Write
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5300
+- **Branch:** merged via #5303
+- **PR:** #5303
+- **Paths:** see #5303
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`8b156ea9`; collated from changes/5300-conflict-disarm-app-token-scoped-to-affi.md)
+- **Summary:** Conflict Disarm App token scoped to AffineDrift and Repository_Management with contents read, pull-requests write and issues write
+- **Next step:** Shipped in PR #5303.
+
+### DL-#5166 · UX Slice 3: One Heading Face Token, Strict H1-H4 Scale, 1Rem Body Floor, No Mid-Word Breaks, Custom.Scss Mirrors Tokens
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5166
+- **Branch:** claude/ad-5166-1
+- **PR:** #5235, #5272, #5280, #5297
+- **Paths:** see #5235
+- **Started:** 2026-10-29
+- **Last verified:** 2026-11-01 (`79487d50`; collated from changes/5166-close-ux-slice-3-component-headings-use.md)
+- **Summary:** UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens
+- **Next step:** Issue closes on merge.
+
+### DL-#5295 · Conflict Disarm Runs Its Job Inline (Reading RM's Conflict_Disarm Script via an App-Token Checkout) Instead of Calling an Internal Repository_Management Reusable Workflow, Which a Public Repo Cannot Do, so It No Longer Fails Every Run With 0 Jobs
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5295
+- **Branch:** merged via #5296
+- **PR:** #5296
+- **Paths:** see #5296
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`ac11321b`; collated from changes/5295-conflict-disarm-runs-its-job-inline-read.md)
+- **Summary:** Conflict Disarm runs its job inline (reading RM's conflict_disarm script via an App-token checkout) instead of calling an internal Repository_Management reusable workflow, which a public repo cannot do, so it no longer fails every run with 0 jobs
+- **Next step:** Shipped in PR #5296.
+
+### DL-#5293 · Fence the GAAI Ci-Watch-and-Fix Skill in Project Rules and Collapse the Duplicated CI Watch Section (RM #2567).
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5293
+- **Branch:** merged via #5294
+- **PR:** #5294
+- **Paths:** see #5294
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`e1b3ff17`; collated from changes/5293-gaai-fence.md)
+- **Summary:** Fence the GAAI ci-watch-and-fix skill in project rules and collapse the duplicated CI Watch section (RM #2567).
+- **Next step:** Shipped in PR #5294.
+
+### DL-#5289 · Docs: Root REVIEW.md With AffineDrift Review Rules (RM #2565 Rollout)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5289
+- **Branch:** merged via #5290
+- **PR:** #5290
+- **Paths:** see #5290
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`ae2229f5`; collated from changes/5289-review-md.md)
+- **Summary:** docs: root REVIEW.md with AffineDrift review rules (RM #2565 rollout)
+- **Next step:** Shipped in PR #5290.
+
+### DL-#5282 · Unblock Collate Change Fragments: Drop the Two Re-Added #5136 Fragments and Retarget the In-Review Slack Take-Up Article Fragment to #5284 (Owner Ruling, Option A)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5282
+- **Branch:** merged via #5285
+- **PR:** #5285
+- **Paths:** see #5285
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`83625712`; collated from changes/5282-unblock-collate-change-fragments-drop-th.md)
+- **Summary:** Unblock Collate Change Fragments: drop the two re-added #5136 fragments and retarget the in-review slack take-up article fragment to #5284 (owner ruling, option a)
+- **Next step:** Shipped in PR #5285.
+
+### DL-#5256 · Measure Passive RK4 Energy Drift in Ztcf-Explorer and Drift-Control-Sandbox; Keep RK4 in Both, Enforced by a Headless Jest Threshold Test
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5256
+- **Branch:** merged via #5278
+- **PR:** #5278
+- **Paths:** see #5278
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`972e0ca8`; collated from changes/5256-measure-passive-rk4-energy-drift-in-ztcf.md)
+- **Summary:** Measure passive RK4 energy drift in ztcf-explorer and drift-control-sandbox; keep RK4 in both, enforced by a headless Jest threshold test
+- **Next step:** Shipped in PR #5278.
+
+### DL-#5254 · Expose the ZTCF Explorer Through a Window.AffineDriftWidgets Controller (getState/setParam/Step) With a Polite Live Readout, Keyboard and Axe E2e Coverage
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5254
+- **Branch:** merged via #5283
+- **PR:** #5283
+- **Paths:** see #5283
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`930e6546`; collated from changes/5254-expose-the-ztcf-explorer-through-a-windo.md)
+- **Summary:** Expose the ZTCF explorer through a window.AffineDriftWidgets controller (getState/setParam/step) with a polite live readout, keyboard and axe e2e coverage
+- **Next step:** Shipped in PR #5283.
+
+### DL-#5240 · Bootstrap Python Requirements Before the Nightly Quarto Render
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5240
+- **Branch:** merged via #5265
+- **PR:** #5265, #5281
+- **Paths:** see #5265
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`2e2fd036`; collated from changes/5240-run-the-nightly-failure-reporter-as-a-mo.md)
+- **Summary:** Bootstrap Python requirements before the nightly Quarto render
+- **Next step:** Shipped in PR #5265.
+
+### DL-#5183 · Close-Out: Volume I Book Chapter Read Links Verified on Main (#5188); No Further Content Change.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5183
+- **Branch:** merged via #5275
+- **PR:** #5275
+- **Paths:** see #5275
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`f0f13d7f`; collated from changes/5183-closeout-tangent-book-chapter-links.md)
+- **Summary:** Close-out: Volume I book chapter read links verified on main (#5188); no further content change.
+- **Next step:** Shipped in PR #5275.
+
+### DL-#5181 · Close-Out: Hub and Book Ch.1 Summaries Match Manuscript Affine Wording (#5188 Area).
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5181
+- **Branch:** merged via #5277
+- **PR:** #5277
+- **Paths:** see #5277
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`63e66c19`; collated from changes/5181-closeout-tangent-core-claim-wording.md)
+- **Summary:** Close-out: hub and book Ch.1 summaries match manuscript affine wording (#5188 area).
+- **Next step:** Shipped in PR #5277.
+
+### DL-#5176 · Add Phase-Zero Humanoid Rights Ledger With Five Pending Artifact Reviews and AMASS Hold
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5176
+- **Branch:** merged via #5266
+- **PR:** #5266
+- **Paths:** see #5266
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`f6fdd953`; collated from changes/5176-add-phase-zero-humanoid-rights-ledger-wi.md)
+- **Summary:** Add phase-zero humanoid rights ledger with five pending artifact reviews and AMASS hold
+- **Next step:** Shipped in PR #5266.
+
+### DL-#5174 · Record Proposed Humanoid Expansion Scope, Upstream Boundary and Phase Gates
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5174
+- **Branch:** merged via #5267
+- **PR:** #5267
+- **Paths:** see #5267
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`268b7d7a`; collated from changes/5174-record-proposed-humanoid-expansion-scope.md)
+- **Summary:** Record proposed humanoid expansion scope, upstream boundary and phase gates
+- **Next step:** Shipped in PR #5267.
+
+### DL-#5170 · Reduce the Site-Search Index, Remove Chrome Text, Rank the Double-Pendulum Chapter, and Fit the Phone Search Panel to the Viewport
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5170
+- **Branch:** merged via #5276
+- **PR:** #5276
+- **Paths:** see #5276
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`8ca900c6`; collated from changes/5170-bound-search-and-lazy-load.md)
+- **Summary:** Reduce the site-search index, remove chrome text, rank the double-pendulum chapter, and fit the phone search panel to the viewport
+- **Next step:** Shipped in PR #5276.
+
+### DL-#5169 · Home Hero First, Balanced Hero Column, Figure Capped Near Design Size, Hub Prose Capped to Reading Measure
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5169
+- **Branch:** merged via #5271
+- **PR:** #5271
+- **Paths:** see #5271
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`a105b74f`; collated from changes/5169-home-hero-first-balanced-hero-column-fig.md)
+- **Summary:** Home hero first, balanced hero column, figure capped near design size, hub prose capped to reading measure
+- **Next step:** Shipped in PR #5271.
+
+### DL-#5168 · UX Slice 5: Compact Article Opening (Title Card, Abstract, Summary/Takeaways/Caveats Cards) and a Title-Fallback Filter for Empty Title Headings
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5168
+- **Branch:** merged via #5273
+- **PR:** #5273
+- **Paths:** see #5273
+- **Started:** 2026-10-31
+- **Last verified:** 2026-10-31 (`be47cdc1`; collated from changes/5168-ux-slice-5-compact-article-opening-title.md)
+- **Summary:** UX slice 5: compact article opening (title card, abstract, summary/takeaways/caveats cards) and a title-fallback filter for empty title headings
+- **Next step:** Shipped in PR #5273.
+
+### DL-#5167 · UX Slice 4: Labelled In-Header Theme Toggle, One-Row Phone Header, Unique Nav Landmarks, No First-Visit Update Toast
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5167
+- **Branch:** merged via #5238
+- **PR:** #5238, #5279
+- **Paths:** see #5238
+- **Started:** 2026-10-29
+- **Last verified:** 2026-10-31 (`94824961`; collated from changes/5167-phone-search-control-one-row.md)
+- **Summary:** UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast
+- **Next step:** Shipped in PR #5238.
+
 ### DL-#5209 · Option A-4 Prerequisite: Drop the Discarded Discrete_Lqr Stabilisability Probe From the #5208 Correction-Authority Evaluator (0.38 s per Call, Result Never Used); Red-Then-Green Regression Test
 
 - **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5209
 - **Branch:** merged via #5236
-- **PR:** #5236
+- **PR:** #5236, #5237
 - **Paths:** see #5236
 - **Started:** 2026-10-29
-- **Last verified:** 2026-10-29 (`45322bd1`; collated from changes/5209-option-a-4a-drop-discarded-lqr-probe.md)
+- **Last verified:** 2026-10-29 (`13988747`; collated from changes/5209-option-a-4b-vendor-reference-trace.md)
 - **Summary:** Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test
 - **Next step:** Shipped in PR #5236.
 
@@ -631,10 +995,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5131
 - **Branch:** merged via #5133
-- **PR:** #5133
+- **PR:** #5133, #5275
 - **Paths:** see #5133
 - **Started:** 2026-10-24
-- **Last verified:** 2026-10-24 (`e32fefe6`; collated from changes/5131-bump-pypdf-to-6-21-2-to-clear-cve-2026-1.md)
+- **Last verified:** 2026-10-31 (`f0f13d7f`; collated from changes/5131-bump-pypdf-6-21-4-pip-audit.md)
 - **Summary:** Bump pypdf to 6.21.2 to clear CVE-2026-115572/115580/115585 failing pip-audit
 - **Next step:** Shipped in PR #5133.
 

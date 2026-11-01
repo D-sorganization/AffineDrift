@@ -40,12 +40,16 @@ def test_article_page_grid_does_not_apply_column_or_gap() -> None:
         ), f"gap in article layout block {index} shrinks the body column"
 
 
-def test_prose_width_targets_about_68ch_for_slice_1() -> None:
-    """Desktop article measure should land near the epic's ~68ch target (#5164)."""
+def test_prose_width_targets_about_68_real_characters_per_line() -> None:
+    """The epic targets ~68 real characters per line at 1440px (#5164).
+
+    The 68ch token measured 76-78 real characters on Theory Part 1 and ch03, so
+    #5166 scoped 55ch overrides on those two pages while keeping the shared default at 61ch.
+    """
     tokens = TYPOGRAPHY_TOKENS.read_text(encoding="utf-8")
     match = re.search(r"--prose-width:\s*(\d+)ch;", tokens)
     assert match, "--prose-width token not found in css/tokens/typography.css"
-    assert int(match.group(1)) == 68
+    assert 61 <= int(match.group(1)) <= 62
 
 
 def test_programming_catalog_stays_on_article_layout_with_scrollable_tables() -> None:

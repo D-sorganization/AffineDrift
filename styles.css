@@ -37,6 +37,7 @@
 @import url("css/components/drift-plus-control.css");
 @import url("css/components/swing-viewer.css");
 @import url("css/components/quarto-theme.css");
+@import url("css/components/header-nav.css");
 @import url("css/utilities/spacing.css");
 
 /* Native cross-document view transitions (issue #3334): a free same-origin
@@ -96,19 +97,10 @@
   --header-offset: 80px;
   --scroll-offset: 100px;
 
-  /* Typography limits */
-  --prose-width: 68ch;
-
-  /* Fluid Typography (Phase 3: responsive scaling with clamp())
-     Benefits: Scales smoothly between breakpoints, eliminates hardcoded media queries for font sizes,
-     improves readability at all viewport sizes */
+  /* Fluid Typography (Phase 3: responsive scaling with clamp()).
+     --prose-width and the h1-h6 scale (--font-size-h*) live only in
+     css/tokens/typography.css (#5166). */
   --fs-body: clamp(16px, 1rem + 0.2vw, 18px);
-  --fs-h1: clamp(2rem, 4vw + 1rem, 2.75rem);
-  --fs-h2: clamp(1.75rem, 3vw + 0.5rem, 2.25rem);
-  --fs-h3: clamp(1.35rem, 2vw + 0.5rem, 1.75rem);
-  --fs-h4: clamp(1.15rem, 1.5vw + 0.5rem, 1.35rem);
-  --fs-h5: clamp(1rem, 1.2vw + 0.4rem, 1.25rem);
-  --fs-h6: clamp(0.95rem, 1vw + 0.3rem, 1.1rem);
   --fs-large: clamp(1.1rem, 1.2vw + 0.3rem, 1.35rem);
   --fs-base: clamp(1rem, 1vw + 0.2rem, 1.15rem);
   --fs-small: clamp(0.85rem, 0.8vw + 0.1rem, 0.95rem);
@@ -193,7 +185,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-family: var(--font-family-heading);
   font-weight: 700;
   line-height: 1.25;
   color: var(--text-primary);
@@ -201,24 +193,23 @@ h6 {
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw + 1rem, 2.75rem);
+  font-size: var(--font-size-h1);
   letter-spacing: -0.02em;
 }
 
 h2 {
-  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.25rem);
+  font-size: var(--font-size-h2);
   letter-spacing: -0.01em;
   margin-top: 2rem;
 }
 
 h3 {
-  font-size: clamp(1.35rem, 2vw + 0.5rem, 1.75rem);
+  font-size: var(--font-size-h3);
   margin-top: 1.5rem;
-  color: var(--color-link);
 }
 
 h4 {
-  font-size: clamp(1.15rem, 1.5vw + 0.5rem, 1.35rem);
+  font-size: var(--font-size-h4);
 }
 
 a {
@@ -260,10 +251,7 @@ a:hover {
 .quarto-title-block .reading-time-estimate,
 .quarto-title-block .reading-time-estimate span,
 #title-block-header .reading-time-estimate,
-#title-block-header .reading-time-estimate span {
-  color: var(--text-inverse) !important;
-}
-
+#title-block-header .reading-time-estimate span,
 main.content .reading-time-estimate,
 main.content .reading-time-estimate span,
 .page-layout-full .reading-time-estimate,
@@ -327,24 +315,34 @@ main.content .reading-time-estimate span,
   max-width: var(--prose-width);
 }
 
-/* Publication title shell. The title, description, and metadata stack in one
-   readable flow at every viewport; they never compete for narrow flex tracks. */
+/* Hub pages (page-layout: full) skip the article-layout rule above, but
+   their top-level intro prose is just as prone to an overlong measure.
+   Scope to direct children / known text-only wrappers so grid and card
+   content (already bounded by their own grid tracks) keeps its width
+   (issue #5169). */
+#quarto-content.page-layout-full #quarto-document-content > p,
+#quarto-content.page-layout-full #quarto-document-content > ul,
+#quarto-content.page-layout-full #quarto-document-content > ol,
+#quarto-content.page-layout-full .about-text > p {
+  max-width: var(--prose-width);
+}
+
+/* Publication title shell. Compact, calm header: title, description, and
+   metadata stack in one readable flow at every viewport, on a quiet surface
+   consistent with the page-header-card/summary-takeaways/caveats cards
+   (slim accent rule) instead of a full-screen dark hero (#5168). */
 #quarto-content.page-layout-article #title-block-header.quarto-title-block {
   position: static;
   display: block;
   width: 100%;
   min-width: 0;
   margin: 0 0 var(--spacing-lg);
-  padding: clamp(1.25rem, 2.5vw, 2.25rem);
-  color: var(--text-inverse);
-  background: linear-gradient(
-    135deg,
-    var(--color-primary-dark),
-    var(--color-primary-main)
-  );
-  border: 1px solid var(--color-primary-main);
-  border-radius: var(--border-radius-lg, 0.75rem);
-  box-shadow: var(--shadow-md);
+  padding: 1rem 1.25rem;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-neutral-200);
+  border-left: 4px solid var(--color-primary-light);
+  border-radius: 6px;
 }
 
 #title-block-header .quarto-title,
@@ -358,7 +356,7 @@ main.content .reading-time-estimate span,
   width: 100%;
   max-width: none;
   margin: 0;
-  font-size: clamp(2rem, 2.5vw, 2.9rem);
+  font-size: var(--font-size-h1);
   overflow-wrap: normal;
   hyphens: none;
   text-wrap: balance;
@@ -367,28 +365,66 @@ main.content .reading-time-estimate span,
 #title-block-header .description,
 #title-block-header .subtitle {
   max-width: 62ch;
-  margin-top: 0.75rem;
-  color: var(--text-inverse);
+  margin-top: 0.5rem;
+  color: var(--text-secondary);
   font-size: var(--fs-base);
-  line-height: 1.55;
-  opacity: 0.92;
+  line-height: 1.5;
   text-wrap: pretty;
 }
 
 #title-block-header .quarto-title-meta {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-  gap: 0.75rem 1.5rem;
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgb(255 255 255 / 0.25);
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.5rem 1.25rem;
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-neutral-200);
+  font-size: 0.85rem;
 }
 
 #title-block-header .quarto-title-meta-heading,
 #title-block-header .quarto-title-meta-contents,
 #title-block-header .quarto-title-meta-contents p {
-  color: var(--text-inverse);
+  color: var(--text-secondary);
   overflow-wrap: break-word;
+}
+
+/* Quarto's bundled theme dims these labels at a higher specificity
+   (`#title-block-header.quarto-title-block.default ...`), which drops
+   --text-secondary below AA contrast on the calm surface (#5168); match
+   its specificity to win for both the meta heading and abstract title. */
+#title-block-header.quarto-title-block.default .quarto-title-meta-heading,
+#title-block-header.quarto-title-block.default .abstract .block-title {
+  opacity: 1;
+}
+
+/* Same issue for the category chips (Quarto dims them to 0.6 opacity via
+   `.quarto-title .quarto-categories .quarto-category`); add the header ID to
+   outweigh that selector and restore readable contrast (#5168). */
+#title-block-header .quarto-title .quarto-categories .quarto-category {
+  opacity: 1;
+  color: var(--text-secondary);
+}
+
+/* Quarto's unstyled default `.abstract` block (Bootstrap defaults) was the
+   largest single contributor to title-block height -- compact it to match
+   the other quiet boxes instead of leaving default template spacing (#5168). */
+#title-block-header .abstract {
+  margin: 0.75rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-neutral-200);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+#title-block-header .abstract .block-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
 }
 
 /* Reset Quarto's margin-sidebar and sidebar columns on full-layout pages only */
@@ -720,6 +756,12 @@ table caption,
   display: block;
 }
 
+@media (max-width: 991.98px) {
+  #quarto-header {
+    padding: 0;
+  }
+}
+
 nav .container {
   display: flex;
   justify-content: space-between;
@@ -753,7 +795,7 @@ nav .container {
 
 #quarto-header .navbar-brand {
   color: var(--pure-white);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   font-weight: 700;
   font-size: var(--fs-large);
 }
@@ -834,7 +876,7 @@ nav .container {
   gap: 0.75rem;
   color: var(--pure-white);
   font-weight: 700;
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   font-size: var(--fs-large);
   text-decoration: none;
 }
@@ -999,7 +1041,7 @@ nav .container {
   font-size: var(--fs-base);
   font-weight: 600;
   color: var(--text-primary);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
 }
 
 .accordion-header:hover {
@@ -1223,23 +1265,6 @@ blockquote,
     overflow-wrap: anywhere;
   }
 
-  /* Mobile typography scaling for better readability on small screens */
-  h1 {
-    font-size: var(--fs-large);
-  }
-
-  h2 {
-    font-size: var(--fs-large);
-  }
-
-  h3 {
-    font-size: 1.25rem;
-  }
-
-  h4 {
-    font-size: var(--fs-base);
-  }
-
   .page-columns.page-full .standard-page-layout,
   .ad-page-container .standard-page-layout,
   .standard-page-layout {
@@ -1326,7 +1351,7 @@ blockquote,
   color: var(--pure-white);
   padding: 1.5rem 2rem;
   background: linear-gradient(to top, rgb(0 0 0 / 0.9), transparent);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   font-size: var(--fs-base);
   line-height: 1.4;
   pointer-events: none;
@@ -1707,7 +1732,7 @@ h3:hover .anchor-link,
   margin: 0;
   font-size: var(--fs-base);
   color: var(--pure-white);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1915,7 +1940,7 @@ form.contact-form .form-group label {
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
 }
 
 .contact-form .form-group input,
@@ -2037,7 +2062,7 @@ form.contact-form .form-group textarea {
    --- */
 
 .home-sidebar h3 {
-  color: var(--color-link);
+  color: var(--text-primary);
   font-size: var(--fs-small);
   font-weight: 600;
   text-transform: uppercase;
@@ -2097,12 +2122,12 @@ form.contact-form .form-group textarea {
 }
 
 .welcome-header h1 {
-  color: var(--color-link);
-  font-size: 3rem;
+  color: var(--text-primary);
+  font-size: var(--font-size-h1);
   margin-bottom: 0.5rem;
   margin-top: 0;
   font-weight: 700;
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   line-height: 1.1;
 }
 
@@ -2110,7 +2135,7 @@ form.contact-form .form-group textarea {
   color: var(--text-light);
   font-size: 1.3rem;
   font-style: italic;
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
 }
 
 .home-text p {
@@ -2118,7 +2143,6 @@ form.contact-form .form-group textarea {
   line-height: 1.8;
   color: var(--text-dark);
   font-size: var(--fs-base);
-  font-family: "Playfair Display", serif;
 }
 
 .math-showcase {
@@ -2309,9 +2333,7 @@ form.contact-form .form-group textarea {
 .quarto-title-banner .title,
 .quarto-title-banner .subtitle,
 #quarto-header .navbar-brand,
-#quarto-header .navbar-title,
-h1.title,
-.title {
+#quarto-header .navbar-title {
   color: #fff;
 }
 
@@ -2472,7 +2494,7 @@ h1.title,
   margin: 0;
   font-size: var(--fs-base);
   color: white;
-  font-family: "Playfair Display", serif;
+  font-family: var(--font-family-heading);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -2951,7 +2973,7 @@ h1.title,
 
   /* Welcome header adjustments */
   .welcome-header h1 {
-    font-size: 2rem;
+    font-size: var(--font-size-h1);
   }
 
   .welcome-header .subtitle {
@@ -3003,36 +3025,9 @@ h1.title,
    per-file dark block here.
    ============================================================= */
 
-/* =============================================================
-   Dark Mode Toggle Button
-   ============================================================= */
-
-#theme-toggle {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 9999;
-  background: var(--bg-alt);
-  border: 1px solid var(--border-color);
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
-  font-size: var(--fs-base);
-  cursor: pointer;
-  box-shadow: var(--shadow-md);
-  transition: background 0.2s, border-color 0.2s;
-}
-
-#theme-toggle:hover {
-  background: var(--accent-blue);
-  color: #fff;
-}
-
 /* theme.dark is now configured (#4556), which makes Quarto auto-inject its
    own native color-scheme toggle switch into the navbar. Hide it: the site
-   already ships the tested, accessible toggle above with its own design
+   already ships the tested, accessible toggle (css/components/header-nav.css) with its own design
    tokens, and two independent, out-of-sync theme controls would confuse
    readers. */
 .quarto-color-scheme-toggle {
@@ -3203,14 +3198,20 @@ input:focus:not(:focus-visible) {
 
 /* Public-site mobile containment: prose paths and URLs may be arbitrarily long. */
 #quarto-document-content :not(pre) > code,
-#quarto-document-content a,
+#quarto-document-content a {
+  overflow-wrap: anywhere;
+}
+
+/* Normal words never split mid-word (#5166): headings and list text wrap at
+   spaces and break only a token too long for the line. */
 #quarto-document-content h1,
 #quarto-document-content h2,
 #quarto-document-content h3,
 #quarto-document-content h4,
 #quarto-document-content li {
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: manual;
 }
 
 #quarto-document-content :not(pre) > code {

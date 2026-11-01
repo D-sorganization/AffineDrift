@@ -232,6 +232,40 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-01 | #5270 | Retire remaining 'hyperplane' display text in the manuscript terminology heading and the book Ch.4 blurb; mathematical object names were already disambiguated |
+| 2026-11-01 | #5305 | Cross-Browser Nightly renders the site once in a build-site job; the firefox and webkit legs download it instead of each rendering under a 45-minute timeout |
+| 2026-11-01 | #5303 | Conflict Disarm App token scoped to AffineDrift and Repository_Management with contents read, pull-requests write and issues write |
+| 2026-11-01 | #5297 | Close UX slice 3: component headings use scale tokens; axe/Lighthouse evidence on live pages |
+| 2026-11-01 | #5296 | Conflict Disarm runs its job inline (reading RM's conflict_disarm script via an App-token checkout) instead of calling an internal Repository_Management reusable workflow, which a public repo cannot do, so it no longer fails every run with 0 jobs |
+| 2026-11-01 | #5294 | Fence the GAAI ci-watch-and-fix skill in project rules and collapse the duplicated CI Watch section (RM #2567). |
+| 2026-11-01 | #5290 | docs: root REVIEW.md with AffineDrift review rules (RM #2565 rollout) |
+| 2026-10-31 | #5279 | Keep the phone search control in the single-row navigation header |
+| 2026-10-31 | #5280 | Meet the measured reading-width target on Theory Part 1 and chapter 3. |
+| 2026-10-31 | #5285 | Unblock Collate Change Fragments: drop the two re-added #5136 fragments and retarget the in-review slack take-up article fragment to #5284 (owner ruling, option a); Draft the Slack Take-Up as a Witness article (synthetic study, figures, Argon verification from PR #5140), revised with Feynman's prose pass and Karl's lay-review accuracy fixes; unpublished, do-not-merge pending the publication gate |
+| 2026-10-31 | #5278 | Measure passive RK4 energy drift in ztcf-explorer and drift-control-sandbox; keep RK4 in both, enforced by a headless Jest threshold test |
+| 2026-10-31 | #5283 | Expose the ZTCF explorer through a window.AffineDriftWidgets controller (getState/setParam/step) with a polite live readout, keyboard and axe e2e coverage |
+| 2026-10-31 | #5281 | Run the Cross-Browser Nightly failure reporter as `python3 -m scripts.report_e2e_browser_failures` so its `scripts.*` import resolves, with a test that flags any workflow running a `scripts.*` importer by path |
+| 2026-10-31 | #5265 | Bootstrap Python requirements before the nightly Quarto render |
+| 2026-10-31 | #5277 | Close-out: hub and book Ch.1 summaries match manuscript affine wording (#5188 area). |
+| 2026-10-31 | #5269 | Outline three humanoid launch series with rights and publication gates |
+| 2026-10-31 | #5268 | Document humanoid audiences and planning metadata contract with UX handoff |
+| 2026-10-31 | #5266 | Add phase-zero humanoid rights ledger with five pending artifact reviews and AMASS hold |
+| 2026-10-31 | #5267 | Record proposed humanoid expansion scope, upstream boundary and phase gates |
+| 2026-10-31 | #5276 | Reduce the site-search index, remove chrome text, rank the double-pendulum chapter, and fit the phone search panel to the viewport |
+| 2026-10-31 | #5271 | Home hero first, balanced hero column, figure capped near design size, hub prose capped to reading measure |
+| 2026-10-31 | #5273 | UX slice 5: compact article opening (title card, abstract, summary/takeaways/caveats cards) and a title-fallback filter for empty title headings |
+| 2026-10-31 | #5272 | Apply shared typography tokens to rendered pages and the Physics of Golf book; update the PDF dependency baseline. |
+| 2026-10-31 | #5275 | Bump pypdf to 6.21.4 to clear pip-audit CVE-2026-119203–119209 blocking CI.; Close-out: Volume I book chapter read links verified on main (#5188); no further content change. |
+| 2026-10-30 | #5261 | Specify and implement versioned, bounded #state= URL-hash state contract for dcr-visualizer (#5255) |
+| 2026-10-30 | #5260 | Draft JSON Schema and provenance field spec for asset_manifest.json (#5251) |
+| 2026-10-30 | #5259 | Measure 60-day AGENT_HANDOFF.md and _quarto.yml conflict frequency and recommend no-go on .agent/state split (#5250) |
+| 2026-10-30 | #5258 | Audit self-hosted assets, SRI, and CSP against ADR 0002 with post-render SRI check (#5252) |
+| 2026-10-30 | #5257 | Audit CI workflow permissions, untrusted run interpolations, and action SHA pins (#5249) |
+| 2026-10-29 | #5235 | UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens |
+| 2026-10-29 | #5238 | UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast |
+| 2026-10-29 | #5237 | Option A-4 prerequisite: vendor the UpstreamDrift Option A reference trace with sha256 and recomputed payload-digest verification, and a verified loader |
+| 2026-10-29 | #5189 | Tighten Part 4/7 residual Gronwall bound; de-emphasize fixed-trajectory integral naming in thesis |
+| 2026-10-29 | #5188 | Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links |
 | 2026-10-29 | #5236 | Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test |
 | 2026-10-29 | #5239 | Record redirect for unpublished Slack article to restore URL stability check in deploy workflow |
 | 2026-10-28 | #5231 | Pin merged UpstreamDrift companion commits and refresh article status |

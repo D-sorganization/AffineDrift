@@ -68,6 +68,7 @@ APPLIED_ARTICLE_ROUTES = frozenset(
         "/articles/proximal-distal-model-workbench.html",
         "/articles/proximal_distal_energy_transfer/index.html",
         "/articles/putting-roll-models.html",
+        "/articles/slack-takeup-identifiability.html",
         "/articles/strokes-gained-limitations.html",
         "/articles/technology-club-fitting.html",
         "/articles/technology-force-measurement.html",

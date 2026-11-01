@@ -22,13 +22,13 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
-  cross-browser-e2e:
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [firefox, webkit]
+  build-site:
+    # #5301: render the site once for both browser legs. Each leg used to render
+    # it itself under a 45-minute job timeout; a cold render took 44 minutes on
+    # 2026-11-01 and cancelled the firefox leg before any test ran (the cancel
+    # also skipped the cache save, so the next night started cold again).
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Compute Quarto render cache key
@@ -47,6 +47,58 @@ jobs:
             _site
             .quarto
           key: ${{ steps.quarto_cache_key.outputs.key }}
+      - name: Resolve pinned Quarto version
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        id: quarto
+        run: echo "version=$(tr -d '[:space:]' < .quarto-version)" >> "$GITHUB_OUTPUT"
+      - name: Set up Quarto
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        with:
+          version: ${{ steps.quarto.outputs.version }}
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        with:
+          python-version: "3.12"
+      - name: Bootstrap Python venv
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        timeout-minutes: 40
+        env:
+          PIP_DEFAULT_TIMEOUT: "60"
+        run: |
+          python -m venv "$RUNNER_TEMP/ci-venv"
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install --no-cache-dir -r requirements.txt
+          echo "$RUNNER_TEMP/ci-venv/bin" >> "$GITHUB_PATH"
+      - name: Remove .env.example
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        run: rm -f .env.example
+      - name: Build site for E2E
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        timeout-minutes: 60
+        run: quarto render --to html
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: cross-browser-site
+          path: _site
+          include-hidden-files: true
+          retention-days: 1
+
+  cross-browser-e2e:
+    needs: build-site
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: cross-browser-site
+          path: _site
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ".nvmrc"
@@ -63,21 +115,6 @@ jobs:
             echo "No passwordless sudo — installing browser binaries only."
             npx playwright install "${{ matrix.browser }}"
           fi
-      - name: Resolve pinned Quarto version
-        if: steps.quarto_cache.outputs.cache-hit != 'true'
-        id: quarto
-        run: echo "version=$(tr -d '[:space:]' < .quarto-version)" >> "$GITHUB_OUTPUT"
-      - name: Set up Quarto
-        if: steps.quarto_cache.outputs.cache-hit != 'true'
-        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
-        with:
-          version: ${{ steps.quarto.outputs.version }}
-      - name: Remove .env.example
-        if: steps.quarto_cache.outputs.cache-hit != 'true'
-        run: rm -f .env.example
-      - name: Build site for E2E
-        if: steps.quarto_cache.outputs.cache-hit != 'true'
-        run: quarto render --to html
       - name: Sync Frontend Assets
         run: |
           python3 scripts/sync_frontend_assets.py
@@ -117,7 +154,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 scripts/report_e2e_browser_failures.py \
+          python3 -m scripts.report_e2e_browser_failures \
             --report reports/playwright-report-firefox.json \
             --report reports/playwright-report-webkit.json \
             --repo "${{ github.repository }}" \

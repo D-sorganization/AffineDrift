@@ -28,7 +28,7 @@
 :root {
   /* ========== Font Families ========== */
   --font-family-base: -apple-system, blinkmacsystemfont, "Segoe UI", "Roboto", "Helvetica Neue", "Arial", sans-serif;
-  --font-family-heading: "Georgia", "Times New Roman", serif;
+  --font-family-heading: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-family-mono: "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
 
   /* ========== Font Sizes ========== */
@@ -37,8 +37,8 @@
 
   /* Preferred size = 1vw + base value (scales with viewport) */
 
-  /* Body text - 16px on mobile, responsive up to 18px on large screens */
-  --font-size-body: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+  /* Body text - never below 1rem (16px); grows to 18px on large screens (#5166) */
+  --font-size-body: clamp(1rem, 0.6vw + 0.75rem, 1.125rem);
 
   /* Small text - 14px responsive */
   --font-size-sm: clamp(0.75rem, 0.9vw + 0.4rem, 1rem);
@@ -58,19 +58,21 @@
   /* 3XL - 40px responsive */
   --font-size-3xl: clamp(1.875rem, 2.5vw + 0.9rem, 2.5rem);
 
-  /* Heading sizes - semantic scale for h1-h6 */
-  --font-size-h1: clamp(2rem, 3vw + 1rem, 2.5rem);
-  --font-size-h2: clamp(1.75rem, 2.5vw + 0.9rem, 2.25rem);
-  --font-size-h3: clamp(1.5rem, 2vw + 0.8rem, 1.875rem);
-  --font-size-h4: clamp(1.25rem, 1.5vw + 0.7rem, 1.5rem);
-  --font-size-h5: clamp(1rem, 1.2vw + 0.6rem, 1.25rem);
-  --font-size-h6: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+  /* Heading sizes - the single h1-h6 scale (#5166). Every viewport keeps
+     h1 > h2 > h3 > h4 >= h5 >= h6; h5 and h6 never drop below body (1rem).
+     styles.css and component boxes consume these tokens; no raw sizes. */
+  --font-size-h1: clamp(1.75rem, 4vw + 0.75rem, 2.75rem);
+  --font-size-h2: clamp(1.5rem, 3vw + 0.5rem, 2.25rem);
+  --font-size-h3: clamp(1.25rem, 2vw + 0.5rem, 1.75rem);
+  --font-size-h4: clamp(1.1rem, 1.5vw + 0.5rem, 1.35rem);
+  --font-size-h5: clamp(1rem, 1vw + 0.4rem, 1.2rem);
+  --font-size-h6: clamp(1rem, 0.5vw + 0.6rem, 1.1rem);
 
   /* Prose text for articles and long-form content */
-  --font-size-prose: clamp(0.875rem, 1.1vw + 0.4rem, 1.125rem);
+  --font-size-prose: clamp(1rem, 0.6vw + 0.75rem, 1.125rem);
 
   /* Code and monospace */
-  --font-size-code: clamp(0.8rem, 0.9vw + 0.4rem, 0.95rem);
+  --font-size-code: clamp(0.875rem, 0.5vw + 0.7rem, 0.95rem);
 
   /* ========== Font Weights ========== */
   --font-weight-light: 300;
@@ -110,12 +112,18 @@
 
   /* ========== Prose Width ========== */
 
-  /* Optimal line length for readability (~68ch; ~72–75 real characters at 17px root, #5164) */
-  --prose-width: 68ch;
+  /* Shared default stays within the site's 60–75ch reading-comfort rule.
+     The two measured #5166 pages override this token in their page CSS. */
+  --prose-width: 61ch;
 
   /* ========== Text Transform ========== */
   --text-transform-uppercase: uppercase;
   --text-transform-lowercase: lowercase;
   --text-transform-capitalize: capitalize;
   --text-transform-none: none;
+}
+
+/* Match the measured 65–71 real-character target on Theory Part 1. */
+html:has(link[rel="canonical"][href$="/articles/theory-part1.html"]) {
+  --prose-width: 55ch;
 }
