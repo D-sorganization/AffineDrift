@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-01 | #5303 | Conflict Disarm App token scoped to AffineDrift and Repository_Management with contents read, pull-requests write and issues write |
 | 2026-11-01 | #5297 | Close UX slice 3: component headings use scale tokens; axe/Lighthouse evidence on live pages |
 | 2026-11-01 | #5296 | Conflict Disarm runs its job inline (reading RM's conflict_disarm script via an App-token checkout) instead of calling an internal Repository_Management reusable workflow, which a public repo cannot do, so it no longer fails every run with 0 jobs |
 | 2026-11-01 | #5294 | Fence the GAAI ci-watch-and-fix skill in project rules and collapse the duplicated CI Watch section (RM #2567). |
