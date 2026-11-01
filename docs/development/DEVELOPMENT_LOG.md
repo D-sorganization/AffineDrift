@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5182 · Retire Remaining 'Hyperplane' Display Text in the Manuscript Terminology Heading and the Book Ch.4 Blurb; Mathematical Object Names Were Already Disambiguated
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5182
+- **Branch:** merged via #5270
+- **PR:** #5270
+- **Paths:** see #5270
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`89bef879`; collated from changes/5182-retire-remaining-hyperplane-display-text.md)
+- **Summary:** Retire remaining 'hyperplane' display text in the manuscript terminology heading and the book Ch.4 blurb; mathematical object names were already disambiguated
+- **Next step:** Shipped in PR #5270.
+
 ### DL-#5301 · Cross-Browser Nightly Renders the Site Once in a Build-Site Job; the Firefox and Webkit Legs Download It Instead of Each Rendering Under a 45-Minute Timeout
 
 - **State:** shipped
