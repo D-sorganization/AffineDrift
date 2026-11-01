@@ -29,7 +29,7 @@ Quarto could not render locally because its dotenv profile requires an absent
 axe-core 4.14.0 (via `@axe-core/playwright`) ran 2026-11-01 after
 `document.fonts.ready` on the live public site at 375×812 and 1440×900.
 Tags included WCAG 2.0, 2.1, and 2.2 A/AA. Reproduce with
-`node docs/ux-evidence/5166/capture_axe.js` after `npm ci`.
+`node scripts/ux-evidence/5166/capture_axe.js` after `npm ci`.
 
 | Page | Viewport | Passes | Violations |
 | --- | --- | ---: | ---: |
