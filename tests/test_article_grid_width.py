@@ -44,7 +44,7 @@ def test_prose_width_targets_about_68_real_characters_per_line() -> None:
     """The epic targets ~68 real characters per line at 1440px (#5164).
 
     The 68ch token measured 76-78 real characters on Theory Part 1 and ch03, so
-    #5166 moved the token to 62ch (see its follow-up comment of 2026-10-26).
+    #5166 scoped 55ch overrides on those two pages while keeping the shared default at 61ch.
     """
     tokens = TYPOGRAPHY_TOKENS.read_text(encoding="utf-8")
     match = re.search(r"--prose-width:\s*(\d+)ch;", tokens)

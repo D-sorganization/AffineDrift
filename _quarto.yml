@@ -8,6 +8,8 @@ project:
     # Moves the static skip link ahead of the navbar (#4566); Quarto places
     # include-before-body content inside <main>.
     - python3 scripts/move_skip_link.py
+    # Keep Quarto search focused and load its runtime only on interaction (#5170).
+    - python3 scripts/post_render_search.py
   render:
     - "*.qmd"
     - "pages/**/*.qmd"
@@ -382,6 +384,7 @@ format:
     css:
       - styles.css
       - css/search-metrics.css
+      - css/search-overlay-mobile.css
     filters:
       - scripts/filters/title-fallback.lua
       - scripts/filters/page-header-card.lua
@@ -411,6 +414,7 @@ format:
     include-in-header:
       - _includes/site-head.html
       - _includes/mathjax-loader.html
+      - _includes/search-lazy-loader.html
     include-before-body:
       - _includes/skip-link.html
     include-after-body:
