@@ -612,6 +612,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5295 · Conflict Disarm Runs Its Job Inline (Reading RM's Conflict_Disarm Script via an App-Token Checkout) Instead of Calling an Internal Repository_Management Reusable Workflow, Which a Public Repo Cannot Do, so It No Longer Fails Every Run With 0 Jobs
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5295
+- **Branch:** merged via #5296
+- **PR:** #5296
+- **Paths:** see #5296
+- **Started:** 2026-11-01
+- **Last verified:** 2026-11-01 (`ac11321b`; collated from changes/5295-conflict-disarm-runs-its-job-inline-read.md)
+- **Summary:** Conflict Disarm runs its job inline (reading RM's conflict_disarm script via an App-token checkout) instead of calling an internal Repository_Management reusable workflow, which a public repo cannot do, so it no longer fails every run with 0 jobs
+- **Next step:** Shipped in PR #5296.
+
 ### DL-#5293 · Fence the GAAI Ci-Watch-and-Fix Skill in Project Rules and Collapse the Duplicated CI Watch Section (RM #2567).
 
 - **State:** shipped

@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-01 | #5296 | Conflict Disarm runs its job inline (reading RM's conflict_disarm script via an App-token checkout) instead of calling an internal Repository_Management reusable workflow, which a public repo cannot do, so it no longer fails every run with 0 jobs |
 | 2026-11-01 | #5294 | Fence the GAAI ci-watch-and-fix skill in project rules and collapse the duplicated CI Watch section (RM #2567). |
 | 2026-11-01 | #5290 | docs: root REVIEW.md with AffineDrift review rules (RM #2565 rollout) |
 | 2026-10-31 | #5279 | Keep the phone search control in the single-row navigation header |
