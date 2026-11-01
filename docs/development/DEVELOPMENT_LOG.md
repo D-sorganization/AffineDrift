@@ -345,19 +345,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Audit CI workflow permissions, untrusted run interpolations, and action SHA pins (#5249)
 - **Next step:** Merge the PR.
 
-### DL-#5166 · UX Slice 3: One Heading Face Token, Strict H1-H4 Scale, 1Rem Body Floor, No Mid-Word Breaks, Custom.Scss Mirrors Tokens
-
-- **State:** in_review
-- **Owner:** unassigned
-- **Issue:** #5166
-- **Branch:** claude/ad-5166-1
-- **PR:** #5235, #5272, #5280
-- **Paths:** see #5235
-- **Started:** 2026-10-29
-- **Last verified:** 2026-10-31 (`0599ad10`; collated from changes/5166-measured-page-reading-width-follow-up.md)
-- **Summary:** UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens
-- **Next step:** Validate the focused typography correction.
-
 ### DL-#5180 · Tangent-Space Review PR A: Affine Hub/Book Summaries and Volume I Chapter Read Links
 
 - **State:** in_review
@@ -611,6 +598,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5166 · UX Slice 3: One Heading Face Token, Strict H1-H4 Scale, 1Rem Body Floor, No Mid-Word Breaks, Custom.Scss Mirrors Tokens
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5166
+- **Branch:** claude/ad-5166-1
+- **PR:** #5235, #5272, #5280, #5297
+- **Paths:** see #5235
+- **Started:** 2026-10-29
+- **Last verified:** 2026-11-01 (`79487d50`; collated from changes/5166-close-ux-slice-3-component-headings-use.md)
+- **Summary:** UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens
+- **Next step:** Issue closes on merge.
 
 ### DL-#5295 · Conflict Disarm Runs Its Job Inline (Reading RM's Conflict_Disarm Script via an App-Token Checkout) Instead of Calling an Internal Repository_Management Reusable Workflow, Which a Public Repo Cannot Do, so It No Longer Fails Every Run With 0 Jobs
 
