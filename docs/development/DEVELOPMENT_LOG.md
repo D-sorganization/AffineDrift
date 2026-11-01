@@ -956,10 +956,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5136
 - **Branch:** merged via #5149
-- **PR:** #5149, #5150
+- **PR:** #5149, #5150, #5308
 - **Paths:** see #5149
 - **Started:** 2026-10-26
-- **Last verified:** 2026-10-26 (`e1eeac3f`; collated from changes/5136-add-the-toy-b-two-hand-take-up-study-its.md)
+- **Last verified:** 2026-11-01 (`19fe4a3c`; collated from changes/5136-apply-karl-lay-reader-and-feynman-prose.md)
 - **Summary:** Add the shared dead-zone chain core, the Toy A train study and the Toy C grasp-kernel counts for #5136
 - **Next step:** Shipped in PR #5149.
 
