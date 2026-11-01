@@ -5,8 +5,8 @@ checks that the prose quotes exactly those numbers and references every figure.
 """
 
 import json
-from pathlib import Path
 from decimal import ROUND_HALF_UP, Decimal
+from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
