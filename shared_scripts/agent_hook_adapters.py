@@ -233,7 +233,7 @@ def _read_json_object(path: Path) -> dict[str, Any]:
     return cast(dict[str, Any], parsed)
 
 
-def generate_adapters(  # noqa: C901, PLR0915 -- complex multi-target generator
+def generate_adapters(  # noqa: C901, PLR0915
     root: Path,
     *,
     targets: frozenset[str],

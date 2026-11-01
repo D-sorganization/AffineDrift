@@ -49,6 +49,7 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         "NOTATION.md",
         "PARAMETERS.md",
         "README.md",
+        "REVIEW.md",
         "SECURITY.md",
         "SPEC.md",
         "VERSION",
