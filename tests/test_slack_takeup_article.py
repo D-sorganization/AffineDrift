@@ -5,12 +5,21 @@ checks that the prose quotes exactly those numbers and references every figure.
 """
 
 import json
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTICLE = ROOT / "articles/slack-takeup-identifiability.qmd"
 RESULTS = ROOT / "data/slack_takeup_witness/results.json"
+
+
+def _pct(value: float) -> str:
+    """Percent to one decimal, rounding halves up (0.7425 -> 74.3%, 0.5275 -> 52.8%)."""
+    exact = Decimal(repr(value)) * 100
+    return f"{exact.quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)}%"
+
+
 FIGURES = ("train-takeup-order", "nullity-counts", "event-time-sensitivity", "matched-pair")
 
 
@@ -18,12 +27,12 @@ def _quoted(results: dict[str, Any]) -> list[str]:
     """Every number the article quotes, formatted as the prose writes it."""
     hands, train = results["hands"], results["train"]
     pair, split = results["matched_pair"], results["split_visibility"]
-    pct = [f"{100 * train[name]['accuracy']:.1f}%" for name in ("uncertain", "taut")]
+    pct = [_pct(train[name]["accuracy"]) for name in ("uncertain", "taut")]
     for regime in ("known", "uncertain", "preloaded", "smooth"):
         row = hands[regime]
-        pct += [f"{100 * row[key]:.1f}%" for key in ("accuracy", "wilson_low", "wilson_high")]
-    pct.append(f"{100 * hands['preloaded']['no_events']:.1f}%")
-    pct.append(f"{100 * hands['preloaded']['both_events']:.1f}%")
+        pct += [_pct(row[key]) for key in ("accuracy", "wilson_low", "wilson_high")]
+    pct.append(_pct(hands["preloaded"]["no_events"]))
+    pct.append(_pct(hands["preloaded"]["both_events"]))
     times = [f"{1e3 * value:.2f} ms" for value in pair["target_times"] + pair["matched_times"]]
     times += [f"{1e3 * value:.1f} mrad" for value in pair["nuisance"]]
     flow = results["first_order"]
