@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-01 | #5310 | Rename citation key koike2020 to choi2020grip (Choi and Park 2020) across the series |
 | 2026-11-01 | #5308 | Apply Karl lay-reader and Feynman prose refinements to Slack Take-Up as a Witness |
 | 2026-11-01 | #5270 | Retire remaining 'hyperplane' display text in the manuscript terminology heading and the book Ch.4 blurb; mathematical object names were already disambiguated |
 | 2026-11-01 | #5305 | Cross-Browser Nightly renders the site once in a build-site job; the firefox and webkit legs download it instead of each rendering under a 45-minute timeout |
