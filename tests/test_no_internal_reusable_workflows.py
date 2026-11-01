@@ -59,7 +59,7 @@ def test_conflict_disarm_app_token_is_scoped_to_ad_and_rm() -> None:
 
     assert repositories == {"AffineDrift", "Repository_Management"}
     assert permissions == {
-        "permission-contents": "read",
+        "permission-contents": "write",
         "permission-pull-requests": "write",
         "permission-issues": "write",
     }
