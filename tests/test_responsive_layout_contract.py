@@ -7,6 +7,23 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
+def test_full_layout_phone_content_has_inline_padding() -> None:
+    """Full-layout pages without centered wrappers need side inset on phones (#5323)."""
+    stylesheet = (REPO_ROOT / "styles.css").read_text(encoding="utf-8")
+
+    contract = stylesheet.split(
+        "/* Phone full-layout side inset: bare main.content must not touch viewport edges. */",
+        maxsplit=1,
+    )[1]
+    rule = contract.split("#quarto-content.page-layout-full main.content", maxsplit=1)[1].split(
+        "}", maxsplit=1
+    )[0]
+
+    assert "@media (max-width: 575.98px)" in contract
+    assert "padding-inline: clamp(1rem, 4vw, 2rem)" in rule
+    assert "box-sizing: border-box" in rule
+
+
 def test_models_mobile_layout_prioritizes_primary_content() -> None:
     """The compact Models view must not spend its first fold on a duplicate TOC."""
     source = (REPO_ROOT / "models" / "models.qmd").read_text(encoding="utf-8")

@@ -294,6 +294,14 @@ main.content .reading-time-estimate span,
   width: 100%;
 }
 
+/* Phone full-layout side inset: bare main.content must not touch viewport edges. */
+@media (max-width: 575.98px) {
+  #quarto-content.page-layout-full main.content {
+    box-sizing: border-box;
+    padding-inline: clamp(1rem, 4vw, 2rem);
+  }
+}
+
 /* Article pages: keep margins tighter and sidebars visible */
 #quarto-content.page-layout-article {
   max-width: var(--content-max-width);
