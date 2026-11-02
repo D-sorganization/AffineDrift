@@ -299,6 +299,19 @@ def test_anti_phantom_guard_uses_gh_jq_not_runner_jq() -> None:
     assert "--jq .changedFiles" in content
 
 
+def test_seed_quarto_e2e_cache_workflow_seeds_default_branch_cache() -> None:
+    """#5342: main push job seeds the exact quarto cache key without restore-keys."""
+    seed = ROOT_DIR / ".github/workflows/seed-quarto-e2e-cache.yml"
+    assert seed.is_file()
+    text = seed.read_text(encoding="utf-8")
+    assert "python3 scripts/quarto_cache_key.py --repo-root ." in text
+    assert "- main" in text or "main" in text.split("branches:", maxsplit=1)[1][:80]
+    assert "restore-keys" not in text
+    e2e = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
+    cache_step = e2e.split("id: quarto_cache\n", maxsplit=1)[1].split("Build site for E2E", maxsplit=1)[0]
+    assert "restore-keys" not in cache_step
+
+
 @pytest.mark.skipif(
     not LATEX_RELEASE_WORKFLOW_PATH.exists(),
     reason="latex-release-volumes.yml not yet created",
