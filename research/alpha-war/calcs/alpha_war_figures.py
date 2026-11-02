@@ -11,6 +11,7 @@ FIG_DIR = CALCS_DIR.parent / "draft" / "figures"
 
 
 def _svg_header(w: int, h: int) -> str:
+    """Return the opening SVG root element for a figure of the given size."""
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" '
         f'viewBox="0 0 {w} {h}" role="img">'
@@ -18,6 +19,7 @@ def _svg_header(w: int, h: int) -> str:
 
 
 def fig_transport_stations(payload: dict) -> str:
+    """Plot alpha moment versus shaft station from study 1 transport data."""
     study = payload["study_1_grip_point_transport"]["wscg_at_minimum_couple"]
     stations = study["stations"]
     xs = [s["shaft_offset_from_mid_hands_m"] for s in stations]
@@ -29,28 +31,35 @@ def fig_transport_stations(payload: dict) -> str:
     span_y = ymax - ymin or 1.0
 
     def tx(x: float) -> float:
+        """Map shaft offset to horizontal SVG coordinate."""
         return pad + (x - xmin) / span_x * (w - 2 * pad)
 
     def ty(y: float) -> float:
+        """Map alpha moment to vertical SVG coordinate."""
         return h - pad - (y - ymin) / span_y * (h - 2 * pad)
 
+    title = (
+        f'<text x="{pad}" y="24" font-size="14">'
+        "Alpha moment vs shaft station (WSCG min couple)</text>"
+    )
     lines = [
         _svg_header(w, h),
-        f'<text x="{pad}" y="24" font-size="14">Alpha moment vs shaft station (WSCG min couple)</text>',
+        title,
         f'<line x1="{pad}" y1="{h-pad}" x2="{w-pad}" y2="{h-pad}" stroke="#333"/>',
         f'<line x1="{pad}" y1="{pad}" x2="{pad}" y2="{h-pad}" stroke="#333"/>',
     ]
-    for x, y in zip(xs, ys):
-        lines.append(
-            f'<circle cx="{tx(x):.1f}" cy="{ty(y):.1f}" r="4" fill="#1f77b4"/>'
-        )
-    lines.append(f'<line x1="{tx(xs[0]):.1f}" y1="{ty(ys[0]):.1f}" '
-                 f'x2="{tx(xs[-1]):.1f}" y2="{ty(ys[-1]):.1f}" stroke="#1f77b4"/>')
+    for x, y in zip(xs, ys, strict=True):
+        lines.append(f'<circle cx="{tx(x):.1f}" cy="{ty(y):.1f}" r="4" fill="#1f77b4"/>')
+    lines.append(
+        f'<line x1="{tx(xs[0]):.1f}" y1="{ty(ys[0]):.1f}" '
+        f'x2="{tx(xs[-1]):.1f}" y2="{ty(ys[-1]):.1f}" stroke="#1f77b4"/>'
+    )
     lines.append("</svg>")
     return "\n".join(lines)
 
 
 def fig_filter_sweep(payload: dict) -> str:
+    """Plot filtered impact couple versus Butterworth cutoff frequency."""
     rows = payload["study_4_filtering_and_drag_sensitivity"]["butterworth_cutoff_sweep"]
     xs = [r["cutoff_hz"] for r in rows]
     ys = [r["clean_filtered_at_impact_nm"] for r in rows]
@@ -60,24 +69,31 @@ def fig_filter_sweep(payload: dict) -> str:
     span_y = ymax - ymin or 1.0
 
     def tx(x: float) -> float:
+        """Map cutoff frequency to horizontal SVG coordinate."""
         return pad + x / xmax * (w - 2 * pad)
 
     def ty(y: float) -> float:
+        """Map filtered couple to vertical SVG coordinate."""
         return h - pad - (y - ymin) / span_y * (h - 2 * pad)
 
+    filter_title = (
+        '<text x="50" y="24" font-size="14">'
+        "Filtered impact couple vs Butterworth cutoff (Hz)</text>"
+    )
     lines = [
         _svg_header(w, h),
-        '<text x="50" y="24" font-size="14">Filtered impact couple vs Butterworth cutoff (Hz)</text>',
+        filter_title,
         f'<line x1="{pad}" y1="{h-pad}" x2="{w-pad}" y2="{h-pad}" stroke="#333"/>',
         f'<line x1="{pad}" y1="{pad}" x2="{pad}" y2="{h-pad}" stroke="#333"/>',
     ]
-    pts = " ".join(f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(xs, ys))
+    pts = " ".join(f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(xs, ys, strict=True))
     lines.append(f'<polyline fill="none" stroke="#d62728" stroke-width="2" points="{pts}"/>')
     lines.append("</svg>")
     return "\n".join(lines)
 
 
 def fig_couple_timeseries(payload: dict) -> str:
+    """Plot hand couple and sum-of-moments time series from study 2."""
     snaps = payload["study_2_couple_vs_sum_of_moments"]["snapshots"]
     ts = [s["time_s"] for s in snaps]
     couple = [s["total_hand_couple_mid_nm"] for s in snaps]
@@ -90,13 +106,16 @@ def fig_couple_timeseries(payload: dict) -> str:
     span_v = vmax - vmin or 1.0
 
     def tx(t: float) -> float:
+        """Map time to horizontal SVG coordinate."""
         return pad + (t - tmin) / span_t * (w - 2 * pad)
 
     def ty(v: float) -> float:
+        """Map torque value to vertical SVG coordinate."""
         return h - pad - (v - vmin) / span_v * (h - 2 * pad)
 
     def poly(series: list[float], color: str) -> str:
-        pts = " ".join(f"{tx(t):.1f},{ty(v):.1f}" for t, v in zip(ts, series))
+        """Build a polyline element for one time series."""
+        pts = " ".join(f"{tx(t):.1f},{ty(v):.1f}" for t, v in zip(ts, series, strict=True))
         return f'<polyline fill="none" stroke="{color}" stroke-width="2" points="{pts}"/>'
 
     lines = [
@@ -110,12 +129,17 @@ def fig_couple_timeseries(payload: dict) -> str:
 
 
 def fig_swing_plane_schematic() -> str:
+    """Return a schematic SVG of the functional swing plane."""
     w, h = 640, 280
+    ellipse = (
+        '<ellipse cx="320" cy="160" rx="220" ry="70" fill="none" '
+        'stroke="#888" stroke-dasharray="6 4"/>'
+    )
     return "\n".join(
         [
             _svg_header(w, h),
             '<text x="40" y="30" font-size="14">Functional swing plane (schematic)</text>',
-            '<ellipse cx="320" cy="160" rx="220" ry="70" fill="none" stroke="#888" stroke-dasharray="6 4"/>',
+            ellipse,
             '<text x="260" y="250" font-size="12">Instantaneous swing plane</text>',
             '<line x1="120" y1="200" x2="520" y2="120" stroke="#333" stroke-width="3"/>',
             '<text x="500" y="110" font-size="12">Club path</text>',
@@ -127,6 +151,7 @@ def fig_swing_plane_schematic() -> str:
 
 
 def fig_nesbit_fig11_schematic() -> str:
+    """Return a qualitative re-plot inspired by Nesbit and Serrano Fig. 11."""
     w, h = 640, 320
     panels = [
         ("S1 scratch", "negative"),
@@ -134,19 +159,33 @@ def fig_nesbit_fig11_schematic() -> str:
         ("S3 13-hcp", "near zero"),
         ("S4 18-hcp", "positive"),
     ]
-    lines = [_svg_header(w, h), '<text x="40" y="28" font-size="14">Nesbit &amp; Serrano Fig. 11 — qualitative subject trends (re-plot)</text>']
+    header = (
+        '<text x="40" y="28" font-size="14">'
+        "Nesbit &amp; Serrano Fig. 11 — qualitative subject trends (re-plot)</text>"
+    )
+    lines = [_svg_header(w, h), header]
     for i, (label, trend) in enumerate(panels):
         x0 = 40 + i * 150
-        color = "#d62728" if trend == "negative" else "#2ca02c" if trend == "positive" else "#888"
-        lines.append(f'<rect x="{x0}" y="50" width="130" height="220" fill="#f7f7f7" stroke="#ccc"/>')
+        if trend == "negative":
+            color = "#d62728"
+        elif trend == "positive":
+            color = "#2ca02c"
+        else:
+            color = "#888"
+        rect = f'<rect x="{x0}" y="50" width="130" height="220" ' f'fill="#f7f7f7" stroke="#ccc"/>'
+        lines.append(rect)
         lines.append(f'<text x="{x0+10}" y="75" font-size="12">{label}</text>')
         lines.append(f'<text x="{x0+10}" y="95" font-size="11">Impact trend: {trend}</text>')
-        lines.append(f'<polyline fill="none" stroke="{color}" stroke-width="3" points="{x0+20},240 {x0+60},120 {x0+110},200"/>')
+        poly_pts = f"{x0+20},240 {x0+60},120 {x0+110},200"
+        lines.append(
+            f'<polyline fill="none" stroke="{color}" stroke-width="3" points="{poly_pts}"/>'
+        )
     lines.append("</svg>")
     return "\n".join(lines)
 
 
 def main() -> None:
+    """Load calculation JSON and write all draft figure SVGs to disk."""
     payload = json.loads(JSON_PATH.read_text(encoding="utf-8"))
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     outputs = {
