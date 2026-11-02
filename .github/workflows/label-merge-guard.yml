@@ -1,0 +1,125 @@
+name: Label Merge Guard
+
+# Enforces fleet hold labels that automerge_guard.py cannot block at merge time:
+# ``do-not-merge`` on pull requests (including merge-queue commits) and
+# ``do-not-automate`` on issues closed by automation (2026-10-27/30 incidents).
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+  merge_group:
+  issues:
+    types: [closed]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: write
+
+concurrency:
+  group: label-merge-guard-${{ github.event.pull_request.number || github.event.issue.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  block-do-not-merge:
+    name: Block do-not-merge label
+    timeout-minutes: 10
+    # Fork PRs are routed to a hosted runner, never skipped (RM#1989).
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' || vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    if: >-
+      (github.event_name == 'merge_group' && github.event.merge_group.base_ref == 'main') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main')
+    steps:
+      # No checkout: labels are read through the REST API on every event, including
+      # merge_group and pull_request_target-free labeled events (RM#1989).
+      - name: Fail while do-not-merge is present
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MERGE_HEAD_REF: ${{ github.event.merge_group.head_ref }}
+        run: |
+          set -eo pipefail
+
+          resolve_pr() {
+            if [ -n "$PR_NUMBER" ] && [ "$PR_NUMBER" != "null" ]; then
+              echo "$PR_NUMBER"
+              return
+            fi
+            if [ "$EVENT_NAME" != "merge_group" ] || [ -z "$MERGE_HEAD_REF" ]; then
+              echo "::error::Could not resolve pull request number for $EVENT_NAME"
+              exit 1
+            fi
+            OWNER="${REPO%%/*}"
+            NUM=$(gh pr list --repo "$REPO" --state open --head "${OWNER}:${MERGE_HEAD_REF}" \
+              --json number --jq '.[0].number // empty' 2>/dev/null || true)
+            if [ -z "$NUM" ]; then
+              NUM=$(gh pr list --repo "$REPO" --state open --head "$MERGE_HEAD_REF" \
+                --json number --jq '.[0].number // empty' 2>/dev/null || true)
+            fi
+            if [ -z "$NUM" ]; then
+              echo "::error::merge_group could not map head ref ${MERGE_HEAD_REF} to an open PR"
+              exit 1
+            fi
+            echo "$NUM"
+          }
+
+          PR=$(resolve_pr)
+          LABELS=$(gh pr view "$PR" --repo "$REPO" --json labels --jq '[.labels[].name] | join(",")')
+          if echo "$LABELS" | tr ',' '\n' | grep -iq '^do-not-merge$'; then
+            echo "::error::Pull request #$PR has the do-not-merge label; merge is blocked."
+            echo "Remove the label only after a human clears the hold, then re-run checks."
+            exit 1
+          fi
+          echo "::notice::No do-not-merge label on PR #$PR; merge guard passed."
+
+  protect-do-not-automate:
+    name: Reopen do-not-automate bot closes
+    timeout-minutes: 5
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    if: github.event_name == 'issues'
+    steps:
+      - name: Reopen issues automation closed against do-not-automate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ACTOR: ${{ github.actor }}
+          SENDER_TYPE: ${{ github.event.sender.type }}
+        run: |
+          set -eo pipefail
+
+          is_automation_actor() {
+            if [ "$SENDER_TYPE" = "Bot" ]; then
+              return 0
+            fi
+            case "$ACTOR" in
+              *"[bot]") return 0 ;;
+              d-sorg*agent) return 0 ;;
+            esac
+            return 1
+          }
+
+          LABELS=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json labels \
+            --jq '[.labels[].name] | join(",")')
+          if ! echo "$LABELS" | tr ',' '\n' | grep -iq '^do-not-automate$'; then
+            echo "::notice::Issue #$ISSUE_NUMBER has no do-not-automate label; nothing to do."
+            exit 0
+          fi
+
+          if ! is_automation_actor; then
+            echo "::notice::Issue #$ISSUE_NUMBER closed by human actor $ACTOR; allowed."
+            exit 0
+          fi
+
+          gh issue reopen "$ISSUE_NUMBER" --repo "$REPO"
+          gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body \
+            "This issue carries the \`do-not-automate\` label and was closed by automation (\`$ACTOR\`). It was reopened automatically; a human must close it when the hold is cleared."
+          echo "::warning::Reopened issue #$ISSUE_NUMBER after bot/app close with do-not-automate."
