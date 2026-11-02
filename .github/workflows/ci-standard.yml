@@ -232,6 +232,11 @@ jobs:
         # cannot carry an {#eq-} label, so the cross-reference gate sees nothing
         # unresolved either.
         run: python3 scripts/check_display_math.py
+      - name: Verify Article Sources Have No Control Characters
+        # PR #5152 corrupted LaTeX when a shell write interpreted \t and \v in
+        # \top, \times, and \varnothing as TAB and vertical tab. Only LF is
+        # allowed below U+0020 in articles/*.qmd.
+        run: python3 scripts/check_article_control_characters.py
       - name: Verify No LaTeX Quotation Marks In Prose
         # LaTeX quotes as ``opening'' and TeX curls it; markdown does not, so
         # the .tex -> .qmd conversions shipped the raw marks: the Geometry of
