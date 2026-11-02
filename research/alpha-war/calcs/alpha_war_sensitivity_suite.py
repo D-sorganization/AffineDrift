@@ -121,6 +121,7 @@ def run_study_1_grip_point_transport() -> dict[str, Any]:
     )
 
     def _evaluate_station_sweep(sample_idx: int, label: str) -> dict[str, Any]:
+        """Sweep shaft stations at one time sample and record alpha-moment sign data."""
         r_l = lead_pos_3d[sample_idx]
         r_t = trail_pos_3d[sample_idx]
         grip_vec = r_t - r_l
@@ -652,6 +653,7 @@ def run_study_6_shaft_flex_contribution() -> dict[str, Any]:
 
 
 def main() -> None:
+    """Run all six studies and write ``alpha_war_calculations.json`` under ``CALCS_DIR``."""
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     results = {
         "study_1_grip_point_transport": run_study_1_grip_point_transport(),
