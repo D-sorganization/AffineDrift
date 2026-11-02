@@ -22,6 +22,7 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
     """Table 7.1 in alpha-war-v0.md must match the sensitivity JSON export."""
 
     def test_table_7_1_matches_calculations_json(self) -> None:
+        """Draft Table 7.1 moments match ``study_1_grip_point_transport`` in the JSON export."""
         payload = json.loads(JSON_PATH.read_text(encoding="utf-8"))
         study = payload["study_1_grip_point_transport"]
         for (station, state_key), expected in DRAFT_TABLE_7_1.items():
