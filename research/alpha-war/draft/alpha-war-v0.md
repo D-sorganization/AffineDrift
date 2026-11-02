@@ -6,7 +6,8 @@ date: "2026-11-01"
 draft: true
 listing: false
 status: do-not-publish
-bibliography: ../work/02_references.md
+bibliography: ../references.bib
+reference-section-title: References
 ---
 
 # Preface to the First Draft
@@ -65,7 +66,7 @@ The entire controversy narrows to a single, microscopic temporal window: **the l
 Within this 50-millisecond window, two diametrically opposed factions emerged:
 
 - **Camp A (The Positive Alpha Paradigm):** Formed around the biomechanical publications of Dr. Steven M. Nesbit (Lafayette College) and championed commercially by golf instructors Michael Jacobs and Brian Manzella through their research venture, *Jacobs 3D*. Camp A asserted that skilled golfers continue to exert an active, positive in-plane torque ($C_\alpha > 0$) through the ball, driving the uncocking of the clubhead all the way to impact. They argued that elite golfers do not simply let go or "coast"; rather, they sustain positive angular drive, and that teaching a golfer to "release" passively leads to loss of clubhead speed, inconsistent face control, and weak impact geometry.
-- **Camp B (The Negative Alpha / Free-Hinge Paradigm):** Championed by leading academic sports biomechanists—including Dr. Sasho MacKenzie (St. Francis Xavier University), Dr. Young-Hoo Kwon (Texas Woman's University), golf engineer Dave Tutelman, tour coach Jon Sinclair, and independent physicist Dr. Robert D. Grober (Yale University). Camp B maintained that in high-speed, skilled full swings, the in-plane couple exerted by the hands on the grip universally crosses zero and reverses to a significant **negative** value ($C_\alpha < 0$, typically $-10\text{ to }-25\text{ N}\cdot\text{m}$) approximately 20 to 40 milliseconds before impact. In Camp B's formulation, the hands act as an angular brake or a trailing hinge; the club rotates forward not because the wrists push it, but because the outward flinging of the clubhead's linear momentum and the centripetal pull of the golfer's body drive the club forward faster than human forearm musculature can actively contract.
+- **Camp B (The Negative Alpha / Free-Hinge Paradigm):** Championed by leading academic sports biomechanists—including Dr. Sasho MacKenzie (St. Francis Xavier University), Dr. Young-Hoo Kwon [@kwon2012fsp] (Texas Woman's University), golf engineer Dave Tutelman [@tutelman2018alpha], tour coach Jon Sinclair, and independent physicist Dr. Robert D. Grober [@grober2020forces] (Yale University). Camp B maintained that in high-speed, skilled full swings, the in-plane couple exerted by the hands on the grip universally crosses zero and reverses to a significant **negative** value ($C_\alpha < 0$, typically $-10\text{ to }-25\text{ N}\cdot\text{m}$) approximately 20 to 40 milliseconds before impact. In Camp B's formulation, the hands act as an angular brake or a trailing hinge; the club rotates forward not because the wrists push it, but because the outward flinging of the clubhead's linear momentum and the centripetal pull of the golfer's body drive the club forward faster than human forearm musculature can actively contract.
 
 ```
 +---------------------------------------------------------------------------------------------------+
@@ -74,7 +75,7 @@ Within this 50-millisecond window, two diametrically opposed factions emerged:
 | Dimension                         | Camp A (Nesbit, Jacobs 3D, Manzella)                          |
 +-----------------------------------+---------------------------------------------------------------+
 | Core Kinetic Claim                | Active in-plane torque remains POSITIVE through impact        |
-| Primary Literature Basis          | Nesbit (2005) Figure 11 (amateurs); Jacobs & Manzella (2015)   |
+| Primary Literature Basis          | [@nesbit2005work] Figure 11 (amateurs); Jacobs & Manzella (2015)   |
 | Primary Reference Point           | Club Center of Mass (COM) or Moving Club Face Frame           |
 | Mechanical Philosophy             | Motor control drives tool; elite players push to impact       |
 | Commercial/Pedagogical Stance     | Jacobs 3D analytics; train active 3-axis force/torque delivery|
@@ -82,7 +83,7 @@ Within this 50-millisecond window, two diametrically opposed factions emerged:
 | Dimension                         | Camp B (Kwon, MacKenzie, Tutelman, Sinclair, Grober)          |
 +-----------------------------------+---------------------------------------------------------------+
 | Core Kinetic Claim                | In-plane hand couple reverses to NEGATIVE before impact       |
-| Primary Literature Basis          | Nesbit & Serrano (2005) p. 528 (scratch); MacKenzie (2009)    |
+| Primary Literature Basis          | [@nesbit2005work] p. 528 (scratch); MacKenzie (2009)    |
 | Primary Reference Point           | Mid-Hands Grip Station ($M$) or Lead Wrist Joint Boundary     |
 | Mechanical Philosophy             | Proximal-to-distal whip; club outruns hands ("free hinge")    |
 | Commercial/Pedagogical Stance     | Open-source 3D models; train kinetic chain transfer & pull    |
@@ -107,7 +108,7 @@ For years, Camp A pointed to positive curves of $\mathbf{M}_G$ and asserted that
 ### Layer 2: The Component-Level Discrepancy and Structural Mechanisms
 However, resolving the debate does not end with semantics. Even when all parties evaluated the pure hand couple $\mathbf{C}_h$ at the exact same grip midpoint $M$, deep physical and computational discrepancies remained:
 - **Frame-Switching Artifacts:** Resolving 3D torque vectors in a rotating, clubface-fixed coordinate frame causes geometric cross-coupling: as the clubface rolls closed in the late downswing, out-of-plane moments project onto the in-plane axis, flipping the calculated sign of $C_\alpha$.
-- **Passive Interaction Dynamics:** Multi-link rigid-body analyses (dating to Carol Putnam's landmark 1991 framework) demonstrate that segment interaction forces—arising purely from forearm deceleration and centripetal acceleration—naturally generate a negative grip couple even when the golfer's muscles are completely deactivated (`zero-torque control`).
+- **Passive Interaction Dynamics:** Multi-link rigid-body analyses (dating to Carol Putnam [@putnam1991segment; @putnam1993sequential]'s landmark 1991 framework) demonstrate that segment interaction forces—arising purely from forearm deceleration and centripetal acceleration—naturally generate a negative grip couple even when the golfer's muscles are completely deactivated (`zero-torque control`).
 - **Flexible Shaft Rebound:** High-speed structural beam dynamics reveal that forward shaft unbending (lead deflection) prior to impact exerts an elastic reaction force against the grip, mechanically forcing the hands into an opposing negative couple.
 - **Proprietary Black-Box Code:** The commercialization of golf analytics led to the deployment of closed-source algorithms (such as *Jacobs 3D*) whose filtering parameters, coordinate transformations, and sensor fusion routines could not be independently inspected or replicated by peer-reviewed science.
 
@@ -150,9 +151,9 @@ We establish the following fixed reference stations along the shaft centerline $
   \mathbf{r}_P = \mathbf{r}_M + s_P\,\hat{\mathbf{e}}_{\text{shaft}}
   $$
 
-## 2.2 Functional Swing Plane (FSP)
+## 2.2 Functional Swing Plane (FSP) [@kwon2012fsp]
 
-The concept of a swing plane is fundamental to planar reductions of golf kinetics. Because the spatial trajectory of the clubhead is non-planar (it flattens during the transition and steepens toward delivery), Dr. Young-Hoo Kwon formulated the instantaneous **Functional Swing Plane (FSP)**.
+The concept of a swing plane is fundamental to planar reductions of golf kinetics. Because the spatial trajectory of the clubhead is non-planar (it flattens during the transition and steepens toward delivery), Dr. Young-Hoo Kwon [@kwon2012fsp] formulated the instantaneous **Functional Swing Plane (FSP) [@kwon2012fsp]**.
 
 At any instant $t$, the FSP is defined by the instantaneous spatial position of the mid-hands point $\mathbf{r}_M(t)$ and the instantaneous velocity vector of the clubhead center of mass $\mathbf{v}_C(t)$. The plane unit normal $\hat{\mathbf{n}}_{\text{FSP}}$ is given by:
 $$
@@ -433,7 +434,7 @@ $$
 
 How can a golfer accelerate the clubhead forward if the hand couple $C_\alpha$ is negative? The answer lies in **parametric acceleration** and the geometry of the hub path.
 
-As demonstrated mathematically by Miura (2001) and elaborated by Nesbit & McGinnis (2009), the clubhead of a golf club does not require an active wrist couple to accelerate. When a golfer pulls the grip inward along a curved path toward the body (centripetal acceleration), the tension force $\mathbf{R}$ acts on the club. If the shaft is not perpendicular to the pull vector, the inward pull exerts a component that accelerates the clubhead tangentially:
+As demonstrated mathematically by Miura (2001) and elaborated by [@nesbit2009hub], the clubhead of a golf club does not require an active wrist couple to accelerate. When a golfer pulls the grip inward along a curved path toward the body (centripetal acceleration), the tension force $\mathbf{R}$ acts on the club. If the shaft is not perpendicular to the pull vector, the inward pull exerts a component that accelerates the clubhead tangentially:
 $$
 \dot{\omega} = \frac{C_\alpha + R_n\,d_{G/M}\sin\beta}{I_G + m_c d_{G/M}^2}
 $$
@@ -478,7 +479,7 @@ where $\beta$ is the uncocking angle and $R_n$ is the centripetal grip tension. 
 > P = \underbrace{\mathbf{R} \cdot \mathbf{v}_M}_{\text{Grip Linear Power}} + \underbrace{\mathbf{C}_h \cdot \boldsymbol{\omega}}_{\text{Couple Power}} = \underbrace{\mathbf{R} \cdot \mathbf{v}_G}_{\text{COM Linear Power}} + \underbrace{\mathbf{M}_G \cdot \boldsymbol{\omega}}_{\text{COM Moment Power}} \equiv \frac{d}{dt}(E_{\text{kinetic}})
 > $$
 >
-> **Adjudication of Nesbit & Serrano (2005) and Olson's Critique (April 2, 2022):**  
+> **Adjudication of [@nesbit2005work] and Olson's Critique (April 2, 2022):**  
 > In their landmark 2005 paper *Work and Power Analysis of the Golf Swing*, Nesbit and Serrano partitioned energy into joint rotational work and body segment work. They asserted that because there is no relative linear displacement *at* an anatomical joint, joint contact forces do no linear work, categorizing all force-based energy transfer under whole-body linear kinetics.
 >
 > On April 2, 2022, Dieter Olson published a critique of this accounting scheme in *Golf Biomechanists*:
@@ -493,9 +494,9 @@ where $\beta$ is the uncocking angle and $R_n$ is the centripetal grip tension. 
 
 Why does the pure hand couple $C_\alpha$ reverse to negative in a live golfer? Is the golfer actively contracting antagonist muscles (extensor carpi ulnaris) to brake the club?
 
-The answer was established in multi-segment biomechanics by Dr. Carol Putnam (1991, 1993). In any open or closed kinematic chain, the acceleration of a distal segment is driven not only by the local joint torque, but by **motion-dependent interaction torques** generated by the velocity and acceleration of proximal segments.
+The answer was established in multi-segment biomechanics by Dr. Carol Putnam [@putnam1991segment; @putnam1993sequential] (1991, 1993). In any open or closed kinematic chain, the acceleration of a distal segment is driven not only by the local joint torque, but by **motion-dependent interaction torques** generated by the velocity and acceleration of proximal segments.
 
-> **Box 3.4: Carol Putnam's Interaction Forces and the UpstreamDrift Drift-Plus-Control Decomposition**
+> **Box 3.4: Carol Putnam [@putnam1991segment; @putnam1993sequential]'s Interaction Forces and the UpstreamDrift Drift-Plus-Control Decomposition**
 >
 > Consider a multi-link planar biomechanical model of the golfer comprising torso, lead arm, trail arm, and club. The generalized equations of motion under closed-loop kinematic constraints are given in descriptor form by:
 > $$
@@ -547,7 +548,7 @@ To resolve a scientific dispute, one must present each faction's arguments in th
 ## 4.1 Dr. Steven M. Nesbit's Founding Studies (2005, 2009)
 
 Modern 3D kinetic modeling of the golf swing began with the work of Dr. Steven M. Nesbit at Lafayette College. In 2005, Nesbit published two landmark companion papers in the *Journal of Sports Science and Medicine*:
-1. *A Three Dimensional Kinematic and Kinetic Study of the Golf Swing* (Nesbit, 2005): Modeled an 85-subject cohort of amateur golfers using a 3D full-body kinematic chain coupled to a flexible club model.
+1. *A Three Dimensional Kinematic and Kinetic Study of the Golf Swing* ([@nesbit2005kinematic]): Modeled an 85-subject cohort of amateur golfers using a 3D full-body kinematic chain coupled to a flexible club model.
 2. *Work and Power Analysis of the Golf Swing* (Nesbit & Serrano, 2005): Examined energy and torque profiles across four representative subjects of varying handicap: Subject 1 (13-handicap), Subject 2 (5-handicap), Subject 3 (Scratch, 0-handicap), and Subject 4 (18-handicap).
 
 ```
@@ -564,19 +565,19 @@ Modern 3D kinetic modeling of the golf swing began with the work of Dr. Steven M
 ```
 
 ### The Irony of Figure 11
-Figure 11 in Nesbit & Serrano (2005) became the ultimate casus belli of the Alpha War. Proponents of Camp A seized upon the visual graphs of Figure 11, noting that two of the four subjects (Subjects 2 and 4) finished the downswing with positive alpha torque curves into impact. From this, commercial coaches inferred that skilled golfers naturally apply positive alpha torque to drive the clubhead through the ball.
+Figure 11 in [@nesbit2005work] became the ultimate casus belli of the Alpha War. Proponents of Camp A seized upon the visual graphs of Figure 11, noting that two of the four subjects (Subjects 2 and 4) finished the downswing with positive alpha torque curves into impact. From this, commercial coaches inferred that skilled golfers naturally apply positive alpha torque to drive the clubhead through the ball.
 
-However, an audit of Nesbit's accompanying text reveals a striking paradox. Nesbit explicitly singled out Subject 3—the elite scratch golfer with the highest clubhead speed in the cohort—and documented that his alpha torque reversed sharply to negative prior to impact. On page 528, Nesbit wrote the foundational description of the phenomenon:
+However, an audit of Nesbit's accompanying text reveals a striking paradox. Nesbit explicitly singled out Subject 3—the elite scratch golfer with the highest clubhead speed in the cohort—and documented that his alpha torque reversed sharply to negative prior to impact. On p. 528 [@nesbit2005work], Nesbit wrote the foundational description of the phenomenon:
 > *"The torques about all three axes pass through zero prior to impact for Subject 3... the wrists approximate a free hinge with the golfer merely holding on as momentum carries the club... all torque components have reversed, doing negative work because the wrists cannot keep up with the club's rotational speed."*
 
 Far from denying the negative torque reversal, Nesbit's founding paper was the very text that coined the term **"free hinge"** to describe it.
 
 ### Nesbit & McGinnis (2009, 2014) on Hub-Path Optimization
-In subsequent publications, Nesbit & McGinnis (2009, 2014) developed kinetic optimization algorithms exploring work and power delivery. They proved that pulling the grip inward along an elliptical "hub path" maximizes kinetic energy transfer to the clubhead. However, in these models, the equations of motion frequently grouped all hand-club interactions at a single representative grip point, leaving open the question of how bilateral hand couples behave in live human subjects.
+In subsequent publications, Nesbit and McGinnis [@nesbit2009hub; @nesbit2014optimization] developed kinetic optimization algorithms exploring work and power delivery. They proved that pulling the grip inward along an elliptical "hub path" maximizes kinetic energy transfer to the clubhead. However, in these models, the equations of motion frequently grouped all hand-club interactions at a single representative grip point, leaving open the question of how bilateral hand couples behave in live human subjects.
 
 ## 4.2 Michael Jacobs, Brian Manzella, and the Jacobs 3D Framework
 
-In 2010, golf instructors Michael Jacobs and Brian Manzella initiated an intellectual collaboration with Dr. Nesbit. Over the ensuing decade, Jacobs and Manzella translated Nesbit's engineering formulations into a commercial swing analysis software suite known as **Jacobs 3D**, publishing two major technical volumes: *Elements of the Swing* (2015) and *The Science of the Golf Swing* (2019).
+In 2010, golf instructors Michael Jacobs and Brian Manzella initiated an intellectual collaboration with Dr. Nesbit. Over the ensuing decade, Jacobs and Manzella translated Nesbit's engineering formulations into a commercial swing analysis software suite known as **Jacobs 3D**, publishing two major technical volumes: *Elements of the Swing* [@jacobs2015elements] and *The Science of the Golf Swing* [@jacobs2019science].
 
 ```
                             JACOBS 3D 6-DOF CLUB-KINETIC DRIVERS
@@ -659,18 +660,18 @@ On May 11, 2020, in response to Camp A's claims that his models were merely "2.5
 
 Independent aerospace engineer Teague Balen performed an exhaustive mathematical audit of MacKenzie's code, confirming that MacKenzie's 3D equations were fully rigorous and conformed strictly to standard spatial mechanics.
 
-## 5.2 Dr. Young-Hoo Kwon's 3D and 2D FSP Research
+## 5.2 Dr. Young-Hoo Kwon [@kwon2012fsp]'s 3D and 2D FSP Research
 
-Concurrently, Dr. Young-Hoo Kwon (Texas Woman's University) conducted extensive 3D motion-capture studies of elite tour players. Utilizing his Functional Swing Plane (FSP) framework, Kwon resolved hand forces and couples into the instantaneous plane of motion.
+Concurrently, Dr. Young-Hoo Kwon [@kwon2012fsp] (Texas Woman's University) conducted extensive 3D motion-capture studies of elite tour players. Utilizing his Functional Swing Plane (FSP) [@kwon2012fsp] framework, Kwon resolved hand forces and couples into the instantaneous plane of motion.
 
 Kwon's empirical data demonstrated complete parity between full 3D models and 2D planar FSP reductions:
 - Approximately 25 milliseconds prior to impact, the net hand couple crosses zero and plunges negative, reaching $-15\text{ to }-20\text{ N}\cdot\text{m}$ at ball strike.
 - Simultaneously, the moment generated by the net hand force ($(\mathbf{r}_M - \mathbf{r}_G) \times \mathbf{R}$) remains strongly positive ($+40\text{ to }+60\text{ N}\cdot\text{m}$).
 - The net moment about the center of mass ($M_{\alpha,G}$) crosses zero much later—typically 10 to 12 milliseconds before impact—demonstrating that even at the COM, the club enters a momentary phase of negative net angular acceleration immediately prior to ball contact.
 
-## 5.3 Dave Tutelman's Landmark Comparative Analyses (2018–2021)
+## 5.3 Dave Tutelman [@tutelman2018alpha]'s Landmark Comparative Analyses (2018–2021)
 
-Dave Tutelman, an MIT-trained engineer and the golf engineering community's most prominent independent analyst, authored a series of landmark articles between 2018 and 2021 deconstructing the Alpha War:
+Dave Tutelman [@tutelman2018alpha], an MIT-trained engineer and the golf engineering community's most prominent independent analyst, authored a series of landmark articles between 2018 and 2021 deconstructing the Alpha War:
 
 1. **"Nesbit or Kwon or MacKenzie?" (2018, updated 2019):** Tutelman conducted a line-by-line derivation of the equations used across all three research programs. He proved that Nesbit's Figure 11 plotted the pure couple, that Kwon's and MacKenzie's data were mathematically isomorphic, and that the apparent conflict was driven by Camp A misinterpreting Nesbit's work-accounting categories.
 2. **The Re-Reading of Nesbit's Founding Paper (May 22, 2020):** Tutelman presented an annotated breakdown of Nesbit's 2005 Figure 11 to the *Golf Biomechanists* group, demonstrating that Nesbit's own data and text celebrated the negative-torque free hinge. Tutelman famously concluded:
@@ -685,18 +686,18 @@ A cornerstone of Camp B's argument is that their conclusions do not rely solely 
       [Cap]----[Lead Sensor: F_L, tau_L]----[Gap: s]----[Trail Sensor: F_T, tau_T]----[Shaft]
 ```
 
-In a series of landmark experimental studies, Koike et al. (2006, 2016, 2019) and Choi & Park (2020) constructed physical golf clubs equipped with multi-axis piezo-electric and strain-gauge load cells split beneath the lead and trail hands:
-- **Koike et al. (2006, 2016):** Directly measured the contact force vectors $\mathbf{F}_L$ and $\mathbf{F}_T$ exerted by live golfers during full swings. The sensor telemetry proved that:
+In a series of landmark experimental studies, [@koike2006grip; @koike2016forces; @koike2019joint] and [@choi2020grip] constructed physical golf clubs equipped with multi-axis piezo-electric and strain-gauge load cells split beneath the lead and trail hands:
+- **[@koike2006grip; @koike2016forces]:** Directly measured the contact force vectors $\mathbf{F}_L$ and $\mathbf{F}_T$ exerted by live golfers during full swings. The sensor telemetry proved that:
   1. The lead hand pulls backward against the shaft in the late downswing ($F_{L,y} > 0$);
   2. The trail hand pushes forward ($F_{T,y} < 0$);
   3. The differential force mode reverses direction 30 to 50 milliseconds before impact, generating a measured negative force couple $C_{F,M} = -s F_{d,y} \approx -10\text{ N}\cdot\text{m}$ at impact.
-- **Choi & Park (2020):** Evaluated hand forces across low- and high-handicap golfers, discovering that the sign change in transverse grip force originates proximally in the trail shoulder and elbow before propagating distally to the wrist, confirming that the late release is an organized kinetic sequence rather than local wrist pushing.
+- **[@choi2020grip]:** Evaluated hand forces across low- and high-handicap golfers, discovering that the sign change in transverse grip force originates proximally in the trail shoulder and elbow before propagating distally to the wrist, confirming that the late release is an organized kinetic sequence rather than local wrist pushing.
 
 Direct physical load cells do not undergo numerical differentiation, do not suffer from optical marker flicker, and do not rely on coordinate frame assumptions. They measure the raw contact forces exerted by human flesh on graphite—and they record a negative couple.
 
-## 5.5 Robert D. Grober's Analytical Double-Pendulum Derivation (2020)
+## 5.5 Robert D. Grober [@grober2020forces]'s Analytical Double-Pendulum Derivation (2020)
 
-In June 2020, Yale physicist Dr. Robert D. Grober published an independent mathematical derivation on the arXiv repository (*Forces and Torques Near to Impact in the Golf Swing*, arXiv:2006.11778).
+In June 2020, Yale physicist Dr. Robert D. Grober [@grober2020forces] published an independent mathematical derivation on the arXiv repository (*Forces and Torques Near to Impact in the Golf Swing*, [@grober2020forces]).
 
 Modeling the golfer as an analytical double pendulum, Grober solved for the exact wrist torque $\tau(t)$ required to sustain observed downswing kinematics. Grober proved analytically that:
 $$
@@ -731,13 +732,13 @@ Finally, Dieter Olson (2020–2026) introduced rigorous biomechanical capacity b
 +============================+===========================+================================+==========================+
 | Research Team / Source     | Methodology               | Metric Evaluated               | Finding at Impact        |
 +============================+===========================+================================+==========================+
-| Nesbit & Serrano (2005)    | 3D Full-Body Mocap        | Wrist Joint Torques            | Scratch golfer NEGATIVE  |
-| MacKenzie & Sprigings (2009)| 3D Forward Dynamics      | Wrist Torque Actuators         | Reverses to NEGATIVE     |
-| MacKenzie (2020 Vimeo)     | 3D Inverse Dynamics       | Grip-Frame Hand Couple         | Strongly NEGATIVE (-20Nm)|
+| [@nesbit2005work]    | 3D Full-Body Mocap        | Wrist Joint Torques            | Scratch golfer NEGATIVE  |
+| [@mackenzie2009forward]| 3D Forward Dynamics      | Wrist Torque Actuators         | Reverses to NEGATIVE     |
+| [@mackenzie2020gripvideo]     | 3D Inverse Dynamics       | Grip-Frame Hand Couple         | Strongly NEGATIVE (-20Nm)|
 | Kwon (2012–2020)           | 3D FSP Inverse Dynamics   | Planar Hand Couple             | Reverses to NEGATIVE     |
 | Tutelman (2018–2021)       | Analytical Deconstruction | Hand Couple vs Force Moment    | Couple is NEGATIVE       |
-| Koike et al. (2006, 2016)  | Physical Load Cells       | Direct Hand Shear Forces       | Couple is NEGATIVE (-10Nm)|
-| Choi & Park (2020)         | Instrumented Grip Sensors | Bilateral Contact Forces       | Reverses to NEGATIVE     |
+| [@koike2006grip; @koike2016forces]  | Physical Load Cells       | Direct Hand Shear Forces       | Couple is NEGATIVE (-10Nm)|
+| [@choi2020grip]         | Instrumented Grip Sensors | Bilateral Contact Forces       | Reverses to NEGATIVE     |
 | Grober (2020 arXiv)        | Double-Pendulum Mechanics | Analytical Joint Torque        | Proven NEGATIVE          |
 | Olson (2020–2026)          | Multi-Body KKT Simulation | Drift vs Control Wrench        | Reverses to NEGATIVE     |
 +============================+===========================+================================+==========================+
@@ -911,7 +912,7 @@ Rigorous inverse dynamics requires **pre-impact boundary truncation**: data must
 The physical couple $\mathbf{C}_h$ applied by the hands to the club is a 3D spatial vector. In three dimensions, decomposing this vector into "alpha", "beta", and "gamma" components depends entirely on the orientation of the chosen coordinate basis.
 
 Two distinct frame families have competed across the literature:
-1. **The Functional Swing Plane (FSP) Frame ($\mathcal{F}_{\text{FSP}}$):** Defined by the trajectory of the clubhead or grip hub (Kwon, MacKenzie, Tutelman). The in-plane axis $\hat{\mathbf{e}}_n$ is normal to the instantaneous swing plane, measuring the torque that unhinges the wrists within the plane of motion. This frame does **not** rotate as the clubface rolls about the shaft.
+1. **The Functional Swing Plane (FSP) [@kwon2012fsp] Frame ($\mathcal{F}_{\text{FSP}}$):** Defined by the trajectory of the clubhead or grip hub (Kwon, MacKenzie, Tutelman). The in-plane axis $\hat{\mathbf{e}}_n$ is normal to the instantaneous swing plane, measuring the torque that unhinges the wrists within the plane of motion. This frame does **not** rotate as the clubface rolls about the shaft.
 2. **The Club-Fixed Principal Frame ($\mathcal{F}_{\text{club}}$):** Fixed to the clubhead/shaft geometry (Nesbit, Jacobs 3D). Axis $\hat{\mathbf{u}}_\gamma$ lies along the shaft, $\hat{\mathbf{u}}_\alpha$ points perpendicular to the shaft in the direction of the clubface normal, and $\hat{\mathbf{u}}_\beta$ lies perpendicular to both.
 
 ```
@@ -1302,17 +1303,17 @@ The following master table cross-references and adjudicates every major claim fr
 | **CLM-LIT-03** | Inward hub pull unconditionally increases clubhead speed | Golf Instructors / Camp A | Hub curvature & normal acceleration | Planar Hub Frame | **Qualified (Requires Coordination with Release)** |
 | **CLM-LIT-04** | MacKenzie's 3D forward model is merely "2-1/2D" and invalid | Camp A (Jacobs/Manzella critique) | Complete 3D inverse/forward dynamics | 3D Grip Frame | **Refuted (MacKenzie Model is Fully 3D)** |
 | **CLM-LIT-05** | Kwon 3D and 2D models show identical reversal timing | Kwon (cited via Tutelman 2018) | In-plane couple $\tau_\alpha$ at grip | FSP Frame | **Settled (Verified Modeling Consensus)** `[VERIFY]` |
-| **CLM-LIT-06** | Grober (2020) derives negative couple from double pendulum | Grober (2020 arXiv:2006.11778) | Hinge torque $\tau_h$ balancing distal COM | 2D Planar Lagrangian | **Settled (Mathematical Derivation)** |
+| **CLM-LIT-06** | Grober (2020) derives negative couple from double pendulum | Grober (2020 [@grober2020forces]) | Hinge torque $\tau_h$ balancing distal COM | 2D Planar Lagrangian | **Settled (Mathematical Derivation)** |
 | **CLM-REF-01** | Shifting reference point from grip to COM flips moment sign | Olson (2022–2026), UpstreamDrift | Moment transport: $M_G = M_M - \mathbf{r} \times \mathbf{R}$ | Rigid Wrench Transport | **Settled (Mathematical Identity)** |
 | **CLM-REF-02** | Conflation of pure couple $C_h$ and COM moment $M_G$ drove debate | Olson (2022), Manzella (2021) | Distinction between $C_h$ and $M_G$ | All Frames | **Settled (Definitional Artifact)** |
 | **CLM-REF-03** | Global inertial to club-fixed frame inverts apparent signs | Sinclair (2020), Tutelman (2018) | Projected torque components | Global vs. Club-Fixed | **Settled (Kinematic Projection Artifact)** |
 | **CLM-REF-04** | Two-hand closed chain makes individual hand forces indeterminate | Olson (2022–2024, UpstreamDrift) | Contact forces $\mathbf{F}_L, \mathbf{F}_T$ | Closed-Loop Chain | **Settled (Linear Algebraic Identity)** |
 | **CLM-REF-05** | Wrist universal joint generates non-working constraint torques | Olson (Jan 2025) | Constraint wrench $\boldsymbol{\lambda}^\top \mathbf{J} \dot{\mathbf{q}} = 0$ | Anatomical 2-DOF Wrist | **Settled (Kinematic Modeling Fact)** |
 | **CLM-MCH-01** | Torque reversal caused by muscle force-velocity limits | Nesbit (2005), Sprigings (2000) | Hill-type contractile velocity | Forearm Musculature | **Supported (Contributing Physiological Factor)** |
-| **CLM-MCH-02** | Reversal is purely an interaction-force reaction in linked chain | Putnam (1991/1993), Grober (2020) | Coriolis and centrifugal coupling | Multi-Body Dynamics | **Settled (Sufficient Dynamic Mechanism)** |
+| **CLM-MCH-02** | Reversal is purely an interaction-force reaction in linked chain | [@putnam1991segment; @putnam1993sequential], Grober (2020) | Coriolis and centrifugal coupling | Multi-Body Dynamics | **Settled (Sufficient Dynamic Mechanism)** |
 | **CLM-MCH-03** | Forward shaft rebound produces massive negative grip couple | Olson (Dec 2023), Tutelman (2018) | Elastic restoring moment $\mathbf{M}_{\text{bend}}$ | 12-Segment Beam | **Settled (Dominant Physical Co-Factor)** |
 | **CLM-MCH-04** | Negative couple persists with completely unforced wrists | Olson (2022, 2026 UpstreamDrift) | Unforced contact reaction wrench | Two-Hand Constrained | **Settled (ZTCF Model Verification)** |
-| **CLM-DAT-01** | Direct load cells confirm negative couple of $-10\text{ N}\cdot\text{m}$ | Koike et al. (2006, 2016) | Measured handle strain/force wrench | Grip Physical Axes | **Settled (Direct Empirical Proof)** |
+| **CLM-DAT-01** | Direct load cells confirm negative couple of $-10\text{ N}\cdot\text{m}$ | [@koike2006grip; @koike2016forces] | Measured handle strain/force wrench | Grip Physical Axes | **Settled (Direct Empirical Proof)** |
 | **CLM-DAT-02** | Filter cutoff $<15\text{ Hz}$ smooths impact into downswing | Methodological Consensus / Camp A | Filter frequency response $H(f)$ | Digital Filtering | **Settled (Demonstrated in Study 4)** |
 | **CLM-DAT-03** | Aerodynamic drag accounts for $9\text{--}10\text{ N}\cdot\text{m}$ of negative moment | Olson (May 2020) | Aerodynamic moment $\mathbf{r} \times \mathbf{F}_{\text{drag}}$ | Clubhead Pressure Center | **Settled (Physical Calibration Factor)** |
 | **CLM-DAT-04** | Post-impact visual shaft bend proves pre-impact positive torque | Popular Coaching / Camp A | High-speed photography / visual bend | Post-Impact Visual | **Refuted (Causally Inadmissible Post-Event)** |
@@ -1409,7 +1410,7 @@ To definitively close every remaining empirical uncertainty and resolve all pend
 - **Euler's Equations of Motion:** The classical non-linear equations describing the rotational dynamics of a 3D rigid body expressed in body-fixed principal axes: $\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times \mathbf{I} \boldsymbol{\omega} = \mathbf{M}$.
 - **Free Hinge:** A joint that transmits zero active actuator torque ($\tau = 0$), moving purely under kinematic constraint reactions and passive dynamic interaction forces.
 - **Free Vector:** A vector quantity that can be translated arbitrarily in space without altering its physical definition, such as a pure force couple or linear velocity.
-- **Functional Swing Plane (FSP):** The instantaneous planar surface that best fits the 3D trajectory of the clubhead or grip hub during the downswing (Kwon formalism).
+- **Functional Swing Plane (FSP) [@kwon2012fsp]:** The instantaneous planar surface that best fits the 3D trajectory of the clubhead or grip hub during the downswing (Kwon formalism).
 - **Gamma Torque ($M_\gamma$):** The torsional couple applied about the longitudinal shaft axis ($\hat{\mathbf{e}}_{\text{shaft}}$), responsible for rolling the clubface open or closed.
 - **Grasp Matrix ($\mathbf{A}$):** The linear transformation matrix mapping contact wrenches exerted by individual end-effectors (hands) to the net resultant wrench on the manipulated object (club).
 - **Grip Midpoint ($M$):** The geometric reference point halfway between the lead- and trail-hand contact centers on the grip: $\mathbf{r}_M = \frac{1}{2}(\mathbf{r}_L + \mathbf{r}_T)$.
@@ -1433,57 +1434,18 @@ To definitively close every remaining empirical uncertainty and resolve all pend
 
 # 10. References
 
-## 10.1 (a) Primary Research Literature
+Peer-reviewed and limited-circulation sources are cited in the body with `[@key]` keys and rendered below by Quarto from `research/alpha-war/references.bib`. Entries tagged **VRF-05** through **VRF-08** in the bibliography are limited-circulation coaching or workshop materials. The annotated working registry in `work/02_references.md` remains an internal verification aid and is not the render bibliography.
 
-- Featherstone, R. (2008). *Rigid Body Dynamics Algorithms*. Springer Science & Business Media. [Verified DOI: 10.1007/978-0-387-74315-8]
-- Grober, R. D. (2020). Mechanics and energetics of the golf swing: A planar double pendulum model. *arXiv preprint arXiv:2006.11778*. [Verified arXiv: 2006.11778]
-- Koike, S., Mimura, K., & Kobayashi, K. (2006). Development of an instrumented golf club to measure three-dimensional grip forces applied by both hands. In *The Engineering of Sport 6* (pp. 317–322). Springer, New York, NY. [Verified DOI: 10.1007/978-0-387-46050-5_56]
-- Koike, S., Yamada, N., & Ishikawa, H. (2016). Estimation of kinetic energy generation and transfer in golf swing using a multi-body model with an instrumented grip. *Journal of Sports Sciences*, 34(24), 2235–2244. [Verified DOI: 10.1080/02640414.2016.1158434]
-- Kwon, Y.-H., Como, C. S., Singhal, K., Lee, S., & Han, K. H. (2012). Assessment of planarity of the golf swing based on the functional swing plane of the clubhead and grip points. *Sports Biomechanics*, 11(2), 127–148. [Verified DOI: 10.1080/14763141.2012.660799]
-- MacKenzie, S. J., & Sprigings, E. J. (2009). Understanding the role of the wrist flexors in the golf downswing using computer simulation. *Sports Engineering*, 12(1), 13–24. [Verified DOI: 10.1007/s12283-009-0027-3]
-- Murray, R. M., Li, Z., & Sastry, S. S. (1994). *A Mathematical Introduction to Robotic Manipulation*. CRC Press, Boca Raton, FL. [Verified ISBN: 978-0-8493-7981-9]
-- Nesbit, S. M. (2005). A three-dimensional kinematic and kinetic study of the golf swing. *Journal of Sports Science & Medicine*, 4(4), 499–519. [PMID: 24627666]
-- Nesbit, S. M., & McGinnis, R. (2009). Kinetic constrained optimization of the golf swing hub path. *Journal of Sports Science & Medicine*, 8(1), 85–97. [PMID: 24150560]
-- Putnam, C. A. (1991). A segment interaction analysis of proximal-to-distal sequential segment motion patterns. *Medicine and Science in Sports and Exercise*, 23(1), 130–144. [Verified PMID: 2017015]
-- Putnam, C. A. (1993). Sequential motions of body segments in striking and throwing skills: Descriptions and explanations. *Journal of Biomechanics*, 26(Suppl 1), 125–135. [Verified DOI: 10.1016/0021-9290(93)90084-R]
-- Sprigings, E. J., & MacKenzie, S. J. (2002). Examining the delayed release in the golf swing using a computer simulation model. *Sports Engineering*, 5(1), 23–32. [Verified DOI: 10.1046/j.1460-2687.2002.00094.x]
+::: {#refs}
+:::
 
-## 10.2 (b) Instruction, Coaching, and Applied Technical Sources
+## 10.1 (a) Primary Research Literature — see rendered list
 
-- Croker, P. (2019). *Pushing and Pulling: The Dynamics of the Golf Swing and the Sensorimotor Illusion*. Croker Golf System Monograph, Melbourne, Australia. `[VERIFY]`
-- Jacobs, M., & Nesbit, S. M. (2017). *The Science of the Swing: A Modern Look at Golf Club Kinetics*. Jacobs 3D Publishing, Long Island, NY. [Verified ISBN: 978-0-692-91185-3]
-- Jacobs, M. (2020). *Look Inside the Swing: Advanced 3D Kinetics of the Golf Club*. Jacobs 3D Publishing, Long Island, NY. `[VERIFY]`
-- Manzella, B. (2020). *The Alpha Torque Controversy and the Mechanics of the Release*. Brian Manzella Golf Instruction Webinar Series, New Orleans, LA. `[VERIFY]`
-- Manzella, B. (2021). Release kinetics: Alpha torque, hub paths, and the sum of the moments. *Post Modern Golf Technical Notes*, 12(3), 45–61. `[VERIFY]`
-- Sinclair, J. (2020). *3D Kinematics and Joint Moment Interpretation in Elite Golfers*. Sinclair Golf Biomechanics Workshop Presentation, Dallas, TX. `[VERIFY]`
-- Tutelman, D. (2014). *The Golf Swing as a Double Pendulum: Physics and Hand Torque*. Dave Tutelman's Golf Science Articles. [Verified URL: https://www.tutelman.com/golf/clubs/doublePendulum.php]
-- Tutelman, D. (2018). *Alpha Torque and the Free Hinge: An Evaluation of Nesbit, Kwon, and Jacobs 3D*. Dave Tutelman's Technical Archive. [Verified URL: https://www.tutelman.com/golf/design/alphaTorque.php]
+## 10.2 (b) Instruction and coaching — see `references.bib` (VRF-05..08)
 
-## 10.3 (c) Facebook Discussion Corpus
+## 10.3 (c) Facebook discussion corpus — paraphrase only; clearance per #5206
 
-- Golf Biomechanists Group (2018–2026). Public Facebook Discussion Group (~7,000 members). Threads:
-  - Thread 2018-04: "Nesbit 2005 Subject 4 Joint Torques and the Free Hinge Myth."
-  - Thread 2019-11: "Alpha Torque Reversal: Kwon vs. Jacobs 3D."
-  - Thread 2021-03: "Sum of the Moments about COM vs. Applied Grip Couple: A Resolution."
-  - Thread 2024-01: "The Rain-Release High-Speed Video: Can We Prove Right-Hand Snapping?"
-- Post Modern Golf Group (2019–2025). Private Facebook Discussion Forum (Group ID: 1491913404436131). Threads on kinetic sequencing, hand force decomposition, and Jacobs 3D webinars. `[VERIFY login/access]`
-- Olson, D. (2018–2026). Personal Research Archive, Facebook Data Export (`your_posts_1.json`, `post_comments_1.json`):
-  - Post 2020-05: "Aerodynamic Drag Bias in Driver Inverse Dynamics."
-  - Post 2022-03: "Wrench Transport and the Sign-Reversal Locus along the Shaft."
-  - Post 2023-12: "The Coasting Hypothesis: Why Bobby Jones Freewheeled the Clubhead."
-  - Post 2025-01: "Universal-Joint Constraint Mechanics in the Human Wrist."
-
-## 10.4 (d) Code, Simulations, and Calculations
-
-- `alpha_war_sensitivity_suite.py` (2026). Reproducible calculation suite for the Alpha War thesis. Workspace: `~/staff-repos/aw-thesis/research/alpha-war/calcs/`.
-- `alpha_war_calculations.json` (2026). Machine-readable quantitative dataset for Studies 1–6. Workspace: `~/staff-repos/aw-thesis/research/alpha-war/calcs/`.
-- `test_alpha_war_sensitivity_suite.py` (2026). Unit test and mathematical verification suite for wrench transport, SVD observability, and Butterworth filtering.
-- `UpstreamDrift` Research Core (2022–2026). Open-source golf physics and multi-body simulation repository. GitHub: `D-sorganization/UpstreamDrift`:
-  - `scripts.research.proximal_distal_energy.two_hand_wrench`
-  - `scripts.research.proximal_distal_energy.bilateral_wrench_identifiability`
-  - `scripts.research.proximal_distal_energy.two_arm_closed_loop`
-  - `scripts.research.proximal_distal_energy.flexible_shaft_study`
-  - `docs/research/proximal_distal_energy_transfer/data/wscg_two_hand_raw/`
+## 10.4 (d) Code and calculations — `research/alpha-war/calcs/`
 
 ---
 
@@ -1570,7 +1532,7 @@ $$M_{11} = J_1, \quad M_{22} = I_{G2} + m_2 r_{G2}^2, \quad M_{12} = M_{21} = m_
 Solving row 2 for the active wrist hinge torque $\tau_2$:
 $$\tau_2 = M_{22} \ddot{\theta}_2 + M_{21}(\phi) \ddot{\theta}_1 + m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi + G_2(\theta_2)$$
 
-Following Carol Putnam's (1991, 1993) segment interaction formalism:
+Following Carol Putnam [@putnam1991segment; @putnam1993sequential]'s (1991, 1993) segment interaction formalism:
 $$\tau_2 = \underbrace{M_{22} \ddot{\theta}_2}_{\text{Distal Angular Acceleration}} + \underbrace{m_2 L_1 r_{G2} \cos\phi \cdot \ddot{\theta}_1}_{\text{Proximal Angular Acceleration Coupling}} + \underbrace{m_2 L_1 r_{G2} \sin\phi \cdot \dot{\theta}_1^2}_{\text{Centrifugal Interaction Moment}} + \underbrace{G_2}_{\text{Gravity}}$$
 
 In the late downswing release:
