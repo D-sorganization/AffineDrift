@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5316 · Phone-Viewport Playwright Smoke Spec in E2e-Tests and a Warn-Only Nightly Lighthouse Mobile Baseline
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5316
+- **Branch:** merged via #5340
+- **PR:** #5340
+- **Paths:** see #5340
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`bc957874`; collated from changes/5316-phone-viewport-playwright-smoke-spec-in.md)
+- **Summary:** Phone-viewport Playwright smoke spec in e2e-tests and a warn-only nightly Lighthouse mobile baseline
+- **Next step:** Shipped in PR #5340.
+
 ### DL-#5314 · Coarse-Pointer 44Px Touch Targets for Site Chrome: Secondary-Nav Sidebar Toggle, Title-Block Category Chips, Code Tools Button
 
 - **State:** shipped
