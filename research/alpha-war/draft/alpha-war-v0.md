@@ -24,7 +24,7 @@ All mathematical formulations strictly adhere to the unified notation establishe
 
 ---
 
-# Executive Summary (Plain Language)
+# Executive Summary (Plain Language) {#executive-summary-plain-language}
 
 **What is disputed?** In the last few milliseconds before the club hits the ball, do the hands actively *twist* the club open (positive “alpha” torque) or mainly *hold* the grip while momentum and pull forces rotate the club (often showing a negative hand couple at the grip)?
 
