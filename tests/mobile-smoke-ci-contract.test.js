@@ -6,7 +6,7 @@ const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 const exists = (rel) => fs.existsSync(path.join(ROOT, rel));
 
 const SMOKE_SPEC = 'tests/e2e/mobile-smoke.spec.js';
-const LHCI_CONFIG = 'lighthouserc.json';
+const LHCI_CONFIG = 'config/lighthouserc.json';
 const NIGHTLY = '.github/workflows/cross-browser-nightly.yml';
 
 /** Body of a top-level job in a workflow file, up to the next top-level job. */
@@ -23,7 +23,9 @@ describe('Mobile smoke and Lighthouse mobile baseline in CI (#5316)', () => {
     expect(exists(SMOKE_SPEC)).toBe(true);
     const spec = read(SMOKE_SPEC);
     // test.use keeps it inside `--project=chromium`, so e2e-tests runs it as-is.
-    expect(spec).toMatch(/test\.use\(\{[^}]*width:\s*390,\s*height:\s*844[^}]*isMobile:\s*true/);
+    expect(spec).toMatch(
+      /test\.use\(\{\s*viewport:\s*\{\s*width:\s*390,\s*height:\s*844\s*\},\s*isMobile:\s*true/,
+    );
     expect(spec).toMatch(/hasTouch:\s*true/);
     expect(spec).toMatch(/scrollWidth/);
     expect(spec).toMatch(/navbar-toggler/);
