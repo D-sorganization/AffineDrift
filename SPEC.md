@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-02 | #5337 | Phone off-canvas docked sidebar: bounded width, 44px rows, current-page bar, dimmed scrim and close button |
 | 2026-11-02 | #5333 | Conflict Disarm now calls the public fleet-workflows reusable workflow pinned to 367b182c instead of an inlined sweep; dry_run stays true by default, and a contract test guards the uses: ref and the full-SHA pin |
 | 2026-11-02 | #5330 | Coarse-pointer 44px touch targets for sandbox, converter, dataset explorer, maturity badge |
 | 2026-11-02 | #5311 | Slack take-up: first-publication date and open post-hoc pass-bar disclosure |
