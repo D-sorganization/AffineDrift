@@ -173,7 +173,9 @@ def _page_kind(relative_path: Path) -> str:
         return "textbook"
     if posix.startswith("books/"):
         return "book"
-    if posix.startswith(("articles/", "critiques/")) and not posix.endswith("/index.html"):
+    if posix.startswith("articles/") or (
+        posix.startswith("critiques/") and not posix.endswith("/index.html")
+    ):
         return "article"
     return "hub"
 
