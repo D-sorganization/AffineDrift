@@ -232,6 +232,10 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-02 | #5328 | Add phone-side padding on full-layout main content (#5323) |
+| 2026-11-02 | #5357 | Backlog slice delivery for #5317; Backlog slice delivery for #5318; Backlog slice delivery for #5321 |
+| 2026-11-02 | #5349 | Backlog slice delivery for #5185 |
+| 2026-11-02 | #5345 | Weekly Python and npm patch bumps; pytest held at 9.1.x per pyproject cap |
 | 2026-11-02 | #5356 | Backlog slice delivery for #5320 |
 | 2026-11-02 | #5343 | Service worker: update notice only when a cached asset really changed, network-first JSON/CSV data, compact phone notice |
 | 2026-11-02 | #5340 | Phone-viewport Playwright smoke spec in e2e-tests and a warn-only nightly Lighthouse mobile baseline |
