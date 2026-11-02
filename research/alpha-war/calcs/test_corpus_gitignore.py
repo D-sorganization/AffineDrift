@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import unittest
 from pathlib import Path
@@ -20,12 +21,15 @@ class TestAlphaWarCorpusGitignore(unittest.TestCase):
 
     def test_corpus_directory_is_ignored_by_git(self) -> None:
         """Git must treat files under ``corpus/`` as ignored."""
+        git = shutil.which("git")
+        if git is None:
+            self.skipTest("git is unavailable")
         CORPUS_DIR.mkdir(parents=True, exist_ok=True)
         probe = CORPUS_DIR / ".keep"
         probe.write_text("", encoding="utf-8")
         try:
-            result = subprocess.run(
-                ["git", "check-ignore", "-q", str(probe.relative_to(REPO_ROOT))],
+            result = subprocess.run(  # noqa: S603 - fixed argv, no shell, no user input
+                [git, "check-ignore", "-q", str(probe.relative_to(REPO_ROOT))],
                 cwd=REPO_ROOT,
                 check=False,
             )
