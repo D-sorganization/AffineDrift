@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5324 · Coarse-Pointer 44Px Touch Targets for Sandbox, Converter, Dataset Explorer, Maturity Badge
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5324
+- **Branch:** merged via #5330
+- **PR:** #5330
+- **Paths:** see #5330
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`aa32b389`; collated from changes/5324-coarse-pointer-44px-touch-targets-for-sa.md)
+- **Summary:** Coarse-pointer 44px touch targets for sandbox, converter, dataset explorer, maturity badge
+- **Next step:** Shipped in PR #5330.
+
 ### DL-#5182 · Retire Remaining 'Hyperplane' Display Text in the Manuscript Terminology Heading and the Book Ch.4 Blurb; Mathematical Object Names Were Already Disambiguated
 
 - **State:** shipped
