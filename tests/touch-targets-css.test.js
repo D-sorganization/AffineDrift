@@ -65,3 +65,40 @@ describe('Touch Target CSS Contract (WCAG 2.5.5, #4563)', () => {
     expect(workflow).not.toMatch(/should provide summary of all compliant elements/);
   });
 });
+
+describe('Mobile widget touch targets (#5324)', () => {
+  const coarseBlock = (css) => {
+    const match = css.match(/@media\s*\(\s*pointer:\s*coarse\s*\)\s*\{([\s\S]*?)\n\}/);
+    expect(match).not.toBeNull();
+    return match[1];
+  };
+
+  test('drift-control sandbox enlarges coarse-pointer controls', () => {
+    const css = fs.readFileSync(path.join(ROOT, 'css', 'drift-control-sandbox.css'), 'utf8');
+    const block = coarseBlock(css);
+    expect(block).toMatch(/#dcsb-controls input\[type="range"\][\s\S]*min-height:\s*44px/);
+    expect(block).toMatch(/#dcsb-controls input\[type="checkbox"\][\s\S]*min-height:\s*44px/);
+    expect(block).toMatch(/#dcsb-controls select[\s\S]*min-height:\s*44px/);
+  });
+
+  test('rotation converter enlarges coarse-pointer form controls', () => {
+    const css = fs.readFileSync(path.join(ROOT, 'css', 'rotation-converter.css'), 'utf8');
+    const block = coarseBlock(css);
+    expect(block).toMatch(/\.rc-panel input\[type="text"\][\s\S]*min-height:\s*44px/);
+    expect(block).toMatch(/\.rc-load-btn[\s\S]*min-height:\s*44px/);
+    expect(block).toMatch(/\.rc-preset-btn[\s\S]*min-height:\s*44px/);
+  });
+
+  test('dataset explorer enlarges coarse-pointer summaries and download buttons', () => {
+    const css = fs.readFileSync(path.join(ROOT, 'css', 'dataset-explorer.css'), 'utf8');
+    const block = coarseBlock(css);
+    expect(block).toMatch(/#dataset-explorer-app details > summary[\s\S]*min-height:\s*44px/);
+    expect(block).toMatch(/\.de-download__button[\s\S]*min-height:\s*44px/);
+  });
+
+  test('.badge--maturity meets coarse-pointer min height in page-header-card.css', () => {
+    const css = fs.readFileSync(path.join(ROOT, 'css', 'components', 'page-header-card.css'), 'utf8');
+    const block = coarseBlock(css);
+    expect(block).toMatch(/\.badge--maturity[\s\S]*min-height:\s*44px/);
+  });
+});
