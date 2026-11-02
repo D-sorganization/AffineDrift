@@ -12,7 +12,7 @@ CALCS_DIR = Path(__file__).resolve().parent
 if str(CALCS_DIR) not in sys.path:
     sys.path.insert(0, str(CALCS_DIR))
 
-from alpha_war_sensitivity_suite import (
+from alpha_war_sensitivity_suite import (  # noqa: E402
     run_study_1_grip_point_transport,
     run_study_2_couple_vs_sum_of_moments,
     run_study_3_frame_conventions,
@@ -30,9 +30,7 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
         res = run_study_1_grip_point_transport()
         wscg_min = res["wscg_at_minimum_couple"]
         self.assertLess(wscg_min["total_couple_about_mid_hands_nm"], -20.0)
-        stations = {
-            s["station"]: s["reported_alpha_moment_nm"] for s in wscg_min["stations"]
-        }
+        stations = {s["station"]: s["reported_alpha_moment_nm"] for s in wscg_min["stations"]}
         self.assertLess(stations["butt_end"], 0.0)
         self.assertLess(stations["mid_hands"], 0.0)
         self.assertGreater(stations["clubhead_center"], 0.0)
@@ -48,9 +46,7 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
         """Verify exact additivity of hand couple and moment of net force about COM."""
         res = run_study_2_couple_vs_sum_of_moments()
         for snap in res["snapshots"]:
-            expected_sum = (
-                snap["total_hand_couple_mid_nm"] + snap["moment_of_force_about_com_nm"]
-            )
+            expected_sum = snap["total_hand_couple_mid_nm"] + snap["moment_of_force_about_com_nm"]
             self.assertTrue(
                 np.isclose(snap["sum_of_moments_about_com_nm"], expected_sum, atol=1e-9)
             )
@@ -59,9 +55,7 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
         """Verify Euclidean norm invariance under clubface roll rotation."""
         res = run_study_3_frame_conventions()
         fsp = res["input_physical_couple_fsp_nm"]
-        norm_fsp = np.linalg.norm(
-            [fsp["M_shaft_t"], fsp["M_out_of_plane_p"], fsp["M_in_plane_n"]]
-        )
+        norm_fsp = np.linalg.norm([fsp["M_shaft_t"], fsp["M_out_of_plane_p"], fsp["M_in_plane_n"]])
         for row in res["jacobs_club_frame_roll_sweep"]:
             norm_club = np.linalg.norm(
                 [
@@ -73,7 +67,7 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
             self.assertTrue(np.isclose(norm_fsp, norm_club, atol=1e-12))
 
     def test_study_4_filtering_sign_reversal_and_drag_bias(self) -> None:
-        """Verify low cutoff (8 Hz) flips negative impact couple positive while collision bleed inflates it."""
+        """8 Hz cutoff can flip impact couple sign; across-impact filtering inflates it."""
         res = run_study_4_filtering_and_drag_sensitivity()
         self.assertLess(res["true_couple_at_impact_nm"], -15.0)
         by_fc = {row["cutoff_hz"]: row for row in res["butterworth_cutoff_sweep"]}
@@ -93,9 +87,7 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
         self.assertEqual(res["bilateral_full_wrench_map"]["nullity"], 6)
         attr = res["two_arm_closed_loop_state_attribution"]
         self.assertTrue(np.isclose(attr["additivity_residual_nm"], 0.0, atol=1e-12))
-        self.assertTrue(
-            np.isclose(attr["zero_grip_separation_moment_nm"], 0.0, atol=1e-12)
-        )
+        self.assertTrue(np.isclose(attr["zero_grip_separation_moment_nm"], 0.0, atol=1e-12))
 
     def test_study_6_shaft_flex_contribution(self) -> None:
         """Verify matched 3-link flexible shaft decomposition and beam rebound couple."""

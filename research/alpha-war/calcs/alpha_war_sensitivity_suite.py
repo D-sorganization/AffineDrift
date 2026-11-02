@@ -49,6 +49,8 @@ for _pkg_name, _pkg_paths in [
         _mod.__path__ = _pkg_paths
         sys.modules[_pkg_name] = _mod
 
+# UpstreamDrift imports must follow runtime namespace bootstrap.
+# ruff: noqa: E402
 from scripts.research.proximal_distal_energy.bilateral_wrench_identifiability import (
     audit_linear_map,
     full_hand_wrench_map,
@@ -149,9 +151,7 @@ def run_study_1_grip_point_transport() -> dict[str, Any]:
         resultant_2d, moment_mid_nm = two_contact_wrench(
             positions_2d, forces_2d, np.array([0.0, 0.0]), couples_2d
         )
-        axial_comp, normal_comp, _, _ = resolve_grip_components(
-            forces_2d, np.array([1.0, 0.0])
-        )
+        axial_comp, normal_comp, _, _ = resolve_grip_components(forces_2d, np.array([1.0, 0.0]))
         stations = [
             ("butt_end", -0.050),
             ("lead_wrist", -0.5 * sep_m),
@@ -194,9 +194,7 @@ def run_study_1_grip_point_transport() -> dict[str, Any]:
                 float(resultant_2d[0]),
                 float(resultant_2d[1]),
             ],
-            "differential_normal_force_n": float(
-                0.5 * (normal_comp[0] - normal_comp[1])
-            ),
+            "differential_normal_force_n": float(0.5 * (normal_comp[0] - normal_comp[1])),
             "force_couple_about_mid_hands_nm": float(
                 -sep_m * 0.5 * (normal_comp[0] - normal_comp[1])
             ),
@@ -319,9 +317,7 @@ def run_study_2_couple_vs_sum_of_moments() -> dict[str, Any]:
                 "ztcf_passive_couple_mid_nm": float(ztcf_c_mid[idx]),
                 "resultant_axial_force_n": float(r_x[idx]),
                 "resultant_transverse_beta_force_n": float(r_y[idx]),
-                "moment_of_force_about_com_nm": float(
-                    moment_of_resultant_about_com[idx]
-                ),
+                "moment_of_force_about_com_nm": float(moment_of_resultant_about_com[idx]),
                 "sum_of_moments_about_com_nm": float(sum_of_moments_about_com[idx]),
             }
         )
@@ -472,9 +468,7 @@ def run_study_4_filtering_and_drag_sensitivity() -> dict[str, Any]:
                 "drag_force_n": f_drag_n,
                 "unmodeled_drag_moment_about_mid_hands_nm": float(-moment_about_mid_nm),
                 "unmodeled_drag_moment_about_com_nm": float(-moment_about_com_nm),
-                "true_hand_couple_if_inferred_is_minus_12nm": float(
-                    -12.0 + moment_about_mid_nm
-                ),
+                "true_hand_couple_if_inferred_is_minus_12nm": float(-12.0 + moment_about_mid_nm),
             }
         )
 
@@ -570,13 +564,9 @@ def run_study_5_closed_loop_and_identifiability() -> dict[str, Any]:
     )
     q0_zero = params_zero_arm.consistent_configuration(np.array([0.0, -0.50]), 0.16)
     j_zero = constraint_jacobian(q0_zero, params_zero_arm)
-    proj_zero = (
-        np.eye(len(q0_zero)) - j_zero.T @ np.linalg.pinv(j_zero @ j_zero.T) @ j_zero
-    )
+    proj_zero = np.eye(len(q0_zero)) - j_zero.T @ np.linalg.pinv(j_zero @ j_zero.T) @ j_zero
     qdot0_zero = proj_zero @ qdot_seed
-    split_zero = drift_control_attribution(
-        q0_zero, qdot0_zero, active_ctrl, params_zero_arm
-    )
+    split_zero = drift_control_attribution(q0_zero, qdot0_zero, active_ctrl, params_zero_arm)
     kin0_zero = kinematics(q0_zero, params_zero_arm)
     f_zero = split_zero.total.contact_force_on_club_n
     wrench_zero_arm = contact_wrench(
@@ -604,25 +594,16 @@ def run_study_5_closed_loop_and_identifiability() -> dict[str, Any]:
             "condition_number": float(audit_full.nonzero_condition_number),
         },
         "two_arm_closed_loop_state_attribution": {
-            "total_force_moment_about_club_center_nm": float(
-                wrench_total.moment_about_center_nm
-            ),
+            "total_force_moment_about_club_center_nm": float(wrench_total.moment_about_center_nm),
             "drift_only_force_moment_nm": float(wrench_drift.moment_about_center_nm),
             "control_only_force_moment_nm": float(wrench_ctrl.moment_about_center_nm),
             "additivity_residual_nm": float(
                 wrench_total.moment_about_center_nm
-                - (
-                    wrench_drift.moment_about_center_nm
-                    + wrench_ctrl.moment_about_center_nm
-                )
+                - (wrench_drift.moment_about_center_nm + wrench_ctrl.moment_about_center_nm)
             ),
             "drift_resultant_force_n": [float(x) for x in modes_drift.resultant_n],
-            "drift_differential_force_n": [
-                float(x) for x in modes_drift.differential_n
-            ],
-            "zero_grip_separation_moment_nm": float(
-                wrench_zero_arm.moment_about_center_nm
-            ),
+            "drift_differential_force_n": [float(x) for x in modes_drift.differential_n],
+            "zero_grip_separation_moment_nm": float(wrench_zero_arm.moment_about_center_nm),
             "club_position_m": [float(x) for x in kin0["club_center"]],
         },
     }
@@ -632,12 +613,8 @@ def run_study_6_shaft_flex_contribution() -> dict[str, Any]:
     """Study 6: Matched flexible vs. rigid shaft rebound contribution using UpstreamDrift."""
     params_flex = FlexibleShaftParams.reference()
     state0 = default_initial_state()
-    trace_flex = rollout_flexible(
-        params_flex, initial_state=state0, dt_s=0.0005, horizon_s=0.45
-    )
-    trace_rigid = rollout_rigid(
-        params_flex, initial_state=state0, dt_s=0.0005, horizon_s=0.45
-    )
+    trace_flex = rollout_flexible(params_flex, initial_state=state0, dt_s=0.0005, horizon_s=0.45)
+    trace_rigid = rollout_rigid(params_flex, initial_state=state0, dt_s=0.0005, horizon_s=0.45)
 
     idx_imp = int(np.argmin(np.abs(trace_flex.t - 0.42725)))
     state_imp = trace_flex.state[idx_imp]
@@ -654,16 +631,11 @@ def run_study_6_shaft_flex_contribution() -> dict[str, Any]:
         "upstream_drift_matched_3link_study": {
             "sample_time_s": float(trace_flex.t[idx_imp]),
             "shaft_deflection_deg": float(np.rad2deg(state_imp[2])),
-            "shaft_elastic_moment_nm": float(
-                -params_flex.shaft_stiffness_nm_rad * state_imp[2]
-            ),
-            "shaft_damping_moment_nm": float(
-                -params_flex.shaft_damping_nms_rad * state_imp[5]
-            ),
+            "shaft_elastic_moment_nm": float(-params_flex.shaft_stiffness_nm_rad * state_imp[2]),
+            "shaft_damping_moment_nm": float(-params_flex.shaft_damping_nms_rad * state_imp[5]),
             "shaft_interface_force_norm_n": float(np.linalg.norm(f_interface)),
             "distal_angular_accel_contributions_rad_s2": {
-                k: float(np.sum(v[idx_imp]))
-                for k, v in trace_flex.contributions.items()
+                k: float(np.sum(v[idx_imp])) for k, v in trace_flex.contributions.items()
             },
             "rigid_wrist_angle_at_same_time_rad": float(trace_rigid.state[idx_imp, 1]),
             "flexible_wrist_angle_at_same_time_rad": float(state_imp[1]),
@@ -685,12 +657,8 @@ def main() -> None:
         "study_1_grip_point_transport": run_study_1_grip_point_transport(),
         "study_2_couple_vs_sum_of_moments": run_study_2_couple_vs_sum_of_moments(),
         "study_3_frame_conventions": run_study_3_frame_conventions(),
-        "study_4_filtering_and_drag_sensitivity": (
-            run_study_4_filtering_and_drag_sensitivity()
-        ),
-        "study_5_closed_loop_and_identifiability": (
-            run_study_5_closed_loop_and_identifiability()
-        ),
+        "study_4_filtering_and_drag_sensitivity": (run_study_4_filtering_and_drag_sensitivity()),
+        "study_5_closed_loop_and_identifiability": (run_study_5_closed_loop_and_identifiability()),
         "study_6_shaft_flex_contribution": run_study_6_shaft_flex_contribution(),
     }
     json_path = CALCS_DIR / "alpha_war_calculations.json"
