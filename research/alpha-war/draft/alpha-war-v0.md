@@ -601,7 +601,7 @@ Camp A's doctrine rested on three core physical propositions:
 
 ## 4.3 The Climax and Definitional Split (2020–2022)
 
-Between 2018 and 2020, as academic biomechanists increasingly criticized Jacobs 3D's claims of positive alpha torque, the debate reached an intense climax in online professional forums (*Post Modern Golf* and *Golf Biomechanists*). 
+Between 2018 and 2020, as academic biomechanists increasingly criticized Jacobs 3D's claims of positive alpha torque, the debate intensified in professional online forums (a public biomechanics group and a **private coaching forum whose name and membership list are withheld pending source clearance**). 
 
 The turning point occurred during the summer of 2020, when Brian Manzella and Michael Jacobs published explicit clarifying definitions:
 - **July 9, 2020 (Manzella):** Published an instructional graphic explicitly separating **Alpha Torque** (the pure applied couple perpendicular to the face) from the **Alpha Sum of the Moments** (the net angular response about the club center of mass, combining applied torque with the levered beta force).
@@ -1654,7 +1654,7 @@ This registry compiles every claim, source, or parameter flagged inline with `[V
 | **VRF-06** | Sec 10.2 | Jacobs (2020): *Look Inside the Swing* | Commercial coaching publication | **Limited Circulation Source** | Verification of page numbers and formal library index |
 | **VRF-07** | Sec 10.2 | Manzella (2020, 2021) webinars and technical notes | Private forum posts and video recordings | **Private Media Archive** | Archival video review of Brian Manzella instruction channel |
 | **VRF-08** | Sec 10.2 | Sinclair (2020) workshop presentation slides | Private workshop slides delivered to coaching cohort | **Unpublished Presentation Slides** | Formal acquisition of slide deck from Sinclair Golf |
-| **VRF-09** | Sec 10.3 | Post Modern Golf Facebook Group archive (ID: 1491913404436131) | Private, membership-gated social media group | **Archived Social Media Thread** | Authentication against saved JSON export files in `corpus/` |
+| **VRF-09** | Sec 10.3 | Private coaching-forum Facebook archive | Membership-gated social media; numeric group ID removed from draft | **Not cleared** | Dieter: see `CLEARANCE_PENDING.md` CLR-01; authenticate against local `corpus/` export only |
 | **VRF-10** | Sec 8.4, Protocol 8 | Adoption of mandatory reporting standard | Proposed community consensus standard | **Proposed Academic Policy** | Submission to International Sports Engineering Association (ISEA) |
 
 ---
