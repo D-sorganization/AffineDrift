@@ -24,6 +24,21 @@ All mathematical formulations strictly adhere to the unified notation establishe
 
 ---
 
+# Executive Summary (Plain Language) {#executive-summary-plain-language}
+
+**What is disputed?** In the last few milliseconds before the club hits the ball, do the hands actively *twist* the club open (positive “alpha” torque) or mainly *hold* the grip while momentum and pull forces rotate the club (often showing a negative hand couple at the grip)?
+
+**Two-layer verdict (preview).**
+
+1. **Layer 1 — definitions:** Much of the “war” was two camps plotting **different quantities**. The **pure hand couple** at the grip midpoint often turns **negative** before impact in peer-reviewed and instrumented-grip studies. The **total moment about the club center of mass** can stay **positive** at the same instant because the large inward/forward grip force creates a strong lever moment. Both curves can be correct at once if the reference point and decomposition are stated.
+2. **Layer 2 — physics and methods:** Even when everyone agrees on “couple at mid-hands,” sign and magnitude still shift with **filter cutoffs**, **impact window**, **club-fixed vs swing-plane frames**, **shaft flex rebound**, and **closed-chain indeterminacy** of two-hand contact forces. Sensitivity calculations in `research/alpha-war/calcs/` quantify these effects.
+
+**Who should read what?** Read this summary and [§9 Glossary](#9-glossary) first. Main chapters 1–8 stay narrative; boxed math and appendices A–D carry derivations (KKT, Lie algebra, SVD proofs) for specialists.
+
+**Publication status:** Unpublished draft (`status: do-not-publish`). Not listed in the public site build.
+
+---
+
 # 1. Problem Statement: What "Alpha Torque" Means and Why It Matters
 
 ## 1.1 The Everyday Experience of the Late Downswing
@@ -85,38 +100,16 @@ Within this 50-millisecond window, two diametrically opposed factions emerged:
 | Dimension                         | Camp B (Kwon, MacKenzie, Tutelman, Sinclair, Grober)          |
 +-----------------------------------+---------------------------------------------------------------+
 | Core Kinetic Claim                | In-plane hand couple reverses to NEGATIVE before impact       |
-| Primary Literature Basis          | [@nesbit2005work] p. 528 (scratch); MacKenzie (2009)    |
+| Primary Literature Basis          | [@nesbit2005work] Fig. 11 (scratch subject 1); MacKenzie (2009)    |
 | Primary Reference Point           | Mid-Hands Grip Station ($M$) or Lead Wrist Joint Boundary     |
 | Mechanical Philosophy             | Proximal-to-distal whip; club outruns hands ("free hinge")    |
 | Commercial/Pedagogical Stance     | Open-source 3D models; train kinetic chain transfer & pull    |
 +-----------------------------------+---------------------------------------------------------------+
 ```
 
-## 1.3 The Two-Layer Thesis Preview
+## 1.3 How the Rest of the Document Is Organized
 
-Why did brilliant engineers, renowned university professors, and elite tour coaches talk past each other for over a decade? The central thesis of this investigation is that the Alpha War was not a single, monolithic disagreement. Rather, the controversy operated on **two distinct mechanical layers**, each governed by its own mathematical and empirical realities:
-
-### Layer 1: The Definitional and Geometric Cleave
-The foundational cause of the debate was a profound, unacknowledged semantic conflation. The two camps were using the identical term—"alpha torque"—to denote two fundamentally different mechanical quantities evaluated at two different physical reference points:
-1. **Camp B's Metric: The Pure Hand Couple ($\mathbf{C}_h \equiv \mathbf{M}_M$).** Camp B calculated the equivalent torque couple exerted by the hands about the *grip midpoint* $M$ (or the distal wrist joint). Evaluated at the hands, the couple is a free vector representing purely rotational action. Because the club unhinges at over $2{,}000^\circ/\text{s}$ while the hands decelerate, this pure couple universally crosses zero and turns strongly negative ($C_\alpha \approx -15\text{ to }-25\text{ N}\cdot\text{m}$).
-2. **Camp A's Metric: The Total Moment About the Center of Mass ($\mathbf{M}_G$).** In contrast, Camp A frequently plotted what they termed the "Alpha Sum of the Moments"—the total rotational moment acting on the club evaluated about the *club center of mass* $G$. Under the fundamental reference-point transport theorem of spatial mechanics,
-   $$
-   \mathbf{M}_G = \mathbf{C}_h - (\mathbf{r}_G - \mathbf{r}_M) \times \mathbf{R}
-   $$
-   Because the golfer exerts an enormous upward and inward centripetal force ($\mathbf{R}$) on the grip, the lever arm from the grip to the club center of mass generates a massive positive moment that routinely exceeds $+50\text{ N}\cdot\text{m}$. Even when the hand couple $\mathbf{C}_h$ is negative ($-15\text{ N}\cdot\text{m}$), the total moment $\mathbf{M}_G$ can remain strongly positive ($+35\text{ N}\cdot\text{m}$). 
-
-For years, Camp A pointed to positive curves of $\mathbf{M}_G$ and asserted that "alpha torque is positive," while Camp B pointed to negative curves of $\mathbf{C}_h$ and asserted that "alpha torque is negative." Both mathematical statements were simultaneously true, but they described entirely different physical quantities.
-
-### Layer 2: The Component-Level Discrepancy and Structural Mechanisms
-However, resolving the debate does not end with semantics. Even when all parties evaluated the pure hand couple $\mathbf{C}_h$ at the exact same grip midpoint $M$, deep physical and computational discrepancies remained:
-- **Frame-Switching Artifacts:** Resolving 3D torque vectors in a rotating, clubface-fixed coordinate frame causes geometric cross-coupling: as the clubface rolls closed in the late downswing, out-of-plane moments project onto the in-plane axis, flipping the calculated sign of $C_\alpha$.
-- **Passive Interaction Dynamics:** Multi-link rigid-body analyses (dating to Carol Putnam [@putnam1991segment; @putnam1993sequential]'s 1991 interaction framework) demonstrate that segment interaction forces—arising purely from forearm deceleration and centripetal acceleration—naturally generate a negative grip couple even when the golfer's muscles are completely deactivated (`zero-torque control`).
-- **Flexible Shaft Rebound:** High-speed structural beam dynamics reveal that forward shaft unbending (lead deflection) prior to impact exerts an elastic reaction force against the grip, mechanically forcing the hands into an opposing negative couple.
-- **Proprietary Black-Box Code:** The commercialization of golf analytics led to the deployment of closed-source algorithms (such as *Jacobs 3D*) whose filtering parameters, coordinate transformations, and sensor fusion routines could not be independently inspected or replicated by peer-reviewed science.
-
-In the chapters that follow, we unpack both layers with complete mathematical rigor, tracing the mechanics of the golf club from first principles to the cutting edge of modern forward-dynamics simulation.
-
----
+Section 1 introduces the dispute window and camp positions. [§9 Glossary](#9-glossary) defines alpha, beta, gamma, functional swing plane, and related terms. The **two-layer verdict** (definitional vs component-level) is stated in the [Executive Summary](#executive-summary-plain-language) above; §8 returns to synthesis, adjudication tables, and test protocols. Chapters 3–7 and appendices carry equations and sensitivity studies for readers who want full rigor.
 
 # 2. Definitions and Coordinate Frames
 
