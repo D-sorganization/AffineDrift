@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5320 · Backlog Slice Delivery For #5320
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5320
+- **Branch:** cursor/ops-doc-5320-a086
+- **PR:** #5356
+- **Paths:** see #5356
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`1b029063`; collated from changes/5320-backlog-slice-delivery-for-5320.md)
+- **Summary:** Backlog slice delivery for #5320
+- **Next step:** Shipped in PR #5356.
+
 ### DL-#5315 · Service Worker: Update Notice Only When a Cached Asset Really Changed, Network-First JSON/CSV Data, Compact Phone Notice
 
 - **State:** shipped
