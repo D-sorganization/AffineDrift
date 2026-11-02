@@ -548,29 +548,29 @@ To resolve a scientific dispute, one must present each faction's arguments in th
 ## 4.1 Dr. Steven M. Nesbit's Founding Studies (2005, 2009)
 
 Modern 3D kinetic modeling of the golf swing began with the work of Dr. Steven M. Nesbit at Lafayette College. In 2005, Nesbit published two landmark companion papers in the *Journal of Sports Science and Medicine*:
-1. *A Three Dimensional Kinematic and Kinetic Study of the Golf Swing* ([@nesbit2005kinematic]): Modeled an 85-subject cohort of amateur golfers using a 3D full-body kinematic chain coupled to a flexible club model.
-2. *Work and Power Analysis of the Golf Swing* (Nesbit & Serrano, 2005): Examined energy and torque profiles across four representative subjects of varying handicap: Subject 1 (13-handicap), Subject 2 (5-handicap), Subject 3 (Scratch, 0-handicap), and Subject 4 (18-handicap).
+1. *A Three Dimensional Kinematic and Kinetic Study of the Golf Swing* [@nesbit2005kinematic]: Modeled an **85-subject** cohort of amateur golfers using a 3D full-body kinematic chain coupled to a flexible club model.
+2. *Work and Power Analysis of the Golf Swing* [@nesbit2005work]: Examined energy and torque profiles across **four representative subjects** (Table 1): Subject 1 (scratch, 0-handicap male), Subject 2 (5-handicap male), Subject 3 (13-handicap male), and Subject 4 (18-handicap female).
 
 ```
 +===================================================================================================+
 |                        NESBIT & SERRANO (2005) FIGURE 11 SUBJECT BREAKDOWN                        |
 +===========+============+=======================+==========================+=======================+
-| Subject   | Handicap   | Peak Clubhead Speed   | Alpha Torque at Impact   | Work Behavior         |
-+===========+============+=======================+==========================+=======================+
-| Subject 1 | 13-Hcp     | Moderate              | ~0 N·m (Near Zero)       | Low efficiency        |
-| Subject 2 | 5-Hcp      | High                  | Strongly POSITIVE        | Active late push      |
-| Subject 3 | Scratch    | Highest (109 mph)     | Strongly NEGATIVE        | Free Hinge / Braking  |
-| Subject 4 | 18-Hcp     | Lowest                | Strongly POSITIVE        | "Casting" / Pushing   |
+| Subject   | Handicap   | Peak Clubhead Speed   | Alpha Torque at Impact (Fig. 11)   | Work Behavior         |
++===========+============+=======================+====================================+=======================+
+| Subject 1 | Scratch (0)| Highest in cohort     | Strongly NEGATIVE (retarding)      | Free-hinge / braking  |
+| Subject 2 | 5-Hcp      | High                  | Strongly POSITIVE                  | Active late push      |
+| Subject 3 | 13-Hcp     | Moderate              | ~0 N·m (near zero)                 | Lower sustained torque|
+| Subject 4 | 18-Hcp     | Lowest                | Strongly POSITIVE                  | "Casting" / pushing   |
 +===========+============+=======================+==========================+=======================+
 ```
 
-### The Irony of Figure 11
-Figure 11 in [@nesbit2005work] became the ultimate casus belli of the Alpha War. Proponents of Camp A seized upon the visual graphs of Figure 11, noting that two of the four subjects (Subjects 2 and 4) finished the downswing with positive alpha torque curves into impact. From this, commercial coaches inferred that skilled golfers naturally apply positive alpha torque to drive the clubhead through the ball.
+### Figure 11 and the scratch-golfer reversal
+Figure 11 in [@nesbit2005work, Fig. 11, p. 529] became a focal artifact of the Alpha War. Proponents of Camp A seized upon the visual graphs of Figure 11, noting that two of the four subjects (Subjects 2 and 4) finished the downswing with positive alpha torque curves into impact. From this, commercial coaches inferred that skilled golfers naturally apply positive alpha torque to drive the clubhead through the ball.
 
-However, an audit of Nesbit's accompanying text reveals a striking paradox. Nesbit explicitly singled out Subject 3—the elite scratch golfer with the highest clubhead speed in the cohort—and documented that his alpha torque reversed sharply to negative prior to impact. On p. 528 [@nesbit2005work], Nesbit wrote the foundational description of the phenomenon:
-> *"The torques about all three axes pass through zero prior to impact for Subject 3... the wrists approximate a free hinge with the golfer merely holding on as momentum carries the club... all torque components have reversed, doing negative work because the wrists cannot keep up with the club's rotational speed."*
+However, an audit of Nesbit and Serrano's accompanying text reveals a striking paradox. Nesbit explicitly singled out **Subject 1**—the scratch male golfer with the highest clubhead speed in the four-subject comparison—and documented that the wrist torque components retard club rotation just before impact. On p. 531 [@nesbit2005work], they wrote:
+> *"Because the wrist joints cannot keep up with the angular speed of the club, they actually retard the angular motion of the club just prior to impact resulting in the straightening of the club and the release of its stored energy."*
 
-Far from denying the negative torque reversal, Nesbit's founding paper was the very text that coined the term **"free hinge"** to describe it.
+The same passage explains that the scratch golfer was able to **zero his power output at impact** (p. 531), consistent with a passive trailing-hinge phase rather than active positive alpha drive at ball contact.
 
 ### Nesbit & McGinnis (2009, 2014) on Hub-Path Optimization
 In subsequent publications, Nesbit and McGinnis [@nesbit2009hub; @nesbit2014optimization] developed kinetic optimization algorithms exploring work and power delivery. They proved that pulling the grip inward along an elliptical "hub path" maximizes kinetic energy transfer to the clubhead. However, in these models, the equations of motion frequently grouped all hand-club interactions at a single representative grip point, leaving open the question of how bilateral hand couples behave in live human subjects.
@@ -674,8 +674,8 @@ Kwon's empirical data demonstrated complete parity between full 3D models and 2D
 Dave Tutelman [@tutelman2018alpha], an MIT-trained engineer and the golf engineering community's most prominent independent analyst, authored a series of landmark articles between 2018 and 2021 deconstructing the Alpha War:
 
 1. **"Nesbit or Kwon or MacKenzie?" (2018, updated 2019):** Tutelman conducted a line-by-line derivation of the equations used across all three research programs. He proved that Nesbit's Figure 11 plotted the pure couple, that Kwon's and MacKenzie's data were mathematically isomorphic, and that the apparent conflict was driven by Camp A misinterpreting Nesbit's work-accounting categories.
-2. **The Re-Reading of Nesbit's Founding Paper (May 22, 2020):** Tutelman presented an annotated breakdown of Nesbit's 2005 Figure 11 to the *Golf Biomechanists* group, demonstrating that Nesbit's own data and text celebrated the negative-torque free hinge. Tutelman famously concluded:
-   > *"The only remaining question is prevalence: whether negative alpha torque is universal among skilled golfers or merely dominant. Everyone agrees negative alpha at impact is the right way to swing; everyone but Nesbit's commercial disciples agrees it is true of all elite swings."*
+2. **The Re-Reading of Nesbit's Founding Paper (May 22, 2020):** Tutelman presented an annotated breakdown of [@nesbit2005work, Fig. 11] to the *Golf Biomechanists* group, arguing that Nesbit's own scratch-golfer case supports late negative wrist torque. Tutelman's summary conclusion has not been verified verbatim against a stable public archive:
+   > *[VERIFY: Tutelman Facebook summary, May 2020 — paraphrase pending transcript audit. Original attributed wording removed until verified.]*
 
 ## 5.4 Direct Physical Sensor Telemetry: Instrumented Split Grips
 
@@ -1032,6 +1032,8 @@ Study 1 evaluates the transported moment $M_{\alpha,P}(s_P) = C_\alpha - s_P R_y
 8. **Clubhead center:** $s = +1.020\text{ m}$.
 
 ### Table 7.1: Reference-Point Transport on Empirical WSCG Dataset
+
+Values regenerated from `calcs/alpha_war_sensitivity_suite.py` → `study_1_grip_point_transport` in `calcs/alpha_war_calculations.json` (CI-checked).
 
 | Station | Shaft Offset $s_P$ (m) | Peak Speed ($t = 0.1933\text{ s}$) Moment ($\text{N}\cdot\text{m}$) | Sign ($t = 0.1933\text{ s}$) | Min Couple ($t = 0.2151\text{ s}$) Moment ($\text{N}\cdot\text{m}$) | Sign ($t = 0.2151\text{ s}$) |
 |---|---|---|---|---|---|
@@ -1638,7 +1640,8 @@ This registry compiles every claim, source, or parameter flagged inline with `[V
 | **VRF-01** | Sec 6.4, Box 6.3 | Jacobs 3D claim of trail-hand "snapping" at release | Proprietary coaching claim without split-grip data | **Mechanically Indeterminate** | Execute Protocol 5 (12-Axis Instrumented Split-Grip Campaign) |
 | **VRF-02** | Sec 8.1, Layer 2 | Jacobs 3D software algorithms, filter cutoffs, and reference points | Proprietary, closed-source commercial software | **Unverified Commercial Dossier** | Execute Protocol 1 (Same-Swing Dual-Pipeline Benchmark) |
 | **VRF-03** | Table 8.1, CLM-SGN-01 | Camp A positive alpha webinar demonstrations | Login-gated coaching webinar archives (2018–2022) | **Unpublished Coaching Archive** | Author/panel verification of recorded webinar transcripts |
-| **VRF-04** | Table 8.1, CLM-LIT-05 | Kwon 2D vs. 3D model equivalence cited via Tutelman | Secondary citation of private correspondence | **Secondary Source Pending Audit** | Direct verification against Dr. Kwon's published laboratory notes |
+| **VRF-04** | Sec 5.3 | Tutelman attributed Facebook quote (May 2020) | No stable public transcript; prior draft quote not verified | **Unverified Direct Quote** | Obtain Tutelman post transcript or paraphrase only |
+| **VRF-04b** | Table 8.1, CLM-LIT-05 | Kwon 2D vs. 3D model equivalence cited via Tutelman | Secondary citation of private correspondence | **Secondary Source Pending Audit** | Direct verification against Dr. Kwon's published laboratory notes |
 | **VRF-05** | Sec 10.2 | Croker (2019) monograph: *Pushing and Pulling* | Self-published instruction monograph | **Limited Circulation Source** | Physical inspection of monograph print edition |
 | **VRF-06** | Sec 10.2 | Jacobs (2020): *Look Inside the Swing* | Commercial coaching publication | **Limited Circulation Source** | Verification of page numbers and formal library index |
 | **VRF-07** | Sec 10.2 | Manzella (2020, 2021) webinars and technical notes | Private forum posts and video recordings | **Private Media Archive** | Archival video review of Brian Manzella instruction channel |
