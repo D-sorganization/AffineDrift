@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5314 · Coarse-Pointer 44Px Touch Targets for Site Chrome: Secondary-Nav Sidebar Toggle, Title-Block Category Chips, Code Tools Button
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5314
+- **Branch:** merged via #5339
+- **PR:** #5339
+- **Paths:** see #5339
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`1077db03`; collated from changes/5314-coarse-pointer-44px-site-chrome-touch-targets.md)
+- **Summary:** Coarse-pointer 44px touch targets for site chrome: secondary-nav sidebar toggle, title-block category chips, Code tools button
+- **Next step:** Shipped in PR #5339.
+
 ### DL-#5326 · Phones: The <=480Px Display-Math Step-Down Goes From 0.85Em to 0.82Em, so Theory-Part1's Near-Fit Equations No Longer Scroll at 390Px; Title-Block Meta Headings, Category Chips and the BibTeX Citation Block Hold a 12Px Floor
 
 - **State:** shipped
