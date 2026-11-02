@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-02 | #5356 | Backlog slice delivery for #5320 |
 | 2026-11-02 | #5343 | Service worker: update notice only when a cached asset really changed, network-first JSON/CSV data, compact phone notice |
 | 2026-11-02 | #5340 | Phone-viewport Playwright smoke spec in e2e-tests and a warn-only nightly Lighthouse mobile baseline |
 | 2026-11-02 | #5339 | Coarse-pointer 44px touch targets for site chrome: secondary-nav sidebar toggle, title-block category chips, Code tools button |
