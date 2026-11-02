@@ -101,4 +101,19 @@ describe('Mobile widget touch targets (#5324)', () => {
     const block = coarseBlock(css);
     expect(block).toMatch(/\.badge--maturity[\s\S]*min-height:\s*44px/);
   });
+  // Site chrome on phones (#5314): the controls a 390x844 touch scan found under 44px.
+  test('the secondary-nav sidebar toggle is a 44px coarse-pointer target in header-nav.css', () => {
+    const css = fs.readFileSync(path.join(ROOT, 'css', 'components', 'header-nav.css'), 'utf8');
+    const block = coarseBlock(css);
+    expect(block).toMatch(/\.quarto-secondary-nav \.quarto-btn-toggle\s*\{[^}]*min-height:\s*44px/);
+    expect(block).toMatch(/\.quarto-secondary-nav \.quarto-btn-toggle\s*\{[^}]*min-width:\s*44px/);
+  });
+
+  test('title-block category chips and the Code tools button are 44px coarse-pointer targets', () => {
+    const css = fs.readFileSync(path.join(ROOT, 'css', 'components', 'page-header-card.css'), 'utf8');
+    const block = coarseBlock(css);
+    expect(block).toMatch(/#title-block-header \.quarto-category a\s*\{[^}]*min-height:\s*44px/);
+    expect(block).toMatch(/#title-block-header \.quarto-category a\s*\{[^}]*display:\s*inline-flex/);
+    expect(block).toMatch(/#title-block-header #quarto-code-tools-source\s*\{[^}]*min-height:\s*44px/);
+  });
 });
