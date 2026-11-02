@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5332 · Conflict Disarm Now Calls the Public Fleet-Workflows Reusable Workflow Pinned to 367B182c Instead of an Inlined Sweep; Dry_Run Stays True by Default, and a Contract Test Guards the Uses: Ref and the Full-SHA Pin
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5332
+- **Branch:** merged via #5333
+- **PR:** #5333
+- **Paths:** see #5333
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`7943291c`; collated from changes/5332-conflict-disarm-now-calls-the-public-fle.md)
+- **Summary:** Conflict Disarm now calls the public fleet-workflows reusable workflow pinned to 367b182c instead of an inlined sweep; dry_run stays true by default, and a contract test guards the uses: ref and the full-SHA pin
+- **Next step:** Shipped in PR #5333.
+
 ### DL-#5324 · Coarse-Pointer 44Px Touch Targets for Sandbox, Converter, Dataset Explorer, Maturity Badge
 
 - **State:** shipped
