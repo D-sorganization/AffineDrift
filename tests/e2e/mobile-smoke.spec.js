@@ -12,9 +12,12 @@ const { test, expect } = require('@playwright/test');
 const ROUTES = [
   '/',
   '/articles/theory-part1.html',
+  '/articles/tangent-hyperplanes-series/part-1-geometry.html',
   '/resources/articles.html',
   '/resources/bibliography.html',
+  '/resources/projections.html',
   '/pages/overview.html',
+  '/pages/tangent-hyperplanes.html',
   '/models/models.html',
 ];
 
