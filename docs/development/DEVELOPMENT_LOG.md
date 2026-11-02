@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5315 · Service Worker: Update Notice Only When a Cached Asset Really Changed, Network-First JSON/CSV Data, Compact Phone Notice
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5315
+- **Branch:** merged via #5343
+- **PR:** #5343
+- **Paths:** see #5343
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`9b505cd8`; collated from changes/5315-service-worker-no-false-update-or-stale-data.md)
+- **Summary:** Service worker: update notice only when a cached asset really changed, network-first JSON/CSV data, compact phone notice
+- **Next step:** Shipped in PR #5343.
+
 ### DL-#5316 · Phone-Viewport Playwright Smoke Spec in E2e-Tests and a Warn-Only Nightly Lighthouse Mobile Baseline
 
 - **State:** shipped
