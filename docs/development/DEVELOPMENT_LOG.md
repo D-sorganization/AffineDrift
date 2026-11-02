@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5325 · Phone Off-Canvas Docked Sidebar: Bounded Width, 44Px Rows, Current-Page Bar, Dimmed Scrim and Close Button
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5325
+- **Branch:** merged via #5337
+- **PR:** #5337
+- **Paths:** see #5337
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`bc6279ad`; collated from changes/5325-phone-offcanvas-docked-sidebar.md)
+- **Summary:** Phone off-canvas docked sidebar: bounded width, 44px rows, current-page bar, dimmed scrim and close button
+- **Next step:** Shipped in PR #5337.
+
 ### DL-#5332 · Conflict Disarm Now Calls the Public Fleet-Workflows Reusable Workflow Pinned to 367B182c Instead of an Inlined Sweep; Dry_Run Stays True by Default, and a Contract Test Guards the Uses: Ref and the Full-SHA Pin
 
 - **State:** shipped
