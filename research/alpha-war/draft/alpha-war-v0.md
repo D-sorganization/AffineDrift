@@ -157,6 +157,8 @@ We establish the following fixed reference stations along the shaft centerline $
 
 The concept of a swing plane is fundamental to planar reductions of golf kinetics. Because the spatial trajectory of the clubhead is non-planar (it flattens during the transition and steepens toward delivery), Dr. Young-Hoo Kwon [@kwon2012fsp] formulated the instantaneous **Functional Swing Plane (FSP) [@kwon2012fsp]**.
 
+![Schematic of the functional swing plane relative to the club path](figures/fig-swing-plane-schematic.svg){fig-alt="Schematic ellipse indicating the instantaneous functional swing plane with grip hub and club path"}
+
 At any instant $t$, the FSP is defined by the instantaneous spatial position of the mid-hands point $\mathbf{r}_M(t)$ and the instantaneous velocity vector of the clubhead center of mass $\mathbf{v}_C(t)$. The plane unit normal $\hat{\mathbf{n}}_{\text{FSP}}$ is given by:
 $$
 \hat{\mathbf{n}}_{\text{FSP}} = \frac{(\mathbf{r}_C - \mathbf{r}_M) \times \mathbf{v}_C}{\|(\mathbf{r}_C - \mathbf{r}_M) \times \mathbf{v}_C\|}
@@ -567,7 +569,9 @@ Modern 3D kinetic modeling of the golf swing began with the work of Dr. Steven M
 ```
 
 ### Figure 11 and the scratch-golfer reversal
-Figure 11 in [@nesbit2005work, Fig. 11, p. 529] became a focal artifact of the Alpha War. Proponents of Camp A seized upon the visual graphs of Figure 11, noting that two of the four subjects (Subjects 2 and 4) finished the downswing with positive alpha torque curves into impact. From this, commercial coaches inferred that skilled golfers naturally apply positive alpha torque to drive the clubhead through the ball.
+Figure 11 in [@nesbit2005work, Fig. 11, p. 529] became a focal artifact of the Alpha War.
+
+![Qualitative re-plot of Nesbit and Serrano Figure 11 subject trends (not a reproduced journal figure)](figures/fig-nesbit-fig11-schematic.svg){fig-alt="Schematic four-panel sketch indicating which of four published subjects show positive or negative alpha torque trends near impact per the peer-reviewed caption"} Proponents of Camp A seized upon the visual graphs of Figure 11, noting that two of the four subjects (Subjects 2 and 4) finished the downswing with positive alpha torque curves into impact. From this, commercial coaches inferred that skilled golfers naturally apply positive alpha torque to drive the clubhead through the ball.
 
 However, an audit of Nesbit and Serrano's accompanying text reveals a striking paradox. Nesbit explicitly singled out **Subject 1**—the scratch male golfer with the highest clubhead speed in the four-subject comparison—and documented that the wrist torque components retard club rotation just before impact. On p. 531 [@nesbit2005work], they wrote:
 > *"Because the wrist joints cannot keep up with the angular speed of the club, they actually retard the angular motion of the club just prior to impact resulting in the straightening of the club and the release of its stored energy."*
@@ -1055,6 +1059,8 @@ Values regenerated from `calcs/alpha_war_sensitivity_suite.py` → `study_1_grip
 | **Clubhead Center** | $+1.0200$ | $-10.64$ | Negative | **$+8.76$** | **Positive** |
 | *Sign-Flip Locus $s^*$* | — | **$+4.177\text{ m}$** | (Outside Club) | **$+0.737\text{ m}$** | (Between COM & Head) |
 
+![Alpha moment versus shaft station from WSCG calculations](figures/fig-transport-stations.svg){fig-alt="Plot of reported alpha moment in newton-meters versus shaft offset from mid-hands at minimum couple timing"}
+
 *Key Kinetic Parameters:*
 - At $t = 0.1933\text{ s}$ ($v_{\text{head}} = 115.08\text{ mph}$): $R_x = -521.46\text{ N}$, $R_y = -3.37\text{ N}$, $F_{d,y} = 90.75\text{ N}$, $C_{F,M} = -6.92\text{ N}\cdot\text{m}$, $\tau_{\text{free}} = -7.17\text{ N}\cdot\text{m}$, $C_{\alpha,M} = -14.08\text{ N}\cdot\text{m}$.
 - At $t = 0.2151\text{ s}$ ($v_{\text{head}} = 109.92\text{ mph}$): $R_x = -468.00\text{ N}$, $R_y = -30.96\text{ N}$, $F_{d,y} = 244.05\text{ N}$, $C_{F,M} = -18.60\text{ N}\cdot\text{m}$, $\tau_{\text{free}} = -4.22\text{ N}\cdot\text{m}$, $C_{\alpha,M} = -22.81\text{ N}\cdot\text{m}$.
@@ -1103,6 +1109,7 @@ Study 2 tracks the complete time-series decomposition from early downswing ($t =
 2. **Zero Crossings of COM Moment ($M_{\alpha,G}$):** Crosses from positive to negative at $t = \mathbf{0.14400\text{ s}}$, and crosses back from negative to positive at $t = \mathbf{0.21662\text{ s}}$.
 3. **Passive Dynamic Dominance (ZTCF):** At minimum couple ($t = 0.2151\text{ s}$), the Zero-Torque Counterfactual model generates a passive contact couple of $\mathbf{-19.63\text{ N}\cdot\text{m}}$, accounting for **$86.15\%$** of the actual negative couple ($-22.81\text{ N}\cdot\text{m}$). The negative torque is overwhelmingly an unforced kinematic reaction to arm hub deceleration!
 
+![Hand couple and sum of moments about the club center of mass over time](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple and sum of moments about the club center of mass from WSCG sensitivity calculations"}
 ---
 
 ## 7.3 Study 3: Coordinate Frame and Clubface Roll Sensitivity
@@ -1158,6 +1165,8 @@ Study 4 investigates the numerical sensitivity of inferred impact torque ($t = 0
 *Summary of Artifacts:*
 - At $f_c = 8.0\text{ Hz}$, over-smoothing flips the clean couple from $-17.62\text{ N}\cdot\text{m}$ to **$+0.26\text{ N}\cdot\text{m}$** at $t=0$ and **$+1.39\text{ N}\cdot\text{m}$** at $t=-5\text{ ms}$.
 - At $f_c = 30.0\text{ Hz}$, across-impact filtering inflates the couple from $-15.18\text{ N}\cdot\text{m}$ to **$-37.96\text{ N}\cdot\text{m}$**.
+
+![Filtered impact couple versus Butterworth cutoff frequency](figures/fig-filter-cutoff-sweep.svg){fig-alt="Line plot of clean filtered alpha couple at impact versus low-pass cutoff frequency in hertz"}
 
 ### Table 7.7: Unmodeled Aerodynamic Drag Sensitivity (Moment Arm $r_{\text{head}} = 1.02\text{ m}$)
 
