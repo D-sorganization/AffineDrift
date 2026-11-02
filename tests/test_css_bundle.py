@@ -156,6 +156,8 @@ class TestRealRepoBundle:
         assert "#quarto-header .quarto-secondary-nav" in out
         assert "#quarto-content.page-layout-full .ad-page-container.page-columns.page-full" in out
         assert "#quarto-content.page-layout-full .home-layout--single.page-columns.page-full" in out
+        assert "padding-inline: clamp(1rem, 4vw, 2rem)" in out
+        assert "#quarto-content.page-layout-full main.content" in out
 
 
 def _significant_line(css: str) -> str | None:

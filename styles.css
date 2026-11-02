@@ -294,6 +294,11 @@ main.content .reading-time-estimate span,
   width: 100%;
 }
 
+/* Full-layout pages without .ad-page-container need phone gutters (#5323). */
+#quarto-content.page-layout-full main.content {
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
 /* Article pages: keep margins tighter and sidebars visible */
 #quarto-content.page-layout-article {
   max-width: var(--content-max-width);
