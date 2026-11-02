@@ -12,10 +12,14 @@ GITIGNORE = REPO_ROOT / "research" / "alpha-war" / ".gitignore"
 
 
 class TestAlphaWarCorpusGitignore(unittest.TestCase):
+    """Corpus export directory must stay git-ignored per #5206."""
+
     def test_gitignore_lists_corpus(self) -> None:
+        """The alpha-war gitignore file must list ``corpus/``."""
         self.assertIn("corpus/", GITIGNORE.read_text(encoding="utf-8"))
 
     def test_corpus_directory_is_ignored_by_git(self) -> None:
+        """Git must treat files under ``corpus/`` as ignored."""
         CORPUS_DIR.mkdir(parents=True, exist_ok=True)
         probe = CORPUS_DIR / ".keep"
         probe.write_text("", encoding="utf-8")
