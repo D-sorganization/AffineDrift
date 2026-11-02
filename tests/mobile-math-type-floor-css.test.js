@@ -3,6 +3,7 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const STYLES = fs.readFileSync(path.join(ROOT, 'css', 'components', 'quarto-theme.css'), 'utf8');
+const CANONICAL = fs.readFileSync(path.join(ROOT, 'styles.css'), 'utf8');
 
 /** Body of the first `@media (max-width: <px>px)` block that contains `needle`. */
 function mediaBlockContaining(css, maxWidthPx, needle) {
@@ -28,14 +29,20 @@ function mediaBlockContaining(css, maxWidthPx, needle) {
 }
 
 describe('Mobile math fit and 12px type floor (#5326)', () => {
-  test('phone display equations in top-level paragraphs may use the side gutter', () => {
-    const phone = mediaBlockContaining(STYLES, 480, 'section > p > .math.display');
-    expect(phone).toMatch(
-      /#quarto-document-content > p > \.math\.display,\s*#quarto-document-content section > p > \.math\.display\s*\{[^}]*margin-inline:\s*-1rem/,
+  test('phone display math steps down enough for near-fit equations to fit', () => {
+    // The rule applies to both the wrapper and mjx-container, so the scale
+    // compounds: 0.82^2 brings theory-part1's widest 356px equation to ~331px,
+    // inside the 337px column at 390px.
+    const phone = mediaBlockContaining(CANONICAL, 480, '.math.display');
+    const match = phone.match(
+      /mjx-container\[jax="CHTML"\]\[display="true"\],\s*\.MathJax_Display,\s*\.math\.display\s*\{[^}]*font-size:\s*([0-9.]+)em/,
     );
-    // The canonical display-math rule caps max-width at 100%, which would
-    // cancel the negative margins.
-    expect(phone).toMatch(/section > p > \.math\.display\s*\{[^}]*max-width:\s*none/);
+    expect(match).not.toBeNull();
+    expect(Number(match[1]) ** 2 * (356 / 0.85 ** 2)).toBeLessThanOrEqual(337);
+  });
+
+  test('display math never bleeds into the gutter, which widens its section', () => {
+    expect(STYLES).not.toMatch(/\.math\.display\s*\{[^}]*margin-inline:\s*-/);
   });
 
   test('title-block meta headings and category chips never render under 12px', () => {

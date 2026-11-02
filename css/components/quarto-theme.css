@@ -296,15 +296,3 @@ pre.quarto-appendix-bibtex,
 pre.quarto-appendix-bibtex > code {
   font-size: max(12px, 0.75rem);
 }
-
-/* MathJax 3 cannot line-break display math, so equations a few px wider than
-   the ~337px phone column scrolled sideways (#5326). On phones, equations in
-   top-level paragraphs may use 1rem of each page gutter; callouts, lists and
-   tables keep their padding, and truly wide equations still scroll. */
-@media (max-width: 480px) {
-  #quarto-document-content > p > .math.display,
-  #quarto-document-content section > p > .math.display {
-    max-width: none; /* styles.css caps display math at 100%, cancelling the bleed */
-    margin-inline: -1rem;
-  }
-}
