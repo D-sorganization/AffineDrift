@@ -117,6 +117,7 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "pics",
         "references",
         "reports",
+        "research",
         "repositories",
         "resources",
         "schemas",
