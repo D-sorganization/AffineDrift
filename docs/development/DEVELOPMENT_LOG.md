@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5326 · Phones: The <=480Px Display-Math Step-Down Goes From 0.85Em to 0.82Em, so Theory-Part1's Near-Fit Equations No Longer Scroll at 390Px; Title-Block Meta Headings, Category Chips and the BibTeX Citation Block Hold a 12Px Floor
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5326
+- **Branch:** merged via #5335
+- **PR:** #5335
+- **Paths:** see #5335
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`4f119b7d`; collated from changes/5326-phones-display-equations-in-top-level-pa.md)
+- **Summary:** Phones: the <=480px display-math step-down goes from 0.85em to 0.82em, so theory-part1's near-fit equations no longer scroll at 390px; title-block meta headings, category chips and the BibTeX citation block hold a 12px floor
+- **Next step:** Shipped in PR #5335.
+
 ### DL-#5325 · Phone Off-Canvas Docked Sidebar: Bounded Width, 44Px Rows, Current-Page Bar, Dimmed Scrim and Close Button
 
 - **State:** shipped
