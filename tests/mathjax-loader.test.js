@@ -77,6 +77,11 @@ describe('gated MathJax loader (#3332-A)', () => {
     expect(mathjaxScriptCount()).toBe(1);
   });
 
+  test('sets a phone-friendly CHTML minScale (#5326)', () => {
+    const html = fs.readFileSync(INCLUDE_PATH, 'utf8');
+    expect(html).toMatch(/minScale:\s*0\.85/);
+  });
+
   test('pins the exact MathJax version with an SRI integrity hash', async () => {
     document.body.innerHTML = '<main><span class="math">x</span></main>';
     await runLoader();

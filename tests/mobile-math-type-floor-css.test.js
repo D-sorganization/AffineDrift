@@ -56,4 +56,10 @@ describe('Mobile math fit and 12px type floor (#5326)', () => {
       /pre\.quarto-appendix-bibtex,\s*pre\.quarto-appendix-bibtex > code\s*\{[^}]*font-size:\s*max\(12px,\s*0\.75rem\)/,
     );
   });
+
+  test('scoped math-mobile stylesheet raises script size on phones (#5326)', () => {
+    const scoped = fs.readFileSync(path.join(ROOT, 'css', 'math-mobile.css'), 'utf8');
+    expect(scoped).toMatch(/mjx-script/);
+    expect(CANONICAL).toMatch(/@import url\("css\/math-mobile\.css"\)/);
+  });
 });
