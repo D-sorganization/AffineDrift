@@ -1177,10 +1177,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5137
 - **Branch:** merged via #5152
-- **PR:** #5152
+- **PR:** #5152, #5360
 - **Paths:** see #5152
 - **Started:** 2026-10-24
-- **Last verified:** 2026-10-24 (`84d64373`; collated from changes/5137-correct-the-false-if-and-only-if-in-the.md)
+- **Last verified:** 2026-11-02 (`4a45063c`; collated from changes/5137-restore-swallowed-latex-escapes-in-after.md)
 - **Summary:** Correct the false if-and-only-if in the After One Solution level sub-fibre claim: end levels may be facets
 - **Next step:** Shipped in PR #5152.
 
