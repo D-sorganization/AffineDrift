@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5361 · Add Label-Merge-Guard Workflow Enforcing Do-Not-Merge and Do-Not-Automate Holds
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5361
+- **Branch:** cursor/label-merge-guard-1f35
+- **PR:** #5361
+- **Paths:** see #5361
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`9b9d04ca`; collated from changes/5361-add-label-merge-guard-workflow-enforcing.md)
+- **Summary:** Add label-merge-guard workflow enforcing do-not-merge and do-not-automate holds
+- **Next step:** Shipped in PR #5361.
+
 ### DL-#5323 · Add Phone-Side Padding on Full-Layout Main Content (#5323)
 
 - **State:** shipped
