@@ -12,13 +12,15 @@ reference-section-title: References
 
 # Preface to the First Draft
 
-This document constitutes the complete first draft (v0, Chapters 1 through 10 and Appendices A through D) of a comprehensive, thesis-level adjudication of the "Alpha War"—the protracted, often acrimonious debate that divided the golf biomechanics and coaching communities between 2014 and 2026. The core dispute centers upon the sign, magnitude, origin, and coaching implications of the in-plane torque ("alpha torque") applied by a golfer's hands to the club during the final 30 to 50 milliseconds of the downswing prior to ball impact.
+This document constitutes the complete first draft (v0, Chapters 1 through 10 and Appendices A through D) of a comprehensive, thesis-level review of the "Alpha War"—a long-running technical dispute in golf biomechanics and coaching (2014–2026) over the sign, magnitude, origin, and coaching implications of in-plane hand torque ("alpha torque") in the final 30 to 50 milliseconds before ball contact.
 
 The text is structured into two complementary narrative registers:
 1. **The Main Narrative:** Layperson-accessible, neutral, and educational exposition that explains physical phenomena through everyday analogies, biomechanical principles, and the historical evolution of the debate.
 2. **Mathematical and Mechanical Callout Boxes:** Graduate-level, fully rigorous derivations formulated from classical rigid-body mechanics (Newton–Euler equations, spatial wrench reductions, reference-point transport theorems, closed-loop constrained Lagrangian dynamics, and flexible-beam structural dynamics).
 
 All mathematical formulations strictly adhere to the unified notation established across the research program. Uncertain, unverified, or proprietary parameters that cannot be independently audited from peer-reviewed literature are explicitly flagged inline as `[VERIFY]`.
+
+**Conflict of interest.** The author (Dieter Olson) participated in online biomechanics forums, contributed simulation code in AffineDrift/UpstreamDrift, and appears as a named analyst in parts of this draft. Author-affiliated arguments are segregated in §5A (not presented as part of the Camp B coalition evidence in §5.1–5.5). The author has no financial interest in Jacobs 3D or competing launch-monitor products; the goal of this draft is adjudication, not coaching product endorsement.
 
 ---
 
@@ -50,7 +52,7 @@ A dramatic illustration of this phenomenon occurred in a widely circulated video
                         * Clubhead                                       *==/ (Wrist "Freewheels")
 ```
 
-This phenomenon—what the legendary Bobby Jones famously described in the 1930s as "freewheeling," wherein the golfer merely holds onto a club whose uncocking momentum carries it through the ball—lies at the absolute center of modern golf kinetics. Yet behind this intuitive physical experience lies a decade-long scientific schism known throughout the biomechanics community as the **Alpha War**.
+This phenomenon—what the legendary Bobby Jones described in the 1930s as "freewheeling," wherein the golfer merely holds onto a club whose uncocking momentum carries it through the ball—lies at the absolute center of modern golf kinetics. Yet behind this intuitive physical experience lies a decade-long scientific schism known throughout the biomechanics community as the **Alpha War**.
 
 ## 1.2 Defining the Narrow Window of Dispute
 
@@ -108,7 +110,7 @@ For years, Camp A pointed to positive curves of $\mathbf{M}_G$ and asserted that
 ### Layer 2: The Component-Level Discrepancy and Structural Mechanisms
 However, resolving the debate does not end with semantics. Even when all parties evaluated the pure hand couple $\mathbf{C}_h$ at the exact same grip midpoint $M$, deep physical and computational discrepancies remained:
 - **Frame-Switching Artifacts:** Resolving 3D torque vectors in a rotating, clubface-fixed coordinate frame causes geometric cross-coupling: as the clubface rolls closed in the late downswing, out-of-plane moments project onto the in-plane axis, flipping the calculated sign of $C_\alpha$.
-- **Passive Interaction Dynamics:** Multi-link rigid-body analyses (dating to Carol Putnam [@putnam1991segment; @putnam1993sequential]'s landmark 1991 framework) demonstrate that segment interaction forces—arising purely from forearm deceleration and centripetal acceleration—naturally generate a negative grip couple even when the golfer's muscles are completely deactivated (`zero-torque control`).
+- **Passive Interaction Dynamics:** Multi-link rigid-body analyses (dating to Carol Putnam [@putnam1991segment; @putnam1993sequential]'s 1991 interaction framework) demonstrate that segment interaction forces—arising purely from forearm deceleration and centripetal acceleration—naturally generate a negative grip couple even when the golfer's muscles are completely deactivated (`zero-torque control`).
 - **Flexible Shaft Rebound:** High-speed structural beam dynamics reveal that forward shaft unbending (lead deflection) prior to impact exerts an elastic reaction force against the grip, mechanically forcing the hands into an opposing negative couple.
 - **Proprietary Black-Box Code:** The commercialization of golf analytics led to the deployment of closed-source algorithms (such as *Jacobs 3D*) whose filtering parameters, coordinate transformations, and sensor fusion routines could not be independently inspected or replicated by peer-reviewed science.
 
@@ -480,7 +482,7 @@ where $\beta$ is the uncocking angle and $R_n$ is the centripetal grip tension. 
 > $$
 >
 > **Adjudication of [@nesbit2005work] and Olson's Critique (April 2, 2022):**  
-> In their landmark 2005 paper *Work and Power Analysis of the Golf Swing*, Nesbit and Serrano partitioned energy into joint rotational work and body segment work. They asserted that because there is no relative linear displacement *at* an anatomical joint, joint contact forces do no linear work, categorizing all force-based energy transfer under whole-body linear kinetics.
+> In their 2005 paper *Work and Power Analysis of the Golf Swing*, Nesbit and Serrano partitioned energy into joint rotational work and body segment work. They asserted that because there is no relative linear displacement *at* an anatomical joint, joint contact forces do no linear work, categorizing all force-based energy transfer under whole-body linear kinetics.
 >
 > On April 2, 2022, Dieter Olson published a critique of this accounting scheme in *Golf Biomechanists*:
 > > If one assumes that zero relative motion between the hands and the grip implies zero linear work, then by that same logic a weightlifter pressing a barbell overhead does zero linear work on the bar because the bar does not slide across the palms. Yet the barbell gains massive gravitational potential energy. The hands undeniably transfer linear power ($\mathbf{R} \cdot \mathbf{v}_M$) into the club.
@@ -547,7 +549,7 @@ To resolve a scientific dispute, one must present each faction's arguments in th
 
 ## 4.1 Dr. Steven M. Nesbit's Founding Studies (2005, 2009)
 
-Modern 3D kinetic modeling of the golf swing began with the work of Dr. Steven M. Nesbit at Lafayette College. In 2005, Nesbit published two landmark companion papers in the *Journal of Sports Science and Medicine*:
+Modern 3D kinetic modeling of the golf swing began with the work of Dr. Steven M. Nesbit at Lafayette College. In 2005, Nesbit published two companion papers in the *Journal of Sports Science and Medicine*:
 1. *A Three Dimensional Kinematic and Kinetic Study of the Golf Swing* [@nesbit2005kinematic]: Modeled an **85-subject** cohort of amateur golfers using a 3D full-body kinematic chain coupled to a flexible club model.
 2. *Work and Power Analysis of the Golf Swing* [@nesbit2005work]: Examined energy and torque profiles across **four representative subjects** (Table 1): Subject 1 (scratch, 0-handicap male), Subject 2 (5-handicap male), Subject 3 (13-handicap male), and Subject 4 (18-handicap female).
 
@@ -605,7 +607,7 @@ The turning point occurred during the summer of 2020, when Brian Manzella and Mi
 - **July 9, 2020 (Manzella):** Published an instructional graphic explicitly separating **Alpha Torque** (the pure applied couple perpendicular to the face) from the **Alpha Sum of the Moments** (the net angular response about the club center of mass, combining applied torque with the levered beta force).
 - **August 9, 2020 (Manzella):** Formally acknowledged that the negative curves published by mainstream university biomechanists were plotting the **sum of the moments**, declaring emphatically:
   > *"Mainstream biomechanics graphs showing negative values are plotting the sum of the moments—absolutely, positively NOT JUST alpha torque."*
-- **March 11–12, 2021 (Jacobs & Manzella):** Published their landmark "Same Swing, Two Metrics" dossier, presenting a single motion-capture swing processed through Jacobs 3D under two different computational pipelines:
+- **March 11–12, 2021 (Jacobs & Manzella):** Published their "Same Swing, Two Metrics" comparison, presenting a single motion-capture swing processed through Jacobs 3D under two different computational pipelines:
   1. *Alpha Torque:* Remained **positive** ($+10\text{ to }+25\text{ N}\cdot\text{m}$) all the way to impact.
   2. *Alpha Sum of the Moments:* Plunged **negative** ($-20\text{ to }-40\text{ N}\cdot\text{m}$) prior to impact.
 
@@ -671,7 +673,7 @@ Kwon's empirical data demonstrated complete parity between full 3D models and 2D
 
 ## 5.3 Dave Tutelman [@tutelman2018alpha]'s Landmark Comparative Analyses (2018–2021)
 
-Dave Tutelman [@tutelman2018alpha], an MIT-trained engineer and the golf engineering community's most prominent independent analyst, authored a series of landmark articles between 2018 and 2021 deconstructing the Alpha War:
+Dave Tutelman [@tutelman2018alpha], an MIT-trained engineer and the golf engineering community's most prominent independent analyst, authored a series of technical articles between 2018 and 2021 deconstructing the Alpha War:
 
 1. **"Nesbit or Kwon or MacKenzie?" (2018, updated 2019):** Tutelman conducted a line-by-line derivation of the equations used across all three research programs. He proved that Nesbit's Figure 11 plotted the pure couple, that Kwon's and MacKenzie's data were mathematically isomorphic, and that the apparent conflict was driven by Camp A misinterpreting Nesbit's work-accounting categories.
 2. **The Re-Reading of Nesbit's Founding Paper (May 22, 2020):** Tutelman presented an annotated breakdown of [@nesbit2005work, Fig. 11] to the *Golf Biomechanists* group, arguing that Nesbit's own scratch-golfer case supports late negative wrist torque. Tutelman's summary conclusion has not been verified verbatim against a stable public archive:
@@ -686,7 +688,7 @@ A cornerstone of Camp B's argument is that their conclusions do not rely solely 
       [Cap]----[Lead Sensor: F_L, tau_L]----[Gap: s]----[Trail Sensor: F_T, tau_T]----[Shaft]
 ```
 
-In a series of landmark experimental studies, [@koike2006grip; @koike2016forces; @koike2019joint] and [@choi2020grip] constructed physical golf clubs equipped with multi-axis piezo-electric and strain-gauge load cells split beneath the lead and trail hands:
+In a series of instrumented-grip experimental studies, [@koike2006grip; @koike2016forces; @koike2019joint] and [@choi2020grip] constructed physical golf clubs equipped with multi-axis piezo-electric and strain-gauge load cells split beneath the lead and trail hands:
 - **[@koike2006grip; @koike2016forces]:** Directly measured the contact force vectors $\mathbf{F}_L$ and $\mathbf{F}_T$ exerted by live golfers during full swings. The sensor telemetry proved that:
   1. The lead hand pulls backward against the shaft in the late downswing ($F_{L,y} > 0$);
   2. The trail hand pushes forward ($F_{T,y} < 0$);
@@ -709,9 +711,15 @@ $$
 $$
 Grober demonstrated that negative alpha torque is not a stylistic quirk or an athletic flaw; it is an unavoidable mathematical consequence of driving a two-link kinetic chain with an accelerating hub.
 
-## 5.6 Dieter Olson's Biomechanical Plausibility Bounds
+---
 
-Finally, Dieter Olson (2020–2026) introduced rigorous biomechanical capacity bounds that establish the physical impossibility of Camp A's claims:
+# 5A. Author Supplementary Analysis (Conflict-of-Interest Section)
+
+**Section disclosure.** This section records simulation and forum-analysis contributions by the draft author (Dieter Olson, 2020–2026). It is **not** part of the third-party Camp B evidence chain in §5.1–5.5. Readers should weigh these bounds alongside peer-reviewed studies rather than as independent confirmation of them.
+
+## 5A.1 Biomechanical plausibility bounds
+
+Under stated grip geometry and Hill-type muscle assumptions, the author derived capacity limits on feasible positive hand couples near impact:
 
 1. **The Hand-Force Capacity Bound (May 16, 2020):**  
    Suppose a golfer were to apply an active hand couple of $C_\alpha = +30\text{ N}\cdot\text{m}$ at impact across an inter-hand grip separation of $s = 0.0762\text{ m}$ (3.0 inches). From Box 3.1, neglecting free wrist torque:
@@ -744,7 +752,7 @@ Finally, Dieter Olson (2020–2026) introduced rigorous biomechanical capacity b
 +============================+===========================+================================+==========================+
 ```
 
-With the theoretical foundations and the competing evidence of both camps fully established, we turn in Chapters 6 through 10 to the measurement artifacts, numerical simulation experiments, and the definitive synthesis that settles the Alpha War.
+With the theoretical foundations and the competing evidence of both camps fully established, we turn in Chapters 6 through 10 to the measurement artifacts, numerical simulation experiments, and the synthesis and open test protocols.
 
 ---
 
@@ -1341,7 +1349,7 @@ Biomechanics explains why this subjective perception is real, even though the ne
 
 ### The "Coasting" / "Freewheeling" Hypothesis vs. Release Styles
 
-In December 2023, Dieter Olson proposed the **Coasting Hypothesis**, observing that legendary ball-strikers (most famously Bobby Jones) described feeling completely passive hands through the hitting area, letting centrifugal force and momentum "freewheel" the club through the ball.
+In December 2023, Dieter Olson proposed the **Coasting Hypothesis**, observing that legendary ball-strikers (including Bobby Jones) described feeling completely passive hands through the hitting area, letting centrifugal force and momentum "freewheel" the club through the ball.
 
 Computational optimal control models in `UpstreamDrift` (Chapter 13) confirm the mechanical wisdom of this cue:
 - When a golfer attempts to actively accelerate the clubhead with the wrists late in the downswing (`late_push`), voluntary motor noise is injected into the clubface angle at the exact moment when lever arm sensitivity is highest, increasing face angle dispersion at impact.
