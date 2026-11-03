@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#2427 · Add Report-Only Pr-Body-Lint Pull_Request_Target Caller (RM Reusable Workflow) and Contract Test.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #2427
+- **Branch:** merged via #5390
+- **PR:** #5390
+- **Paths:** see #5390
+- **Started:** 2026-11-03
+- **Last verified:** 2026-11-03 (`59beb5c7`; collated from changes/2427-add-report-only-pr-body-lint-caller.md)
+- **Summary:** Add report-only pr-body-lint pull_request_target caller (RM reusable workflow) and contract test.
+- **Next step:** Shipped in PR #5390.
+
 ### DL-#5319 · Build Manifest Writer: Scripts/write_build_manifest.py Records the Commit, Quarto Version and Lockfile SHA-256 Digests Against Schemas/Build-Manifest.Schema.Json, With --Check for Staleness (SBOM and Deploy Wiring Remain)
 
 - **State:** shipped
