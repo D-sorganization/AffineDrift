@@ -20,6 +20,7 @@
 | `lint-workflow-files.yml` | `contents: read, pull-requests: write` | `L81: github.event.pull_request.number` | none |
 | `local-only-runner-guard.yml` | `contents: read` | none | none |
 | `release.yml` | `contents: write` | none | none |
+| `seed-quarto-e2e-cache.yml` | `contents: read` | none | none |
 | `spec-check.yml` | `contents: read, pull-requests: write` | `L54: github.event.pull_request.base.sha` | none |
 
 ## Summary of Findings

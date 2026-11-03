@@ -308,7 +308,9 @@ def test_seed_quarto_e2e_cache_workflow_seeds_default_branch_cache() -> None:
     assert "- main" in text or "main" in text.split("branches:", maxsplit=1)[1][:80]
     assert "restore-keys" not in text
     e2e = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
-    cache_step = e2e.split("id: quarto_cache\n", maxsplit=1)[1].split("Build site for E2E", maxsplit=1)[0]
+    cache_step = e2e.split("id: quarto_cache\n", maxsplit=1)[1].split(
+        "Build site for E2E", maxsplit=1
+    )[0]
     assert "restore-keys" not in cache_step
 
 
