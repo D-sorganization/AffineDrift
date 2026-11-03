@@ -247,8 +247,8 @@ A major impediment to clarity has been the disparate nomenclature employed acros
 > M_{\alpha,\text{club}}(\phi_{\text{roll}}) = M_{\text{in}}\cos\phi_{\text{roll}} - M_{\text{out}}\sin\phi_{\text{roll}}
 > $$
 >
-> **Quantitative Demonstration (from `calcs/alpha_war_sensitivity_suite.py` Study 3):**  
-> Consider a realistic late-downswing loading state where the golfer exerts a strongly negative in-plane couple $M_{\text{in}} = -15.0\text{ N}\cdot\text{m}$, a moderate positive out-of-plane couple $M_{\text{out}} = +8.0\text{ N}\cdot\text{m}$, and an axial closing torque $M_{\text{shaft}} = +4.5\text{ N}\cdot\text{m}$.
+> **Quantitative Demonstration (Illustrative Input, `calcs/alpha_war_sensitivity_suite.py` Study 3):**  
+> Consider an **illustrative** late-downswing loading state where the golfer exerts a strongly negative in-plane couple $M_{\text{in}} = -15.0\text{ N}\cdot\text{m}$, a moderate positive out-of-plane couple $M_{\text{out}} = +8.0\text{ N}\cdot\text{m}$, and an axial closing torque $M_{\text{shaft}} = +4.5\text{ N}\cdot\text{m}$.
 >
 > 1. At $\phi_{\text{roll}} = 0^\circ$ (square face):
 >    $$
@@ -258,9 +258,9 @@ A major impediment to clarity has been the disparate nomenclature employed acros
 >    $$
 >    M_{\alpha,\text{club}}(45^\circ) = -15.0\left(\frac{\sqrt{2}}{2}\right) - 8.0\left(\frac{\sqrt{2}}{2}\right) = -16.26\text{ N}\cdot\text{m}
 >    $$
-> 3. If the sign convention of out-of-plane roll is inverted (or if the face rolls past open into a hooded orientation $\phi = -61.93^\circ$):
+> 3. If the sign convention of out-of-plane roll is inverted (or if the face rolls past open into a hooded orientation, illustrative $\phi^* = 61.93^\circ$):
 >    $$
->    \phi^* = \arctan\left(\frac{M_{\text{in}}}{M_{\text{out}}}\right) \implies M_{\alpha,\text{club}}(\phi^*) = 0.00\text{ N}\cdot\text{m}
+>    \phi^* = \arctan\left(\frac{|M_{\text{in}}|}{M_{\text{out}}}\right) = \arctan\left(\frac{15}{8}\right) = 61.93^\circ \quad \text{(Illustrative Sign-Flip Angle)} \implies M_{\alpha,\text{club}}(\phi^*) = 0.00\text{ N}\cdot\text{m}
 >    $$
 >    Past this critical roll angle, the projected alpha component flips to **$+8.00\text{ to }+14.43\text{ N}\cdot\text{m}$ (Positive)**, while the overall spatial torque magnitude remains strictly invariant:
 >    $$
@@ -396,24 +396,24 @@ $$
 >
 > **Quantitative Adjudication (from `calcs/alpha_war_sensitivity_suite.py` Study 1):**
 >
-> 1. **Tour Driver Impact Scenario:**  
->    Suppose the golfer's hands exert a negative couple $C_\alpha = -16.00\text{ N}\cdot\text{m}$ while pulling with transverse shear $R_y = -75.00\text{ N}$.
+> 1. **Illustrative Tour Driver Impact Scenario (Analytical Input):**  
+>    Suppose, as an **illustrative** analytical benchmark, the golfer's hands exert a negative couple $C_\alpha = -16.00\text{ N}\cdot\text{m}$ while pulling with transverse shear $R_y = -75.00\text{ N}$.
 >    - At Butt End ($s = -0.050\text{ m}$): $M_\alpha = -16.00 - (-0.050)(-75.0) = \mathbf{-19.75\text{ N}\cdot\text{m}}$
 >    - At Mid-Hands ($s = 0.000\text{ m}$): $M_\alpha = C_\alpha = \mathbf{-16.00\text{ N}\cdot\text{m}}$
 >    - At Lead Hand ($s = -0.0381\text{ m}$): $M_\alpha = \mathbf{-18.86\text{ N}\cdot\text{m}}$
 >    - At Trail Hand ($s = +0.0381\text{ m}$): $M_\alpha = \mathbf{-13.14\text{ N}\cdot\text{m}}$
->    - Sign Reversal Locus ($s^*$): Setting $M_\alpha(s^*) = 0$:
+>    - Illustrative Sign-Reversal Locus ($s^*$): Setting $M_\alpha(s^*) = 0$:
 >      $$
->      s^* = \frac{C_\alpha}{R_y} = \frac{-16.00\text{ N}\cdot\text{m}}{-75.00\text{ N}} = \mathbf{+0.2133\text{ m}}
+>      s^* = \frac{C_\alpha}{R_y} = \frac{-16.00\text{ N}\cdot\text{m}}{-75.00\text{ N}} = \mathbf{+0.2133\text{ m}} \quad \text{(Illustrative)}
 >      $$
->      The reported moment flips sign just 8 inches below the hands!
+>      In this illustrative case, the reported moment flips sign just 8.4 inches below the hands.
 >    - At Club COM ($s = +0.720\text{ m}$):
 >      $$
 >      M_{\alpha,G} = -16.00 - (+0.720)(-75.0) = -16.00 + 54.00 = \mathbf{+38.00\text{ N}\cdot\text{m}}
 >      $$
 >
-> 2. **WSCG Minimum-Couple State ($t = 0.2151\text{ s}$, $v_{\text{head}} = 109.92\text{ mph}$):**  
->    From the empirical WSCG two-hand dataset:
+> 2. **Simulated WSCG Minimum-Couple State ($t = 0.2151\text{ s}$, $v_{\text{head}} = 109.92\text{ mph}$):**  
+>    From the **simulated** WSCG two-hand inverse/forward-dynamics dataset:
 >    - Grip separation $s = 0.0762\text{ m}$, opposed forces $F_{L,y} = +228.57\text{ N}$, $F_{T,y} = -259.53\text{ N}$.
 >    - Differential force $F_{d,y} = +244.05\text{ N} \implies C_{F,M} = -18.60\text{ N}\cdot\text{m}$.
 >    - Free wrist torque $\tau_{\text{free}} = -4.22\text{ N}\cdot\text{m} \implies C_\alpha = -22.81\text{ N}\cdot\text{m}$.
@@ -422,7 +422,7 @@ $$
 >      $$
 >      M_{\alpha,G} = -22.81 - (+0.720)(-30.96) = -22.81 + 22.29 = \mathbf{-0.53\text{ N}\cdot\text{m}}
 >      $$
->    - Sign reversal locus: $s^* = \frac{-22.81}{-30.96} = \mathbf{+0.7368\text{ m}}$ (just 1.7 cm past the club COM!).
+>    - Simulated sign-reversal locus: $s^* = \frac{-22.8148}{-30.9558} = \mathbf{+0.7370\text{ m}}$ (**simulated**, 1.7 cm past the club COM, distinct from the $+0.213\text{ m}$ illustrative analytical case above).
 >    - At the clubhead ($s = +1.020\text{ m}$): $M_\alpha = \mathbf{+8.76\text{ N}\cdot\text{m}}$ (Strongly Positive).
 >
 > **Definitive Conclusion:** The sign of the "alpha moment" is not a physical invariant; it is a direct function of the evaluation station $s_P$. Anyone reporting "alpha torque" without specifying $s_P$ is reporting an underdetermined quantity.
@@ -521,18 +521,18 @@ The answer was established in multi-segment biomechanics by Dr. Carol Putnam [@p
 > \ddot{\mathbf{q}}_{\text{ctrl}} = \mathbf{M}^{-1}(\mathbf{q})\left[ \mathbf{Q}(\mathbf{u}) + \mathbf{J}^\mathsf{T}\boldsymbol{\lambda}_{\text{ctrl}} \right]
 > $$
 >
-> **Zero-Torque Control Simulation (ZTCF):**  
+> **Zero-Torque Control Simulation (Simulated WSCG ZTCF Model):**  
 > What happens if the golfer completely deactivates all wrist muscles ($\mathbf{Q}_{\text{wrist}} \equiv 0$) in the late downswing?
 >
-> In `calcs/alpha_war_sensitivity_suite.py` (Study 2 and Study 5), the closed-loop system was simulated under identical kinematic trajectories:
-> 1. At peak clubhead speed ($t = 0.1933\text{ s}$, $v_{\text{head}} = 115.08\text{ mph}$):
->    - Full active control hand couple: $C_{\alpha,\text{BASE}} = \mathbf{-14.08\text{ N}\cdot\text{m}}$
->    - Passive zero-torque hand couple: $C_{\alpha,\text{ZTCF}} = \mathbf{-11.19\text{ N}\cdot\text{m}}$
-> 2. At minimum hand couple ($t = 0.2151\text{ s}$):
->    - Full active control hand couple: $C_{\alpha,\text{BASE}} = \mathbf{-22.81\text{ N}\cdot\text{m}}$
->    - Passive zero-torque hand couple: $C_{\alpha,\text{ZTCF}} = \mathbf{-19.63\text{ N}\cdot\text{m}}$
+> In `calcs/alpha_war_sensitivity_suite.py` (Study 2 and Study 5), the closed-loop WSCG model was **simulated** under identical kinematic trajectories:
+> 1. At peak clubhead speed ($t = 0.1933\text{ s}$, $v_{\text{head}} = 115.08\text{ mph}$, **simulated**):
+>    - Full active control hand couple: $C_{\alpha,\text{BASE}} = \mathbf{-14.08\text{ N}\cdot\text{m}}$ ($-14.0806\text{ N}\cdot\text{m}$)
+>    - Passive zero-torque hand couple: $C_{\alpha,\text{ZTCF}} = \mathbf{-11.19\text{ N}\cdot\text{m}}$ ($-11.1948\text{ N}\cdot\text{m}$, **$79.51\%$** passive share)
+> 2. At minimum hand couple ($t = 0.2151\text{ s}$, **simulated**):
+>    - Full active control hand couple: $C_{\alpha,\text{BASE}} = \mathbf{-22.81\text{ N}\cdot\text{m}}$ ($-22.8148\text{ N}\cdot\text{m}$)
+>    - Passive zero-torque hand couple: $C_{\alpha,\text{ZTCF}} = \mathbf{-19.63\text{ N}\cdot\text{m}}$ ($-19.6294\text{ N}\cdot\text{m}$)
 >
-> **Result:** The passive, zero-torque drift dynamics account for **86.15%** of the observed negative hand couple!
+> **Result:** In this simulated WSCG counterfactual, the passive, zero-torque drift dynamics account for **86.04%** ($19.6294 / 22.8148$) of the negative hand couple at minimum couple timing (`alpha_war_calculations.json`).
 >
 > The negative couple is not an intentional muscular "braking" action. It is an unavoidable physical consequence of multi-body constraint mechanics: as the rapidly rotating clubhead outruns the arm segment, the geometric constraint of keeping two hands on the grip forces the lead hand to pull backward and the trail hand to push forward relative to the club, generating an equal-and-opposite reaction couple on the golfer's wrists.
 
@@ -778,10 +778,10 @@ Crucially, while the resultant force $\mathbf{R} = \mathbf{F}_L + \mathbf{F}_T$ 
     Butt (B)     Lead (L)   Mid-Hands (M)   Trail (T)   Lower Collar      Club COM (G)            Clubhead
        |------------|------------|------------|--------------|-----------------|---------------------|
     s = -0.05m   -0.038m       s = 0       +0.038m        +0.15m            +0.72m                +1.02m
-                                                          ^
-                                                          |
-                                                  Sign-Reversal Locus
-                                                     s* = +0.213m
+                                                          ^                   ^
+                                                          |                   |
+                                             Illustrative s* = +0.213m   Simulated WSCG s* = +0.737m
+                                            (C = -16 Nm, R_y = -75 N)   (t = 0.2151s: C = -22.81, R_y = -30.96)
 ```
 
 ### The Spatial Moment Transport Law
@@ -822,15 +822,21 @@ Because $R_y$ is large and negative, the spatial gradient along the shaft is ste
 $$\frac{d M_{\alpha,P}}{d s_P} = -R_y = +75.0\text{ N}\cdot\text{m/m}$$
 Every $10\text{ cm}$ distal shift along the shaft adds $+7.5\text{ N}\cdot\text{m}$ of positive moment!
 
-Consider the analytical tour-driver case from Study 1 (`alpha_war_calculations.json`):
-- Pure hand couple at mid-hands: $C_\alpha = -16.00\text{ N}\cdot\text{m}$ (retarding uncocking).
-- Resultant normal force: $R_y = -75.00\text{ N}$.
-- Evaluating at the club center of mass ($s_G = +0.720\text{ m}$):
-  $$M_{\alpha,G} = -16.00 - (0.720)(-75.00) = -16.00 + 54.00 = \mathbf{+38.00\text{ N}\cdot\text{m}}$$
-- The sign-reversal locus occurs at:
-  $$s^* = \frac{-16.00}{-75.00} = \mathbf{+0.213\text{ m}} = 8.40\text{ inches}$$
+Consider the two distinct reference-point transport cases evaluated in Study 1 (`alpha_war_calculations.json`):
 
-This sign flip occurs just below the grip collar ($s \approx +0.15\text{ m}$). A researcher evaluating the wrench at the grip midpoint ($s=0$) or lead wrist ($s=-0.038\text{ m}$) records a negative couple of $-16.0\text{ to }-18.9\text{ N}\cdot\text{m}$. A researcher evaluating the wrench at the club mass center ($s=+0.72\text{ m}$) records $+38.0\text{ N}\cdot\text{m}$. Both calculations are exact representations of the same physical state, but they answer completely different mechanical questions.
+1. **Illustrative Analytical Tour-Driver Case ($C_\alpha = -16.00\text{ N}\cdot\text{m}$, $R_y = -75.00\text{ N}$):**
+   - Pure hand couple at mid-hands: $C_\alpha = -16.00\text{ N}\cdot\text{m}$ (illustrative retarding couple).
+   - Resultant normal force: $R_y = -75.00\text{ N}$ (illustrative transverse pull).
+   - Evaluating at the club center of mass ($s_G = +0.720\text{ m}$):
+     $$M_{\alpha,G} = -16.00 - (0.720)(-75.00) = -16.00 + 54.00 = \mathbf{+38.00\text{ N}\cdot\text{m}}$$
+   - The **illustrative** sign-reversal locus occurs just below the grip collar ($s \approx +0.15\text{ m}$):
+     $$s^*_{\text{illus}} = \frac{-16.00}{-75.00} = \mathbf{+0.213\text{ m}} = 8.40\text{ inches} \quad \text{(Illustrative)}$$
+2. **Simulated WSCG Minimum-Couple State ($t = 0.2151\text{ s}$, $C_\alpha = -22.81\text{ N}\cdot\text{m}$, $R_y = -30.96\text{ N}$):**
+   - Because the transverse force magnitude ($|R_y| = 30.96\text{ N}$) is smaller relative to the couple ($-22.8148\text{ N}\cdot\text{m}$), the **simulated** sign-reversal locus shifts distally to:
+     $$s^*_{\text{sim}} = \frac{-22.8148}{-30.9558} = \mathbf{+0.737\text{ m}} \quad \text{(Simulated WSCG Model)}$$
+   - Here $M_{\alpha,G} = -0.53\text{ N}\cdot\text{m}$ at the club COM ($s_G = +0.720\text{ m}$) and flips positive just $1.7\text{ cm}$ past the COM, reaching $+8.76\text{ N}\cdot\text{m}$ at the clubhead center ($s = +1.020\text{ m}$).
+
+In both cases, an analyst evaluating the wrench at the grip midpoint ($s=0$) or lead wrist ($s=-0.038\text{ m}$) records a negative couple, whereas an analyst evaluating the wrench distally beyond $s^*$ records a positive moment. Both calculations represent the same physical wrench at different stations along the shaft.
 
 ---
 
@@ -946,10 +952,10 @@ $$\hat{\mathbf{u}}_\gamma = \hat{\mathbf{e}}_t$$
 The reported club-fixed alpha couple is:
 $$M_{\alpha,\text{club}}(\phi_{\text{roll}}) = M_{\text{in}} \cos\phi_{\text{roll}} + M_{\text{out}} \sin\phi_{\text{roll}}$$
 
-Consider the realistic late-downswing state evaluated in Study 3 (`alpha_war_calculations.json`), where $M_{\text{in}} = -15.0\text{ N}\cdot\text{m}$ (resisting uncocking), $M_{\text{out}} = +8.0\text{ N}\cdot\text{m}$ (out-of-plane bending), and $M_{\text{shaft}} = +4.5\text{ N}\cdot\text{m}$ (squaring torque):
+Consider the **illustrative** late-downswing loading state evaluated in Study 3 (`alpha_war_calculations.json`), where $M_{\text{in}} = -15.0\text{ N}\cdot\text{m}$ (resisting uncocking), $M_{\text{out}} = +8.0\text{ N}\cdot\text{m}$ (out-of-plane bending), and $M_{\text{shaft}} = +4.5\text{ N}\cdot\text{m}$ (squaring torque):
 - At $\phi_{\text{roll}} = 0^\circ$: $M_{\alpha,\text{club}} = -15.00\text{ N}\cdot\text{m}$ (negative).
 - At $\phi_{\text{roll}} = 45^\circ$: $M_{\alpha,\text{club}} = -4.95\text{ N}\cdot\text{m}$ (negative).
-- At $\phi^* = \arctan(15/8) = \mathbf{61.93^\circ}$: $M_{\alpha,\text{club}} = \mathbf{0.00\text{ N}\cdot\text{m}}$ (**sign flip**).
+- At $\phi^* = \arctan(15/8) = \mathbf{61.93^\circ}$ (**illustrative** sign-flip angle): $M_{\alpha,\text{club}} = \mathbf{0.00\text{ N}\cdot\text{m}}$ (**sign flip**).
 - At $\phi_{\text{roll}} = 90^\circ$: $M_{\alpha,\text{club}} = \mathbf{+8.00\text{ N}\cdot\text{m}}$ (**positive**).
 - At $\phi_{\text{roll}} = 120^\circ$: $M_{\alpha,\text{club}} = \mathbf{+14.43\text{ N}\cdot\text{m}}$ (**positive**).
 
@@ -1050,17 +1056,17 @@ Values regenerated from `calcs/alpha_war_sensitivity_suite.py` → `study_1_grip
 | **Mid-Shaft** | $+0.4000$ | $-12.73$ | Negative | $-10.43$ | Negative |
 | **Club COM ($G$)** | $+0.7200$ | **$-11.65$** | Negative | **$-0.53$** | Negative |
 | **Clubhead Center** | $+1.0200$ | $-10.64$ | Negative | **$+8.76$** | **Positive** |
-| *Sign-Flip Locus $s^*$* | — | **$+4.177\text{ m}$** | (Outside Club) | **$+0.737\text{ m}$** | (Between COM & Head) |
+| *Simulated Sign-Flip Locus $s^*$* | — | **$+4.177\text{ m}$** | (Simulated, Outside Club) | **$+0.737\text{ m}$** | (Simulated, Between COM & Head) |
 
 ![Alpha moment versus shaft station from WSCG calculations](figures/fig-transport-stations.svg){fig-alt="Plot of reported alpha moment in newton-meters versus shaft offset from mid-hands at minimum couple timing"}
 
-*Key Kinetic Parameters:*
-- At $t = 0.1933\text{ s}$ ($v_{\text{head}} = 115.08\text{ mph}$): $R_x = -521.46\text{ N}$, $R_y = -3.37\text{ N}$, $F_{d,y} = 90.75\text{ N}$, $C_{F,M} = -6.92\text{ N}\cdot\text{m}$, $\tau_{\text{free}} = -7.17\text{ N}\cdot\text{m}$, $C_{\alpha,M} = -14.08\text{ N}\cdot\text{m}$.
-- At $t = 0.2151\text{ s}$ ($v_{\text{head}} = 109.92\text{ mph}$): $R_x = -468.00\text{ N}$, $R_y = -30.96\text{ N}$, $F_{d,y} = 244.05\text{ N}$, $C_{F,M} = -18.60\text{ N}\cdot\text{m}$, $\tau_{\text{free}} = -4.22\text{ N}\cdot\text{m}$, $C_{\alpha,M} = -22.81\text{ N}\cdot\text{m}$.
+*Key Simulated WSCG Kinetic Parameters:*
+- At $t = 0.1933\text{ s}$ ($v_{\text{head}} = 115.08\text{ mph}$, **simulated**): $R_x = -521.46\text{ N}$, $R_y = -3.37\text{ N}$, $F_{d,y} = 90.75\text{ N}$, $C_{F,M} = -6.92\text{ N}\cdot\text{m}$, $\tau_{\text{free}} = -7.17\text{ N}\cdot\text{m}$, $C_{\alpha,M} = -14.08\text{ N}\cdot\text{m}$.
+- At $t = 0.2151\text{ s}$ ($v_{\text{head}} = 109.92\text{ mph}$, **simulated**): $R_x = -468.00\text{ N}$, $R_y = -30.96\text{ N}$, $F_{d,y} = 244.05\text{ N}$, $C_{F,M} = -18.60\text{ N}\cdot\text{m}$, $\tau_{\text{free}} = -4.22\text{ N}\cdot\text{m}$, $C_{\alpha,M} = -22.81\text{ N}\cdot\text{m}$.
 
-### Table 7.2: Reference-Point Transport for Analytical Tour Driver Cases ($C_{\alpha,M} = -16.00\text{ N}\cdot\text{m}$)
+### Table 7.2: Reference-Point Transport for Illustrative Analytical Tour Driver Cases ($C_{\alpha,M} = -16.00\text{ N}\cdot\text{m}$)
 
-| Station | Shaft Offset $s_P$ (m) | Case 1: $R_y = -75\text{ N}$ (Forward Levering) | Case 2: $R_y = +75\text{ N}$ (Backward Dragging) |
+| Station | Shaft Offset $s_P$ (m) | Case 1 (Illustrative): $R_y = -75\text{ N}$ (Forward Levering) | Case 2 (Illustrative): $R_y = +75\text{ N}$ (Backward Dragging) |
 |---|---|---|---|
 | **Butt End ($B$)** | $-0.0500$ | $-19.75\text{ N}\cdot\text{m}$ | $-12.25\text{ N}\cdot\text{m}$ |
 | **Lead Wrist ($L$)** | $-0.0381$ | $-18.86\text{ N}\cdot\text{m}$ | $-13.14\text{ N}\cdot\text{m}$ |
@@ -1068,7 +1074,7 @@ Values regenerated from `calcs/alpha_war_sensitivity_suite.py` → `study_1_grip
 | **Trail Wrist ($T$)** | $+0.0381$ | $-13.14\text{ N}\cdot\text{m}$ | $-18.86\text{ N}\cdot\text{m}$ |
 | **Lower Grip** | $+0.1500$ | $-4.75\text{ N}\cdot\text{m}$ | $-27.25\text{ N}\cdot\text{m}$ |
 | **Club COM ($G$)** | $+0.7200$ | **$+38.00\text{ N}\cdot\text{m}$ (Positive)** | **$-70.00\text{ N}\cdot\text{m}$ (Deep Negative)** |
-| *Sign-Flip Locus $s^*$* | — | **$+0.213\text{ m}$ (Below Grip Collar)** | **$-0.213\text{ m}$ (Above Butt Cap)** |
+| *Illustrative Sign-Flip Locus $s^*$* | — | **$+0.213\text{ m}$ (Illustrative, Below Grip Collar)** | **$-0.213\text{ m}$ (Illustrative, Above Butt Cap)** |
 
 In Case 1, the transverse resultant force $R_y = -75\text{ N}$ exerts a positive moment of $+54.00\text{ N}\cdot\text{m}$ about the COM, overwhelming the $-16.00\text{ N}\cdot\text{m}$ hand couple and producing $+38.00\text{ N}\cdot\text{m}$ at $G$.
 
@@ -1100,16 +1106,16 @@ Study 2 tracks the complete time-series decomposition from early downswing ($t =
 *Critical Dynamic Observations:*
 1. **Zero Crossing of Hand Couple ($C_{\alpha,M}$):** Occurs at $t = \mathbf{0.18017\text{ s}}$, exactly $13.1\text{ ms}$ before peak clubhead speed ($t = 0.1933\text{ s}$).
 2. **Zero Crossings of COM Moment ($M_{\alpha,G}$):** Crosses from positive to negative at $t = \mathbf{0.14400\text{ s}}$, and crosses back from negative to positive at $t = \mathbf{0.21662\text{ s}}$.
-3. **Passive Dynamic Dominance (ZTCF):** At minimum couple ($t = 0.2151\text{ s}$), the Zero-Torque Counterfactual model generates a passive contact couple of $\mathbf{-19.63\text{ N}\cdot\text{m}}$, accounting for **$86.15\%$** of the actual negative couple ($-22.81\text{ N}\cdot\text{m}$). The negative torque is overwhelmingly an unforced kinematic reaction to arm hub deceleration!
+3. **Simulated Passive Dynamic Dominance (ZTCF):** At minimum couple ($t = 0.2151\text{ s}$), the **simulated** Zero-Torque Counterfactual model generates a passive contact couple of $\mathbf{-19.63\text{ N}\cdot\text{m}}$ ($-19.6294\text{ N}\cdot\text{m}$), accounting for **$86.04\%$** of the simulated negative couple ($-22.8148\text{ N}\cdot\text{m}$, `alpha_war_calculations.json`). In this model, the negative couple is predominantly an unforced kinematic reaction to arm hub deceleration.
 
 ![Hand couple and sum of moments about the club center of mass over time](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple and sum of moments about the club center of mass from WSCG sensitivity calculations"}
 ---
 
 ## 7.3 Study 3: Coordinate Frame and Clubface Roll Sensitivity
 
-Study 3 quantifies how face roll $\phi_{\text{roll}}$ and shaft orientation $\theta$ alter the projected components of a 3D couple $\mathbf{M}_{\text{FSP}} = (+4.5, +8.0, -15.0)\text{ N}\cdot\text{m}$ with constant norm $\|\mathbf{M}\| = 17.586\text{ N}\cdot\text{m}$.
+Study 3 quantifies how face roll $\phi_{\text{roll}}$ and shaft orientation $\theta$ alter the projected components of an **illustrative** 3D couple $\mathbf{M}_{\text{FSP}} = (+4.5, +8.0, -15.0)\text{ N}\cdot\text{m}$ with constant norm $\|\mathbf{M}\| = 17.586\text{ N}\cdot\text{m}$.
 
-### Table 7.4: Clubface Roll Sweep About Shaft Axis
+### Table 7.4: Illustrative Clubface Roll Sweep About Shaft Axis
 
 | Roll Angle $\phi_{\text{roll}}$ (deg) | Club-Fixed $M_\alpha$ ($\text{N}\cdot\text{m}$) | Club-Fixed $M_\beta$ ($\text{N}\cdot\text{m}$) | Shaft Torque $M_\gamma$ ($\text{N}\cdot\text{m}$) | Vector Norm $\|\mathbf{M}\|$ ($\text{N}\cdot\text{m}$) | Apparent Alpha Sign |
 |---|---|---|---|---|---|
@@ -1117,7 +1123,7 @@ Study 3 quantifies how face roll $\phi_{\text{roll}}$ and shaft orientation $\th
 | **$30.0^\circ$** | $-8.99$ | $+14.43$ | $+4.50$ | $17.586$ | Negative |
 | **$45.0^\circ$** | $-4.95$ | $+16.26$ | $+4.50$ | $17.586$ | Negative |
 | **$60.0^\circ$** | $-0.57$ | $+16.99$ | $+4.50$ | $17.586$ | Negative |
-| *$\mathbf{61.93^\circ}$* | **$0.00$** | **$+17.00$** | **$+4.50$** | $17.586$ | **Zero Crossing** |
+| *$\mathbf{61.93^\circ}$ (Illustrative $\phi^*$)* | **$0.00$** | **$+17.00$** | **$+4.50$** | $17.586$ | **Illustrative Zero Crossing** |
 | **$90.0^\circ$** | **$+8.00$** | $+15.00$ | $+4.50$ | $17.586$ | **Positive** |
 | **$120.0^\circ$** | **$+14.43$** | $+8.99$ | $+4.50$ | $17.586$ | **Positive** |
 | **$150.0^\circ$** | **$+16.99$** | $+0.57$ | $+4.50$ | $17.586$ | **Positive** |
@@ -1304,35 +1310,35 @@ The following master table cross-references and adjudicates every major claim fr
 
 | Claim ID | Core Claim Statement | Proponent Camp | Target Physical Quantity | Coordinate Frame | Formal Adjudication Status |
 |---|---|---|---|---|---|
-| **CLM-SGN-01** | Hands apply positive alpha torque through impact | Camp A (Jacobs, Manzella) | Pure hand couple $C_{\alpha,M}$ at mid-hands | FSP / Moving Club | **Refuted / Definitional Artifact** `[VERIFY webinars]` |
-| **CLM-SGN-02** | Hand couple reverses negative $15\text{--}30\text{ ms}$ before impact | Camp B (Kwon, MacKenzie, Tutelman) | Pure hand couple $C_{\alpha,M}$ at mid-hands | FSP / Moving Grip | **Settled (Empirical & Mathematical Fact)** |
-| **CLM-SGN-03** | Total alpha moment about COM ($M_{\alpha,G}$) remains positive | Camp A & Camp B consensus | Total moment $M_{\alpha,G} = I_G \alpha_{\text{club}}$ | Club Principal / FSP | **Settled (Empirical & Mathematical Fact)** |
-| **CLM-SGN-04** | Trail hand "snaps" or flexes actively at release | Popular Coaching / Camp A | Isolated trail hand force/couple | Hand Anatomical | **Unprovable / Closed-Loop Indeterminate** |
-| **CLM-SGN-05** | Applied positive couple $>+30\text{ N}\cdot\text{m}$ at impact is impossible | Olson (2020) | Differential hand contact force $F_d$ | Mid-hands ($s \approx 0.076\text{ m}$) | **Settled (Biomechanical Constraint)** |
-| **CLM-SGN-06** | Peak positive alpha couple occurs early, decaying to zero/negative | Consensus (Camp A & Camp B) | Hand couple magnitude $C_\alpha(t)$ | Grip Frame | **Settled (Universal Consensus)** |
-| **CLM-LIT-01** | Nesbit (2005) Fig 11 proves skilled players apply positive alpha | Camp A (Jacobs, Manzella) | Club-fixed alpha torque in Fig 11 | Club-Fixed Frame | **Refuted (Misreading of 26-Handicap Subject)** |
-| **CLM-LIT-02** | Nesbit (2005) documents "free hinge" / negative torque for scratch | Camp B (Tutelman, Sinclair) | Joint torque for Subject 4 | Club-Fixed Frame | **Settled (Textual & Empirical Fact)** |
-| **CLM-LIT-03** | Inward hub pull unconditionally increases clubhead speed | Golf Instructors / Camp A | Hub curvature & normal acceleration | Planar Hub Frame | **Qualified (Requires Coordination with Release)** |
-| **CLM-LIT-04** | MacKenzie's 3D forward model is merely "2-1/2D" and invalid | Camp A (Jacobs/Manzella critique) | Complete 3D inverse/forward dynamics | 3D Grip Frame | **Refuted (MacKenzie Model is Fully 3D)** |
-| **CLM-LIT-05** | Kwon 3D and 2D models show identical reversal timing | Kwon (cited via Tutelman 2018) | In-plane couple $\tau_\alpha$ at grip | FSP Frame | **Settled (Verified Modeling Consensus)** `[VERIFY]` |
-| **CLM-LIT-06** | Grober (2020) derives negative couple from double pendulum | Grober (2020 [@grober2020forces]) | Hinge torque $\tau_h$ balancing distal COM | 2D Planar Lagrangian | **Settled (Mathematical Derivation)** |
-| **CLM-REF-01** | Shifting reference point from grip to COM flips moment sign | Olson (2022–2026), UpstreamDrift | Moment transport: $M_G = M_M - \mathbf{r} \times \mathbf{R}$ | Rigid Wrench Transport | **Settled (Mathematical Identity)** |
-| **CLM-REF-02** | Conflation of pure couple $C_h$ and COM moment $M_G$ drove debate | Olson (2022), Manzella (2021) | Distinction between $C_h$ and $M_G$ | All Frames | **Settled (Definitional Artifact)** |
-| **CLM-REF-03** | Global inertial to club-fixed frame inverts apparent signs | Sinclair (2020), Tutelman (2018) | Projected torque components | Global vs. Club-Fixed | **Settled (Kinematic Projection Artifact)** |
-| **CLM-REF-04** | Two-hand closed chain makes individual hand forces indeterminate | Olson (2022–2024, UpstreamDrift) | Contact forces $\mathbf{F}_L, \mathbf{F}_T$ | Closed-Loop Chain | **Settled (Linear Algebraic Identity)** |
-| **CLM-REF-05** | Wrist universal joint generates non-working constraint torques | Olson (Jan 2025) | Constraint wrench $\boldsymbol{\lambda}^\top \mathbf{J} \dot{\mathbf{q}} = 0$ | Anatomical 2-DOF Wrist | **Settled (Kinematic Modeling Fact)** |
-| **CLM-MCH-01** | Torque reversal caused by muscle force-velocity limits | Nesbit (2005), Sprigings (2000) | Hill-type contractile velocity | Forearm Musculature | **Supported (Contributing Physiological Factor)** |
-| **CLM-MCH-02** | Reversal is purely an interaction-force reaction in linked chain | [@putnam1991segment; @putnam1993sequential], Grober (2020) | Coriolis and centrifugal coupling | Multi-Body Dynamics | **Settled (Sufficient Dynamic Mechanism)** |
-| **CLM-MCH-03** | Forward shaft rebound produces massive negative grip couple | Olson (Dec 2023), Tutelman (2018) | Elastic restoring moment $\mathbf{M}_{\text{bend}}$ | 12-Segment Beam | **Settled (Dominant Physical Co-Factor)** |
-| **CLM-MCH-04** | Negative couple persists with completely unforced wrists | Olson (2022, 2026 UpstreamDrift) | Unforced contact reaction wrench | Two-Hand Constrained | **Settled (ZTCF Model Verification)** |
-| **CLM-DAT-01** | Direct load cells confirm negative couple of $-10\text{ N}\cdot\text{m}$ | [@koike2006grip; @koike2016forces] | Measured handle strain/force wrench | Grip Physical Axes | **Settled (Direct Empirical Proof)** |
-| **CLM-DAT-02** | Filter cutoff $<15\text{ Hz}$ smooths impact into downswing | Methodological Consensus / Camp A | Filter frequency response $H(f)$ | Digital Filtering | **Settled (Demonstrated in Study 4)** |
-| **CLM-DAT-03** | Aerodynamic drag accounts for $9\text{--}10\text{ N}\cdot\text{m}$ of negative moment | Olson (May 2020) | Aerodynamic moment $\mathbf{r} \times \mathbf{F}_{\text{drag}}$ | Clubhead Pressure Center | **Settled (Physical Calibration Factor)** |
-| **CLM-DAT-04** | Post-impact visual shaft bend proves pre-impact positive torque | Popular Coaching / Camp A | High-speed photography / visual bend | Post-Impact Visual | **Refuted (Causally Inadmissible Post-Event)** |
-| **CLM-CCH-01** | "Coasting through impact" / "Freewheeling" optimizes delivery | Olson (Dec 2023), Bobby Jones | Motor control torque derivative | Stochastic Trajectory | **Open Coaching Hypothesis** |
-| **CLM-CCH-02** | Active distal driving ("pushing through") enhances speed | Camp A Instructors | Commanded muscular joint torque | Motor Intention | **Disputed (Biomechanically Unsound)** |
-| **CLM-CCH-03** | Restraining distal torque schedule improves tail head speed | UpstreamDrift (Ch 13 / Ch 06d) | Nondominated multi-objective schedule | Moving-Base Model | **Settled (Optimal Control Verification)** |
-| **CLM-CCH-04** | Golfer subjective feel is diametrically opposed to measured kinetics | Olson (2020–2024), Croker (2019) | Perceptual effort vs. wrench | Sensorimotor System | **Settled (Motor Learning Principle)** |
+| **CLM-SGN-01** | Hands apply positive alpha torque through impact | Camp A (Jacobs, Manzella) | Pure hand couple $C_{\alpha,M}$ at mid-hands | FSP / Moving Club | **Unverified - convention mapping required** `[VERIFY webinars]` *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* |
+| **CLM-SGN-02** | Hand couple reverses negative $15\text{--}30\text{ ms}$ before impact | Camp B (Kwon, MacKenzie, Tutelman) | Pure hand couple $C_{\alpha,M}$ at mid-hands | FSP / Moving Grip | **Settled (Empirical & Mathematical Fact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-SGN-03** | Total alpha moment about COM ($M_{\alpha,G}$) remains positive | Camp A & Camp B consensus | Total moment $M_{\alpha,G} = I_G \alpha_{\text{club}}$ | Club Principal / FSP | **Settled (Empirical & Mathematical Fact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-SGN-04** | Trail hand "snaps" or flexes actively at release | Popular Coaching / Camp A | Isolated trail hand force/couple | Hand Anatomical | **Unprovable / Closed-Loop Indeterminate** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-SGN-05** | Applied positive couple $>+30\text{ N}\cdot\text{m}$ at impact is impossible | Olson (2020) | Differential hand contact force $F_d$ | Mid-hands ($s \approx 0.076\text{ m}$) | **Settled (Biomechanical Constraint)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-SGN-06** | Peak positive alpha couple occurs early, decaying to zero/negative | Consensus (Camp A & Camp B) | Hand couple magnitude $C_\alpha(t)$ | Grip Frame | **Settled (Universal Consensus)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-LIT-01** | Nesbit (2005) Fig 11 proves skilled players apply positive alpha | Camp A (Jacobs, Manzella) | Club-fixed alpha torque in Fig 11 | Club-Fixed Frame | **Refuted (Misreading of 26-Handicap Subject)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-LIT-02** | Nesbit (2005) documents "free hinge" / negative torque for scratch | Camp B (Tutelman, Sinclair) | Joint torque for Subject 4 | Club-Fixed Frame | **Settled (Textual & Empirical Fact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-LIT-03** | Inward hub pull unconditionally increases clubhead speed | Golf Instructors / Camp A | Hub curvature & normal acceleration | Planar Hub Frame | **Qualified (Requires Coordination with Release)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-LIT-04** | MacKenzie's 3D forward model is merely "2-1/2D" and invalid | Camp A (Jacobs/Manzella critique) | Complete 3D inverse/forward dynamics | 3D Grip Frame | **Refuted (MacKenzie Model is Fully 3D)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-LIT-05** | Kwon 3D and 2D models show identical reversal timing | Kwon (cited via Tutelman 2018) | In-plane couple $\tau_\alpha$ at grip | FSP Frame | **Unverified - primary source check required (VRF-04b)** `[VERIFY]` *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* |
+| **CLM-LIT-06** | Grober (2020) derives negative couple from double pendulum | Grober (2020 [@grober2020forces]) | Hinge torque $\tau_h$ balancing distal COM | 2D Planar Lagrangian | **Settled (Mathematical Derivation)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-REF-01** | Shifting reference point from grip to COM flips moment sign | Olson (2022–2026), UpstreamDrift | Moment transport: $M_G = M_M - \mathbf{r} \times \mathbf{R}$ | Rigid Wrench Transport | **Settled (Mathematical Identity)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-REF-02** | Conflation of pure couple $C_h$ and COM moment $M_G$ drove debate | Olson (2022), Manzella (2021) | Distinction between $C_h$ and $M_G$ | All Frames | **Settled (Definitional Artifact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-REF-03** | Global inertial to club-fixed frame inverts apparent signs | Sinclair (2020), Tutelman (2018) | Projected torque components | Global vs. Club-Fixed | **Settled (Kinematic Projection Artifact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-REF-04** | Two-hand closed chain makes individual hand forces indeterminate | Olson (2022–2024, UpstreamDrift) | Contact forces $\mathbf{F}_L, \mathbf{F}_T$ | Closed-Loop Chain | **Settled (Linear Algebraic Identity)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-REF-05** | Wrist universal joint generates non-working constraint torques | Olson (Jan 2025) | Constraint wrench $\boldsymbol{\lambda}^\top \mathbf{J} \dot{\mathbf{q}} = 0$ | Anatomical 2-DOF Wrist | **Settled (Kinematic Modeling Fact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-MCH-01** | Torque reversal caused by muscle force-velocity limits | Nesbit (2005), Sprigings (2000) | Hill-type contractile velocity | Forearm Musculature | **Supported (Contributing Physiological Factor)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-MCH-02** | Reversal is purely an interaction-force reaction in linked chain | [@putnam1991segment; @putnam1993sequential], Grober (2020) | Coriolis and centrifugal coupling | Multi-Body Dynamics | **Settled (Sufficient Dynamic Mechanism)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-MCH-03** | Forward shaft rebound produces massive negative grip couple | Olson (Dec 2023), Tutelman (2018) | Elastic restoring moment $\mathbf{M}_{\text{bend}}$ | 12-Segment Beam | **Settled (Dominant Physical Co-Factor)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-MCH-04** | Negative couple persists with completely unforced wrists | Olson (2022, 2026 UpstreamDrift) | Unforced contact reaction wrench | Two-Hand Constrained | **Settled (ZTCF Model Verification)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-DAT-01** | Direct load cells confirm negative couple of $-10\text{ N}\cdot\text{m}$ | [@koike2006grip; @koike2016forces] | Measured handle strain/force wrench | Grip Physical Axes | **Settled (Direct Empirical Proof)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-DAT-02** | Filter cutoff $<15\text{ Hz}$ smooths impact into downswing | Methodological Consensus / Camp A | Filter frequency response $H(f)$ | Digital Filtering | **Settled (Demonstrated in Study 4)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-DAT-03** | Aerodynamic drag accounts for $9\text{--}10\text{ N}\cdot\text{m}$ of negative moment | Olson (May 2020) | Aerodynamic moment $\mathbf{r} \times \mathbf{F}_{\text{drag}}$ | Clubhead Pressure Center | **Settled (Physical Calibration Factor)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-DAT-04** | Post-impact visual shaft bend proves pre-impact positive torque | Popular Coaching / Camp A | High-speed photography / visual bend | Post-Impact Visual | **Refuted (Causally Inadmissible Post-Event)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-CCH-01** | "Coasting through impact" / "Freewheeling" optimizes delivery | Olson (Dec 2023), Bobby Jones | Motor control torque derivative | Stochastic Trajectory | **Open Coaching Hypothesis** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-CCH-02** | Active distal driving ("pushing through") enhances speed | Camp A Instructors | Commanded muscular joint torque | Motor Intention | **Disputed (Biomechanically Unsound)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-CCH-03** | Restraining distal torque schedule improves tail head speed | UpstreamDrift (Ch 13 / Ch 06d) | Nondominated multi-objective schedule | Moving-Base Model | **Settled (Optimal Control Verification)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-CCH-04** | Golfer subjective feel is diametrically opposed to measured kinetics | Olson (2020–2024), Croker (2019) | Perceptual effort vs. wrench | Sensorimotor System | **Settled (Motor Learning Principle)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 
 ---
 

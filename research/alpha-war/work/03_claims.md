@@ -111,12 +111,12 @@ Where $\mathbf{r}_{G/H} = \mathbf{r}_G - \mathbf{r}_H$ is the position vector po
 
 | Claim ID | Core Assertion | Claimant / Camp | Physical Quantity & Reference Point | Frame / Convention | Status / Resolution |
 |---|---|---|---|---|---|
-| **CLM-SGN-01** | Golfer's hands apply positive alpha torque through impact | Camp A (Jacobs, Manzella) | Pure hand couple $\mathbf{C}_h$ at mid-hands | Club-fixed / Swing plane | **Refuted / Definitional Artifact** [VERIFY webinars] |
-| **CLM-SGN-02** | Net alpha couple reverses negative 20–50 ms before impact in skilled swings | Camp B (Kwon, MacKenzie, Tutelman, Sinclair) | Pure hand couple $\mathbf{C}_h$ at mid-hands | Grip frame / Swing plane | **Settled (Empirical & Mathematical)** |
-| **CLM-SGN-03** | Total alpha moment about club COM ($\mathbf{M}_G$) remains positive to impact | Camp A (Manzella 2021) & Camp B (MacKenzie 2009) | Total moment $\mathbf{M}_G = I_G \boldsymbol{\alpha}$ about COM | Club principal axes / FSP | **Settled (Empirical & Mathematical)** |
-| **CLM-SGN-04** | Trail hand exerts positive torque ("snapping") at release | Popular Instruction / Camp A | Right hand isolated couple / force $\mathbf{C}_R, \mathbf{F}_R$ | Hand anatomical axes | **Unprovable / Closed-Loop Artifact** |
-| **CLM-SGN-05** | Applied positive torque of +30 N·m at impact is biomechanically impossible | Olson (2020) | Differential hand contact force $F_d$ | Mid-hands ($d \approx 0.1$ m) | **Settled (Biomechanical Constraint)** |
-| **CLM-SGN-06** | Peak positive alpha torque occurs early in downswing, decaying to zero/negative | Consensus (Camp A & Camp B) | Torque magnitude $|\mathbf{M}_H(t)|$ | Grip frame | **Settled (Consensus)** |
+| **CLM-SGN-01** | Golfer's hands apply positive alpha torque through impact | Camp A (Jacobs, Manzella) | Pure hand couple $\mathbf{C}_h$ at mid-hands | Club-fixed / Swing plane | **Unverified - convention mapping required** [VERIFY webinars] *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* |
+| **CLM-SGN-02** | Net alpha couple reverses negative 20–50 ms before impact in skilled swings | Camp B (Kwon, MacKenzie, Tutelman, Sinclair) | Pure hand couple $\mathbf{C}_h$ at mid-hands | Grip frame / Swing plane | **Settled (Empirical & Mathematical)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-SGN-03** | Total alpha moment about club COM ($\mathbf{M}_G$) remains positive to impact | Camp A (Manzella 2021) & Camp B (MacKenzie 2009) | Total moment $\mathbf{M}_G = I_G \boldsymbol{\alpha}$ about COM | Club principal axes / FSP | **Settled (Empirical & Mathematical)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-SGN-04** | Trail hand exerts positive torque ("snapping") at release | Popular Instruction / Camp A | Right hand isolated couple / force $\mathbf{C}_R, \mathbf{F}_R$ | Hand anatomical axes | **Unprovable / Closed-Loop Artifact** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-SGN-05** | Applied positive torque of +30 N·m at impact is biomechanically impossible | Olson (2020) | Differential hand contact force $F_d$ | Mid-hands ($d \approx 0.1$ m) | **Settled (Biomechanical Constraint)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-SGN-06** | Peak positive alpha torque occurs early in downswing, decaying to zero/negative | Consensus (Camp A & Camp B) | Torque magnitude $|\mathbf{M}_H(t)|$ | Grip frame | **Settled (Consensus)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 
 ---
 
@@ -124,12 +124,12 @@ Where $\mathbf{r}_{G/H} = \mathbf{r}_G - \mathbf{r}_H$ is the position vector po
 
 | Claim ID | Core Assertion | Claimant / Camp | Physical Quantity & Reference Point | Frame / Convention | Status / Resolution |
 |---|---|---|---|---|---|
-| **CLM-LIT-01** | Nesbit (2005) Figure 11 proves skilled golfers apply positive alpha at impact | Camp A (Jacobs, Manzella) | Alpha torque component in Fig 11 | Club-fixed frame | **Refuted (Misreading of Source)** |
-| **CLM-LIT-02** | Nesbit (2005) explicitly documents "free hinge" and negative torque for scratch golfer | Camp B (Tutelman, Sinclair) | Alpha torque & 3D components for Subject 4 | Club-fixed frame | **Settled (Textual & Empirical Fact)** |
-| **CLM-LIT-03** | Nesbit & McGinnis (2009) proves inward hub pull unconditionally increases clubhead speed | Golf Instructors / Camp A | Hub path curvature & normal acceleration | Planar 2D hub frame | **Overgeneralized / Qualified** |
-| **CLM-LIT-04** | MacKenzie's 3D model is merely "2-1/2D" and invalid | Camp A (Jacobs/Manzella critique) | Complete 3D inverse/forward dynamics | 3D Grip-fixed frame | **Refuted (Balen/MacKenzie Audit)** |
-| **CLM-LIT-05** | Kwon 3D and 2D models yield identical negative-couple reversal timing | Kwon (cited via Tutelman 2018) | In-plane couple $\tau_{\alpha}$ at grip | Functional Swing Plane (FSP) | **Settled (Empirical Modeling)** [VERIFY] |
-| **CLM-LIT-06** | Grober (2020) analytically derives negative couple from double pendulum physics | Grober (2020 arXiv:2006.11778) | Hinge torque $\tau_h$ balancing distal COM | 2D Planar Lagrangian frame | **Settled (Mathematical Derivation)** |
+| **CLM-LIT-01** | Nesbit (2005) Figure 11 proves skilled golfers apply positive alpha at impact | Camp A (Jacobs, Manzella) | Alpha torque component in Fig 11 | Club-fixed frame | **Refuted (Misreading of Source)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-LIT-02** | Nesbit (2005) explicitly documents "free hinge" and negative torque for scratch golfer | Camp B (Tutelman, Sinclair) | Alpha torque & 3D components for Subject 4 | Club-fixed frame | **Settled (Textual & Empirical Fact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-LIT-03** | Nesbit & McGinnis (2009) proves inward hub pull unconditionally increases clubhead speed | Golf Instructors / Camp A | Hub path curvature & normal acceleration | Planar 2D hub frame | **Overgeneralized / Qualified** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-LIT-04** | MacKenzie's 3D model is merely "2-1/2D" and invalid | Camp A (Jacobs/Manzella critique) | Complete 3D inverse/forward dynamics | 3D Grip-fixed frame | **Refuted (Balen/MacKenzie Audit)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-LIT-05** | Kwon 3D and 2D models yield identical negative-couple reversal timing | Kwon (cited via Tutelman 2018) | In-plane couple $\tau_{\alpha}$ at grip | Functional Swing Plane (FSP) | **Unverified - primary source check required (VRF-04b)** [VERIFY] *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* |
+| **CLM-LIT-06** | Grober (2020) analytically derives negative couple from double pendulum physics | Grober (2020 arXiv:2006.11778) | Hinge torque $\tau_h$ balancing distal COM | 2D Planar Lagrangian frame | **Settled (Mathematical Derivation)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 
 ---
 
@@ -137,11 +137,11 @@ Where $\mathbf{r}_{G/H} = \mathbf{r}_G - \mathbf{r}_H$ is the position vector po
 
 | Claim ID | Core Assertion | Claimant / Camp | Physical Quantity & Reference Point | Frame / Convention | Status / Resolution |
 |---|---|---|---|---|---|
-| **CLM-REF-01** | Shifting reference point from grip butt to COM flips moment sign | Olson (2022–2026), UpstreamDrift | Moment transport: $\mathbf{M}_G = \mathbf{M}_H - \mathbf{r} \times \mathbf{F}_g$ | Rigid body wrench reduction | **Settled (Mathematical Identity)** |
-| **CLM-REF-02** | Conflation of pure couple $\mathbf{C}_h$ and COM moment $\mathbf{M}_G$ drove the war | Olson (2022), Manzella (2020–2022) | Distinction between $\mathbf{C}_h$ and $\mathbf{M}_G$ | All frames | **Settled (Definitional Artifact)** |
-| **CLM-REF-03** | Switching from fixed global to club-fixed frame inverts apparent torque signs | Sinclair (2020), Tutelman (2018) | Torque projection onto moving axes | Global vs. Club-Fixed | **Settled (Kinematic Artifact)** |
-| **CLM-REF-04** | Two-hand closed kinematic chain makes individual hand forces indeterminate | Olson (2022–2024, UpstreamDrift) | Lead vs. Trail contact forces $\mathbf{F}_L, \mathbf{F}_T$ | Two-hand closed loop | **Settled (Rigid Mechanics Identity)** |
-| **CLM-REF-05** | Wrist modeled as universal joint generates non-working constraint torques | Olson (Jan 2025) | Constraint wrench $\mathbf{\lambda}^\top \mathbf{J} \dot{\mathbf{q}} = 0$ | Anatomical wrist joint (2-DOF) | **Settled (Kinematic Modeling)** |
+| **CLM-REF-01** | Shifting reference point from grip butt to COM flips moment sign | Olson (2022–2026), UpstreamDrift | Moment transport: $\mathbf{M}_G = \mathbf{M}_H - \mathbf{r} \times \mathbf{F}_g$ | Rigid body wrench reduction | **Settled (Mathematical Identity)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-REF-02** | Conflation of pure couple $\mathbf{C}_h$ and COM moment $\mathbf{M}_G$ drove the war | Olson (2022), Manzella (2020–2022) | Distinction between $\mathbf{C}_h$ and $\mathbf{M}_G$ | All frames | **Settled (Definitional Artifact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-REF-03** | Switching from fixed global to club-fixed frame inverts apparent torque signs | Sinclair (2020), Tutelman (2018) | Torque projection onto moving axes | Global vs. Club-Fixed | **Settled (Kinematic Artifact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-REF-04** | Two-hand closed kinematic chain makes individual hand forces indeterminate | Olson (2022–2024, UpstreamDrift) | Lead vs. Trail contact forces $\mathbf{F}_L, \mathbf{F}_T$ | Two-hand closed loop | **Settled (Rigid Mechanics Identity)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-REF-05** | Wrist modeled as universal joint generates non-working constraint torques | Olson (Jan 2025) | Constraint wrench $\mathbf{\lambda}^\top \mathbf{J} \dot{\mathbf{q}} = 0$ | Anatomical wrist joint (2-DOF) | **Settled (Kinematic Modeling)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 
 ---
 
@@ -149,10 +149,10 @@ Where $\mathbf{r}_{G/H} = \mathbf{r}_G - \mathbf{r}_H$ is the position vector po
 
 | Claim ID | Core Assertion | Claimant / Camp | Physical Quantity & Reference Point | Frame / Convention | Status / Resolution |
 |---|---|---|---|---|---|
-| **CLM-MCH-01** | Torque reversal is caused by muscle force-velocity concentric limits | Nesbit (2005), Sprigings (2000) | Hill-type muscle contractile velocity | Forearm flexor/extensor units | **Supported / Partial Mechanism** |
-| **CLM-MCH-02** | Reversal is purely an interaction-force reaction in a linked system | Putnam (1991/1993), Grober (2020), Olson | Coriolis and centrifugal coupling terms | Multi-body equations of motion | **Settled (Sufficient Mechanism)** |
-| **CLM-MCH-03** | Forward shaft deflection (rebound) produces massive negative grip couple | Olson (Dec 2023), Tutelman (2018) | Elastic restoring moment $\mathbf{M}_{\text{bend}}$ | Flexible shaft (12-segment model)| **Settled (Dominant Co-Factor)** |
-| **CLM-MCH-04** | Pointwise zero-command persistence: negative couple persists with free wrists | Olson (2022, 2026 UpstreamDrift) | Uncommanded contact reaction wrench | Two-hand constrained model | **Settled (Model Verification)** |
+| **CLM-MCH-01** | Torque reversal is caused by muscle force-velocity concentric limits | Nesbit (2005), Sprigings (2000) | Hill-type muscle contractile velocity | Forearm flexor/extensor units | **Supported / Partial Mechanism** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-MCH-02** | Reversal is purely an interaction-force reaction in a linked system | Putnam (1991/1993), Grober (2020), Olson | Coriolis and centrifugal coupling terms | Multi-body equations of motion | **Settled (Sufficient Mechanism)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-MCH-03** | Forward shaft deflection (rebound) produces massive negative grip couple | Olson (Dec 2023), Tutelman (2018) | Elastic restoring moment $\mathbf{M}_{\text{bend}}$ | Flexible shaft (12-segment model)| **Settled (Dominant Co-Factor)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-MCH-04** | Pointwise zero-command persistence: negative couple persists with free wrists | Olson (2022, 2026 UpstreamDrift) | Uncommanded contact reaction wrench | Two-hand constrained model | **Settled (Model Verification)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 
 ---
 
@@ -160,10 +160,10 @@ Where $\mathbf{r}_{G/H} = \mathbf{r}_G - \mathbf{r}_H$ is the position vector po
 
 | Claim ID | Core Assertion | Claimant / Camp | Physical Quantity & Reference Point | Frame / Convention | Status / Resolution |
 |---|---|---|---|---|---|
-| **CLM-DAT-01** | Direct instrumented-grip sensors confirm negative couple of -10 N·m | Koike et al. (2006, 2016) | Measured handle strain/load cell wrench | Physical grip coordinates | **Settled (Empirical Evidence)** |
-| **CLM-DAT-02** | Low-pass filter cutoff (<15 Hz) smooths impact discontinuity into downswing | Methodological Consensus / Camp A | Filter frequency response $H(f)$ | Time-domain filtering | **Valid Risk / Methodological Artifact** |
-| **CLM-DAT-03** | Aerodynamic drag on driver head accounts for 9–10 N·m of negative moment | Olson (May 2020) | Aerodynamic force moment $\mathbf{r}_{\text{aero}} \times \mathbf{F}_{\text{drag}}$ | Clubhead center of pressure | **Settled (Physical Correction)** |
-| **CLM-DAT-04** | Post-impact visual evidence (follow-through) is valid proof of pre-impact kinetics | Popular Coaching / Camp A | High-speed photography / visual shaft bend| Post-impact visual frame | **Refuted (Physical Inadmissibility)** |
+| **CLM-DAT-01** | Direct instrumented-grip sensors confirm negative couple of -10 N·m | Koike et al. (2006, 2016) | Measured handle strain/load cell wrench | Physical grip coordinates | **Settled (Empirical Evidence)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-DAT-02** | Low-pass filter cutoff (<15 Hz) smooths impact discontinuity into downswing | Methodological Consensus / Camp A | Filter frequency response $H(f)$ | Time-domain filtering | **Valid Risk / Methodological Artifact** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-DAT-03** | Aerodynamic drag on driver head accounts for 9–10 N·m of negative moment | Olson (May 2020) | Aerodynamic force moment $\mathbf{r}_{\text{aero}} \times \mathbf{F}_{\text{drag}}$ | Clubhead center of pressure | **Settled (Physical Correction)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-DAT-04** | Post-impact visual evidence (follow-through) is valid proof of pre-impact kinetics | Popular Coaching / Camp A | High-speed photography / visual shaft bend| Post-impact visual frame | **Refuted (Physical Inadmissibility)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 
 ---
 
@@ -171,10 +171,10 @@ Where $\mathbf{r}_{G/H} = \mathbf{r}_G - \mathbf{r}_H$ is the position vector po
 
 | Claim ID | Core Assertion | Claimant / Camp | Physical Quantity & Reference Point | Frame / Convention | Status / Resolution |
 |---|---|---|---|---|---|
-| **CLM-CCH-01** | "Coasting through impact" / "Freewheeling" is optimal for delivery consistency | Olson (Dec 2023), Bobby Jones | Motor control schedule / torque derivative | Stochastic trajectory control | **Open Coaching Hypothesis** |
-| **CLM-CCH-02** | Active distal driving ("pushing through impact") enhances compression and speed | Camp A Instructors (Jacobs, Manzella) | Commanded muscular joint torque | Neuromuscular intention | **Disputed / Biomechanically Unsound** |
-| **CLM-CCH-03** | Restraining distal torque schedule (`early_restrain`) improves tail clubhead speed | UpstreamDrift (Ch 13 / Ch 06d) | Nondominated multi-objective schedule | Planar moving-base model | **Settled (Model Verification)** |
-| **CLM-CCH-04** | Golfer subjective feel is diametrically opposed to measured joint kinetics | Olson (2020–2024), Croker (2019) | Perceptual effort vs. Newton-Euler wrench | Sensorimotor integration | **Settled (Motor Learning Principle)** |
+| **CLM-CCH-01** | "Coasting through impact" / "Freewheeling" is optimal for delivery consistency | Olson (Dec 2023), Bobby Jones | Motor control schedule / torque derivative | Stochastic trajectory control | **Open Coaching Hypothesis** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-CCH-02** | Active distal driving ("pushing through impact") enhances compression and speed | Camp A Instructors (Jacobs, Manzella) | Commanded muscular joint torque | Neuromuscular intention | **Disputed / Biomechanically Unsound** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-CCH-03** | Restraining distal torque schedule (`early_restrain`) improves tail clubhead speed | UpstreamDrift (Ch 13 / Ch 06d) | Nondominated multi-objective schedule | Planar moving-base model | **Settled (Model Verification)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-CCH-04** | Golfer subjective feel is diametrically opposed to measured joint kinetics | Olson (2020–2024), Croker (2019) | Perceptual effort vs. Newton-Euler wrench | Sensorimotor integration | **Settled (Motor Learning Principle)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 
 ---
 
@@ -201,8 +201,8 @@ CLAIM DOSSIER: CORE KINETIC SIGN & MAGNITUDE CLAIMS
    - Proprietary Jacobs 3D motion capture inverse-dynamics software graphs.
    - Kinesthetic intuition of players and instructors who "feel" hard hitting with the hands/arms through the ball.
 6. **Technical Assessment & Resolution Status:**
-   **Refuted as a claim of pure hand couple $\mathbf{C}_h$; Re-classified as a Definitional Artifact.**  
-   When the physical quantity is the pure couple $\mathbf{C}_h$ applied by the hands, every published peer-reviewed inverse-dynamics study (MacKenzie, Kwon), direct sensor measurement (Koike et al.), and forward-dynamics model demonstrates that $\mathbf{C}_h$ is negative ($-5$ to $-30$ N·m) at impact in skilled swings.  
+   **Unverified - convention mapping required.** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)*  
+   While published peer-reviewed inverse-dynamics studies (MacKenzie, Kwon) and direct grip sensor measurements (Koike et al.) report a negative mid-hands couple $\mathbf{C}_h$ ($-5$ to $-30$ N·m) near impact in skilled swings, whether Camp A's positive curves reflect a reference-point transport ($\mathbf{M}_G$ vs. $\mathbf{C}_h$), a club-fixed frame rotation, or filter smoothing cannot be treated as settled without an explicit convention mapping against Jacobs 3D's proprietary definitions.  
    *[VERIFY]:* Access to archived Jacobs 3D webinar graphs is required to verify the exact mathematical definition implemented in their software (whether their "alpha torque" is $\mathbf{M}_H$, $\mathbf{M}_G$, or an off-center pivot moment).
 
 ---
