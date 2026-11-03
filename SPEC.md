@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-03 | #5309 | Panel-refined draft of Managing Slack in Linked Systems (do not merge); Publish panel-refined Managing Slack in Linked Systems (#5135, #5309) |
 | 2026-11-02 | #5360 | Restore swallowed LaTeX escapes in After One Solution and gate articles/*.qmd control bytes |
 | 2026-11-02 | #5361 | Add label-merge-guard workflow enforcing do-not-merge and do-not-automate holds |
 | 2026-11-02 | #5328 | Add phone-side padding on full-layout main content (#5323) |

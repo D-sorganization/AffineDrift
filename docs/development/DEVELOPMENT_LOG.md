@@ -416,10 +416,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5135
 - **Branch:** cursor/slack-transmission-core-7958
-- **PR:** #5148, #5144, #5145, #5310
+- **PR:** #5148, #5144, #5145, #5310, #5309
 - **Paths:** see #5148
 - **Started:** 2026-10-26
-- **Last verified:** 2026-11-01 (`1da6c00e`; collated from changes/5135-rename-citation-key-koike2020-to-choi202.md)
+- **Last verified:** 2026-11-03 (`0ce3c82b`; collated from changes/5135-publish-panel-refined-managing-slack-in.md)
 - **Summary:** Add the core slack-representation transmission model (dead-zone, smooth-spring, activation and unequal-lag channels, play operator, preparation split) with its tests for the Managing Slack in Linked Systems article
 - **Next step:** Four-seat panel review, revision round, Fleet-Critic review and Dieter's sign-off before merge.
 
