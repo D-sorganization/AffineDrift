@@ -114,6 +114,25 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
                 "Adjudicated by:", line, msg=f"Missing adjudication on {vrf_id}"
             )
 
+    def test_vrf_verify_first_5398(self) -> None:
+        """VRF-04b, VRF-10, VRF-02, and VRF-06 outcomes must be verified/reframed and recorded in App D."""
+        draft_text = _find_draft_path().read_text(encoding="utf-8")
+        bib_text = (ALPHA_WAR_DIR / "references.bib").read_text(encoding="utf-8")
+
+        # VRF-04b: Kwon primary FSP/axle-chain papers cited; CLM-LIT-05 stays unverified without [VERIFY]
+        self.assertIn("[@kwon2012fsp; @madrid2020axle]", draft_text)
+        self.assertNotIn("`[VERIFY]`", draft_text.split("## 8.2")[1].split("## 8.3")[0])
+
+        # VRF-10: Explicitly called a new proposal alongside ISB standards
+        self.assertIn("[@wu2002isb; @wu2005isb]", draft_text)
+        self.assertIn("@article{wu2002isb", bib_text)
+        self.assertIn("@article{wu2005isb", bib_text)
+        self.assertIn("new methodological proposal", draft_text)
+
+        # VRF-02 & VRF-06: Jacobs & Nesbit (2019) 339 pp. and Jacobs (2020) documented
+        self.assertIn("339 pp.", bib_text)
+        self.assertIn("[@jacobs2019science; @jacobs2020lookinside]", draft_text)
+
 
 if __name__ == "__main__":
     unittest.main()
