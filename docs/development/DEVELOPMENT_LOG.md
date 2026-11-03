@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5319 · Build Manifest Writer: Scripts/write_build_manifest.py Records the Commit, Quarto Version and Lockfile SHA-256 Digests Against Schemas/Build-Manifest.Schema.Json, With --Check for Staleness (SBOM and Deploy Wiring Remain)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5319
+- **Branch:** merged via #5386
+- **PR:** #5386
+- **Paths:** see #5386
+- **Started:** 2026-11-03
+- **Last verified:** 2026-11-03 (`112240c9`; collated from changes/5319-build-manifest-writer.md)
+- **Summary:** Build manifest writer: scripts/write_build_manifest.py records the commit, Quarto version and lockfile SHA-256 digests against schemas/build-manifest.schema.json, with --check for staleness (SBOM and deploy wiring remain)
+- **Next step:** Shipped in PR #5386.
+
 ### DL-#5313 · Phone Layout Audit Manifest: Playwright Mobile Smoke and Lighthouse Read One Route and Viewport Set (iPhone 390X844, Android 360X800)
 
 - **State:** shipped
