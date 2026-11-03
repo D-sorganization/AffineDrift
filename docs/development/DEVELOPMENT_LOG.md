@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5342 · Seed the Exact-Key Quarto E2E Render Cache on Main Push so PRs and Merge Groups Can Restore It (WEB-13.1 #4595)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5342
+- **Branch:** brick/ci-toolchain/5342-quarto-cache-seed
+- **PR:** #5382
+- **Paths:** see #5382
+- **Started:** 2026-11-03
+- **Last verified:** 2026-11-03 (`2b53616a`; collated from changes/5342-seed-quarto-e2e-render-cache-on-main.md)
+- **Summary:** Seed the exact-key Quarto E2E render cache on main push so PRs and merge groups can restore it (WEB-13.1 #4595)
+- **Next step:** Shipped in PR #5382.
+
 ### DL-#5361 · Add Label-Merge-Guard Workflow Enforcing Do-Not-Merge and Do-Not-Automate Holds
 
 - **State:** shipped
