@@ -367,7 +367,7 @@ def test_level_subfibre_claim_is_one_way_and_handles_end_levels() -> None:
     item = text[start : text.index(r"$\square$", start)]
     assert "if and only if" not in item
     assert "exactly when that face is a facet" in item
-    assert "\\{0\\}\times[0,1]" in item  # the [0,1]^2, c=(1,0) end-level facet counterexample
+    assert "\\{0\\}\\times[0,1]" in item  # the [0,1]^2, c=(1,0) end-level facet counterexample
     # Numeric check of the counterexample: the min face of c.x on the unit square is a facet.
     vertices = [(0, 0), (0, 1), (1, 0), (1, 1)]
     for c, face_size in (((1, 0), 2), ((1, 1), 1)):
