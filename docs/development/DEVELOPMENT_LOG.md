@@ -416,10 +416,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5135
 - **Branch:** cursor/slack-transmission-core-7958
-- **PR:** #5148, #5144, #5145, #5310
+- **PR:** #5148, #5144, #5145, #5310, #5309
 - **Paths:** see #5148
 - **Started:** 2026-10-26
-- **Last verified:** 2026-11-01 (`1da6c00e`; collated from changes/5135-rename-citation-key-koike2020-to-choi202.md)
+- **Last verified:** 2026-11-03 (`0ce3c82b`; collated from changes/5135-publish-panel-refined-managing-slack-in.md)
 - **Summary:** Add the core slack-representation transmission model (dead-zone, smooth-spring, activation and unequal-lag channels, play operator, preparation split) with its tests for the Managing Slack in Linked Systems article
 - **Next step:** Four-seat panel review, revision round, Fleet-Critic review and Dieter's sign-off before merge.
 
@@ -598,6 +598,97 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5361 · Add Label-Merge-Guard Workflow Enforcing Do-Not-Merge and Do-Not-Automate Holds
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5361
+- **Branch:** cursor/label-merge-guard-1f35
+- **PR:** #5361
+- **Paths:** see #5361
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`9b9d04ca`; collated from changes/5361-add-label-merge-guard-workflow-enforcing.md)
+- **Summary:** Add label-merge-guard workflow enforcing do-not-merge and do-not-automate holds
+- **Next step:** Shipped in PR #5361.
+
+### DL-#5323 · Add Phone-Side Padding on Full-Layout Main Content (#5323)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5323
+- **Branch:** merged via #5328
+- **PR:** #5328
+- **Paths:** see #5328
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`eea98be0`; collated from changes/5323-add-phone-side-padding-on-full-layout-ma.md)
+- **Summary:** Add phone-side padding on full-layout main content (#5323)
+- **Next step:** Shipped in PR #5328.
+
+### DL-#5321 · Backlog Slice Delivery For #5321
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5321
+- **Branch:** cursor/ops-doc-5321-a086
+- **PR:** #5357
+- **Paths:** see #5357
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`67b40205`; collated from changes/5321-backlog-slice-delivery-for-5321.md)
+- **Summary:** Backlog slice delivery for #5321
+- **Next step:** Shipped in PR #5357.
+
+### DL-#5318 · Backlog Slice Delivery For #5318
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5318
+- **Branch:** cursor/site-release-rollback-5318-a086
+- **PR:** #5357
+- **Paths:** see #5357
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`67b40205`; collated from changes/5318-backlog-slice-delivery-for-5318.md)
+- **Summary:** Backlog slice delivery for #5318
+- **Next step:** Shipped in PR #5357.
+
+### DL-#5317 · Backlog Slice Delivery For #5317
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5317
+- **Branch:** cursor/ops-doc-5317-a086
+- **PR:** #5357
+- **Paths:** see #5357
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`67b40205`; collated from changes/5317-backlog-slice-delivery-for-5317.md)
+- **Summary:** Backlog slice delivery for #5317
+- **Next step:** Shipped in PR #5357.
+
+### DL-#5185 · Backlog Slice Delivery For #5185
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5185
+- **Branch:** cursor/tangent-integral-naming-5185-a086
+- **PR:** #5349
+- **Paths:** see #5349
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`d536f9fb`; collated from changes/5185-backlog-slice-delivery-for-5185.md)
+- **Summary:** Backlog slice delivery for #5185
+- **Next step:** Shipped in PR #5349.
+
+### DL-#2337 · Weekly Python and Npm Patch Bumps; Pytest Held at 9.1.X per Pyproject Cap
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #2337
+- **Branch:** dependabot/weekly_deps-902be992ca
+- **PR:** #5345
+- **Paths:** see #5345
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`92019e98`; collated from changes/2337-weekly-python-and-npm-patch-bumps-pytest.md)
+- **Summary:** Weekly Python and npm patch bumps; pytest held at 9.1.x per pyproject cap
+- **Next step:** Shipped in PR #5345.
 
 ### DL-#5320 · Backlog Slice Delivery For #5320
 
@@ -1086,10 +1177,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5137
 - **Branch:** merged via #5152
-- **PR:** #5152
+- **PR:** #5152, #5360
 - **Paths:** see #5152
 - **Started:** 2026-10-24
-- **Last verified:** 2026-10-24 (`84d64373`; collated from changes/5137-correct-the-false-if-and-only-if-in-the.md)
+- **Last verified:** 2026-11-02 (`4a45063c`; collated from changes/5137-restore-swallowed-latex-escapes-in-after.md)
 - **Summary:** Correct the false if-and-only-if in the After One Solution level sub-fibre claim: end levels may be facets
 - **Next step:** Shipped in PR #5152.
 
