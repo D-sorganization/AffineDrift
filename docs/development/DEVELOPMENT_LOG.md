@@ -599,6 +599,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5313 · Phone Layout Audit Manifest: Playwright Mobile Smoke and Lighthouse Read One Route and Viewport Set (iPhone 390X844, Android 360X800)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5313
+- **Branch:** merged via #5385
+- **PR:** #5385
+- **Paths:** see #5385
+- **Started:** 2026-11-03
+- **Last verified:** 2026-11-03 (`e4b49a77`; collated from changes/5313-phone-layout-audit-manifest.md)
+- **Summary:** Phone layout audit manifest: Playwright mobile smoke and Lighthouse read one route and viewport set (iPhone 390x844, Android 360x800)
+- **Next step:** Shipped in PR #5385.
+
 ### DL-#5342 · Seed the Exact-Key Quarto E2E Render Cache on Main Push so PRs and Merge Groups Can Restore It (WEB-13.1 #4595)
 
 - **State:** shipped
@@ -761,10 +774,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5326
 - **Branch:** merged via #5335
-- **PR:** #5335
+- **PR:** #5335, #5348
 - **Paths:** see #5335
 - **Started:** 2026-11-02
-- **Last verified:** 2026-11-02 (`4f119b7d`; collated from changes/5326-phones-display-equations-in-top-level-pa.md)
+- **Last verified:** 2026-11-03 (`f9b4977b`; collated from changes/5326-mobile-mathjax-minscale-math-mobile-css.md)
 - **Summary:** Phones: the <=480px display-math step-down goes from 0.85em to 0.82em, so theory-part1's near-fit equations no longer scroll at 390px; title-block meta headings, category chips and the BibTeX citation block hold a 12px floor
 - **Next step:** Shipped in PR #5335.
 

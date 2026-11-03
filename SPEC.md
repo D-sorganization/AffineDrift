@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-03 | #5348 | Mobile MathJax minScale, math-mobile CSS, and diagram min-width floors |
+| 2026-11-03 | #5385 | Phone layout audit manifest: Playwright mobile smoke and Lighthouse read one route and viewport set (iPhone 390x844, Android 360x800) |
 | 2026-11-03 | #5382 | Seed the exact-key Quarto E2E render cache on main push so PRs and merge groups can restore it (WEB-13.1 #4595) |
 | 2026-11-03 | #5309 | Panel-refined draft of Managing Slack in Linked Systems (do not merge); Publish panel-refined Managing Slack in Linked Systems (#5135, #5309) |
 | 2026-11-02 | #5360 | Restore swallowed LaTeX escapes in After One Solution and gate articles/*.qmd control bytes |
