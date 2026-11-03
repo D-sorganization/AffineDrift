@@ -19,6 +19,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = REPO_ROOT / ".github" / "workflows"
 CONFLICT_DISARM = WORKFLOWS / "conflict-disarm.yml"
 INTERNAL_PREFIX = "D-sorganization/Repository_Management/.github/workflows/"
+# RM #2427: report-only PR body lint; pinned SHA, no PR-head checkout in caller.
+ALLOWED_RM_REUSABLE_PR_BODY_LINT = (
+    f"{INTERNAL_PREFIX}reusable-pr-body-lint.yml@" "d3c5ff3fcb21e15997ca8668b8c9278e2e25dcff"
+)
 FLEET_WORKFLOWS_CONFLICT_DISARM = (
     "D-sorganization/fleet-workflows/.github/workflows/reusable-conflict-disarm.yml"
 )
@@ -35,7 +39,10 @@ def _jobs(path: Path) -> dict[str, Any]:
 @pytest.mark.parametrize("path", sorted(WORKFLOWS.glob("*.y*ml")), ids=lambda p: p.name)
 def test_no_job_calls_an_internal_reusable_workflow(path: Path) -> None:
     for name, job in _jobs(path).items():
-        assert not str(job.get("uses", "")).startswith(INTERNAL_PREFIX), name
+        uses = str(job.get("uses", ""))
+        if uses.startswith(ALLOWED_RM_REUSABLE_PR_BODY_LINT):
+            continue
+        assert not uses.startswith(INTERNAL_PREFIX), name
 
 
 def _conflict_disarm_job() -> dict[str, Any]:
