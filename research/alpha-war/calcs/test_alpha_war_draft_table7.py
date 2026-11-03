@@ -79,6 +79,41 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
         )
         self.assertIn("Adjudicated by:", draft_text)
 
+    def test_vrf_cut_and_reframe_5397(self) -> None:
+        """VRF-09 and Jan 2024 rain clip must be cut; VRF-01/03/04/07/08 reframed; App D adjudicated."""
+        draft_text = _find_draft_path().read_text(encoding="utf-8")
+        for forbidden in (
+            "rain-soaked professional tournament",
+            "rain-release",
+            "private coaching forum whose name",
+            "[VERIFY: PGA Tour",
+            "[VERIFY: Tutelman",
+            "[VERIFY webinars]",
+        ):
+            self.assertNotIn(forbidden, draft_text)
+
+        self.assertIn("[@manzella2020webinar]", draft_text)
+        self.assertIn("[@sinclair2020workshop]", draft_text)
+
+        app_d = draft_text.split("## Appendix D:")[1]
+        for vrf_id in (
+            "VRF-01",
+            "VRF-02",
+            "VRF-03",
+            "VRF-04",
+            "VRF-04b",
+            "VRF-05",
+            "VRF-06",
+            "VRF-07",
+            "VRF-08",
+            "VRF-09",
+            "VRF-10",
+        ):
+            line = next(ln for ln in app_d.splitlines() if f"**{vrf_id}**" in ln)
+            self.assertIn(
+                "Adjudicated by:", line, msg=f"Missing adjudication on {vrf_id}"
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

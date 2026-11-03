@@ -49,9 +49,7 @@ What are the golfer's hands actually doing during these final fifty milliseconds
 
 Consider an intuitive analogy: swinging a heavy carpenter's hammer to drive a nail into an upright post. At the start of the swing, your wrist flexes back to set the hammer head. To initiate the strike, your forearm pulls downward while your wrist muscles contract to whip the hammer head forward. In this initial acceleration phase, your hand undeniably exerts a positive, forward-twisting effort—what dynamicists term a torque or couple—acting to uncock the wrist and fling the tool head toward the target.
 
-Now consider what happens in the final inch before the hammer hits the nail. As the heavy steel head reaches high speed, its momentum begins to outstrip the rate at which your forearm muscles can contract. If you attempt to "push" the hammer even faster at the very bottom of the stroke, you encounter a curious mechanical sensation: the hammer feels as though it is pulling away from your grip, dragging your hand forward. If you were to swing a hammer with an oily handle on a slick day, the tool would tear itself out of your fingers. 
-
-A dramatic illustration of this phenomenon occurred in a widely circulated video from January 2024, captured during a rain-soaked professional tournament `[VERIFY: PGA Tour / European Tour event clip]`. As a tour professional swung a driver through impact, moisture caused the grip to slip entirely from his hands just before ball contact. Rather than decelerating or tumbling erratically, the released club continued rotating forward smoothly along its swing arc at over 2,000 degrees per second, striking the ball cleanly while the golfer's empty hands snapped into follow-through.
+Now consider what happens in the final inch before the hammer hits the nail. As the heavy steel head reaches high speed, its momentum begins to outstrip the rate at which your forearm muscles can contract. If you attempt to "push" the hammer even faster at the very bottom of the stroke, you encounter a curious mechanical sensation: the hammer feels as though it is pulling away from your grip, dragging your hand forward. If you were to swing a hammer with an oily handle on a slick day, the tool would tear itself out of your fingers.
 
 ```
        Phase 1: Delivery (~t = -150 to -40 ms)         Phase 2: Impact Zone (~t = -40 to 0 ms)
@@ -598,17 +596,13 @@ Camp A's doctrine rested on three core physical propositions:
 
 ## 4.3 The Climax and Definitional Split (2020–2022)
 
-Between 2018 and 2020, as academic biomechanists increasingly criticized Jacobs 3D's claims of positive alpha torque, the debate intensified in professional online forums (a public biomechanics group and a **private coaching forum whose name and membership list are withheld pending source clearance**). 
+Between 2018 and 2020, as academic biomechanists increasingly questioned Jacobs 3D's claims of positive alpha torque, the debate intensified across coaching webinars and online technical discussions.
 
-The turning point occurred during the summer of 2020, when Brian Manzella and Michael Jacobs published explicit clarifying definitions:
-- **July 9, 2020 (Manzella):** Published an instructional graphic explicitly separating **Alpha Torque** (the pure applied couple perpendicular to the face) from the **Alpha Sum of the Moments** (the net angular response about the club center of mass, combining applied torque with the levered beta force).
-- **August 9, 2020 (Manzella):** Formally acknowledged that the negative curves published by mainstream university biomechanists were plotting the **sum of the moments**, declaring emphatically:
-  > *"Mainstream biomechanics graphs showing negative values are plotting the sum of the moments—absolutely, positively NOT JUST alpha torque."*
-- **March 11–12, 2021 (Jacobs & Manzella):** Published their "Same Swing, Two Metrics" comparison, presenting a single motion-capture swing processed through Jacobs 3D under two different computational pipelines:
-  1. *Alpha Torque:* Remained **positive** ($+10\text{ to }+25\text{ N}\cdot\text{m}$) all the way to impact.
-  2. *Alpha Sum of the Moments:* Plunged **negative** ($-20\text{ to }-40\text{ N}\cdot\text{m}$) prior to impact.
+According to secondary descriptions of coaching webinars and instructional notes from 2020–2021 [@manzella2020webinar] (login-gated coaching archives that have not been independently audited against raw motion-capture telemetry; see **VRF-03** and **VRF-07**), Brian Manzella and Michael Jacobs introduced a two-metric terminology distinction:
+- **July–August 2020 (Manzella, attributed):** Reportedly distinguished **Alpha Torque** (described as the applied couple perpendicular to the clubface) from the **Alpha Sum of the Moments** (the net angular response about the club center of mass combining applied torque with the levered beta force), arguing in coaching commentary [@manzella2020webinar] that mainstream university biomechanics graphs showing negative pre-impact values were plotting the sum of the moments rather than isolated alpha torque alone.
+- **March 2021 (Jacobs & Manzella, attributed):** In a "Same Swing, Two Metrics" webinar demonstration [@manzella2020webinar], Camp A reportedly presented a single motion-capture swing processed through Jacobs 3D under two different outputs: an *Alpha Torque* curve remaining positive ($+10\text{ to }+25\text{ N}\cdot\text{m}$) to impact alongside an *Alpha Sum of the Moments* curve plunging negative ($-20\text{ to }-40\text{ N}\cdot\text{m}$) prior to impact.
 
-Manzella proclaimed that this single demonstration resolved the Alpha War, asserting that the five-year battle had been an artifact of mismatched terminology.
+Manzella contended that this distinction explained the five-year controversy as a mismatch in reported physical quantities—though, because the underlying Jacobs 3D coordinate definitions and filter parameters were not published in peer-reviewed form, the exact mapping between those two webinar curves and standard Newton–Euler grip wrenches remains unverified (**VRF-03**, **VRF-07**).
 
 ## 4.4 Scientific Strengths and Methodological Criticisms of Camp A
 
@@ -672,9 +666,8 @@ Kwon's empirical data demonstrated complete parity between full 3D models and 2D
 
 Dave Tutelman [@tutelman2018alpha], an MIT-trained engineer and the golf engineering community's most prominent independent analyst, authored a series of technical articles between 2018 and 2021 deconstructing the Alpha War:
 
-1. **"Nesbit or Kwon or MacKenzie?" (2018, updated 2019):** Tutelman conducted a line-by-line derivation of the equations used across all three research programs. He proved that Nesbit's Figure 11 plotted the pure couple, that Kwon's and MacKenzie's data were mathematically isomorphic, and that the apparent conflict was driven by Camp A misinterpreting Nesbit's work-accounting categories.
-2. **The Re-Reading of Nesbit's Founding Paper (May 22, 2020):** Tutelman presented an annotated breakdown of [@nesbit2005work, Fig. 11] to the *Golf Biomechanists* group, arguing that Nesbit's own scratch-golfer case supports late negative wrist torque. Tutelman's summary conclusion has not been verified verbatim against a stable public archive:
-   > *[VERIFY: Tutelman Facebook summary, May 2020 — paraphrase pending transcript audit. Original attributed wording removed until verified.]*
+1. **"Nesbit or Kwon or MacKenzie?" (2018, updated 2019) [@tutelman2018alpha]:** Tutelman conducted a line-by-line derivation of the equations used across all three research programs, showing how Nesbit's Figure 11, Kwon's FSP couple, and MacKenzie's grip-frame couple relate to reference-point choice and work-accounting conventions.
+2. **The Re-Reading of Nesbit's Founding Paper (May 2020, attributed paraphrase) and Sinclair's Coaching Synthesis:** In May 2020 technical commentary (paraphrased here per secondary description, as no stable public verbatim transcript is archived; see **VRF-04**), Tutelman revisited [@nesbit2005work, Fig. 11] and pointed out that Nesbit's own text on p. 528 singled out the scratch golfer (Subject 4) as the sole subject whose wrist torques reversed negative across all three axes ("a free hinge"). Tour instructor Jon Sinclair similarly argued in his public video explainer [@sinclair2020video] and unpublished coaching workshop slides [@sinclair2020workshop] (attributed secondary source; see **VRF-08**) that projecting 3D grip kinetics into moving club-fixed frames versus global frames alters apparent curve polarity near impact.
 
 ## 5.4 Direct Physical Sensor Telemetry: Instrumented Split Grips
 
@@ -993,7 +986,7 @@ However, the golfer grips the club with **two hands**, forming a closed kinemati
 >    $$\operatorname{rank}(\mathbf{A}_W) = 6, \quad \operatorname{nullity}(\mathbf{A}_W) = 12 - 6 = 6$$
 >    **Formal Observability Theorem:** The bilateral grasp map has a 6-dimensional nullspace. Whole-club inverse dynamics can determine only the 6 net wrench components; it is mathematically impossible to isolate lead-hand vs. trail-hand contributions, or separate force-couple moments from free wrist torques, without independent instrumented load cells under each hand.
 
-This theorem directly refutes claims in the popular coaching corpus (e.g., the January 2024 "rain-release" video analysis) asserting that high-speed cameras prove the trail hand "snapped forward" or "pushed through impact." Any such observation is mechanically indeterminate from whole-club kinematics alone.
+This theorem directly governs unverified coaching claims in the commercial instruction corpus (reportedly including Jacobs 3D release commentary; see **VRF-01**) asserting that standard optical motion capture proves the trail hand actively "snapped forward" or "pushed through impact." Because 6-DOF whole-club inverse dynamics possesses a 6-dimensional bilateral nullspace, any claim about an isolated single-hand push or snap is mechanically indeterminate from whole-club kinematics alone.
 
 ### Unmodeled Aerodynamic Drag Bias
 
@@ -1310,7 +1303,7 @@ The following master table cross-references and adjudicates every major claim fr
 
 | Claim ID | Core Claim Statement | Proponent Camp | Target Physical Quantity | Coordinate Frame | Formal Adjudication Status |
 |---|---|---|---|---|---|
-| **CLM-SGN-01** | Hands apply positive alpha torque through impact | Camp A (Jacobs, Manzella) | Pure hand couple $C_{\alpha,M}$ at mid-hands | FSP / Moving Club | **Unverified - convention mapping required** `[VERIFY webinars]` *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* |
+| **CLM-SGN-01** | Hands apply positive alpha torque through impact | Camp A (Jacobs, Manzella) | Pure hand couple $C_{\alpha,M}$ at mid-hands | FSP / Moving Club | **Unverified - convention mapping required** *(see VRF-03/07; Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* |
 | **CLM-SGN-02** | Hand couple reverses negative $15\text{--}30\text{ ms}$ before impact | Camp B (Kwon, MacKenzie, Tutelman) | Pure hand couple $C_{\alpha,M}$ at mid-hands | FSP / Moving Grip | **Settled (Empirical & Mathematical Fact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 | **CLM-SGN-03** | Total alpha moment about COM ($M_{\alpha,G}$) remains positive | Camp A & Camp B consensus | Total moment $M_{\alpha,G} = I_G \alpha_{\text{club}}$ | Club Principal / FSP | **Settled (Empirical & Mathematical Fact)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 | **CLM-SGN-04** | Trail hand "snaps" or flexes actively at release | Popular Coaching / Camp A | Isolated trail hand force/couple | Hand Anatomical | **Unprovable / Closed-Loop Indeterminate** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
@@ -1459,9 +1452,9 @@ Peer-reviewed and limited-circulation sources are cited in the body with `[@key]
 
 ## 10.1 (a) Primary Research Literature — see rendered list
 
-## 10.2 (b) Instruction and coaching — see `references.bib` (VRF-05..08)
+## 10.2 (b) Instruction and coaching — see `references.bib` (VRF-05..08; reframed with attribution and hedges)
 
-## 10.3 (c) Facebook discussion corpus — paraphrase only; clearance per #5206
+## 10.3 (c) Public biomechanics discussions — paraphrase only (private forum VRF-09 excluded per `CLEARANCE_PENDING.md` CLR-01)
 
 ## 10.4 (d) Code and calculations — `research/alpha-war/calcs/`
 
@@ -1653,17 +1646,17 @@ This registry compiles every claim, source, or parameter flagged inline with `[V
 
 | Item ID | Section / Context | Flagged Claim or Resource | Nature of Uncertainty | Evidentiary Status | Required Resolution Protocol |
 |---|---|---|---|---|---|
-| **VRF-01** | Sec 6.4, Box 6.3 | Jacobs 3D claim of trail-hand "snapping" at release | Proprietary coaching claim without split-grip data | **Mechanically Indeterminate** | Execute Protocol 5 (12-Axis Instrumented Split-Grip Campaign) |
-| **VRF-02** | Sec 8.1, Layer 2 | Jacobs 3D software algorithms, filter cutoffs, and reference points | Proprietary, closed-source commercial software | **Unverified Commercial Dossier** | Execute Protocol 1 (Same-Swing Dual-Pipeline Benchmark) |
-| **VRF-03** | Table 8.1, CLM-SGN-01 | Camp A positive alpha webinar demonstrations | Login-gated coaching webinar archives (2018–2022) | **Unpublished Coaching Archive** | Author/panel verification of recorded webinar transcripts |
-| **VRF-04** | Sec 5.3 | Tutelman attributed Facebook quote (May 2020) | No stable public transcript; prior draft quote not verified | **Unverified Direct Quote** | Obtain Tutelman post transcript or paraphrase only |
-| **VRF-04b** | Table 8.1, CLM-LIT-05 | Kwon 2D vs. 3D model equivalence cited via Tutelman | Secondary citation of private correspondence | **Secondary Source Pending Audit** | Direct verification against Dr. Kwon's published laboratory notes |
-| **VRF-05** | Sec 10.2 | Croker (2019) monograph: *Pushing and Pulling* | Self-published instruction monograph | **Limited Circulation Source** | Physical inspection of monograph print edition |
-| **VRF-06** | Sec 10.2 | Jacobs (2020): *Look Inside the Swing* | Commercial coaching publication | **Limited Circulation Source** | Verification of page numbers and formal library index |
-| **VRF-07** | Sec 10.2 | Manzella (2020, 2021) webinars and technical notes | Private forum posts and video recordings | **Private Media Archive** | Archival video review of Brian Manzella instruction channel |
-| **VRF-08** | Sec 10.2 | Sinclair (2020) workshop presentation slides | Private workshop slides delivered to coaching cohort | **Unpublished Presentation Slides** | Formal acquisition of slide deck from Sinclair Golf |
-| **VRF-09** | Sec 10.3 | Private coaching-forum Facebook archive | Membership-gated social media; numeric group ID removed from draft | **Not cleared** | Dieter: see `CLEARANCE_PENDING.md` CLR-01; authenticate against local `corpus/` export only |
-| **VRF-10** | Sec 8.4, Protocol 8 | Adoption of mandatory reporting standard | Proposed community consensus standard | **Proposed Academic Policy** | Submission to International Sports Engineering Association (ISEA) |
+| **VRF-01** | Sec 6.4, Box 6.3 | Jacobs 3D claim of trail-hand "snapping" at release | Proprietary coaching claim without split-grip data | **Reframed (Attributed Unverified Claim; Mechanically Indeterminate)** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Execute Protocol 5 (12-Axis Instrumented Split-Grip Campaign) |
+| **VRF-02** | Sec 8.1, Layer 2 | Jacobs 3D software algorithms, filter cutoffs, and reference points | Proprietary, closed-source commercial software | **Unverified Commercial Dossier** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Execute Protocol 1 (Same-Swing Dual-Pipeline Benchmark) |
+| **VRF-03** | Sec 4.3, Table 8.1 (`CLM-SGN-01`) | Camp A positive alpha webinar demonstrations | Login-gated coaching webinar archives (2018–2022) | **Reframed (Attributed Unverified Claim with Hedge)** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Author/panel verification of recorded webinar transcripts |
+| **VRF-04** | Sec 5.3 | Tutelman May 2020 commentary on Nesbit Fig 11 | No stable public verbatim transcript | **Reframed (Paraphrase Only with Hedge)** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Paraphrase retained; verbatim quote omitted |
+| **VRF-04b** | Table 8.1, `CLM-LIT-05` | Kwon 2D vs. 3D model equivalence cited via Tutelman | Secondary citation of private correspondence | **Secondary Source Pending Audit** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Direct verification against Dr. Kwon's primary publications |
+| **VRF-05** | Sec 8.3, Sec 10.2 | Croker (2019) monograph: *Pushing and Pulling* | Self-published instruction monograph | **Reframed (Attributed Limited-Circulation Source)** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Physical inspection of monograph print edition |
+| **VRF-06** | Sec 10.2 | Jacobs (2020): *Look Inside the Swing* | Commercial coaching publication | **Limited Circulation Source** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Verification of page numbers and formal library index |
+| **VRF-07** | Sec 4.3, Sec 10.2 | Manzella (2020, 2021) webinars and technical notes | Login-gated coaching webinars (`[@manzella2020webinar]`) | **Reframed (Attributed Unverified Claim with Hedge)** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Archival video review of Brian Manzella instruction channel |
+| **VRF-08** | Sec 5.3, Sec 10.2 | Sinclair (2020) workshop presentation slides | Unpublished coaching workshop slides (`[@sinclair2020workshop]`) | **Reframed (Attributed Unverified Claim with Hedge)** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Paired with public video explainer `[@sinclair2020video]` |
+| **VRF-09** | Sec 4.3, Sec 10.3 | Private coaching-forum archive and Jan 2024 rain-slip clip | Membership-gated social media (`CLR-01`) and uncalibrated tournament clip | **Cut (Removed from Prose)** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Excluded per `CLEARANCE_PENDING.md` CLR-01 and panel consensus |
+| **VRF-10** | Sec 8.4, Protocol 8 | Adoption of mandatory reporting standard | Proposed community consensus standard | **Proposed Academic Policy** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Submission to International Sports Engineering Association (ISEA) |
 
 ---
 *End of First Draft (v0 — Chapters 1–10 and Appendices A–D).*
