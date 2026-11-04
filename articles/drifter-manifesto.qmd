@@ -577,7 +577,7 @@ The flexible-link numerical example in this article is a reproducible model chec
 
 A swing carries the consequences of earlier action into its later motion. Joint torques change velocities, posture and shaft deformation; those state changes affect the forces and accelerations that follow. A large motion-dependent term near contact can therefore reflect earlier torque input. It does not establish that the golfer has stopped contributing.
 
-The **Zero Torque Counterfactual (ZTCF)** sets a declared torque channel to zero in a specified model. The **Zero Velocity Counterfactual (ZVCF)** evaluates that model at a specified velocity-reset state. The first can define a future trajectory; the second is a state evaluation. Neither operation weighs the club as it feels to the golfer, identifies intention, or partitions clubhead speed into percentages supplied by “physics” and “the player.”
+The **Zero Torque Counterfactual (ZTCF)** evaluates the autonomous drift ($\tau = 0$) in a specified model. The **Zero Velocity Counterfactual (ZVCF)** evaluates the control component ($M(q)^{-1}\tau$), isolating the instantaneous effect of actuator torque. At any fixed state $(q, \dot q)$, their sum equals total acceleration, but integrated trajectories do not add. Neither operation weighs the club as it feels to the golfer, identifies intention, or partitions clubhead speed into percentages supplied by “physics” and “the player.”
 
 These names are this site's diagnostic terminology. Their underlying force balance and differential equations are established mechanics; applying them to golf does not itself demonstrate novelty or empirical validity.
 
@@ -720,9 +720,23 @@ Declare an output tolerance, parameter/measurement uncertainty, integration erro
 
 ### Zero Velocity Counterfactual (ZVCF)
 
-At a specified configuration, reset the declared velocity coordinates while retaining the other declared states. This evaluates configuration-dependent loads; it neither holds the club in equilibrium nor measures perceived heaviness. The force, acceleration and holding-load signs are made explicit below.
+At a specified configuration, the **Zero Velocity Counterfactual (ZVCF)** isolates the control component (torques on, velocity and gravity off, matching the original MATLAB `SCRIPT_ZVCF_GENERATOR.m`):
 
-{{< include ../_includes/mechanics-zero-velocity.qmd >}}
+$$a_{\mathrm{ZVCF}}(q, \tau) = M(q)^{-1}\tau.$$
+
+Evaluating with velocity and gravity turned off separates the instantaneous effect of applied joint torques from autonomous drift ($a_{\mathrm{ZTCF}}$). At any fixed state $(q, \dot q)$, the instantaneous acceleration decomposition
+
+$$a(q, \dot q, \tau) = a_{\mathrm{ZTCF}}(q, \dot q) + a_{\mathrm{ZVCF}}(q, \tau)$$
+
+is exact, with gravity and velocity effects accounted for once in drift.
+
+::: {.callout-note}
+## Exactness, Trajectory Non-Additivity, and IAA Mapping
+1. **Pointwise Exactness**: The acceleration split $a = a_{\mathrm{ZTCF}} + a_{\mathrm{ZVCF}}$ is an exact linear identity at any instantaneous state $(q, \dot q)$ because inverse inertia linearly distributes generalized forces: $M(q)^{-1}(\tau_{\mathrm{drift}} + \tau) = M(q)^{-1}\tau_{\mathrm{drift}} + M(q)^{-1}\tau$.
+2. **Trajectories Do Not Add**: Forward-integrated counterfactual trajectories do **not** generally sum: $x(t) \neq x_{\mathrm{ZTCF}}(t) + x_{\mathrm{ZVCF}}(t)$. Because nonlinear dynamics couple position, velocity, and torque over time ($\dot x = f(x) + G(x)u$), counterfactual states diverge onto distinct trajectories where Coriolis, centrifugal, and gravitational forces are evaluated at different configurations.
+3. **Induced Acceleration Analysis (IAA)**: In first-order state-space form $\dot x = f(x) + G(x)u$, $a_{\mathrm{ZTCF}}$ maps to the drift vector field $f(x)$ while $a_{\mathrm{ZVCF}}$ maps to the control vector field $G(x)u$. In biomechanical Induced Acceleration Analysis, this corresponds to partitioning total instantaneous acceleration into autonomous contributions (inertial velocity coupling and gravity) and actuator-induced accelerations without double-counting static biases.
+4. **Historical Naming Note**: Earlier AffineDrift revisions (notably Decision 4 / UD #11553) and some literature used the label "ZVCF" for the static gravity-and-configuration-only slice ($u=0, \dot q=0$). Under the restored canonical convention, ZVCF designates the control component ($M(q)^{-1}\tau$), while the gravity-only evaluation is termed the static or zero-velocity zero-torque acceleration.
+:::
 
 ### Evidence Needed for a Golf Interpretation
 
