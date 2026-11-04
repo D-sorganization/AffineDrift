@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5419 · Bind Every Markerless-Mocap Projection Artifact to Its UpstreamDrift Model_Id, Run_Id, Ud_Commit and Claim Class (Fail Closed)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5419
+- **Branch:** brick/backlog-completion/5419-projection-run-identity
+- **PR:** #5428
+- **Paths:** see #5428
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`d5865546`; collated from changes/5419-bind-every-markerless-mocap-projection-a.md)
+- **Summary:** Bind every markerless-mocap projection artifact to its UpstreamDrift model_id, run_id, ud_commit and claim class (fail closed)
+- **Next step:** Merge the PR, then VIS-EVIDENCE-2.
+
 ### DL-#5284 · Slack Take-Up as a Witness Article Draft
 
 - **State:** in_review
