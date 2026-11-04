@@ -704,3 +704,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-05 | #4904 | Correct biological multibody power, geometric stiffness, compliant-versus-kinematic coupling and inverse-dynamics load accounting across the multibody and inverse-problem chapters (#4900). |
 | 2026-10-05 | #4906 | Define the spatial-twist convention for screw-axis extraction, handle degenerate axes, and correct constraint-rank and ligament-stiffness reasoning in the joint-kinematics chapter (#4901). |
 | 2026-10-05 | #4910 | Verify covariance-dependent likelihood, beam boundary-condition and biological control claims in the inference, flexible-mechanics and control chapters with checked Gaussian MAP, Euler-Bernoulli tip-mass and control examples (#4905). |
+| 2026-11-04 | #5440 | Add lay guide to ZTCF and ZVCF reconciling time and active/passive lenses with snapshot caveats and mechanics baselines. |
