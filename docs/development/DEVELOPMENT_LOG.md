@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5448 · Figure Exemptions Now State Provenance: The Proximal-Distal Figures Projected From the Pinned UpstreamDrift Release Cite Its Commit With a Hash Pin and an Explicit No-Run-Identity Marker, the Companion Figures Name Their Generator Scripts, and the Rest Are Marked Origin Unrecorded
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5448
+- **Branch:** brick/backlog-completion/5448-pd-projection-records
+- **PR:** #5449
+- **Paths:** see #5449
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`808a8747`; collated from changes/5448-provenance-tagged-exemptions-for-proximal-distal-figures.md)
+- **Summary:** Figure exemptions now state provenance: the proximal-distal figures projected from the pinned UpstreamDrift release cite its commit with a hash pin and an explicit no-run-identity marker, the companion figures name their generator scripts, and the rest are marked origin unrecorded
+- **Next step:** Merge the PR. Projection records with real model and run ids follow UpstreamDrift #14518 (per-preset run manifests and figure-to-run mapping); epic #5422 tracks it.
+
 ### DL-#5421 · CI Gate: A Non-Draft Page May Embed a Figure Only When a Verified Projection Record Traces It or an Explicit, Reasoned Exemption Covers It; Draft Pages Warn
 
 - **State:** in_review
