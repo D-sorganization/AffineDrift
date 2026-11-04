@@ -241,6 +241,58 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5448 · Figure Exemptions Now State Provenance: The Proximal-Distal Figures Projected From the Pinned UpstreamDrift Release Cite Its Commit With a Hash Pin and an Explicit No-Run-Identity Marker, the Companion Figures Name Their Generator Scripts, and the Rest Are Marked Origin Unrecorded
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5448
+- **Branch:** brick/backlog-completion/5448-pd-projection-records
+- **PR:** #5449
+- **Paths:** see #5449
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`808a8747`; collated from changes/5448-provenance-tagged-exemptions-for-proximal-distal-figures.md)
+- **Summary:** Figure exemptions now state provenance: the proximal-distal figures projected from the pinned UpstreamDrift release cite its commit with a hash pin and an explicit no-run-identity marker, the companion figures name their generator scripts, and the rest are marked origin unrecorded
+- **Next step:** Merge the PR. Projection records with real model and run ids follow UpstreamDrift #14518 (per-preset run manifests and figure-to-run mapping); epic #5422 tracks it.
+
+### DL-#5421 · CI Gate: A Non-Draft Page May Embed a Figure Only When a Verified Projection Record Traces It or an Explicit, Reasoned Exemption Covers It; Draft Pages Warn
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5421
+- **Branch:** brick/backlog-completion/5421-figure-projection-check
+- **PR:** #5445
+- **Paths:** see #5445
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`38695d45`; collated from changes/5421-ci-check-every-published-figure-has-a-pro.md)
+- **Summary:** CI gate: a non-draft page may embed a figure only when a verified projection record traces it or an explicit, reasoned exemption covers it; draft pages warn
+- **Next step:** Merge the PR. VIS-EVIDENCE #5422 then has all three children; migrate UpstreamDrift-derived figures off the exemption list as projection records land.
+
+### DL-#5420 · Add the Provenance Caption Shortcode: A Figure Caption Naming the UpstreamDrift Model, Run_Id, Commit and Claim Class, Linked Only to the Public UD Repo (Fail Closed on Bad Values)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5420
+- **Branch:** brick/backlog-completion/5420-provenance-captions
+- **PR:** #5442
+- **Paths:** see #5442
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`151a4fbe`; collated from changes/5420-figure-provenance-captions-and-source-model.md)
+- **Summary:** Add the provenance caption shortcode: a figure caption naming the UpstreamDrift model, run_id, commit and claim class, linked only to the public UD repo (fail closed on bad values)
+- **Next step:** Merge the PR, then the next VIS-EVIDENCE child under #5422.
+
+### DL-#5419 · Bind Every Markerless-Mocap Projection Artifact to Its UpstreamDrift Model_Id, Run_Id, Ud_Commit and Claim Class (Fail Closed)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5419
+- **Branch:** brick/backlog-completion/5419-projection-run-identity
+- **PR:** #5428
+- **Paths:** see #5428
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`d5865546`; collated from changes/5419-bind-every-markerless-mocap-projection-a.md)
+- **Summary:** Bind every markerless-mocap projection artifact to its UpstreamDrift model_id, run_id, ud_commit and claim class (fail closed)
+- **Next step:** Merge the PR, then VIS-EVIDENCE-2.
+
 ### DL-#5284 · Slack Take-Up as a Witness Article Draft
 
 - **State:** in_review
@@ -351,12 +403,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5180
 - **Branch:** cursor/tangent-review-pr-a-d406
-- **PR:** #5188, #5189
+- **PR:** #5188, #5189, #5436
 - **Paths:** see #5188
 - **Started:** 2026-10-29
-- **Last verified:** 2026-10-29 (`4355300b`; collated from changes/5180-tighten-part-4-7-residual-gronwall-bound.md)
+- **Last verified:** 2026-11-04 (`d7b0eb8f`; collated from changes/5180-retire-hyperplane-display-titles-in-the.md)
 - **Summary:** Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links
-- **Next step:** Publication gate review (Karl through Dieter).
+- **Next step:** Merge PR #5436 after CI green and publication gate.
 
 ### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
 
@@ -598,6 +650,32 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5432 · Evidence Check Asserts Drift+Control=Total and ZVCF=Control
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5432
+- **Branch:** cursor/evidence-sum-check-5432-9d3a
+- **PR:** #5435
+- **Paths:** see #5435
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`7e307ce9`; collated from changes/5432-evidence-check-asserts-drift-control-tot.md)
+- **Summary:** Evidence check asserts drift+control=total and ZVCF=control
+- **Next step:** Shipped in PR #5435.
+
+### DL-#5429 · Rewrite Decision 4: ZVCF = Control; Terminology Gate Flags Gravity-Only ZVCF and ZTCF+Control-Preserved Double Count.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5429
+- **Branch:** cursor/terminology-decision4-zvcf-control-5956
+- **PR:** #5437
+- **Paths:** see #5437
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`1dd50830`; collated from changes/5429-rewrite-decision-4-zvcf-control-terminol.md)
+- **Summary:** Rewrite Decision 4: ZVCF = control; terminology gate flags gravity-only ZVCF and ZTCF+control-preserved double count.
+- **Next step:** Shipped in PR #5437.
 
 ### DL-#2427 · Add Report-Only Pr-Body-Lint Pull_Request_Target Caller (RM Reusable Workflow) and Contract Test.
 
