@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5421 · CI Gate: A Non-Draft Page May Embed a Figure Only When a Verified Projection Record Traces It or an Explicit, Reasoned Exemption Covers It; Draft Pages Warn
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5421
+- **Branch:** brick/backlog-completion/5421-figure-projection-check
+- **PR:** #5445
+- **Paths:** see #5445
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`38695d45`; collated from changes/5421-ci-check-every-published-figure-has-a-pro.md)
+- **Summary:** CI gate: a non-draft page may embed a figure only when a verified projection record traces it or an explicit, reasoned exemption covers it; draft pages warn
+- **Next step:** Merge the PR. VIS-EVIDENCE #5422 then has all three children; migrate UpstreamDrift-derived figures off the exemption list as projection records land.
+
 ### DL-#5420 · Add the Provenance Caption Shortcode: A Figure Caption Naming the UpstreamDrift Model, Run_Id, Commit and Claim Class, Linked Only to the Public UD Repo (Fail Closed on Bad Values)
 
 - **State:** in_review
