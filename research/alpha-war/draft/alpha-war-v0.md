@@ -1051,7 +1051,9 @@ Values regenerated from `calcs/alpha_war_sensitivity_suite.py` → `study_1_grip
 | **Clubhead Center** | $+1.0200$ | $-10.64$ | Negative | **$+8.76$** | **Positive** |
 | *Simulated Sign-Flip Locus $s^*$* | — | **$+4.177\text{ m}$** | (Simulated, Outside Club) | **$+0.737\text{ m}$** | (Simulated, Between COM & Head) |
 
-![Alpha moment versus shaft station from WSCG calculations](figures/fig-transport-stations.svg){fig-alt="Plot of reported alpha moment in newton-meters versus shaft offset from mid-hands at minimum couple timing"}
+**Plain-language takeaway (Figure 1):** Moving the reference point down the shaft toward the clubhead shifts the reported alpha moment from negative to positive without changing the hands' physical push-pull couple.
+
+![Figure 1: Reference-point transport line M_alpha,P(s) = C_alpha - s*R_y (N·m vs. shaft offset s in m, frame F_FSP, +CCW uncocking sign convention), comparing the simulated WSCG minimum-couple case (s* = +0.737 m, ±20% R_y sensitivity envelope) against illustrative Case 1 (s* = +0.213 m).](figures/fig-transport-stations.svg){fig-alt="Plot of reported alpha moment M(s) in newton-meters versus shaft offset s in meters in frame F_FSP (+CCW uncocking), marking the simulated WSCG sign-flip station s* = +0.737 m with a ±20% R_y sensitivity envelope and the illustrative Case 1 sign-flip station s* = +0.213 m"}
 
 *Key Simulated WSCG Kinetic Parameters:*
 - At $t = 0.1933\text{ s}$ ($v_{\text{head}} = 115.08\text{ mph}$, **simulated**): $R_x = -521.46\text{ N}$, $R_y = -3.37\text{ N}$, $F_{d,y} = 90.75\text{ N}$, $C_{F,M} = -6.92\text{ N}\cdot\text{m}$, $\tau_{\text{free}} = -7.17\text{ N}\cdot\text{m}$, $C_{\alpha,M} = -14.08\text{ N}\cdot\text{m}$.
@@ -1121,6 +1123,10 @@ Study 3 quantifies how face roll $\phi_{\text{roll}}$ and shaft orientation $\th
 | **$120.0^\circ$** | **$+14.43$** | $+8.99$ | $+4.50$ | $17.586$ | **Positive** |
 | **$150.0^\circ$** | **$+16.99$** | $+0.57$ | $+4.50$ | $17.586$ | **Positive** |
 | **$180.0^\circ$** | **$+15.00$** | $-8.00$ | $+4.50$ | $17.586$ | **Positive** |
+
+**Plain-language takeaway (Figure 3):** Rotating the measurement frame with the rolling clubface mixes out-of-plane bending into the alpha axis and flips the apparent sign above $\phi^* = 61.93^\circ$ (illustrative) even when the 3D hand couple is held constant.
+
+![Figure 3: Club-frame projected alpha couple M_alpha,club(phi_roll) (N·m vs. clubface roll angle phi_roll in deg, frame F_club relative to F_FSP, +CCW uncocking sign convention) for illustrative input M_FSP = (-15.0, +8.0, +4.5) N·m, marking the illustrative sign flip at phi* = 61.93 deg with a ±20% M_beta sensitivity envelope.](figures/fig-club-roll-projection.svg){fig-alt="Plot of club-frame projected alpha couple in newton-meters versus clubface roll angle in degrees in frame F_club relative to F_FSP (+CCW uncocking), showing the illustrative zero crossing at phi* = 61.93 deg and ±20% out-of-plane couple sensitivity band"}
 
 ### Table 7.5: Global vs. Club Frame Force Projection Across Shaft Lean
 
