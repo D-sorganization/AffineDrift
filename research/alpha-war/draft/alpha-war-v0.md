@@ -1103,7 +1103,9 @@ Study 2 tracks the complete time-series decomposition from early downswing ($t =
 2. **Zero Crossings of COM Moment ($M_{\alpha,G}$):** Crosses from positive to negative at $t = \mathbf{0.14400\text{ s}}$, and crosses back from negative to positive at $t = \mathbf{0.21662\text{ s}}$.
 3. **Simulated Passive Dynamic Dominance (ZTCF):** At minimum couple ($t = 0.2151\text{ s}$), the **simulated** Zero-Torque Counterfactual model generates a passive contact couple of $\mathbf{-19.63\text{ N}\cdot\text{m}}$ ($-19.6294\text{ N}\cdot\text{m}$), accounting for **$86.04\%$** of the simulated negative couple ($-22.8148\text{ N}\cdot\text{m}$, `alpha_war_calculations.json`). In this model, the negative couple is predominantly an unforced kinematic reaction to arm hub deceleration.
 
-![Hand couple and sum of moments about the club center of mass over time](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple and sum of moments about the club center of mass from WSCG sensitivity calculations"}
+**Plain-language takeaway (Figure 2):** The hands' pure couple turns negative before impact and closely tracks the unforced passive (ZTCF) curve ($86.04\%$ passive share at minimum couple), even while the total moment about the club's center of mass returns near zero.
+
+![Figure 2: Simulated WSCG time series comparing total hand couple C_alpha,M(t), ZTCF passive couple, and sum of moments about the club center of mass M_alpha,G(t) (N·m vs. time t in s, frame F_FSP, +CCW uncocking sign convention) with ±3.0 N·m inverse-dynamics error-propagation bands and the 86.04% passive share at t = 0.2151 s.](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple, ZTCF passive couple, and sum of moments about the club center of mass in frame F_FSP (+CCW uncocking) with inverse-dynamics error-propagation bands and 86.04% ZTCF share annotation at t = 0.2151 s"}
 ---
 
 ## 7.3 Study 3: Coordinate Frame and Clubface Roll Sensitivity
@@ -1161,10 +1163,13 @@ Study 4 investigates the numerical sensitivity of inferred impact torque ($t = 0
 | **$100.0$** | $-16.76$ | Negative | $-18.48$ | **$-80.58$** | **$-30.39$** | $-12.12$ |
 
 *Summary of Artifacts:*
+- **Filter Order and Phase Handling:** Each sweep applies a **2nd-order low-pass Butterworth filter per pass via bidirectional zero-lag `filtfilt` (effective 4th-order zero-phase)**. Because `filtfilt` is non-causal in its reverse pass, any ball-collision impulse left in the time series bleeds $30\text{ to }50\text{ ms}$ backward into the pre-impact window unless the kinematic trajectory is strictly truncated **at least $20\text{ ms}$ before contact**.
 - At $f_c = 8.0\text{ Hz}$, over-smoothing flips the clean couple from $-17.62\text{ N}\cdot\text{m}$ to **$+0.26\text{ N}\cdot\text{m}$** at $t=0$ and **$+1.39\text{ N}\cdot\text{m}$** at $t=-5\text{ ms}$.
 - At $f_c = 30.0\text{ Hz}$, across-impact filtering inflates the couple from $-15.18\text{ N}\cdot\text{m}$ to **$-37.96\text{ N}\cdot\text{m}$**.
 
-![Filtered impact couple versus Butterworth cutoff frequency](figures/fig-filter-cutoff-sweep.svg){fig-alt="Line plot of clean filtered alpha couple at impact versus low-pass cutoff frequency in hertz"}
+**Plain-language takeaway (Figure 4):** Low-cutoff smoothing ($<10\text{ Hz}$) erases the late negative couple and can flip its sign, while filtering across ball impact bleeds collision forces backward in time—so kinematics must be truncated at least $20\text{ ms}$ before contact.
+
+![Figure 4: Two-panel Butterworth cutoff sweep (4 to 100 Hz, 2nd-order per pass / effective 4th-order zero-lag filtfilt, frame F_FSP, +CCW uncocking): Panel (a) pre-impact truncation (>=20 ms before contact) versus Panel (b) filtering across impact (collision bleed).](figures/fig-filter-cutoff-sweep.svg){fig-alt="Two-panel plot of filtered alpha couple in newton-meters versus Butterworth cutoff frequency from 4 to 100 Hz comparing Panel (a) pre-impact truncation at least 20 ms before contact against Panel (b) across-impact collision bleed"}
 
 ### Table 7.7: Unmodeled Aerodynamic Drag Sensitivity (Moment Arm $r_{\text{head}} = 1.02\text{ m}$)
 

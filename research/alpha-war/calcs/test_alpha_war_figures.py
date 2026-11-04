@@ -98,6 +98,56 @@ class TestAlphaWarFigures(unittest.TestCase):
         self.assertIn("figures/fig-club-roll-projection.svg", draft)
         self.assertIn("Plain-language takeaway (Figure 3):", draft)
 
+    def test_fig2_couple_timeseries_matches_json(self) -> None:
+        """Fig 2 must plot hand couple vs ZTCF vs COM moment with error bands and 86.04% share."""
+        main()
+        payload = json.loads(JSON_PATH.read_text(encoding="utf-8"))
+        snaps = payload["study_2_couple_vs_sum_of_moments"]["snapshots"]
+        min_snap = next(s for s in snaps if abs(s["time_s"] - 0.2151) < 1e-4)
+        share_pct = (
+            100.0
+            * abs(min_snap["ztcf_passive_couple_mid_nm"])
+            / abs(min_snap["total_hand_couple_mid_nm"])
+        )
+        self.assertAlmostEqual(share_pct, 86.04, places=2)
+
+        svg = (FIG_DIR / "fig-couple-vs-com.svg").read_text(encoding="utf-8")
+        self.assertIn(f"{share_pct:.2f}%", svg)
+        self.assertIn("ZTCF", svg)
+        self.assertIn("<polygon", svg)
+        self.assertIn("error-propagation", svg.lower())
+        self.assertIn("F_FSP", svg)
+        self.assertIn("+CCW uncocking", svg)
+        self.assertIn("N·m", svg)
+        self.assertIn("Plain-language takeaway:", svg)
+
+        draft = _current_draft_text()
+        self.assertIn("figures/fig-couple-vs-com.svg", draft)
+        self.assertIn("Plain-language takeaway (Figure 2):", draft)
+
+    def test_fig4_filter_sweep_panels_and_spec(self) -> None:
+        """Fig 4 must have two small-multiple panels (truncation vs bleed) and filter spec."""
+        main()
+        payload = json.loads(JSON_PATH.read_text(encoding="utf-8"))
+        study4 = payload["study_4_filtering_and_drag_sensitivity"]
+        rows = {r["cutoff_hz"]: r for r in study4["butterworth_cutoff_sweep"]}
+
+        svg = (FIG_DIR / "fig-filter-cutoff-sweep.svg").read_text(encoding="utf-8")
+        self.assertIn("Panel (a)", svg)
+        self.assertIn("Panel (b)", svg)
+        self.assertIn("20 ms", svg)
+        self.assertIn("filtfilt", svg)
+        self.assertIn("4th-order", svg)
+        self.assertIn(f"+{rows[8.0]['clean_filtered_at_impact_nm']:.2f}", svg)
+        self.assertIn(f"{rows[30.0]['across_impact_filtered_at_impact_nm']:.2f}", svg)
+        self.assertIn("F_FSP", svg)
+        self.assertIn("+CCW uncocking", svg)
+        self.assertIn("Plain-language takeaway:", svg)
+
+        draft = _current_draft_text()
+        self.assertIn("figures/fig-filter-cutoff-sweep.svg", draft)
+        self.assertIn("Plain-language takeaway (Figure 4):", draft)
+
 
 if __name__ == "__main__":
     unittest.main()
