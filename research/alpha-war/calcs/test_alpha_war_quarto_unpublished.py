@@ -1,7 +1,8 @@
-"""Quarto unpublished guardrails for the Alpha War draft."""
+"""Quarto unpublished guardrails, citation resolution, and zero-warning render check for v1."""
 
 from __future__ import annotations
 
+import os
 import re
 import shutil
 import subprocess
@@ -9,9 +10,10 @@ import unittest
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DRAFT = REPO_ROOT / "research" / "alpha-war" / "draft" / "alpha-war-v1.md"
+ALPHA_WAR_DIR = REPO_ROOT / "research" / "alpha-war"
+DRAFT = ALPHA_WAR_DIR / "draft" / "alpha-war-v1.md"
+BIB_PATH = ALPHA_WAR_DIR / "references.bib"
 QUARTO_YML = REPO_ROOT / "_quarto.yml"
-RENDER_LOG = REPO_ROOT / "research" / "alpha-war" / "draft" / "render-log.txt"
 
 
 def _frontmatter_flags(text: str) -> dict[str, str]:
@@ -29,7 +31,7 @@ def _frontmatter_flags(text: str) -> dict[str, str]:
 
 
 class TestAlphaWarQuartoUnpublished(unittest.TestCase):
-    """Ensure the Alpha War draft stays off the public Quarto site."""
+    """Ensure the Alpha War v1 draft stays unpublished and renders with zero warnings."""
 
     def test_frontmatter_blocks_publication(self) -> None:
         """Draft frontmatter must mark the document as unpublished."""
@@ -43,29 +45,65 @@ class TestAlphaWarQuartoUnpublished(unittest.TestCase):
         yml = QUARTO_YML.read_text(encoding="utf-8")
         self.assertNotIn("research/alpha-war", yml)
         self.assertNotIn("alpha-war-v0", yml)
+        self.assertNotIn("alpha-war-v1", yml)
+
+    def test_all_citations_resolve_in_references_bib(self) -> None:
+        """Every [@key] citation in alpha-war-v1.md must exist in references.bib."""
+        draft_text = DRAFT.read_text(encoding="utf-8").replace("`[@key]`", "")
+        bib_text = BIB_PATH.read_text(encoding="utf-8")
+        bib_keys = set(re.findall(r"^@\w+\{([^,\s]+),", bib_text, flags=re.MULTILINE))
+        cite_blocks = re.findall(r"\[([^\[\]]*@[a-zA-Z0-9_]+[^\[\]]*)\]", draft_text)
+        cited_keys: set[str] = set()
+        for block in cite_blocks:
+            for key in re.findall(r"@([a-zA-Z0-9_]+)", block):
+                cited_keys.add(key)
+        self.assertGreater(len(cited_keys), 20)
+        missing = sorted(cited_keys - bib_keys)
+        self.assertEqual(missing, [], f"Unresolved citation keys: {missing}")
 
     def test_optional_quarto_render(self) -> None:
-        """When Quarto is installed, a local HTML render of the draft must succeed."""
+        """When Quarto is installed, HTML render must succeed with zero warnings."""
         quarto = shutil.which("quarto")
         if quarto is None:
             self.skipTest("quarto not installed in this environment")
-        result = subprocess.run(  # noqa: S603 - fixed argv from shutil.which, no shell
-            [
-                quarto,
-                "render",
-                str(DRAFT),
-                "--to",
-                "html",
-                "--output-dir",
-                str(DRAFT.parent / "_render_check"),
-            ],
-            cwd=REPO_ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        RENDER_LOG.write_text(result.stdout + "\n" + result.stderr, encoding="utf-8")
-        self.assertEqual(result.returncode, 0, result.stderr[-2000:])
+        env = os.environ.copy()
+        env.setdefault("CODECOV_TOKEN", "unused")
+        html_out = DRAFT.with_suffix(".html")
+        files_dir = DRAFT.parent / f"{DRAFT.stem}_files"
+        try:
+            result = subprocess.run(  # noqa: S603 - fixed argv from shutil.which, no shell
+                [
+                    quarto,
+                    "render",
+                    str(DRAFT),
+                    "--to",
+                    "html",
+                ],
+                cwd=REPO_ROOT,
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            combined_log = result.stdout + "\n" + result.stderr
+            self.assertEqual(result.returncode, 0, combined_log[-2000:])
+            self.assertNotIn("[WARNING]", combined_log)
+            self.assertNotIn("not found", combined_log.lower())
+            self.assertTrue(html_out.is_file(), "Rendered HTML file must exist")
+            html_text = html_out.read_text(encoding="utf-8")
+            self.assertIn("callout-warning", html_text)
+            self.assertIn("callout-important", html_text)
+            self.assertIn("fig-transport-stations.svg", html_text)
+            self.assertIn("fig-couple-vs-com.svg", html_text)
+            self.assertIn("fig-club-roll-projection.svg", html_text)
+            self.assertIn("fig-filter-cutoff-sweep.svg", html_text)
+            self.assertNotIn("rain-soaked professional tournament", html_text)
+            self.assertNotIn("private coaching forum whose name", html_text)
+        finally:
+            if html_out.is_file():
+                html_out.unlink()
+            if files_dir.is_dir():
+                shutil.rmtree(files_dir)
 
 
 if __name__ == "__main__":
