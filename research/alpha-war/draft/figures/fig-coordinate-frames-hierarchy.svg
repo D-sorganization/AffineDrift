@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="420" viewBox="0 0 820 420" role="img">
+  <defs>
+    <marker id="arrow-conn" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-roll" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="30" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="bold" fill="#0f172a">
+    Figure 2.3: Coordinate Frame Hierarchy and Clubface Roll Projection
+  </text>
+  <text x="30" y="48" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" fill="#475569">
+    Structural relationship between the four coordinate frames and the roll transformation angle phi_roll
+  </text>
+
+  <!-- Frame 1: Global Inertial Frame F_0 -->
+  <rect x="30" y="75" width="225" height="135" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+  <rect x="30" y="75" width="225" height="28" rx="6" fill="#e2e8f0"/>
+  <text x="40" y="94" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="bold" fill="#1e293b">Global Inertial Frame F_0</text>
+  <text x="40" y="120" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#334155"><tspan font-weight="bold">Origin:</tspan> Ground / Tee (O)</text>
+  <text x="40" y="138" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#334155"><tspan font-weight="bold">Axes:</tspan> { I, J, K }</text>
+  <text x="40" y="155" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">• I: Down target line</text>
+  <text x="40" y="171" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">• J: Perpendicular away</text>
+  <text x="40" y="187" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">• K: Vertical upward</text>
+
+  <!-- Arrow F_0 -> F_FSP -->
+  <line x1="255" y1="142" x2="305" y2="142" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow-conn)"/>
+  <text x="280" y="133" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#475569">Planar fit</text>
+
+  <!-- Frame 2: Functional Swing Plane Frame F_FSP -->
+  <rect x="310" y="75" width="235" height="135" rx="6" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.8"/>
+  <rect x="310" y="75" width="235" height="28" rx="6" fill="#bae6fd"/>
+  <text x="320" y="94" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="bold" fill="#0369a1">Functional Swing Plane F_FSP</text>
+  <text x="320" y="120" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#0c4a6e"><tspan font-weight="bold">Origin:</tspan> Mid-Hands M(t)</text>
+  <text x="320" y="138" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#0c4a6e"><tspan font-weight="bold">Axes:</tspan> { e_t, e_p, e_n }</text>
+  <text x="320" y="155" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#0369a1">• e_t: Tangent to grip path</text>
+  <text x="320" y="171" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#0369a1">• e_p: In-plane normal (toward ball)</text>
+  <text x="320" y="187" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#0369a1">• e_n: Plane normal (n_FSP)</text>
+
+  <!-- Forking arrows to F_grip and F_club -->
+  <!-- Line down-left to F_grip -->
+  <path d="M 427 210 L 427 240 L 250 240 L 250 260" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow-conn)"/>
+  <text x="310" y="234" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" fill="#475569">Grip alignment</text>
+
+  <!-- Line down-right to F_club with Roll note -->
+  <path d="M 427 210 L 427 240 L 600 240 L 600 260" fill="none" stroke="#d97706" stroke-width="1.8" marker-end="url(#arrow-roll)"/>
+  <text x="510" y="234" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="bold" fill="#b45309">Clubface Roll phi_roll</text>
+
+  <!-- Frame 3: Moving Grip Frame F_grip -->
+  <rect x="135" y="265" width="235" height="135" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+  <rect x="135" y="265" width="235" height="28" rx="6" fill="#e2e8f0"/>
+  <text x="145" y="284" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="bold" fill="#1e293b">Moving Grip Frame F_grip</text>
+  <text x="145" y="310" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#334155"><tspan font-weight="bold">Origin:</tspan> Mid-Hands M(t)</text>
+  <text x="145" y="328" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#334155"><tspan font-weight="bold">Axes:</tspan> { x_g, y_g, z_g }</text>
+  <text x="145" y="345" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">• z_g: Along shaft centerline</text>
+  <text x="145" y="361" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">• y_g: In-plane uncocking (transverse)</text>
+  <text x="145" y="377" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">• x_g: Out-of-plane normal</text>
+
+  <!-- Frame 4: Club-Fixed Principal Frame F_club -->
+  <rect x="480" y="265" width="240" height="135" rx="6" fill="#fefce8" stroke="#ca8a04" stroke-width="1.8"/>
+  <rect x="480" y="265" width="240" height="28" rx="6" fill="#fef08a"/>
+  <text x="490" y="284" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="bold" fill="#854d0e">Club-Fixed Frame F_club</text>
+  <text x="490" y="310" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#713f12"><tspan font-weight="bold">Origin:</tspan> Club Center of Mass G</text>
+  <text x="490" y="328" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#713f12"><tspan font-weight="bold">Axes:</tspan> { u_alpha, u_beta, u_gamma }</text>
+  <text x="490" y="345" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#854d0e">• u_gamma: Shaft longitudinal axis</text>
+  <text x="490" y="361" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#854d0e">• u_alpha: Face-normal loft uncocking</text>
+  <text x="490" y="377" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#854d0e">• u_beta: Face-plane toe bending</text>
+
+  <!-- Right side: Roll projection callout box -->
+  <rect x="580" y="75" width="210" height="135" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1.2"/>
+  <text x="590" y="94" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#9a3412">Roll Projection Effect</text>
+  <text x="590" y="115" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#c2410c">M_alpha,club =</text>
+  <text x="590" y="130" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="bold" fill="#9a3412">M_in·cos(phi) - M_out·sin(phi)</text>
+  <text x="590" y="152" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" fill="#431407">As clubface rolls to square,</text>
+  <text x="590" y="167" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" fill="#431407">out-of-plane torque M_out</text>
+  <text x="590" y="182" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" fill="#431407">bleeds into the alpha axis,</text>
+  <text x="590" y="197" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="bold" fill="#ea580c">flipping apparent torque sign!</text>
+</svg>

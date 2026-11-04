@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
+from typing import Any
 
 CALCS_DIR = Path(__file__).resolve().parent
 JSON_PATH = CALCS_DIR / "alpha_war_calculations.json"
@@ -19,7 +20,7 @@ def _svg_header(w: int, h: int) -> str:
     )
 
 
-def fig_transport_stations(payload: dict) -> str:
+def fig_transport_stations(payload: dict[str, Any]) -> str:
     """Plot M(s) = C_alpha - s*R_y along the shaft with simulated and illustrative s*."""
     study1 = payload["study_1_grip_point_transport"]
     sim = study1["wscg_at_minimum_couple"]
@@ -49,7 +50,7 @@ def fig_transport_stations(payload: dict) -> str:
 
     def tx(x: float) -> float:
         """Map shaft offset (m) to horizontal SVG coordinate."""
-        return pad_l + (x - xmin) / span_x * (w - pad_l - pad_r)
+        return float(pad_l + (x - xmin) / span_x * (w - pad_l - pad_r))
 
     def ty(y: float) -> float:
         """Map alpha moment (N·m) to vertical SVG coordinate."""
@@ -111,7 +112,7 @@ def fig_transport_stations(payload: dict) -> str:
     return "\n".join(lines)
 
 
-def fig_club_roll_projection(payload: dict) -> str:
+def fig_club_roll_projection(payload: dict[str, Any]) -> str:
     """Plot club-frame alpha couple M_alpha,club(phi) across roll angle with phi*."""
     study3 = payload["study_3_frame_conventions"]
     fsp = study3["input_physical_couple_fsp_nm"]
@@ -196,7 +197,7 @@ def fig_club_roll_projection(payload: dict) -> str:
     return "\n".join(lines)
 
 
-def fig_filter_sweep(payload: dict) -> str:
+def fig_filter_sweep(payload: dict[str, Any]) -> str:
     """Plot two small-multiple panels: (a) pre-impact truncation vs (b) across-impact bleed."""
     study4 = payload["study_4_filtering_and_drag_sensitivity"]
     rows = study4["butterworth_cutoff_sweep"]
@@ -300,7 +301,7 @@ def fig_filter_sweep(payload: dict) -> str:
     return "\n".join(lines)
 
 
-def fig_couple_timeseries(payload: dict) -> str:
+def fig_couple_timeseries(payload: dict[str, Any]) -> str:
     """Plot hand couple, ZTCF passive couple, and COM moment over time with error bands."""
     snaps = payload["study_2_couple_vs_sum_of_moments"]["snapshots"]
     ts = [s["time_s"] for s in snaps]
@@ -321,7 +322,7 @@ def fig_couple_timeseries(payload: dict) -> str:
 
     def tx(t: float) -> float:
         """Map time (s) to horizontal SVG coordinate."""
-        return pad_l + (t - tmin) / span_t * (w - pad_l - pad_r)
+        return float(pad_l + (t - tmin) / span_t * (w - pad_l - pad_r))
 
     def ty(v: float) -> float:
         """Map moment/couple (N·m) to vertical SVG coordinate."""
@@ -385,57 +386,158 @@ def fig_couple_timeseries(payload: dict) -> str:
 
 
 def fig_swing_plane_schematic() -> str:
-    """Return a schematic SVG of the functional swing plane."""
-    w, h = 640, 280
-    ellipse = (
-        '<ellipse cx="320" cy="160" rx="220" ry="70" fill="none" '
-        'stroke="#888" stroke-dasharray="6 4"/>'
-    )
+    """Return a publication-grade vector schematic SVG of the functional swing plane (FSP)."""
+    w, h = 760, 360
+    font = 'font-family="system-ui, -apple-system, sans-serif"'
     return "\n".join(
         [
             _svg_header(w, h),
-            '<text x="40" y="30" font-size="14">Functional swing plane (schematic)</text>',
-            ellipse,
-            '<text x="260" y="250" font-size="12">Instantaneous swing plane</text>',
-            '<line x1="120" y1="200" x2="520" y2="120" stroke="#333" stroke-width="3"/>',
-            '<text x="500" y="110" font-size="12">Club path</text>',
-            '<circle cx="140" cy="195" r="6" fill="#1f77b4"/>',
-            '<text x="90" y="200" font-size="12">Grip hub</text>',
+            "<defs>",
+            '  <marker id="fsp-arrow-blue" markerWidth="8" markerHeight="8" '
+            'refX="6" refY="3" orient="auto">',
+            '    <path d="M0,0 L6,3 L0,6 Z" fill="#1f77b4"/>',
+            "  </marker>",
+            '  <marker id="fsp-arrow-red" markerWidth="8" markerHeight="8" '
+            'refX="6" refY="3" orient="auto">',
+            '    <path d="M0,0 L6,3 L0,6 Z" fill="#d62728"/>',
+            "  </marker>",
+            '  <marker id="fsp-arrow-green" markerWidth="8" markerHeight="8" '
+            'refX="6" refY="3" orient="auto">',
+            '    <path d="M0,0 L6,3 L0,6 Z" fill="#15803d"/>',
+            "  </marker>",
+            "</defs>",
+            '<rect x="10" y="10" width="740" height="340" rx="8" '
+            'fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>',
+            f'<text x="30" y="34" {font} font-size="14" font-weight="bold" fill="#0f172a">'
+            "Functional swing plane (schematic) — Kwon FSP &amp; Instantaneous Plane Geometry"
+            "</text>",
+            f'<text x="30" y="52" {font} font-size="11" fill="#475569">'
+            "Orthogonal triad (e_t, e_n, e_b): clubhead trajectory, inward grip hub arc, "
+            "and out-of-plane normal axis e_alpha</text>",
+            '<polygon points="90,285 260,95 680,95 510,285" fill="#e0f2fe" '
+            'fill-opacity="0.55" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="6 4"/>',
+            f'<text x="515" y="116" {font} font-size="11" font-weight="bold" fill="#0369a1">'
+            "Functional Swing Plane (F_FSP)</text>",
+            '<ellipse cx="385" cy="195" rx="220" ry="68" fill="none" '
+            'stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>',
+            f'<text x="230" y="275" {font} font-size="11.5" font-weight="bold" fill="#334155">'
+            "Instantaneous swing plane &amp; clubhead delivery arc</text>",
+            '<path d="M 250 185 Q 310 225 395 205" fill="none" '
+            'stroke="#1f77b4" stroke-width="2.5"/>',
+            '<circle cx="315" cy="205" r="6.5" fill="#1f77b4"/>',
+            f'<text x="225" y="210" {font} font-size="12" font-weight="bold" fill="#1f77b4">'
+            "Grip hub (M)</text>",
+            '<line x1="315" y1="205" x2="545" y2="145" stroke="#0f172a" stroke-width="3.5"/>',
+            '<circle cx="545" cy="145" r="7" fill="#0f172a"/>',
+            f'<text x="558" y="148" {font} font-size="12" font-weight="bold" fill="#0f172a">'
+            "Club path &amp; head</text>",
+            '<line x1="315" y1="205" x2="315" y2="105" stroke="#d62728" '
+            'stroke-width="2.5" marker-end="url(#fsp-arrow-red)"/>',
+            f'<text x="325" y="115" {font} font-size="11.5" font-weight="bold" fill="#d62728">'
+            "Out-of-plane normal e_b = e_alpha (+CCW uncocking)</text>",
+            '<line x1="315" y1="205" x2="365" y2="155" stroke="#15803d" '
+            'stroke-width="2.2" marker-end="url(#fsp-arrow-green)"/>',
+            f'<text x="372" y="162" {font} font-size="11" font-weight="bold" fill="#15803d">'
+            "Centripetal normal e_n</text>",
+            '<line x1="315" y1="205" x2="405" y2="225" stroke="#1f77b4" '
+            'stroke-width="2.2" marker-end="url(#fsp-arrow-blue)"/>',
+            f'<text x="412" y="232" {font} font-size="11" font-weight="bold" fill="#1f77b4">'
+            "Tangent e_t</text>",
+            '<rect x="25" y="302" width="710" height="34" rx="4" fill="#f1f5f9" stroke="#cbd5e1"/>',
+            f'<text x="38" y="323" {font} font-size="11" fill="#334155">'
+            "Key insight: Alpha torque C_alpha is the moment component projected onto "
+            "the plane normal e_alpha perpendicular to the FSP.</text>",
             "</svg>",
         ]
     )
 
 
 def fig_nesbit_fig11_schematic() -> str:
-    """Return a qualitative re-plot inspired by Nesbit and Serrano Fig. 11."""
-    w, h = 640, 320
+    """Return a publication-grade multi-panel re-plot inspired by Nesbit and Serrano Fig. 11."""
+    w, h = 760, 360
+    font = 'font-family="system-ui, -apple-system, sans-serif"'
     panels = [
-        ("S1 scratch", "negative"),
-        ("S2 5-hcp", "positive"),
-        ("S3 13-hcp", "near zero"),
-        ("S4 18-hcp", "positive"),
+        (
+            "S1 scratch",
+            "negative",
+            "0.73hcp: reverses to -18 N·m at impact",
+            "20,210 65,115 110,165 145,245",
+        ),
+        (
+            "S2 5-hcp",
+            "positive",
+            "5-hcp: stays positive (+12 N·m)",
+            "20,215 70,130 115,145 145,165",
+        ),
+        (
+            "S3 13-hcp",
+            "near zero",
+            "13-hcp: plateaus near 0 N·m",
+            "20,220 70,145 115,175 145,195",
+        ),
+        (
+            "S4 18-hcp",
+            "positive",
+            "18-hcp: casts early, stays positive",
+            "20,205 60,125 110,150 145,170",
+        ),
     ]
-    header = (
-        '<text x="40" y="28" font-size="14">'
-        "Nesbit &amp; Serrano Fig. 11 — qualitative subject trends (re-plot)</text>"
-    )
-    lines = [_svg_header(w, h), header]
-    for i, (label, trend) in enumerate(panels):
-        x0 = 40 + i * 150
+    lines = [
+        _svg_header(w, h),
+        '<rect x="10" y="10" width="740" height="340" rx="8" '
+        'fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>',
+        f'<text x="30" y="34" {font} font-size="14" font-weight="bold" fill="#0f172a">'
+        "Nesbit &amp; Serrano Fig. 11 — qualitative subject trends (re-plot)</text>",
+        f'<text x="30" y="52" {font} font-size="11" fill="#475569">'
+        "Skill-dependent divergence in late-downswing alpha torque across four handicap tiers "
+        "(adapted from Nesbit &amp; Serrano 2005)</text>",
+    ]
+    for i, (label, trend, note, rel_pts) in enumerate(panels):
+        x0 = 28 + i * 178
         if trend == "negative":
             color = "#d62728"
+            badge_bg = "#fef2f2"
         elif trend == "positive":
-            color = "#2ca02c"
+            color = "#15803d"
+            badge_bg = "#f0fdf4"
         else:
-            color = "#888"
-        rect = f'<rect x="{x0}" y="50" width="130" height="220" fill="#f7f7f7" stroke="#ccc"/>'
-        lines.append(rect)
-        lines.append(f'<text x="{x0 + 10}" y="75" font-size="12">{label}</text>')
-        lines.append(f'<text x="{x0 + 10}" y="95" font-size="11">Impact trend: {trend}</text>')
-        poly_pts = f"{x0 + 20},240 {x0 + 60},120 {x0 + 110},200"
+            color = "#475569"
+            badge_bg = "#f1f5f9"
         lines.append(
-            f'<polyline fill="none" stroke="{color}" stroke-width="3" points="{poly_pts}"/>'
+            f'<rect x="{x0}" y="68" width="164" height="225" rx="6" '
+            'fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>'
         )
+        lines.append(f'<rect x="{x0}" y="68" width="164" height="44" rx="6" fill="{badge_bg}"/>')
+        lines.append(
+            f'<text x="{x0 + 10}" y="86" {font} font-size="12" '
+            f'font-weight="bold" fill="#0f172a">{label}</text>'
+        )
+        lines.append(
+            f'<text x="{x0 + 10}" y="103" {font} font-size="10.5" '
+            f'font-weight="bold" fill="{color}">Impact trend: {trend}</text>'
+        )
+        lines.append(
+            f'<line x1="{x0 + 12}" y1="195" x2="{x0 + 152}" y2="195" '
+            'stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3"/>'
+        )
+        lines.append(
+            f'<text x="{x0 + 14}" y="191" {font} font-size="9" fill="#64748b">0 N·m</text>'
+        )
+        pts = " ".join(
+            f"{x0 + int(p.split(',')[0])},{int(p.split(',')[1])}" for p in rel_pts.split()
+        )
+        lines.append(f'<polyline fill="none" stroke="{color}" stroke-width="3" points="{pts}"/>')
+        lines.append(
+            f'<text x="{x0 + 8}" y="280" {font} font-size="9.2" fill="#334155">{note}</text>'
+        )
+    lines.append(
+        '<rect x="28" y="304" width="698" height="32" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>'
+    )
+    lines.append(
+        f'<text x="40" y="324" {font} font-size="10.8" fill="#1e3a8a">'
+        "Takeaway: Only the scratch golfer (S1) exhibits the sharp pre-impact sign reversal "
+        "to negative alpha torque; higher handicaps push through impact.</text>"
+    )
     lines.append("</svg>")
     return "\n".join(lines)
 

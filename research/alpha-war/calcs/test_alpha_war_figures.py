@@ -16,7 +16,7 @@ FIG_DIR = DRAFT_DIR / "figures"
 if str(CALCS_DIR) not in sys.path:
     sys.path.insert(0, str(CALCS_DIR))
 
-from alpha_war_figures import main  # noqa: E402
+from alpha_war_figures import main  # noqa: E402 -- sys.path updated above for local script import
 
 
 def _current_draft_text() -> str:
@@ -40,6 +40,11 @@ class TestAlphaWarFigures(unittest.TestCase):
             "fig-club-roll-projection.svg",
             "fig-swing-plane-schematic.svg",
             "fig-nesbit-fig11-schematic.svg",
+            "fig-delivery-vs-impact-phases.svg",
+            "fig-club-reference-stations.svg",
+            "fig-coordinate-frames-hierarchy.svg",
+            "fig-split-grip-sensor.svg",
+            "fig-two-layer-verdict.svg",
         ):
             self.assertTrue((FIG_DIR / name).is_file(), name)
 

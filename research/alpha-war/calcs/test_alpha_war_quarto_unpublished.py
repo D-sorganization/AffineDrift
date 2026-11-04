@@ -61,6 +61,25 @@ class TestAlphaWarQuartoUnpublished(unittest.TestCase):
         missing = sorted(cited_keys - bib_keys)
         self.assertEqual(missing, [], f"Unresolved citation keys: {missing}")
 
+    def test_no_ascii_art_or_box_drawing_tables(self) -> None:
+        """Draft v1 must not contain ASCII stick-art diagrams or box-drawing tables."""
+        draft_text = DRAFT.read_text(encoding="utf-8")
+        for forbidden_ascii in (
+            "+===",
+            "+---",
+            "O===>",
+            "|||",
+            "```mermaid",
+            "```\n  ",
+            "```\n+",
+            "```\n|",
+        ):
+            self.assertNotIn(
+                forbidden_ascii,
+                draft_text,
+                f"Forbidden ASCII diagram/table token found: {forbidden_ascii!r}",
+            )
+
     def test_optional_quarto_render(self) -> None:
         """When Quarto is installed, HTML render must succeed with zero warnings."""
         quarto = shutil.which("quarto")
@@ -71,7 +90,7 @@ class TestAlphaWarQuartoUnpublished(unittest.TestCase):
         html_out = DRAFT.with_suffix(".html")
         files_dir = DRAFT.parent / f"{DRAFT.stem}_files"
         try:
-            result = subprocess.run(  # noqa: S603 - fixed argv from shutil.which, no shell
+            result = subprocess.run(  # noqa: S603 -- fixed argv from shutil.which, no shell
                 [
                     quarto,
                     "render",
