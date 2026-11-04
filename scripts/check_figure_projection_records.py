@@ -32,10 +32,17 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.mocap_projection_primitives import DIGEST, REVISION  # noqa: E402
-from scripts.verify_markerless_mocap_projection import verify_projection_manifest  # noqa: E402
-from scripts.verify_proximal_distal_projection import manifest_digest_matches  # noqa: E402
-from src.tools.site_page_scan import (  # noqa: E402
+from scripts.mocap_projection_primitives import (  # noqa: E402 -- reason: sys.path modified above
+    DIGEST,
+    REVISION,
+)
+from scripts.verify_markerless_mocap_projection import (  # noqa: E402 -- reason: sys.path modified above
+    verify_projection_manifest,
+)
+from scripts.verify_proximal_distal_projection import (  # noqa: E402 -- reason: sys.path modified above
+    manifest_digest_matches,
+)
+from src.tools.site_page_scan import (  # noqa: E402 -- reason: sys.path modified above
     expand_includes,
     is_rendered,
     page_body,
@@ -43,7 +50,7 @@ from src.tools.site_page_scan import (  # noqa: E402
     rendered_relative_paths,
     strip_code,
 )
-from src.tools.utils.link_utils import (  # noqa: E402
+from src.tools.utils.link_utils import (  # noqa: E402 -- reason: sys.path modified above
     is_external_url,
     normalize_internal_url,
     resolve_relative_path,
