@@ -36,6 +36,10 @@ from scripts.mocap_projection_primitives import (  # noqa: E402 -- reason: sys.p
     DIGEST,
     REVISION,
 )
+from scripts.ud_figure_map_records import (  # noqa: E402 -- reason: sys.path modified above
+    RECORD_DIR,
+    verify_record_bytes,
+)
 from scripts.verify_markerless_mocap_projection import (  # noqa: E402 -- reason: sys.path modified above
     verify_projection_manifest,
 )
@@ -123,11 +127,14 @@ def is_draft(page: Path) -> bool:
 
 
 def traced_figures(root: Path, projections: Path) -> set[str]:
-    """Return figure paths named by verified ``visualization`` projection artifacts.
+    """Return figure paths named by verified ``visualization`` projection artifacts
+    and by UD figure-map records under ``projections / RECORD_DIR``.
 
     Raises:
         MocapProjectionError: if any projection manifest fails verification,
             including a figure whose bytes no longer match its digest.
+        ValueError: if a UD figure-map record is malformed or a figure's bytes
+            differ from it.
     """
     traced: set[str] = set()
     for manifest_path in sorted(projections.glob("*.json")):
@@ -138,6 +145,11 @@ def traced_figures(root: Path, projections: Path) -> set[str]:
         traced.update(
             item["path"] for item in manifest["artifacts"] if item["kind"] == TRACING_KIND
         )
+    # A separate record kind (#5454): UD figure-map records never pass through,
+    # or relax, the mocap manifest checks above.
+    for record_path in sorted((projections / RECORD_DIR).glob("*.json")):
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+        traced.update(verify_record_bytes(record, root))
     return traced
 
 
