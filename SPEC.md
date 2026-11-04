@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-04 | #5435 | Evidence check asserts drift+control=total and ZVCF=control |
+| 2026-11-04 | #5437 | Rewrite Decision 4: ZVCF = control; terminology gate flags gravity-only ZVCF and ZTCF+control-preserved double count. |
 | 2026-11-03 | #5390 | Add report-only pr-body-lint pull_request_target caller (RM reusable workflow) and contract test. |
 | 2026-11-03 | #5386 | Build manifest writer: scripts/write_build_manifest.py records the commit, Quarto version and lockfile SHA-256 digests against schemas/build-manifest.schema.json, with --check for staleness (SBOM and deploy wiring remain) |
 | 2026-11-03 | #5348 | Mobile MathJax minScale, math-mobile CSS, and diagram min-width floors |
