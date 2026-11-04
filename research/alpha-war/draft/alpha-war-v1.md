@@ -10,15 +10,15 @@ bibliography: ../references.bib
 reference-section-title: References
 ---
 
-# Preface to the First Draft
+# Preface to the Revised Draft (v1)
 
-This document constitutes the complete first draft (v0, Chapters 1 through 10 and Appendices A through D) of a comprehensive, thesis-level review of the "Alpha War"—a long-running technical dispute in golf biomechanics and coaching (2014–2026) over the sign, magnitude, origin, and coaching implications of in-plane hand torque ("alpha torque") in the final 30 to 50 milliseconds before ball contact.
+This document constitutes the revised draft (v1, Chapters 1 through 10 and Appendices A through D) of a comprehensive, thesis-level review of the "Alpha War"—a long-running technical dispute in golf biomechanics and coaching (2014–2026) over the sign, magnitude, origin, and coaching implications of in-plane hand torque ("alpha torque") in the final 30 to 50 milliseconds before ball contact.
 
 The text is structured into two complementary narrative registers:
 1. **The Main Narrative:** Layperson-accessible, neutral, and educational exposition that explains physical phenomena through everyday analogies, biomechanical principles, and the historical evolution of the debate.
-2. **Mathematical and Mechanical Callout Boxes:** Graduate-level, fully rigorous derivations formulated from classical rigid-body mechanics (Newton–Euler equations, spatial wrench reductions, reference-point transport theorems, closed-loop constrained Lagrangian dynamics, and flexible-beam structural dynamics).
+2. **Mathematical and Mechanical Callout Boxes & Appendices:** Graduate-level, fully rigorous derivations and methodological caveats formulated from classical rigid-body mechanics (Newton–Euler equations, spatial wrench reductions, reference-point transport theorems, closed-loop constrained Lagrangian dynamics, and flexible-beam structural dynamics).
 
-All mathematical formulations strictly adhere to the unified notation established across the research program. Uncertain, unverified, or proprietary parameters that cannot be independently audited from peer-reviewed literature are explicitly flagged inline as `[VERIFY]`.
+All mathematical formulations strictly adhere to the unified notation established across the research program. Uncertain, unverified, or proprietary parameters that cannot be independently audited from peer-reviewed literature are cataloged and adjudicated in the Appendix D Verification Registry (**VRF-01** through **VRF-10**).
 
 **Conflict of interest.** The author (Dieter Olson) participated in online biomechanics forums, contributed simulation code in AffineDrift/UpstreamDrift, and appears as a named analyst in parts of this draft. Author-affiliated arguments are segregated in §5A (not presented as part of the Camp B coalition evidence in §5.1–5.5). The author has no financial interest in Jacobs 3D or competing launch-monitor products; the goal of this draft is adjudication, not coaching product endorsement.
 
@@ -864,17 +864,16 @@ However, the late downswing contains genuine high-frequency kinetic transients. 
        -100ms        -50ms        -10ms   0ms
 ```
 
-> **Box 6.2: Frequency-Domain Transfer Function of Numerical Double Differentiation and Butterworth Filtering**
->
-> 1. **Noise Amplification in Differentiated Signals:** Let the recorded angle be $\tilde{\theta}(t) = \theta(t) + \epsilon(t)$, where $\epsilon(t)$ is stationary zero-mean white noise with power spectral density $S_\epsilon(f) = \sigma^2 / f_s$. The power spectrum of the raw second derivative is:
->    $$S_{\ddot{\tilde{\theta}}}(f) = (2\pi f)^4 S_\theta(f) + (2\pi f)^4 \frac{\sigma^2}{f_s}$$
->    The noise term grows with the fourth power of frequency ($f^4$), demanding low-pass filtration.
-> 2. **Zero-Phase 4th-Order Butterworth Filter:** Forward-backward filtering (`filtfilt`) applies a causal filter $H(f)$ and its time-reversed conjugate $H^*(f)$, eliminating phase distortion while doubling the attenuation order:
->    $$|H(f)|^2 = \frac{1}{\left[1 + (f/f_c)^{2n}\right]^2}$$
->    For a nominal 4th-order filter ($n=4$), the effective attenuation rolls off at $-48\text{ dB/octave}$ ($-160\text{ dB/decade}$).
-> 3. **The Combined Acceleration Transfer Function:** The effective operator estimating acceleration from raw positions is:
->    $$G(f) = -(2\pi f)^2 \cdot \frac{1}{1 + (f/f_c)^{2n}}$$
->    $G(f)$ peaks sharply at an intermediate frequency $f_{\text{peak}} \approx f_c \cdot (2/n)^{1/(2n)}$, severely attenuating signal components above $f_c$ while transmitting low-frequency content.
+::: {.callout-warning title="Box 6.2: Zero-Lag Butterworth Filtering and Strict Pre-Impact Truncation (>=20 ms)"}
+**Plain-language lead:** Because standard biomechanics filters smooth data both forward and backward in time, running a filter across ball impact drags the violent collision spike 30 to 50 milliseconds backward into the late downswing—so tracking data must be cut off at least 20 milliseconds before the club touches the ball.
+
+1. **Noise Amplification in Differentiated Signals:** Let the recorded angle be $\tilde{\theta}(t) = \theta(t) + \epsilon(t)$, where $\epsilon(t)$ is stationary zero-mean white noise with power spectral density $S_\epsilon(f) = \sigma^2 / f_s$. The power spectrum of the raw second derivative is:
+   $$S_{\ddot{\tilde{\theta}}}(f) = (2\pi f)^4 S_\theta(f) + (2\pi f)^4 \frac{\sigma^2}{f_s}$$
+   The noise term grows with the fourth power of frequency ($f^4$), demanding low-pass filtration.
+2. **Zero-Phase Butterworth Filter Order and Phase Handling:** Forward-backward filtering (`filtfilt`) applies a 2nd-order low-pass Butterworth filter $H(f)$ per pass and its time-reversed conjugate $H^*(f)$, eliminating phase lag while producing an **effective 4th-order zero-phase response**:
+   $$|H_{\text{eff}}(f)| = |H(f)|^2 = \frac{1}{1 + (f/f_c)^{4}}$$
+3. **Mandatory Pre-Impact Truncation ($\ge 20\text{ ms}$):** Because `filtfilt` is non-causal in its reverse pass, any ball-collision impulse at $t = 0$ bleeds $30\text{ to }50\text{ ms}$ backward into the pre-impact window. Kinematic trajectories must therefore be strictly truncated **at least $20\text{ ms}$ before ball contact** ($t \le -20\text{ ms}$) prior to bidirectional filtering.
+:::
 
 ### Artifact 1: Low-Cutoff Over-Smoothing ($f_c \approx 6\text{--}8\text{ Hz}$)
 
@@ -907,7 +906,7 @@ Because forward-backward filtering (`filtfilt`) runs backward in time from the e
   - At $t = -5\text{ ms}$: couple is inflated from $-15.91\text{ N}\cdot\text{m}$ to $\mathbf{-34.69\text{ N}\cdot\text{m}}$.
 - At $f_c = 100\text{ Hz}$, across-impact filtering explodes to $\mathbf{-80.58\text{ N}\cdot\text{m}}$ at impact!
 
-Rigorous inverse dynamics requires **pre-impact boundary truncation**: data must be truncated at $t = -1\text{ ms}$ prior to ball contact and smoothly extrapolated before running digital filters, ensuring that post-impact collision forces never leak into downswing kinetics.
+Rigorous inverse dynamics requires **strict pre-impact boundary truncation**: kinematic data must be truncated **at least $20\text{ ms}$ ($t \le -20\text{ ms}$) prior to ball contact** before running bidirectional zero-lag (`filtfilt`) digital filters, ensuring that post-impact collision impulses (which otherwise bleed $30\text{ to }50\text{ ms}$ backward in time) never contaminate pre-impact hand-couple estimates.
 
 ---
 
@@ -968,23 +967,16 @@ Whole-club inverse dynamics treats the golf club as a single rigid (or flexible)
 
 However, the golfer grips the club with **two hands**, forming a closed kinematic loop. This structural reality creates a fundamental mathematical indeterminacy that no whole-club tracking algorithm can overcome.
 
-> **Box 6.3: Derivation of the Bilateral Wrench Observability Matrix and Nullspace**
->
-> 1. **Bilateral Contact Wrench Mapping:** Let the lead hand ($L$) and trail hand ($T$) exert contact forces $\mathbf{f}_L, \mathbf{f}_T \in \mathbb{R}^3$ at discrete contact centers $\mathbf{r}_L = -\frac{s}{2}\hat{\mathbf{e}}_x$ and $\mathbf{r}_T = +\frac{s}{2}\hat{\mathbf{e}}_x$, separated by grip distance $s = 0.0762\text{ m}$ ($3.0\text{ in}$). The resultant wrench $\mathbf{W}_M \in \mathbb{R}^6$ at mid-hands is:
->    $$\mathbf{W}_M = \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_M \end{bmatrix} = \mathbf{A}_F \begin{bmatrix} \mathbf{f}_L \\ \mathbf{f}_T \end{bmatrix}$$
->    where the grasp mapping matrix $\mathbf{A}_F \in \mathbb{R}^{6 \times 6}$ is:
->    $$\mathbf{A}_F = \begin{bmatrix} \mathbf{I}_3 & \mathbf{I}_3 \\ [\mathbf{r}_L]_\times & [\mathbf{r}_T]_\times \end{bmatrix} = \begin{bmatrix} 1 & 0 & 0 & 1 & 0 & 0 \\ 0 & 1 & 0 & 0 & 1 & 0 \\ 0 & 0 & 1 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0 & -s/2 & 0 & 0 & +s/2 \\ 0 & +s/2 & 0 & 0 & -s/2 & 0 \end{bmatrix}$$
-> 2. **Rank and Nullspace of the Force Grasp Map:**
->    - Row 4 of $\mathbf{A}_F$ is identically zero because both contact points lie along the $\hat{\mathbf{e}}_x$ shaft axis ($[\hat{\mathbf{e}}_x]_\times \hat{\mathbf{e}}_x = \mathbf{0}$).
->    - Thus:
->      $$\operatorname{rank}(\mathbf{A}_F) = 5, \quad \operatorname{nullity}(\mathbf{A}_F) = 6 - 5 = 1$$
->    - The normalized null vector of $\mathbf{A}_F$ is:
->      $$\mathbf{v}_{\text{null}} = \frac{1}{\sqrt{2}}\begin{bmatrix} +1 & 0 & 0 & -1 & 0 & 0 \end{bmatrix}^\top$$
->    - **Physical Meaning:** The nullspace corresponds to internal longitudinal tension/compression: the two hands can squeeze or pull against each other along the shaft with arbitrary force $F_{\text{squeeze}}$ without producing any net force or moment on the club.
-> 3. **Full Bilateral Wrench Map (Forces + Free Wrist Couples):** If each hand also exerts a free wrist couple $\boldsymbol{\tau}_L, \boldsymbol{\tau}_T \in \mathbb{R}^3$, the contact wrench vector is $\mathbf{w}_{\text{hands}} = [\mathbf{f}_L^\top, \boldsymbol{\tau}_L^\top, \mathbf{f}_T^\top, \boldsymbol{\tau}_T^\top]^\top \in \mathbb{R}^{12}$, and the grasp matrix $\mathbf{A}_W \in \mathbb{R}^{6 \times 12}$ is:
->    $$\mathbf{A}_W = \begin{bmatrix} \mathbf{I}_3 & \mathbf{0}_3 & \mathbf{I}_3 & \mathbf{0}_3 \\ [\mathbf{r}_L]_\times & \mathbf{I}_3 & [\mathbf{r}_T]_\times & \mathbf{I}_3 \end{bmatrix}$$
->    $$\operatorname{rank}(\mathbf{A}_W) = 6, \quad \operatorname{nullity}(\mathbf{A}_W) = 12 - 6 = 6$$
->    **Formal Observability Theorem:** The bilateral grasp map has a 6-dimensional nullspace. Whole-club inverse dynamics can determine only the 6 net wrench components; it is mathematically impossible to isolate lead-hand vs. trail-hand contributions, or separate force-couple moments from free wrist torques, without independent instrumented load cells under each hand.
+::: {.callout-important title="Box 6.3: 12-DOF Split-Grip Under-Identifiability from 6-DOF Lumped-Wrench Inverse Dynamics"}
+**Plain-language lead:** Tracking the motion of the golf club as a single rigid body only reveals the combined net push-pull of both hands together (6 degrees of freedom); it cannot mathematically separate what the left and right hands are doing individually (12 degrees of freedom) without separate force sensors under each hand.
+
+1. **Bilateral Contact Wrench Mapping:** Let the lead hand ($L$) and trail hand ($T$) exert contact forces $\mathbf{f}_L, \mathbf{f}_T \in \mathbb{R}^3$ at discrete contact centers $\mathbf{r}_L = -\frac{s}{2}\hat{\mathbf{e}}_x$ and $\mathbf{r}_T = +\frac{s}{2}\hat{\mathbf{e}}_x$, separated by grip distance $s = 0.0762\text{ m}$ ($3.0\text{ in}$). The resultant wrench $\mathbf{W}_M \in \mathbb{R}^6$ at mid-hands is:
+   $$\mathbf{W}_M = \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_M \end{bmatrix} = \mathbf{A}_F \begin{bmatrix} \mathbf{f}_L \\ \mathbf{f}_T \end{bmatrix}$$
+   where the grasp mapping matrix $\mathbf{A}_F \in \mathbb{R}^{6 \times 6}$ has $\operatorname{rank}(\mathbf{A}_F) = 5$ and $\operatorname{nullity}(\mathbf{A}_F) = 1$, with normalized null vector $\mathbf{v}_{\text{null}} = \frac{1}{\sqrt{2}}\begin{bmatrix} +1 & 0 & 0 & -1 & 0 & 0 \end{bmatrix}^\top$ corresponding to internal axial squeeze/tension along the shaft.
+2. **Full 12-DOF Bilateral Wrench Map (Forces + Free Wrist Couples):** When each hand exerts both a 3D contact force and a 3D free wrist couple, $\mathbf{w}_{\text{hands}} = [\mathbf{f}_L^\top, \boldsymbol{\tau}_L^\top, \mathbf{f}_T^\top, \boldsymbol{\tau}_T^\top]^\top \in \mathbb{R}^{12}$, the grasp matrix $\mathbf{A}_W \in \mathbb{R}^{6 \times 12}$ is:
+   $$\mathbf{A}_W = \begin{bmatrix} \mathbf{I}_3 & \mathbf{0}_3 & \mathbf{I}_3 & \mathbf{0}_3 \\ [\mathbf{r}_L]_\times & \mathbf{I}_3 & [\mathbf{r}_T]_\times & \mathbf{I}_3 \end{bmatrix}, \quad \operatorname{rank}(\mathbf{A}_W) = 6, \quad \operatorname{nullity}(\mathbf{A}_W) = 12 - 6 = 6$$
+3. **Formal Observability Theorem:** Because $\mathbf{A}_W$ maps a 12-DOF split-grip input space onto a 6-DOF net club wrench with a 6-dimensional nullspace, 6-DOF lumped-wrench inverse dynamics cannot uniquely resolve 12-DOF split-grip forces or anatomical single-hand torques without explicit bilateral contact constraints or independent 6-axis load cells under each hand (see Appendix C for the full SVD proof).
+:::
 
 This theorem directly governs unverified coaching claims in the commercial instruction corpus (reportedly including Jacobs 3D release commentary; see **VRF-01**) asserting that standard optical motion capture proves the trail hand actively "snapped forward" or "pushed through impact." Because 6-DOF whole-club inverse dynamics possesses a 6-dimensional bilateral nullspace, any claim about an isolated single-hand push or snap is mechanically indeterminate from whole-club kinematics alone.
 
@@ -1263,17 +1255,24 @@ After reviewing the historical literature, the Facebook debates, and the quantit
    - Camp B plotted C_alpha (Pure Hand Couple).
    - Camp A plotted M_alpha,G (Sum of Moments About COM) or a pivot moment.
  
- LAYER 2: THE COMPONENT DISCREPANCY (Muscular Driving Refuted)
+ LAYER 2: THE COMPONENT DISCREPANCY (Provisional — Convention Mapping & Filter Bounds Required)
  ----------------------------------------------------------------------------------
- Question: Does the golfer exert active positive MUSCULAR torque at impact?
+ Question: Is the sign of the applied hand couple near impact settled across all pipelines?
  
- Finding: REFUTED.
-   - Hand couple C_alpha reverses negative across all open 3D inverse-dynamics models.
-   - Direct instrumented split-grip sensors confirm -10 Nm negative couple.
-   - Wrist muscles exceed maximum shortening velocity (>1500 deg/s concentric limit).
-   - Shaft elastic rebound creates -35 Nm mechanical braking couple.
-   - Jacobs 3D positive applied-torque claim remains proprietary and unverified (VRF-02).
+ Status: NOT DECLARED SETTLED (Provisional Pending Cross-Pipeline Audit & Truncation Bounds).
+   - In open FSP/mid-hands models and Koike split-grip sensors, C_alpha,M turns negative.
+   - However, apparent sign flips with reference station s_P, clubface roll phi_roll, and
+     low-pass filter cutoff f_c (<10 Hz over-smoothing vs. across-impact collision bleed).
+   - Jacobs 3D positive applied-torque claims remain unverified pending convention mapping
+     and a same-swing dual-pipeline benchmark (Protocol 1; VRF-02, CLM-SGN-01).
 ```
+
+::: {.callout-important title="Box 8.1: Stage 5 Panel Caveat — Why the Sign of the Alpha Couple Is Not Treated as Settled"}
+**Plain-language lead:** Although open-source swing-plane models and instrumented split-grip clubs show a negative (retarding) hand couple just before impact, the underlying sign dispute between Camp A and Camp B is **not declared settled** in this review because reported couple polarity depends critically on coordinate-convention mapping, digital filter cutoffs, and pre-impact data truncation.
+
+1. **Cross-Camp Convention Mapping Must Be Demonstrated, Not Assumed:** As formalized in the Appendix B convention-mapping primer (§B.0), transforming between Camp B's functional swing plane ($\mathcal{F}_{\text{FSP}}$ at mid-hands $M$) and Camp A's rolling clubhead principal frame ($\mathcal{F}_{\text{club}}$ at $M$ or $G$) mixes out-of-plane bending ($M_\beta$) and transverse force levering ($-s_P R_y$) into the reported alpha channel. Until identical raw 3D marker trajectories are processed through both pipelines under an explicit convention map (Protocol 1), `CLM-SGN-01` remains **Unverified — convention mapping required**.
+2. **Filter Cutoff Sensitivity and Collision Bleed Must Be Empirically Bounded:** As demonstrated in Study 4 (Figure 4), a 2nd-order per-pass (effective 4th-order zero-lag `filtfilt`) Butterworth filter flips a true $-17.62\text{ N}\cdot\text{m}$ impact couple to $+0.26\text{ N}\cdot\text{m}$ at $f_c = 8\text{ Hz}$, while filtering across ball contact bleeds collision deceleration $30\text{ to }50\text{ ms}$ backward in time (inflating the couple to $-37.96\text{ N}\cdot\text{m}$ at $30\text{ Hz}$). Definitive sign adjudication requires strict pre-impact truncation ($\ge 20\text{ ms}$ prior to contact) and direct 12-DOF split-grip telemetry (Protocol 5).
+:::
 
 ### Layer 1: Definitional Reconciliation (The Mathematical Identity)
 
@@ -1293,11 +1292,9 @@ $$M_{\alpha,G} = (-20\text{ N}\cdot\text{m}) + (+50\text{ N}\cdot\text{m}) = \ma
 
 Both mathematical quantities are physically real, and both can be verified on the exact same swing. At Layer 1, the Alpha War was a semantic dispute caused by overloaded terminology.
 
-### Layer 2: The Component Discrepancy (The Biomechanical Breakdown)
+### Layer 2: The Component Discrepancy (Biomechanical Mechanisms and Provisional Boundaries)
 
-However, the dispute cannot be dismissed entirely as a semantic misunderstanding. Camp A explicitly asserted that their positive alpha curve represented **applied muscular torque** exerted by the golfer's hands, claiming that elite players actively drive the uncocking of the wrists through the ball.
-
-At Layer 2, this substantive claim is refuted:
+At Layer 2, Camp A coaches further proposed that a positive alpha curve represents **applied muscular torque** actively driving wrist uncocking through ball contact. Within the FSP mid-hands framework ($\mathcal{F}_{\text{FSP}}$ at $M$), five physical and methodological factors explain why open models and direct sensors report a negative couple while leaving cross-pipeline sign claims provisional until Protocols 1 and 5 are executed:
 1. **Universal Negative Reversal in Open Inverse Dynamics:** Every validated, peer-reviewed 3D inverse-dynamics dataset in the history of golf biomechanics—including Nesbit's own scratch golfer (Subject 4 in Nesbit 2005), MacKenzie & Sprigings (2000, 2009), and Kwon et al. (2012)—shows that the pure hand couple reverses negative $15\text{--}30\text{ ms}$ before impact in skilled players.
 2. **Direct Empirical Sensor Confirmation:** The only direct physical measurements of separate hand forces using instrumented split-grip load cells (Koike et al. 2006, 2016) recorded a net negative in-plane couple of $-10\text{ N}\cdot\text{m}$ at impact, accompanied by massive opposing hand contact forces ($F_L \approx +200\text{ N}$, $F_T \approx -200\text{ N}$).
 3. **Muscle Contractile Mechanics:** At impact, the club unhinges at angular velocities exceeding $1500\text{--}2500\text{ deg/s}$ ($26\text{--}44\text{ rad/s}$). Under standard Hill-type muscle force-velocity relationships, human forearm flexors shortening at this extreme rate cannot exert meaningful positive isometric tension; the joint outruns the muscle's cross-bridge cycling rate.
@@ -1381,7 +1378,7 @@ The depth at which the club is held in the hands—whether in the fingers (dista
 
 ## 8.4 Decisive Experimental and Computational Tests
 
-To definitively close every remaining empirical uncertainty and resolve all pending `[VERIFY]` flags, the biomechanics community should execute eight standardized, falsifiable research protocols:
+To definitively close every remaining empirical uncertainty and resolve all pending VRF verification registry items (Appendix D), the biomechanics community should execute eight standardized, falsifiable research protocols:
 
 1. **Protocol 1: Same-Swing Dual-Pipeline Benchmark**
    - *Objective:* Eliminate algorithmic ambiguity by processing the exact same raw 3D marker trajectory simultaneously through Jacobs 3D, Kwon3D, and the open-source `UpstreamDrift` inverse-dynamics engine.
@@ -1532,7 +1529,33 @@ The apparent moment at mid-hands equals the rate of change of angular momentum a
 
 ---
 
-## Appendix B: Lagrangian and Constrained KKT Derivation of the Planar Double Pendulum and Two-Arm Closed Loop
+## Appendix B: Convention-Mapping Primer, Lagrangian Double Pendulum, and Constrained Two-Arm KKT Derivation
+
+### B.0 Convention-Mapping Primer: Axes, Positive Rotation, Moment Components, and Transport Direction Across Camps
+
+**Plain-language lead:** Two analysts can watch the exact same golf swing and report opposite torque signs simply because they point their coordinate axes in different directions, define "positive" rotation differently, or measure the twist at different spots along the club.
+
+Before comparing numerical curves across the Alpha War literature, each investigator's coordinate basis, positive-rotation sense, moment component ordering, and spatial transport station must be mapped explicitly onto a shared reference frame.
+
+#### Table B.1: Cross-Camp Coordinate, Rotation, Component, and Transport Convention Map
+
+| Tradition / Analyst | Basis Axes $(\hat{\mathbf{e}}_1, \hat{\mathbf{e}}_2, \hat{\mathbf{e}}_3)$ | Positive Alpha Rotation | Moment Components $(\alpha, \beta, \gamma)$ | Reference Station $s_P$ & Transport Direction |
+|---|---|---|---|---|
+| **Kwon FSP** [@kwon2012fsp; @kwon2018kinetics] | $\mathcal{F}_{\text{FSP}} = (\hat{\mathbf{e}}_t, \hat{\mathbf{e}}_p, \hat{\mathbf{e}}_n)$ anchored to instantaneous Functional Swing Plane | $+\hat{\mathbf{e}}_n$ (`+CCW` uncocking in FSP toward ball) | $\alpha = M_n$ (in-plane), $\beta = M_p$ (out-of-plane), $\gamma = M_t$ (shaft axial) | Grip hub / mid-hands $M$ ($s_M = 0.000\text{ m}$); no COM force levering |
+| **MacKenzie & Sprigings** [@mackenzie2009] | Moving grip/club frame resolved onto instantaneous swing plane | $+\hat{\mathbf{e}}_n$ (`+CCW` uncocking in swing plane) | $\alpha = M_n$ (in-plane), **$\beta = M_t$ (shaft squaring)**, **$\gamma = M_p$ (out-of-plane)** *(swaps $\beta \leftrightarrow \gamma$)* | Grip endpoint / wrist center ($s \approx -0.038\text{ to }0.000\text{ m}$) |
+| **Tutelman** [@tutelman2018alpha] | Planar FSP / shaft-normal decomposition $\mathcal{F}_{\text{FSP}}$ | `+CCW` uncocking (accelerating clubhead toward contact) | $\alpha = M_{\text{in}}$ (in-plane), $\beta = M_{\text{out}}$ (out-of-plane), $\gamma = M_{\text{shaft}}$ | Distinguishes wrist/mid-hands ($s_M = 0$) from club COM ($s_G = +0.720\text{ m}$) |
+| **Nesbit** [@nesbit2005work] | Club-fixed principal inertia axes $\mathcal{F}_{\text{club}} = (\hat{\mathbf{u}}_\alpha, \hat{\mathbf{u}}_\beta, \hat{\mathbf{u}}_\gamma)$ rotating with clubhead roll $\phi_{\text{roll}}$ | $+\hat{\mathbf{u}}_\alpha$ aligned with clubface normal (rotates as shaft rolls) | $\alpha = M_{\hat{\mathbf{u}}_\alpha}$ (clubface pitch), $\beta = M_{\hat{\mathbf{u}}_\beta}$ (toe droop), $\gamma = M_{\hat{\mathbf{u}}_\gamma}$ (shaft roll) | Lumped wrist-grip junction node ($s \approx 0$), rotating with $\phi_{\text{roll}}$ |
+| **Jacobs 3D / Manzella** [@jacobs2019science; @jacobs2020lookinside] | Clubhead principal axes $\mathcal{F}_{\text{club}}$ (or global lab frame for force graphs) | $+\hat{\mathbf{u}}_\alpha$ in club-fixed frame | Reports both "Alpha Couple" and "Alpha Sum of Moments" ($M_{\alpha,G}$) | Transported from grip $M$ ($s=0$) along $+\hat{\mathbf{e}}_{\text{shaft}}$ to club COM $G$ ($s_G = +0.720\text{ m}$) or pivot $s_P$ |
+
+#### Explicit Transformation Between Camp B ($\mathcal{F}_{\text{FSP}}$ at $M$) and Camp A ($\mathcal{F}_{\text{club}}$ at Station $s_P$)
+
+Let the hands apply a resultant force $\mathbf{R}_{\text{FSP}} = [R_x, R_y, R_z]^\top$ and pure couple $\mathbf{C}_{\text{FSP},M} = [C_\gamma, C_\beta, C_\alpha]^\top$ at mid-hands $M$ ($s_M = 0$) in $\mathcal{F}_{\text{FSP}}$. First, transporting the reference point along the shaft by signed distance $s_P$ toward the clubhead ($+\hat{\mathbf{e}}_t$) via the Poinsot operator $\mathbf{Ad}_{g_{PM}}^{-\top}$ yields the FSP moment at station $P$:
+$$\mathbf{M}_{\text{FSP},P}(s_P) = \begin{bmatrix} M_{\gamma,P} \\ M_{\beta,P} \\ M_{\alpha,P} \end{bmatrix} = \begin{bmatrix} C_\gamma \\ C_\beta + s_P R_z \\ C_\alpha - s_P R_y \end{bmatrix}$$
+Second, rotating from $\mathcal{F}_{\text{FSP}}$ into the club-fixed frame $\mathcal{F}_{\text{club}}$ through the shaft roll angle $\phi_{\text{roll}}$ gives the exact cross-camp mapping for the reported alpha moment:
+$$M_{\alpha,\text{club},P}(\phi_{\text{roll}}, s_P) = \left(C_\alpha - s_P R_y\right)\cos\phi_{\text{roll}} + \left(C_\beta + s_P R_z\right)\sin\phi_{\text{roll}}$$
+This single equation encapsulates why sign comparisons across camps are invalid unless $(s_P, \phi_{\text{roll}}, R_y, C_\beta)$ are simultaneously specified:
+1. Setting $\phi_{\text{roll}} = 0$ and shifting $s_P$ from $M$ ($0\text{ m}$) to $G$ ($+0.720\text{ m}$) adds $-s_G R_y$, flipping the sign whenever $s_P > s^* = C_\alpha / R_y$ (Figure 1).
+2. Fixing $s_P = 0$ and rolling the clubface by $\phi_{\text{roll}}$ mixes $C_\beta \sin\phi_{\text{roll}}$ into the alpha channel, flipping the sign whenever $\phi_{\text{roll}} > \phi^* = \arctan(-C_\alpha / C_\beta)$ (Figure 3).
 
 ### B.1 Planar Double Pendulum Equations of Motion
 
@@ -1649,9 +1672,9 @@ However, the 6-dimensional nullspace means that an infinite continuum of individ
 
 ---
 
-## Appendix D: Consolidated Registry of Inline `[VERIFY]` Flags and Evidentiary Status
+## Appendix D: Consolidated Verification Registry (VRF-01 through VRF-10) and Evidentiary Status
 
-This registry compiles every claim, source, or parameter flagged inline with `[VERIFY]` across this thesis, documenting its current evidentiary status and the exact protocol required to resolve it.
+This registry compiles every source, parameter, or claim cataloged in the VRF verification registry across this thesis, documenting its current evidentiary status, panel adjudication authorship, and the exact protocol required to resolve any remaining open items.
 
 ### Table D.1: Consolidated Verification Registry
 
@@ -1670,5 +1693,5 @@ This registry compiles every claim, source, or parameter flagged inline with `[V
 | **VRF-10** | Sec 8.4, Protocol 8 | Proposed frame-discipline reporting standard | New methodological proposal extending ISB standards `[@wu2002isb; @wu2005isb]` | **Verified as New Thesis Proposal (Not an Existing ISEA Standard)** *(Adjudicated by: Stage 5 Panel th_bb97958bf095, 2026-11-03)* | Explicitly framed as a new community proposal alongside ISB citations |
 
 ---
-*End of First Draft (v0 — Chapters 1–10 and Appendices A–D).*
+*End of Revised Draft (v1 — Chapters 1–10 and Appendices A–D).*
 

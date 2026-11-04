@@ -1,4 +1,4 @@
-"""Verify Chapter 7 tables, ZTCF share, s* separation, and CLM verdicts match calcs and panel audit."""
+"""Verify Chapter 7 tables, ZTCF share, s* separation, and CLM verdicts match calcs and panel."""
 
 from __future__ import annotations
 
@@ -61,7 +61,7 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
         self.assertNotIn("86.15%", draft_text)
 
     def test_s_star_illustrative_vs_simulated_and_claim_verdicts(self) -> None:
-        """Illustrative (+0.213 m) and simulated (+0.737 m) s* values and CLM relabels must be present."""
+        """Illustrative (+0.213 m) and simulated (+0.737 m) s* and CLM relabels must exist."""
         payload = json.loads(JSON_PATH.read_text(encoding="utf-8"))
         study1 = payload["study_1_grip_point_transport"]
         sim_s_star = study1["wscg_at_minimum_couple"]["sign_flip_station_offset_m"]
@@ -74,13 +74,11 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
         draft_text = _find_draft_path().read_text(encoding="utf-8")
         self.assertIn("Unverified - convention mapping required", draft_text)
         self.assertNotIn("Refuted / Definitional Artifact", draft_text)
-        self.assertIn(
-            "Unverified - primary source check required (VRF-04b)", draft_text
-        )
+        self.assertIn("Unverified - primary source check required (VRF-04b)", draft_text)
         self.assertIn("Adjudicated by:", draft_text)
 
     def test_vrf_cut_and_reframe_5397(self) -> None:
-        """VRF-09 and Jan 2024 rain clip must be cut; VRF-01/03/04/07/08 reframed; App D adjudicated."""
+        """VRF-09 and rain clip must be cut; VRF-01/03/04/07/08 reframed; App D adjudicated."""
         draft_text = _find_draft_path().read_text(encoding="utf-8")
         for forbidden in (
             "rain-soaked professional tournament",
@@ -110,16 +108,14 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
             "VRF-10",
         ):
             line = next(ln for ln in app_d.splitlines() if f"**{vrf_id}**" in ln)
-            self.assertIn(
-                "Adjudicated by:", line, msg=f"Missing adjudication on {vrf_id}"
-            )
+            self.assertIn("Adjudicated by:", line, msg=f"Missing adjudication on {vrf_id}")
 
     def test_vrf_verify_first_5398(self) -> None:
-        """VRF-04b, VRF-10, VRF-02, and VRF-06 outcomes must be verified/reframed and recorded in App D."""
+        """VRF-04b, VRF-10, VRF-02, and VRF-06 outcomes must be verified and recorded in App D."""
         draft_text = _find_draft_path().read_text(encoding="utf-8")
         bib_text = (ALPHA_WAR_DIR / "references.bib").read_text(encoding="utf-8")
 
-        # VRF-04b: Kwon primary FSP/axle-chain papers cited; CLM-LIT-05 stays unverified without [VERIFY]
+        # VRF-04b: Kwon FSP/axle-chain papers cited; CLM-LIT-05 unverified without [VERIFY]
         self.assertIn("[@kwon2012fsp; @madrid2020axle]", draft_text)
         self.assertNotIn("`[VERIFY]`", draft_text.split("## 8.2")[1].split("## 8.3")[0])
 
@@ -132,6 +128,37 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
         # VRF-02 & VRF-06: Jacobs & Nesbit (2019) 339 pp. and Jacobs (2020) documented
         self.assertIn("339 pp.", bib_text)
         self.assertIn("[@jacobs2019science; @jacobs2020lookinside]", draft_text)
+
+    def test_v1_assembly_boxed_caveats_and_no_verify_5401(self) -> None:
+        """Draft v1 must exist with App B primer, boxed caveats, provisional sign, no [VERIFY]."""
+        v1 = ALPHA_WAR_DIR / "draft" / "alpha-war-v1.md"
+        v0 = ALPHA_WAR_DIR / "draft" / "alpha-war-v0.md"
+        self.assertTrue(v1.is_file(), "alpha-war-v1.md must exist")
+        self.assertFalse(v0.is_file(), "alpha-war-v0.md must be renamed via git mv")
+
+        draft_text = v1.read_text(encoding="utf-8")
+        self.assertNotIn("[VERIFY", draft_text)
+        self.assertNotIn("VERIFY]", draft_text)
+
+        # App B convention-mapping primer
+        app_b = draft_text.split("## Appendix B:")[1].split("## Appendix C:")[0]
+        self.assertIn("### B.0 Convention-Mapping Primer:", app_b)
+        for required_term in (
+            "Positive Alpha Rotation",
+            "Moment Components",
+            "Transport Direction",
+            "Plain-language lead:",
+        ):
+            self.assertIn(required_term, app_b)
+
+        # Boxed callouts for filtering and 12-DOF split-grip under-identifiability
+        self.assertIn('::: {.callout-warning title="Box 6.2:', draft_text)
+        self.assertIn('::: {.callout-important title="Box 6.3:', draft_text)
+        self.assertIn('::: {.callout-important title="Box 8.1:', draft_text)
+        self.assertNotIn(
+            "LAYER 2: THE COMPONENT DISCREPANCY (Muscular Driving Refuted)", draft_text
+        )
+        self.assertIn("not declared settled", draft_text)
 
 
 if __name__ == "__main__":

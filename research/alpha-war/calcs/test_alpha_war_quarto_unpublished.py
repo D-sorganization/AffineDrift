@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DRAFT = REPO_ROOT / "research" / "alpha-war" / "draft" / "alpha-war-v0.md"
+DRAFT = REPO_ROOT / "research" / "alpha-war" / "draft" / "alpha-war-v1.md"
 QUARTO_YML = REPO_ROOT / "_quarto.yml"
 RENDER_LOG = REPO_ROOT / "research" / "alpha-war" / "draft" / "render-log.txt"
 
