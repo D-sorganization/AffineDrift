@@ -232,6 +232,71 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-04 | #5446 | Add lay guide to ZTCF and ZVCF reconciling time and active/passive lenses with snapshot caveats and mechanics baselines (#5440) |
+| 2026-11-04 | #5442 | Add the provenance caption shortcode: a figure caption naming the UpstreamDrift model, run_id, commit and claim class, linked only to the public UD repo (fail closed on bad values) |
+| 2026-11-04 | #5436 | Retire hyperplane display titles in the compact tangent-space series (Parts 1–7) and hub. |
+| 2026-11-04 | #5428 | Bind every markerless-mocap projection artifact to its UpstreamDrift model_id, run_id, ud_commit and claim class (fail closed) |
+| 2026-11-04 | #5435 | Evidence check asserts drift+control=total and ZVCF=control |
+| 2026-11-04 | #5437 | Rewrite Decision 4: ZVCF = control; terminology gate flags gravity-only ZVCF and ZTCF+control-preserved double count. |
+| 2026-11-03 | #5390 | Add report-only pr-body-lint pull_request_target caller (RM reusable workflow) and contract test. |
+| 2026-11-03 | #5386 | Build manifest writer: scripts/write_build_manifest.py records the commit, Quarto version and lockfile SHA-256 digests against schemas/build-manifest.schema.json, with --check for staleness (SBOM and deploy wiring remain) |
+| 2026-11-03 | #5348 | Mobile MathJax minScale, math-mobile CSS, and diagram min-width floors |
+| 2026-11-03 | #5385 | Phone layout audit manifest: Playwright mobile smoke and Lighthouse read one route and viewport set (iPhone 390x844, Android 360x800) |
+| 2026-11-03 | #5382 | Seed the exact-key Quarto E2E render cache on main push so PRs and merge groups can restore it (WEB-13.1 #4595) |
+| 2026-11-03 | #5309 | Panel-refined draft of Managing Slack in Linked Systems (do not merge); Publish panel-refined Managing Slack in Linked Systems (#5135, #5309) |
+| 2026-11-02 | #5360 | Restore swallowed LaTeX escapes in After One Solution and gate articles/*.qmd control bytes |
+| 2026-11-02 | #5361 | Add label-merge-guard workflow enforcing do-not-merge and do-not-automate holds |
+| 2026-11-02 | #5328 | Add phone-side padding on full-layout main content (#5323) |
+| 2026-11-02 | #5357 | Backlog slice delivery for #5317; Backlog slice delivery for #5318; Backlog slice delivery for #5321 |
+| 2026-11-02 | #5349 | Backlog slice delivery for #5185 |
+| 2026-11-02 | #5345 | Weekly Python and npm patch bumps; pytest held at 9.1.x per pyproject cap |
+| 2026-11-02 | #5356 | Backlog slice delivery for #5320 |
+| 2026-11-02 | #5343 | Service worker: update notice only when a cached asset really changed, network-first JSON/CSV data, compact phone notice |
+| 2026-11-02 | #5340 | Phone-viewport Playwright smoke spec in e2e-tests and a warn-only nightly Lighthouse mobile baseline |
+| 2026-11-02 | #5339 | Coarse-pointer 44px touch targets for site chrome: secondary-nav sidebar toggle, title-block category chips, Code tools button |
+| 2026-11-02 | #5335 | Phones: the <=480px display-math step-down goes from 0.85em to 0.82em, so theory-part1's near-fit equations no longer scroll at 390px; title-block meta headings, category chips and the BibTeX citation block hold a 12px floor |
+| 2026-11-02 | #5337 | Phone off-canvas docked sidebar: bounded width, 44px rows, current-page bar, dimmed scrim and close button |
+| 2026-11-02 | #5333 | Conflict Disarm now calls the public fleet-workflows reusable workflow pinned to 367b182c instead of an inlined sweep; dry_run stays true by default, and a contract test guards the uses: ref and the full-SHA pin |
+| 2026-11-02 | #5330 | Coarse-pointer 44px touch targets for sandbox, converter, dataset explorer, maturity badge |
+| 2026-11-02 | #5311 | Slack take-up: first-publication date and open post-hoc pass-bar disclosure |
+| 2026-11-01 | #5310 | Rename citation key koike2020 to choi2020grip (Choi and Park 2020) across the series |
+| 2026-11-01 | #5308 | Apply Karl lay-reader and Feynman prose refinements to Slack Take-Up as a Witness |
+| 2026-11-01 | #5270 | Retire remaining 'hyperplane' display text in the manuscript terminology heading and the book Ch.4 blurb; mathematical object names were already disambiguated |
+| 2026-11-01 | #5305 | Cross-Browser Nightly renders the site once in a build-site job; the firefox and webkit legs download it instead of each rendering under a 45-minute timeout |
+| 2026-11-01 | #5303 | Conflict Disarm App token scoped to AffineDrift and Repository_Management with contents read, pull-requests write and issues write |
+| 2026-11-01 | #5297 | Close UX slice 3: component headings use scale tokens; axe/Lighthouse evidence on live pages |
+| 2026-11-01 | #5296 | Conflict Disarm runs its job inline (reading RM's conflict_disarm script via an App-token checkout) instead of calling an internal Repository_Management reusable workflow, which a public repo cannot do, so it no longer fails every run with 0 jobs |
+| 2026-11-01 | #5294 | Fence the GAAI ci-watch-and-fix skill in project rules and collapse the duplicated CI Watch section (RM #2567). |
+| 2026-11-01 | #5290 | docs: root REVIEW.md with AffineDrift review rules (RM #2565 rollout) |
+| 2026-10-31 | #5279 | Keep the phone search control in the single-row navigation header |
+| 2026-10-31 | #5280 | Meet the measured reading-width target on Theory Part 1 and chapter 3. |
+| 2026-10-31 | #5285 | Unblock Collate Change Fragments: drop the two re-added #5136 fragments and retarget the in-review slack take-up article fragment to #5284 (owner ruling, option a); Draft the Slack Take-Up as a Witness article (synthetic study, figures, Argon verification from PR #5140), revised with Feynman's prose pass and Karl's lay-review accuracy fixes; unpublished, do-not-merge pending the publication gate |
+| 2026-10-31 | #5278 | Measure passive RK4 energy drift in ztcf-explorer and drift-control-sandbox; keep RK4 in both, enforced by a headless Jest threshold test |
+| 2026-10-31 | #5283 | Expose the ZTCF explorer through a window.AffineDriftWidgets controller (getState/setParam/step) with a polite live readout, keyboard and axe e2e coverage |
+| 2026-10-31 | #5281 | Run the Cross-Browser Nightly failure reporter as `python3 -m scripts.report_e2e_browser_failures` so its `scripts.*` import resolves, with a test that flags any workflow running a `scripts.*` importer by path |
+| 2026-10-31 | #5265 | Bootstrap Python requirements before the nightly Quarto render |
+| 2026-10-31 | #5277 | Close-out: hub and book Ch.1 summaries match manuscript affine wording (#5188 area). |
+| 2026-10-31 | #5269 | Outline three humanoid launch series with rights and publication gates |
+| 2026-10-31 | #5268 | Document humanoid audiences and planning metadata contract with UX handoff |
+| 2026-10-31 | #5266 | Add phase-zero humanoid rights ledger with five pending artifact reviews and AMASS hold |
+| 2026-10-31 | #5267 | Record proposed humanoid expansion scope, upstream boundary and phase gates |
+| 2026-10-31 | #5276 | Reduce the site-search index, remove chrome text, rank the double-pendulum chapter, and fit the phone search panel to the viewport |
+| 2026-10-31 | #5271 | Home hero first, balanced hero column, figure capped near design size, hub prose capped to reading measure |
+| 2026-10-31 | #5273 | UX slice 5: compact article opening (title card, abstract, summary/takeaways/caveats cards) and a title-fallback filter for empty title headings |
+| 2026-10-31 | #5272 | Apply shared typography tokens to rendered pages and the Physics of Golf book; update the PDF dependency baseline. |
+| 2026-10-31 | #5275 | Bump pypdf to 6.21.4 to clear pip-audit CVE-2026-119203–119209 blocking CI.; Close-out: Volume I book chapter read links verified on main (#5188); no further content change. |
+| 2026-10-30 | #5261 | Specify and implement versioned, bounded #state= URL-hash state contract for dcr-visualizer (#5255) |
+| 2026-10-30 | #5260 | Draft JSON Schema and provenance field spec for asset_manifest.json (#5251) |
+| 2026-10-30 | #5259 | Measure 60-day AGENT_HANDOFF.md and _quarto.yml conflict frequency and recommend no-go on .agent/state split (#5250) |
+| 2026-10-30 | #5258 | Audit self-hosted assets, SRI, and CSP against ADR 0002 with post-render SRI check (#5252) |
+| 2026-10-30 | #5257 | Audit CI workflow permissions, untrusted run interpolations, and action SHA pins (#5249) |
+| 2026-10-29 | #5235 | UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens |
+| 2026-10-29 | #5238 | UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast |
+| 2026-10-29 | #5237 | Option A-4 prerequisite: vendor the UpstreamDrift Option A reference trace with sha256 and recomputed payload-digest verification, and a verified loader |
+| 2026-10-29 | #5189 | Tighten Part 4/7 residual Gronwall bound; de-emphasize fixed-trajectory integral naming in thesis |
+| 2026-10-29 | #5188 | Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links |
+| 2026-10-29 | #5236 | Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test |
+| 2026-10-29 | #5239 | Record redirect for unpublished Slack article to restore URL stability check in deploy workflow |
 | 2026-10-28 | #5231 | Pin merged UpstreamDrift companion commits and refresh article status |
 | 2026-10-27 | #5145 | Draft the Managing Slack in Linked Systems article for panel review, with verified bibliography and number-pinning contract tests |
 | 2026-10-27 | #5214 | Add offline LTV correction-authority evaluator with backward Gramian recursion and condition-number gate |
@@ -704,4 +769,3 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-05 | #4904 | Correct biological multibody power, geometric stiffness, compliant-versus-kinematic coupling and inverse-dynamics load accounting across the multibody and inverse-problem chapters (#4900). |
 | 2026-10-05 | #4906 | Define the spatial-twist convention for screw-axis extraction, handle degenerate axes, and correct constraint-rank and ligament-stiffness reasoning in the joint-kinematics chapter (#4901). |
 | 2026-10-05 | #4910 | Verify covariance-dependent likelihood, beam boundary-condition and biological control claims in the inference, flexible-mechanics and control chapters with checked Gaussian MAP, Euler-Bernoulli tip-mass and control examples (#4905). |
-| 2026-11-04 | #5440 | Add lay guide to ZTCF and ZVCF reconciling time and active/passive lenses with snapshot caveats and mechanics baselines. |

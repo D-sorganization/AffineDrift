@@ -55,6 +55,8 @@ export function initSmoothScroll() {
     });
 }
 
+const MAIN_NAV_LABEL = "Main navigation";
+
 /**
  * Initialize navbar collapse behavior with unified mobile navigation
  *
@@ -83,15 +85,25 @@ export function initNavbarCollapse() {
         }
     }
 
-    // Ensure Quarto navbar has proper ARIA attributes
+    // Name the navbar landmark. <nav> already is the landmark, so the collapse
+    // wrapper must not repeat it with role="navigation" (landmark-unique).
+    const navbar = document.querySelector("nav.navbar");
+    if (navbar && !navbar.hasAttribute("aria-label")) {
+        navbar.setAttribute("aria-label", MAIN_NAV_LABEL);
+    }
     if (navbarCollapse) {
-        navbarCollapse.setAttribute("role", "navigation");
-        if (!navbarCollapse.getAttribute("aria-label")) {
-            navbarCollapse.setAttribute("aria-label", "Site navigation");
+        if (navbarCollapse.getAttribute("role") === "navigation") {
+            navbarCollapse.removeAttribute("role");
+        }
+        if (!navbarCollapse.hasAttribute("role")) {
+            navbarCollapse.removeAttribute("aria-label");
         }
     }
 
     if (navbarToggler) {
+        // Quarto emits role="menu" on the toggler; it is a disclosure button
+        // controlling a link list, so the role is invalid there (aria-allowed-role).
+        navbarToggler.removeAttribute("role");
         // Set initial ARIA state on toggle button
         navbarToggler.setAttribute("aria-controls", "navbarCollapse");
         if (!navbarToggler.getAttribute("aria-label") || navbarToggler.getAttribute("aria-label") === "Toggle navigation menu") {
@@ -642,4 +654,30 @@ export function initSkipToContent() {
             targetElement.focus({ preventScroll: true });
         }
     });
+}
+
+/**
+ * Add a close button to Quarto's docked sidebar (issue #5325).
+ *
+ * On phones the sidebar opens as an off-canvas panel over a scrim. The button
+ * closes it through Quarto's own toggle, so Bootstrap's collapse state, the
+ * toggle's aria-expanded and the headroom header stay in sync, then returns
+ * focus to that toggle. CSS hides the button on desktop.
+ */
+export function initSidebarClose() {
+    const sidebar = document.getElementById("quarto-sidebar");
+    const toggle = document.querySelector(".quarto-btn-toggle");
+    if (!sidebar || !toggle || sidebar.querySelector(".sidebar-close")) return;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "sidebar-close";
+    button.setAttribute("aria-label", "Close navigation");
+    button.setAttribute("aria-controls", "quarto-sidebar");
+    button.innerHTML = '<span aria-hidden="true">&times;</span>';
+    button.addEventListener("click", () => {
+        toggle.click();
+        toggle.focus();
+    });
+    sidebar.prepend(button);
 }

@@ -2,71 +2,73 @@
 
 # AffineDrift Project Status
 
-Steward projection generated on 2026-10-07 from
+Steward projection generated on 2026-11-03 from
 [CHARTER.md](CHARTER.md), the published [catalog](../development/planning/catalog.json),
 recent merged PRs, and CI state on `main`.
 This is the impact/acoustics slice, not a whole-repository progress assessment.
 
-Sources verified: issue #4253 open; main CI **red** (`Deploy Website` failure
-on `0d7a5816`, 2026-10-07T06:34:14Z, tracked by auto-issue #4993; `CI Standard`
-and `Performance Benchmarks` green on the same push); 3 open PRs, all drafts
-(#4949, #4823, #4683) outside this slice; 209 PRs merged since the 2026-09-24
-steward pass; 39 open issues repo-wide.
+Sources verified: issue #4253 closed; main CI **green** (`Deploy Website` runs
+succeeding; issue #4993 auto-closed 2026-10-09T22:02:46Z after deploy fix merged);
+7 open PRs (1 active collate, 5 article drafts including 2 under do-not-merge hold,
+1 research draft); 260 PRs merged since the 2026-10-07 steward pass; ~40 open issues
+repo-wide.
 
 ## Progress
 
 | ID | Feature | Status | Progress | Last Change |
 | --- | --- | --- | --- | --- |
-| IA-THEORY | Source review and qualified numerical synthesis | in-progress | Active — content/scientific-accuracy fixes continue to merge (e.g. #4790, #4788, #4785 chapter corrections); trust/evidence-ladder and claim-registry work shipped (#4970, #4971); corpus audit ongoing | 2026-10-07 |
-| DV-4253 | Physical and perceptual evidence synthesis | parked | Awaiting verified prerequisites; unchanged in [catalog.json](../development/planning/catalog.json) since 2026-09-23 | 2026-09-23 |
+| IA-THEORY | Source review and qualified numerical synthesis | in-progress | Active — content/scientific-accuracy fixes continue to merge; infrastructure work ongoing (deploy fixes, E2E rendering, Quarto cache, change-fragment collation, mobile layout audits); documentation updates (#5363, #5390); 260 commits merged since 2026-10-07 | 2026-11-03 |
+| DV-4253 | Physical and perceptual evidence synthesis | parked | Awaiting verified prerequisites; unchanged in [catalog.json](../development/planning/catalog.json) since 2026-09-23; issue #4253 closed 2026-10-09 but work remains parked | 2026-10-09 |
 
-## Recent Activity (since 2026-09-24)
+## Recent Activity (since 2026-10-07)
 
-209 PRs merged in the window — far above a normal steward cadence — driven mostly
-by a new website epic program (E1–E14, issues #4496–#4610 and their WEB-xx
-sub-issues, opened 2026-10-04) alongside the ongoing textbook/content audit.
-Representative merges:
+260 PRs merged in the 27-day window — continued pace from the website epic program
+and ongoing textbook/content audit. Infrastructure and deploy stabilization work
+completed:
 
-- **#4970** — `feat(trust)`: evidence ladder rungs and measured-record rule (#4517).
-- **#4971** — `fix(critiques)`: rename DEFENSE_STRATEGY to adjudication-summary with redirect (#4525).
-- **#4792 / #4793** — maturity-vocabulary consolidation and article front-matter schema validation (website epic feeder work).
-- **#4979** — `feat(site)`: consolidated claude PRs — sandbox, ZTCF explorer, explainers, Start Here, Big Idea, swing viewer.
-- **#4988** — `fix(e2e)`: settle layout before measuring touch targets.
-- **#4980** — vendored stalled-merge requeue tooling from Repository_Management (#2018).
-- Ongoing chapter/content corrections (#4785, #4788, #4790 and others) continue the
-  IA-THEORY source-review line.
+- **#5390** — `ci`: add report-only PR body lint caller (RM #2427).
+- **#5386** — `feat(ops)`: verifiable build manifest writer (#5319 slice).
+- **#5385** — `test(mobile)`: phone layout audit manifest drives smoke and Lighthouse.
+- **#5382** — `ci`: seed Quarto E2E render cache on main push (#5342).
+- **#5384** — `fix(codeowners)`: stop auto-requesting Dieter on bot PRs (#5383).
+- **#5361** — `ci`: enforce do-not-merge and do-not-automate hold labels.
+- **#5363** — `docs(articles)`: muscle-model advantage reads 0.95% in series prose (latest, 2026-11-03).
+- Ongoing chapter/content corrections and article drafts continue the IA-THEORY
+  source-review line; 5 article PRs currently open (1 held by do-not-merge waiver,
+  4 under review or draft).
 
-No merge in the window touches DV-4253's prerequisites or closes #4253.
+No merge in the window touches DV-4253's prerequisites or closes #4253 (issue closed
+automatically 2026-10-09 after related theory work completed, but feature remains parked).
 
 ## Blockers
 
-- (first appeared 2026-10-07) **Main CI is red.** `Deploy Website` failed on the
-  latest `main` push (`0d7a5816`, 2026-10-07T06:34:14Z); auto-tracked by issue
-  #4993 (`fleet-main-health`), which closes itself once a run on `main` succeeds.
-  The two prior pushes same day were cancelled runs, not failures. `CI Standard`
-  and `Performance Benchmarks` are green on the same commit, so this looks scoped
-  to the deploy step. Not yet a day old — watch; escalate to Decisions Needed if
-  still red on the next steward pass.
+- **(resolved, 2026-10-09)** ✓ Main CI was red with `Deploy Website` failure on
+  2026-10-07. Issue #4993 auto-closed 2026-10-09T22:02:46Z after the deploy fix
+  merged. Current runs on main are green (Conflict Disarm, Performance Benchmarks,
+  Seed Quarto E2E, CI Standard all succeeded as of 2026-11-03T12:19:00Z).
+  **Directive 3 (AD main deploy repair) is complete.**
 - DV-4253 lacks the qualified downstream physical/radiation and controlled blinded
   perception evidence described in the owner plan. Numerical work does not clear
   these gates. Source review and qualified numerical synthesis can continue.
 
 ## Decisions Needed
 
-- (first appeared 2026-09-23) DV-4253: Board decision pending on whether to resource the
-  [Owner Plan](https://github.com/D-sorganization/AffineDrift/blob/main/docs/development/planning/DV-4253.md);
-  funding, access dates, execution capacity and accountable human/equipment owner
-  are unverified. _(14 days as of 2026-10-07 — at the `scope.proposal_age_days`
-  threshold. This is a resourcing/scope decision, a Board-proposal candidate per
-  the playbook, but this run had no `submit_proposal` tool or
-  `shared_scripts.board_proposals` CLI available in the worktree to file one.
-  Flagging for a run with that tool/scope attached.)_
-- (first appeared 2026-09-23) DV-4253: Decide how to obtain and qualify qualified Tools/UpstreamDrift
-  physical impact and radiation results with uncertainty; prerequisite evidence
-  remains unavailable.
-- (first appeared 2026-09-23) DV-4253: Decide how to obtain and qualify controlled blinded perception
-  evidence before any player-specific sweetness claim; prerequisite evidence
-  remains unavailable.
+- **(BOARD PROPOSAL CANDIDATE; 41 days old as of 2026-11-03)** (first appeared 2026-09-23)
+  DV-4253: **Board decision pending on whether to resource the
+  [Owner Plan](https://github.com/D-sorganization/AffineDrift/blob/main/docs/development/planning/DV-4253.md).**
+  Funding, access dates, execution capacity and accountable human/equipment owner
+  are unverified. Resourcing/scope decision; meets Board-proposal criteria (2+ weeks,
+  architectural). Issue #4253 closed 2026-10-09 after theory work completed; epic
+  remains parked pending this Board decision. _(41+ days as of 2026-11-03; past the
+  14-day `scope.proposal_age_days` threshold. Prior steward pass (2026-10-07) had no
+  `submit_proposal` tool available; this run also lacks `shared_scripts.board_proposals`
+  CLI in the worktree. Requires follow-up submission or tool availability.)_
+- (first appeared 2026-09-23) DV-4253: Decide how to obtain and qualify qualified
+  Tools/UpstreamDrift physical impact and radiation results with uncertainty;
+  prerequisite evidence remains unavailable.
+- (first appeared 2026-09-23) DV-4253: Decide how to obtain and qualify controlled
+  blinded perception evidence before any player-specific sweetness claim; prerequisite
+  evidence remains unavailable.
 
 ## Reactivation
 

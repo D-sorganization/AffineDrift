@@ -126,4 +126,69 @@ test.describe("Search Functionality", () => {
     const firstResult = page.locator(".search-result-doc .search-result-link").first();
     await expect(firstResult).toHaveAttribute("href", /zero[-_]torque[-_]counterfactual/);
   });
+
+  test("loads the search libraries and index only after search interaction", async ({ page }) => {
+    const requested = [];
+    page.on("request", (request) => {
+      if (/site_libs\/quarto-search\/(autocomplete\.umd|fuse\.min|quarto-search)\.js|search\.json/.test(request.url())) {
+        requested.push(request.url());
+      }
+    });
+
+    await page.goto("/", { waitUntil: "networkidle" });
+    expect(requested).toEqual([]);
+
+    await page.locator("#quarto-search .aa-DetachedSearchButton").click();
+    await expect(page.locator(".aa-Input")).toBeVisible();
+    await expect.poll(() => requested.filter((url) => url.includes("site_libs/quarto-search/")).length).toBe(3);
+    expect(requested.some((url) => url.endsWith("/search.json"))).toBe(false);
+
+    await page.locator(".aa-Input").fill("double pendulum");
+    await expect.poll(() => requested.some((url) => url.endsWith("/search.json"))).toBe(true);
+  });
+
+  test("ranks the double-pendulum chapter in the first three results", async ({ page }) => {
+    await page.goto("/");
+    await page.locator("#quarto-search .aa-DetachedSearchButton").click();
+    const input = page.locator(".aa-Input");
+    await expect(input).toBeVisible();
+    await input.fill("double pendulum");
+
+    const results = page.locator(".search-result-doc .search-result-link");
+    await expect(results.first()).toBeVisible();
+    await expect.poll(async () => results.evaluateAll((links) =>
+      links.slice(0, 3).some((link) => new URL(link.href).pathname.endsWith(
+        "/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html",
+      )),
+    )).toBe(true);
+    await expect(page.locator(".aa-Panel")).not.toContainText("Skip to main content");
+  });
+
+  test("phone search panel fills the viewport below the input and restores focus", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/");
+    const trigger = page.locator("#quarto-search .aa-DetachedSearchButton");
+    await trigger.click();
+    await expect(page.locator("body")).toHaveClass(/aa-Detached/);
+    const panel = page.locator(".aa-DetachedContainer .aa-Panel");
+    await expect(panel).toBeVisible();
+
+    const [form, panelBox] = await Promise.all([
+      page.locator(".aa-DetachedFormContainer").boundingBox(),
+      panel.boundingBox(),
+    ]);
+    expect(panelBox.y).toBeGreaterThanOrEqual(form.y + form.height - 1);
+    expect(panelBox.y + panelBox.height).toBeGreaterThanOrEqual(811);
+    expect(panelBox.width).toBeGreaterThanOrEqual(374);
+
+    await page.keyboard.press("Escape");
+    await expect(page.locator("body")).not.toHaveClass(/aa-Detached/);
+    await expect(trigger).toBeFocused();
+
+    await trigger.click();
+    await expect(page.locator("body")).toHaveClass(/aa-Detached/);
+    await page.getByRole("button", { name: /cancel/i }).click();
+    await expect(page.locator("body")).not.toHaveClass(/aa-Detached/);
+    await expect(trigger).toBeFocused();
+  });
 });

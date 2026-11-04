@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/schemas/asset-manifest-v1.schema.json",
+  "title": "AffineDrift Asset Manifest Provenance Schema v1",
+  "description": "Schema for publication asset manifests and optional computational provenance fields (Issue #5251).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "purpose",
+    "study_source_commit",
+    "study_report_sha256",
+    "assets"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "purpose": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "study_source_commit": {
+      "$ref": "#/$defs/gitCommitSha"
+    },
+    "study_report_sha256": {
+      "$ref": "#/$defs/sha256Digest"
+    },
+    "producer_repo_sha": {
+      "$ref": "#/$defs/gitCommitSha"
+    },
+    "tools_contract_version": {
+      "$ref": "#/$defs/contractVersion"
+    },
+    "input_sha256": {
+      "$ref": "#/$defs/sha256Digest"
+    },
+    "solver_config_sha256": {
+      "$ref": "#/$defs/sha256Digest"
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/assetEntry"
+      }
+    },
+    "lineage_notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/lineageNote"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gitCommitSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sha256Digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "contractVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "repoPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "assetEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "source_repository",
+        "source_commit",
+        "source_path",
+        "sha256",
+        "bytes"
+      ],
+      "properties": {
+        "file": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "source_repository": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_commit": {
+          "$ref": "#/$defs/gitCommitSha"
+        },
+        "source_path": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "producer_repo_sha": {
+          "$ref": "#/$defs/gitCommitSha"
+        },
+        "tools_contract_version": {
+          "$ref": "#/$defs/contractVersion"
+        },
+        "input_sha256": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "solver_config_sha256": {
+          "$ref": "#/$defs/sha256Digest"
+        }
+      }
+    },
+    "lineageNote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "relationship",
+        "note"
+      ],
+      "properties": {
+        "commit": {
+          "$ref": "#/$defs/gitCommitSha"
+        },
+        "relationship": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "note": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    }
+  }
+}

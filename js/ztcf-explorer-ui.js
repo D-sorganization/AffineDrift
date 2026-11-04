@@ -12,7 +12,9 @@
   const TABLE_EVERY = 10;
   const {q0, qd0, torque, horizon, steps} = ZE.DEFAULTS;
   const model = ZE.makeModel(ZE.DEFAULTS.params);
+  const PARAMS = Object.freeze(['interventionStep']);
   let run = null;
+  let current = null;
 
   function status(message, valid) {
     const element = byId('ztx-status');
@@ -99,7 +101,26 @@
     }).join('');
   }
 
+  /** Frozen snapshot of what the widget currently shows, as displayed numbers. */
+  function snapshot(step) {
+    return Object.freeze({
+      interventionStep: step,
+      interventionTime: Number(format(run.actual[step].t)),
+      speedActual: Number(format(run.actual[steps].speed)),
+      speedBranch: Number(format(run.branch[run.branch.length - 1].speed)),
+      speedDifference: Number(format(run.difference.clubheadSpeed)),
+      dq: Object.freeze(run.difference.q.map(value => Number(format(value)))),
+    });
+  }
+
+  function announce(state) {
+    byId('ztx-readout').textContent = `Intervention at t = ${format(state.interventionTime)} s: `
+      + `run minus zero-torque branch is ${format(state.speedDifference)} m/s at the horizon.`;
+  }
+
+  /** Renders the slider's step; returns the error (keeping the last valid run) or null. */
   function update() {
+    const previous = run;
     try {
       const step = Number(byId('ztx-step').value);
       run = ZE.explore(model, q0, qd0, torque, horizon, steps, step);
@@ -107,11 +128,56 @@
       drawScene(step);
       drawChart(step);
       renderResults();
+      current = snapshot(step);
+      announce(current);
       status('Computed in your browser by the checked mirror of '
         + 'src/affine_control/ztcf_explorer.py.', true);
+      return null;
     } catch (error) {
+      run = previous;
       status(`${error.message}. Showing the last valid result.`, false);
+      return error;
     }
+  }
+
+  /** Precondition: name is a declared parameter and value an integer sample index.
+   * Fails closed: on an engine error the slider is restored and the error rethrown. */
+  function setParam(name, value) {
+    if (!PARAMS.includes(name)) throw new Error(`[ztcf-explorer] unknown parameter "${name}"`);
+    if (!Number.isInteger(value) || value < 0 || value >= steps) {
+      throw new Error(`[ztcf-explorer] ${name} must be an integer in [0, ${steps - 1}]`);
+    }
+    const slider = byId('ztx-step');
+    const before = slider.value;
+    slider.value = String(value);
+    const error = update();
+    if (error) {
+      slider.value = before;
+      throw new Error(`[ztcf-explorer] ${error.message}`);
+    }
+    return current;
+  }
+
+  /** Moves the intervention by delta samples, clamped to the slider range. */
+  function step(delta = 1) {
+    const target = Number(byId('ztx-step').value) + delta;
+    return setParam('interventionStep', Math.min(steps - 1, Math.max(0, target)));
+  }
+
+  /** The polite live region announcing each recomputation, created next to the status. */
+  function ensureReadout() {
+    if (byId('ztx-readout')) return;
+    const readout = document.createElement('p');
+    readout.id = 'ztx-readout';
+    readout.className = 'ztx-readout';
+    readout.setAttribute('aria-live', 'polite');
+    readout.setAttribute('aria-atomic', 'true');
+    byId('ztx-status').after(readout);
+  }
+
+  function register() {
+    const registry = window.AffineDriftWidgets || (window.AffineDriftWidgets = {});
+    registry['ztcf-explorer'] = Object.freeze({getState: () => current, setParam, step});
   }
 
   function boot() {
@@ -119,8 +185,10 @@
     if (!app || app.dataset.bound) return;
     app.dataset.bound = 'true';
     performance.mark('ztx-boot');
+    ensureReadout();
     byId('ztx-step').addEventListener('input', update);
     update();
+    register();
     app.dataset.widgetReady = 'true';
     performance.mark('ztx-ready');
   }

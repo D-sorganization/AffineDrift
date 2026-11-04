@@ -25,6 +25,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parent.parent
 QUARTO_YML = REPO_ROOT / "_quarto.yml"
 STYLES_CSS = REPO_ROOT / "styles.css"
+HEADER_CSS = REPO_ROOT / "css" / "components" / "header-nav.css"
 
 
 def _html_theme() -> dict:
@@ -52,12 +53,13 @@ def test_quartos_native_color_scheme_toggle_is_hidden() -> None:
     assert "display: none" in css.split(".quarto-color-scheme-toggle", 1)[1][:200]
 
 
-def test_custom_theme_toggle_stays_fixed_position() -> None:
-    # #theme-toggle is inserted by js/dark-mode-toggle.js after
-    # DOMContentLoaded. `position: fixed` removes it from normal document
-    # flow, so its (possibly late) insertion cannot shift any other element
-    # -- the CLS contribution acceptance criterion depends on this staying true.
-    css = STYLES_CSS.read_text(encoding="utf-8")
+def test_custom_theme_toggle_is_in_flow_in_the_header_row() -> None:
+    # #theme-toggle is inserted by js/dark-mode-toggle.js beside the navbar
+    # menu button (#5167), so the phone header stays a single row. It must
+    # not be a position:fixed floating button, which overlapped content and
+    # sat outside the header.
+    css = HEADER_CSS.read_text(encoding="utf-8")
     rule_start = css.index("#theme-toggle {")
     rule_body = css[rule_start : css.index("}", rule_start)]
-    assert "position: fixed" in rule_body
+    assert "position: fixed" not in rule_body
+    assert "min-width: 44px" in rule_body

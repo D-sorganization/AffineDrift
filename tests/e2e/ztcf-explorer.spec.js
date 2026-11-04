@@ -1,4 +1,5 @@
 const { test, expect } = require("@playwright/test");
+const AxeBuilder = require("@axe-core/playwright").default;
 
 // WEB-06.4 (#4534): ZTCF counterfactual explorer on the ZTCF page. ADR 0002
 // class A widget checks: self-hosted (no cross-origin requests while it runs),
@@ -60,5 +61,44 @@ test.describe("ZTCF counterfactual explorer", () => {
     await expect(
       page.locator('#ztx-app a[href$="critiques/ztcf_identifiability.html"]'),
     ).toBeVisible();
+  });
+
+  // #5254: the window.AffineDriftWidgets controller, keyboard scrubbing, the
+  // live readout and an axe pass scoped to the widget.
+  test("is drivable through its controller and the keyboard, and is axe clean", async ({
+    page,
+  }) => {
+    await page.goto(route, { waitUntil: "load" });
+    await expect(page.locator("#ztx-app")).toHaveAttribute("data-widget-ready", "true");
+
+    const state = await page.evaluate(() =>
+      window.AffineDriftWidgets["ztcf-explorer"].setParam("interventionStep", 120),
+    );
+    expect(state.interventionStep).toBe(120);
+    await expect(page.locator("#ztx-step")).toHaveValue("120");
+    const stepped = await page.evaluate(() =>
+      window.AffineDriftWidgets["ztcf-explorer"].step(1),
+    );
+    expect(stepped.interventionStep).toBe(121);
+
+    const readout = page.locator("#ztx-readout");
+    await expect(readout).toHaveAttribute("aria-live", "polite");
+    const announced = await readout.textContent();
+    await page.locator("#ztx-step").focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(page.locator("#ztx-step")).toHaveValue("122");
+    await expect(readout).not.toHaveText(announced);
+    const afterKey = await page.evaluate(
+      () => window.AffineDriftWidgets["ztcf-explorer"].getState().interventionStep,
+    );
+    expect(afterKey).toBe(122);
+
+    await page.locator("#ztx-app details summary").click();
+    await expect(page.locator("#ztx-data tr").first()).toBeVisible();
+    const result = await new AxeBuilder({ page }).include("#ztx-app").analyze();
+    const blocking = result.violations.filter((violation) =>
+      ["serious", "critical"].includes(violation.impact),
+    );
+    expect(blocking).toEqual([]);
   });
 });

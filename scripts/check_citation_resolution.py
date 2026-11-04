@@ -40,6 +40,8 @@ CROSS_REFERENCE_PREFIXES = (
     "ch:",
     "q-",
     "q:",
+    "wrn-",
+    "wrn:",
 )
 CHAPTER_LABEL_PATTERN = re.compile(r"^ch\d", re.IGNORECASE)
 FENCED_CODE_PATTERN = re.compile(r"```.*?```", re.DOTALL)

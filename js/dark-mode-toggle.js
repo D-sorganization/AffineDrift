@@ -76,11 +76,14 @@
       return svg;
     }
 
+    // A toggle button keeps one stable name; aria-pressed carries the state.
+    btn.setAttribute('aria-label', 'Dark mode');
+    btn.title = 'Toggle dark mode';
+
     function updateBtn(theme) {
       btn.textContent = "";
       btn.appendChild(theme === 'dark' ? createSunSvg() : createMoonSvg());
-      btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-      btn.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+      btn.setAttribute('aria-pressed', String(theme === 'dark'));
     }
 
     btn._updateBtn = updateBtn; // let the OS-preference listener refresh the icon
@@ -93,9 +96,15 @@
       updateBtn(next);
     });
 
-    // Insert into navbar
-    const navbar = document.querySelector('.navbar') || document.querySelector('nav') || document.body;
-    navbar.appendChild(btn);
+    // Keep the control in the header row, beside the menu toggler, so a phone
+    // header stays a single row (#5167). Fall back to the navbar, then the body.
+    const toggler = document.querySelector('.navbar-toggler');
+    if (toggler && toggler.parentNode) {
+      toggler.parentNode.insertBefore(btn, toggler);
+    } else {
+      const navbar = document.querySelector('.navbar') || document.querySelector('nav') || document.body;
+      navbar.appendChild(btn);
+    }
   });
 
   // Listen for system preference change. Because load no longer persists, this

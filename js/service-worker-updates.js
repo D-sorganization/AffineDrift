@@ -71,8 +71,13 @@
       return false;
     }
 
+    // Only a page that was already controlled when it loaded can see an
+    // update. A first visit has no controller yet; clients.claim() gives it one
+    // mid-session and the following broadcast is a first install, not news.
+    const wasControlled = Boolean(controller.controller);
+
     controller.addEventListener('message', (event) => {
-      if (event?.data?.type === UPDATE_MESSAGE_TYPE) {
+      if (wasControlled && event?.data?.type === UPDATE_MESSAGE_TYPE) {
         showBanner();
       }
     });

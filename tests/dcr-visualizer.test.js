@@ -101,3 +101,47 @@ describe('swing-phase state trajectories', () => {
     expect(DV.instantaneousScalarDcr(system)).toBeCloseTo(Math.E, 12);
   });
 });
+
+describe('URL-hash widget state contract (#5255)', () => {
+  test('round-trips valid widget state through #state= encoding', () => {
+    const input = {x0: -2.5, ubar: 3.25, horizon: 4.0, phase: 0.75};
+    const hash = DV.encodeWidgetStateHash(input);
+    expect(hash.startsWith('#state=')).toBe(true);
+    const decoded = DV.decodeWidgetStateHash(hash);
+    expect(decoded).toEqual({
+      valid: true,
+      state: input,
+      reason: null,
+    });
+  });
+
+  test.each([
+    ['', 'empty hash'],
+    ['#other=1', 'missing state= prefix'],
+    ['#state=', 'empty state payload'],
+    ['#state=%E0%A4%A', 'malformed URI or JSON payload'],
+    ['#state={bad', 'malformed URI or JSON payload'],
+    [`#state=${'a'.repeat(600)}`, 'hash exceeds maximum length'],
+    [
+      `#state=${encodeURIComponent(JSON.stringify({v: 2, w: 'dcr-visualizer', p: {x0: 1, ubar: 1, horizon: 1, phase: 0.5}}))}`,
+      'unsupported schema version or widget id',
+    ],
+    [
+      `#state=${encodeURIComponent(JSON.stringify({v: 1, w: 'other-widget', p: {x0: 1, ubar: 1, horizon: 1, phase: 0.5}}))}`,
+      'unsupported schema version or widget id',
+    ],
+    [
+      `#state=${encodeURIComponent(JSON.stringify({v: 1, w: 'dcr-visualizer', p: {x0: 0, ubar: 1, horizon: 1, phase: 0.5}}))}`,
+      'x0 must be nonzero within [-100, 100]',
+    ],
+    [
+      `#state=${encodeURIComponent(JSON.stringify({v: 1, w: 'dcr-visualizer', p: {x0: 1, ubar: -1, horizon: 1, phase: 0.5}}))}`,
+      'ubar must be within (0, 100]',
+    ],
+  ])('rejects malformed or out-of-bounds hash %s without throwing and falls back to defaults', (badHash, expectedReason) => {
+    const decoded = DV.decodeWidgetStateHash(badHash);
+    expect(decoded.valid).toBe(false);
+    expect(decoded.state).toEqual(DV.DCR_STATE_DEFAULTS);
+    expect(decoded.reason).toBe(expectedReason);
+  });
+});

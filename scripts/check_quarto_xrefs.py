@@ -35,7 +35,10 @@ BOOKS = (
     Path("articles/The_Geometry_of_Motion/quarto"),
 )
 
-PREFIXES = ("sec", "eq", "fig", "tbl", "thm", "lst")
+# Standalone Quarto manuscripts outside the book projects (one file each).
+STANDALONE = (Path("articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.qmd"),)
+
+PREFIXES = ("sec", "eq", "fig", "tbl", "thm", "lst", "wrn")
 _ALT = "|".join(PREFIXES)
 
 DEFINITION = re.compile(r"\{#((?:" + _ALT + r")-[A-Za-z0-9_:.-]+)\}")
@@ -44,6 +47,7 @@ HEADING = re.compile(r"^\s*#{1,6}\s")
 FENCE = re.compile(r"^\s*(```+|~~~+)")
 DIV_OPEN = re.compile(r"^:::+\s*\{")
 DIV_CLOSE = re.compile(r"^:::+\s*$")
+DIV_ID = re.compile(r"\{#([^}\s]+)")
 CALLOUT = re.compile(r"\.callout-")
 INLINE_CODE = re.compile(r"`[^`]*`")
 
@@ -72,16 +76,19 @@ def scan(
         if in_fence:
             continue
 
+        bare = INLINE_CODE.sub("", line)
+
         if DIV_OPEN.match(line):
             depth += 1
             if CALLOUT.search(line):
                 callout_depth = depth
+            div_id = DIV_ID.search(bare)
+            if div_id is not None:
+                defined.setdefault(div_id.group(1), (path, number))
         elif DIV_CLOSE.match(line):
             if callout_depth == depth:
                 callout_depth = 0
             depth = max(0, depth - 1)
-
-        bare = INLINE_CODE.sub("", line)
 
         for match in DEFINITION.finditer(bare):
             key = match.group(1)
@@ -98,9 +105,7 @@ def scan(
 
 def main() -> int:
     books = [book for book in BOOKS if book.is_dir()]
-    if not books:
-        print("  no book directory found; nothing to check")
-        return 0
+    standalone_files = [path for path in STANDALONE if path.is_file()]
 
     files: list[Path] = []
     total_defined = 0
@@ -111,12 +116,21 @@ def main() -> int:
     # Each book is its own Quarto project, so a reference resolves against the
     # book that contains it. Pooling the two would let a missing target in one
     # be masked by a same-named target in the other.
-    for book in books:
-        book_files = sorted(book.glob("*.qmd"))
-        files.extend(book_files)
+    projects: list[tuple[str, list[Path]]] = [
+        ("book", sorted(book.glob("*.qmd"))) for book in books
+    ]
+    if standalone_files:
+        projects.append(("standalone", standalone_files))
+
+    if not projects:
+        print("  no Quarto projects found; nothing to check")
+        return 0
+
+    for _kind, project_files in projects:
+        files.extend(project_files)
         defined: dict[str, tuple[Path, int]] = {}
         references: list[tuple[Path, str, int]] = []
-        for path in book_files:
+        for path in project_files:
             found, used, orphaned = scan(path)
             for key, where in found.items():
                 defined.setdefault(key, where)
@@ -151,9 +165,12 @@ def main() -> int:
         )
         return 1
 
+    scope = f"{len(books)} book(s)"
+    if standalone_files:
+        scope += f" and {len(standalone_files)} standalone manuscript(s)"
     print(
         f"  {total_defined} cross-reference target(s), {total_references} reference(s), "
-        f"all resolved across {len(books)} book(s)"
+        f"all resolved across {scope}"
     )
     return 0
 

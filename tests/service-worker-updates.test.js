@@ -12,6 +12,7 @@ describe('service-worker-updates', () => {
       configurable: true,
       value: {
         addEventListener: jest.fn(),
+        controller: { state: 'activated' },
       },
     });
   });
@@ -52,6 +53,26 @@ describe('service-worker-updates', () => {
     expect(document.getElementById('service-worker-update-banner')).not.toBeNull();
 
     removeBanner();
+    expect(document.getElementById('service-worker-update-banner')).toBeNull();
+  });
+
+  test('shows no banner on first install (no controller at page load) (#5167)', () => {
+    window.navigator.serviceWorker.controller = null;
+    init();
+    const handler = window.navigator.serviceWorker.addEventListener.mock.calls[0][1];
+
+    // clients.claim() makes a controller appear after the page loaded; the
+    // broadcast that follows is still a first install, not an update.
+    window.navigator.serviceWorker.controller = { state: 'activated' };
+    handler({ data: { type: UPDATE_MESSAGE_TYPE } });
+
+    expect(document.getElementById('service-worker-update-banner')).toBeNull();
+  });
+
+  test('ignores messages of other types', () => {
+    init();
+    const handler = window.navigator.serviceWorker.addEventListener.mock.calls[0][1];
+    handler({ data: { type: 'something-else' } });
     expect(document.getElementById('service-worker-update-banner')).toBeNull();
   });
 });

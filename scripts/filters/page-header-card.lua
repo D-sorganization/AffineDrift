@@ -111,7 +111,7 @@ function Pandoc(doc)
     return doc
   end
   if cite then table.insert(items, ui.item("citation", "Citation", cite)) end
-  local html = '<header class="page-header-card" role="region" aria-label="Page metadata">' ..
+  local html = '<header class="page-header-card" aria-label="Page metadata">' ..
     '<dl class="page-header-metadata">' .. table.concat(items, "\n") .. '</dl></header>'
   table.insert(doc.blocks, 1, pandoc.RawBlock("html", html))
   return doc

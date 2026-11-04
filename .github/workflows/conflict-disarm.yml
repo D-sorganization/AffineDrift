@@ -28,8 +28,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # One implementation: the public fleet-workflows reusable workflow, pinned to
+  # a reviewed commit (fleet-workflows#1). It checks out its own source at that
+  # SHA and scopes the optional App token to this repository with contents,
+  # pull-requests and issues write. Bump the pin with a reviewed PR.
   disarm:
-    uses: D-sorganization/Repository_Management/.github/workflows/reusable-conflict-disarm.yml@main
+    name: Conflict disarm sweep
+    uses: D-sorganization/fleet-workflows/.github/workflows/reusable-conflict-disarm.yml@367b182c24ae3b01488fc1266130969e775023de
     with:
       dry_run: ${{ inputs.dry_run || 'true' }}
       exclude_prs: ${{ inputs.exclude_prs || '' }}
+      runner: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    secrets:
+      JULES_APP_ID: ${{ secrets.JULES_APP_ID }}
+      JULES_APP_PRIVATE_KEY: ${{ secrets.JULES_APP_PRIVATE_KEY }}

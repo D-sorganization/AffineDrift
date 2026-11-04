@@ -50,4 +50,6 @@ quarto render Hybrid_Tangent_Spaces.qmd --to pdf
 
 ---
 
-_Generated: January 19, 2026_
+**Part1_Unified_Thesis.pdf is stale** relative to `Tangent_Hyperplanes_Unified_Thesis.qmd` (naming and cross-reference fixes through 2026-10-25). Regenerate with the command above before citing the PDF offline.
+
+_Generated: January 19, 2026 (PDF not re-rendered in CI; see note above)._

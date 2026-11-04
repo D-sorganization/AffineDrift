@@ -4,8 +4,8 @@
 
 .page-header-card {
   display: block;
-  margin: 1.5rem 0 2rem;
-  padding: 1.25rem 1.5rem;
+  margin: 1rem 0 1.25rem;
+  padding: 0.85rem 1.1rem;
   background: var(--bg-secondary);
   border: 1px solid var(--color-neutral-200);
   border-left: 4px solid var(--color-primary-light);
@@ -15,8 +15,8 @@
 
 .page-header-metadata {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.25rem 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem 1.25rem;
   margin: 0;
   padding: 0;
 }
@@ -123,4 +123,26 @@
 .page-header-cite-link:hover,
 .page-header-cite-link:focus-visible {
   color: var(--color-primary-dark);
+}
+
+@media (pointer: coarse) {
+  .badge--maturity {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.65rem;
+  }
+
+  /* Title-block chrome under 44px on a 390px touch scan (#5314): category
+     chip links (~15px tall) and Quarto's Code tools button (38px). */
+  #title-block-header .quarto-category a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 0.25rem;
+  }
+
+  #title-block-header #quarto-code-tools-source {
+    min-height: 44px;
+  }
 }
