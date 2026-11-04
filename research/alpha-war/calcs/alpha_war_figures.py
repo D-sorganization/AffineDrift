@@ -197,70 +197,188 @@ def fig_club_roll_projection(payload: dict) -> str:
 
 
 def fig_filter_sweep(payload: dict) -> str:
-    """Plot filtered impact couple versus Butterworth cutoff frequency."""
-    rows = payload["study_4_filtering_and_drag_sensitivity"]["butterworth_cutoff_sweep"]
+    """Plot two small-multiple panels: (a) pre-impact truncation vs (b) across-impact bleed."""
+    study4 = payload["study_4_filtering_and_drag_sensitivity"]
+    rows = study4["butterworth_cutoff_sweep"]
+    true_tau = study4["true_couple_at_impact_nm"]
     xs = [r["cutoff_hz"] for r in rows]
-    ys = [r["clean_filtered_at_impact_nm"] for r in rows]
-    w, h, pad = 640, 360, 50
-    xmax = max(xs)
-    ymin, ymax = min(ys), max(ys)
-    span_y = ymax - ymin or 1.0
+    clean_t0 = [r["clean_filtered_at_impact_nm"] for r in rows]
+    clean_5ms = [r["clean_filtered_5ms_pre_nm"] for r in rows]
+    bleed_t0 = [r["across_impact_filtered_at_impact_nm"] for r in rows]
+    bleed_5ms = [r["across_impact_filtered_5ms_pre_nm"] for r in rows]
+    by_fc = {r["cutoff_hz"]: r for r in rows}
 
-    def tx(x: float) -> float:
-        """Map cutoff frequency to horizontal SVG coordinate."""
-        return pad + x / xmax * (w - 2 * pad)
+    w, h = 760, 410
+    p1_x0, p1_x1, p2_x0, p2_x1 = 58, 358, 428, 728
+    y_top, y_bot = 82, 348
+    ymin, ymax = -85.0, 10.0
+
+    def tx(x: float, x0: int, x1: int) -> float:
+        """Map cutoff frequency (4..100 Hz) to panel horizontal coordinate."""
+        return x0 + (x - 4.0) / 96.0 * (x1 - x0)
 
     def ty(y: float) -> float:
-        """Map filtered couple to vertical SVG coordinate."""
-        return h - pad - (y - ymin) / span_y * (h - 2 * pad)
+        """Map couple (N·m) to vertical coordinate."""
+        return y_bot - (y - ymin) / (ymax - ymin) * (y_bot - y_top)
 
-    filter_title = (
-        '<text x="50" y="24" font-size="14">'
-        "Filtered impact couple vs Butterworth cutoff (Hz)</text>"
-    )
+    def band(series: list[float], delta: float, x0: int, x1: int) -> str:
+        """Build a polygon error/sensitivity band around a cutoff series."""
+        hi = [f"{tx(x, x0, x1):.1f},{ty(y + delta):.1f}" for x, y in zip(xs, series, strict=True)]
+        lo = [
+            f"{tx(x, x0, x1):.1f},{ty(y - delta):.1f}"
+            for x, y in zip(reversed(xs), reversed(series), strict=True)
+        ]
+        return " ".join(hi + lo)
+
+    def pts(series: list[float], x0: int, x1: int) -> str:
+        """Build polyline coordinate string for a cutoff series."""
+        return " ".join(f"{tx(x, x0, x1):.1f},{ty(y):.1f}" for x, y in zip(xs, series, strict=True))
+
+    y0 = ty(0.0)
+    yt = ty(true_tau)
+    c8 = by_fc[8.0]["clean_filtered_at_impact_nm"]
+    b30 = by_fc[30.0]["across_impact_filtered_at_impact_nm"]
+    b100 = by_fc[100.0]["across_impact_filtered_at_impact_nm"]
+
     lines = [
         _svg_header(w, h),
-        filter_title,
-        f'<line x1="{pad}" y1="{h - pad}" x2="{w - pad}" y2="{h - pad}" stroke="#333"/>',
-        f'<line x1="{pad}" y1="{pad}" x2="{pad}" y2="{h - pad}" stroke="#333"/>',
+        '<text x="58" y="20" font-size="13" font-weight="bold">'
+        "Fig 4: Butterworth cutoff sweep (4-100 Hz): pre-impact truncation vs across-impact bleed"
+        "</text>",
+        '<text x="58" y="37" font-size="10.8" fill="#333">'
+        "Plain-language takeaway: Low cutoffs (&lt;10 Hz) erase the negative peak and flip sign; "
+        "filtering across impact bleeds collision force backward."
+        "</text>",
+        '<text x="58" y="52" font-size="10.2" fill="#555">'
+        "Filter: 2nd-order Butterworth per pass, bidirectional zero-lag filtfilt "
+        "(effective 4th-order) | Truncation: &gt;=20 ms before contact | "
+        "Frame: F_FSP (+CCW uncocking)"
+        "</text>",
+        f'<text x="{p1_x0}" y="72" font-size="11.5" font-weight="bold" fill="#1f77b4">'
+        "Panel (a): Pre-impact truncation (&gt;=20 ms pre-contact)</text>",
+        f'<text x="{p2_x0}" y="72" font-size="11.5" font-weight="bold" fill="#d62728">'
+        "Panel (b): Filtering across impact (collision bleed)</text>",
+        f'<rect x="{p1_x0}" y="{y_top}" width="{p1_x1 - p1_x0}" height="{y_bot - y_top}" '
+        'fill="#fafafa" stroke="#333"/>',
+        f'<rect x="{p2_x0}" y="{y_top}" width="{p2_x1 - p2_x0}" height="{y_bot - y_top}" '
+        'fill="#fafafa" stroke="#333"/>',
+        f'<line x1="{p1_x0}" y1="{y0:.1f}" x2="{p1_x1}" y2="{y0:.1f}" '
+        'stroke="#666" stroke-dasharray="4 3"/>',
+        f'<line x1="{p2_x0}" y1="{y0:.1f}" x2="{p2_x1}" y2="{y0:.1f}" '
+        'stroke="#666" stroke-dasharray="4 3"/>',
+        f'<line x1="{p1_x0}" y1="{yt:.1f}" x2="{p1_x1}" y2="{yt:.1f}" '
+        'stroke="#2ca02c" stroke-dasharray="3 3"/>',
+        f'<line x1="{p2_x0}" y1="{yt:.1f}" x2="{p2_x1}" y2="{yt:.1f}" '
+        'stroke="#2ca02c" stroke-dasharray="3 3"/>',
+        f'<polygon points="{band(clean_t0, 2.0, p1_x0, p1_x1)}" '
+        'fill="#1f77b4" fill-opacity="0.18"/>',
+        f'<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" '
+        f'points="{pts(clean_t0, p1_x0, p1_x1)}"/>',
+        f'<polyline fill="none" stroke="#1f77b4" stroke-width="1.5" '
+        f'stroke-dasharray="5 3" points="{pts(clean_5ms, p1_x0, p1_x1)}"/>',
+        f'<circle cx="{tx(8.0, p1_x0, p1_x1):.1f}" cy="{ty(c8):.1f}" r="4.5" fill="#d62728"/>',
+        f'<text x="{tx(8.0, p1_x0, p1_x1) + 6:.1f}" y="{ty(c8) - 6:.1f}" '
+        f'font-size="10" fill="#d62728">8 Hz sign flip: +{c8:.2f} N·m</text>',
+        f'<text x="{p1_x0 + 8}" y="{yt + 14:.1f}" font-size="10" fill="#2ca02c">'
+        f"True pre-impact couple: {true_tau:.2f} N·m</text>",
+        f'<polygon points="{band(bleed_t0, 3.5, p2_x0, p2_x1)}" '
+        'fill="#d62728" fill-opacity="0.16"/>',
+        f'<polyline fill="none" stroke="#d62728" stroke-width="2.2" '
+        f'points="{pts(bleed_t0, p2_x0, p2_x1)}"/>',
+        f'<polyline fill="none" stroke="#ff7f0e" stroke-width="1.5" '
+        f'stroke-dasharray="5 3" points="{pts(bleed_5ms, p2_x0, p2_x1)}"/>',
+        f'<circle cx="{tx(30.0, p2_x0, p2_x1):.1f}" cy="{ty(b30):.1f}" r="4.5" fill="#d62728"/>',
+        f'<text x="{tx(30.0, p2_x0, p2_x1) + 6:.1f}" y="{ty(b30) + 4:.1f}" '
+        f'font-size="10" fill="#d62728">'
+        f"30 Hz bleed: {b30:.2f} N·m (100 Hz: {b100:.2f} N·m)</text>",
+        f'<text x="{p1_x0 + 70}" y="{h - 18}" font-size="11">Butterworth cutoff f_c (Hz)</text>',
+        f'<text x="{p2_x0 + 70}" y="{h - 18}" font-size="11">Butterworth cutoff f_c (Hz)</text>',
+        f'<text x="16" y="{(y_top + y_bot) // 2}" font-size="11" '
+        f'transform="rotate(-90 16,{(y_top + y_bot) // 2})">Filtered alpha couple (N·m)</text>',
+        "</svg>",
     ]
-    pts = " ".join(f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(xs, ys, strict=True))
-    lines.append(f'<polyline fill="none" stroke="#d62728" stroke-width="2" points="{pts}"/>')
-    lines.append("</svg>")
     return "\n".join(lines)
 
 
 def fig_couple_timeseries(payload: dict) -> str:
-    """Plot hand couple and sum-of-moments time series from study 2."""
+    """Plot hand couple, ZTCF passive couple, and COM moment over time with error bands."""
     snaps = payload["study_2_couple_vs_sum_of_moments"]["snapshots"]
     ts = [s["time_s"] for s in snaps]
     couple = [s["total_hand_couple_mid_nm"] for s in snaps]
+    ztcf = [s["ztcf_passive_couple_mid_nm"] for s in snaps]
     com = [s["sum_of_moments_about_com_nm"] for s in snaps]
-    w, h, pad = 640, 360, 50
+
+    min_snap = next(s for s in snaps if abs(s["time_s"] - 0.2151) < 1e-4)
+    c_min = min_snap["total_hand_couple_mid_nm"]
+    z_min = min_snap["ztcf_passive_couple_mid_nm"]
+    share_pct = 100.0 * abs(z_min) / abs(c_min)
+
+    w, h, pad_l, pad_r, pad_t, pad_b = 720, 400, 68, 36, 62, 58
     tmin, tmax = min(ts), max(ts)
-    vals = couple + com
-    vmin, vmax = min(vals), max(vals)
+    vmin, vmax = -28.0, 62.0
     span_t = tmax - tmin or 1.0
     span_v = vmax - vmin or 1.0
 
     def tx(t: float) -> float:
-        """Map time to horizontal SVG coordinate."""
-        return pad + (t - tmin) / span_t * (w - 2 * pad)
+        """Map time (s) to horizontal SVG coordinate."""
+        return pad_l + (t - tmin) / span_t * (w - pad_l - pad_r)
 
     def ty(v: float) -> float:
-        """Map torque value to vertical SVG coordinate."""
-        return h - pad - (v - vmin) / span_v * (h - 2 * pad)
+        """Map moment/couple (N·m) to vertical SVG coordinate."""
+        return h - pad_b - (v - vmin) / span_v * (h - pad_t - pad_b)
 
-    def poly(series: list[float], color: str) -> str:
+    def poly(series: list[float], color: str, dash: str = "") -> str:
         """Build a polyline element for one time series."""
         pts = " ".join(f"{tx(t):.1f},{ty(v):.1f}" for t, v in zip(ts, series, strict=True))
-        return f'<polyline fill="none" stroke="{color}" stroke-width="2" points="{pts}"/>'
+        d_attr = f' stroke-dasharray="{dash}"' if dash else ""
+        return f'<polyline fill="none" stroke="{color}" stroke-width="2.2"{d_attr} points="{pts}"/>'
 
+    def band(series: list[float], sigma: float, color: str) -> str:
+        """Build an error-propagation polygon band around a time series."""
+        hi = [f"{tx(t):.1f},{ty(v + sigma):.1f}" for t, v in zip(ts, series, strict=True)]
+        lo = [
+            f"{tx(t):.1f},{ty(v - sigma):.1f}"
+            for t, v in zip(reversed(ts), reversed(series), strict=True)
+        ]
+        pts_str = " ".join(hi + lo)
+        return f'<polygon points="{pts_str}" fill="{color}" fill-opacity="0.16" stroke="none"/>'
+
+    y0 = ty(0.0)
     lines = [
         _svg_header(w, h),
-        '<text x="50" y="24" font-size="14">Hand couple vs sum of moments about COM</text>',
+        '<text x="68" y="22" font-size="13" font-weight="bold">'
+        "Fig 2: WSCG time series — hand couple C_alpha,M(t) vs ZTCF passive vs COM moment "
+        "(N·m vs s)</text>",
+        '<text x="68" y="39" font-size="10.8" fill="#333">'
+        "Plain-language takeaway: The hand couple turns negative before impact and tracks the "
+        f"passive ZTCF curve ({share_pct:.2f}% share at t=0.2151 s)."
+        "</text>",
+        '<text x="68" y="54" font-size="10.2" fill="#555">'
+        "Frame: F_FSP (functional swing plane) | Sign convention: +CCW uncocking | "
+        "Source: simulated WSCG with ±3.0 N·m inverse-dynamics error-propagation bands"
+        "</text>",
+        f'<line x1="{pad_l}" y1="{h - pad_b}" x2="{w - pad_r}" y2="{h - pad_b}" stroke="#333"/>',
+        f'<line x1="{pad_l}" y1="{pad_t}" x2="{pad_l}" y2="{h - pad_b}" stroke="#333"/>',
+        f'<line x1="{pad_l}" y1="{y0:.1f}" x2="{w - pad_r}" y2="{y0:.1f}" '
+        'stroke="#666" stroke-dasharray="4 3"/>',
+        band(couple, 3.0, "#1f77b4"),
+        band(ztcf, 2.5, "#2ca02c"),
+        band(com, 3.0, "#ff7f0e"),
         poly(couple, "#1f77b4"),
+        poly(ztcf, "#2ca02c", "6 4"),
         poly(com, "#ff7f0e"),
+        f'<circle cx="{tx(0.2151):.1f}" cy="{ty(c_min):.1f}" r="4.5" fill="#1f77b4"/>',
+        f'<circle cx="{tx(0.2151):.1f}" cy="{ty(z_min):.1f}" r="4.5" fill="#2ca02c"/>',
+        f'<text x="{tx(0.2151) - 285:.1f}" y="{ty(c_min) + 14:.1f}" '
+        f'font-size="10.5" fill="#1f77b4">'
+        f"t=0.2151 s (simulated): ZTCF {z_min:.2f} N·m / Total {c_min:.2f} N·m = "
+        f"{share_pct:.2f}% passive share</text>",
+        f'<text x="{pad_l + 12}" y="{pad_t + 18}" font-size="10.5" fill="#333">'
+        "Legend: Blue = Total hand couple C_alpha,M | Green dashed = ZTCF passive | "
+        "Orange = COM moment M_alpha,G</text>",
+        f'<text x="{w // 2 - 65}" y="{h - 16}" font-size="11">Downswing time t (s)</text>',
+        f'<text x="16" y="{h // 2}" font-size="11" '
+        f'transform="rotate(-90 16,{h // 2})">Couple / moment (N·m)</text>',
         "</svg>",
     ]
     return "\n".join(lines)

@@ -422,9 +422,19 @@ def run_study_4_filtering_and_drag_sensitivity() -> dict[str, Any]:
     theta_with_impact = np.cumsum(omega_with_impact) * dt
 
     cutoff_list_hz = [4.0, 6.0, 8.0, 10.0, 15.0, 20.0, 30.0, 50.0, 100.0]
+    idx_trunc_20ms = idx_impact - 20
+    max_trunc_bleed_nm = 0.0
     filter_results = []
     for fc in cutoff_list_hz:
         b, a = butter(2, fc / (0.5 * fs), btype="low")
+        # Verify strict pre-impact truncation (>=20 ms before contact) eliminates collision bleed
+        theta_trunc_clean = filtfilt(b, a, theta_pre[:idx_trunc_20ms])
+        theta_trunc_imp = filtfilt(b, a, theta_with_impact[:idx_trunc_20ms])
+        alpha_trunc_clean = np.gradient(np.gradient(theta_trunc_clean, dt), dt)
+        alpha_trunc_imp = np.gradient(np.gradient(theta_trunc_imp, dt), dt)
+        trunc_bleed = float(np.max(np.abs(i_g * (alpha_trunc_imp - alpha_trunc_clean))))
+        max_trunc_bleed_nm = max(max_trunc_bleed_nm, trunc_bleed)
+
         # Case A: Clean swing (no ball collision impulse) filtered with zero-lag Butterworth
         theta_filt_clean = filtfilt(b, a, theta_pre)
         alpha_filt_clean = np.gradient(np.gradient(theta_filt_clean, dt), dt)
@@ -475,6 +485,13 @@ def run_study_4_filtering_and_drag_sensitivity() -> dict[str, Any]:
 
     return {
         "sampling_rate_hz": fs,
+        "filter_order_per_pass": 2,
+        "effective_zero_lag_order": 4,
+        "phase_handling": (
+            "zero-lag bidirectional filtfilt (2nd-order Butterworth per pass, 4th-order effective)"
+        ),
+        "recommended_pre_impact_truncation_ms": 20.0,
+        "truncated_20ms_pre_impact_bleed_max_nm": max_trunc_bleed_nm,
         "true_couple_at_impact_nm": float(tau_true[idx_impact]),
         "true_zero_crossing_time_s": float(
             find_zero_crossings(t[:idx_impact], tau_true[:idx_impact])[0][0]

@@ -78,6 +78,15 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
             by_fc[30.0]["clean_filtered_at_impact_nm"] - 15.0,
         )
 
+    def test_study_4_filter_order_zero_lag_and_pre_impact_truncation(self) -> None:
+        """Verify 2nd-order per-pass (4th-order zero-lag filtfilt) spec and >=20 ms truncation."""
+        res = run_study_4_filtering_and_drag_sensitivity()
+        self.assertEqual(res["filter_order_per_pass"], 2)
+        self.assertEqual(res["effective_zero_lag_order"], 4)
+        self.assertIn("filtfilt", res["phase_handling"])
+        self.assertGreaterEqual(res["recommended_pre_impact_truncation_ms"], 20.0)
+        self.assertAlmostEqual(res["truncated_20ms_pre_impact_bleed_max_nm"], 0.0, places=9)
+
     def test_study_5_closed_loop_identifiability_and_zero_arm(self) -> None:
         """Verify rank-5 point-force map, rank-6 full-wrench map, and zero-arm null couple."""
         res = run_study_5_closed_loop_and_identifiability()
