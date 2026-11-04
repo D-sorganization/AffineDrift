@@ -38,7 +38,7 @@ def _site(tmp_path: Path, body: str, frontmatter: str = "") -> Path:
     return tmp_path
 
 
-def _exemptions(tmp_path: Path, entries: list[dict[str, str]]) -> Path:
+def _exemptions(tmp_path: Path, entries: list[dict[str, Any]]) -> Path:
     path = tmp_path / "exemptions.json"
     path.write_text(json.dumps({"exemptions": entries}), encoding="utf-8")
     return path
@@ -155,3 +155,83 @@ def test_current_site_passes_with_explicit_exemptions() -> None:
     report = gate.check_site(ROOT, gate.DEFAULT_PROJECTIONS, gate.DEFAULT_EXEMPTIONS)
     assert report.failures == []
     assert all(item.reason.strip() for item in gate.load_exemptions(gate.DEFAULT_EXEMPTIONS))
+
+
+# Provenance-tagged exemptions (VIS-EVIDENCE-4, #5448).
+COMMIT = "b" * 40
+PROXIMAL_DISTAL = (
+    "articles/figures/proximal_distal_companion/",
+    "articles/figures/proximal_distal_energy_transfer/",
+    "articles/proximal_distal_energy_transfer/figures/",
+)
+
+
+def _ud_release(**overrides: str) -> dict[str, str]:
+    entry = {
+        "pattern": FIGURE,
+        "reason": "projected from the pinned UpstreamDrift release",
+        "provenance": "ud_release",
+        "source_commit": COMMIT,
+        "run_identity": "none: needs UD rerun",
+        "sha256": hashlib.sha256(SVG).hexdigest(),
+    }
+    entry.update(overrides)
+    return entry
+
+
+@pytest.mark.parametrize(
+    ("overrides", "message"),
+    [
+        ({"run_identity": " "}, "run_identity"),
+        ({"source_commit": "main"}, "source_commit"),
+        ({"provenance": "vibes"}, "provenance"),
+        ({"pattern": "articles/figures/*"}, "exact path"),
+        ({"sha256": "abc"}, "sha256"),
+    ],
+)
+def test_malformed_provenance_is_rejected(
+    tmp_path: Path, overrides: dict[str, str], message: str
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        gate.load_exemptions(_exemptions(tmp_path, [_ud_release(**overrides)]))
+
+
+def test_ud_release_exemption_with_matching_hash_passes(tmp_path: Path) -> None:
+    root = _site(tmp_path, "![A swing](figures/swing.svg)")
+    (root / FIGURE).write_bytes(SVG.replace(b"\n", b"\r\n"))
+    assert _check(root, exemptions=_exemptions(tmp_path, [_ud_release()])).failures == []
+
+
+def test_ud_release_exemption_with_changed_bytes_fails(tmp_path: Path) -> None:
+    root = _site(tmp_path, "![A swing](figures/swing.svg)")
+    (root / FIGURE).write_bytes(b"<svg/>")
+    report = _check(root, exemptions=_exemptions(tmp_path, [_ud_release()]))
+    assert report.failures == [f"exemption hash mismatch: {FIGURE}"]
+
+
+def test_ad_generated_exemption_needs_its_generator(tmp_path: Path) -> None:
+    root = _site(tmp_path, "![A swing](figures/swing.svg)")
+    entry = {
+        "pattern": "articles/figures/*",
+        "reason": "drawn by a script in this repository",
+        "provenance": "ad_generated",
+        "generators": ["scripts/make_swing.py"],
+    }
+    report = _check(root, exemptions=_exemptions(tmp_path, [entry]))
+    assert report.failures == ["exemption generator missing: scripts/make_swing.py"]
+    (root / "scripts").mkdir()
+    (root / "scripts/make_swing.py").write_text("", encoding="utf-8")
+    assert _check(root, exemptions=_exemptions(tmp_path, [entry])).failures == []
+
+
+def test_proximal_distal_exemptions_state_their_provenance() -> None:
+    entries = gate.load_exemptions(gate.DEFAULT_EXEMPTIONS)
+    proximal_distal = [e for e in entries if e.pattern.startswith(PROXIMAL_DISTAL)]
+    assert proximal_distal
+    assert all(e.provenance for e in proximal_distal)
+    assert {e.provenance for e in proximal_distal} == {
+        "ud_release",
+        "ad_generated",
+        "origin_unrecorded",
+    }
+    assert all(e.run_identity.startswith("none") for e in proximal_distal if e.sha256)

@@ -5,7 +5,11 @@ A figure is *traced* when a markerless-mocap publication projection under
 ``evidence/projections/`` lists it as a ``visualization`` artifact and the
 manifest passes ``verify_projection_manifest`` against the figure's bytes.
 Figures that predate projection records are listed as explicit, reasoned glob
-exemptions in ``evidence/projections/figure_exemptions.json``.
+exemptions in ``evidence/projections/figure_exemptions.json``. An exemption may
+state its provenance (#5448): ``ud_release`` (projected from a pinned
+UpstreamDrift release; needs the source commit and the run identity, and an
+optional ``sha256`` pins one exact file), ``ad_generated`` (drawn by named
+generator scripts in this repository) or ``origin_unrecorded``.
 
 Pages come from the ``_quarto.yml`` render list. A page with ``draft: true``
 only warns. Exit 0 when no published page embeds an untraced figure, else 1.
@@ -28,7 +32,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.mocap_projection_primitives import DIGEST, REVISION  # noqa: E402
 from scripts.verify_markerless_mocap_projection import verify_projection_manifest  # noqa: E402
+from scripts.verify_proximal_distal_projection import manifest_digest_matches  # noqa: E402
 from src.tools.site_page_scan import (  # noqa: E402
     expand_includes,
     is_rendered,
@@ -50,6 +56,8 @@ DEFAULT_EXEMPTIONS = DEFAULT_PROJECTIONS / "figure_exemptions.json"
 PAGE_SUFFIXES = (".qmd", ".md")
 TRACING_KIND = "visualization"
 FIGURE_PATTERN = re.compile(r"!\[[^\]]*\]\(\s*<?([^)\s>]+)|<img\b[^>]*?\bsrc=[\"']([^\"']+)")
+PROVENANCE_KINDS = frozenset({"ud_release", "ad_generated", "origin_unrecorded"})
+GLOB_CHARACTERS = frozenset("*?[")
 
 
 @dataclass(frozen=True)
@@ -58,6 +66,11 @@ class Exemption:
 
     pattern: str
     reason: str
+    provenance: str = ""
+    source_commit: str = ""
+    run_identity: str = ""
+    sha256: str = ""
+    generators: tuple[str, ...] = ()
 
 
 @dataclass
@@ -121,21 +134,62 @@ def traced_figures(root: Path, projections: Path) -> set[str]:
     return traced
 
 
+def _text(entry: dict[str, Any], key: str) -> str:
+    return str(entry.get(key, "")).strip()
+
+
+def _check_provenance(item: Exemption, label: str) -> None:
+    """Raise ``ValueError`` unless ``item`` states a coherent provenance."""
+    if item.provenance and item.provenance not in PROVENANCE_KINDS:
+        raise ValueError(f"{label}: unknown provenance {item.provenance!r}")
+    if item.provenance == "ud_release":
+        if not REVISION.fullmatch(item.source_commit):
+            raise ValueError(f"{label}: ud_release needs a 40-hex source_commit")
+        if not item.run_identity:
+            raise ValueError(f"{label}: ud_release needs a run_identity statement")
+    if item.sha256:
+        if not DIGEST.fullmatch(item.sha256):
+            raise ValueError(f"{label}: sha256 must be 64 lowercase hex characters")
+        if GLOB_CHARACTERS & set(item.pattern):
+            raise ValueError(f"{label}: a sha256 pin needs an exact path, not a glob")
+
+
 def load_exemptions(path: Path) -> list[Exemption]:
     """Load exemption globs; every entry needs a non-empty pattern and reason.
 
     Raises:
-        ValueError: if an entry is missing its pattern or reason.
+        ValueError: if an entry is missing its pattern or reason, or states an
+            unknown or incomplete provenance.
     """
     data = json.loads(path.read_text(encoding="utf-8"))
     exemptions: list[Exemption] = []
     for index, entry in enumerate(data["exemptions"]):
-        pattern = str(entry.get("pattern", "")).strip()
-        reason = str(entry.get("reason", "")).strip()
-        if not pattern or not reason:
+        texts = ("pattern", "reason", "provenance", "source_commit", "run_identity", "sha256")
+        fields = {name: _text(entry, name) for name in texts}
+        if not fields["pattern"] or not fields["reason"]:
             raise ValueError(f"{path}: exemption {index} needs a pattern and a reason")
-        exemptions.append(Exemption(pattern, reason))
+        generators = tuple(str(name).strip() for name in entry.get("generators", []))
+        item = Exemption(**fields, generators=generators)
+        _check_provenance(item, f"{path}: exemption {index}")
+        exemptions.append(item)
     return exemptions
+
+
+def exemption_failures(root: Path, exemptions: Sequence[Exemption]) -> list[str]:
+    """Return pinned files whose bytes changed and generators that are missing."""
+    failures: list[str] = []
+    for item in exemptions:
+        pinned = root / item.pattern
+        if item.sha256 and not (
+            pinned.is_file() and manifest_digest_matches(pinned.read_bytes(), item.sha256)
+        ):
+            failures.append(f"exemption hash mismatch: {item.pattern}")
+        failures.extend(
+            f"exemption generator missing: {name}"
+            for name in item.generators
+            if not (root / name).is_file()
+        )
+    return failures
 
 
 def _exempt(figure: str, pattern: str) -> bool:
@@ -147,8 +201,9 @@ def _exempt(figure: str, pattern: str) -> bool:
 def check_site(root: Path, projections: Path, exemptions_path: Path) -> FigureReport:
     """Report every untraced, unexempted figure embedded by a rendered page."""
     traced = traced_figures(root, projections)
-    patterns = [item.pattern for item in load_exemptions(exemptions_path)]
-    report = FigureReport()
+    exemptions = load_exemptions(exemptions_path)
+    patterns = [item.pattern for item in exemptions]
+    report = FigureReport(failures=exemption_failures(root, exemptions))
     for page in published_pages(root):
         bucket = report.warnings if is_draft(page) else report.failures
         for figure in embedded_figures(root, page):
