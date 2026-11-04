@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 
 CALCS_DIR = Path(__file__).resolve().parent
@@ -19,42 +20,179 @@ def _svg_header(w: int, h: int) -> str:
 
 
 def fig_transport_stations(payload: dict) -> str:
-    """Plot alpha moment versus shaft station from study 1 transport data."""
-    study = payload["study_1_grip_point_transport"]["wscg_at_minimum_couple"]
-    stations = study["stations"]
+    """Plot M(s) = C_alpha - s*R_y along the shaft with simulated and illustrative s*."""
+    study1 = payload["study_1_grip_point_transport"]
+    sim = study1["wscg_at_minimum_couple"]
+    ill = study1["analytical_driver_transport_cases"][0]
+
+    stations = sim["stations"]
     xs = [s["shaft_offset_from_mid_hands_m"] for s in stations]
-    ys = [s["reported_alpha_moment_nm"] for s in stations]
-    w, h, pad = 640, 360, 50
+    ys_sim = [s["reported_alpha_moment_nm"] for s in stations]
+    c_sim = sim["total_couple_about_mid_hands_nm"]
+    ry_sim = sim["resultant_axial_normal_n"][1]
+    s_star_sim = sim["sign_flip_station_offset_m"]
+
+    c_ill = ill["couple_about_mid_hands_nm"]
+    ry_ill = ill["resultant_force_n"][1]
+    s_star_ill = ill["sign_flip_offset_from_mid_hands_m"]
+    xs_ill = [s["shaft_offset_m"] for s in ill["stations"]]
+    ys_ill = [s["moment_nm"] for s in ill["stations"]]
+
+    ys_low = [c_sim - s * (0.8 * ry_sim) for s in xs]
+    ys_high = [c_sim - s * (1.2 * ry_sim) for s in xs]
+
+    w, h, pad_l, pad_r, pad_t, pad_b = 720, 400, 68, 36, 62, 58
     xmin, xmax = min(xs), max(xs)
-    ymin, ymax = min(ys), max(ys)
+    ymin, ymax = -28.0, 42.0
     span_x = xmax - xmin or 1.0
     span_y = ymax - ymin or 1.0
 
     def tx(x: float) -> float:
-        """Map shaft offset to horizontal SVG coordinate."""
-        return pad + (x - xmin) / span_x * (w - 2 * pad)
+        """Map shaft offset (m) to horizontal SVG coordinate."""
+        return pad_l + (x - xmin) / span_x * (w - pad_l - pad_r)
 
     def ty(y: float) -> float:
-        """Map alpha moment to vertical SVG coordinate."""
-        return h - pad - (y - ymin) / span_y * (h - 2 * pad)
+        """Map alpha moment (N·m) to vertical SVG coordinate."""
+        return h - pad_b - (y - ymin) / span_y * (h - pad_t - pad_b)
 
-    title = (
-        f'<text x="{pad}" y="24" font-size="14">'
-        "Alpha moment vs shaft station (WSCG min couple)</text>"
+    band_pts = " ".join(
+        [f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(xs, ys_high, strict=True)]
+        + [f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(reversed(xs), reversed(ys_low), strict=True)]
     )
+    sim_pts = " ".join(f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(xs, ys_sim, strict=True))
+    ill_pts = " ".join(f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(xs_ill, ys_ill, strict=True))
+    y0 = ty(0.0)
+    circles = "".join(
+        f'<circle cx="{tx(x):.1f}" cy="{ty(y):.1f}" r="3.5" fill="#1f77b4"/>'
+        for x, y in zip(xs, ys_sim, strict=True)
+    )
+
     lines = [
         _svg_header(w, h),
-        title,
-        f'<line x1="{pad}" y1="{h-pad}" x2="{w-pad}" y2="{h-pad}" stroke="#333"/>',
-        f'<line x1="{pad}" y1="{pad}" x2="{pad}" y2="{h-pad}" stroke="#333"/>',
+        '<text x="68" y="22" font-size="13" font-weight="bold">'
+        "Fig 1: Reference-point transport M(s) = C_alpha - s*R_y along the shaft (N·m vs m)"
+        "</text>",
+        '<text x="68" y="39" font-size="11" fill="#333">'
+        "Plain-language takeaway: Moving the reference point toward the clubhead shifts "
+        "reported moment from negative to positive."
+        "</text>",
+        '<text x="68" y="54" font-size="10.5" fill="#555">'
+        "Frame: F_FSP (functional swing plane) | Sign convention: +CCW uncocking (alpha) | "
+        "Units: s in m, M in N·m"
+        "</text>",
+        f'<line x1="{pad_l}" y1="{h - pad_b}" x2="{w - pad_r}" y2="{h - pad_b}" stroke="#333"/>',
+        f'<line x1="{pad_l}" y1="{pad_t}" x2="{pad_l}" y2="{h - pad_b}" stroke="#333"/>',
+        f'<line x1="{pad_l}" y1="{y0:.1f}" x2="{w - pad_r}" y2="{y0:.1f}" '
+        'stroke="#666" stroke-dasharray="4 3"/>',
+        f'<polygon points="{band_pts}" fill="#1f77b4" fill-opacity="0.18" stroke="none"/>',
+        f'<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" points="{sim_pts}"/>',
+        f'<polyline fill="none" stroke="#ff7f0e" stroke-width="2" '
+        f'stroke-dasharray="6 4" points="{ill_pts}"/>',
+        circles,
+        f'<circle cx="{tx(s_star_sim):.1f}" cy="{y0:.1f}" r="5" fill="#d62728"/>',
+        f'<text x="{tx(s_star_sim) - 155:.1f}" y="{y0 + 18:.1f}" font-size="10.5" fill="#1f77b4">'
+        f"Simulated WSCG (t=0.2151 s): s* = +{s_star_sim:.3f} m "
+        f"(C={c_sim:.2f} N·m, R_y={ry_sim:.2f} N)"
+        "</text>",
+        f'<circle cx="{tx(s_star_ill):.1f}" cy="{y0:.1f}" r="5" fill="#ff7f0e"/>',
+        f'<text x="{tx(s_star_ill) + 8:.1f}" y="{y0 - 10:.1f}" font-size="10.5" fill="#b85600">'
+        f"Illustrative Case 1: s* = +{s_star_ill:.3f} m (C={c_ill:.2f} N·m, R_y={ry_ill:.2f} N)"
+        "</text>",
+        f'<text x="{pad_l + 12}" y="{pad_t + 18}" font-size="10.5" fill="#1f77b4">'
+        "Shaded band: ±20% R_y sensitivity envelope on simulated WSCG transport line"
+        "</text>",
+        f'<text x="{w // 2 - 95}" y="{h - 16}" font-size="11">'
+        "Shaft offset s from mid-hands M (m)"
+        "</text>",
+        f'<text x="14" y="{h // 2}" font-size="11" '
+        f'transform="rotate(-90 14,{h // 2})">Reported alpha moment M(s) (N·m)</text>',
+        "</svg>",
     ]
-    for x, y in zip(xs, ys, strict=True):
-        lines.append(f'<circle cx="{tx(x):.1f}" cy="{ty(y):.1f}" r="4" fill="#1f77b4"/>')
-    lines.append(
-        f'<line x1="{tx(xs[0]):.1f}" y1="{ty(ys[0]):.1f}" '
-        f'x2="{tx(xs[-1]):.1f}" y2="{ty(ys[-1]):.1f}" stroke="#1f77b4"/>'
+    return "\n".join(lines)
+
+
+def fig_club_roll_projection(payload: dict) -> str:
+    """Plot club-frame alpha couple M_alpha,club(phi) across roll angle with phi*."""
+    study3 = payload["study_3_frame_conventions"]
+    fsp = study3["input_physical_couple_fsp_nm"]
+    m_in = fsp["M_in_plane_n"]
+    m_out = fsp["M_out_of_plane_p"]
+    m_shaft = fsp["M_shaft_t"]
+    phi_star_deg = math.degrees(math.atan2(-m_in, m_out))
+
+    angles = list(range(0, 181, 5))
+    ys = [m_in * math.cos(math.radians(a)) + m_out * math.sin(math.radians(a)) for a in angles]
+    ys_low = [
+        m_in * math.cos(math.radians(a)) + (0.8 * m_out) * math.sin(math.radians(a)) for a in angles
+    ]
+    ys_high = [
+        m_in * math.cos(math.radians(a)) + (1.2 * m_out) * math.sin(math.radians(a)) for a in angles
+    ]
+
+    w, h, pad_l, pad_r, pad_t, pad_b = 720, 400, 68, 36, 62, 58
+    xmin, xmax = 0.0, 180.0
+    ymin, ymax = -18.0, 20.0
+    span_x = xmax - xmin
+    span_y = ymax - ymin
+
+    def tx(x: float) -> float:
+        """Map roll angle (deg) to horizontal SVG coordinate."""
+        return pad_l + (x - xmin) / span_x * (w - pad_l - pad_r)
+
+    def ty(y: float) -> float:
+        """Map projected couple (N·m) to vertical SVG coordinate."""
+        return h - pad_b - (y - ymin) / span_y * (h - pad_t - pad_b)
+
+    band_pts = " ".join(
+        [f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(angles, ys_high, strict=True)]
+        + [
+            f"{tx(x):.1f},{ty(y):.1f}"
+            for x, y in zip(reversed(angles), reversed(ys_low), strict=True)
+        ]
     )
-    lines.append("</svg>")
+    curve_pts = " ".join(f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(angles, ys, strict=True))
+    sweep_rows = study3["jacobs_club_frame_roll_sweep"]
+    sweep_circles = "".join(
+        f'<circle cx="{tx(r["clubface_roll_rel_fsp_deg"]):.1f}" '
+        f'cy="{ty(r["club_frame_alpha_couple_nm"]):.1f}" r="3.5" fill="#2ca02c"/>'
+        for r in sweep_rows
+    )
+    y0 = ty(0.0)
+
+    lines = [
+        _svg_header(w, h),
+        '<text x="68" y="22" font-size="13" font-weight="bold">'
+        "Fig 3: Club-frame projected alpha couple M_alpha,club(phi) vs clubface roll (N·m vs deg)"
+        "</text>",
+        '<text x="68" y="39" font-size="11" fill="#333">'
+        "Plain-language takeaway: Rotating the frame with face roll flips apparent alpha sign "
+        "above phi* = 61.93 deg (illustrative)."
+        "</text>",
+        '<text x="68" y="54" font-size="10.5" fill="#555">'
+        f"Frame: F_club rotated by phi from F_FSP | Sign convention: +CCW uncocking | "
+        f"Illustrative input: M_FSP=({m_in:.1f}, +{m_out:.1f}, +{m_shaft:.1f}) N·m"
+        "</text>",
+        f'<line x1="{pad_l}" y1="{h - pad_b}" x2="{w - pad_r}" y2="{h - pad_b}" stroke="#333"/>',
+        f'<line x1="{pad_l}" y1="{pad_t}" x2="{pad_l}" y2="{h - pad_b}" stroke="#333"/>',
+        f'<line x1="{pad_l}" y1="{y0:.1f}" x2="{w - pad_r}" y2="{y0:.1f}" '
+        'stroke="#666" stroke-dasharray="4 3"/>',
+        f'<polygon points="{band_pts}" fill="#2ca02c" fill-opacity="0.18" stroke="none"/>',
+        f'<polyline fill="none" stroke="#2ca02c" stroke-width="2.2" points="{curve_pts}"/>',
+        sweep_circles,
+        f'<circle cx="{tx(phi_star_deg):.1f}" cy="{y0:.1f}" r="5.5" fill="#d62728"/>',
+        f'<text x="{tx(phi_star_deg) + 10:.1f}" y="{y0 + 16:.1f}" font-size="10.5" fill="#d62728">'
+        f"phi* = {phi_star_deg:.2f} deg (illustrative zero crossing: arctan(15/8))"
+        "</text>",
+        f'<text x="{pad_l + 12}" y="{pad_t + 18}" font-size="10.5" fill="#2ca02c">'
+        "Shaded band: ±20% out-of-plane M_beta sensitivity envelope on illustrative roll projection"
+        "</text>",
+        f'<text x="{w // 2 - 115}" y="{h - 16}" font-size="11">'
+        "Clubface roll angle phi_roll relative to FSP (deg)"
+        "</text>",
+        f'<text x="14" y="{h // 2}" font-size="11" '
+        f'transform="rotate(-90 14,{h // 2})">Club-frame M_alpha,club(phi) (N·m)</text>',
+        "</svg>",
+    ]
     return "\n".join(lines)
 
 
@@ -83,8 +221,8 @@ def fig_filter_sweep(payload: dict) -> str:
     lines = [
         _svg_header(w, h),
         filter_title,
-        f'<line x1="{pad}" y1="{h-pad}" x2="{w-pad}" y2="{h-pad}" stroke="#333"/>',
-        f'<line x1="{pad}" y1="{pad}" x2="{pad}" y2="{h-pad}" stroke="#333"/>',
+        f'<line x1="{pad}" y1="{h - pad}" x2="{w - pad}" y2="{h - pad}" stroke="#333"/>',
+        f'<line x1="{pad}" y1="{pad}" x2="{pad}" y2="{h - pad}" stroke="#333"/>',
     ]
     pts = " ".join(f"{tx(x):.1f},{ty(y):.1f}" for x, y in zip(xs, ys, strict=True))
     lines.append(f'<polyline fill="none" stroke="#d62728" stroke-width="2" points="{pts}"/>')
@@ -172,11 +310,11 @@ def fig_nesbit_fig11_schematic() -> str:
             color = "#2ca02c"
         else:
             color = "#888"
-        rect = f'<rect x="{x0}" y="50" width="130" height="220" ' f'fill="#f7f7f7" stroke="#ccc"/>'
+        rect = f'<rect x="{x0}" y="50" width="130" height="220" fill="#f7f7f7" stroke="#ccc"/>'
         lines.append(rect)
-        lines.append(f'<text x="{x0+10}" y="75" font-size="12">{label}</text>')
-        lines.append(f'<text x="{x0+10}" y="95" font-size="11">Impact trend: {trend}</text>')
-        poly_pts = f"{x0+20},240 {x0+60},120 {x0+110},200"
+        lines.append(f'<text x="{x0 + 10}" y="75" font-size="12">{label}</text>')
+        lines.append(f'<text x="{x0 + 10}" y="95" font-size="11">Impact trend: {trend}</text>')
+        poly_pts = f"{x0 + 20},240 {x0 + 60},120 {x0 + 110},200"
         lines.append(
             f'<polyline fill="none" stroke="{color}" stroke-width="3" points="{poly_pts}"/>'
         )
@@ -190,6 +328,7 @@ def main() -> None:
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     outputs = {
         "fig-transport-stations.svg": fig_transport_stations(payload),
+        "fig-club-roll-projection.svg": fig_club_roll_projection(payload),
         "fig-filter-cutoff-sweep.svg": fig_filter_sweep(payload),
         "fig-couple-vs-com.svg": fig_couple_timeseries(payload),
         "fig-swing-plane-schematic.svg": fig_swing_plane_schematic(),
