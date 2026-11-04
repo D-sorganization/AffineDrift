@@ -364,12 +364,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5180
 - **Branch:** cursor/tangent-review-pr-a-d406
-- **PR:** #5188, #5189
+- **PR:** #5188, #5189, #5436
 - **Paths:** see #5188
 - **Started:** 2026-10-29
-- **Last verified:** 2026-10-29 (`4355300b`; collated from changes/5180-tighten-part-4-7-residual-gronwall-bound.md)
+- **Last verified:** 2026-11-04 (`d7b0eb8f`; collated from changes/5180-retire-hyperplane-display-titles-in-the.md)
 - **Summary:** Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links
-- **Next step:** Publication gate review (Karl through Dieter).
+- **Next step:** Merge PR #5436 after CI green and publication gate.
 
 ### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
 
