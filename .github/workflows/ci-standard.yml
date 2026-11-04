@@ -212,6 +212,10 @@ jobs:
         # verified projection record in evidence/projections/ traces it or an
         # explicit, reasoned exemption covers it. Draft pages only warn.
         run: python3 scripts/check_figure_projection_records.py
+      - name: Verify UD Figure-Map Records Against the Pinned UD Map
+        # VIS-EVIDENCE-5 (#5454): each record's source, run_id and model_id must
+        # equal the UpstreamDrift figure_run_map.json at the record's pinned commit.
+        run: python3 scripts/ud_figure_map_records.py
       - name: Verify Each Page Renders One Title
         # Two failures that look like nothing in the source. A YAML 'title:'
         # beside a body H1 renders the title twice, separately numbered, which

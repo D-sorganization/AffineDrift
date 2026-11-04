@@ -23,7 +23,7 @@ import logging
 import sys
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -57,11 +57,18 @@ def _text(entry: Mapping[str, Any], key: str, label: str) -> str:
     return value
 
 
+def _require_relative(path: str, label: str) -> None:
+    pure = PurePosixPath(path)
+    if pure.is_absolute() or ".." in pure.parts or "\\" in path:
+        raise ValueError(f"{label}: {path!r} must be a relative path inside the repository")
+
+
 def _verify_figure(path: str, entry: Mapping[str, Any]) -> None:
     label = f"ud_figure_map figure {path}"
+    _require_relative(path, label)
     if not DIGEST.fullmatch(_text(entry, "sha256", label)):
         raise ValueError(f"{label}: sha256 must be 64 lowercase hex characters")
-    _text(entry, "ud_path", label)
+    _require_relative(_text(entry, "ud_path", label), label)
     source = entry.get("source")
     run_id = entry.get("run_id")
     if source == RUN_SOURCE:
@@ -82,6 +89,7 @@ def verify_record_fields(record: Mapping[str, Any]) -> None:
         raise ValueError(f"ud_figure_map: schema must be {SCHEMA}")
     for key in HEADER:
         _text(record, key, "ud_figure_map")
+    _require_relative(record["ud_root"], "ud_figure_map")
     if not REVISION.fullmatch(str(record.get("ud_commit", ""))):
         raise ValueError("ud_figure_map: ud_commit must be a 40-hex commit")
     if not DIGEST.fullmatch(str(record.get("map_sha256", ""))):

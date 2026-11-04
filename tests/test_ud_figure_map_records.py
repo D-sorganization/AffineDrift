@@ -133,7 +133,11 @@ def test_malformed_figure_entry_is_rejected(
 
 @pytest.mark.parametrize(
     ("overrides", "message"),
-    [({"ud_commit": "main"}, "ud_commit"), ({"independent_review": ""}, "independent_review")],
+    [
+        ({"ud_commit": "main"}, "ud_commit"),
+        ({"independent_review": ""}, "independent_review"),
+        ({"ud_root": "../docs"}, "relative"),
+    ],
 )
 def test_malformed_record_header_is_rejected(overrides: dict[str, str], message: str) -> None:
     with pytest.raises(ValueError, match=message):
@@ -179,3 +183,17 @@ def test_build_record_covers_only_figures_the_map_lists(tmp_path: Path) -> None:
         artifacts={f"{UD_ROOT}/figures/{name}": digest for name in names},
     )
     assert records.build_record(release, root, "articles/figures") == _record()
+
+
+@pytest.mark.parametrize(
+    ("key", "field"),
+    [("../outside.svg", "path"), ("/etc/passwd", "path"), (FIGURE, "ud_path")],
+)
+def test_escaping_paths_are_rejected(key: str, field: str) -> None:
+    record = _record()
+    entry = record["figures"].pop(FIGURE)
+    if field == "ud_path":
+        entry["ud_path"] = "../data/secret.svg"
+    record["figures"][key] = entry
+    with pytest.raises(ValueError, match="relative"):
+        records.verify_record_fields(record)
