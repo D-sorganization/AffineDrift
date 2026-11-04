@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-04 | #5442 | Add the provenance caption shortcode: a figure caption naming the UpstreamDrift model, run_id, commit and claim class, linked only to the public UD repo (fail closed on bad values) |
 | 2026-11-04 | #5436 | Retire hyperplane display titles in the compact tangent-space series (Parts 1–7) and hub. |
 | 2026-11-04 | #5428 | Bind every markerless-mocap projection artifact to its UpstreamDrift model_id, run_id, ud_commit and claim class (fail closed) |
 | 2026-11-04 | #5435 | Evidence check asserts drift+control=total and ZVCF=control |

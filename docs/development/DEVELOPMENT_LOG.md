@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5420 · Add the Provenance Caption Shortcode: A Figure Caption Naming the UpstreamDrift Model, Run_Id, Commit and Claim Class, Linked Only to the Public UD Repo (Fail Closed on Bad Values)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5420
+- **Branch:** brick/backlog-completion/5420-provenance-captions
+- **PR:** #5442
+- **Paths:** see #5442
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`151a4fbe`; collated from changes/5420-figure-provenance-captions-and-source-model.md)
+- **Summary:** Add the provenance caption shortcode: a figure caption naming the UpstreamDrift model, run_id, commit and claim class, linked only to the public UD repo (fail closed on bad values)
+- **Next step:** Merge the PR, then the next VIS-EVIDENCE child under #5422.
+
 ### DL-#5419 · Bind Every Markerless-Mocap Projection Artifact to Its UpstreamDrift Model_Id, Run_Id, Ud_Commit and Claim Class (Fail Closed)
 
 - **State:** in_review
