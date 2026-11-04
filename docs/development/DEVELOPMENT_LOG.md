@@ -599,6 +599,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5432 · Evidence Check Asserts Drift+Control=Total and ZVCF=Control
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5432
+- **Branch:** cursor/evidence-sum-check-5432-9d3a
+- **PR:** #5435
+- **Paths:** see #5435
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`7e307ce9`; collated from changes/5432-evidence-check-asserts-drift-control-tot.md)
+- **Summary:** Evidence check asserts drift+control=total and ZVCF=control
+- **Next step:** Shipped in PR #5435.
+
+### DL-#5429 · Rewrite Decision 4: ZVCF = Control; Terminology Gate Flags Gravity-Only ZVCF and ZTCF+Control-Preserved Double Count.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5429
+- **Branch:** cursor/terminology-decision4-zvcf-control-5956
+- **PR:** #5437
+- **Paths:** see #5437
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`1dd50830`; collated from changes/5429-rewrite-decision-4-zvcf-control-terminol.md)
+- **Summary:** Rewrite Decision 4: ZVCF = control; terminology gate flags gravity-only ZVCF and ZTCF+control-preserved double count.
+- **Next step:** Shipped in PR #5437.
+
 ### DL-#2427 · Add Report-Only Pr-Body-Lint Pull_Request_Target Caller (RM Reusable Workflow) and Contract Test.
 
 - **State:** shipped
