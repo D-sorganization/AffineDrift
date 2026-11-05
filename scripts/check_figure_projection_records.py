@@ -66,7 +66,12 @@ DEFAULT_PROJECTIONS = REPO_ROOT / "evidence" / "projections"
 DEFAULT_EXEMPTIONS = DEFAULT_PROJECTIONS / "figure_exemptions.json"
 PAGE_SUFFIXES = (".qmd", ".md")
 TRACING_KIND = "visualization"
-FIGURE_PATTERN = re.compile(r"!\[[^\]]*\]\(\s*<?([^)\s>]+)|<img\b[^>]*?\bsrc=[\"']([^\"']+)")
+# Markdown images, <img> tags and {{< vis-video src=... >}} embeds (#5424).
+FIGURE_PATTERN = re.compile(
+    r"!\[[^\]]*\]\(\s*<?([^)\s>]+)"
+    r"|<img\b[^>]*?\bsrc=[\"']([^\"']+)"
+    r"|\{\{<\s*vis-video\b[^>]*?\bsrc=[\"']?([^\"'\s>]+)"
+)
 PROVENANCE_KINDS = frozenset({"ud_release", "ad_generated", "origin_unrecorded"})
 GLOB_CHARACTERS = frozenset("*?[")
 
@@ -112,7 +117,7 @@ def embedded_figures(root: Path, page: Path) -> list[str]:
     content = strip_code(page_body(expand_includes(root, page)))
     figures: list[str] = []
     for match in FIGURE_PATTERN.finditer(content):
-        url = normalize_internal_url(match.group(1) or match.group(2))
+        url = normalize_internal_url(next(group for group in match.groups() if group))
         if url is None or is_external_url(url) or url.startswith("data:"):
             continue
         target = resolve_relative_path(root=root, source_file=page, url=url).resolve()
