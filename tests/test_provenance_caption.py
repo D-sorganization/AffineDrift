@@ -67,7 +67,7 @@ def _render(tmp_path: Path, body: str, frontmatter: str = "") -> subprocess.Comp
     wrapper = tmp_path / "wrapper.lua"
     wrapper.write_text(WRAPPER_LUA, encoding="utf-8")
     source = f"---\ntitle: Provenance test\n{frontmatter}---\n\n{body}\n"
-    return subprocess.run(  # noqa: S603 - fixed argv, no shell
+    return subprocess.run(  # noqa: S603 -- reason: fixed argv, no shell
         [*_pandoc(), "--from", "markdown", "--to", "html", "--lua-filter", str(wrapper)],
         input=source,
         capture_output=True,
@@ -185,7 +185,7 @@ def test_quarto_render(tmp_path: Path) -> None:
         "claim_class=observed >}}\n",
         encoding="utf-8",
     )
-    subprocess.run(  # noqa: S603 - fixed argv, no shell
+    subprocess.run(  # noqa: S603 -- reason: fixed argv, no shell
         [quarto, "render", "page.qmd", "--to", "html"],
         cwd=tmp_path,
         check=True,

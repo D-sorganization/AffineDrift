@@ -234,6 +234,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | ---------- | ----- | ---------- |
 | 2026-11-04 | #5452 | Update critiques responses to reflect ZVCF = control and instant-vs-trajectory distinction. |
 | 2026-11-04 | #5451 | Exactness box for ZTCF/ZVCF decomposition, control-affine / IAA comparison, and naming note. |
+| 2026-11-04 | #5446 | Add lay guide to ZTCF and ZVCF reconciling time and active/passive lenses with snapshot caveats and mechanics baselines (#5440) |
 | 2026-11-04 | #5449 | Figure exemptions now state provenance: the proximal-distal figures projected from the pinned UpstreamDrift release cite its commit with a hash pin and an explicit no-run-identity marker, the companion figures name their generator scripts, and the rest are marked origin unrecorded |
 | 2026-11-04 | #5445 | CI gate: a non-draft page may embed a figure only when a verified projection record traces it or an explicit, reasoned exemption covers it; draft pages warn |
 | 2026-11-04 | #5442 | Add the provenance caption shortcode: a figure caption naming the UpstreamDrift model, run_id, commit and claim class, linked only to the public UD repo (fail closed on bad values) |
