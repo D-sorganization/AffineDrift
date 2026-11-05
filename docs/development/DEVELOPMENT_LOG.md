@@ -241,6 +241,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5433 · Update Critiques Responses to Reflect ZVCF = Control and Instant-vs-Trajectory Distinction.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5433
+- **Branch:** feat/5433-critiques-zvcf-control
+- **PR:** #5452
+- **Paths:** see #5452
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`a731dcc9`; collated from changes/5433-update-critiques-responses-to-reflect-zv.md)
+- **Summary:** Update critiques responses to reflect ZVCF = control and instant-vs-trajectory distinction.
+- **Next step:** Merge the PR.
+
+### DL-#5431 · Exactness Box for ZTCF/ZVCF Decomposition, Control-Affine / IAA Comparison, and Naming Note.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5431
+- **Branch:** feat/5431-articles-exactness-zvcf
+- **PR:** #5451
+- **Paths:** see #5451
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`225fb16a`; collated from changes/5431-exactness-box-for-ztcf-zvcf-decompositio.md)
+- **Summary:** Exactness box for ZTCF/ZVCF decomposition, control-affine / IAA comparison, and naming note.
+- **Next step:** Merge the PR.
+
 ### DL-#5448 · Figure Exemptions Now State Provenance: The Proximal-Distal Figures Projected From the Pinned UpstreamDrift Release Cite Its Commit With a Hash Pin and an Explicit No-Run-Identity Marker, the Companion Figures Name Their Generator Scripts, and the Rest Are Marked Origin Unrecorded
 
 - **State:** in_review
