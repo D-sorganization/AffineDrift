@@ -25,13 +25,12 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from scipy.signal import butter, filtfilt
-
 from alpha_war_upstream import (  # noqa: E402
     WSCG_REL,
     build_generation_provenance,
     prepare_upstream_context,
 )
+from scipy.signal import butter, filtfilt
 
 _UPSTREAM = prepare_upstream_context()
 UPSTREAM_DRIFT_ROOT = _UPSTREAM.root

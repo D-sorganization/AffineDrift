@@ -56,7 +56,7 @@ def resolve_upstream_root() -> Path:
 
 def _git_head(root: Path) -> str:
     proc = subprocess.run(  # noqa: S603
-        ["git", "-C", str(root), "rev-parse", "HEAD"],
+        ["git", "-C", str(root), "rev-parse", "HEAD"],  # noqa: S607
         check=False,
         capture_output=True,
         text=True,
