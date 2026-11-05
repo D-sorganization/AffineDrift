@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5430 · Restore ZVCF=Control and ZTCF=Drift in NOTATION.md and Mechanics Includes (#5430)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5430
+- **Branch:** cursor/zvcf-control-notation-5430-7c57
+- **PR:** #5438
+- **Paths:** see #5438
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`95f84960`; collated from changes/5430-restore-zvcf-control-and-ztcf-drift-in-n.md)
+- **Summary:** Restore ZVCF=control and ZTCF=drift in NOTATION.md and mechanics includes (#5430)
+- **Next step:** Merge after quality-gate; epic #5434 AD-2
+
 ### DL-#5433 · Update Critiques Responses to Reflect ZVCF = Control and Instant-vs-Trajectory Distinction.
 
 - **State:** in_review
@@ -676,6 +689,45 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5454 · Figure Gate Accepts UD Figure-Map Records: A Separate Record Kind That Traces UD-Projected Figures to Their Run by Sha256 and Run_Id, Without Mocap Review Attestations
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5454
+- **Branch:** merged via #5455
+- **PR:** #5455, #5456
+- **Paths:** see #5455
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`3a91b153`; collated from changes/5454-trace-201-proximal-distal-figures-throug.md)
+- **Summary:** Figure gate accepts UD figure-map records: a separate record kind that traces UD-projected figures to their run by sha256 and run_id, without mocap review attestations
+- **Next step:** Shipped in PR #5455.
+
+### DL-#5424 · Add the Accessible Vis-Video Shortcode for Local WebM/MP4 Embeds (Poster, Captions, Lazy, No Autoplay, Provenance Record) and Trace Embedded Videos in the Figure Gate
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5424
+- **Branch:** merged via #5458
+- **PR:** #5458
+- **Paths:** see #5458
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`efc718b7`; collated from changes/5424-add-the-accessible-vis-video-shortcode-f.md)
+- **Summary:** Add the accessible vis-video shortcode for local WebM/MP4 embeds (poster, captions, lazy, no autoplay, provenance record) and trace embedded videos in the figure gate
+- **Next step:** Shipped in PR #5458.
+
+### DL-#5423 · Draft Site Visual-Placement Audit Table for VIS-SITE (Page, Concept, Proposed Visual, UD Source, Priority)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5423
+- **Branch:** merged via #5457
+- **PR:** #5457
+- **Paths:** see #5457
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`ba53a33e`; collated from changes/5423-draft-site-visual-placement-audit-table.md)
+- **Summary:** Draft site visual-placement audit table for VIS-SITE (page, concept, proposed visual, UD source, priority)
+- **Next step:** Shipped in PR #5457.
 
 ### DL-#5432 · Evidence Check Asserts Drift+Control=Total and ZVCF=Control
 
