@@ -18,7 +18,7 @@ body {
 }
 
 h1, h2, h3, h4, .title, .subtitle {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #0f172a;
   letter-spacing: -0.015em;
 }
@@ -67,10 +67,10 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin: 1.6rem 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.9rem;
   line-height: 1.48;
-  background: #ffffff;
+  background: #fff;
   border-top: 2px solid #0f172a;
   border-bottom: 2px solid #0f172a;
 }
@@ -98,7 +98,7 @@ tbody tr:nth-child(even) {
 figure, .quarto-figure {
   margin: 2rem auto;
   padding: 1rem;
-  background: #ffffff;
+  background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
@@ -112,7 +112,7 @@ figure img, .quarto-figure img, svg {
 }
 
 figcaption, .figure-caption {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.88rem;
   color: #475569;
   margin-top: 0.75rem;
@@ -128,7 +128,7 @@ figcaption, .figure-caption {
 }
 
 .callout-title-container {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 600;
 }
 
@@ -139,18 +139,19 @@ figcaption, .figure-caption {
     line-height: 1.55;
   }
   h1 {
-    page-break-before: always;
+    break-before: page;
     margin-top: 0;
   }
   h1:first-of-type {
-    page-break-before: avoid;
+    break-before: avoid;
   }
   h2, h3 {
-    page-break-after: avoid;
+    break-after: avoid;
   }
   table, figure, .quarto-figure, .callout {
-    page-break-inside: avoid;
+    break-inside: avoid;
   }
+
   @page {
     size: letter;
     margin: 0.75in;
