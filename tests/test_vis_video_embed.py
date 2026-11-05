@@ -128,6 +128,7 @@ def test_leading_parent_segments_reach_site_media(tmp_path: Path) -> None:
         ({"src": "media/../../clip.webm"}, "src"),
         ({"src": "../media/../clip.webm"}, "src"),
         ({"src": "../"}, "src"),
+        ({"src": "../../../../../static/clip.webm"}, "src"),
         ({"src": "media/swing.mov"}, "src"),
         ({"captions": ""}, "captions"),
         ({"captions": "media/swing.srt"}, "captions"),

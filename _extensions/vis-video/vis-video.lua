@@ -12,6 +12,8 @@
 local VIDEO_TYPES = { webm = "video/webm", mp4 = "video/mp4" }
 local POSTER_TYPES = { png = true, jpg = true, jpeg = true, webp = true }
 local FORBIDDEN = { "autoplay", "loop", "muted" }
+-- Deep enough for the deepest page directories (articles/<book>/<volume>/chapters/).
+local MAX_PARENT_SEGMENTS = 4
 
 local function stringify(val)
   if val == nil then
@@ -48,11 +50,11 @@ end
 -- ".." anywhere after them is rejected.
 local function local_path(kwargs, field)
   local value = required(kwargs, field)
-  local rest = value
+  local rest, climbs = value, 0
   while rest:find("^%.%./") do
-    rest = rest:sub(4)
+    rest, climbs = rest:sub(4), climbs + 1
   end
-  local safe = rest:match("^[%w_][%w_./-]*$") ~= nil
+  local safe = rest:match("^[%w_][%w_./-]*$") ~= nil and climbs <= MAX_PARENT_SEGMENTS
   if not safe or rest:find("%.%.") or rest:find("//") then
     fail(field, value, "must be a page-relative local path")
   end

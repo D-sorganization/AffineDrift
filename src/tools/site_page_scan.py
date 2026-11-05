@@ -167,6 +167,11 @@ def parse_front_matter(text: str) -> dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def is_draft(page: Path) -> bool:
+    """Return True when the page front matter sets ``draft: true``."""
+    return parse_front_matter(page.read_text(encoding="utf-8")).get("draft") is True
+
+
 def page_body(text: str) -> str:
     """Return page content with the front matter block removed."""
     if not text.startswith("---\n"):
