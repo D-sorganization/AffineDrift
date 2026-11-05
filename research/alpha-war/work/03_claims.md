@@ -115,7 +115,7 @@ Where $\mathbf{r}_{G/H} = \mathbf{r}_G - \mathbf{r}_H$ is the position vector po
 | **CLM-SGN-02** | Net alpha couple reverses negative 20–50 ms before impact in skilled swings | Camp B (Kwon, MacKenzie, Tutelman, Sinclair) | Pure hand couple $\mathbf{C}_h$ at mid-hands | Grip frame / Swing plane | **Settled (Empirical & Mathematical)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 | **CLM-SGN-03** | Total alpha moment about club COM ($\mathbf{M}_G$) remains positive to impact | Camp A (Manzella 2021) & Camp B (MacKenzie 2009) | Total moment $\mathbf{M}_G = I_G \boldsymbol{\alpha}$ about COM | Club principal axes / FSP | **Settled (Empirical & Mathematical)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 | **CLM-SGN-04** | Trail hand exerts positive torque ("snapping") at release | Popular Instruction / Camp A | Right hand isolated couple / force $\mathbf{C}_R, \mathbf{F}_R$ | Hand anatomical axes | **Unprovable / Closed-Loop Artifact** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
-| **CLM-SGN-05** | Applied positive torque of +30 N·m at impact is biomechanically impossible | Olson (2020) | Differential hand contact force $F_d$ | Mid-hands ($d \approx 0.1$ m) | **Settled (Biomechanical Constraint)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-SGN-05** | A +30 N·m pure force couple requires ~89 lbf opposed shear per hand (Box 3.1 geometry) | Olson (2020) | Differential contact force $F_d$; force couple $C_{F,M}$ | Mid-hands ($d \approx 0.076$ m) | **Bounded Hypothesis (Static Grip Geometry)** *(Revised #5464; not impossibility proof)* |
 | **CLM-SGN-06** | Peak positive alpha torque occurs early in downswing, decaying to zero/negative | Consensus (Camp A & Camp B) | Torque magnitude $|\mathbf{M}_H(t)|$ | Grip frame | **Settled (Consensus)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 
 ---
@@ -269,23 +269,23 @@ CLAIM DOSSIER: CORE KINETIC SIGN & MAGNITUDE CLAIMS
 
 ---
 
-### Claim CLM-SGN-05: Applying a +30 N·m Positive Alpha Couple at High Speed is Biomechanically Impossible
+### Claim CLM-SGN-05: +30 N·m Pure Force Couple vs. Opposed Hand Shear (Box 3.1 Geometry)
 
 1. **Claim Statement:**
-   Applying an in-plane hand couple of $+30$ N·m at impact (as claimed in some early coaching interpretations) would require opposing hand forces exceeding 100 lbs (>450 N) at uncocking speeds exceeding 1500 deg/s, which exceeds human isometric and dynamic wrist capability.
+   Applying a **force-generated** in-plane couple of $+30$ N·m through opposed transverse shear alone (zero common mode, zero free wrist torque) requires differential shear $|F_{d,y}| \approx 394$ N and **equal** $\approx 89$ lbf per hand—not half the differential magnitude.
 2. **Claimant / Camp:**
    Dieter Olson (Golf Biomechanists, May 16, 2020 post).
 3. **Physical Quantity & Reference Point:**
-   Differential contact force $F_d = C_h / d_{\text{hands}}$ across hand separation distance $d \approx 0.1$ m.
+   Differential contact force $F_{d,y} = \tfrac{1}{2}(F_{L,y} - F_{T,y})$ with $C_{F,M} = -s F_{d,y}$ at mid-hands ($s = 0.0762$ m).
 4. **Coordinate Frame & Sign Convention:**
-   Planar grip couple mechanics.
+   Planar grip couple mechanics (Box 3.1).
 5. **Evidence / Basis Cited:**
-   - Static moment equilibrium: $C_h = F_d \cdot d$. For $C_h = 30$ N·m and $d = 0.08$–$0.10$ m, $F_d = 300$–$375$ N (~67–85 lbs of pure push/pull shear force per hand).
-   - Dynamic grip-strength measurements and Hill-model force-velocity constraints showing wrist flexor capacity drops by >70% at high contraction velocities.
-   - Olson's static-hold experiment (March 17, 2022): holding a driver with a 5 lb head weight statically requires ~28 N·m, which was near-impossible to sustain with two hands and felt vastly more intense than any swing.
+   - Static moment equilibrium under pure force-couple assumptions: $|F_{d,y}| = |C_{F,M}|/s$.
+   - Olson static-hold anecdote (~28 N·m) as ergonomic context, not a dynamic proof.
+   - Hill-type force–velocity limits cited only under CLM-MCH-01 with explicit $\omega_{\text{rel}}$ and validated parameters—not by substituting club $\omega$ alone.
 6. **Technical Assessment & Resolution Status:**
-   **Settled (Biomechanical Limit).**  
-   Human wrist anatomy cannot produce a $+30$ N·m pure couple at 2000 deg/s angular velocity. Claims of massive positive torque at impact confuse force moments with pure couples.
+   **Bounded Hypothesis (Static Grip Geometry).**  
+   Per-hand shear magnitudes follow Box 3.1 algebra; dynamic impossibility of $>+30$ N·m is **not** settled without instrumented capacity data. See `research/alpha-war/calcs/alpha_war_hand_force_bounds.py` (#5464).
 
 ---
 
