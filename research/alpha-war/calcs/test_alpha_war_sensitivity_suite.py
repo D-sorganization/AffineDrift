@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 import unittest
 from pathlib import Path
@@ -12,18 +13,34 @@ CALCS_DIR = Path(__file__).resolve().parent
 if str(CALCS_DIR) not in sys.path:
     sys.path.insert(0, str(CALCS_DIR))
 
-from alpha_war_sensitivity_suite import (  # noqa: E402
-    run_study_1_grip_point_transport,
-    run_study_2_couple_vs_sum_of_moments,
-    run_study_3_frame_conventions,
-    run_study_4_filtering_and_drag_sensitivity,
-    run_study_5_closed_loop_and_identifiability,
-    run_study_6_shaft_flex_contribution,
-)
+_UPSTREAM_ROOT = os.environ.get("ALPHA_WAR_UPSTREAM_DRIFT_ROOT", "").strip()
+if _UPSTREAM_ROOT:
+    from alpha_war_sensitivity_suite import (  # noqa: E402
+        run_study_1_grip_point_transport,
+        run_study_2_couple_vs_sum_of_moments,
+        run_study_3_frame_conventions,
+        run_study_4_filtering_and_drag_sensitivity,
+        run_study_5_closed_loop_and_identifiability,
+        run_study_6_shaft_flex_contribution,
+    )
+else:
+    run_study_1_grip_point_transport = None  # type: ignore[assignment,misc]
+    run_study_2_couple_vs_sum_of_moments = None  # type: ignore[assignment,misc]
+    run_study_3_frame_conventions = None  # type: ignore[assignment,misc]
+    run_study_4_filtering_and_drag_sensitivity = None  # type: ignore[assignment,misc]
+    run_study_5_closed_loop_and_identifiability = None  # type: ignore[assignment,misc]
+    run_study_6_shaft_flex_contribution = None  # type: ignore[assignment,misc]
 
 
 class TestAlphaWarSensitivitySuite(unittest.TestCase):
     """Test suite verifying all six Alpha War mechanics and sensitivity studies."""
+
+    def setUp(self) -> None:
+        if run_study_1_grip_point_transport is None:
+            self.skipTest(
+                "Set ALPHA_WAR_UPSTREAM_DRIFT_ROOT to a pinned UpstreamDrift clone "
+                "(see upstream_drift.lock.json)"
+            )
 
     def test_study_1_grip_point_transport_sign_flip(self) -> None:
         """Verify reference-point transport shifts and flips the reported alpha moment."""

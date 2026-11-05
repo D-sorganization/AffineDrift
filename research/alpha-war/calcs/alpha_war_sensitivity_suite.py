@@ -21,33 +21,20 @@ from __future__ import annotations
 import json
 import logging
 import math
-import sys
-import types
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 from scipy.signal import butter, filtfilt
 
-UPSTREAM_DRIFT_ROOT = Path("/home/dieterolson/staff-repos/UpstreamDrift")
-if str(UPSTREAM_DRIFT_ROOT) not in sys.path:
-    sys.path.insert(0, str(UPSTREAM_DRIFT_ROOT))
+from alpha_war_upstream import (  # noqa: E402
+    WSCG_REL,
+    build_generation_provenance,
+    prepare_upstream_context,
+)
 
-# Register lightweight namespace packages for src.shared.python so pure-math
-# submodules (pendulum_simulator, biomechanics) load read-only without GUI/CLI seam init.
-for _pkg_name, _pkg_paths in [
-    ("src", [str(UPSTREAM_DRIFT_ROOT / "src")]),
-    ("src.shared", [str(UPSTREAM_DRIFT_ROOT / "src/shared")]),
-    ("src.shared.python", [str(UPSTREAM_DRIFT_ROOT / "src/shared/python")]),
-    (
-        "src.shared.python.biomechanics",
-        [str(UPSTREAM_DRIFT_ROOT / "src/shared/python/biomechanics")],
-    ),
-]:
-    if _pkg_name not in sys.modules:
-        _mod = types.ModuleType(_pkg_name)
-        _mod.__path__ = _pkg_paths
-        sys.modules[_pkg_name] = _mod
+_UPSTREAM = prepare_upstream_context()
+UPSTREAM_DRIFT_ROOT = _UPSTREAM.root
 
 # UpstreamDrift imports must follow runtime namespace bootstrap.
 # ruff: noqa: E402
@@ -80,15 +67,9 @@ from scripts.research.proximal_distal_energy.two_hand_wrench import (
 )
 
 LOGGER = logging.getLogger(__name__)
+SUITE_VERSION = "2026-11-05-repro-pin"
 OUT_OF_PLANE_AXIS = np.array([0.0, -1.0, 1.0]) / np.sqrt(2.0)
-WSCG_RAW_DIR = (
-    UPSTREAM_DRIFT_ROOT
-    / "docs"
-    / "research"
-    / "proximal_distal_energy_transfer"
-    / "data"
-    / "wscg_two_hand_raw"
-)
+WSCG_RAW_DIR = UPSTREAM_DRIFT_ROOT / WSCG_REL
 CALCS_DIR = Path(__file__).resolve().parent
 
 
@@ -670,7 +651,7 @@ def run_study_6_shaft_flex_contribution() -> dict[str, Any]:
 
 
 def main() -> None:
-    """Run all six studies and write ``alpha_war_calculations.json`` under ``CALCS_DIR``."""
+    """Run all six studies and write JSON outputs plus regeneration provenance."""
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     results = {
         "study_1_grip_point_transport": run_study_1_grip_point_transport(),
@@ -681,8 +662,19 @@ def main() -> None:
         "study_6_shaft_flex_contribution": run_study_6_shaft_flex_contribution(),
     }
     json_path = CALCS_DIR / "alpha_war_calculations.json"
-    json_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    provenance = build_generation_provenance(
+        _UPSTREAM,
+        suite_version=SUITE_VERSION,
+        studies=results,
+    )
+    json_path.write_text(
+        json.dumps({"generation_provenance": provenance, **results}, indent=2),
+        encoding="utf-8",
+    )
+    manifest_path = CALCS_DIR / "alpha_war_regeneration_manifest.json"
+    manifest_path.write_text(json.dumps(provenance, indent=2), encoding="utf-8")
     LOGGER.info("Wrote calculation results to %s", json_path)
+    LOGGER.info("Wrote regeneration manifest to %s", manifest_path)
 
 
 if __name__ == "__main__":

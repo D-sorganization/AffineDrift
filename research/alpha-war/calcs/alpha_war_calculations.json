@@ -1,4 +1,19 @@
 {
+  "generation_provenance": {
+    "upstream_repository": "https://github.com/D-sorganization/UpstreamDrift.git",
+    "upstream_commit": "b700e58941205af6f673f13ebbffcd30f8cca9d8",
+    "upstream_root_env": "ALPHA_WAR_UPSTREAM_DRIFT_ROOT",
+    "wscg_input_sha256": {
+      "docs/research/proximal_distal_energy_transfer/data/wscg_two_hand_raw/base.csv": "cc80319575493f5868b8d1b9b5b5e6bc3edfbe12dc86d19e8326a88a0ff0832b",
+      "docs/research/proximal_distal_energy_transfer/data/wscg_two_hand_raw/ztcf.csv": "f557e510da33b4e38b9a1d5c7f51e0fceaf51b67d559dcf76b69559b58461ac3",
+      "docs/research/proximal_distal_energy_transfer/data/wscg_two_hand_raw/delta.csv": "7bf77908c87c98159f7068eadd89354e7632ae56b7a39d710bcd276623bb762f"
+    },
+    "suite_module": "alpha_war_sensitivity_suite.py",
+    "suite_version": "2026-11-05-repro-pin",
+    "output_json": "alpha_war_calculations.json",
+    "studies_sha256": "c8d2e635dab7c56ef68be1b61fd0ce481d1ad382fc5f6f10ad3f1be45aa9cf60",
+    "python_version": "3.12.3"
+  },
   "study_1_grip_point_transport": {
     "wscg_at_peak_clubhead_speed": {
       "label": "WSCG peak clubhead speed (t = 0.1933 s)",
@@ -6,7 +21,7 @@
       "clubhead_speed_mph": 115.076918114863,
       "grip_separation_m": 0.0761974722699402,
       "lead_force_axial_normal_n": [
-        -857.3001610053668,
+        -857.3001610053667,
         89.06786465026454
       ],
       "trail_force_axial_normal_n": [
@@ -14,7 +29,7 @@
         -92.43923498841686
       ],
       "resultant_axial_normal_n": [
-        -521.460171801001,
+        -521.4601718010009,
         -3.3713703381523175
       ],
       "differential_normal_force_n": 90.75354981934069,
@@ -504,6 +519,11 @@
   },
   "study_4_filtering_and_drag_sensitivity": {
     "sampling_rate_hz": 1000.0,
+    "filter_order_per_pass": 2,
+    "effective_zero_lag_order": 4,
+    "phase_handling": "zero-lag bidirectional filtfilt (2nd-order Butterworth per pass, 4th-order effective)",
+    "recommended_pre_impact_truncation_ms": 20.0,
+    "truncated_20ms_pre_impact_bleed_max_nm": 0.0,
     "true_couple_at_impact_nm": -17.61861664095658,
     "true_zero_crossing_time_s": -0.0172309174910767,
     "butterworth_cutoff_sweep": [
@@ -513,21 +533,21 @@
         "true_couple_5ms_pre_nm": -18.200312331016406,
         "clean_filtered_at_impact_nm": -15.101640146337907,
         "clean_filtered_sign_at_impact": "negative",
-        "clean_filtered_5ms_pre_nm": -11.403297321670287,
+        "clean_filtered_5ms_pre_nm": -11.403297321710255,
         "across_impact_filtered_at_impact_nm": -16.540747178499515,
-        "across_impact_filtered_5ms_pre_nm": -13.032507645520504,
-        "across_impact_filtered_10ms_pre_nm": -9.493205820882977
+        "across_impact_filtered_5ms_pre_nm": -13.03250764560076,
+        "across_impact_filtered_10ms_pre_nm": -9.49320582094277
       },
       {
         "cutoff_hz": 6.0,
         "true_couple_at_impact_nm": -17.61861664095658,
         "true_couple_5ms_pre_nm": -18.200312331016406,
-        "clean_filtered_at_impact_nm": -3.051303999268562,
+        "clean_filtered_at_impact_nm": -3.051303999248418,
         "clean_filtered_sign_at_impact": "negative",
-        "clean_filtered_5ms_pre_nm": 0.07541100132346656,
-        "across_impact_filtered_at_impact_nm": -7.465513777511319,
-        "across_impact_filtered_5ms_pre_nm": -4.4470896511071345,
-        "across_impact_filtered_10ms_pre_nm": -1.3278942628280888
+        "clean_filtered_5ms_pre_nm": 0.07541100126335465,
+        "across_impact_filtered_at_impact_nm": -7.465513777491495,
+        "across_impact_filtered_5ms_pre_nm": -4.4470896511471025,
+        "across_impact_filtered_10ms_pre_nm": -1.3278942628680568
       },
       {
         "cutoff_hz": 8.0,
@@ -555,12 +575,12 @@
         "cutoff_hz": 15.0,
         "true_couple_at_impact_nm": -17.61861664095658,
         "true_couple_5ms_pre_nm": -18.200312331016406,
-        "clean_filtered_at_impact_nm": -10.669794937179233,
+        "clean_filtered_at_impact_nm": -10.669794937199057,
         "clean_filtered_sign_at_impact": "negative",
         "clean_filtered_5ms_pre_nm": -10.128143430812031,
-        "across_impact_filtered_at_impact_nm": -22.253207431066464,
-        "across_impact_filtered_5ms_pre_nm": -21.09058753924753,
-        "across_impact_filtered_10ms_pre_nm": -16.83681287421912
+        "across_impact_filtered_at_impact_nm": -22.2532074311464,
+        "across_impact_filtered_5ms_pre_nm": -21.09058753930764,
+        "across_impact_filtered_10ms_pre_nm": -16.836812874179152
       },
       {
         "cutoff_hz": 20.0,
@@ -666,17 +686,17 @@
       "condition_number": 1.0007255417945522
     },
     "two_arm_closed_loop_state_attribution": {
-      "total_force_moment_about_club_center_nm": -2.366412790168283,
-      "drift_only_force_moment_nm": -0.9290566967111971,
-      "control_only_force_moment_nm": -1.437356093457086,
+      "total_force_moment_about_club_center_nm": -2.3664127901682823,
+      "drift_only_force_moment_nm": -0.929056696711198,
+      "control_only_force_moment_nm": -1.4373560934570841,
       "additivity_residual_nm": 0.0,
       "drift_resultant_force_n": [
-        1.2182168140284704,
-        16.90992641850018
+        1.2182168140284615,
+        16.909926418500227
       ],
       "drift_differential_force_n": [
-        -5.726595089011491,
-        -9.372055421134645
+        -5.726595089011507,
+        -9.372055421134586
       ],
       "zero_grip_separation_moment_nm": 0.0,
       "club_position_m": [
@@ -690,19 +710,19 @@
       "sample_time_s": 0.4275,
       "shaft_deflection_deg": -3.5791729236945047,
       "shaft_elastic_moment_nm": 4.99746816133607,
-      "shaft_damping_moment_nm": -0.08326019457155077,
-      "shaft_interface_force_norm_n": 56.37089718637489,
+      "shaft_damping_moment_nm": -0.08326019457155094,
+      "shaft_interface_force_norm_n": 56.3708971863749,
       "distal_angular_accel_contributions_rad_s2": {
-        "control": -401.55333623814386,
-        "momentum": 57.051518440885346,
-        "gravity": 1.8621578063940483,
-        "joint_damping": 47.55412330839647,
-        "shaft_elastic": 325.27624237371344,
-        "shaft_damping": -5.4192567826780875,
-        "total": 24.77144890856725
+        "control": -401.5533362381442,
+        "momentum": 57.05151844088546,
+        "gravity": 1.8621578063940536,
+        "joint_damping": 47.55412330839652,
+        "shaft_elastic": 325.2762423737137,
+        "shaft_damping": -5.419256782678103,
+        "total": 24.771448908567404
       },
       "rigid_wrist_angle_at_same_time_rad": 0.3561863964205145,
-      "flexible_wrist_angle_at_same_time_rad": 0.37680466214687425
+      "flexible_wrist_angle_at_same_time_rad": 0.3768046621468738
     },
     "two_hand_beam_rebound_wrench_model": {
       "lead_deflection_deg": 11.0,
