@@ -47,6 +47,18 @@ class TestAlphaWarQuartoUnpublished(unittest.TestCase):
         self.assertNotIn("alpha-war-v0", yml)
         self.assertNotIn("alpha-war-v1", yml)
 
+    def test_no_markdown_under_alpha_war_critiques_directory(self) -> None:
+        """Site render glob ``critiques/*.md`` also picks up nested ``critiques/`` trees."""
+        critiques_dir = ALPHA_WAR_DIR / "critiques"
+        if not critiques_dir.is_dir():
+            return
+        stray_markdown = sorted(path.name for path in critiques_dir.glob("*.md"))
+        self.assertEqual(
+            stray_markdown,
+            [],
+            "Move internal alpha-war notes to work/ so Quarto does not emit draft stubs",
+        )
+
     def test_all_citations_resolve_in_references_bib(self) -> None:
         """Every [@key] citation in alpha-war-v1.md must exist in references.bib."""
         draft_text = DRAFT.read_text(encoding="utf-8").replace("`[@key]`", "")
@@ -60,6 +72,24 @@ class TestAlphaWarQuartoUnpublished(unittest.TestCase):
         self.assertGreater(len(cited_keys), 20)
         missing = sorted(cited_keys - bib_keys)
         self.assertEqual(missing, [], f"Unresolved citation keys: {missing}")
+
+    def test_koike2019joint_metadata_matches_publisher_doi(self) -> None:
+        """``koike2019joint`` must match CrossRef for DOI 10.1016/j.jbiomech.2019.01.032 (#5466)."""
+        bib_text = BIB_PATH.read_text(encoding="utf-8")
+        block_match = re.search(
+            r"@article\{koike2019joint,(.*?)^\}",
+            bib_text,
+            flags=re.MULTILINE | re.DOTALL,
+        )
+        self.assertIsNotNone(block_match, "koike2019joint entry missing")
+        block = block_match.group(1)
+        self.assertIn("Tatsuya Ishikawa", block)
+        self.assertIn("Neil E. Bezodis", block)
+        self.assertNotIn("K. Kawamura", block)
+        self.assertIn("swinging motion", block)
+        self.assertNotIn("golf swing", block)
+        self.assertIn("pages   = {8--16}", block)
+        self.assertIn("10.1016/j.jbiomech.2019.01.032", block)
 
     def test_no_ascii_art_or_box_drawing_tables(self) -> None:
         """Draft v1 must not contain ASCII stick-art diagrams or box-drawing tables."""
