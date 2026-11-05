@@ -116,7 +116,7 @@ I cannot verify the calculations or cite draft sections and lines: this snapshot
 
 **VRFs:** Verify primary sources for claims central to the conclusions, especially VRF-04b and Jacobs method/page claims (VRF-02/06); otherwise mark them as unverified secondary descriptions or cut dependent claims. Keep VRF-09 and the rain-slip clip out unless properly cleared and supported. Reframe gated talks and slides as attributed claims unless independently verified.
 
-**Figures:** Show units, frame and sign conventions, input provenance, and sensitivity limits. Fig. 4 should specify filter order and phase handling and make pre-impact truncation versus across-impact bleed explicit. Add a plain-language takeaway to each caption.
+**Figures:** Show units, frame and sign conventions, the source of the inputs, and sensitivity limits. Fig. 4 should specify filter order and phase handling and make pre-impact truncation versus across-impact bleed explicit. Add a plain-language takeaway to each caption.
 
 **PR sequence:** Revise claims and sourcing; update calculation and figure tests; integrate figures and text; render and check citations; then obtain owner sign-off and publish. Keep each PR below 500 lines. The appendices can carry the technical detail while the main narrative stays readable.
 
