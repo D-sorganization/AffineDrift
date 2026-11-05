@@ -232,6 +232,14 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-04 | #5446 | Add lay guide to ZTCF and ZVCF reconciling time and active/passive lenses with snapshot caveats and mechanics baselines (#5440) |
+| 2026-11-04 | #5449 | Figure exemptions now state provenance: the proximal-distal figures projected from the pinned UpstreamDrift release cite its commit with a hash pin and an explicit no-run-identity marker, the companion figures name their generator scripts, and the rest are marked origin unrecorded |
+| 2026-11-04 | #5445 | CI gate: a non-draft page may embed a figure only when a verified projection record traces it or an explicit, reasoned exemption covers it; draft pages warn |
+| 2026-11-04 | #5442 | Add the provenance caption shortcode: a figure caption naming the UpstreamDrift model, run_id, commit and claim class, linked only to the public UD repo (fail closed on bad values) |
+| 2026-11-04 | #5436 | Retire hyperplane display titles in the compact tangent-space series (Parts 1–7) and hub. |
+| 2026-11-04 | #5428 | Bind every markerless-mocap projection artifact to its UpstreamDrift model_id, run_id, ud_commit and claim class (fail closed) |
+| 2026-11-04 | #5435 | Evidence check asserts drift+control=total and ZVCF=control |
+| 2026-11-04 | #5437 | Rewrite Decision 4: ZVCF = control; terminology gate flags gravity-only ZVCF and ZTCF+control-preserved double count. |
 | 2026-11-03 | #5390 | Add report-only pr-body-lint pull_request_target caller (RM reusable workflow) and contract test. |
 | 2026-11-03 | #5386 | Build manifest writer: scripts/write_build_manifest.py records the commit, Quarto version and lockfile SHA-256 digests against schemas/build-manifest.schema.json, with --check for staleness (SBOM and deploy wiring remain) |
 | 2026-11-03 | #5348 | Mobile MathJax minScale, math-mobile CSS, and diagram min-width floors |
