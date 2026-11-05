@@ -61,6 +61,24 @@ class TestAlphaWarQuartoUnpublished(unittest.TestCase):
         missing = sorted(cited_keys - bib_keys)
         self.assertEqual(missing, [], f"Unresolved citation keys: {missing}")
 
+    def test_koike2019joint_metadata_matches_publisher_doi(self) -> None:
+        """``koike2019joint`` must match CrossRef for DOI 10.1016/j.jbiomech.2019.01.032 (#5466)."""
+        bib_text = BIB_PATH.read_text(encoding="utf-8")
+        block_match = re.search(
+            r"@article\{koike2019joint,(.*?)^\}",
+            bib_text,
+            flags=re.MULTILINE | re.DOTALL,
+        )
+        self.assertIsNotNone(block_match, "koike2019joint entry missing")
+        block = block_match.group(1)
+        self.assertIn("Tatsuya Ishikawa", block)
+        self.assertIn("Neil E. Bezodis", block)
+        self.assertNotIn("K. Kawamura", block)
+        self.assertIn("swinging motion", block)
+        self.assertNotIn("golf swing", block)
+        self.assertIn("pages   = {8--16}", block)
+        self.assertIn("10.1016/j.jbiomech.2019.01.032", block)
+
     def test_no_ascii_art_or_box_drawing_tables(self) -> None:
         """Draft v1 must not contain ASCII stick-art diagrams or box-drawing tables."""
         draft_text = DRAFT.read_text(encoding="utf-8")
