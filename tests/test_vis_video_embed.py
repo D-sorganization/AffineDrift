@@ -114,11 +114,20 @@ def test_mp4_source_gets_its_own_type(tmp_path: Path) -> None:
     assert '<source src="media/swing.mp4" type="video/mp4">' in result.stdout
 
 
+def test_leading_parent_segments_reach_site_media(tmp_path: Path) -> None:
+    # Pages under articles/ reach the shared static/ media this way (#5426).
+    result = _render(tmp_path, _kwargs(src="../../static/explainers/ztcf.webm"))
+    assert result.returncode == 0, result.stderr
+    assert '<source src="../../static/explainers/ztcf.webm"' in result.stdout
+
+
 @pytest.mark.parametrize(
     ("overrides", "message"),
     [
         ({"src": "https://tracker.example/clip.mp4"}, "src"),
-        ({"src": "../../../etc/clip.webm"}, "src"),
+        ({"src": "media/../../clip.webm"}, "src"),
+        ({"src": "../media/../clip.webm"}, "src"),
+        ({"src": "../"}, "src"),
         ({"src": "media/swing.mov"}, "src"),
         ({"captions": ""}, "captions"),
         ({"captions": "media/swing.srt"}, "captions"),

@@ -43,11 +43,17 @@ local function required(kwargs, field)
   return value
 end
 
--- A page-relative path inside the site: no scheme, no leading slash, no "..".
+-- A page-relative path inside the site: no scheme and no leading slash.
+-- Leading "../" segments may climb to shared media such as static/ (#5426);
+-- ".." anywhere after them is rejected.
 local function local_path(kwargs, field)
   local value = required(kwargs, field)
-  local safe = value:match("^[%w_][%w_./-]*$") ~= nil
-  if not safe or value:find("%.%.") or value:find("//") then
+  local rest = value
+  while rest:find("^%.%./") do
+    rest = rest:sub(4)
+  end
+  local safe = rest:match("^[%w_][%w_./-]*$") ~= nil
+  if not safe or rest:find("%.%.") or rest:find("//") then
     fail(field, value, "must be a page-relative local path")
   end
   return value
