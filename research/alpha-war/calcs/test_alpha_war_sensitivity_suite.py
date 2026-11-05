@@ -36,6 +36,7 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
     """Test suite verifying all six Alpha War mechanics and sensitivity studies."""
 
     def setUp(self) -> None:
+        """Skip the suite when ``ALPHA_WAR_UPSTREAM_DRIFT_ROOT`` is unset."""
         if run_study_1_grip_point_transport is None:
             self.skipTest(
                 "Set ALPHA_WAR_UPSTREAM_DRIFT_ROOT to a pinned UpstreamDrift clone "

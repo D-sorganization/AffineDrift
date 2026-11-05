@@ -55,6 +55,7 @@ def resolve_upstream_root() -> Path:
 
 
 def _git_head(root: Path) -> str:
+    """Return the full git commit hash at ``root``, or raise if not a git checkout."""
     proc = subprocess.run(  # noqa: S603
         ["git", "-C", str(root), "rev-parse", "HEAD"],  # noqa: S607
         check=False,
