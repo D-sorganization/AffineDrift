@@ -167,9 +167,19 @@ def parse_front_matter(text: str) -> dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def is_draft_front_matter(front_matter: dict[str, Any]) -> bool:
+    """Return True when parsed front matter sets ``draft: true``.
+
+    Accepts the YAML boolean and the string form that the simple front-matter
+    parser in ``src.tools.utils.content_utils`` returns.
+    """
+    value = front_matter.get("draft")
+    return value is True or (isinstance(value, str) and value.strip().lower() == "true")
+
+
 def is_draft(page: Path) -> bool:
     """Return True when the page front matter sets ``draft: true``."""
-    return parse_front_matter(page.read_text(encoding="utf-8")).get("draft") is True
+    return is_draft_front_matter(parse_front_matter(page.read_text(encoding="utf-8")))
 
 
 def page_body(text: str) -> str:
