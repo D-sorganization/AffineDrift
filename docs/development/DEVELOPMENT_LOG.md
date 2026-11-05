@@ -690,6 +690,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5426 · Add the VIS-SITE-4 Draft Page Embedding the AD-Generated ZTCF Explainer Through Vis-Video, Honestly Labelled as Not a Traced UpstreamDrift Render; Allow Leading ../ Media Paths in the Shortcode
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5426
+- **Branch:** merged via #5468
+- **PR:** #5468, #5471
+- **Paths:** see #5468
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`ad26a4ac`; collated from changes/5426-draft-page-support-vis-video-reaches-sha.md)
+- **Summary:** Add the VIS-SITE-4 draft page embedding the AD-generated ZTCF explainer through vis-video, honestly labelled as not a traced UpstreamDrift render; allow leading ../ media paths in the shortcode
+- **Next step:** Shipped in PR #5468.
+
 ### DL-#5454 · Figure Gate Accepts UD Figure-Map Records: A Separate Record Kind That Traces UD-Projected Figures to Their Run by Sha256 and Run_Id, Without Mocap Review Attestations
 
 - **State:** shipped

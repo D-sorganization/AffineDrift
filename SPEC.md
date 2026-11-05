@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-05 | #5471 | Draft-page support: vis-video reaches shared static media via leading ../, and drafts are skipped by the site gate, search index and public manifest |
+| 2026-11-05 | #5468 | Add the VIS-SITE-4 draft page embedding the AD-generated ZTCF explainer through vis-video, honestly labelled as not a traced UpstreamDrift render; allow leading ../ media paths in the shortcode |
 | 2026-11-05 | #5456 | Trace 201 proximal-distal figures through a UD figure-map record and check it against the pinned UD map in CI |
 | 2026-11-05 | #5455 | Figure gate accepts UD figure-map records: a separate record kind that traces UD-projected figures to their run by sha256 and run_id, without mocap review attestations |
 | 2026-11-05 | #5438 | Restore ZVCF=control and ZTCF=drift in NOTATION.md and mechanics includes (#5430) |
