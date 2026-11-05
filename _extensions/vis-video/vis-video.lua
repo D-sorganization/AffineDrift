@@ -12,6 +12,8 @@
 local VIDEO_TYPES = { webm = "video/webm", mp4 = "video/mp4" }
 local POSTER_TYPES = { png = true, jpg = true, jpeg = true, webp = true }
 local FORBIDDEN = { "autoplay", "loop", "muted" }
+-- Deep enough for the deepest page directories (articles/<book>/<volume>/chapters/).
+local MAX_PARENT_SEGMENTS = 4
 
 local function stringify(val)
   if val == nil then
@@ -43,11 +45,17 @@ local function required(kwargs, field)
   return value
 end
 
--- A page-relative path inside the site: no scheme, no leading slash, no "..".
+-- A page-relative path inside the site: no scheme and no leading slash.
+-- Leading "../" segments may climb to shared media such as static/ (#5426);
+-- ".." anywhere after them is rejected.
 local function local_path(kwargs, field)
   local value = required(kwargs, field)
-  local safe = value:match("^[%w_][%w_./-]*$") ~= nil
-  if not safe or value:find("%.%.") or value:find("//") then
+  local rest, climbs = value, 0
+  while rest:find("^%.%./") do
+    rest, climbs = rest:sub(4), climbs + 1
+  end
+  local safe = rest:match("^[%w_][%w_./-]*$") ~= nil and climbs <= MAX_PARENT_SEGMENTS
+  if not safe or rest:find("%.%.") or rest:find("//") then
     fail(field, value, "must be a page-relative local path")
   end
   return value

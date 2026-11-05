@@ -48,9 +48,9 @@ from scripts.verify_proximal_distal_projection import (  # noqa: E402 -- reason:
 )
 from src.tools.site_page_scan import (  # noqa: E402 -- reason: sys.path modified above
     expand_includes,
+    is_draft,
     is_rendered,
     page_body,
-    parse_front_matter,
     rendered_relative_paths,
     strip_code,
 )
@@ -124,11 +124,6 @@ def embedded_figures(root: Path, page: Path) -> list[str]:
         if target.is_relative_to(root.resolve()):
             figures.append(target.relative_to(root.resolve()).as_posix())
     return sorted(set(figures))
-
-
-def is_draft(page: Path) -> bool:
-    """Return True when the page front matter sets ``draft: true``."""
-    return parse_front_matter(page.read_text(encoding="utf-8")).get("draft") is True
 
 
 def traced_figures(root: Path, projections: Path) -> set[str]:
