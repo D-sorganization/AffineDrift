@@ -232,6 +232,11 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-05 | #5456 | Trace 201 proximal-distal figures through a UD figure-map record and check it against the pinned UD map in CI |
+| 2026-11-05 | #5455 | Figure gate accepts UD figure-map records: a separate record kind that traces UD-projected figures to their run by sha256 and run_id, without mocap review attestations |
+| 2026-11-05 | #5438 | Restore ZVCF=control and ZTCF=drift in NOTATION.md and mechanics includes (#5430) |
+| 2026-11-05 | #5458 | Add the accessible vis-video shortcode for local WebM/MP4 embeds (poster, captions, lazy, no autoplay, provenance record) and trace embedded videos in the figure gate |
+| 2026-11-05 | #5457 | Draft site visual-placement audit table for VIS-SITE (page, concept, proposed visual, UD source, priority) |
 | 2026-11-04 | #5452 | Update critiques responses to reflect ZVCF = control and instant-vs-trajectory distinction. |
 | 2026-11-04 | #5451 | Exactness box for ZTCF/ZVCF decomposition, control-affine / IAA comparison, and naming note. |
 | 2026-11-04 | #5446 | Add lay guide to ZTCF and ZVCF reconciling time and active/passive lenses with snapshot caveats and mechanics baselines (#5440) |
