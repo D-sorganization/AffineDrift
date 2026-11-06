@@ -67,6 +67,7 @@ FIGURE_METADATA: dict[str, dict[str, str]] = {
 
 
 def _card(title: str, label: str, alt_text: str, inner: str) -> str:
+    """Wrap figure content in a labelled, accessible SVG card."""
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" width="600" height="320">'
         f'<rect width="600" height="320" fill="#f8fafc" rx="8"/>'
@@ -78,6 +79,7 @@ def _card(title: str, label: str, alt_text: str, inner: str) -> str:
 
 
 def render_figure(name: str, data: dict[str, Any]) -> str:
+    """Render a named MM-3 SVG figure from MM-2 fixture data."""
     meta = FIGURE_METADATA[name]
     title, label, alt = meta["title"], meta["label"], meta["alt_text"]
     if name == "f1_cardan_sequences.svg":
@@ -155,6 +157,7 @@ def render_figure(name: str, data: dict[str, Any]) -> str:
 
 
 def generate_figures(json_path: Path, output_dir: Path) -> list[Path]:
+    """Generate all 8 MM-3 SVG figures from an MM-2 JSON fixture file."""
     data = json.loads(json_path.read_text(encoding="utf-8"))
     output_dir.mkdir(parents=True, exist_ok=True)
     generated: list[Path] = []
@@ -166,6 +169,7 @@ def generate_figures(json_path: Path, output_dir: Path) -> list[Path]:
 
 
 def main() -> None:
+    """CLI entry point for generating MM-3 figures from MM-2 JSON."""
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("json_path", type=Path, help="Path to MM-2 fixture JSON")
