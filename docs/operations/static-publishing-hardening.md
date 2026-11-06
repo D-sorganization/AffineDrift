@@ -7,7 +7,7 @@ Epic tracker for professional deployment of affinedrift.com (#5321).
 | Issue | Topic | Artifact |
 | --- | --- | --- |
 | #5318 | Release and rollback | [site-release-rollback.md](./site-release-rollback.md) |
-| #5319 | Build manifest / SBOM | `scripts/write_build_manifest.py`, `schemas/build-manifest.schema.json` |
+| #5319 | Build manifest / SBOM | `scripts/write_build_manifest.py`, `scripts/write_sbom.py` (CycloneDX), `schemas/build-manifest.schema.json`; published as the `build-provenance-<sha>` workflow artifact |
 | #5320 | Post-deploy URL / SRI checks | [post-deploy-verification.md](./post-deploy-verification.md) |
 
 Sidekick packaging remains on hold per fleet directive (GM #5478).

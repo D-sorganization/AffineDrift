@@ -28,6 +28,7 @@ Record the deploy commit SHA from GitHub Actions and attach it to any incident t
 
 - Compare `_site/build-provenance.json` (written during Docker/production builds) with the deployed commit when investigating drift.
 - Regenerate the verifiable build manifest locally with `python3 -m scripts.write_build_manifest --check` (#5319).
+- Each Deploy Website run uploads `build-provenance-<sha>` (`build-manifest.json` and `sbom.cdx.json`, kept 90 days). Download it for the deployed commit and compare `git_commit` and the lock digests; the files are not served from the site (#5319).
 
 ## Related
 
