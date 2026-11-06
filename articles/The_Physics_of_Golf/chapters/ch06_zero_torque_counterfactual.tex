@@ -112,21 +112,29 @@ Numerical checks should include forward/inverse closure, constraint residuals, p
 \section{The Zero-Velocity Counterfactual}
 \label{sec:zvcf}
 
-The \textbf{instantaneous Zero-Velocity Counterfactual (ZVCF)} evaluates acceleration at the same configuration with specified velocities reset and declared input zero. For the unconstrained convention above, holding $z,t,p$ fixed gives
+The \textbf{instantaneous Zero-Velocity Counterfactual (ZVCF)} names the \textbf{control operand} at a frozen state: joint velocities are set to zero for evaluation, the declared applied generalized torque $\tau$ stays on the right-hand side, and gravity is omitted from the ZVCF operand so it is counted once in drift (align with \texttt{NOTATION.md}). For the unconstrained convention $M\dot v+h=Bu$ with $u=\tau$, holding $z,t,p$ fixed gives
 \begin{equation}
-a_{\mathrm{ZVCF}}(q,z,t)=-M(q)^{-1}h(q,0,z,t).
+a_{\mathrm{ZVCF}}(q,z,p;\tau)=M(q)^{-1}B(q)\tau
+\quad\text{with}\quad \dot q=0.
 \label{eq:zvcf_eom}
 \end{equation}
-If flexible or actuator velocities are stored in $z$, say whether they are also reset. Setting rigid joint velocity to zero does not silently reset all internal motion. In a rigid model with gravity as the only retained zero-velocity load this is $-M^{-1}h_g$. Elastic strain, prescribed loads and internal-state forces can survive zero joint velocity, so ZVCF is not generally gravity-only.
+When $B=I$, this is $a_{\mathrm{ZVCF}}=M^{-1}\tau$.
 
-The difference
+Separately, the \textbf{static zero-velocity bias acceleration}
 \begin{equation}
-a_0(q,v,z,t)=a_{\mathrm{ZVCF}}(q,z,t)+a_{\mathrm{velocity}}(q,v,z,t)
+a_{\mathrm{zv,bias}}(q,z,t)=-M(q)^{-1}h(q,0,z,t)
+\label{eq:zv-bias}
+\end{equation}
+isolates configuration- and internal-state-dependent bias at $\dot q=0$. Do not abbreviate this diagnostic as ZVCF. If flexible or actuator velocities are stored in $z$, say whether they are also reset. Setting rigid joint velocity to zero does not silently reset all internal motion. In a rigid model with gravity as the only retained load at $\dot q=0$, $a_{\mathrm{zv,bias}}$ is $-M^{-1}h_g$. Elastic strain, prescribed loads and internal-state forces can survive zero joint velocity, so $a_{\mathrm{zv,bias}}$ is not generally gravity-only.
+
+The drift block $a_0=-M^{-1}h(q,v,z,t)$ from \eqref{eq:ztcf_acceleration} splits into that static slice plus whatever velocity-dependent effects remain:
+\begin{equation}
+a_0(q,v,z,t)=a_{\mathrm{zv,bias}}(q,z,t)+a_{\mathrm{velocity}}(q,v,z,t)
 \label{eq:drift_decomposition}
 \end{equation}
-defines $a_{\mathrm{velocity}}$ by subtraction under identical remaining declarations. It includes all effects changed by that velocity reset, not just a selected Coriolis term. For constrained models, recompute the constraint acceleration baseline consistently, and first check that the reset is feasible. A prescribed coordinate $q=t$ requires $\dot q=1$; resetting it to zero violates the velocity constraint. A contact law can also change mode at zero velocity.
+defines $a_{\mathrm{velocity}}$ by subtraction under identical remaining declarations. It includes all effects that change when $\dot q$ moves away from zero, not just a selected Coriolis term. For constrained models, recompute the constraint acceleration baseline consistently, and first check that the reset is feasible. A prescribed coordinate $q=t$ requires $\dot q=1$; resetting it to zero violates the velocity constraint. A contact law can also change mode at zero velocity.
 
-This state reset is distinct from removing an input. It changes kinetic energy and may require an impulse if interpreted physically. Integrating afterward would define a separate initial-state intervention. Holding velocity zero for an interval would require a constraint or controller, not free evolution from the instantaneous sample.
+The ZVCF operand \eqref{eq:zvcf_eom} is distinct from both input removal and the static bias \eqref{eq:zv-bias}: it retains $\tau$ under the stated evaluation protocol. Integrating after a velocity reset would define a separate initial-state intervention. Holding velocity zero for an interval would require a constraint or controller, not free evolution from the instantaneous sample.
 
 \section{Two Uniform Rods: A Mechanics Check}
 \label{sec:double_pendulum_ztcf}
@@ -270,7 +278,7 @@ Zero generalized torque can coexist with substantial antagonistic muscle forces.
 \section{Summary and Preview}
 \label{sec:ztcf_summary}
 
-The central chain of reasoning is: define the input and full state; derive the retained dynamics; distinguish a pointwise evaluation from an integrated intervention; project into a named physical output; then test numerical and model uncertainty. The same mass matrix couples torque and acceleration, while state evolution couples present input removal to future drift. ZVCF adds a distinct state reset, and DCR adds a magnitude comparison. None of these steps by itself identifies biological effort or finite-horizon control authority.
+The central chain of reasoning is: define the input and full state; derive the retained dynamics; distinguish a pointwise evaluation from an integrated intervention; project into a named physical output; then test numerical and model uncertainty. The same mass matrix couples torque and acceleration, while state evolution couples present input removal to future drift. ZVCF evaluates the \textbf{control operand} under a velocity reset, and DCR adds a magnitude comparison. None of these steps by itself identifies biological effort or finite-horizon control authority.
 
 The next chapter studies constraint forces. Those forces are essential to a feasible counterfactual whenever supports and contacts matter, even when all declared applied torques are zero.
 

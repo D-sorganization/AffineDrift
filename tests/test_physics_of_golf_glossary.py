@@ -59,11 +59,12 @@ def test_counterfactuals_do_not_claim_zero_control_means_zero_muscle() -> None:
 
 
 def test_zvcf_is_an_instantaneous_zero_control_acceleration() -> None:
-    """ZVCF is an evaluation, not a released or control-preserving trajectory."""
+    """ZVCF names the control operand M^{-1}B\tau at dot q = 0 (see NOTATION)."""
     chapter_text = ZERO_TORQUE_CHAPTER.read_text(encoding="utf-8")
     assert "instantaneous Zero-Velocity Counterfactual (ZVCF)" in chapter_text
-    assert "specified velocities reset and declared input zero" in chapter_text
-    assert r"a_{\mathrm{ZVCF}}(q,z,t)=-M(q)^{-1}h(q,0,z,t)" in chapter_text
+    assert "control operand" in chapter_text
+    assert r"a_{\mathrm{ZVCF}}(q,z,p;\tau)=M(q)^{-1}B(q)\tau" in chapter_text
+    assert "Do not abbreviate this diagnostic as ZVCF" in chapter_text
     assert "first check that the reset is feasible" in chapter_text
     assert "then release" not in chapter_text
 
