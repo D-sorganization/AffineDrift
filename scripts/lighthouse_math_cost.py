@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Attribute a Lighthouse report's cost to client-side math rendering (#5253).
 
-Usage: ``python3 scripts/lighthouse_math_cost.py REPORT.json``
+Usage: ``python3 scripts/lighthouse_math_cost.py REPORT.json [REPORT2.json REPORT3.json]``
 
 Reads one Lighthouse JSON report and prints the share of transfer size, script
 boot-up time and render blocking that comes from MathJax-family scripts. It only
@@ -11,11 +11,22 @@ reads the report; it changes no site configuration.
 from __future__ import annotations
 
 import json
+import math
+import statistics
 import sys
 from pathlib import Path
 from typing import Any
 
 MATH_MARKERS = ("mathjax", "equation-runtime", "katex")
+REPEAT_COUNT = 3
+COMPARISON_FIELDS = ("requestedUrl", "finalDisplayedUrl", "lighthouseVersion", "configSettings")
+REQUIRED_AUDITS = (
+    "largest-contentful-paint",
+    "total-blocking-time",
+    "network-requests",
+    "bootup-time",
+    "render-blocking-resources",
+)
 
 
 def _is_math(url: str) -> bool:
@@ -53,11 +64,75 @@ def math_cost(lhr: dict[str, Any]) -> dict[str, float]:
     }
 
 
+def _repeat_metrics(report: dict[str, Any]) -> dict[str, float]:
+    """Reject failed or incomplete repeat runs instead of treating missing audits as zero."""
+    audits = report.get("audits", {})
+    if report.get("runtimeError") or any(name not in audits for name in REQUIRED_AUDITS):
+        raise ValueError("repeat report contains a runtime error or missing audit")
+    if any(
+        audits[name].get("errorMessage") or audits[name].get("scoreDisplayMode") == "error"
+        for name in REQUIRED_AUDITS
+    ):
+        raise ValueError("repeat report contains a failed required audit")
+    if any("numericValue" not in audits[name] for name in REQUIRED_AUDITS[:2]):
+        raise ValueError("repeat report contains an audit without its numeric result")
+    values = math_cost(report)
+    if any(
+        not isinstance(value, (int, float)) or not math.isfinite(value) for value in values.values()
+    ):
+        raise ValueError("repeat report metrics must be finite numbers")
+    return values
+
+
+def repeat_math_cost(reports: list[dict[str, Any]]) -> dict[str, Any]:
+    """Summarize three independent, comparable Lighthouse runs without a causal SSR claim.
+
+    Preconditions: identical URLs, Lighthouse version and settings; distinct fetch times.
+    Postcondition: each metric retains its min, median and max plus all per-run values.
+    """
+    if len(reports) != REPEAT_COUNT:
+        raise ValueError("exactly three Lighthouse reports are required")
+    baseline = {field: reports[0].get(field) for field in COMPARISON_FIELDS}
+    if any(value is None or value == "" for value in baseline.values()):
+        raise ValueError("repeat reports require URL, version and settings provenance")
+    if any(
+        {field: report.get(field) for field in COMPARISON_FIELDS} != baseline for report in reports
+    ):
+        raise ValueError("repeat reports must use identical URLs, Lighthouse version and settings")
+    times = [report.get("fetchTime") for report in reports]
+    if (
+        any(not isinstance(time, str) or not time for time in times)
+        or len(set(times)) != REPEAT_COUNT
+    ):
+        raise ValueError("repeat reports require three distinct fetchTime values")
+    metrics = [_repeat_metrics(report) for report in reports]
+    return {
+        **baseline,
+        "run_count": REPEAT_COUNT,
+        "runs": [
+            {"fetchTime": time, "metrics": values, "warnings": report.get("runWarnings", [])}
+            for time, values, report in zip(times, metrics, reports, strict=True)
+        ],
+        "metrics": {
+            key: {
+                "min": min(values[key] for values in metrics),
+                "median": statistics.median(values[key] for values in metrics),
+                "max": max(values[key] for values in metrics),
+            }
+            for key in metrics[0]
+        },
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
-    if len(args) != 1:
+    if len(args) not in (1, REPEAT_COUNT):
         print(__doc__)
         return 2
+    if len(args) == REPEAT_COUNT:
+        reports = [json.loads(Path(path).read_text(encoding="utf-8")) for path in args]
+        sys.stdout.write(json.dumps(repeat_math_cost(reports), indent=2, allow_nan=False) + "\n")
+        return 0
     report = json.loads(Path(args[0]).read_text(encoding="utf-8"))
     for key, value in math_cost(report).items():
         print(f"{key}: {value}")

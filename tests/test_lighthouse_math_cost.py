@@ -60,3 +60,102 @@ def test_math_cost_reports_render_blocking_math_waste() -> None:
 def test_math_cost_rejects_a_non_lighthouse_report() -> None:
     with pytest.raises(ValueError, match="Lighthouse"):
         math_cost({"foo": 1})
+
+
+def _repeats() -> list[dict]:
+    reports = [_lhr() for _ in range(3)]
+    for index, report in enumerate(reports):
+        report.update(
+            requestedUrl="https://affinedrift.com/articles/theory-part1.html",
+            finalDisplayedUrl="https://affinedrift.com/articles/theory-part1.html",
+            lighthouseVersion="12.6.1",
+            fetchTime=f"2026-11-06T20:0{index}:00Z",
+            configSettings={"formFactor": "mobile", "throttlingMethod": "simulate"},
+        )
+        report["audits"]["total-blocking-time"]["numericValue"] = [900, 100, 500][index]
+    return reports
+
+
+def test_repeat_summary_reports_spread_and_preserves_run_evidence() -> None:
+    from scripts.lighthouse_math_cost import repeat_math_cost
+
+    reports = _repeats()
+    result = repeat_math_cost(reports)
+    assert result["run_count"] == 3
+    assert result["metrics"]["tbt_ms"] == {"min": 100, "median": 500, "max": 900}
+    assert result["runs"][0]["fetchTime"] == reports[0]["fetchTime"]
+    assert result["runs"][0]["metrics"]["tbt_ms"] == 900
+    assert result["configSettings"] == reports[0]["configSettings"]
+
+
+@pytest.mark.parametrize("count", [0, 1, 2, 4])
+def test_repeat_summary_requires_three_runs(count: int) -> None:
+    from scripts.lighthouse_math_cost import repeat_math_cost
+
+    with pytest.raises(ValueError, match="three"):
+        repeat_math_cost((_repeats() * 2)[:count])
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("requestedUrl", "https://example.org/other"),
+        ("finalDisplayedUrl", "https://example.org/redirected"),
+        ("lighthouseVersion", "13.0.0"),
+        ("configSettings", {"formFactor": "desktop"}),
+        ("fetchTime", "2026-11-06T20:00:00Z"),
+    ],
+)
+def test_repeat_summary_rejects_incomparable_or_duplicate_runs(field: str, value: object) -> None:
+    from scripts.lighthouse_math_cost import repeat_math_cost
+
+    reports = _repeats()
+    reports[1][field] = value
+    with pytest.raises(ValueError):
+        repeat_math_cost(reports)
+
+
+@pytest.mark.parametrize("value", [None, float("nan"), float("inf")])
+def test_repeat_summary_rejects_failed_metric(value: float | None) -> None:
+    from scripts.lighthouse_math_cost import repeat_math_cost
+
+    reports = _repeats()
+    reports[1]["categories"]["performance"]["score"] = value
+    with pytest.raises(ValueError, match="finite"):
+        repeat_math_cost(reports)
+
+
+def test_repeat_summary_rejects_missing_metric_audit() -> None:
+    from scripts.lighthouse_math_cost import repeat_math_cost
+
+    reports = _repeats()
+    del reports[1]["audits"]["total-blocking-time"]
+    with pytest.raises(ValueError, match="audit"):
+        repeat_math_cost(reports)
+
+
+@pytest.mark.parametrize("audit", ["bootup-time", "total-blocking-time"])
+def test_repeat_summary_rejects_failed_required_audit(audit: str) -> None:
+    from scripts.lighthouse_math_cost import repeat_math_cost
+
+    reports = _repeats()
+    reports[1]["audits"][audit] = {"scoreDisplayMode": "error", "errorMessage": "trace failed"}
+    with pytest.raises(ValueError, match="audit"):
+        repeat_math_cost(reports)
+
+
+def test_repeat_summary_preserves_lighthouse_warnings() -> None:
+    from scripts.lighthouse_math_cost import repeat_math_cost
+
+    reports = _repeats()
+    reports[1]["runWarnings"] = ["Test warning"]
+    assert repeat_math_cost(reports)["runs"][1]["warnings"] == ["Test warning"]
+
+
+def test_repeat_summary_rejects_missing_numeric_result() -> None:
+    from scripts.lighthouse_math_cost import repeat_math_cost
+
+    reports = _repeats()
+    del reports[1]["audits"]["total-blocking-time"]["numericValue"]
+    with pytest.raises(ValueError, match="audit"):
+        repeat_math_cost(reports)
