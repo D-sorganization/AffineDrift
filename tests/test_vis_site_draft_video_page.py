@@ -58,6 +58,10 @@ def test_page_embeds_the_ztcf_explainer_with_resolving_media() -> None:
     kwargs = _embed_kwargs()
     for key in ("src", "poster", "captions"):
         assert (PAGE.parent / kwargs[key]).resolve().is_file(), kwargs[key]
+    text = PAGE.read_text(encoding="utf-8")
+    assert "open the same media directly" in text
+    for path in ("../../static/explainers/ztcf.webm", "../../static/explainers/ztcf.en.vtt"):
+        assert (PAGE.parent / path).resolve().is_file(), path
     assert gate.embedded_figures(ROOT, PAGE) == [VIDEO]
     assert (ROOT / kwargs["record"]).resolve() == gate.DEFAULT_EXEMPTIONS
 
