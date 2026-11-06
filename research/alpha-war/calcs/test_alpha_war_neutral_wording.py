@@ -31,18 +31,22 @@ class TestNeutralWording(unittest.TestCase):
     """Use assertTrue/assertFalse so a failure never diffs a whole chapter."""
 
     def setUp(self) -> None:
+        """Load the draft text once per test."""
         self.text = DRAFT.read_text(encoding="utf-8")
 
     def test_no_loaded_characterizations(self) -> None:
+        """The draft contains none of the loaded words in LOADED."""
         lowered = self.text.lower()
         found = [word for word in LOADED if word in lowered]
         self.assertEqual(found, [])
 
     def test_conflict_of_interest_is_disclosed_in_the_preface(self) -> None:
+        """The preface carries the conflict-of-interest disclosure."""
         preface = self.text.split("# Executive Summary", 1)[0]
         self.assertTrue("**Conflict of interest.**" in preface)
 
     def test_author_analysis_is_a_separate_top_level_section(self) -> None:
+        """The author's own analysis is its own top-level section 5A."""
         heading = re.search(r"^# 5A\. Author Supplementary Analysis", self.text, re.M)
         self.assertTrue(heading is not None)
 

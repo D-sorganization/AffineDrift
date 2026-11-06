@@ -663,7 +663,7 @@ Figure 11 in [@nesbit2005work, Fig. 11, p. 529] became a focal artifact of the A
 
 ![Qualitative re-plot of Nesbit and Serrano Figure 11 subject trends (not a reproduced journal figure)](figures/fig-nesbit-fig11-schematic.svg){fig-alt="Schematic four-panel sketch indicating which of four published subjects show positive or negative alpha torque trends near impact per the peer-reviewed caption"}
 
-Proponents of Camp A pointed to the visual graphs of Figure 11, noting that two of the four subjects (Subjects 2 and 4) finished the downswing with positive alpha torque curves into impact. From this, commercial coaches inferred that skilled golfers naturally apply positive alpha torque to drive the clubhead through the ball.
+Proponents of Camp A read the graphs of Figure 11 as showing positive alpha torque curves into impact for two of the four subjects (Subjects 2 and 4); this per-subject reading is unverified, VRF-11, because the paper tabulates no values at impact and the curves were read by eye only. From this, commercial coaches inferred that skilled golfers naturally apply positive alpha torque to drive the clubhead through the ball.
 
 However, an audit of Nesbit and Serrano's text shows a narrower statement than Camp B's retelling. In the Discussion (p. 531, [@nesbit2005work]) they say that the scratch golfer (Subject 1) "was able to zero his power output at impact resulting in maximum work output" and, for the subjects as a group, wrote:
 
