@@ -7,7 +7,7 @@ ranking in the epic.
 ## Scope and Posture
 
 - Audience: a technically literate reader who has not met the rotation reference.
-- Reuse, do not duplicate: [`articles/rotation-representations-reference.qmd`](../../articles/rotation-representations-reference.qmd)
+- Reuse, do not duplicate: [`articles/rotation-representations-reference.qmd`](../../../articles/rotation-representations-reference.qmd)
   already covers matrices, Euler angles, gimbal lock, axis-angle, exponential
   coordinates, quaternions, the double cover and the golf bridge. The new
   article links to its sections and only adds what it lacks (see "Gap
