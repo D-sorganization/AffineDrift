@@ -552,11 +552,13 @@ $$
 P = \mathbf{R} \cdot \left[ \mathbf{v}_M + \boldsymbol{\omega} \times (\mathbf{r}_G - \mathbf{r}_M) \right] + \mathbf{M}_G \cdot \boldsymbol{\omega} = \mathbf{R} \cdot \mathbf{v}_G + \mathbf{M}_G \cdot \boldsymbol{\omega}
 $$
 
-**The Power Invariance Theorem:**
+**The Power Invariance Theorem (hand input to the club):**
 
 $$
-P = \underbrace{\mathbf{R} \cdot \mathbf{v}_M}_{\text{Grip Linear Power}} + \underbrace{\mathbf{C}_h \cdot \boldsymbol{\omega}}_{\text{Couple Power}} = \underbrace{\mathbf{R} \cdot \mathbf{v}_G}_{\text{COM Linear Power}} + \underbrace{\mathbf{M}_G \cdot \boldsymbol{\omega}}_{\text{COM Moment Power}} \equiv \frac{d}{dt}(E_{\text{kinetic}})
+P_{\text{hand}\rightarrow\text{club}} = \underbrace{\mathbf{R} \cdot \mathbf{v}_M}_{\text{Grip Linear Power}} + \underbrace{\mathbf{C}_h \cdot \boldsymbol{\omega}}_{\text{Couple Power}} = \underbrace{\mathbf{R} \cdot \mathbf{v}_G}_{\text{COM Linear Power}} + \underbrace{\mathbf{M}_G \cdot \boldsymbol{\omega}}_{\text{COM Moment Power}}
 $$
+
+The kinetic-energy rate of the club alone obeys the work–energy principle with **all** external powers, including gravity and (when modeled) fluid drag, not the hand term alone: $\frac{d}{dt}E_{\text{kinetic, club}} = P_{\text{hand}\rightarrow\text{club}} + P_{\text{gravity}} + P_{\text{aero}} + \cdots$. Chapter 3 elsewhere keeps the stated gravity and aerodynamic load terms; this box only fixes the pairing statement so it cannot be read as “hands equal $\dot{E}_{\text{kinetic}}$” in isolation.
 
 **Adjudication of [@nesbit2005work] and Olson's Critique (April 2, 2022):**  
 In their 2005 paper _Work and Power Analysis of the Golf Swing_, Nesbit and Serrano partitioned energy into joint rotational work and body segment work. They asserted that because there is no relative linear displacement _at_ an anatomical joint, joint contact forces do no linear work, categorizing all force-based energy transfer under whole-body linear kinetics.
@@ -1776,9 +1778,9 @@ Let $\mathcal{F}_0$ be a fixed inertial reference frame. The motion of a rigid b
 $$\mathbf{V}_P = \begin{bmatrix} \boldsymbol{\omega} \\ \mathbf{v}_P \end{bmatrix} \in \mathbb{R}^6$$
 where $\boldsymbol{\omega} \in \mathbb{R}^3$ is the angular velocity of the body and $\mathbf{v}_P \in \mathbb{R}^3$ is the linear velocity of point $P$.
 
-The dual space of forces and moments is the space of spatial forces (wrenches) $\mathbf{W}_P \in \operatorname{se}^*(3)$:
-$$\mathbf{W}_P = \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_P \end{bmatrix} \in \mathbb{R}^6$$
-where $\mathbf{R} \in \mathbb{R}^3$ is the resultant linear force and $\mathbf{M}_P \in \mathbb{R}^3$ is the resultant moment about point $P$.
+The dual space of forces and moments is the space of spatial forces (wrenches) $\mathbf{W}_P \in \operatorname{se}^*(3)$. To pair correctly with the twist order $\mathbf{V}_P=[\boldsymbol{\omega}^\top,\mathbf{v}_P^\top]^\top$, we stack **moment first, then force** (Featherstone-style):
+$$\mathbf{W}_P = \begin{bmatrix} \mathbf{M}_P \\ \mathbf{R} \end{bmatrix} \in \mathbb{R}^6$$
+where $\mathbf{R} \in \mathbb{R}^3$ is the resultant force and $\mathbf{M}_P \in \mathbb{R}^3$ is the resultant moment about point $P$. Mechanical power is $\mathcal{P}=\mathbf{M}_P\cdot\boldsymbol{\omega}+\mathbf{R}\cdot\mathbf{v}_P$.
 
 ### A.2 The Wrench Adjoint Transport Operator
 
@@ -1787,27 +1789,28 @@ $$\mathbf{V}_B = \mathbf{Ad}_{g_{BA}} \mathbf{V}_A = \begin{bmatrix} \mathbf{I}_
 where $[\mathbf{r}]_\times \in \mathbb{R}^{3 \times 3}$ is the standard skew-symmetric cross-product matrix:
 $$[\mathbf{r}]_\times = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0 \end{bmatrix}$$
 
-Because physical power is invariant under coordinate changes, the wrench transforms via the dual (co-adjoint) operator:
+Because physical power is invariant under coordinate changes, the wrench transforms via the dual (co-adjoint) to the twist adjoint. With $\mathbf{W}=[\mathbf{M}^\top,\mathbf{R}^\top]^\top$ and $\mathbf{V}=[\boldsymbol{\omega}^\top,\mathbf{v}^\top]^\top$:
 $$\mathcal{P} = \mathbf{W}_B^\top \mathbf{V}_B = \mathbf{W}_A^\top \mathbf{V}_A$$
-$$\mathbf{W}_A^\top \mathbf{V}_A = \mathbf{W}_B^\top (\mathbf{Ad}_{g_{BA}} \mathbf{V}_A) \implies \mathbf{W}_A = \mathbf{Ad}_{g_{BA}}^\top \mathbf{W}_B$$
+$$\mathbf{W}_A^\top \mathbf{V}_A = \mathbf{W}_B^\top (\mathbf{Ad}_{g_{BA}} \mathbf{V}_A) \implies \mathbf{W}_A = \mathbf{Ad}_{g_{BA}}^{-\top} \mathbf{W}_B$$
 
-Inverting this relationship gives the spatial wrench transport law from point $A$ to point $B$:
-$$\mathbf{W}_B = \mathbf{Ad}_{g_{BA}}^{-\top} \mathbf{W}_A = \begin{bmatrix} \mathbf{I}_3 & \mathbf{0}_3 \\ -[\mathbf{r}_{BA}]_\times & \mathbf{I}_3 \end{bmatrix} \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_A \end{bmatrix}$$
-
-Multiplying out the matrix rows gives the component equations:
+Explicit transport from station $A$ to station $B$ (same resultant force $\mathbf{R}$, moment updated about $B$):
 $$\mathbf{R}_B = \mathbf{R}_A = \mathbf{R}$$
-$$\mathbf{M}_B = \mathbf{M}_A - [\mathbf{r}_{BA}]_\times \mathbf{R} = \mathbf{M}_A - (\mathbf{r}_B - \mathbf{r}_A) \times \mathbf{R}$$
+$$\mathbf{M}_B = \mathbf{M}_A + \mathbf{r}_{BA} \times \mathbf{R} = \mathbf{M}_A + (\mathbf{r}_B - \mathbf{r}_A) \times \mathbf{R}$$
+
+In block form, $\mathbf{W}_B = \mathbf{Ad}_{g_{BA}}^{-\top} \mathbf{W}_A$ with
+$$\mathbf{Ad}_{g_{BA}}^{-\top} = \begin{bmatrix} \mathbf{I}_3 & -[\mathbf{r}_{BA}]_\times \\ \mathbf{0}_3 & \mathbf{I}_3 \end{bmatrix}, \qquad \mathbf{W}_A=\begin{bmatrix} \mathbf{M}_A \\ \mathbf{R} \end{bmatrix}, \quad \mathbf{W}_B=\begin{bmatrix} \mathbf{M}_B \\ \mathbf{R} \end{bmatrix}.$$
+
 This completes the formal proof of the Poinsot transport theorem used throughout Chapters 6 and 7.
 
 ### A.3 Step-by-Step Proof of Mechanical Work and Power Invariance
 
 We verify that transporting the evaluation point does not alter the computed mechanical work or power delivered by the hands to the club:
-$$\mathcal{P}_B = \mathbf{W}_B^\top \mathbf{V}_B = \mathbf{R}^\top \mathbf{v}_B + \mathbf{M}_B^\top \boldsymbol{\omega}$$
-Substitute $\mathbf{v}_B = \mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}$ and $\mathbf{M}_B = \mathbf{M}_A - \mathbf{r}_{BA} \times \mathbf{R}$:
-$$\mathcal{P}_B = \mathbf{R}^\top (\mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}) + (\mathbf{M}_A - \mathbf{r}_{BA} \times \mathbf{R})^\top \boldsymbol{\omega}$$
-Using the scalar triple product identity $\mathbf{a}^\top (\mathbf{b} \times \mathbf{c}) = (\mathbf{a} \times \mathbf{b})^\top \mathbf{c}$:
-$$\mathbf{R}^\top (\boldsymbol{\omega} \times \mathbf{r}_{BA}) = (\mathbf{R} \times \boldsymbol{\omega})^\top \mathbf{r}_{BA} = -(\boldsymbol{\omega} \times \mathbf{R})^\top \mathbf{r}_{BA} = -(\mathbf{r}_{BA} \times \mathbf{R})^\top \boldsymbol{\omega}$$
-The cross terms cancel identically:
+$$\mathcal{P}_B = \mathbf{W}_B^\top \mathbf{V}_B = \mathbf{M}_B^\top \boldsymbol{\omega} + \mathbf{R}^\top \mathbf{v}_B$$
+Substitute $\mathbf{v}_B = \mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}$ and $\mathbf{M}_B = \mathbf{M}_A + \mathbf{r}_{BA} \times \mathbf{R}$:
+$$\mathcal{P}_B = \mathbf{R}^\top (\mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}) + (\mathbf{M}_A + \mathbf{r}_{BA} \times \mathbf{R})^\top \boldsymbol{\omega}$$
+Expand: $\mathbf{R}^\top (\boldsymbol{\omega} \times \mathbf{r}_{BA}) + (\mathbf{r}_{BA} \times \mathbf{R})^\top \boldsymbol{\omega}$. Using cyclic permutation of the scalar triple product,
+$$\mathbf{R}^\top (\boldsymbol{\omega} \times \mathbf{r}_{BA}) = (\mathbf{R} \times \boldsymbol{\omega})^\top \mathbf{r}_{BA} = (\mathbf{r}_{BA} \times \mathbf{R})^\top \boldsymbol{\omega}.$$
+Thus the cross terms cancel identically:
 $$\mathcal{P}_B = \mathbf{R}^\top \mathbf{v}_A + \mathbf{M}_A^\top \boldsymbol{\omega} = \mathcal{P}_A$$
 Power is strictly invariant. Changing the moment evaluation point shifts energy attribution between linear translation ($\mathbf{R}^\top \mathbf{v}$) and rotation ($\mathbf{M}^\top \boldsymbol{\omega}$), but preserves total power.
 
