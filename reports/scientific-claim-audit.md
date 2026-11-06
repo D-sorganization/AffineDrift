@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 288
+- Reviewed: 287
 - Deferred: 0
 - Exempt: 3
 
@@ -82,7 +82,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 8 |
 | `/articles/shot-pattern-analysis.html` | `articles/shot-pattern-analysis.qmd` | 13 |
 | `/articles/slack-management-linked-systems.html` | `articles/slack-management-linked-systems.qmd` | 8 |
-| `/articles/slack-takeup-identifiability.html` | `articles/slack-takeup-identifiability.qmd` | 8 |
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
 | `/articles/superposition.html` | `articles/superposition.qmd` | 4 |
@@ -376,7 +375,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 6 |
 | `ad-route-98afce2d9c4b` | `/articles/shot-pattern-analysis.html` | Reviewed | — | None | None | 0 |
 | `ad-route-99e4c31f61ba` | `/articles/slack-management-linked-systems.html` | Reviewed | — | None | None | 0 |
-| `ad-route-49e059f4029d` | `/articles/slack-takeup-identifiability.html` | Reviewed | — | None | None | 0 |
 | `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |
 | `ad-route-0cd531e060c5` | `/articles/superposition.html` | Reviewed | — | None | None | 4 |
