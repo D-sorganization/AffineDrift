@@ -608,6 +608,9 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     headless_agents = _find_route(inventory, "/pages/upstreamdrift-headless-and-agents.html")
     assert headless_agents["status"] == "reviewed"
     assert headless_agents["review"]["source_path"] == "pages/upstreamdrift-headless-and-agents.qmd"
+    swing_funnels_ucm = _find_route(inventory, "/articles/swing-robust-funnels-ucm.html")
+    assert swing_funnels_ucm["status"] == "reviewed"
+    assert swing_funnels_ucm["review"]["source_path"] == "articles/swing-robust-funnels-ucm.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )
