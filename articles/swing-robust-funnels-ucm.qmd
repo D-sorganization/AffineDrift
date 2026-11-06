@@ -192,6 +192,12 @@ The linear and Monte Carlo $\rho$ **disagree moderately** because the linearizat
 
 ![Monte Carlo Samples and the Linear $\pm 2\sigma$ Ellipse for $(v,\psi)$ at Impact.](swing-robust-funnels-figures/fig-mc-linear.svg){#fig-mc-linear fig-alt="Scatter of Monte Carlo speed and path angle with overlaid linear covariance ellipse"}
 
+<details>
+<summary>Long description (SVG sensitivity figures)</summary>
+
+Long description: **fig-sigma-max** plots $\sigma_{\max}$ of the discrete variational transition matrix versus time (ms) for the manufactured planar triple pendulum; shaded bands mark the last 150 ms before nominal impact and a 100–150 ms latency band. **fig-cov-ellipse** shows the linearized covariance ellipse for clubhead speed $v$ versus in-plane path angle $\psi$ at the declared impact event, with the annotated linear correlation. **fig-event-vs-fixed** compares gradient norms for $v$ and $\psi$ at event time $t_e$ versus a fixed clock sample just before $t_e$. **fig-mc-linear** overlays Monte Carlo $(v,\psi)$ samples at impact with the linear $\pm 2\sigma$ ellipse from the same linearization point.
+</details>
+
 **Regenerate** figures and JSON after changing the model: `PYTHONPATH=. python scripts/build_swing_robust_funnels_figures.py`.
 
 Linear propagation fails when second-order flow curvature and Part 4 residuals dominate; keep the Monte Carlo map as a qualitative cross-check at moderate noise.
