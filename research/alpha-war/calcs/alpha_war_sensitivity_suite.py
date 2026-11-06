@@ -21,6 +21,7 @@ from __future__ import annotations
 import json
 import logging
 import math
+import os
 import sys
 import types
 from pathlib import Path
@@ -29,7 +30,20 @@ from typing import Any
 import numpy as np
 from scipy.signal import butter, filtfilt
 
-UPSTREAM_DRIFT_ROOT = Path("/home/dieterolson/staff-repos/UpstreamDrift")
+
+def _resolve_upstream_drift_root() -> Path:
+    """Return the UpstreamDrift checkout used for read-only WSCG and mechanics routines."""
+    env_root = os.environ.get("UPSTREAM_DRIFT_ROOT", "").strip()
+    if env_root:
+        return Path(env_root).expanduser().resolve()
+    affine_root = Path(__file__).resolve().parents[3]
+    sibling = affine_root.parent / "UpstreamDrift"
+    if sibling.is_dir():
+        return sibling.resolve()
+    return Path("/home/dieterolson/staff-repos/UpstreamDrift")
+
+
+UPSTREAM_DRIFT_ROOT = _resolve_upstream_drift_root()
 if str(UPSTREAM_DRIFT_ROOT) not in sys.path:
     sys.path.insert(0, str(UPSTREAM_DRIFT_ROOT))
 
@@ -48,6 +62,37 @@ for _pkg_name, _pkg_paths in [
         _mod = types.ModuleType(_pkg_name)
         _mod.__path__ = _pkg_paths
         sys.modules[_pkg_name] = _mod
+
+
+def _ensure_upstream_logging_pkg_shim() -> None:
+    """Install a minimal logging_pkg when UpstreamDrift lacks the packaged namespace."""
+    cfg_name = "src.shared.python.logging_pkg.logging_config"
+    if cfg_name in sys.modules:
+        return
+    try:
+        import importlib
+
+        importlib.import_module(cfg_name)
+    except ModuleNotFoundError:
+        pkg_name = "src.shared.python.logging_pkg"
+        if pkg_name not in sys.modules:
+            _pkg = types.ModuleType(pkg_name)
+            _pkg.__path__ = []
+            sys.modules[pkg_name] = _pkg
+        _cfg = types.ModuleType(cfg_name)
+
+        def get_logger(name: str) -> logging.Logger:
+            return logging.getLogger(name)
+
+        def setup_logging() -> None:
+            return
+
+        _cfg.get_logger = get_logger
+        _cfg.setup_logging = setup_logging
+        sys.modules[cfg_name] = _cfg
+
+
+_ensure_upstream_logging_pkg_shim()
 
 # UpstreamDrift imports must follow runtime namespace bootstrap.
 # ruff: noqa: E402

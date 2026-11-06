@@ -211,7 +211,7 @@ The mathematical relationships, origins, and physical roles of these four frames
 | Frame Name                       |           Symbol            |           Origin            | Basis Axes                                                                                                                                                         | Primary Application & Physical Role                                                        |
 | :------------------------------- | :-------------------------: | :-------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
 | **Global Inertial Frame**        |       $\mathcal{F}_0$       |     Ground / Tee ($O$)      | $\{\hat{\mathbf{I}}, \hat{\mathbf{J}}, \hat{\mathbf{K}}\}$: Target line, lateral ground, vertical up opposing gravity                                              | Inertial reference for full-body tracking, clubhead trajectory, and ground reaction forces |
-| **Functional Swing Plane Frame** | $\mathcal{F}_{\text{FSP}}$  | Mid-Hands $\mathbf{r}_M(t)$ | $\{\hat{\mathbf{e}}_t, \hat{\mathbf{e}}_p, \hat{\mathbf{e}}_n\}$: Grip velocity tangent, in-plane normal toward ball, plane normal $\hat{\mathbf{n}}_{\text{FSP}}$ | Resolves true uncocking mechanics along the instantaneous planar arc of the clubhead       |
+| **Functional Swing Plane Frame** | $\mathcal{F}_{\text{FSP}}$  | Mid-Hands $\mathbf{r}_M(t)$ | $\{\hat{\mathbf{e}}_t, \hat{\mathbf{e}}_p, \hat{\mathbf{e}}_n\}$: Shaft tangent (positive down the shaft toward the clubhead; Appendix B.0 transport direction), in-plane normal toward the ball, plane normal $\hat{\mathbf{n}}_{\text{FSP}}$ | Resolves true uncocking mechanics along the instantaneous planar arc of the clubhead       |
 | **Moving Grip Frame**            | $\mathcal{F}_{\text{grip}}$ | Mid-Hands $\mathbf{r}_M(t)$ | $\{\hat{\mathbf{x}}_g, \hat{\mathbf{y}}_g, \hat{\mathbf{z}}_g\}$: Out-of-plane normal, in-plane uncocking transverse, axial down shaft                             | Directly measures forces and torques applied by the golfer's hands on the handle           |
 | **Club-Fixed Principal Frame**   | $\mathcal{F}_{\text{club}}$ |  Club Center of Mass ($G$)  | $\{\hat{\mathbf{u}}_\alpha, \hat{\mathbf{u}}_\beta, \hat{\mathbf{u}}_\gamma\}$: Face-normal uncocking, toe-up face bending, longitudinal shaft axis                | Standard aerospace body-fixed frame; rotates with clubface roll and shaft deflection       |
 
@@ -225,7 +225,7 @@ The mathematical relationships, origins, and physical roles of these four frames
 ### 2. Functional Swing Plane Frame ($\mathcal{F}_{\text{FSP}}$)
 
 - **Origin ($M$):** Located at the mid-hands grip station $\mathbf{r}_M(t)$.
-- **Axes ($\{\hat{\mathbf{e}}_t, \hat{\mathbf{e}}_p, \hat{\mathbf{e}}_n\}$):** $\hat{\mathbf{e}}_t$ points along the instantaneous velocity of the grip; $\hat{\mathbf{e}}_p$ lies within the swing plane perpendicular to the shaft directed toward the ball; $\hat{\mathbf{e}}_n = \hat{\mathbf{n}}_{\text{FSP}}$ is the plane normal.
+- **Axes ($\{\hat{\mathbf{e}}_t, \hat{\mathbf{e}}_p, \hat{\mathbf{e}}_n\}$):** $\hat{\mathbf{e}}_t$ is the **shaft tangential axis** (unit vector along the shaft, positive toward the clubhead), matching the transport direction used in Appendix B.0; $\hat{\mathbf{e}}_p$ lies within the swing plane, perpendicular to the shaft, directed toward the ball; $\hat{\mathbf{e}}_n = \hat{\mathbf{n}}_{\text{FSP}}$ is the plane normal. Where hub kinematics matter explicitly, denote the normalized grip-point velocity $\hat{\mathbf{v}}_M = \mathbf{v}_M / \|\mathbf{v}_M\|$; $\hat{\mathbf{e}}_t$ and $\hat{\mathbf{v}}_M$ are **not** the same vector in general (they coincide only when the mid-hands path lies exactly along the shaft line).
 
 ### 3. Moving Grip Frame ($\mathcal{F}_{\text{grip}}$)
 
@@ -252,7 +252,7 @@ A major impediment to clarity has been the disparate nomenclature employed acros
 : Table 2.3: Cross-camp axis and sign convention concordance table. {#tbl-concordance}
 
 ::: {.callout-note title="Box 2.1: Transformation of 3D Torque Vectors Under Frame Rotation and Clubface Roll Mixing"}
-**Plain-language lead:** When analysts calculate torque in a coordinate system that rolls along with the rotating clubface rather than staying aligned with the swing plane, the physical twisting forces get mixed together. As the golfer squares the face into impact, out-of-plane bending loads bleed into the uncocking measurement, falsely making a braking torque look like an active forward push.
+**Plain-language lead:** When analysts calculate torque in a coordinate system that rolls along with the rotating clubface rather than staying aligned with the swing plane, the **same** spatial couple is projected onto different axis directions. As the golfer squares the face into impact, out-of-plane bending loads appear in the uncocking channel—an orthonormal axis rotation, not a separate physical torque source.
 
 A frequent source of sign disagreement arises when comparing torque vectors expressed in the Functional Swing Plane frame $\mathcal{F}_{\text{FSP}}$ against those expressed in the rotating Club-Fixed Principal Frame $\mathcal{F}_{\text{club}}$.
 
@@ -267,19 +267,19 @@ where $M_{\text{in}}$ is the pure in-plane uncocking couple, $M_{\text{out}}$ is
 As the golfer approaches impact, the club rotates about the longitudinal shaft axis to square the clubface. Let $\phi_{\text{roll}}$ denote this roll angle (where $\phi_{\text{roll}} = 0$ corresponds to a clubface aligned strictly perpendicular to the swing plane). The rotation matrix transforming coordinates from $\mathcal{F}_{\text{FSP}}$ into $\mathcal{F}_{\text{club}}$ is given by:
 
 $$
-\mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}}) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\phi_{\text{roll}} & \sin\phi_{\text{roll}} \\ 0 & -\sin\phi_{\text{roll}} & \cos\phi_{\text{roll}} \end{bmatrix}
+\mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}}) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\phi_{\text{roll}} & -\sin\phi_{\text{roll}} \\ 0 & \sin\phi_{\text{roll}} & \cos\phi_{\text{roll}} \end{bmatrix}
 $$
 
 Transforming the torque vector yields the components in the club-fixed frame:
 
 $$
-\begin{bmatrix} M_\gamma \\ M_\beta \\ M_\alpha \end{bmatrix}_{\text{club}} = \mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}}) \begin{bmatrix} M_{\text{shaft}} \\ M_{\text{out}} \\ M_{\text{in}} \end{bmatrix}_{\text{FSP}} = \begin{bmatrix} M_{\text{shaft}} \\ M_{\text{out}}\cos\phi_{\text{roll}} + M_{\text{in}}\sin\phi_{\text{roll}} \\ -M_{\text{out}}\sin\phi_{\text{roll}} + M_{\text{in}}\cos\phi_{\text{roll}} \end{bmatrix}
+\begin{bmatrix} M_\gamma \\ M_\beta \\ M_\alpha \end{bmatrix}_{\text{club}} = \mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}}) \begin{bmatrix} M_{\text{shaft}} \\ M_{\text{out}} \\ M_{\text{in}} \end{bmatrix}_{\text{FSP}} = \begin{bmatrix} M_{\text{shaft}} \\ M_{\text{out}}\cos\phi_{\text{roll}} - M_{\text{in}}\sin\phi_{\text{roll}} \\ M_{\text{out}}\sin\phi_{\text{roll}} + M_{\text{in}}\cos\phi_{\text{roll}} \end{bmatrix}
 $$
 
 Under this transformation, the apparent club-fixed "alpha torque" is:
 
 $$
-M_{\alpha,\text{club}}(\phi_{\text{roll}}) = M_{\text{in}}\cos\phi_{\text{roll}} - M_{\text{out}}\sin\phi_{\text{roll}}
+M_{\alpha,\text{club}}(\phi_{\text{roll}}) = M_{\text{in}}\cos\phi_{\text{roll}} + M_{\text{out}}\sin\phi_{\text{roll}}
 $$
 
 **Quantitative Demonstration (Illustrative Input, `calcs/alpha_war_sensitivity_suite.py` Study 3):**  
@@ -291,11 +291,11 @@ Consider an **illustrative** late-downswing loading state where the golfer exert
    $$
 2. At $\phi_{\text{roll}} = 45^\circ$:
    $$
-   M_{\alpha,\text{club}}(45^\circ) = -15.0\left(\frac{\sqrt{2}}{2}\right) - 8.0\left(\frac{\sqrt{2}}{2}\right) = -16.26\text{ N}\cdot\text{m}
+   M_{\alpha,\text{club}}(45^\circ) = -15.0\left(\frac{\sqrt{2}}{2}\right) + 8.0\left(\frac{\sqrt{2}}{2}\right) = -4.95\text{ N}\cdot\text{m}
    $$
-3. If the sign convention of out-of-plane roll is inverted (or if the face rolls past open into a hooded orientation, illustrative $\phi^* = 61.93^\circ$):
+3. The illustrative **zero-crossing** roll angle (where the club-fixed alpha projection vanishes for fixed $\mathbf{M}_{\text{FSP}}$) is:
    $$
-   \phi^* = \arctan\left(\frac{|M_{\text{in}}|}{M_{\text{out}}}\right) = \arctan\left(\frac{15}{8}\right) = 61.93^\circ \quad \text{(Illustrative Sign-Flip Angle)} \implies M_{\alpha,\text{club}}(\phi^*) = 0.00\text{ N}\cdot\text{m}
+   \phi^* = \operatorname{atan2}\bigl(-M_{\text{in}}, M_{\text{out}}\bigr) = \operatorname{atan2}(15, 8) = 61.93^\circ \quad \implies M_{\alpha,\text{club}}(\phi^*) = 0.00\text{ N}\cdot\text{m}
    $$
    Past this critical roll angle, the projected alpha component flips to **$+8.00\text{ to }+14.43\text{ N}\cdot\text{m}$ (Positive)**, while the overall spatial torque magnitude remains strictly invariant:
    $$
@@ -1092,7 +1092,7 @@ Consider the **illustrative** late-downswing loading state evaluated in Study 3 
 
 - At $\phi_{\text{roll}} = 0^\circ$: $M_{\alpha,\text{club}} = -15.00\text{ N}\cdot\text{m}$ (negative).
 - At $\phi_{\text{roll}} = 45^\circ$: $M_{\alpha,\text{club}} = -4.95\text{ N}\cdot\text{m}$ (negative).
-- At $\phi^* = \arctan(15/8) = \mathbf{61.93^\circ}$ (**illustrative** sign-flip angle): $M_{\alpha,\text{club}} = \mathbf{0.00\text{ N}\cdot\text{m}}$ (**sign flip**).
+- At $\phi^* = \operatorname{atan2}(15, 8) = \mathbf{61.93^\circ}$ (**illustrative** zero-crossing angle): $M_{\alpha,\text{club}} = \mathbf{0.00\text{ N}\cdot\text{m}}$ (**projection crosses zero**).
 - At $\phi_{\text{roll}} = 90^\circ$: $M_{\alpha,\text{club}} = \mathbf{+8.00\text{ N}\cdot\text{m}}$ (**positive**).
 - At $\phi_{\text{roll}} = 120^\circ$: $M_{\alpha,\text{club}} = \mathbf{+14.43\text{ N}\cdot\text{m}}$ (**positive**).
 
@@ -1296,7 +1296,7 @@ Table 7.4 sweeps through clubface roll angles ($\phi_{\text{roll}}$) from $0^\ci
 | **$30.0^\circ$**                                  | $-8.99$                                         | $+14.43$                                       | $+4.50$                                           | $17.586$                                               | Negative                       |
 | **$45.0^\circ$**                                  | $-4.95$                                         | $+16.26$                                       | $+4.50$                                           | $17.586$                                               | Negative                       |
 | **$60.0^\circ$**                                  | $-0.57$                                         | $+16.99$                                       | $+4.50$                                           | $17.586$                                               | Negative                       |
-| _$\mathbf{61.93^\circ}$ (Illustrative $\phi^_$)\* | **$0.00$**                                      | **$+17.00$**                                   | **$+4.50$**                                       | $17.586$                                               | **Illustrative Zero Crossing** |
+| _$\mathbf{61.93^\circ}$ (Illustrative $\phi^*$)_ | **$0.00$**                                      | **$+17.00$**                                   | **$+4.50$**                                       | $17.586$                                               | **Illustrative Zero Crossing** |
 | **$90.0^\circ$**                                  | **$+8.00$**                                     | $+15.00$                                       | $+4.50$                                           | $17.586$                                               | **Positive**                   |
 | **$120.0^\circ$**                                 | **$+14.43$**                                    | $+8.99$                                        | $+4.50$                                           | $17.586$                                               | **Positive**                   |
 | **$150.0^\circ$**                                 | **$+16.99$**                                    | $+0.57$                                        | $+4.50$                                           | $17.586$                                               | **Positive**                   |
@@ -1846,7 +1846,7 @@ $$M_{\alpha,\text{club},P}(\phi_{\text{roll}}, s_P) = \left(C_\alpha - s_P R_y\r
 This single equation encapsulates why sign comparisons across camps are invalid unless $(s_P, \phi_{\text{roll}}, R_y, C_\beta)$ are simultaneously specified:
 
 1. Setting $\phi_{\text{roll}} = 0$ and shifting $s_P$ from $M$ ($0\text{ m}$) to $G$ ($+0.720\text{ m}$) adds $-s_G R_y$, flipping the sign whenever $s_P > s^* = C_\alpha / R_y$ (Figure 1).
-2. Fixing $s_P = 0$ and rolling the clubface by $\phi_{\text{roll}}$ mixes $C_\beta \sin\phi_{\text{roll}}$ into the alpha channel, flipping the sign whenever $\phi_{\text{roll}} > \phi^* = \arctan(-C_\alpha / C_\beta)$ (Figure 3).
+2. Fixing $s_P = 0$ and rolling the clubface by $\phi_{\text{roll}}$ mixes $C_\beta \sin\phi_{\text{roll}}$ into the alpha channel, flipping the sign whenever $\phi_{\text{roll}} > \phi^* = \operatorname{atan2}(-C_\alpha, C_\beta)$ (Figure 3).
 
 ### B.1 Planar Double Pendulum Equations of Motion
 

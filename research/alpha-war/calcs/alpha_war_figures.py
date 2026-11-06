@@ -182,7 +182,7 @@ def fig_club_roll_projection(payload: dict[str, Any]) -> str:
         sweep_circles,
         f'<circle cx="{tx(phi_star_deg):.1f}" cy="{y0:.1f}" r="5.5" fill="#d62728"/>',
         f'<text x="{tx(phi_star_deg) + 10:.1f}" y="{y0 + 16:.1f}" font-size="10.5" fill="#d62728">'
-        f"phi* = {phi_star_deg:.2f} deg (illustrative zero crossing: arctan(15/8))"
+        f"phi* = {phi_star_deg:.2f} deg (illustrative zero crossing: atan2(15, 8))"
         "</text>",
         f'<text x="{pad_l + 12}" y="{pad_t + 18}" font-size="10.5" fill="#2ca02c">'
         "Shaded band: ±20% out-of-plane M_beta sensitivity envelope on illustrative roll projection"
