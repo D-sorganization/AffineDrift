@@ -152,7 +152,7 @@ Where $\mathbf{r}_{G/H} = \mathbf{r}_G - \mathbf{r}_H$ is the position vector po
 | **CLM-MCH-01** | Torque reversal is caused by muscle force-velocity concentric limits | Nesbit (2005), Sprigings (2000) | Hill-type muscle contractile velocity | Forearm flexor/extensor units | **Supported / Partial Mechanism** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 | **CLM-MCH-02** | Reversal is purely an interaction-force reaction in a linked system | Putnam (1991/1993), Grober (2020), Olson | Coriolis and centrifugal coupling terms | Multi-body equations of motion | **Settled (Sufficient Mechanism)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 | **CLM-MCH-03** | Forward shaft deflection (rebound) produces massive negative grip couple | Olson (Dec 2023), Tutelman (2018) | Elastic restoring moment $\mathbf{M}_{\text{bend}}$ | Flexible shaft (12-segment model)| **Settled (Dominant Co-Factor)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
-| **CLM-MCH-04** | Pointwise zero-command persistence: negative couple persists with free wrists | Olson (2022, 2026 UpstreamDrift) | Uncommanded contact reaction wrench | Two-hand constrained model | **Settled (Model Verification)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-MCH-04** | Pointwise **wrist-command-off** persistence: negative midpoint couple persists on the bundled WSCG KKT trajectory | Olson (2022, 2026 UpstreamDrift) | ZTCF vs BASE couple (`alpha_war_calculations.json`) | Two-hand constrained **simulation** | **Qualified (Model-Scenario Diagnostic)** *(ZTCF torque-cut on project planar WSCG bundle; not a physiological relaxed-grip field trial)* |
 
 ---
 

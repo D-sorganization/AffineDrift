@@ -49,7 +49,7 @@ Tracks the exact decomposition $M_{\alpha,G}(t) = C_{\alpha,M}(t) - d_{G/M} R_y(
 - Mid-downswing ($t = 0.140\text{ s}$): $C_{\alpha,M} = +36.69\text{ N}\cdot\text{m}$.
 - Zero crossing of hand couple $C_{\alpha,M}$: **$t = 0.18017\text{ s}$** ($13.1\text{ ms}$ before peak clubhead speed at $t = 0.1933\text{ s}$).
 - Peak clubhead speed ($t = 0.1933\text{ s}$, $115.08\text{ mph}$, simulated): $C_{\alpha,M} = -14.08\text{ N}\cdot\text{m}$ (while simulated ZTCF zero-torque passive couple is $-11.19\text{ N}\cdot\text{m}$, or $79.51\%$).
-- Minimum hand couple ($t = 0.2151\text{ s}$, simulated): $C_{\alpha,M} = -22.8148\text{ N}\cdot\text{m}$ (while simulated ZTCF zero-torque passive couple is $-19.6294\text{ N}\cdot\text{m}$, or **$86.04\%$** of the BASE negative couple).
+- Minimum hand couple ($t = 0.2151\text{ s}$, simulated): $C_{\alpha,M} = -22.8148\text{ N}\cdot\text{m}$ (while the **ZTCF** branch on the **same** trajectory is $-19.6294\text{ N}\cdot\text{m}$, giving **$86.04\%$** as the **magnitude ratio** $|C_{\alpha,\text{ZTCF}}|/|C_{\alpha,\text{BASE}}|$ — a **pointwise modeled diagnostic**, not a measured physiological muscle-energy share).
 
 ### Study 3: Coordinate Frame & Axis Convention Sensitivity (`study_3_frame_conventions`)
 For an **illustrative** late-downswing couple $\mathbf{M}_{\text{FSP}} = (M_{\text{shaft}} = +4.5, M_{\text{out}} = +8.0, M_{\text{in}} = -15.0)\text{ N}\cdot\text{m}$:

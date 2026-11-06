@@ -60,6 +60,15 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
         self.assertIn(formatted_share, draft_text)
         self.assertNotIn("86.15%", draft_text)
 
+    def test_wscg_ztcf_provenance_language_present_5462(self) -> None:
+        """Draft must label WSCG bundle as modeled and ZTCF ratio as diagnostic (#5462)."""
+        draft_text = _find_draft_path().read_text(encoding="utf-8")
+        self.assertIn("project-originated planar WSCG bundle", draft_text)
+        self.assertIn(
+            "### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory", draft_text
+        )
+        self.assertIn("measured share of physiological muscle torque", draft_text)
+
     def test_s_star_illustrative_vs_simulated_and_claim_verdicts(self) -> None:
         """Illustrative (+0.213 m) and simulated (+0.737 m) s* and CLM relabels must exist."""
         payload = json.loads(JSON_PATH.read_text(encoding="utf-8"))
