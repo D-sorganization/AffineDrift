@@ -29,6 +29,9 @@ project:
     - "critiques/index.qmd"
     - "critiques/*.md"
     - "!critiques/INLINE_SUGGESTIONS.md"
+    # ``critiques/*.md`` also matches research/alpha-war/critiques/*.md; keep
+    # the unpublished Alpha War workspace out of the public site (#5470).
+    - "!research/alpha-war/**/*.md"
   resources:
     - data/
     - schemas/research-protocol-readiness-v1.schema.json

@@ -41,9 +41,19 @@ class TestAlphaWarQuartoUnpublished(unittest.TestCase):
         self.assertEqual(flags.get("status"), "do-not-publish")
 
     def test_not_registered_in_quarto_site_config(self) -> None:
-        """The site ``_quarto.yml`` must not register alpha-war paths."""
+        """The site ``_quarto.yml`` must not positively register alpha-war paths."""
         yml = QUARTO_YML.read_text(encoding="utf-8")
-        self.assertNotIn("research/alpha-war", yml)
+        for line in yml.splitlines():
+            if "research/alpha-war" not in line:
+                continue
+            stripped = line.strip()
+            if stripped.startswith("#"):
+                continue
+            self.assertTrue(
+                stripped.startswith('- "!'),
+                f"research/alpha-war may only appear as a render exclusion: {stripped}",
+            )
+        self.assertIn('!research/alpha-war/**/*.md', yml)
         self.assertNotIn("alpha-war-v0", yml)
         self.assertNotIn("alpha-war-v1", yml)
 
