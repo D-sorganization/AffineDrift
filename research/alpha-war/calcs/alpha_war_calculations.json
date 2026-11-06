@@ -1,19 +1,4 @@
 {
-  "generation_provenance": {
-    "upstream_repository": "https://github.com/D-sorganization/UpstreamDrift.git",
-    "upstream_commit": "b700e58941205af6f673f13ebbffcd30f8cca9d8",
-    "upstream_root_env": "ALPHA_WAR_UPSTREAM_DRIFT_ROOT",
-    "wscg_input_sha256": {
-      "docs/research/proximal_distal_energy_transfer/data/wscg_two_hand_raw/base.csv": "cc80319575493f5868b8d1b9b5b5e6bc3edfbe12dc86d19e8326a88a0ff0832b",
-      "docs/research/proximal_distal_energy_transfer/data/wscg_two_hand_raw/ztcf.csv": "f557e510da33b4e38b9a1d5c7f51e0fceaf51b67d559dcf76b69559b58461ac3",
-      "docs/research/proximal_distal_energy_transfer/data/wscg_two_hand_raw/delta.csv": "7bf77908c87c98159f7068eadd89354e7632ae56b7a39d710bcd276623bb762f"
-    },
-    "suite_module": "alpha_war_sensitivity_suite.py",
-    "suite_version": "2026-11-05-repro-pin",
-    "output_json": "alpha_war_calculations.json",
-    "studies_sha256": "c8d2e635dab7c56ef68be1b61fd0ce481d1ad382fc5f6f10ad3f1be45aa9cf60",
-    "python_version": "3.12.3"
-  },
   "study_1_grip_point_transport": {
     "wscg_at_peak_clubhead_speed": {
       "label": "WSCG peak clubhead speed (t = 0.1933 s)",
@@ -707,12 +692,17 @@
   },
   "study_6_shaft_flex_contribution": {
     "upstream_drift_matched_3link_study": {
+      "model": "UpstreamDrift reduced planar 3-link with lumped shaft-bending coordinate (FlexibleShaftParams.reference); gravity on; shoulder/wrist damping on",
       "sample_time_s": 0.4275,
       "shaft_deflection_deg": -3.5791729236945047,
       "shaft_elastic_moment_nm": 4.99746816133607,
       "shaft_damping_moment_nm": -0.08326019457155094,
+      "shaft_interface_force_xy_n": [
+        8.725711164527151,
+        55.69147164755206
+      ],
       "shaft_interface_force_norm_n": 56.3708971863749,
-      "distal_angular_accel_contributions_rad_s2": {
+      "distal_angular_accel_contributions_flexible_rad_s2": {
         "control": -401.5533362381442,
         "momentum": 57.05151844088546,
         "gravity": 1.8621578063940536,
@@ -721,16 +711,27 @@
         "shaft_damping": -5.419256782678103,
         "total": 24.771448908567404
       },
+      "distal_angular_accel_contributions_rigid_rad_s2": {
+        "control": 58.83827519951244,
+        "momentum": -22.82582051696625,
+        "gravity": -3.2076713145038975,
+        "joint_damping": -7.792137040568801,
+        "shaft_elastic": 0.0,
+        "shaft_damping": 0.0,
+        "total": 25.01264632747349
+      },
       "rigid_wrist_angle_at_same_time_rad": 0.3561863964205145,
       "flexible_wrist_angle_at_same_time_rad": 0.3768046621468738
     },
     "two_hand_beam_rebound_wrench_model": {
+      "scenario": "standalone hypothetical scaling \u2014 not derived from the matched 3-link rollout above; no stated EI, lever length, or boundary conditions; do not infer population shaft behavior",
+      "inputs_are_uncited": true,
       "lead_deflection_deg": 11.0,
       "grip_separation_m": 0.0762,
-      "opposed_hand_force_magnitude_n": 465.0,
-      "force_couple_from_shaft_rebound_nm": -35.433,
-      "active_right_wrist_torque_nm": 10.0,
-      "net_equivalent_grip_couple_nm": -25.433
+      "opposed_hand_force_magnitude_n_assumed": 465.0,
+      "force_couple_from_assumed_opposed_forces_nm": -35.433,
+      "active_right_wrist_torque_nm_assumed": 10.0,
+      "net_scalar_sum_of_assumed_nm": -25.433
     }
   }
 }
