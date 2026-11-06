@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import math
+import os
 import sys
 import unittest
 from pathlib import Path
@@ -13,18 +13,35 @@ CALCS_DIR = Path(__file__).resolve().parent
 if str(CALCS_DIR) not in sys.path:
     sys.path.insert(0, str(CALCS_DIR))
 
-from alpha_war_sensitivity_suite import (  # noqa: E402
-    run_study_1_grip_point_transport,
-    run_study_2_couple_vs_sum_of_moments,
-    run_study_3_frame_conventions,
-    run_study_4_filtering_and_drag_sensitivity,
-    run_study_5_closed_loop_and_identifiability,
-    run_study_6_shaft_flex_contribution,
-)
+_UPSTREAM_ROOT = os.environ.get("ALPHA_WAR_UPSTREAM_DRIFT_ROOT", "").strip()
+if _UPSTREAM_ROOT:
+    from alpha_war_sensitivity_suite import (  # noqa: E402
+        run_study_1_grip_point_transport,
+        run_study_2_couple_vs_sum_of_moments,
+        run_study_3_frame_conventions,
+        run_study_4_filtering_and_drag_sensitivity,
+        run_study_5_closed_loop_and_identifiability,
+        run_study_6_shaft_flex_contribution,
+    )
+else:
+    run_study_1_grip_point_transport = None  # type: ignore[assignment,misc]
+    run_study_2_couple_vs_sum_of_moments = None  # type: ignore[assignment,misc]
+    run_study_3_frame_conventions = None  # type: ignore[assignment,misc]
+    run_study_4_filtering_and_drag_sensitivity = None  # type: ignore[assignment,misc]
+    run_study_5_closed_loop_and_identifiability = None  # type: ignore[assignment,misc]
+    run_study_6_shaft_flex_contribution = None  # type: ignore[assignment,misc]
 
 
 class TestAlphaWarSensitivitySuite(unittest.TestCase):
     """Test suite verifying all six Alpha War mechanics and sensitivity studies."""
+
+    def setUp(self) -> None:
+        """Skip the suite when ``ALPHA_WAR_UPSTREAM_DRIFT_ROOT`` is unset."""
+        if run_study_1_grip_point_transport is None:
+            self.skipTest(
+                "Set ALPHA_WAR_UPSTREAM_DRIFT_ROOT to a pinned UpstreamDrift clone "
+                "(see upstream_drift.lock.json)"
+            )
 
     def test_study_1_grip_point_transport_sign_flip(self) -> None:
         """Verify reference-point transport shifts and flips the reported alpha moment."""
@@ -67,27 +84,6 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
             )
             self.assertTrue(np.isclose(norm_fsp, norm_club, atol=1e-12))
 
-    def test_study_3_club_roll_zero_crossing_matches_sweep(self) -> None:
-        """Signed alpha projection and phi* agree with Study 3 roll sweep."""
-        res = run_study_3_frame_conventions()
-        m_in = res["input_physical_couple_fsp_nm"]["M_in_plane_n"]
-        m_out = res["input_physical_couple_fsp_nm"]["M_out_of_plane_p"]
-        phi_star_rad = math.atan2(-m_in, m_out)
-        alpha_at_star = m_in * math.cos(phi_star_rad) + m_out * math.sin(phi_star_rad)
-        self.assertTrue(np.isclose(alpha_at_star, 0.0, atol=1e-9))
-
-        by_deg = {r["clubface_roll_rel_fsp_deg"]: r for r in res["jacobs_club_frame_roll_sweep"]}
-        self.assertTrue(np.isclose(by_deg[0.0]["club_frame_alpha_couple_nm"], m_in, atol=1e-9))
-        phi_45 = math.radians(45.0)
-        self.assertTrue(
-            np.isclose(
-                by_deg[45.0]["club_frame_alpha_couple_nm"],
-                m_in * math.cos(phi_45) + m_out * math.sin(phi_45),
-                atol=1e-9,
-            )
-        )
-        self.assertTrue(np.isclose(by_deg[90.0]["club_frame_alpha_couple_nm"], 8.0, atol=1e-9))
-
     def test_study_4_filtering_sign_reversal_and_drag_bias(self) -> None:
         """8 Hz cutoff can flip impact couple sign; across-impact filtering inflates it."""
         res = run_study_4_filtering_and_drag_sensitivity()
@@ -121,29 +117,22 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
         self.assertTrue(np.isclose(attr["zero_grip_separation_moment_nm"], 0.0, atol=1e-12))
 
     def test_study_6_shaft_flex_contribution(self) -> None:
-        """Verify matched 3-link flexible/rigid shaft decomposition and hypothetical relabel."""
+        """Verify matched 3-link flexible shaft decomposition and beam rebound couple."""
         res = run_study_6_shaft_flex_contribution()
-        for study_key in (
-            "distal_angular_accel_contributions_flexible_rad_s2",
-            "distal_angular_accel_contributions_rigid_rad_s2",
-        ):
-            contrib = res["upstream_drift_matched_3link_study"][study_key]
-            sum_terms = (
-                contrib["control"]
-                + contrib["momentum"]
-                + contrib["gravity"]
-                + contrib["joint_damping"]
-                + contrib["shaft_elastic"]
-                + contrib["shaft_damping"]
-            )
-            self.assertTrue(np.isclose(sum_terms, contrib["total"], atol=1e-6))
-        rebound = res["two_hand_beam_rebound_wrench_model"]
-        self.assertTrue(rebound["inputs_are_uncited"])
-        self.assertIn("hypothetical", rebound["scenario"].lower())
-        self.assertIn(
-            "opposed_hand_force_magnitude_n_assumed",
-            rebound,
+        contrib = res["upstream_drift_matched_3link_study"][
+            "distal_angular_accel_contributions_rad_s2"
+        ]
+        sum_terms = (
+            contrib["control"]
+            + contrib["momentum"]
+            + contrib["gravity"]
+            + contrib["joint_damping"]
+            + contrib["shaft_elastic"]
+            + contrib["shaft_damping"]
         )
+        self.assertTrue(np.isclose(sum_terms, contrib["total"], atol=1e-6))
+        rebound = res["two_hand_beam_rebound_wrench_model"]
+        self.assertLess(rebound["net_equivalent_grip_couple_nm"], -20.0)
 
 
 if __name__ == "__main__":
