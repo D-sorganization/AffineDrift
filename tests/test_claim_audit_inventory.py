@@ -468,6 +468,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/Golf_Control_Theory.html",
             "/pages/scope-and-limits.html",
             "/articles/slack-management-linked-systems.html",
+            "/articles/slack-takeup-identifiability.html",
         }
         and (
             record["route"] == "/"
@@ -554,6 +555,9 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     assert slack_management["review"]["source_path"] == (
         "articles/slack-management-linked-systems.qmd"
     )
+    slack_witness = _find_route(inventory, "/articles/slack-takeup-identifiability.html")
+    assert slack_witness["status"] == "reviewed"
+    assert slack_witness["review"]["source_path"] == "articles/slack-takeup-identifiability.qmd"
     drift_past = _find_route(inventory, "/articles/drift-is-the-past-control-is-the-present.html")
     assert drift_past["status"] == "reviewed"
     assert drift_past["review"]["source_path"] == (
