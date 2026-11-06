@@ -118,6 +118,8 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "references",
         "reports",
         "repositories",
+        # Alpha War thesis collateral (bib + work notes); same layout as branch research/alpha-war-thesis (#5466).
+        "research",
         "resources",
         "schemas",
         "scripts",
