@@ -467,6 +467,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/validation-roadmap.html",
             "/pages/Golf_Control_Theory.html",
             "/pages/scope-and-limits.html",
+            "/articles/slack-management-linked-systems.html",
         }
         and (
             record["route"] == "/"
