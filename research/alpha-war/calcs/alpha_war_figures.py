@@ -453,90 +453,63 @@ def fig_swing_plane_schematic() -> str:
 
 
 def fig_nesbit_fig11_schematic() -> str:
-    """Return a publication-grade multi-panel re-plot inspired by Nesbit and Serrano Fig. 11."""
-    w, h = 760, 360
+    """Return a four-panel layout for Nesbit and Serrano (2005) Fig. 11, with no curve data.
+
+    The paper tabulates no per-subject values at impact, so this figure draws no curve,
+    value or trend. It labels the four subjects (handicap and sex from Table 1) and marks
+    the impact reading as eye-read only (unverified, VRF-11).
+    """
+    w, h = 760, 300
     font = 'font-family="system-ui, -apple-system, sans-serif"'
     panels = [
-        (
-            "S1 scratch",
-            "negative",
-            "0.73hcp: reverses to -18 N·m at impact",
-            "20,210 65,115 110,165 145,245",
-        ),
-        (
-            "S2 5-hcp",
-            "positive",
-            "5-hcp: stays positive (+12 N·m)",
-            "20,215 70,130 115,145 145,165",
-        ),
-        (
-            "S3 13-hcp",
-            "near zero",
-            "13-hcp: plateaus near 0 N·m",
-            "20,220 70,145 115,175 145,195",
-        ),
-        (
-            "S4 18-hcp",
-            "positive",
-            "18-hcp: casts early, stays positive",
-            "20,205 60,125 110,150 145,170",
-        ),
+        ("Subject 1", "handicap 0, male"),
+        ("Subject 2", "handicap 5, male"),
+        ("Subject 3", "handicap 13, male"),
+        ("Subject 4", "handicap 18, female"),
     ]
     lines = [
         _svg_header(w, h),
-        '<rect x="10" y="10" width="740" height="340" rx="8" '
+        '<rect x="10" y="10" width="740" height="280" rx="8" '
         'fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>',
         f'<text x="30" y="34" {font} font-size="14" font-weight="bold" fill="#0f172a">'
-        "Nesbit &amp; Serrano Fig. 11 — qualitative subject trends (re-plot)</text>",
+        "Nesbit &amp; Serrano (2005), Fig. 11, p. 529: subject layout (no curve data)</text>",
         f'<text x="30" y="52" {font} font-size="11" fill="#475569">'
-        "Skill-dependent divergence in late-downswing alpha torque across four handicap tiers "
-        "(adapted from Nesbit &amp; Serrano 2005)</text>",
+        "Subject handicap and sex from Table 1 of the paper; the curves are not reproduced "
+        "here.</text>",
     ]
-    for i, (label, trend, note, rel_pts) in enumerate(panels):
+    for i, (label, note) in enumerate(panels):
         x0 = 28 + i * 178
-        if trend == "negative":
-            color = "#d62728"
-            badge_bg = "#fef2f2"
-        elif trend == "positive":
-            color = "#15803d"
-            badge_bg = "#f0fdf4"
-        else:
-            color = "#475569"
-            badge_bg = "#f1f5f9"
         lines.append(
-            f'<rect x="{x0}" y="68" width="164" height="225" rx="6" '
+            f'<rect x="{x0}" y="68" width="164" height="150" rx="6" '
             'fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>'
         )
-        lines.append(f'<rect x="{x0}" y="68" width="164" height="44" rx="6" fill="{badge_bg}"/>')
+        lines.append(f'<rect x="{x0}" y="68" width="164" height="44" rx="6" fill="#f1f5f9"/>')
         lines.append(
             f'<text x="{x0 + 10}" y="86" {font} font-size="12" '
             f'font-weight="bold" fill="#0f172a">{label}</text>'
         )
         lines.append(
-            f'<text x="{x0 + 10}" y="103" {font} font-size="10.5" '
-            f'font-weight="bold" fill="{color}">Impact trend: {trend}</text>'
+            f'<text x="{x0 + 10}" y="103" {font} font-size="10.5" fill="#334155">{note}</text>'
         )
         lines.append(
-            f'<line x1="{x0 + 12}" y1="195" x2="{x0 + 152}" y2="195" '
-            'stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3"/>'
+            f'<text x="{x0 + 10}" y="150" {font} font-size="10" fill="#64748b">'
+            "Impact sign: not tabulated</text>"
         )
         lines.append(
-            f'<text x="{x0 + 14}" y="191" {font} font-size="9" fill="#64748b">0 N·m</text>'
-        )
-        pts = " ".join(
-            f"{x0 + int(p.split(',')[0])},{int(p.split(',')[1])}" for p in rel_pts.split()
-        )
-        lines.append(f'<polyline fill="none" stroke="{color}" stroke-width="3" points="{pts}"/>')
-        lines.append(
-            f'<text x="{x0 + 8}" y="280" {font} font-size="9.2" fill="#334155">{note}</text>'
+            f'<text x="{x0 + 10}" y="166" {font} font-size="10" fill="#64748b">'
+            "(eye-read only)</text>"
         )
     lines.append(
-        '<rect x="28" y="304" width="698" height="32" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>'
+        '<rect x="28" y="234" width="698" height="40" rx="4" fill="#eff6ff" stroke="#bfdbfe"/>'
     )
     lines.append(
-        f'<text x="40" y="324" {font} font-size="10.8" fill="#1e3a8a">'
-        "Takeaway: Only the scratch golfer (S1) exhibits the sharp pre-impact sign reversal "
-        "to negative alpha torque; higher handicaps push through impact.</text>"
+        f'<text x="40" y="252" {font} font-size="10.8" fill="#1e3a8a">'
+        "Any per-subject sign reading of Fig. 11 is unverified, VRF-11: the paper gives "
+        "no values at impact.</text>"
+    )
+    lines.append(
+        f'<text x="40" y="267" {font} font-size="10.8" fill="#1e3a8a">'
+        "A faithful re-plot needs digitised data from the primary figure.</text>"
     )
     lines.append("</svg>")
     return "\n".join(lines)

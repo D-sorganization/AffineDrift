@@ -661,7 +661,7 @@ Table 4.1 summarizes the subject characteristics and torque behaviors reported b
 
 Figure 11 in [@nesbit2005work, Fig. 11, p. 529] became a focal artifact of the Alpha War.
 
-![Qualitative re-plot of Nesbit and Serrano Figure 11 subject trends (not a reproduced journal figure)](figures/fig-nesbit-fig11-schematic.svg){fig-alt="Schematic four-panel sketch indicating which of four published subjects show positive or negative alpha torque trends near impact per the peer-reviewed caption"}
+![Layout of the four subjects of Nesbit and Serrano Figure 11 [@nesbit2005work, Fig. 11, p. 529]; no curves are reproduced and the impact sign is unverified, VRF-11](figures/fig-nesbit-fig11-schematic.svg){fig-alt="Four labelled panels for Subjects 1 to 4 with handicap and sex from Table 1; no curve or value is drawn, and a note says the sign at impact is not tabulated"}
 
 Proponents of Camp A read the graphs of Figure 11 as showing positive alpha torque curves into impact for two of the four subjects (Subjects 2 and 4); this per-subject reading is unverified, VRF-11, because the paper tabulates no values at impact and the curves were read by eye only. From this, commercial coaches inferred that skilled golfers naturally apply positive alpha torque to drive the clubhead through the ball.
 
