@@ -26,7 +26,7 @@ ROOT_COMPONENT_NAME = "affinedrift"
 NPM_PREFIX = "node_modules/"
 NPM_ALGS = {"sha512": "SHA-512", "sha384": "SHA-384", "sha256": "SHA-256", "sha1": "SHA-1"}
 
-_PIP_PIN = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)==([^\s;\\]+)")
+_PIP_PIN = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)(?:\[[^\]]*\])?==([^\s;\\]+)")
 _PIP_HASH = re.compile(r"--hash=sha256:([0-9a-fA-F]+)")
 
 
@@ -61,15 +61,20 @@ def parse_pip_lock(text: str) -> list[dict[str, Any]]:
     """Return pypi components from a ``uv pip compile --generate-hashes`` lock."""
     pins: dict[tuple[str, str], list[dict[str, str]]] = {}
     current: list[dict[str, str]] | None = None
-    for line in text.splitlines():
+    for number, raw in enumerate(text.splitlines(), start=1):
+        line = raw.strip()
+        if not line or line.startswith(("#", "-")):
+            if current is not None:
+                current.extend(
+                    {"alg": "SHA-256", "content": digest.lower()}
+                    for digest in _PIP_HASH.findall(line)
+                )
+            continue
         pin = _PIP_PIN.match(line)
-        if pin:
-            name = re.sub(r"[-_.]+", "-", pin.group(1)).lower()
-            current = pins.setdefault((name, pin.group(2)), [])
-        elif current is not None:
-            current.extend(
-                {"alg": "SHA-256", "content": digest.lower()} for digest in _PIP_HASH.findall(line)
-            )
+        if not pin:
+            raise SbomInputError(f"{PIP_LOCK}: unparseable line {number}: {line!r}")
+        name = re.sub(r"[-_.]+", "-", pin.group(1)).lower()
+        current = pins.setdefault((name, pin.group(2)), [])
     return [_component("pypi", n, v, h) for (n, v), h in pins.items()]
 
 
@@ -94,6 +99,8 @@ def parse_npm_lock(text: str) -> list[dict[str, Any]]:
         raise SbomInputError(f"{NPM_LOCK}: not a lockfile with a 'packages' map ({exc})") from exc
     found: dict[tuple[str, str], list[dict[str, str]]] = {}
     for key, entry in packages.items():
+        if not isinstance(entry, dict):
+            raise SbomInputError(f"{NPM_LOCK}: package entry {key!r} is not an object")
         if NPM_PREFIX not in key or entry.get("link") or not entry.get("version"):
             continue
         name = key.rsplit(NPM_PREFIX, 1)[1]

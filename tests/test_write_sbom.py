@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.write_sbom import SbomInputError, build_sbom, main
+from scripts.write_sbom import SbomInputError, build_sbom, main, parse_npm_lock, parse_pip_lock
 
 GIT = ["git"]
 PIP_LOCK = """\
@@ -137,3 +137,39 @@ def test_malformed_lockfiles_raise_clear_error(repo: Path) -> None:
     (repo / "requirements-docker.lock").write_text("# only comments\n", encoding="utf-8")
     with pytest.raises(SbomInputError, match="requirements-docker.lock"):
         build_sbom(repo)
+
+
+EXTRAS_LOCK = """\
+first==1.0 \\
+    --hash=sha256:1111
+foo[bar,baz]==2.0 \\
+    --hash=sha256:aaaa \\
+    --hash=sha256:bbbb
+    # via first
+marked==3.0 ; python_version > "3.9" \\
+    --hash=sha256:cccc
+"""
+
+
+def test_extras_line_is_its_own_component_with_its_own_hashes() -> None:
+    by_purl = {c["purl"]: c for c in parse_pip_lock(EXTRAS_LOCK)}
+    assert sorted(by_purl) == [
+        "pkg:pypi/first@1.0",
+        "pkg:pypi/foo@2.0",
+        "pkg:pypi/marked@3.0",
+    ]
+    assert by_purl["pkg:pypi/first@1.0"]["hashes"] == [{"alg": "SHA-256", "content": "1111"}]
+    assert [h["content"] for h in by_purl["pkg:pypi/foo@2.0"]["hashes"]] == ["aaaa", "bbbb"]
+    assert by_purl["pkg:pypi/foo@2.0"]["name"] == "foo"
+    assert by_purl["pkg:pypi/marked@3.0"]["hashes"] == [{"alg": "SHA-256", "content": "cccc"}]
+
+
+def test_unparseable_requirements_line_raises() -> None:
+    with pytest.raises(SbomInputError, match="requirements-docker.lock.*line 2"):
+        parse_pip_lock("good==1.0 \\\n    not a requirement\n")
+
+
+def test_non_dict_npm_package_entry_raises() -> None:
+    lock = json.dumps({"packages": {"node_modules/x": "1.0.0"}})
+    with pytest.raises(SbomInputError, match="package-lock.json.*node_modules/x"):
+        parse_npm_lock(lock)
