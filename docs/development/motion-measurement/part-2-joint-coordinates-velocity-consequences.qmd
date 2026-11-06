@@ -1,0 +1,105 @@
+---
+title: "Motion Measurement, Part 2: Joint Coordinates, Velocity and Consequences"
+description: "Joint coordinate systems, Poisson angular velocity, filtering, X-factor variants, and kinematic sequence."
+draft: true
+listing: false
+---
+
+## Overview
+
+Part 2 examines the transformation of measured orientation into joint kinematics and velocity metrics. Foundations of rotation algebra are referenced from [Rotation Representations: A Cross-Reference Guide](../../../articles/rotation-representations-reference.qmd). Here we analyze Joint Coordinate Systems (JCS), Poisson angular velocity estimation, filtering artifacts, golf X-factor definitions, and kinematic sequence timing.
+
+## 2.1 Joint Coordinate Systems
+
+Clinical and biomechanical standards describe relative joint motion using Joint Coordinate Systems (Grood & Suntay 1983; Wu et al. 2002, 2005). As illustrated in Figure F5, a JCS consists of two body-fixed axes (proximal and distal) connected by a floating axis perpendicular to both. Mathematically, this construction is equivalent to a specific Cardan sequence (typically flexion-extension about the proximal transverse axis, lateral tilt about the floating axis, and axial rotation about the distal longitudinal axis).
+
+## 2.2 Angular Velocity
+
+Segment angular velocity $\omega$ represents an instantaneous vector in $\mathbb{R}^3$, distinct from rates of Euler angles (Figure F6). It is related to rotation matrix derivatives via Poisson's equation $\dot{R} = [\omega]_\times R$ (global) or $\dot{R} = R [\omega_{\mathrm{local}}]_\times$ (segment-local). As demonstrated in `motion_measurement_fixtures.py`, reading Euler angle differences directly as angular velocity components introduces substantial errors (>0.1 rad/s on smooth synthetic paths), amplifying dramatically as the middle angle approaches gimbal lock. Robust differentiation calculates $\omega$ from finite orientation differences: $\omega \approx \mathrm{rotvec}(R_{k+1} R_{k-1}^T) / (2 \Delta t)$.
+
+## 2.3 Noise and Filtering
+
+Raw orientation measurements inherit high-frequency noise from skin motion and sensor precision (Figure F7). Filtering unit quaternions component-wise requires sign-continuity unwrapping across the double cover ($q \to -q$): in synthetic fixture tests, moving-average filtering across a sign boundary without unwrapping collapses the quaternion norm to <0.5, while hemisphere-continuous unwrapping preserves norm >0.99. Regarding finite-difference derivatives, analytic fixtures demonstrate that noise error is independent of $\omega$, whereas truncation error scales as $\omega^3 \Delta t^2$ on harmonic trajectories; no general $O(\omega^2)$ noise law exists.
+
+## 2.4 X-Factor and Spine Dynamics
+
+X-factor measures the relative axial orientation between thorax and pelvis (Figure F8). Studies (Kwon 2013; Brown 2013; Cheetham 2001) document four common computation methods:
+1. *Line turn*: Projection of acromion and ASIS lines onto the ground plane.
+2. *JCS axial rotation*: True 3D relative rotation about the spinal longitudinal axis.
+3. *Position proxy*: Linear distances between shoulder and hip markers.
+4. *Legacy Euler yaw*: Difference of independent global heading angles.
+
+When the torso flexes or bends laterally, 2D line projections introduce substantial geometric crosstalk, whereas 3D JCS axial rotation isolates torsion from trunk tilt and lateral bend.
+
+## 2.5 Kinematic Sequence
+
+The kinematic sequence evaluates proximal-to-distal velocity transfer across pelvis, thorax, lead arm, and club head. Metrics include peak timing sequence and speed gain (the ratio or difference of successive peak segment angular velocities). Comparing trajectories across swings requires event-relative time normalisation across landmarks (Address, Top of Backswing, Impact, Finish).
+
+## Registry Mapping (UD#14421)
+
+Per PLAN.md, all golf metric definitions map to the UpstreamDrift canonical registry under parent issue UD#14421. Until registry approval lands, all child slice entries are classified as `pending`:
+- UD#14422 (GM-1a): Registry schema and citation metadata (`pending`)
+- UD#14423 (GM-1b): X-factor computation variants (`pending`)
+- UD#14424 (GM-1c): Pelvis and thorax turn conventions (`pending`)
+- UD#14425 (GM-2): Spinal coupling and lateral bend (`pending`)
+- UD#14426 (GM-3): Kinematic sequence, speed gain, and X-factor stretch (`pending`)
+- UD#14427 (GM-4): Event-relative time normalisation (`pending`)
+- UD#14428 (GM-5): Segment orientations at impact events (`pending`)
+
+## Metric Convention Cards
+
+Every metric below carries a formal 7-field convention specification.
+
+### Convention Card 1: X-factor variants
+- **Frame**: Thorax segment frame relative to pelvis segment frame (or each relative to laboratory global frame).
+- **Axes**: ISB trunk coordinate system; Z longitudinal (spine), Y lateral, X anterior.
+- **Sequence**: Intrinsic ZXY Cardan sequence (JCS axial) vs horizontal plane projection (line turn) vs independent ZYX yaw.
+- **Sign**: Positive indicates thorax rotated further clockwise/closed to pelvis (backswing stretch in right-handed swing).
+- **Velocity component**: Relative axial angular velocity about thorax longitudinal axis.
+- **Events**: Address (ADD), Top of Backswing (TB), Maximum Stretch (MS), Impact (IMP).
+- **Units**: Degrees ($^\circ$) for orientation; degrees per second ($^\circ/\mathrm{s}$) for velocity.
+
+### Convention Card 2: X-factor stretch
+- **Frame**: Thorax relative to pelvis.
+- **Axes**: Longitudinal spinal axis (JCS) or projected horizontal shoulder-pelvis line angle.
+- **Sequence**: Intrinsic ZXY Cardan or 2D projected line difference.
+- **Sign**: Positive for increase in thorax-pelvis separation beyond top of backswing value (Cheetham et al. 2001).
+- **Velocity component**: Time rate of relative axial rotation ($\dot{\theta}_{\mathrm{X\text{-}factor}}$).
+- **Events**: Top of Backswing (TB) to point of Maximum Stretch (MS).
+- **Units**: Degrees ($^\circ$) for stretch amplitude; milliseconds ($\mathrm{ms}$) for stretch duration.
+
+### Convention Card 3: Shoulder and pelvis turn
+- **Frame**: Segment anatomical frame (thorax or pelvis) relative to laboratory global frame.
+- **Axes**: Global vertical $Z_{\mathrm{global}}$ for heading, or segment longitudinal axis for axial rotation.
+- **Sequence**: Intrinsic ZYX Euler angles (heading, tilt, roll) or projected line angle.
+- **Sign**: Positive counter-clockwise viewed from above (closed backswing for right-handed golfer).
+- **Velocity component**: Angular velocity about global vertical axis or segment anatomical axis.
+- **Events**: Address (ADD), Top of Backswing (TB), Impact (IMP), Finish (FIN).
+- **Units**: Degrees ($^\circ$) for turn angle; degrees per second ($^\circ/\mathrm{s}$) for turn velocity.
+
+### Convention Card 4: Kinematic sequence & speed gain
+- **Frame**: Segment local frames (pelvis, thorax, lead arm, club) and laboratory global frame.
+- **Axes**: Segment principal functional axes (longitudinal for torso segments, swing plane normal for club).
+- **Sequence**: Component-wise angular velocity extraction via Poisson formula or rigid cluster tracking.
+- **Sign**: Positive in the downswing direction (counter-clockwise toward target).
+- **Velocity component**: Segment-local axial component or total 3D resultant speed $\|\omega\|$.
+- **Events**: Peak pelvis velocity ($t_{\mathrm{pelvis}}$), peak thorax velocity ($t_{\mathrm{thorax}}$), peak arm velocity ($t_{\mathrm{arm}}$), Impact (IMP).
+- **Units**: Degrees per second ($^\circ/\mathrm{s}$) for peak velocities; dimensionless ratio or difference ($^\circ/\mathrm{s}$) for speed gain.
+
+### Convention Card 5: Event-relative time normalisation
+- **Frame**: Temporal trial frame partitioned into phase segments.
+- **Axes**: Non-dimensional normalized time axis ($t^* \in [0, 100\%]$).
+- **Sequence**: Piecewise cubic spline interpolation matching physical landmarks.
+- **Sign**: Monotonically increasing time sequence from start to finish.
+- **Velocity component**: Rescaled derivative $\mathrm{d}\theta / \mathrm{d}t^*$ with respect to normalized phase time.
+- **Events**: Event intervals: Address (0%), Top of Backswing (100% backswing / 0% downswing), Impact (100% downswing / 0% follow-through), Finish (100%).
+- **Units**: Percent phase time (% phase) or milliseconds ($\mathrm{ms}$) of actual elapsed time.
+
+### Convention Card 6: Trunk tilt and lateral bend
+- **Frame**: Thorax segment frame relative to pelvis segment frame or global vertical.
+- **Axes**: Thorax sagittal axis (flexion/extension) and coronal axis (lateral bend / side tilt).
+- **Sequence**: ISB recommended ZXY Cardan sequence (lateral bend as secondary floating axis).
+- **Sign**: Positive forward flexion and positive lead-side lateral bend (towards target at impact).
+- **Velocity component**: Instantaneous angular velocity vector projected onto segment anatomical axes.
+- **Events**: Address (ADD), Top of Backswing (TB), Impact (IMP).
+- **Units**: Degrees ($^\circ$) for tilt and lateral bend; degrees per second ($^\circ/\mathrm{s}$) for tilt rate.
