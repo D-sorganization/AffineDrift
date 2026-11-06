@@ -151,6 +151,11 @@ jobs:
           # Only the collated files: never the Repository_Management checkout.
           git add -A -- SPEC.md docs changes
           git commit -m "chore(changes): collate ${COLLATED} change fragment(s)"
+          # Merge-queue entries lock the head branch: force-push is rejected with
+          # GH006 until the PR is dequeued. Disable auto-merge first, then push.
+          if [ -n "$PR_NUM" ]; then
+            gh pr merge "$PR_NUM" -R "$REPO_SLUG" --disable-auto || true
+          fi
           # The branch carries only this generated commit, rebuilt from main
           # each run from every fragment on main, so overwriting it never
           # discards work.
