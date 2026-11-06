@@ -70,4 +70,5 @@ def test_core_theses_from_4522_are_registered() -> None:
         "ad-wuj-001",
         "ad-tsc-001",
         "ad-impact-001",
+        "ad-sfd-001",
     }

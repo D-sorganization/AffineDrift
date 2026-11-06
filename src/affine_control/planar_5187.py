@@ -37,6 +37,8 @@ class Planar5187Config:
 
 @dataclass(frozen=True)
 class TrajectoryBundle:
+    """Nominal trajectory samples for the planar #5187 pipeline."""
+
     times_s: Float64Vector
     states: Float64Matrix
     torques: Float64Matrix
@@ -45,6 +47,8 @@ class TrajectoryBundle:
 
 @dataclass(frozen=True)
 class VariationalSlice:
+    """Variational summaries (Phi, FTLE, sigma_max) at one time sample."""
+
     time_s: float
     phi: Float64Matrix
     sigma_max: float
@@ -53,6 +57,8 @@ class VariationalSlice:
 
 @dataclass(frozen=True)
 class ImpactState:
+    """State and segment bookkeeping at the nominal ground-plane impact."""
+
     time_s: float
     state: Float64Vector
     segment_index: int
@@ -60,6 +66,8 @@ class ImpactState:
 
 @dataclass(frozen=True)
 class Planar5187PipelineResult:
+    """End-to-end outputs for the planar triple-pendulum #5187 Monte Carlo study."""
+
     config: Planar5187Config
     bundle: TrajectoryBundle
     slices: tuple[VariationalSlice, ...]
