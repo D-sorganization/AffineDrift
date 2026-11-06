@@ -20,7 +20,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/after-one-solution-null-space-exploration.html` | `articles/after-one-solution-null-space-exploration.qmd` | 9 |
 | `/articles/appendix-applications.html` | `articles/appendix-applications.qmd` | 1 |
 | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` | 1 |
-| `/articles/core-theses-registry.html` | `articles/core-theses-registry.qmd` | 14 |
+| `/articles/core-theses-registry.html` | `articles/core-theses-registry.qmd` | 15 |
 | `/articles/degrees-of-freedom-and-dimensionality.html` | `articles/degrees-of-freedom-and-dimensionality.qmd` | 1 |
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 7 |
 | `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 16 |
@@ -313,7 +313,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-8de89596499b` | `/articles/after-one-solution-null-space-exploration.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f6e740c6e376` | `/articles/appendix-applications.html` | Reviewed | — | None | None | 0 |
 | `ad-route-3953a6c17747` | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | Reviewed | — | None | None | 0 |
-| `ad-route-bdb06b93b8fa` | `/articles/core-theses-registry.html` | Reviewed | — | `ad-dcr-002`, `ad-decomp-001`, `ad-icc-001`, `ad-impact-001`, `ad-pds-001`, `ad-sas-001`, `ad-superpos-001`, `ad-tsc-001`, `ad-wuj-001`, `ad-ztcf-001`, `ad-zvcf-001` | None | 0 |
+| `ad-route-bdb06b93b8fa` | `/articles/core-theses-registry.html` | Reviewed | — | `ad-dcr-002`, `ad-decomp-001`, `ad-icc-001`, `ad-impact-001`, `ad-pds-001`, `ad-sas-001`, `ad-sfd-001`, `ad-superpos-001`, `ad-tsc-001`, `ad-wuj-001`, `ad-ztcf-001`, `ad-zvcf-001` | None | 0 |
 | `ad-route-746e90148b98` | `/articles/degrees-of-freedom-and-dimensionality.html` | Reviewed | — | None | None | 0 |
 | `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 4 |
 | `ad-route-4a8ccbe60039` | `/articles/drift-control-ratio.html` | Reviewed | — | `ad-dcr-001` | `crit-dimensional-inconsistency-dcr`, `crit-lie-bracket-formalism-overreach`, `crit-normative-ambiguity-drift`, `crit-planar-dcr-blindness`, `crit-precision-gross-control` | 3 |
