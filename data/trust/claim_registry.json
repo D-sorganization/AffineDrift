@@ -611,6 +611,58 @@
       ],
       "page_id": "ad-impact-interval-conservation",
       "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "For a declared manufactured swing model, the linearized correlation between small clubhead-speed errors and small in-plane path-angle errors at a declared ground-plane impact event is computed from a propagated covariance and an event-time-corrected sensitivity map. It does not measure real golfers, a three-dimensional face angle, or decoupling under every possible perturbation."
+          },
+          "claim_id": "ad-sfd-001",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is the pinned Monte Carlo and linearized Σ_y outputs committed with this repository for the planar triple-pendulum torque program in ``src/affine_control/planar_5187.py``.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "An independent recomputation from the same declared torque program, covariance, and guard that yields materially different linearized ρ or Φ_e than the values committed in ``articles/swing-robust-funnels-figures/planar-5187-results.json``.",
+            "A claim that these manufactured-model correlations alone establish speed–face decoupling for human swings or SO(3) face angles without the declared 3D protocol."
+          ],
+          "limitations": [
+            "The path-angle proxy ψ is an in-plane clubhead velocity heading; it is not a three-dimensional clubface normal or loft.",
+            "Finite-difference Jacobians and explicit Euler Φ propagation introduce discretization error tied to the declared time step and finite-difference step.",
+            "Heun integration for Monte Carlo samples is a declared approximation for speed; it is not identical to the RK4 nominal integrator.",
+            "Not a participant-level validation or a skill-group comparison."
+          ],
+          "next_validation_gate": "Extend to a three-dimensional chain with a face chart on SO(3) and preregistered human motion capture, as tracked in AffineDrift #5186.",
+          "population": "Declared planar triple-pendulum torque program and stochastic extensions; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-10-13",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/planar_5187.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "e5f79f454d36c91f3f8afe3195d0669290c99e0aa82e031a327edf0a7ebba69d"
+            }
+          ],
+          "technical_anchor": "claim-ad-sfd-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "For the AffineDrift manufactured planar triple-pendulum torque program integrated with a declared step size, with a diagonal Gaussian initial covariance on joint angles and rates and additive torque noise, the Σ-metric linear correlation ρ_lin between clubhead speed and in-plane path angle ψ at the first upward crossing of a declared ground plane is computed from a propagated state covariance through an event-time-corrected linearization and declared task Jacobian rows; Monte Carlo sampling under the same noise model provides a nonlinear cross-check. The result is model- and protocol-specific and does not establish participant-level speed–face decoupling or a three-dimensional face-orientation claim."
+          },
+          "title": "Speed–Path Linearized Correlation at a Declared Planar Impact Event",
+          "uncertainty": {
+            "statement": "Discretization error in Φ and finite-difference gradients is not certified by a closed-form bound in this delivery.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The same nominal torque schedule, initial state, impact guard, integrator choices, and noise standard deviations as documented in ``articles/swing-robust-funnels-figures/planar-5187-results.json``.",
+            "Task outputs restricted to clubhead speed magnitude and in-plane velocity heading ψ at the declared event."
+          ]
+        }
+      ],
+      "page_id": "ad-speed-face-decoupling",
+      "source_path": "articles/core-theses-registry.qmd"
     }
   ],
   "schema_version": "1.0.0"

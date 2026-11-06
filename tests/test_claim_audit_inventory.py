@@ -559,6 +559,9 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     assert drift_past["review"]["source_path"] == (
         "articles/drift-is-the-past-control-is-the-present.qmd"
     )
+    swing_funnels_ucm = _find_route(inventory, "/articles/swing-robust-funnels-ucm.html")
+    assert swing_funnels_ucm["status"] == "reviewed"
+    assert swing_funnels_ucm["review"]["source_path"] == "articles/swing-robust-funnels-ucm.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )

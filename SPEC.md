@@ -234,6 +234,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | ---------- | ----- | ---------- |
 | 2026-11-06 | #5482 | MM-1: motion-measurement article plan, verified references and registry mapping (plan only, no publication) |
 | 2026-11-06 | #5486 | Measure math-rendering cost on Theory Part 1 from the nightly Lighthouse report (script, test, evidence doc; no SSR prototype yet) |
+| 2026-11-06 | #5194 | Swing robust funnels: planar #5187 figures and Monte Carlo via src/affine_control/planar_5187.py; article publishes pinned results; registers ad-sfd-001 |
 | 2026-11-06 | #5477 | SBOM generator: scripts/write_sbom.py emits a deterministic CycloneDX 1.5 JSON SBOM from requirements-docker.lock and package-lock.json, with --check for staleness (publication and deploy wiring remain) |
 | 2026-11-05 | #5471 | Draft-page support: vis-video reaches shared static media via leading ../, and drafts are skipped by the site gate, search index and public manifest |
 | 2026-11-05 | #5468 | Add the VIS-SITE-4 draft page embedding the AD-generated ZTCF explainer through vis-video, honestly labelled as not a traced UpstreamDrift render; allow leading ../ media paths in the shortcode |
