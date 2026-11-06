@@ -787,10 +787,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5319
 - **Branch:** merged via #5386
-- **PR:** #5386
+- **PR:** #5386, #5477
 - **Paths:** see #5386
 - **Started:** 2026-11-03
-- **Last verified:** 2026-11-03 (`112240c9`; collated from changes/5319-build-manifest-writer.md)
+- **Last verified:** 2026-11-06 (`c254d4ab`; collated from changes/5319-sbom-generator.md)
 - **Summary:** Build manifest writer: scripts/write_build_manifest.py records the commit, Quarto version and lockfile SHA-256 digests against schemas/build-manifest.schema.json, with --check for staleness (SBOM and deploy wiring remain)
 - **Next step:** Shipped in PR #5386.
 

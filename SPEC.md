@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-06 | #5477 | SBOM generator: scripts/write_sbom.py emits a deterministic CycloneDX 1.5 JSON SBOM from requirements-docker.lock and package-lock.json, with --check for staleness (publication and deploy wiring remain) |
 | 2026-11-05 | #5471 | Draft-page support: vis-video reaches shared static media via leading ../, and drafts are skipped by the site gate, search index and public manifest |
 | 2026-11-05 | #5468 | Add the VIS-SITE-4 draft page embedding the AD-generated ZTCF explainer through vis-video, honestly labelled as not a traced UpstreamDrift render; allow leading ../ media paths in the shortcode |
 | 2026-11-05 | #5456 | Trace 201 proximal-distal figures through a UD figure-map record and check it against the pinned UD map in CI |
