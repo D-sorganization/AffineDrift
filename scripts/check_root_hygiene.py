@@ -117,6 +117,8 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "pics",
         "references",
         "reports",
+        # Motion-measurement epic (#5408) critique tree; lives beside articles/research drafts.
+        "research",
         "repositories",
         # Alpha War thesis collateral (bib + work notes); same layout as branch research/alpha-war-thesis (#5466).
         "research",
