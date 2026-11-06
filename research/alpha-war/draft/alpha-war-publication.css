@@ -1,0 +1,159 @@
+/* Publication-grade academic styling for The Alpha War Monograph */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --aw-ink: #1a202c;
+  --aw-muted: #4a5568;
+  --aw-accent: #1e3a8a;
+  --aw-accent-light: #eff6ff;
+  --aw-border: #cbd5e1;
+  --aw-surface: #f8fafc;
+}
+
+body {
+  font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  color: var(--aw-ink);
+  line-height: 1.72;
+  font-size: 1.06rem;
+}
+
+h1, h2, h3, h4, .title, .subtitle {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #0f172a;
+  letter-spacing: -0.015em;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 1.85rem;
+  margin-top: 2.6rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid var(--aw-accent);
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 1.38rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+}
+
+h3 {
+  font-weight: 600;
+  font-size: 1.14rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #334155;
+}
+
+.quarto-title-block .title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.22;
+  color: #0f172a;
+}
+
+.quarto-title-block .subtitle {
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--aw-muted);
+  margin-top: 0.5rem;
+}
+
+/* Publication Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.6rem 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.48;
+  background: #fff;
+  border-top: 2px solid #0f172a;
+  border-bottom: 2px solid #0f172a;
+}
+
+thead th {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1.5px solid #334155;
+}
+
+tbody td {
+  padding: 0.58rem 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+/* Figures and Captions */
+figure, .quarto-figure {
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+figure img, .quarto-figure img, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+figcaption, .figure-caption {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.88rem;
+  color: #475569;
+  margin-top: 0.75rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+/* Callout Boxes */
+.callout {
+  margin: 1.75rem 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.callout-title-container {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+}
+
+/* Print / PDF optimizations */
+@media print {
+  body {
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+  h1 {
+    break-before: page;
+    margin-top: 0;
+  }
+  h1:first-of-type {
+    break-before: avoid;
+  }
+  h2, h3 {
+    break-after: avoid;
+  }
+  table, figure, .quarto-figure, .callout {
+    break-inside: avoid;
+  }
+
+  @page {
+    size: letter;
+    margin: 0.75in;
+  }
+}
