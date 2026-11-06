@@ -2,18 +2,18 @@
 title: "Drift Is the Past, Control Is the Present: A Lay Guide to Momentum and Muscle"
 description: "A lay guide to how instantaneous swing acceleration splits into past momentum and present muscle push, and why the pieces cannot simply be summed over time."
 author: "Dieter Olson"
-date: "Date unverified"
-date-source: "unverified"
-date-modified: "2026-11-04"
-last-reviewed: "2026-11-04"
+date: "2026-11-04"
+date-source: "author-publication-record"
+date-modified: "2026-11-06"
+last-reviewed: "2026-11-06"
 canonical: "/articles/drift-is-the-past-control-is-the-present.html"
 status: "available"
 audience-level: "intro"
 evidence-rung: "qualified-simulation"
-summary-plain: "At any frozen instant, how your club accelerates splits into drift (momentum plus gravity) and control (what your muscles push right now). This guide explains what that split means, where gravity fits, and why it works as a snapshot but breaks as a movie."
-abstract: "Every golfer wonders how much clubhead speed comes from muscle power versus letting the club swing. At a single frozen instant, total acceleration splits into drift and control. This article explains the ZTCF family and ZVCF, reconciles them with active and passive coaching concepts, and details why snapshot decomposition cannot simply be integrated over time."
+summary-plain: "At any frozen instant, how your modeled plant accelerates splits into drift (velocity coupling, passive tissue forces and gravity in the model) and control (declared joint torques right now). This guide explains what that split means, where gravity fits, and why it works as a snapshot but breaks as a movie."
+abstract: "Every golfer wonders how much clubhead speed comes from muscle power versus letting the club swing. At a single frozen instant, total acceleration splits into drift and control for a stated multibody model. This article explains the ZTCF family and ZVCF, reconciles them with active and passive coaching concepts, and details why snapshot decomposition cannot simply be integrated over time."
 key-takeaways:
-  - "Instantaneous acceleration decomposes uniquely into drift (velocity and gravity) and control (applied torques)."
+  - "Instantaneous acceleration decomposes uniquely, for a given model and coordinates, into drift (passive generalized forces in that model) and control (declared joint torques)."
   - "ZTCF and ZVCF isolate different counterfactual baselines to clarify muscle vs. momentum contributions."
   - "Snapshot accelerations cannot be summed across the swing because control torques continuously shape future drift."
 format:
@@ -30,7 +30,7 @@ categories:
 ---
 
 ::: {.abstract}
-Every golfer wonders how much clubhead speed comes from muscle power versus "letting the club swing." In control theory and multibody mechanics, that question has an exact answer, but only if you ask it at a single frozen instant. At that instant, total acceleration splits into two pieces: **drift** (what the body and club would do on their own, carried by momentum and gravity) and **control** (what joint torques add right now). This article explains the two counterfactual tools that compute that split—**ZTCF** and **ZVCF**—reconciles them with the familiar coaching distinction between active and passive motion, and explains the essential caveat: why this split works perfectly for a snapshot, but breaks down if you try to add the pieces over time.
+Every golfer wonders how much clubhead speed comes from muscle power versus "letting the club swing." In control theory and multibody mechanics, that question has an exact answer, but only if you ask it in a stated model at a single frozen instant. At that instant, total acceleration splits into two pieces: **drift** (what the plant does with declared joint torques set to zero, including velocity-dependent coupling and gravity in the equations) and **control** (what the declared joint torques add right now). This article explains the two counterfactual tools that compute that split—**ZTCF** and **ZVCF**—reconciles them with the familiar coaching distinction between active and passive motion, and explains the essential caveat: why this split works perfectly for a snapshot, but breaks down if you try to add the pieces over time.
 :::
 
 ## The Coasting Car and the Playground Swing {#sec-everyday-intuition}
@@ -39,41 +39,41 @@ Imagine driving a car down a winding mountain road. You take your foot off the a
 
 Now, while still coasting, you turn the steering wheel sharply to the left. 
 
-Where the car accelerates next is the sum of two distinct influences:
+Where the car accelerates **right at that instant** is the sum of two distinct influences:
 
 1. **The coasting baseline:** where momentum and gravity would carry you if your hands did nothing new.
-2. **Your steering action:** what your hands on the wheel are forcing into the car at this very second.
+2. **Your steering action:** what your hands on the wheel are forcing into the car at this very second (not the history of steering inputs that set you up for the turn).
 
-A child on a playground swing reveals the exact same split. As the swing rushes through the bottom of the arc, the child's body rises up the other side purely on momentum and gravity. If an adult steps in and gives a shove, that push adds to the motion. A tiny, well-timed push at the right point in the arc produces a huge rise; a clumsy push at the top disrupts the rhythm. The swing's instantaneous acceleration is always the sum of the motion already underway plus the push applied at that second.
+A child on a playground swing reveals the same split at an instant. As the swing rushes through the bottom of the arc, the child's body rises up the other side largely on momentum and gravity at that phase. If an adult steps in and gives a shove **at one instant**, that impulse contribution adds to the forces already acting. (Over many cycles, timing builds differently; this article keeps the camera on one frozen frame.)
 
 In engineering mechanics, we give these two parts precise names: **drift** and **control**.
 
 ## The Golf Swing, Frame by Frame {#sec-frame-by-frame}
 
-A golf downswing takes about one-third of a second. At every millisecond of that rush, your joints are rotating, your torso is unwinding, and the clubhead is accelerating toward the ball.
+A golf downswing is often quoted in the mid-hundreds of milliseconds (roughly a quarter to a third of a second in many coaching summaries; exact numbers vary with study definitions). At every millisecond of that rush, your joints are rotating, your torso is unwinding, and the clubhead is accelerating toward the ball.
 
 Suppose we freeze the swing at an exact instant midway down—shaft roughly parallel to the ground—and ask two thought experiments:
 
-1. **"What if the golfer went completely limp at this instant?"**
-   Suppose every muscle stopped firing right now ($\tau = 0$). The club would not drop straight to the turf like a dropped stone. It is already moving at sixty miles per hour. That existing velocity whips the segments forward through centrifugal and Coriolis coupling, while gravity pulls downward. In our framework, this zero-muscle baseline is called the **Zero-Torque Counterfactual (ZTCF)**, or simply **drift**.
+1. **"What if the golfer switched off every modeled joint torque at this instant?"**
+   In the model, set $\tau = 0$: the declared joint motors stop pushing **now**. Real joints stay connected; passive tissues and contact loads can still apply forces, but anything folded into the model's passive vector $h$ remains. Per [`NOTATION.md`](../NOTATION.md), ZTCF does **not** mean a flaccid body. The club would not drop straight to the turf like a dropped stone. Segments are already moving quickly (representative orders of tens of meters per second at the clubhead in a full swing). That existing velocity whips the segments forward through centrifugal and Coriolis coupling in the equations, while gravity pulls downward. In our framework, this zero-torque baseline is called the **Zero-Torque Counterfactual (ZTCF)**, or simply **drift**.
 
 2. **"What if the golfer pushed with their muscles, but had zero speed?"**
    Suppose we freeze the golfer in this identical body position, zero out all velocity, switch off gravity, and apply only the muscular torques the golfer is exerting at this moment. The resulting acceleration is what the muscles alone produce through the body's inertia matrix ($M^{-1}\tau$). In our framework, this active-torque baseline is called the **Zero-Velocity Counterfactual (ZVCF)**, or simply **control**.
 
-At this frozen snapshot, nature gives us a remarkable mathematical fact: **drift plus control equals the exact total acceleration of the clubhead**.
+At this frozen snapshot, nature gives us a remarkable mathematical fact: **drift plus control equals the exact total generalized acceleration** in the model **joint coordinates** (clubhead acceleration follows by forward kinematics).
 
 ::: {.callout-note}
 ### The Single Equation (For the Curious) {#sec-single-equation}
-If you describe the golfer and club with joint positions $q$, velocities $\dot{q}$, inertia matrix $M(q)$, passive velocity/gravity forces $h(q, \dot{q})$, and muscle torques $\tau$, the instantaneous acceleration $\ddot{q}$ splits cleanly:
+Start from the usual multibody form $M(q)\ddot q + h(q,\dot q)=\tau$, where $h$ collects Coriolis, centrifugal, gravity and other **declared passive** loads in the model (anything not placed in $\tau$). Rearranged, it says "mass matrix times acceleration equals total generalized force, split into two piles" --- passive loads and applied torques:
 $$\ddot{q} = \underbrace{-M(q)^{-1} h(q, \dot{q})}_{\text{Drift (ZTCF)}} + \underbrace{M(q)^{-1} \tau}_{\text{Control (ZVCF)}}$$
-At one fixed state, total acceleration is drift plus control. Gravity is counted exactly once, inside the drift term.
+At one fixed state, total acceleration is drift plus control. A task-space acceleration picks up the usual $J\ddot q + \dot J \dot q$ chain; the $\dot J \dot q$ term belongs with drift when $h$ is built from the full equations of motion at that instant. Gravity is counted exactly once, inside the drift term.
 :::
 
-![Figure 1: At a Single Downswing Instant, the Clubhead Acceleration Splits Into Drift (Momentum and Gravity) and Control (Active Muscle Torque), Adding Tip-to-Tail to Form Total Acceleration.](figures/core_theory/fig_dcr_vector_decomposition.svg){#fig-vector-split fig-alt="Vector diagram showing drift acceleration arrow and control acceleration arrow summing tip-to-tail to equal total acceleration vector."}
+![Figure 1: At a Single Downswing Instant, the Clubhead Acceleration Splits Into Drift (Passive Model Loads) and Control (Applied Joint Torques), Adding Tip-to-Tail to Form Total Acceleration.](figures/core_theory/fig_dcr_vector_decomposition.svg){#fig-vector-split fig-alt="Vector diagram showing drift acceleration arrow and control acceleration arrow summing tip-to-tail to equal total acceleration vector. The picture is drawn in task space at the clubhead; the equation box writes the same split in joint coordinates before mapping to the clubhead."}
 
 <details>
 <summary>Long description</summary>
-The vector diagram illustrates instantaneous acceleration decomposition at a single downswing state. The drift acceleration vector (representing velocity-dependent Coriolis and centrifugal forces plus gravity evaluated at the current posture) combines tip-to-tail with the control acceleration vector (representing applied joint torques acting through the system inertia matrix). Their vector sum forms the exact total acceleration vector of the clubhead at this instant.
+The vector diagram illustrates instantaneous acceleration decomposition at a single downswing state. The drift acceleration vector (representing passive model loads and velocity-dependent coupling in the chosen equations) combines tip-to-tail with the control acceleration vector (representing applied joint torques acting through the system inertia matrix). Their vector sum forms the exact total acceleration vector of the clubhead at this instant.
 </details>
 
 ## Two Lenses on the Same Swing {#sec-two-lenses}
@@ -94,7 +94,7 @@ Both lenses look at the same physical swing, and they arrive at the identical ma
 
 Consider gravity's role in the downswing:
 
-In the **Active/Passive lens**, gravity is obvious. It is not a muscle force, so it is classified as *passive*. Furthermore, gravity acts *right now*—it pulls downward on the clubhead at 9.8 meters per second squared at this exact millisecond. It is not something the golfer did half a second ago.
+In the **Active/Passive lens**, gravity is obvious. It is not a muscle force, so it is classified as *passive*. Furthermore, gravity acts *right now*—it pulls on the club with a force about equal to its weight (mass times $g\approx 9.8\ \mathrm{m}/\mathrm{s}^2$) at this exact millisecond. It is not something the golfer did half a second ago.
 
 In the **Time lens**, however, gravity sits inside *drift*—which we have labeled "the past." Why would an ever-present force of nature belong to the past?
 
@@ -112,7 +112,7 @@ Gravity only pulls straight down toward the center of the earth. But whether tha
 
 This reconciliation reveals a deeper principle: **The state of your body right now is entirely a product of the past; the future is that past state plus the actions you take now.**
 
-Everything passive—both the whip-like momentum coupling between your torso and your arms, and the mechanical leverage gravity has on your club—is computed directly from your current state. The only genuinely new information entering the universe at this millisecond is the active control torque from your muscles.
+Everything passive—both the whip-like momentum coupling between your torso and your arms, and the mechanical leverage gravity has on your club—is computed directly from your current state. The only genuinely new information entering the universe at this millisecond is the active control torque from your muscles **on top of the posture and velocity history that position the plant**.
 
 ![Figure 2: Trajectory Divergence Over Time. While Instantaneous Acceleration Adds Tip-to-Tail at Any Frozen Moment, Forward Trajectories Diverge Once Motions Play Out, Because Posture Differences Change Subsequent Inertia, Gravity, and Velocity Coupling.](figures/core_theory/fig_ztcf_trajectory_divergence.svg){#fig-divergence fig-alt="Plot showing the real swing trajectory diverging from the zero-torque counterfactual trajectory over time."}
 
@@ -123,9 +123,9 @@ The divergence graph shows how forward-simulated trajectories diverge over time 
 
 ## Reconciling Both With ZTCF and ZVCF {#sec-reconciliation}
 
-We can now state the formal definitions established by Dieter Olson for the AffineDrift framework (per issue #5434 and `NOTATION.md`):
+We can now state the formal definitions established by Dieter Olson for the AffineDrift framework (see [`NOTATION.md`](../NOTATION.md) for the canonical qualifiers):
 
-- **ZTCF (Zero-Torque Counterfactual) = Drift:** The complete autonomous acceleration of the golfer-club plant when declared muscle torques are set to zero. This includes all velocity-dependent Coriolis and centrifugal coupling, plus gravity evaluated at the current posture.
+- **ZTCF (Zero-Torque Counterfactual) = Drift:** The complete autonomous acceleration of the golfer-club plant when declared muscle torques are set to zero **in the model**. This includes all velocity-dependent Coriolis and centrifugal coupling folded into $h$, plus gravity evaluated at the current posture, plus any other passive loads kept out of $\tau$.
 - **ZVCF (Zero-Velocity Counterfactual) = Control:** The acceleration produced purely by joint torques through the body's inertia matrix ($M^{-1}\tau$), with velocity and gravity switched off.
 - **ZTCF + ZVCF = Total Acceleration:** At any fixed state, the sum of drift and control equals the real, instantaneous acceleration. Gravity is counted exactly once, inside drift.
 
@@ -142,7 +142,7 @@ Every powerful concept has boundaries, and pretending those boundaries do not ex
 ### 1. Snapshots Add; Movies Diverge {#sec-snapshot-vs-movie}
 The most important caveat in this entire subject: **ZTCF and ZVCF add together only at a single frozen instant. Their integrated paths over time do not add up to the real swing.**
 
-If you go limp mid-downswing (a forward ZTCF rollout), the club flies off on a runaway path. In that runaway path, your wrists bend differently, the shaft changes angle, and the body's inertia matrix $M(q)$ changes. Because the posture diverges immediately, the subsequent velocity and gravity forces also diverge. You cannot take the movie of the "limp golfer" and add it to the movie of the "isolated muscle push" to reconstruct the tournament swing. The sum is exact for acceleration *now*; it is not additive across *time*.
+If you switch off torques mid-downswing (a forward ZTCF rollout), the club flies off on a runaway path. In that runaway path, your wrists bend differently, the shaft changes angle, and the body's inertia matrix $M(q)$ changes. Because the posture diverges immediately, the subsequent velocity and gravity forces also diverge. You cannot take the movie of the "zero-torque golfer" and add it to the movie of the "isolated muscle push" to reconstruct the tournament swing. The sum is exact for acceleration *now*; it is not additive across *time*.
 
 ### 2. "Past" Isn't Completely in the Past {#sec-gravity-not-past}
 As we saw, drift includes gravity. Gravity is not a past action—you did not create gravity on the backswing. What the past created is the *posture* through which gravity acts.
@@ -159,9 +159,11 @@ If you are a golfer or coach, what does this framework offer you beyond elegant 
 
 It offers a clear diagnostic compass: **Are you trying to generate speed in the present that you should have set up in the past?**
 
-Amateur golfers often attempt to "muscle" the ball at the bottom of the swing. In control terms, they are demanding enormous control torque (ZVCF) in the final fifty milliseconds before impact. But human muscles are slow to recruit, and the clubhead is moving too fast for late muscle interventions to catch up.
+Coaching books often claim that better players sequence recruitment earlier and that "passive" speed shows up late. Treat that as a **testable hypothesis** about timing and coordination, not as a theorem from this page: it depends on how each swing was measured and what "passive" meant in that study.
 
-Elite ball-strikers do the opposite. They use their muscles early—in the transition and initial downswing—to build a favorable kinematic state: hip clearance, lead-side posting, and stored wrist lag. By the time the club reaches the delivery area, the swing is propelled by massive passive drift (ZTCF). Their muscles shift from driving the club to maintaining alignment, letting the accumulated momentum and gravitational torque do the heavy lifting.
+Amateur golfers often attempt to "muscle" the ball at the bottom of the swing. In control terms, they are demanding large control torque (ZVCF) very late in the downswing. Recruitment latency and bandwidth limits can make that a losing trade **when** the model and measurement support it.
+
+Elite ball-strikers are frequently described as investing muscular coordination earlier so that later phases ride favorable kinematics. How much of that is passive drift in the sense of ZTCF is an empirical question: compare measured torques, speeds, and declared model boundaries before treating the story as settled.
 
 Drift is the accumulated investment of your past; control is the decision you make right now. When the two work in harmony, the swing feels effortless because the present is riding the wave of what you prepared.
 
