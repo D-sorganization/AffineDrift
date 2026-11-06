@@ -182,7 +182,7 @@ def fig_club_roll_projection(payload: dict[str, Any]) -> str:
         sweep_circles,
         f'<circle cx="{tx(phi_star_deg):.1f}" cy="{y0:.1f}" r="5.5" fill="#d62728"/>',
         f'<text x="{tx(phi_star_deg) + 10:.1f}" y="{y0 + 16:.1f}" font-size="10.5" fill="#d62728">'
-        f"phi* = {phi_star_deg:.2f} deg (illustrative zero crossing: arctan(15/8))"
+        f"phi* = {phi_star_deg:.2f} deg (illustrative zero crossing: atan2(15, 8))"
         "</text>",
         f'<text x="{pad_l + 12}" y="{pad_t + 18}" font-size="10.5" fill="#2ca02c">'
         "Shaded band: ±20% out-of-plane M_beta sensitivity envelope on illustrative roll projection"
@@ -352,7 +352,9 @@ def fig_couple_timeseries(payload: dict[str, Any]) -> str:
         "(N·m vs s)</text>",
         '<text x="68" y="39" font-size="10.8" fill="#333">'
         "Plain-language takeaway: The hand couple turns negative before impact and tracks the "
-        f"passive ZTCF curve ({share_pct:.2f}% share at t=0.2151 s)."
+        f"ZTCF branch on this simulated trajectory "
+        f"(|ZTCF|/|BASE| = {share_pct:.2f}% at t=0.2151 s; "
+        "modeled ratio, not measured muscle passivity)."
         "</text>",
         '<text x="68" y="54" font-size="10.2" fill="#555">'
         "Frame: F_FSP (functional swing plane) | Sign convention: +CCW uncocking | "
@@ -372,8 +374,8 @@ def fig_couple_timeseries(payload: dict[str, Any]) -> str:
         f'<circle cx="{tx(0.2151):.1f}" cy="{ty(z_min):.1f}" r="4.5" fill="#2ca02c"/>',
         f'<text x="{tx(0.2151) - 285:.1f}" y="{ty(c_min) + 14:.1f}" '
         f'font-size="10.5" fill="#1f77b4">'
-        f"t=0.2151 s (simulated): ZTCF {z_min:.2f} N·m / Total {c_min:.2f} N·m = "
-        f"{share_pct:.2f}% passive share</text>",
+        f"t=0.2151 s (simulated): |ZTCF|/|BASE| = |{z_min:.2f}|/|{c_min:.2f}| = "
+        f"{share_pct:.2f}% (same-state modeled ratio)</text>",
         f'<text x="{pad_l + 12}" y="{pad_t + 18}" font-size="10.5" fill="#333">'
         "Legend: Blue = Total hand couple C_alpha,M | Green dashed = ZTCF passive | "
         "Orange = COM moment M_alpha,G</text>",
