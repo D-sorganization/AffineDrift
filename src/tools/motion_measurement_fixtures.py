@@ -75,6 +75,41 @@ def helical_axis_error(step_angle: float, sigma: float, trials: int) -> float:
     return float(np.mean(np.arccos(np.clip(axes @ HELICAL_AXIS, -1.0, 1.0))))
 
 
+def _coning_matrix(time: float) -> Array:
+    """Orientation Rz(t) Rx(t): a unit spin about x carried round a unit precession about z."""
+    spin = Rotation.from_rotvec([time, 0.0, 0.0]).as_matrix()
+    return np.asarray(Rotation.from_rotvec([0.0, 0.0, time]).as_matrix() @ spin, dtype=float)
+
+
+def _axis_error(axes: Array, truth: Array) -> float:
+    """Mean angle (rad) between unit rows of ``axes`` and a unit ``truth`` vector."""
+    return float(np.mean(np.arccos(np.clip(np.atleast_2d(axes) @ truth, -1.0, 1.0))))
+
+
+def moving_axis_error(step: float, sigma: float, trials: int) -> dict[str, float]:
+    """Finite-axis error against the instantaneous axis at the step midpoint, on a coning path.
+
+    ``bias_rad`` is the noise-free difference (it grows with the step because the true axis
+    moves). ``noisy_error_rad`` adds the same additive rotation-vector noise as
+    ``helical_axis_error`` (an assumption: real marker noise is not isotropic), so the noisy
+    curve is U-shaped: small steps are noise-limited, large steps are bias-limited.
+    """
+    if step <= 0.0 or trials < 1:
+        raise ValueError("step must be positive and trials at least 1")
+    start = 0.3
+    finite = Rotation.from_matrix(_coning_matrix(start + step) @ _coning_matrix(start).T)
+    mid = Rotation.from_rotvec([0.0, 0.0, start + step / 2.0])
+    truth = np.array([0.0, 0.0, 1.0]) + mid.apply([1.0, 0.0, 0.0])
+    truth = truth / np.linalg.norm(truth)
+    noise = Rotation.from_rotvec(sigma * np.random.default_rng(SEED).standard_normal((trials, 3)))
+    noisy = (noise * finite).as_rotvec()
+    clean = finite.as_rotvec()
+    return {
+        "bias_rad": _axis_error(clean / np.linalg.norm(clean), truth),
+        "noisy_error_rad": _axis_error(noisy / np.linalg.norm(noisy, axis=1, keepdims=True), truth),
+    }
+
+
 def _euler_path(pitch: float, dt: float) -> tuple[Array, Array, Array]:
     """Smooth ZYX path: time, angles (yaw, pitch, roll) and analytic angle rates."""
     time = np.arange(0.0, 1.0 + dt / 2.0, dt)
@@ -150,6 +185,11 @@ def build_results() -> dict[str, object]:
             "sigma": 1e-3,
             "steps_rad": steps,
             "mean_axis_error_rad": [helical_axis_error(step, 1e-3, 500) for step in steps],
+        },
+        "moving_axis": {
+            "sigma": 1e-3,
+            "steps": [0.01, 0.1, 0.3, 1.0],
+            "by_step": [moving_axis_error(step, 1e-3, 500) for step in [0.01, 0.1, 0.3, 1.0]],
         },
         "angular_velocity": {
             "pitch_30_deg": euler_vs_poisson(1e-3, np.deg2rad(30.0)),

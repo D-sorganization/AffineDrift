@@ -54,7 +54,7 @@ def test_svd_reorthogonalisation_returns_nearest_proper_rotation() -> None:
     assert np.linalg.norm(fixed - truth) < np.linalg.norm(drifted - truth)
 
 
-def test_svd_reorthogonalisation_rejects_a_reflection_free_nonfinite_input() -> None:
+def test_svd_reorthogonalisation_rejects_nonfinite_input() -> None:
     with pytest.raises(ValueError, match="finite"):
         mm.nearest_rotation(np.full((3, 3), np.nan))
 
@@ -74,6 +74,25 @@ def test_helical_axis_error_shrinks_as_the_step_grows() -> None:
     assert errors[0] / errors[2] > 10.0  # roughly inverse to the rotation size
 
 
+def test_finite_axis_bias_grows_with_step_on_a_precessing_axis() -> None:
+    steps = (0.01, 0.1, 0.3, 1.0)
+    bias = [mm.moving_axis_error(step, 1e-3, 200)["bias_rad"] for step in steps]
+    assert bias == sorted(bias)
+    assert bias[0] < 1e-4 and bias[-1] > 0.05  # rad: finite axis drifts from the instantaneous one
+
+
+def test_noisy_finite_axis_error_is_u_shaped_with_an_interior_minimum() -> None:
+    steps = (0.01, 0.1, 0.3, 1.0)
+    noisy = [mm.moving_axis_error(step, 1e-3, 500)["noisy_error_rad"] for step in steps]
+    assert int(np.argmin(noisy)) in (1, 2)  # neither the smallest nor the largest step
+    assert noisy[0] > 5.0 * min(noisy) and noisy[-1] > 5.0 * min(noisy)
+
+
+def test_moving_axis_rejects_a_nonpositive_step() -> None:
+    with pytest.raises(ValueError, match="positive"):
+        mm.moving_axis_error(0.0, 1e-3, 10)
+
+
 def test_poisson_omega_is_exact_and_euler_difference_is_not() -> None:
     result = mm.euler_vs_poisson(dt=1e-3)
     assert result["poisson_max_error"] < 1e-5  # rad/s, central scheme on a smooth path
@@ -83,7 +102,7 @@ def test_poisson_omega_is_exact_and_euler_difference_is_not() -> None:
 def test_euler_difference_error_grows_toward_gimbal_lock() -> None:
     near = mm.euler_vs_poisson(dt=1e-3, pitch=np.deg2rad(85.0))
     far = mm.euler_vs_poisson(dt=1e-3, pitch=np.deg2rad(30.0))
-    assert near["euler_difference_max_error"] > far["euler_difference_max_error"]
+    assert near["euler_difference_mean_error"] > far["euler_difference_mean_error"]
 
 
 def test_quaternion_filtering_needs_sign_continuity() -> None:
@@ -105,4 +124,11 @@ def test_results_are_deterministic_and_round_trip_through_json(tmp_path: Path) -
     second = mm.write_results(tmp_path / "b.json")
     assert first == second
     assert json.loads((tmp_path / "a.json").read_text(encoding="utf-8")) == first
-    assert {"gimbal", "helical_axis", "angular_velocity", "quaternion", "differences"} <= set(first)
+    assert {
+        "gimbal",
+        "helical_axis",
+        "moving_axis",
+        "angular_velocity",
+        "quaternion",
+        "differences",
+    } <= set(first)
