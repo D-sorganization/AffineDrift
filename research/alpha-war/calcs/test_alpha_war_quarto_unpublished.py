@@ -53,7 +53,7 @@ class TestAlphaWarQuartoUnpublished(unittest.TestCase):
                 stripped.startswith('- "!'),
                 f"research/alpha-war may only appear as a render exclusion: {stripped}",
             )
-        self.assertIn('!research/alpha-war/**/*.md', yml)
+        self.assertIn("!research/alpha-war/**/*.md", yml)
         self.assertNotIn("alpha-war-v0", yml)
         self.assertNotIn("alpha-war-v1", yml)
 
