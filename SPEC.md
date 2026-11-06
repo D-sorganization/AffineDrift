@@ -232,6 +232,36 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-06 | #5477 | SBOM generator: scripts/write_sbom.py emits a deterministic CycloneDX 1.5 JSON SBOM from requirements-docker.lock and package-lock.json, with --check for staleness (publication and deploy wiring remain) |
+| 2026-11-05 | #5471 | Draft-page support: vis-video reaches shared static media via leading ../, and drafts are skipped by the site gate, search index and public manifest |
+| 2026-11-05 | #5468 | Add the VIS-SITE-4 draft page embedding the AD-generated ZTCF explainer through vis-video, honestly labelled as not a traced UpstreamDrift render; allow leading ../ media paths in the shortcode |
+| 2026-11-05 | #5456 | Trace 201 proximal-distal figures through a UD figure-map record and check it against the pinned UD map in CI |
+| 2026-11-05 | #5455 | Figure gate accepts UD figure-map records: a separate record kind that traces UD-projected figures to their run by sha256 and run_id, without mocap review attestations |
+| 2026-11-05 | #5438 | Restore ZVCF=control and ZTCF=drift in NOTATION.md and mechanics includes (#5430) |
+| 2026-11-05 | #5458 | Add the accessible vis-video shortcode for local WebM/MP4 embeds (poster, captions, lazy, no autoplay, provenance record) and trace embedded videos in the figure gate |
+| 2026-11-05 | #5457 | Draft site visual-placement audit table for VIS-SITE (page, concept, proposed visual, UD source, priority) |
+| 2026-11-04 | #5452 | Update critiques responses to reflect ZVCF = control and instant-vs-trajectory distinction. |
+| 2026-11-04 | #5451 | Exactness box for ZTCF/ZVCF decomposition, control-affine / IAA comparison, and naming note. |
+| 2026-11-04 | #5446 | Add lay guide to ZTCF and ZVCF reconciling time and active/passive lenses with snapshot caveats and mechanics baselines (#5440) |
+| 2026-11-04 | #5449 | Figure exemptions now state provenance: the proximal-distal figures projected from the pinned UpstreamDrift release cite its commit with a hash pin and an explicit no-run-identity marker, the companion figures name their generator scripts, and the rest are marked origin unrecorded |
+| 2026-11-04 | #5445 | CI gate: a non-draft page may embed a figure only when a verified projection record traces it or an explicit, reasoned exemption covers it; draft pages warn |
+| 2026-11-04 | #5442 | Add the provenance caption shortcode: a figure caption naming the UpstreamDrift model, run_id, commit and claim class, linked only to the public UD repo (fail closed on bad values) |
+| 2026-11-04 | #5436 | Retire hyperplane display titles in the compact tangent-space series (Parts 1–7) and hub. |
+| 2026-11-04 | #5428 | Bind every markerless-mocap projection artifact to its UpstreamDrift model_id, run_id, ud_commit and claim class (fail closed) |
+| 2026-11-04 | #5435 | Evidence check asserts drift+control=total and ZVCF=control |
+| 2026-11-04 | #5437 | Rewrite Decision 4: ZVCF = control; terminology gate flags gravity-only ZVCF and ZTCF+control-preserved double count. |
+| 2026-11-03 | #5390 | Add report-only pr-body-lint pull_request_target caller (RM reusable workflow) and contract test. |
+| 2026-11-03 | #5386 | Build manifest writer: scripts/write_build_manifest.py records the commit, Quarto version and lockfile SHA-256 digests against schemas/build-manifest.schema.json, with --check for staleness (SBOM and deploy wiring remain) |
+| 2026-11-03 | #5348 | Mobile MathJax minScale, math-mobile CSS, and diagram min-width floors |
+| 2026-11-03 | #5385 | Phone layout audit manifest: Playwright mobile smoke and Lighthouse read one route and viewport set (iPhone 390x844, Android 360x800) |
+| 2026-11-03 | #5382 | Seed the exact-key Quarto E2E render cache on main push so PRs and merge groups can restore it (WEB-13.1 #4595) |
+| 2026-11-03 | #5309 | Panel-refined draft of Managing Slack in Linked Systems (do not merge); Publish panel-refined Managing Slack in Linked Systems (#5135, #5309) |
+| 2026-11-02 | #5360 | Restore swallowed LaTeX escapes in After One Solution and gate articles/*.qmd control bytes |
+| 2026-11-02 | #5361 | Add label-merge-guard workflow enforcing do-not-merge and do-not-automate holds |
+| 2026-11-02 | #5328 | Add phone-side padding on full-layout main content (#5323) |
+| 2026-11-02 | #5357 | Backlog slice delivery for #5317; Backlog slice delivery for #5318; Backlog slice delivery for #5321 |
+| 2026-11-02 | #5349 | Backlog slice delivery for #5185 |
+| 2026-11-02 | #5345 | Weekly Python and npm patch bumps; pytest held at 9.1.x per pyproject cap |
 | 2026-11-02 | #5356 | Backlog slice delivery for #5320 |
 | 2026-11-02 | #5343 | Service worker: update notice only when a cached asset really changed, network-first JSON/CSV data, compact phone notice |
 | 2026-11-02 | #5340 | Phone-viewport Playwright smoke spec in e2e-tests and a warn-only nightly Lighthouse mobile baseline |

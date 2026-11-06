@@ -6,6 +6,7 @@ const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 const exists = (rel) => fs.existsSync(path.join(ROOT, rel));
 
 const SMOKE_SPEC = 'tests/e2e/mobile-smoke.spec.js';
+const AUDIT_MANIFEST = 'config/mobile-layout-audit-routes.json';
 const LHCI_CONFIG = 'config/lighthouserc.json';
 const NIGHTLY = '.github/workflows/cross-browser-nightly.yml';
 
@@ -24,19 +25,26 @@ describe('Mobile smoke and Lighthouse mobile baseline in CI (#5316)', () => {
     const spec = read(SMOKE_SPEC);
     // test.use keeps it inside `--project=chromium`, so e2e-tests runs it as-is.
     expect(spec).toMatch(
-      /test\.use\(\{\s*viewport:\s*\{\s*width:\s*390,\s*height:\s*844\s*\},\s*isMobile:\s*true/,
+      /test\.use\(\{\s*viewport:\s*\{\s*width,\s*height\s*\},\s*isMobile:\s*true/,
     );
     expect(spec).toMatch(/hasTouch:\s*true/);
     expect(spec).toMatch(/scrollWidth/);
     expect(spec).toMatch(/navbar-toggler/);
   });
 
+  test('the smoke spec drives the audit manifest, including a 390x844 phone (#5313)', () => {
+    const spec = read(SMOKE_SPEC);
+    expect(spec).toContain(`require('../../${AUDIT_MANIFEST}')`);
+    const { viewports, routes } = JSON.parse(read(AUDIT_MANIFEST));
+    expect(viewports).toContainEqual(expect.objectContaining({ width: 390, height: 844 }));
+    expect(routes.length).toBeGreaterThanOrEqual(5);
+  });
+
   test('the smoke spec and Lighthouse audit the same routes', () => {
     const config = JSON.parse(read(LHCI_CONFIG));
     const urls = config.ci.collect.url.map((url) => new URL(url).pathname);
-    const spec = read(SMOKE_SPEC);
-    expect(urls.length).toBeGreaterThanOrEqual(5);
-    for (const route of urls) expect(spec).toContain(`'${route}'`);
+    const { routes } = JSON.parse(read(AUDIT_MANIFEST));
+    expect(urls).toEqual(routes);
   });
 
   test('Lighthouse runs as a mobile baseline that warns rather than blocks', () => {

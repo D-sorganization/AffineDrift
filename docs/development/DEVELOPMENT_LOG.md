@@ -241,6 +241,97 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5430 · Restore ZVCF=Control and ZTCF=Drift in NOTATION.md and Mechanics Includes (#5430)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5430
+- **Branch:** cursor/zvcf-control-notation-5430-7c57
+- **PR:** #5438
+- **Paths:** see #5438
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`95f84960`; collated from changes/5430-restore-zvcf-control-and-ztcf-drift-in-n.md)
+- **Summary:** Restore ZVCF=control and ZTCF=drift in NOTATION.md and mechanics includes (#5430)
+- **Next step:** Merge after quality-gate; epic #5434 AD-2
+
+### DL-#5433 · Update Critiques Responses to Reflect ZVCF = Control and Instant-vs-Trajectory Distinction.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5433
+- **Branch:** feat/5433-critiques-zvcf-control
+- **PR:** #5452
+- **Paths:** see #5452
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`a731dcc9`; collated from changes/5433-update-critiques-responses-to-reflect-zv.md)
+- **Summary:** Update critiques responses to reflect ZVCF = control and instant-vs-trajectory distinction.
+- **Next step:** Merge the PR.
+
+### DL-#5431 · Exactness Box for ZTCF/ZVCF Decomposition, Control-Affine / IAA Comparison, and Naming Note.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5431
+- **Branch:** feat/5431-articles-exactness-zvcf
+- **PR:** #5451
+- **Paths:** see #5451
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`225fb16a`; collated from changes/5431-exactness-box-for-ztcf-zvcf-decompositio.md)
+- **Summary:** Exactness box for ZTCF/ZVCF decomposition, control-affine / IAA comparison, and naming note.
+- **Next step:** Merge the PR.
+
+### DL-#5448 · Figure Exemptions Now State Provenance: The Proximal-Distal Figures Projected From the Pinned UpstreamDrift Release Cite Its Commit With a Hash Pin and an Explicit No-Run-Identity Marker, the Companion Figures Name Their Generator Scripts, and the Rest Are Marked Origin Unrecorded
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5448
+- **Branch:** brick/backlog-completion/5448-pd-projection-records
+- **PR:** #5449
+- **Paths:** see #5449
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`808a8747`; collated from changes/5448-provenance-tagged-exemptions-for-proximal-distal-figures.md)
+- **Summary:** Figure exemptions now state provenance: the proximal-distal figures projected from the pinned UpstreamDrift release cite its commit with a hash pin and an explicit no-run-identity marker, the companion figures name their generator scripts, and the rest are marked origin unrecorded
+- **Next step:** Merge the PR. Projection records with real model and run ids follow UpstreamDrift #14518 (per-preset run manifests and figure-to-run mapping); epic #5422 tracks it.
+
+### DL-#5421 · CI Gate: A Non-Draft Page May Embed a Figure Only When a Verified Projection Record Traces It or an Explicit, Reasoned Exemption Covers It; Draft Pages Warn
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5421
+- **Branch:** brick/backlog-completion/5421-figure-projection-check
+- **PR:** #5445
+- **Paths:** see #5445
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`38695d45`; collated from changes/5421-ci-check-every-published-figure-has-a-pro.md)
+- **Summary:** CI gate: a non-draft page may embed a figure only when a verified projection record traces it or an explicit, reasoned exemption covers it; draft pages warn
+- **Next step:** Merge the PR. VIS-EVIDENCE #5422 then has all three children; migrate UpstreamDrift-derived figures off the exemption list as projection records land.
+
+### DL-#5420 · Add the Provenance Caption Shortcode: A Figure Caption Naming the UpstreamDrift Model, Run_Id, Commit and Claim Class, Linked Only to the Public UD Repo (Fail Closed on Bad Values)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5420
+- **Branch:** brick/backlog-completion/5420-provenance-captions
+- **PR:** #5442
+- **Paths:** see #5442
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`151a4fbe`; collated from changes/5420-figure-provenance-captions-and-source-model.md)
+- **Summary:** Add the provenance caption shortcode: a figure caption naming the UpstreamDrift model, run_id, commit and claim class, linked only to the public UD repo (fail closed on bad values)
+- **Next step:** Merge the PR, then the next VIS-EVIDENCE child under #5422.
+
+### DL-#5419 · Bind Every Markerless-Mocap Projection Artifact to Its UpstreamDrift Model_Id, Run_Id, Ud_Commit and Claim Class (Fail Closed)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5419
+- **Branch:** brick/backlog-completion/5419-projection-run-identity
+- **PR:** #5428
+- **Paths:** see #5428
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`d5865546`; collated from changes/5419-bind-every-markerless-mocap-projection-a.md)
+- **Summary:** Bind every markerless-mocap projection artifact to its UpstreamDrift model_id, run_id, ud_commit and claim class (fail closed)
+- **Next step:** Merge the PR, then VIS-EVIDENCE-2.
+
 ### DL-#5284 · Slack Take-Up as a Witness Article Draft
 
 - **State:** in_review
@@ -351,12 +442,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5180
 - **Branch:** cursor/tangent-review-pr-a-d406
-- **PR:** #5188, #5189
+- **PR:** #5188, #5189, #5436
 - **Paths:** see #5188
 - **Started:** 2026-10-29
-- **Last verified:** 2026-10-29 (`4355300b`; collated from changes/5180-tighten-part-4-7-residual-gronwall-bound.md)
+- **Last verified:** 2026-11-04 (`d7b0eb8f`; collated from changes/5180-retire-hyperplane-display-titles-in-the.md)
 - **Summary:** Tangent-Space review PR A: affine hub/book summaries and Volume I chapter read links
-- **Next step:** Publication gate review (Karl through Dieter).
+- **Next step:** Merge PR #5436 after CI green and publication gate.
 
 ### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
 
@@ -416,10 +507,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5135
 - **Branch:** cursor/slack-transmission-core-7958
-- **PR:** #5148, #5144, #5145, #5310
+- **PR:** #5148, #5144, #5145, #5310, #5309
 - **Paths:** see #5148
 - **Started:** 2026-10-26
-- **Last verified:** 2026-11-01 (`1da6c00e`; collated from changes/5135-rename-citation-key-koike2020-to-choi202.md)
+- **Last verified:** 2026-11-03 (`0ce3c82b`; collated from changes/5135-publish-panel-refined-managing-slack-in.md)
 - **Summary:** Add the core slack-representation transmission model (dead-zone, smooth-spring, activation and unequal-lag channels, play operator, preparation split) with its tests for the Managing Slack in Linked Systems article
 - **Next step:** Four-seat panel review, revision round, Fleet-Critic review and Dieter's sign-off before merge.
 
@@ -599,6 +690,227 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5426 · Add the VIS-SITE-4 Draft Page Embedding the AD-Generated ZTCF Explainer Through Vis-Video, Honestly Labelled as Not a Traced UpstreamDrift Render; Allow Leading ../ Media Paths in the Shortcode
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5426
+- **Branch:** merged via #5468
+- **PR:** #5468, #5471
+- **Paths:** see #5468
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`ad26a4ac`; collated from changes/5426-draft-page-support-vis-video-reaches-sha.md)
+- **Summary:** Add the VIS-SITE-4 draft page embedding the AD-generated ZTCF explainer through vis-video, honestly labelled as not a traced UpstreamDrift render; allow leading ../ media paths in the shortcode
+- **Next step:** Shipped in PR #5468.
+
+### DL-#5454 · Figure Gate Accepts UD Figure-Map Records: A Separate Record Kind That Traces UD-Projected Figures to Their Run by Sha256 and Run_Id, Without Mocap Review Attestations
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5454
+- **Branch:** merged via #5455
+- **PR:** #5455, #5456
+- **Paths:** see #5455
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`3a91b153`; collated from changes/5454-trace-201-proximal-distal-figures-throug.md)
+- **Summary:** Figure gate accepts UD figure-map records: a separate record kind that traces UD-projected figures to their run by sha256 and run_id, without mocap review attestations
+- **Next step:** Shipped in PR #5455.
+
+### DL-#5424 · Add the Accessible Vis-Video Shortcode for Local WebM/MP4 Embeds (Poster, Captions, Lazy, No Autoplay, Provenance Record) and Trace Embedded Videos in the Figure Gate
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5424
+- **Branch:** merged via #5458
+- **PR:** #5458
+- **Paths:** see #5458
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`efc718b7`; collated from changes/5424-add-the-accessible-vis-video-shortcode-f.md)
+- **Summary:** Add the accessible vis-video shortcode for local WebM/MP4 embeds (poster, captions, lazy, no autoplay, provenance record) and trace embedded videos in the figure gate
+- **Next step:** Shipped in PR #5458.
+
+### DL-#5423 · Draft Site Visual-Placement Audit Table for VIS-SITE (Page, Concept, Proposed Visual, UD Source, Priority)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5423
+- **Branch:** merged via #5457
+- **PR:** #5457
+- **Paths:** see #5457
+- **Started:** 2026-11-05
+- **Last verified:** 2026-11-05 (`ba53a33e`; collated from changes/5423-draft-site-visual-placement-audit-table.md)
+- **Summary:** Draft site visual-placement audit table for VIS-SITE (page, concept, proposed visual, UD source, priority)
+- **Next step:** Shipped in PR #5457.
+
+### DL-#5432 · Evidence Check Asserts Drift+Control=Total and ZVCF=Control
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5432
+- **Branch:** cursor/evidence-sum-check-5432-9d3a
+- **PR:** #5435
+- **Paths:** see #5435
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`7e307ce9`; collated from changes/5432-evidence-check-asserts-drift-control-tot.md)
+- **Summary:** Evidence check asserts drift+control=total and ZVCF=control
+- **Next step:** Shipped in PR #5435.
+
+### DL-#5429 · Rewrite Decision 4: ZVCF = Control; Terminology Gate Flags Gravity-Only ZVCF and ZTCF+Control-Preserved Double Count.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5429
+- **Branch:** cursor/terminology-decision4-zvcf-control-5956
+- **PR:** #5437
+- **Paths:** see #5437
+- **Started:** 2026-11-04
+- **Last verified:** 2026-11-04 (`1dd50830`; collated from changes/5429-rewrite-decision-4-zvcf-control-terminol.md)
+- **Summary:** Rewrite Decision 4: ZVCF = control; terminology gate flags gravity-only ZVCF and ZTCF+control-preserved double count.
+- **Next step:** Shipped in PR #5437.
+
+### DL-#2427 · Add Report-Only Pr-Body-Lint Pull_Request_Target Caller (RM Reusable Workflow) and Contract Test.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #2427
+- **Branch:** merged via #5390
+- **PR:** #5390
+- **Paths:** see #5390
+- **Started:** 2026-11-03
+- **Last verified:** 2026-11-03 (`59beb5c7`; collated from changes/2427-add-report-only-pr-body-lint-caller.md)
+- **Summary:** Add report-only pr-body-lint pull_request_target caller (RM reusable workflow) and contract test.
+- **Next step:** Shipped in PR #5390.
+
+### DL-#5319 · Build Manifest Writer: Scripts/write_build_manifest.py Records the Commit, Quarto Version and Lockfile SHA-256 Digests Against Schemas/Build-Manifest.Schema.Json, With --Check for Staleness (SBOM and Deploy Wiring Remain)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5319
+- **Branch:** merged via #5386
+- **PR:** #5386, #5477
+- **Paths:** see #5386
+- **Started:** 2026-11-03
+- **Last verified:** 2026-11-06 (`c254d4ab`; collated from changes/5319-sbom-generator.md)
+- **Summary:** Build manifest writer: scripts/write_build_manifest.py records the commit, Quarto version and lockfile SHA-256 digests against schemas/build-manifest.schema.json, with --check for staleness (SBOM and deploy wiring remain)
+- **Next step:** Shipped in PR #5386.
+
+### DL-#5313 · Phone Layout Audit Manifest: Playwright Mobile Smoke and Lighthouse Read One Route and Viewport Set (iPhone 390X844, Android 360X800)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5313
+- **Branch:** merged via #5385
+- **PR:** #5385
+- **Paths:** see #5385
+- **Started:** 2026-11-03
+- **Last verified:** 2026-11-03 (`e4b49a77`; collated from changes/5313-phone-layout-audit-manifest.md)
+- **Summary:** Phone layout audit manifest: Playwright mobile smoke and Lighthouse read one route and viewport set (iPhone 390x844, Android 360x800)
+- **Next step:** Shipped in PR #5385.
+
+### DL-#5342 · Seed the Exact-Key Quarto E2E Render Cache on Main Push so PRs and Merge Groups Can Restore It (WEB-13.1 #4595)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5342
+- **Branch:** brick/ci-toolchain/5342-quarto-cache-seed
+- **PR:** #5382
+- **Paths:** see #5382
+- **Started:** 2026-11-03
+- **Last verified:** 2026-11-03 (`2b53616a`; collated from changes/5342-seed-quarto-e2e-render-cache-on-main.md)
+- **Summary:** Seed the exact-key Quarto E2E render cache on main push so PRs and merge groups can restore it (WEB-13.1 #4595)
+- **Next step:** Shipped in PR #5382.
+
+### DL-#5361 · Add Label-Merge-Guard Workflow Enforcing Do-Not-Merge and Do-Not-Automate Holds
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5361
+- **Branch:** cursor/label-merge-guard-1f35
+- **PR:** #5361
+- **Paths:** see #5361
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`9b9d04ca`; collated from changes/5361-add-label-merge-guard-workflow-enforcing.md)
+- **Summary:** Add label-merge-guard workflow enforcing do-not-merge and do-not-automate holds
+- **Next step:** Shipped in PR #5361.
+
+### DL-#5323 · Add Phone-Side Padding on Full-Layout Main Content (#5323)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5323
+- **Branch:** merged via #5328
+- **PR:** #5328
+- **Paths:** see #5328
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`eea98be0`; collated from changes/5323-add-phone-side-padding-on-full-layout-ma.md)
+- **Summary:** Add phone-side padding on full-layout main content (#5323)
+- **Next step:** Shipped in PR #5328.
+
+### DL-#5321 · Backlog Slice Delivery For #5321
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5321
+- **Branch:** cursor/ops-doc-5321-a086
+- **PR:** #5357
+- **Paths:** see #5357
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`67b40205`; collated from changes/5321-backlog-slice-delivery-for-5321.md)
+- **Summary:** Backlog slice delivery for #5321
+- **Next step:** Shipped in PR #5357.
+
+### DL-#5318 · Backlog Slice Delivery For #5318
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5318
+- **Branch:** cursor/site-release-rollback-5318-a086
+- **PR:** #5357
+- **Paths:** see #5357
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`67b40205`; collated from changes/5318-backlog-slice-delivery-for-5318.md)
+- **Summary:** Backlog slice delivery for #5318
+- **Next step:** Shipped in PR #5357.
+
+### DL-#5317 · Backlog Slice Delivery For #5317
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5317
+- **Branch:** cursor/ops-doc-5317-a086
+- **PR:** #5357
+- **Paths:** see #5357
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`67b40205`; collated from changes/5317-backlog-slice-delivery-for-5317.md)
+- **Summary:** Backlog slice delivery for #5317
+- **Next step:** Shipped in PR #5357.
+
+### DL-#5185 · Backlog Slice Delivery For #5185
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5185
+- **Branch:** cursor/tangent-integral-naming-5185-a086
+- **PR:** #5349
+- **Paths:** see #5349
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`d536f9fb`; collated from changes/5185-backlog-slice-delivery-for-5185.md)
+- **Summary:** Backlog slice delivery for #5185
+- **Next step:** Shipped in PR #5349.
+
+### DL-#2337 · Weekly Python and Npm Patch Bumps; Pytest Held at 9.1.X per Pyproject Cap
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #2337
+- **Branch:** dependabot/weekly_deps-902be992ca
+- **PR:** #5345
+- **Paths:** see #5345
+- **Started:** 2026-11-02
+- **Last verified:** 2026-11-02 (`92019e98`; collated from changes/2337-weekly-python-and-npm-patch-bumps-pytest.md)
+- **Summary:** Weekly Python and npm patch bumps; pytest held at 9.1.x per pyproject cap
+- **Next step:** Shipped in PR #5345.
+
 ### DL-#5320 · Backlog Slice Delivery For #5320
 
 - **State:** shipped
@@ -657,10 +969,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5326
 - **Branch:** merged via #5335
-- **PR:** #5335
+- **PR:** #5335, #5348
 - **Paths:** see #5335
 - **Started:** 2026-11-02
-- **Last verified:** 2026-11-02 (`4f119b7d`; collated from changes/5326-phones-display-equations-in-top-level-pa.md)
+- **Last verified:** 2026-11-03 (`f9b4977b`; collated from changes/5326-mobile-mathjax-minscale-math-mobile-css.md)
 - **Summary:** Phones: the <=480px display-math step-down goes from 0.85em to 0.82em, so theory-part1's near-fit equations no longer scroll at 390px; title-block meta headings, category chips and the BibTeX citation block hold a 12px floor
 - **Next step:** Shipped in PR #5335.
 
@@ -1086,10 +1398,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5137
 - **Branch:** merged via #5152
-- **PR:** #5152
+- **PR:** #5152, #5360
 - **Paths:** see #5152
 - **Started:** 2026-10-24
-- **Last verified:** 2026-10-24 (`84d64373`; collated from changes/5137-correct-the-false-if-and-only-if-in-the.md)
+- **Last verified:** 2026-11-02 (`4a45063c`; collated from changes/5137-restore-swallowed-latex-escapes-in-after.md)
 - **Summary:** Correct the false if-and-only-if in the After One Solution level sub-fibre claim: end levels may be facets
 - **Next step:** Shipped in PR #5152.
 

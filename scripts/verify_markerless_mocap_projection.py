@@ -10,7 +10,19 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import cast
+from typing import Any, cast
+
+from scripts.mocap_projection_primitives import (
+    DIGEST,
+    REVISION,
+    MocapProjectionError,
+    _array,
+    _boolean,
+    _integer,
+    _matches,
+    _object,
+    _text,
+)
 
 SCHEMA_ID = "affinedrift/mocap-publication-projection/v1"
 ALLOWED_REPOSITORIES = frozenset({"D-sorganization/Tools", "D-sorganization/UpstreamDrift"})
@@ -25,18 +37,15 @@ ALLOWED_CLASSIFICATIONS = frozenset(
     "public_aggregate qualified_model_scenario sanitized_derived".split()
 )
 ALLOWED_EVIDENCE_CLASSES = {"derived", "model_scenario", "observed", "unavailable"}
+# Field names mirror the UpstreamDrift run-manifest-v1 contract (UpstreamDrift #14431).
+RUN_FIELDS = {"model_id", "model_revision", "run_id", "ud_commit", "claim_class"}
+MODEL_REVISION = re.compile(r"[0-9a-f]{40}|sha256:[0-9a-f]{64}")
 MUTABLE_LINK = re.compile(
     r"https://(?:github\.com/[^/]+/[^/]+/(?:blob|tree)|raw\.githubusercontent\.com/[^/]+/[^/]+)"
     r"/(?:main|master)(?:/|$)",
     re.IGNORECASE,
 )
-REVISION = re.compile(r"[0-9a-f]{40}")
-DIGEST = re.compile(r"[0-9a-f]{64}")
 SENSITIVE_SUFFIXES = frozenset(".avi .env .key .mkv .mov .mp4 .pem .raw .webm".split())
-
-
-class MocapProjectionError(RuntimeError):
-    """Raised when public markerless-mocap evidence violates its contract."""
 
 
 @dataclass(frozen=True)
@@ -46,49 +55,6 @@ class MocapProjectionSummary:
     artifact_count: int
     claim_count: int
     total_bytes: int
-
-
-def _object(value: object, label: str, keys: set[str]) -> dict[str, object]:
-    if not isinstance(value, dict) or not all(isinstance(key, str) for key in value):
-        raise MocapProjectionError(f"{label} must be an object")
-    result = cast(dict[str, object], value)
-    actual = set(result)
-    if actual != keys:
-        raise MocapProjectionError(
-            f"{label} fields differ: missing={sorted(keys - actual)}, extra={sorted(actual - keys)}"
-        )
-    return result
-
-
-def _array(value: object, label: str) -> list[object]:
-    if not isinstance(value, list) or not value:
-        raise MocapProjectionError(f"{label} must be a non-empty array")
-    return cast(list[object], value)
-
-
-def _text(value: object, label: str) -> str:
-    if not isinstance(value, str) or not value.strip():
-        raise MocapProjectionError(f"{label} must be a non-empty string")
-    return value
-
-
-def _boolean(value: object, label: str) -> bool:
-    if type(value) is not bool:
-        raise MocapProjectionError(f"{label} must be boolean")
-    return value
-
-
-def _integer(value: object, label: str) -> int:
-    if type(value) is not int or value < 0:
-        raise MocapProjectionError(f"{label} must be a non-negative integer")
-    return value
-
-
-def _matches(value: object, label: str, pattern: re.Pattern[str]) -> str:
-    text = _text(value, label)
-    if pattern.fullmatch(text) is None:
-        raise MocapProjectionError(f"{label} is invalid")
-    return text
 
 
 def _reject_mutable_links(value: object) -> None:
@@ -260,6 +226,36 @@ def _verify_artifact_file(root: Path, path: PurePosixPath, digest: str, size: in
         raise MocapProjectionError(f"artifact mismatch: {path}")
 
 
+def _verify_run_identity(value: object, artifact_id: str) -> str:
+    """Bind one artifact to the UpstreamDrift model, run and commit that produced it.
+
+    ``run_id`` is the SHA-256 of the canonical run manifest; returns the claim class.
+    """
+    label = f"artifact {artifact_id} run"
+    run = _object(value, label, RUN_FIELDS)
+    _text(run["model_id"], f"{label} model id")
+    _matches(run["model_revision"], f"{label} model revision", MODEL_REVISION)
+    _matches(run["run_id"], f"{label} run id", DIGEST)
+    _matches(run["ud_commit"], f"{label} UD commit", REVISION)
+    claim_class = _text(run["claim_class"], f"{label} claim class")
+    if claim_class not in ALLOWED_EVIDENCE_CLASSES - {"unavailable"}:
+        raise MocapProjectionError(f"{label} claim class is unsupported")
+    return claim_class
+
+
+def _verify_claim_classes(claims: object, artifacts: object) -> None:
+    """Require every claim to share the claim class of each artifact it cites."""
+    classes = {
+        item["id"]: item["run"]["claim_class"] for item in cast(list[dict[str, Any]], artifacts)
+    }
+    for claim in cast(list[dict[str, Any]], claims):
+        for artifact_id in claim["artifact_ids"]:
+            if classes.get(artifact_id, claim["evidence_class"]) != claim["evidence_class"]:
+                raise MocapProjectionError(
+                    f"claim {claim['id']} claim class differs from artifact {artifact_id}"
+                )
+
+
 def _verify_artifact(
     value: object, index: int, source: tuple[str, str], root: Path | None
 ) -> tuple[str, int]:
@@ -276,9 +272,11 @@ def _verify_artifact(
             "bytes",
             "source_license",
             "source_url",
+            "run",
         },
     )
     artifact_id = _text(artifact["id"], f"artifact {index} id")
+    _verify_run_identity(artifact["run"], artifact_id)
     path = _safe_artifact_path(artifact["path"], f"artifact {artifact_id} path")
     kind = _text(artifact["kind"], f"artifact {artifact_id} kind")
     media_type = _text(artifact["media_type"], f"artifact {artifact_id} media type")
@@ -358,6 +356,7 @@ def verify_projection_manifest(
     missing = references - artifact_ids
     if missing:
         raise MocapProjectionError(f"claims reference missing artifacts: {sorted(missing)}")
+    _verify_claim_classes(document["claims"], document["artifacts"])
     return MocapProjectionSummary(len(artifact_ids), len(claim_ids), total_bytes)
 
 
