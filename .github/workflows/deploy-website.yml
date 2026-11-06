@@ -265,7 +265,9 @@ jobs:
           path: _site
 
   deploy:
-    timeout-minutes: 30
+    # Pages sync can exceed the deploy-pages default step timeout (10m); keep headroom
+    # for install + live verification (#5508).
+    timeout-minutes: 60
     if: github.repository == 'D-sorganization/AffineDrift'
     environment:
       name: github-pages
@@ -294,6 +296,9 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
+        with:
+          # action default is 600000 (10m); large _site uploads can sit in syncing_files longer.
+          timeout: 2400000
 
       - name: Verify Deployment Manifest and Every Public Page
         run: |
