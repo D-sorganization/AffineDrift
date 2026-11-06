@@ -151,8 +151,8 @@ Where $\mathbf{r}_{G/H} = \mathbf{r}_G - \mathbf{r}_H$ is the position vector po
 |---|---|---|---|---|---|
 | **CLM-MCH-01** | Torque reversal is caused by muscle force-velocity concentric limits | Nesbit (2005), Sprigings (2000) | Hill-type muscle contractile velocity | Forearm flexor/extensor units | **Supported / Partial Mechanism** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
 | **CLM-MCH-02** | Reversal is purely an interaction-force reaction in a linked system | Putnam (1991/1993), Grober (2020), Olson | Coriolis and centrifugal coupling terms | Multi-body equations of motion | **Settled (Sufficient Mechanism)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
-| **CLM-MCH-03** | Forward shaft deflection (rebound) produces massive negative grip couple | Olson (Dec 2023), Tutelman (2018) | Elastic restoring moment $\mathbf{M}_{\text{bend}}$ | Flexible shaft (12-segment model)| **Settled (Dominant Co-Factor)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
-| **CLM-MCH-04** | Pointwise zero-command persistence: negative couple persists with free wrists | Olson (2022, 2026 UpstreamDrift) | Uncommanded contact reaction wrench | Two-hand constrained model | **Settled (Model Verification)** *(Adjudicated by: Thesis Review Audit v1, 2026-11-03)* |
+| **CLM-MCH-03** | Flexible-shaft strain energy can produce **retarding** grip couples via rebound loads; magnitude is model- and scenario-dependent | Olson (Dec 2023), Tutelman (2018) | Elastic restoring moment $\mathbf{M}_{\text{bend}}$; interface resultant vs. hypothetical $-sF$ scalings | Flexible shaft models | **Qualified (Mechanism Plausible; Magnitude Scenario-Dependent)** *(Revised #5463)* |
+| **CLM-MCH-04** | Pointwise **wrist-command-off** persistence: negative midpoint couple persists on the bundled WSCG KKT trajectory | Olson (2022, 2026 UpstreamDrift) | ZTCF vs BASE couple (`alpha_war_calculations.json`) | Two-hand constrained **simulation** | **Qualified (Model-Scenario Diagnostic)** *(ZTCF torque-cut on project planar WSCG bundle; not a physiological relaxed-grip field trial)* |
 
 ---
 
@@ -528,27 +528,26 @@ CLAIM DOSSIER: PHYSICAL MECHANISMS OF TORQUE REVERSAL
 
 ---
 
-### Claim CLM-MCH-03: Shaft Deflection and Forward Rebound Overwhelms Wrist Musculature to Create Negative Couple
+### Claim CLM-MCH-03: Shaft Deflection and Elastic Rebound as a Grip-Couple Mechanism
 
 1. **Claim Statement:**
-   Elastic rebound of the flexible shaft—which flexes forward (lead deflection) by 5° to 12° into impact—exerts massive restorative shear forces on the grip, generating a negative couple of $-25$ to $-35$ N·m that completely overwhelms any forward muscular effort.
+   Flexible shafts store bending strain energy that can unload near impact, producing **large** grip contact loads and a **retarding** contribution to the net hand couple in some models and swings. A **hypothetical** bookkeeping row ($11^\circ$, $\sim 460\text{–}470\text{ N}$ opposed shear, $-sF$ couple) is **not** interchangeable with the matched reduced-order rollout interface force in `alpha_war_calculations.json` (#5463) and does **not**, by itself, prove universal ``overwhelming'' dominance or a guaranteed net couple sign.
 2. **Claimant / Camp:**
    Dieter Olson (Golf Biomechanists, Dec 21, 2023 post); Dave Tutelman (2018).
 3. **Physical Quantity & Reference Point:**
-   Elastic restoring moment $\mathbf{M}_{\text{bend}} = E I \kappa$ at the shaft butt transmitting differential forces to lead/trail hands.
+   Elastic restoring moment $\mathbf{M}_{\text{bend}} = E I \kappa$ at the shaft butt transmitting differential forces to lead/trail hands; bilateral net wrench must avoid double-counting reactions already inside a full forward model.
 4. **Coordinate Frame & Sign Convention:**
    Club shaft coordinate frame (in-plane lead/lag bending).
 5. **Evidence / Basis Cited:**
    - Olson's 12-segment flexible shaft model in MATLAB (Dec 21, 2023):
      - Configured at impact position with 11° total lead deflection.
      - Commanded input: $+10$ N·m positive right-wrist muscular torque.
-     - Shaft rebound generated opposing hand contact forces of ~460–470 N, creating an elastic negative couple of $\approx -35$ N·m.
-     - Net grip couple: $+10 - 35 = -25$ N·m (overwhelmingly negative).
-     - Identical rigid-shaft model with $+10$ N·m input yielded a net couple of $+9.2$ N·m (<1 N·m negative reaction).
+     - **Illustrative** opposed-hand force magnitude $\sim 460\text{–}470\text{ N}$ with a scalar $-sF$ couple $\approx -35\text{ N·m}$ used in forum-era bookkeeping—requires full beam/contact derivation to stand as an independent empirical prediction.
+     - Identical rigid-shaft model with $+10$ N·m input yielded a net couple of $+9.2$ N·m in that same MATLAB scenario (contrast of flexible vs. rigid **in that model**, not a population proof).
    - High-speed phantom cameras universally documenting forward shaft bend prior to impact.
 6. **Technical Assessment & Resolution Status:**
-   **Settled (Dominant Physical Co-Factor).**  
-   Shaft elasticity is a primary physical contributor to the magnitude of the negative couple measured in real human swings with flexible clubs.
+   **Qualified (Mechanism Plausible; Magnitude Scenario-Dependent).**  
+   Shaft elasticity is a **credible** contributor to late-downswing grip kinetics, but headline scalars must be tied to stated $EI$, boundary conditions, and the net wrench budget—see Study 6, Table 7.10 vs. Table 7.11 separation (#5463).
 
 ---
 

@@ -60,6 +60,15 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
         self.assertIn(formatted_share, draft_text)
         self.assertNotIn("86.15%", draft_text)
 
+    def test_wscg_ztcf_provenance_language_present_5462(self) -> None:
+        """Draft must label WSCG bundle as modeled and ZTCF ratio as diagnostic (#5462)."""
+        draft_text = _find_draft_path().read_text(encoding="utf-8")
+        self.assertIn("project-originated planar WSCG bundle", draft_text)
+        self.assertIn(
+            "### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory", draft_text
+        )
+        self.assertIn("measured share of physiological muscle torque", draft_text)
+
     def test_s_star_illustrative_vs_simulated_and_claim_verdicts(self) -> None:
         """Illustrative (+0.213 m) and simulated (+0.737 m) s* and CLM relabels must exist."""
         payload = json.loads(JSON_PATH.read_text(encoding="utf-8"))
@@ -159,6 +168,47 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
             "LAYER 2: THE COMPONENT DISCREPANCY (Muscular Driving Refuted)", draft_text
         )
         self.assertIn("not declared settled", draft_text)
+
+    def test_table_7_10_study_6_matches_json_5463(self) -> None:
+        """Draft Table 7.10 and §7.6 prose track `study_6` JSON (#5463)."""
+        payload = json.loads(JSON_PATH.read_text(encoding="utf-8"))
+        study = payload["study_6_shaft_flex_contribution"]["upstream_drift_matched_3link_study"]
+        flex = study["distal_angular_accel_contributions_flexible_rad_s2"]
+        rigid = study["distal_angular_accel_contributions_rigid_rad_s2"]
+        iface = study["shaft_interface_force_xy_n"]
+
+        for block in (flex, rigid):
+            tot = sum(block[k] for k in block if k != "total")
+            self.assertAlmostEqual(block["total"], tot, places=3)
+
+        checks = (
+            ("flex control", flex["control"], -401.55, 2),
+            ("flex momentum", flex["momentum"], 57.05, 2),
+            ("flex gravity", flex["gravity"], 1.86, 2),
+            ("flex joint_damping", flex["joint_damping"], 47.55, 2),
+            ("flex shaft_elastic", flex["shaft_elastic"], 325.28, 2),
+            ("flex shaft_damping", flex["shaft_damping"], -5.42, 2),
+            ("flex total", flex["total"], 24.77, 2),
+            ("rigid control", rigid["control"], 58.84, 2),
+            ("rigid momentum", rigid["momentum"], -22.83, 2),
+            ("rigid gravity", rigid["gravity"], -3.21, 2),
+            ("rigid joint_damping", rigid["joint_damping"], -7.79, 2),
+            ("rigid total", rigid["total"], 25.01, 2),
+            ("iface Fx", iface[0], 8.73, 2),
+            ("iface Fy", iface[1], 55.69, 2),
+        )
+        for _label, value, expected, places in checks:
+            self.assertAlmostEqual(value, expected, places=places)
+
+        draft_text = _find_draft_path().read_text(encoding="utf-8")
+        section_76 = draft_text.split("## 7.6")[1].split("# 8.")[0]
+        for phrase in (
+            "### Table 7.10:",
+            "Distal $\\ddot{q}$: Control",
+            "Hypothetical Two-Hand Beam",
+        ):
+            self.assertIn(phrase, section_76)
+        self.assertNotIn("overpowering voluntary wrist muscles", section_76.lower())
 
 
 if __name__ == "__main__":

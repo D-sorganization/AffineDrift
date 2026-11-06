@@ -211,7 +211,7 @@ The mathematical relationships, origins, and physical roles of these four frames
 | Frame Name                       |           Symbol            |           Origin            | Basis Axes                                                                                                                                                         | Primary Application & Physical Role                                                        |
 | :------------------------------- | :-------------------------: | :-------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
 | **Global Inertial Frame**        |       $\mathcal{F}_0$       |     Ground / Tee ($O$)      | $\{\hat{\mathbf{I}}, \hat{\mathbf{J}}, \hat{\mathbf{K}}\}$: Target line, lateral ground, vertical up opposing gravity                                              | Inertial reference for full-body tracking, clubhead trajectory, and ground reaction forces |
-| **Functional Swing Plane Frame** | $\mathcal{F}_{\text{FSP}}$  | Mid-Hands $\mathbf{r}_M(t)$ | $\{\hat{\mathbf{e}}_t, \hat{\mathbf{e}}_p, \hat{\mathbf{e}}_n\}$: Grip velocity tangent, in-plane normal toward ball, plane normal $\hat{\mathbf{n}}_{\text{FSP}}$ | Resolves true uncocking mechanics along the instantaneous planar arc of the clubhead       |
+| **Functional Swing Plane Frame** | $\mathcal{F}_{\text{FSP}}$  | Mid-Hands $\mathbf{r}_M(t)$ | $\{\hat{\mathbf{e}}_t, \hat{\mathbf{e}}_p, \hat{\mathbf{e}}_n\}$: Shaft tangent (positive down the shaft toward the clubhead; Appendix B.0 transport direction), in-plane normal toward the ball, plane normal $\hat{\mathbf{n}}_{\text{FSP}}$ | Resolves true uncocking mechanics along the instantaneous planar arc of the clubhead       |
 | **Moving Grip Frame**            | $\mathcal{F}_{\text{grip}}$ | Mid-Hands $\mathbf{r}_M(t)$ | $\{\hat{\mathbf{x}}_g, \hat{\mathbf{y}}_g, \hat{\mathbf{z}}_g\}$: Out-of-plane normal, in-plane uncocking transverse, axial down shaft                             | Directly measures forces and torques applied by the golfer's hands on the handle           |
 | **Club-Fixed Principal Frame**   | $\mathcal{F}_{\text{club}}$ |  Club Center of Mass ($G$)  | $\{\hat{\mathbf{u}}_\alpha, \hat{\mathbf{u}}_\beta, \hat{\mathbf{u}}_\gamma\}$: Face-normal uncocking, toe-up face bending, longitudinal shaft axis                | Standard aerospace body-fixed frame; rotates with clubface roll and shaft deflection       |
 
@@ -225,7 +225,7 @@ The mathematical relationships, origins, and physical roles of these four frames
 ### 2. Functional Swing Plane Frame ($\mathcal{F}_{\text{FSP}}$)
 
 - **Origin ($M$):** Located at the mid-hands grip station $\mathbf{r}_M(t)$.
-- **Axes ($\{\hat{\mathbf{e}}_t, \hat{\mathbf{e}}_p, \hat{\mathbf{e}}_n\}$):** $\hat{\mathbf{e}}_t$ points along the instantaneous velocity of the grip; $\hat{\mathbf{e}}_p$ lies within the swing plane perpendicular to the shaft directed toward the ball; $\hat{\mathbf{e}}_n = \hat{\mathbf{n}}_{\text{FSP}}$ is the plane normal.
+- **Axes ($\{\hat{\mathbf{e}}_t, \hat{\mathbf{e}}_p, \hat{\mathbf{e}}_n\}$):** $\hat{\mathbf{e}}_t$ is the **shaft tangential axis** (unit vector along the shaft, positive toward the clubhead), matching the transport direction used in Appendix B.0; $\hat{\mathbf{e}}_p$ lies within the swing plane, perpendicular to the shaft, directed toward the ball; $\hat{\mathbf{e}}_n = \hat{\mathbf{n}}_{\text{FSP}}$ is the plane normal. Where hub kinematics matter explicitly, denote the normalized grip-point velocity $\hat{\mathbf{v}}_M = \mathbf{v}_M / \|\mathbf{v}_M\|$; $\hat{\mathbf{e}}_t$ and $\hat{\mathbf{v}}_M$ are **not** the same vector in general (they coincide only when the mid-hands path lies exactly along the shaft line).
 
 ### 3. Moving Grip Frame ($\mathcal{F}_{\text{grip}}$)
 
@@ -252,7 +252,7 @@ A major impediment to clarity has been the disparate nomenclature employed acros
 : Table 2.3: Cross-camp axis and sign convention concordance table. {#tbl-concordance}
 
 ::: {.callout-note title="Box 2.1: Transformation of 3D Torque Vectors Under Frame Rotation and Clubface Roll Mixing"}
-**Plain-language lead:** When analysts calculate torque in a coordinate system that rolls along with the rotating clubface rather than staying aligned with the swing plane, the physical twisting forces get mixed together. As the golfer squares the face into impact, out-of-plane bending loads bleed into the uncocking measurement, falsely making a braking torque look like an active forward push.
+**Plain-language lead:** When analysts calculate torque in a coordinate system that rolls along with the rotating clubface rather than staying aligned with the swing plane, the **same** spatial couple is projected onto different axis directions. As the golfer squares the face into impact, out-of-plane bending loads appear in the uncocking channel—an orthonormal axis rotation, not a separate physical torque source.
 
 A frequent source of sign disagreement arises when comparing torque vectors expressed in the Functional Swing Plane frame $\mathcal{F}_{\text{FSP}}$ against those expressed in the rotating Club-Fixed Principal Frame $\mathcal{F}_{\text{club}}$.
 
@@ -267,19 +267,19 @@ where $M_{\text{in}}$ is the pure in-plane uncocking couple, $M_{\text{out}}$ is
 As the golfer approaches impact, the club rotates about the longitudinal shaft axis to square the clubface. Let $\phi_{\text{roll}}$ denote this roll angle (where $\phi_{\text{roll}} = 0$ corresponds to a clubface aligned strictly perpendicular to the swing plane). The rotation matrix transforming coordinates from $\mathcal{F}_{\text{FSP}}$ into $\mathcal{F}_{\text{club}}$ is given by:
 
 $$
-\mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}}) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\phi_{\text{roll}} & \sin\phi_{\text{roll}} \\ 0 & -\sin\phi_{\text{roll}} & \cos\phi_{\text{roll}} \end{bmatrix}
+\mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}}) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\phi_{\text{roll}} & -\sin\phi_{\text{roll}} \\ 0 & \sin\phi_{\text{roll}} & \cos\phi_{\text{roll}} \end{bmatrix}
 $$
 
 Transforming the torque vector yields the components in the club-fixed frame:
 
 $$
-\begin{bmatrix} M_\gamma \\ M_\beta \\ M_\alpha \end{bmatrix}_{\text{club}} = \mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}}) \begin{bmatrix} M_{\text{shaft}} \\ M_{\text{out}} \\ M_{\text{in}} \end{bmatrix}_{\text{FSP}} = \begin{bmatrix} M_{\text{shaft}} \\ M_{\text{out}}\cos\phi_{\text{roll}} + M_{\text{in}}\sin\phi_{\text{roll}} \\ -M_{\text{out}}\sin\phi_{\text{roll}} + M_{\text{in}}\cos\phi_{\text{roll}} \end{bmatrix}
+\begin{bmatrix} M_\gamma \\ M_\beta \\ M_\alpha \end{bmatrix}_{\text{club}} = \mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}}) \begin{bmatrix} M_{\text{shaft}} \\ M_{\text{out}} \\ M_{\text{in}} \end{bmatrix}_{\text{FSP}} = \begin{bmatrix} M_{\text{shaft}} \\ M_{\text{out}}\cos\phi_{\text{roll}} - M_{\text{in}}\sin\phi_{\text{roll}} \\ M_{\text{out}}\sin\phi_{\text{roll}} + M_{\text{in}}\cos\phi_{\text{roll}} \end{bmatrix}
 $$
 
 Under this transformation, the apparent club-fixed "alpha torque" is:
 
 $$
-M_{\alpha,\text{club}}(\phi_{\text{roll}}) = M_{\text{in}}\cos\phi_{\text{roll}} - M_{\text{out}}\sin\phi_{\text{roll}}
+M_{\alpha,\text{club}}(\phi_{\text{roll}}) = M_{\text{in}}\cos\phi_{\text{roll}} + M_{\text{out}}\sin\phi_{\text{roll}}
 $$
 
 **Quantitative Demonstration (Illustrative Input, `calcs/alpha_war_sensitivity_suite.py` Study 3):**  
@@ -291,11 +291,11 @@ Consider an **illustrative** late-downswing loading state where the golfer exert
    $$
 2. At $\phi_{\text{roll}} = 45^\circ$:
    $$
-   M_{\alpha,\text{club}}(45^\circ) = -15.0\left(\frac{\sqrt{2}}{2}\right) - 8.0\left(\frac{\sqrt{2}}{2}\right) = -16.26\text{ N}\cdot\text{m}
+   M_{\alpha,\text{club}}(45^\circ) = -15.0\left(\frac{\sqrt{2}}{2}\right) + 8.0\left(\frac{\sqrt{2}}{2}\right) = -4.95\text{ N}\cdot\text{m}
    $$
-3. If the sign convention of out-of-plane roll is inverted (or if the face rolls past open into a hooded orientation, illustrative $\phi^* = 61.93^\circ$):
+3. The illustrative **zero-crossing** roll angle (where the club-fixed alpha projection vanishes for fixed $\mathbf{M}_{\text{FSP}}$) is:
    $$
-   \phi^* = \arctan\left(\frac{|M_{\text{in}}|}{M_{\text{out}}}\right) = \arctan\left(\frac{15}{8}\right) = 61.93^\circ \quad \text{(Illustrative Sign-Flip Angle)} \implies M_{\alpha,\text{club}}(\phi^*) = 0.00\text{ N}\cdot\text{m}
+   \phi^* = \operatorname{atan2}\bigl(-M_{\text{in}}, M_{\text{out}}\bigr) = \operatorname{atan2}(15, 8) = 61.93^\circ \quad \implies M_{\alpha,\text{club}}(\phi^*) = 0.00\text{ N}\cdot\text{m}
    $$
    Past this critical roll angle, the projected alpha component flips to **$+8.00\text{ to }+14.43\text{ N}\cdot\text{m}$ (Positive)**, while the overall spatial torque magnitude remains strictly invariant:
    $$
@@ -580,7 +580,7 @@ Why does the pure hand couple $C_\alpha$ reverse to negative in a live golfer? I
 The answer was established in multi-segment biomechanics by Dr. Carol Putnam [@putnam1991segment; @putnam1993sequential] (1991, 1993). In any open or closed kinematic chain, the acceleration of a distal segment is driven not only by the local joint torque, but by **motion-dependent interaction torques** generated by the velocity and acceleration of proximal segments.
 
 ::: {.callout-note title="Box 3.4: Carol Putnam's Interaction Forces and the UpstreamDrift Drift-Plus-Control Decomposition"}
-**Plain-language lead:** In any swinging chain of connected limbs, the fast motion of the torso and arms naturally whips the clubhead forward through inertial interaction forces. Computer simulations prove that even if a golfer completely relaxes all wrist muscles, these passive dynamics account for over 86% of the negative torque measured at the hands.
+**Plain-language lead:** In any swinging chain of connected limbs, the fast motion of the torso and arms naturally whips the clubhead forward through inertial interaction forces. In the planar **WSCG KKT closed-loop model** exercised here (matched kinematics; project-originated), turning off **wrist** torque commands while retaining the arm–club constraints and passive dynamics reproduces a large **pointwise** share of the modeled negative couple at the grip station—but that number is a **signed-component ratio** from one simulation pipeline, not a universal muscle-energy percentage and not an independent human-subject measurement.
 
 Consider a multi-link planar biomechanical model of the golfer comprising torso, lead arm, trail arm, and club. The generalized equations of motion under closed-loop kinematic constraints are given in descriptor form by:
 
@@ -616,20 +616,23 @@ $$
 $$
 
 **Zero-Torque Control Simulation (Simulated WSCG ZTCF Model):**  
-What happens if the golfer completely deactivates all wrist muscles ($\mathbf{Q}_{\text{wrist}} \equiv 0$) in the late downswing?
+What happens if the golfer completely deactivates **wrist** torque commands ($\mathbf{Q}_{\text{wrist}} \equiv 0$) in the late downswing while the **closed-chain** arm–club constraints, inertia, gravity, and shaft elasticity remain active?
 
-In `calcs/alpha_war_sensitivity_suite.py` (Study 2 and Study 5), the closed-loop WSCG model was **simulated** under identical kinematic trajectories:
+In `calcs/alpha_war_sensitivity_suite.py` (Study 2 and Study 5), the **closed-loop WSCG model** was **simulated** under **identical** base-case kinematic trajectories (planar, project-originated; not independent field replication):
+
+- **Input data:** `wscg_two_hand_raw` time series (UpstreamDrift bundle) — modeled / planar matched-state kinematics and interface loads, not a separate instrumented-trial release.
+- **ZTCF construction:** at each instant, the simulator replaces **wrist** actuation with the passive drift branch while **retaining** the same recorded joint trajectory closure (a **stitched, pointwise** torque-cut response along the base trajectory — not one autonomous forward roll-out with muscles fully relaxed in the physiological sense).
 
 1. At peak clubhead speed ($t = 0.1933\text{ s}$, $v_{\text{head}} = 115.08\text{ mph}$, **simulated**):
    - Full active control hand couple: $C_{\alpha,\text{BASE}} = \mathbf{-14.08\text{ N}\cdot\text{m}}$ ($-14.0806\text{ N}\cdot\text{m}$)
-   - Passive zero-torque hand couple: $C_{\alpha,\text{ZTCF}} = \mathbf{-11.19\text{ N}\cdot\text{m}}$ ($-11.1948\text{ N}\cdot\text{m}$, **$79.51\%$** passive share)
+   - ZTCF branch hand couple: $C_{\alpha,\text{ZTCF}} = \mathbf{-11.19\text{ N}\cdot\text{m}}$ ($-11.1948\text{ N}\cdot\text{m}$, **$79.51\%$** $|C_{\alpha,\text{ZTCF}}|/|C_{\alpha,\text{BASE}}|$ same-state magnitude ratio)
 2. At minimum hand couple ($t = 0.2151\text{ s}$, **simulated**):
    - Full active control hand couple: $C_{\alpha,\text{BASE}} = \mathbf{-22.81\text{ N}\cdot\text{m}}$ ($-22.8148\text{ N}\cdot\text{m}$)
-   - Passive zero-torque hand couple: $C_{\alpha,\text{ZTCF}} = \mathbf{-19.63\text{ N}\cdot\text{m}}$ ($-19.6294\text{ N}\cdot\text{m}$)
+   - ZTCF branch hand couple: $C_{\alpha,\text{ZTCF}} = \mathbf{-19.63\text{ N}\cdot\text{m}}$ ($-19.6294\text{ N}\cdot\text{m}$)
 
-**Result:** In this simulated WSCG counterfactual, the passive, zero-torque drift dynamics account for **86.04%** ($19.6294 / 22.8148$) of the negative hand couple at minimum couple timing (`alpha_war_calculations.json`).
+**Result (diagnostic ratio):** At minimum couple timing on this trajectory, $|C_{\alpha,\text{ZTCF}}| / |C_{\alpha,\text{BASE}}| = 19.6294 / 22.8148 =$ **86.04%** (`alpha_war_calculations.json`). Interpret this as a **same-state modeled magnitude ratio** at the selected instant — **not** a measured share of physiological muscle torque, **not** a general "energy passivity" percentage, and **not** a stand-in for a relaxed-grip human experiment.
 
-The negative couple is not an intentional muscular "braking" action. It is an unavoidable physical consequence of multi-body constraint mechanics: as the rapidly rotating clubhead outruns the arm segment, the geometric constraint of keeping two hands on the grip forces the lead hand to pull backward and the trail hand to push forward relative to the club, generating an equal-and-opposite reaction couple on the golfer's wrists.
+The negative couple in this pipeline is dominated by **constraint-consistent unforced drift** (interaction wrenches, retained dynamics): as the rapidly rotating clubhead outruns the arm segment, the geometric constraint of keeping two hands on the grip forces lead/trail contact shear patterns that register as a negative mid-hands couple without claiming a unique muscular cause.
 
 :::
 
@@ -848,7 +851,7 @@ Table 5A.1 summarizes the empirical and analytical evidence base compiled across
 | **Koike et al. (2006–2019)** [@koike2006grip; @koike2016forces; @koike2019joint] | Physical Split-Grip Load Cells        | Direct Bilateral Shear Forces ($\mathbf{F}_L, \mathbf{F}_T$) | Opposed force couple is **NEGATIVE** ($\approx -10\text{ N}\cdot\text{m}$)           |
 | **Choi et al. (2020)** [@choi2020grip]                                           | Instrumented Split-Grip Sensors       | Multi-Axis Hand Wrenches                                     | Sign change propagates proximally from shoulder to wrist                             |
 | **Grober (2020 arXiv)** [@grober2020forces]                                      | Analytical Double-Pendulum Derivation | Analytical Joint Torque $\tau(t)$                            | Proven mathematically **NEGATIVE** via centripetal hub term                          |
-| **Olson (2020–2026)** [Author Simulation]                                        | Multi-Body Constrained KKT Dynamics   | Drift vs Control Hand Wrench                                 | Passive drift accounts for **86.04%** of negative couple                             |
+| **Olson (2020–2026)** [Author Simulation]                                        | Multi-Body Constrained KKT Dynamics   | Drift vs Control Hand Wrench                                 | **86.04%** same-state modeled magnitude ratio $C_{\alpha,\text{ZTCF}} / C_{\alpha,\text{BASE}}$ at $t=0.2151\text{ s}$ (WSCG KKT sim; not independent measurement) |
 
 : Table 5A.1: Master synthesis of empirical, analytical, and sensor evidence regarding in-plane hand kinetics near impact. {#tbl-evidence-synthesis}
 
@@ -1092,7 +1095,7 @@ Consider the **illustrative** late-downswing loading state evaluated in Study 3 
 
 - At $\phi_{\text{roll}} = 0^\circ$: $M_{\alpha,\text{club}} = -15.00\text{ N}\cdot\text{m}$ (negative).
 - At $\phi_{\text{roll}} = 45^\circ$: $M_{\alpha,\text{club}} = -4.95\text{ N}\cdot\text{m}$ (negative).
-- At $\phi^* = \arctan(15/8) = \mathbf{61.93^\circ}$ (**illustrative** sign-flip angle): $M_{\alpha,\text{club}} = \mathbf{0.00\text{ N}\cdot\text{m}}$ (**sign flip**).
+- At $\phi^* = \operatorname{atan2}(15, 8) = \mathbf{61.93^\circ}$ (**illustrative** zero-crossing angle): $M_{\alpha,\text{club}} = \mathbf{0.00\text{ N}\cdot\text{m}}$ (**projection crosses zero**).
 - At $\phi_{\text{roll}} = 90^\circ$: $M_{\alpha,\text{club}} = \mathbf{+8.00\text{ N}\cdot\text{m}}$ (**positive**).
 - At $\phi_{\text{roll}} = 120^\circ$: $M_{\alpha,\text{club}} = \mathbf{+14.43\text{ N}\cdot\text{m}}$ (**positive**).
 
@@ -1174,7 +1177,7 @@ All calculations access `UpstreamDrift` modules strictly **read-only**, employin
 - `bilateral_wrench_identifiability.py`: Singular value decomposition (SVD) and nullspace audits of the bilateral grasp matrices $\mathbf{A}_F$ and $\mathbf{A}_W$.
 - `two_arm_closed_loop.py`: Constrained Lagrangian KKT dynamics separating passive unforced drift from active control.
 - `flexible_shaft_study.py`: Matched 3-link flexible vs. rigid forward dynamics and two-hand beam rebound models.
-- `wscg_two_hand_raw`: High-resolution ($1000\text{ Hz}$) empirical two-hand kinematic/kinetic dataset.
+- `wscg_two_hand_raw`: High-resolution ($1000\text{ Hz}$) **modeled** two-hand kinematic/kinetic time series (project-originated planar WSCG bundle in UpstreamDrift — **not** an independent open-field human replication dataset).
 
 ---
 
@@ -1192,7 +1195,7 @@ Table 7.1 tracks the computed moment across eight physical stations along the sh
 - As you move down the shaft past the sign-flip station $s^*$, the moment flips to positive ($+8.76\text{ N}\cdot\text{m}$ at the clubhead).
   Figure 1 plots these curves visually, showing how the steep slope (caused by the golfer's inward pull $R_y$) drives the line across the zero axis.
 
-### Table 7.1: Reference-Point Transport on Empirical WSCG Dataset
+### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory
 
 Values regenerated from `calcs/alpha_war_sensitivity_suite.py` → `study_1_grip_point_transport` in `calcs/alpha_war_calculations.json` (CI-checked).
 
@@ -1244,7 +1247,7 @@ This study follows an elite swing continuously from the start of the downswing a
 Table 7.3 breaks down the forces at each snapshot in time:
 
 - Column 5 shows the total hand couple ($C_{\alpha,M}$). Notice it starts strongly positive ($+56.82\text{ N}\cdot\text{m}$ at $t = 0.05\text{ s}$), drops to zero at $t = 0.1802\text{ s}$ ($13\text{ ms}$ before peak speed), and plunges into deep negative numbers ($-22.81\text{ N}\cdot\text{m}$ at $t = 0.2151\text{ s}$).
-- Column 6 shows the ZTCF Passive Couple—the torque that occurs naturally with completely limp, unforced wrists. Notice that at $t = 0.2151\text{ s}$, the passive reaction is $-19.63\text{ N}\cdot\text{m}$, accounting for **$86.04\%$** of the total negative couple!
+- Column 6 shows the **ZTCF** branch couple — the modeled passive reaction when **wrist** commands are zeroed on this **same** kinematic trajectory. At $t = 0.2151\text{ s}$, $|C_{\alpha,\text{ZTCF}}| / |C_{\alpha,\text{BASE}}| = \mathbf{86.04\%}$ — a **pointwise, same-pipeline** diagnostic ratio, **not** a measured relaxed-muscle percentage.
 - Column 10 shows the moment about the club's center of mass ($M_{\alpha,G}$), which stays near zero or positive because the inward arm pull balances the negative couple.
   Figure 2 plots these three curves together with error bands, illustrating that the hands track the passive curve like a passenger on a rollercoaster.
 
@@ -1265,11 +1268,11 @@ _Critical Dynamic Observations:_
 
 1. **Zero Crossing of Hand Couple ($C_{\alpha,M}$):** Occurs at $t = \mathbf{0.18017\text{ s}}$, exactly $13.1\text{ ms}$ before peak clubhead speed ($t = 0.1933\text{ s}$).
 2. **Zero Crossings of COM Moment ($M_{\alpha,G}$):** Crosses from positive to negative at $t = \mathbf{0.14400\text{ s}}$, and crosses back from negative to positive at $t = \mathbf{0.21662\text{ s}}$.
-3. **Simulated Passive Dynamic Dominance (ZTCF):** At minimum couple ($t = 0.2151\text{ s}$), the **simulated** Zero-Torque Counterfactual model generates a passive contact couple of $\mathbf{-19.63\text{ N}\cdot\text{m}}$ ($-19.6294\text{ N}\cdot\text{m}$), accounting for **$86.04\%$** of the simulated negative couple ($-22.8148\text{ N}\cdot\text{m}$, `alpha_war_calculations.json`). In this model, the negative couple is predominantly an unforced kinematic reaction to arm hub deceleration.
+3. **Simulated ZTCF Branch (Diagnostic Ratio):** At minimum couple ($t = 0.2151\text{ s}$), the **ZTCF** branch yields $\mathbf{-19.63\text{ N}\cdot\text{m}}$ ($-19.6294\text{ N}\cdot\text{m}$) vs. the base $\mathbf{-22.81\text{ N}\cdot\text{m}}$ ($-22.8148\text{ N}\cdot\text{m}$), i.e. **$86.04\%$** as $|C_{\alpha,\text{ZTCF}}|/|C_{\alpha,\text{BASE}}|$ on this **matched-state** planar simulation — **not** a claim that $86\%$ of muscle work is passive in vivo.
 
-**Plain-language takeaway (Figure 2):** The hands' pure couple turns negative before impact and closely tracks the unforced passive (ZTCF) curve ($86.04\%$ passive share at minimum couple), even while the total moment about the club's center of mass returns near zero.
+**Plain-language takeaway (Figure 2):** The hands' pure couple turns negative before impact and **tracks the ZTCF branch** on this modeled trajectory (86.04% **signed-component ratio** at minimum couple), even while the total moment about the club's center of mass returns near zero.
 
-![Figure 2: Simulated WSCG time series comparing total hand couple C_alpha,M(t), ZTCF passive couple, and sum of moments about the club center of mass M_alpha,G(t) (N·m vs. time t in s, frame F_FSP, +CCW uncocking sign convention) with ±3.0 N·m inverse-dynamics error-propagation bands and the 86.04% passive share at t = 0.2151 s.](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple, ZTCF passive couple, and sum of moments about the club center of mass in frame F_FSP (+CCW uncocking) with inverse-dynamics error-propagation bands and 86.04% ZTCF share annotation at t = 0.2151 s"}
+![Figure 2: Simulated WSCG time series comparing total hand couple C_alpha,M(t), ZTCF branch couple, and sum of moments about the club center of mass M_alpha,G(t) (N·m vs. time t in s, frame F_FSP, +CCW uncocking sign convention) with ±3.0 N·m inverse-dynamics error-propagation bands and the 86.04% |ZTCF|/|BASE| modeled magnitude ratio at t = 0.2151 s.](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple, ZTCF branch couple, and sum of moments about the club center of mass in frame F_FSP (+CCW uncocking) with inverse-dynamics error-propagation bands and 86.04% |ZTCF|/|BASE| annotation at t = 0.2151 s"}
 
 ---
 
@@ -1296,7 +1299,7 @@ Table 7.4 sweeps through clubface roll angles ($\phi_{\text{roll}}$) from $0^\ci
 | **$30.0^\circ$**                                  | $-8.99$                                         | $+14.43$                                       | $+4.50$                                           | $17.586$                                               | Negative                       |
 | **$45.0^\circ$**                                  | $-4.95$                                         | $+16.26$                                       | $+4.50$                                           | $17.586$                                               | Negative                       |
 | **$60.0^\circ$**                                  | $-0.57$                                         | $+16.99$                                       | $+4.50$                                           | $17.586$                                               | Negative                       |
-| _$\mathbf{61.93^\circ}$ (Illustrative $\phi^_$)\* | **$0.00$**                                      | **$+17.00$**                                   | **$+4.50$**                                       | $17.586$                                               | **Illustrative Zero Crossing** |
+| _$\mathbf{61.93^\circ}$ (Illustrative $\phi^*$)_ | **$0.00$**                                      | **$+17.00$**                                   | **$+4.50$**                                       | $17.586$                                               | **Illustrative Zero Crossing** |
 | **$90.0^\circ$**                                  | **$+8.00$**                                     | $+15.00$                                       | $+4.50$                                           | $17.586$                                               | **Positive**                   |
 | **$120.0^\circ$**                                 | **$+14.43$**                                    | $+8.99$                                        | $+4.50$                                           | $17.586$                                               | **Positive**                   |
 | **$150.0^\circ$**                                 | **$+16.99$**                                    | $+0.57$                                        | $+4.50$                                           | $17.586$                                               | **Positive**                   |
@@ -1407,12 +1410,12 @@ $$\mathbf{v}_{\text{null}} = \begin{bmatrix} +0.7071 & 0 & 0 & -0.7071 & 0 & 0 \
 
 ### What This Study Tests & Why It Matters (Layperson Guide)
 
-This study compares a real flexible golf shaft against a theoretical rigid steel bar, and calculates the elastic reaction forces transmitted to the golfer's hands when the shaft kicks forward into impact. It matters because it reveals that the forward-kicking shaft exerts a massive $-35.43\text{ N}\cdot\text{m}$ elastic retarding couple against the hands—completely overpowering voluntary wrist muscles!
+This study runs the matched **reduced planar 3-link** flexible-shaft rollout in `UpstreamDrift` (`FlexibleShaftParams.reference`: lumped bending coordinate, linear stiffness $k$, gravity on, shoulder/wrist damping on) side by side with the **exact rigid-shaft reduction** of the same parameters. It separates the **model-predicted** interface load and distal angular-acceleration breakdown from a **standalone hypothetical** push--pull scaling that uses fixed inputs ($11^\circ$, $465\text{ N}$, $+10\text{ N}\cdot\text{m}$) that are **not** derived from that rollout. The hypothetical block illustrates how large assumed opposed forces map to a force couple at the grip; it is **not** a second measurement of the $56\text{ N}$ interface resultant in Table 7.10 and must not be read as population-level proof that the shaft **establishes** a negative net hand couple.
 
 ### How to Read Table 7.10 and Table 7.11
 
-- In Table 7.10, compare the rigid model to the flexible model at $t = 0.4275\text{ s}$. The flexible shaft bends forward by $-3.58^\circ$ (lead deflection), delivering $+325.28\text{ rad/s}^2$ of elastic kick to accelerate the clubhead.
-- In Table 7.11, look at the beam rebound wrench for an $11.0^\circ$ lead bend: the shaft exerts an opposing contact force of $465.0\text{ N}$ across the hands, generating a $-35.433\text{ N}\cdot\text{m}$ elastic retarding couple. Even if the golfer flexes their trail wrist with near-maximal effort ($+10.000\text{ N}\cdot\text{m}$), the net couple remains deeply negative ($-25.433\text{ N}\cdot\text{m}$).
+- **Table 7.10** reports **stored generalized-acceleration contributions** for the **distal (clubhead) degree of freedom** at $t = 0.4275\text{ s}$: each row sums with the others to the **total** distal $\ddot{q}$ on that coordinate (control, gyroscopic or coupling ``momentum'' terms, gravity, joint damping, and—for the flexible model only—shaft elastic and shaft damping). The rigid column lists the **same term names**; shaft spring and shaft dashpot are identically zero. The proximal shaft-interface resultant in the plane has norm $\|\mathbf{F}\| \approx 56.4\text{ N}$ with components $(F_x, F_y) \approx (8.73, 55.69)\text{ N}$—a **vector magnitude**, not a single transverse component.
+- **Table 7.11** is a **hypothetical** bookkeeping example only: $11^\circ$, $465\text{ N}$, and $+10\text{ N}\cdot\text{m}$ are **assumed** scalars with **no** stated $EI$, effective length, or boundary data in this draft. Do not merge that block with the net hand wrench implied by Table 7.10 (which already encodes the full model dynamics).
 
 ### Table 7.10: Matched 3-Link Downswing State at $t = 0.4275\text{ s}$
 
@@ -1420,26 +1423,29 @@ This study compares a real flexible golf shaft against a theoretical rigid steel
 | ----------------------------------------- | ---------------------------- | -------------------------------------- | ---------------------------------------------- |
 | **Wrist Joint Angle $q_2$ (rad)**         | $0.3562$ ($20.41^\circ$)     | $0.3768$ ($21.59^\circ$)               | $+0.0206\text{ rad}$ ($+1.18^\circ$ more open) |
 | **Shaft Lead Deflection $\delta$**        | $0.00^\circ$ (Rigid)         | $\mathbf{-3.58^\circ}$ (Lead Bend)     | $-3.579^\circ$ Forward Deflection              |
-| **Shaft Elastic Restoring Moment**        | $0.00\text{ N}\cdot\text{m}$ | $\mathbf{+5.00\text{ N}\cdot\text{m}}$ | Elastic kick accelerating head                 |
+| **Shaft Elastic Restoring Moment**        | $0.00\text{ N}\cdot\text{m}$ | $\mathbf{+5.00\text{ N}\cdot\text{m}}$ | Elastic spring torque on flex coordinate       |
 | **Shaft Internal Damping Moment**         | $0.00\text{ N}\cdot\text{m}$ | $-0.08\text{ N}\cdot\text{m}$          | Structural viscoelastic loss                   |
-| **Shaft Interface Contact Force**         | —                            | $\mathbf{56.37\text{ N}}$              | Transverse interface load                      |
-| **Distal Acceleration: Control Share**    | $-385.12\text{ rad/s}^2$     | $\mathbf{-401.55\text{ rad/s}^2}$      | Commanded wrist deceleration                   |
-| **Distal Acceleration: Momentum Share**   | $+48.20\text{ rad/s}^2$      | $\mathbf{+57.05\text{ rad/s}^2}$       | Centrifugal/Coriolis coupling                  |
-| **Distal Acceleration: Shaft Flex Share** | $0.00\text{ rad/s}^2$        | $\mathbf{+325.28\text{ rad/s}^2}$      | Elastic whip kicking clubhead                  |
-| **Total Distal Angular Acceleration**     | $+12.45\text{ rad/s}^2$      | $\mathbf{+24.77\text{ rad/s}^2}$       | Net forward uncocking acceleration             |
+| **Shaft Interface Force in Plane $\mathbf{F}$** | —                            | $\|\mathbf{F}\| \approx 56.37\text{ N}$; $(F_x,F_y) \approx (8.73,55.69)\text{ N}$ | Proximal-on-distal reaction at shaft flex joint (norm + components) |
+| **Distal $\ddot{q}$: Control**            | $+58.84\text{ rad/s}^2$      | $\mathbf{-401.55\text{ rad/s}^2}$      | Generalized control torque contribution        |
+| **Distal $\ddot{q}$: Coupling / Momentum**| $-22.83\text{ rad/s}^2$      | $\mathbf{+57.05\text{ rad/s}^2}$       | Coriolis and velocity-dependent terms          |
+| **Distal $\ddot{q}$: Gravity**            | $-3.21\text{ rad/s}^2$       | $\mathbf{+1.86\text{ rad/s}^2}$        | Gravity acceleration                           |
+| **Distal $\ddot{q}$: Joint Damping**      | $-7.79\text{ rad/s}^2$       | $\mathbf{+47.55\text{ rad/s}^2}$       | Shoulder/wrist viscous damping (generalized)   |
+| **Distal $\ddot{q}$: Shaft Elastic**      | $0.00\text{ rad/s}^2$        | $\mathbf{+325.28\text{ rad/s}^2}$      | Flexible mode only                             |
+| **Distal $\ddot{q}$: Shaft Damping**      | $0.00\text{ rad/s}^2$        | $\mathbf{-5.42\text{ rad/s}^2}$        | Flexible mode only                             |
+| **Total Distal Angular Acceleration**     | $+25.01\text{ rad/s}^2$      | $\mathbf{+24.77\text{ rad/s}^2}$       | Sum of rows above (closure check)              |
 
-### Table 7.11: Two-Hand Beam Rebound Wrench Model ($11.0^\circ$ Lead Deflection)
+### Table 7.11: Hypothetical Two-Hand Beam Rebound Scaling (Not From Table 7.10)
 
-| Mechanical Parameter                                            | Numerical Value            | Units                   | Mechanical Origin                                                                     |
-| --------------------------------------------------------------- | -------------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
-| **Lead Deflection Angle ($\delta_{\text{lead}}$)**              | $11.0$                     | $\text{deg}$            | High-speed photographic average at impact                                             |
-| **Grip Contact Separation ($s$)**                               | $0.0762$ ($3.0\text{ in}$) | $\text{m}$              | Center-to-center distance between hands                                               |
-| **Opposed Contact Force Magnitude ($F_{\text{opp}}$)**          | **$465.0$**                | $\text{N}$              | Beam bending reaction: $F_{\text{opp}} \approx \frac{E I \delta}{L_{\text{lever}} s}$ |
-| **Force Couple from Shaft Rebound ($C_{\text{rebound}}$)**      | **$-35.433$**              | $\text{N}\cdot\text{m}$ | Opposed hand couple: $-s F_{\text{opp}}$                                              |
-| **Active Commanded Trail Wrist Torque ($\tau_{\text{wrist}}$)** | **$+10.000$**              | $\text{N}\cdot\text{m}$ | Near-maximal voluntary wrist flexion effort                                           |
-| **Net Equivalent Hand Couple ($C_{\alpha,\text{net}}$)**        | **$-25.433$**              | $\text{N}\cdot\text{m}$ | **Rebound overwhelms active muscular torque!**                                        |
+| Mechanical Parameter                                            | Numerical Value            | Units                   | Status / Provenance |
+| --------------------------------------------------------------- | -------------------------- | ----------------------- | ------------------- |
+| **Lead Deflection Angle ($\delta_{\text{lead}}$)**              | $11.0$                     | $\text{deg}$            | Assumed illustrative magnitude (not from matched rollout) |
+| **Grip Contact Separation ($s$)**                             | $0.0762$ ($3.0\text{ in}$) | $\text{m}$              | Mid-hands spacing for scalar couple illustration only |
+| **Assumed Opposed Force Magnitude ($F_{\text{opp}}$)**          | **$465.0$**                | $\text{N}$              | **Assumed**; not computed from $EI$, length, or Table 7.10 interface load |
+| **Scalar $-s F_{\text{opp}}$ (illustrative)**                   | **$-35.433$**              | $\text{N}\cdot\text{m}$ | Kinematics-only scaling; **not** the shaft internal moment in Table 7.10 |
+| **Assumed Active Trail-Wrist Torque ($\tau_{\text{wrist}}$)**   | **$+10.000$**              | $\text{N}\cdot\text{m}$ | Illustration-only muscular term |
+| **Illustrative Scalar Sum ($\tau_{\text{wrist}} - s F_{\text{opp}}$)** | **$-25.433$** | $\text{N}\cdot\text{m}$ | **Hypothetical**; not a claim about measured net grip couple |
 
-Even when the golfer commands $+10.0\text{ N}\cdot\text{m}$ of active trail-wrist flexion, the forward-bending shaft exerts a $-35.43\text{ N}\cdot\text{m}$ elastic restoring couple through the hands, resulting in a net retarding couple of **$-25.43\text{ N}\cdot\text{m}$**. The hands are overpowered by the shaft!
+The block above is retained only as a **pedagogical stress test** on grip couple bookkeeping. It does **not** certify that real swings experience $465\text{ N}$ differential shear or a $-25.4\text{ N}\cdot\text{m}$ net couple, and it must not be stacked onto the wrench implied by Table 7.10 without a full bilateral contact model.
 
 ---
 
@@ -1460,7 +1466,7 @@ Figure 8.1 ([`figures/fig-two-layer-verdict.svg`](figures/fig-two-layer-verdict.
 | Resolution Layer                                  | Core Question Addressed                                                                                | Target Physical Quantities                                                                                                                                                                                     | Mathematical / Empirical Basis                                                                                                                                                                                                                                                                                                       | Final Status in This Thesis                                                                                                                                                          |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Layer 1: Definitional Reconciliation**          | Were Camp A and Camp B calculating the same mechanical quantity?                                       | **Camp B:** Pure Hand Couple at Mid-Hands ($C_{\alpha,M} < 0$, $-15\text{ to }-25\text{ N}\cdot\text{m}$)<br>**Camp A:** Moment About Club COM ($M_{\alpha,G} > 0$, $+15\text{ to }+40\text{ N}\cdot\text{m}$) | Poinsot Transport Theorem:<br>$M_{\alpha,G} = C_{\alpha,M} - d_{G/M} R_y = I_G \alpha_{\text{club}}$<br>Centripetal pull: $-d R_y > 0$ ($+30\text{ to }+60\text{ N}\cdot\text{m}$)                                                                                                                                                   | **Settled & Complete.** Both quantities are physically real. The war was largely an overloaded-label semantic dispute.                                                               |
-| **Layer 2: Physical & Methodological Mechanisms** | What is the true sign and muscular origin of the applied hand couple near impact across all pipelines? | Pure hand couple $C_{\alpha,M}$ vs. active muscular effort $\tau_{\text{muscle}}$, shaft rebound $C_{\text{rebound}}$, and filter-processed marker kinematics                                                  | 1. Hill limits need $\omega_{\text{rel}}$ and validated $F$–$v$ params (not club $\omega$ alone)<br>2. Shaft forward kick rebound ($-35.43\text{ N}\cdot\text{m}$)<br>3. ZTCF passive drift ($86.04\%$ passive share)<br>4. Filter cutoff ($8\text{ Hz}$ sign flip vs. $30\text{ Hz}$ bleed)<br>5. Bilateral grasp nullspace ($\operatorname{nullity}(\mathbf{A}_W)=6$) | **Not Declared Settled (Provisional).** Open-source FSP models and split grips show negative couple, but Jacobs 3D positive torque claims remain unverified pending Protocols 1 & 5. |
+| **Layer 2: Physical & Methodological Mechanisms** | What is the true sign and muscular origin of the applied hand couple near impact across all pipelines? | Pure hand couple $C_{\alpha,M}$ vs. active muscular effort $\tau_{\text{muscle}}$, shaft rebound $C_{\text{rebound}}$, and filter-processed marker kinematics                                                  | 1. Hill limits need $\omega_{\text{rel}}$ and validated $F$–$v$ params (not club $\omega$ alone)<br>2. Shaft forward kick rebound ($-35.43\text{ N}\cdot\text{m}$, hypothetical illustrative unless separately validated)<br>3. WSCG **ZTCF** same-state ratio ($86.04\%$ $|C_{\text{ZTCF}}|/|C_{\text{BASE}}|$; modeled, not measured)<br>4. Filter cutoff ($8\text{ Hz}$ sign flip vs. $30\text{ Hz}$ bleed)<br>5. Bilateral grasp nullspace ($\operatorname{nullity}(\mathbf{A}_W)=6$) | **Not Declared Settled (Provisional).** Open-source FSP models and split grips show negative couple, but Jacobs 3D positive torque claims remain unverified pending Protocols 1 & 5. |
 
 ::: {.callout-important title="Box 8.1: Stage 5 Panel Caveat — Why the Sign of the Alpha Couple Is Not Treated as Settled"}
 **Plain-language lead:** Although open-source swing-plane models and instrumented split-grip clubs show a negative (retarding) hand couple just before impact, the underlying sign dispute between Camp A and Camp B is **not declared settled** in this review because reported couple polarity depends critically on coordinate-convention mapping, digital filter cutoffs, and pre-impact data truncation.
@@ -1496,7 +1502,7 @@ At Layer 2, Camp A coaches further proposed that a positive alpha curve represen
 1. **Universal Negative Reversal in Open Inverse Dynamics:** Every validated, peer-reviewed 3D inverse-dynamics dataset in the history of golf biomechanics—including Nesbit's own scratch golfer (Subject 4 in Nesbit 2005), MacKenzie & Sprigings (2000, 2009), and Kwon et al. (2012)—shows that the pure hand couple reverses negative $15\text{--}30\text{ ms}$ before impact in skilled players.
 2. **Direct Empirical Sensor Confirmation:** The only direct physical measurements of separate hand forces using instrumented split-grip load cells (Koike et al. 2006, 2016) recorded a net negative in-plane couple of $-10\text{ N}\cdot\text{m}$ at impact, accompanied by massive opposing hand contact forces ($F_L \approx +200\text{ N}$, $F_T \approx -200\text{ N}$).
 3. **Muscle Contractile Mechanics (provisional):** Near impact, **club** angular velocity often exceeds $1500\text{--}2500\text{ deg/s}$ ($26\text{--}44\text{ rad/s}$), but fascicle shortening speed requires wrist-relative kinematics and moment arms. Hill-type curves may limit concentric capacity (CLM-MCH-01) yet do **not**, without validated parameters, settle claims that a given positive grip couple is impossible (CLM-SGN-05 reclassified in §8.2).
-4. **Shaft Elastic Rebound Dynamics:** An $11^\circ$ forward lead bend at impact generates $465\text{ N}$ of opposing contact reaction forces across the hands, producing a $-35.43\text{ N}\cdot\text{m}$ elastic restoring couple that mechanically overpowers any voluntary trail-wrist effort ($+10\text{ N}\cdot\text{m}$), guaranteeing a negative net couple ($C_{\alpha,\text{net}} = -25.43\text{ N}\cdot\text{m}$).
+4. **Shaft Elastic Rebound Dynamics:** The matched 3-link study (Table 7.10) shows a forward lead bend and a large **modeled** shaft-elastic contribution to distal angular acceleration at the sampled time, with a proximal interface resultant on the order of $56\text{ N}$. Separately, Table 7.11 retains an **assumed** $11^\circ$ / $465\text{ N}$ / $+10\text{ N}\cdot\text{m}$ scalar illustration—**not** derived from that rollout—so this draft does **not** claim that real swings must exhibit that net grip couple or muscle-stress outcome.
 5. **Proprietary Opacity (VRF-02, VRF-06):** While _The Science of the Golf Swing_ (339 pp.) [@jacobs2019science] and _Look Inside the Swing_ [@jacobs2020lookinside] describe the 6-DOF club-frame coordinate axes conceptually, Jacobs 3D has not published its proprietary software source code, exact moment reduction station coordinates, digital filter cutoff frequencies, impact boundary padding methods, or raw kinematic validation telemetry in peer-reviewed engineering venues. Without an open dual-pipeline benchmark (Protocol 1), their software output remains an unverified commercial artifact.
 
 ---
@@ -1528,8 +1534,8 @@ The following master table cross-references and adjudicates every major claim fr
 | **CLM-REF-05** | Wrist universal joint generates non-working constraint torques                        | Olson (Jan 2025)                                               | Constraint wrench $\boldsymbol{\lambda}^\top \mathbf{J} \dot{\mathbf{q}} = 0$ | Anatomical 2-DOF Wrist                 | **Settled (Kinematic Modeling Fact)** _(Adjudicated by: Thesis Review Audit v1, 2026-11-03)_                              |
 | **CLM-MCH-01** | Torque reversal caused by muscle force-velocity limits                                | Nesbit (2005), Sprigings (2000)                                | Hill-type contractile velocity                                                | Forearm Musculature                    | **Supported (Contributing Physiological Factor)** _(Adjudicated by: Thesis Review Audit v1, 2026-11-03)_                  |
 | **CLM-MCH-02** | Reversal is purely an interaction-force reaction in linked chain                      | [@putnam1991segment; @putnam1993sequential], Grober (2020)     | Coriolis and centrifugal coupling                                             | Multi-Body Dynamics                    | **Settled (Sufficient Dynamic Mechanism)** _(Adjudicated by: Thesis Review Audit v1, 2026-11-03)_                         |
-| **CLM-MCH-03** | Forward shaft rebound produces massive negative grip couple                           | Olson (Dec 2023), Tutelman (2018)                              | Elastic restoring moment $\mathbf{M}_{\text{bend}}$                           | 12-Segment Beam                        | **Settled (Dominant Physical Co-Factor)** _(Adjudicated by: Thesis Review Audit v1, 2026-11-03)_                          |
-| **CLM-MCH-04** | Negative couple persists with completely unforced wrists                              | Olson (2022, 2026 UpstreamDrift)                               | Unforced contact reaction wrench                                              | Two-Hand Constrained                   | **Settled (ZTCF Model Verification)** _(Adjudicated by: Thesis Review Audit v1, 2026-11-03)_                              |
+| **CLM-MCH-03** | Flexible shafts store strain energy that can contribute a **retarding** grip couple via rebound loads                           | Olson (Dec 2023), Tutelman (2018)                              | Elastic restoring moment $\mathbf{M}_{\text{bend}}$; interface resultant vs. hypothetical $-sF$ scalings                           | Shaft / grip models                        | **Qualified (Mechanism Plausible; Magnitude Scenario-Dependent)** _(Revised #5463; not a universal dominance or sign proof)_                          |
+| **CLM-MCH-04** | Negative couple persists when **wrist** commands are zeroed in the WSCG KKT model on the bundled trajectory | Olson (2022, 2026 UpstreamDrift)                               | Modeled unforced branch vs. base couple                                              | Two-Hand Constrained (simulated)                  | **Qualified (Model-Scenario Diagnostic)** _(ZTCF torque-cut on project WSCG bundle; not physiological “limp wrist” proof)_                              |
 | **CLM-DAT-01** | Direct load cells confirm negative couple of $-10\text{ N}\cdot\text{m}$              | [@koike2006grip; @koike2016forces]                             | Measured handle strain/force wrench                                           | Grip Physical Axes                     | **Settled (Direct Empirical Proof)** _(Adjudicated by: Thesis Review Audit v1, 2026-11-03)_                               |
 | **CLM-DAT-02** | Filter cutoff $<15\text{ Hz}$ smooths impact into downswing                           | Methodological Consensus / Camp A                              | Filter frequency response $H(f)$                                              | Digital Filtering                      | **Settled (Demonstrated in Study 4)** _(Adjudicated by: Thesis Review Audit v1, 2026-11-03)_                              |
 | **CLM-DAT-03** | Aerodynamic drag accounts for $9\text{--}10\text{ N}\cdot\text{m}$ of negative moment | Olson (May 2020)                                               | Aerodynamic moment $\mathbf{r} \times \mathbf{F}_{\text{drag}}$               | Clubhead Pressure Center               | **Settled (Physical Calibration Factor)** _(Adjudicated by: Thesis Review Audit v1, 2026-11-03)_                          |
@@ -1552,7 +1558,7 @@ The most passionate defenders of positive alpha torque were not laboratory physi
 Biomechanics explains why this subjective perception is real, even though the net physical torque on the club is negative:
 
 1. **Isometric and Eccentric Muscular Tension:** The golfer commands high neuromuscular drive (gamma efferent activation) to stabilize the wrist joints against massive centrifugal loads ($>500\text{ N}$) and segment interaction forces. Golgi tendon organs and muscle spindles fire intensely, signaling maximal voluntary effort to the motor cortex.
-2. **Fighting Forward Shaft Rebound:** As the flexible shaft kicks forward into impact, it exerts an elastic reaction force of $465\text{ N}$ against the trail hand. The golfer's trail palm and wrist flexors are compressed violently backward. The golfer is actively pushing forward with $+10\text{ N}\cdot\text{m}$ of muscular effort to avoid dropping the club, but the shaft is pushing back with $-35\text{ N}\cdot\text{m}$!
+2. **Fighting Forward Shaft Rebound:** As a flexible shaft closes lead deflection near impact, **large** grip contact loads can develop even when the net joint torque reads negative—subjective ``pushing'' effort can track internal muscle tension and compression more closely than the **net** external couple. The numeric $465\text{ N}$ / $-35\text{ N}\cdot\text{m}$ pair in Table 7.11 is an **illustrative** bookkeeping example, not a measured single-hand load from Table 7.10.
 3. **The Sensorimotor Illusion:** Human mechanoreceptors measure internal muscle tension, not net external joint torque. An athlete bracing maximally against an overwhelming external load feels extreme "driving" effort, even as the joint is driven backward into eccentric or retarding motion.
 
 ### The "Coasting" / "Freewheeling" Hypothesis vs. Release Styles
@@ -1846,7 +1852,7 @@ $$M_{\alpha,\text{club},P}(\phi_{\text{roll}}, s_P) = \left(C_\alpha - s_P R_y\r
 This single equation encapsulates why sign comparisons across camps are invalid unless $(s_P, \phi_{\text{roll}}, R_y, C_\beta)$ are simultaneously specified:
 
 1. Setting $\phi_{\text{roll}} = 0$ and shifting $s_P$ from $M$ ($0\text{ m}$) to $G$ ($+0.720\text{ m}$) adds $-s_G R_y$, flipping the sign whenever $s_P > s^* = C_\alpha / R_y$ (Figure 1).
-2. Fixing $s_P = 0$ and rolling the clubface by $\phi_{\text{roll}}$ mixes $C_\beta \sin\phi_{\text{roll}}$ into the alpha channel, flipping the sign whenever $\phi_{\text{roll}} > \phi^* = \arctan(-C_\alpha / C_\beta)$ (Figure 3).
+2. Fixing $s_P = 0$ and rolling the clubface by $\phi_{\text{roll}}$ mixes $C_\beta \sin\phi_{\text{roll}}$ into the alpha channel, flipping the sign whenever $\phi_{\text{roll}} > \phi^* = \operatorname{atan2}(-C_\alpha, C_\beta)$ (Figure 3).
 
 ### B.1 Planar Double Pendulum Equations of Motion
 

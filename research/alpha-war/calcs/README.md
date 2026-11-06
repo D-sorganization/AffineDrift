@@ -49,7 +49,7 @@ Tracks the exact decomposition $M_{\alpha,G}(t) = C_{\alpha,M}(t) - d_{G/M} R_y(
 - Mid-downswing ($t = 0.140\text{ s}$): $C_{\alpha,M} = +36.69\text{ N}\cdot\text{m}$.
 - Zero crossing of hand couple $C_{\alpha,M}$: **$t = 0.18017\text{ s}$** ($13.1\text{ ms}$ before peak clubhead speed at $t = 0.1933\text{ s}$).
 - Peak clubhead speed ($t = 0.1933\text{ s}$, $115.08\text{ mph}$, simulated): $C_{\alpha,M} = -14.08\text{ N}\cdot\text{m}$ (while simulated ZTCF zero-torque passive couple is $-11.19\text{ N}\cdot\text{m}$, or $79.51\%$).
-- Minimum hand couple ($t = 0.2151\text{ s}$, simulated): $C_{\alpha,M} = -22.8148\text{ N}\cdot\text{m}$ (while simulated ZTCF zero-torque passive couple is $-19.6294\text{ N}\cdot\text{m}$, or **$86.04\%$** of the BASE negative couple).
+- Minimum hand couple ($t = 0.2151\text{ s}$, simulated): $C_{\alpha,M} = -22.8148\text{ N}\cdot\text{m}$ (while the **ZTCF** branch on the **same** trajectory is $-19.6294\text{ N}\cdot\text{m}$, giving **$86.04\%$** as the **magnitude ratio** $|C_{\alpha,\text{ZTCF}}|/|C_{\alpha,\text{BASE}}|$ — a **pointwise modeled diagnostic**, not a measured physiological muscle-energy share).
 
 ### Study 3: Coordinate Frame & Axis Convention Sensitivity (`study_3_frame_conventions`)
 For an **illustrative** late-downswing couple $\mathbf{M}_{\text{FSP}} = (M_{\text{shaft}} = +4.5, M_{\text{out}} = +8.0, M_{\text{in}} = -15.0)\text{ N}\cdot\text{m}$:
@@ -68,8 +68,8 @@ For an **illustrative** late-downswing couple $\mathbf{M}_{\text{FSP}} = (M_{\te
 - **Two-Arm Closed-Loop KKT Attribution:** At the tested late-downswing state, $M_{\text{total}} = -2.366\text{ N}\cdot\text{m}$ decomposes exactly into $M_{\text{drift}} = -0.929\text{ N}\cdot\text{m}$ (zero-torque motion-dependent constraint reaction) plus $M_{\text{control}} = -1.437\text{ N}\cdot\text{m}$ (residual $0.0\text{ N}\cdot\text{m}$). Setting grip separation $a_R = a_L = 0$ yields $M_{F,\text{zero-arm}} \equiv 0.0\text{ N}\cdot\text{m}$ identically.
 
 ### Study 6: Matched Flexible vs. Rigid Shaft Rebound (`study_6_shaft_flex_contribution`)
-- **UpstreamDrift Matched 3-Link Model ($t = 0.4275\text{ s}$):** Lead shaft deflection reaches $-3.58^\circ$, generating $+5.00\text{ N}\cdot\text{m}$ elastic moment, $56.37\text{ N}$ shaft interface force, and $+325.28\text{ rad/s}^2$ distal angular acceleration contribution against $-401.55\text{ rad/s}^2$ control and $+57.05\text{ rad/s}^2$ momentum contributions.
-- **Two-Hand Beam Rebound Wrench ($11.0^\circ$ lead deflection):** Elastic shaft rebound generates $465\text{ N}$ opposed hand reaction forces across $s = 0.0762\text{ m}$, producing a **$-35.43\text{ N}\cdot\text{m}$** force couple that overwhelms $+10.0\text{ N}\cdot\text{m}$ of active right-wrist torque for a net couple of **$-25.43\text{ N}\cdot\text{m}$**.
+- **UpstreamDrift Matched 3-Link Model ($t = 0.4275\text{ s}$):** Reduced planar model (`FlexibleShaftParams.reference`) with gravity and shoulder/wrist damping. Lead shaft deflection $\approx -3.58^\circ$, shaft elastic moment $\approx +5.00\text{ N}\cdot\text{m}$, interface resultant $\|\mathbf{F}\| \approx 56.37\text{ N}$ with $(F_x,F_y) \approx (8.73,55.69)\text{ N}$. JSON exports **summed distal** generalized-acceleration contributions for **flexible** and **rigid** rollouts (control, momentum, gravity, joint damping, shaft elastic, shaft damping); each list sums to **total**.
+- **Hypothetical Two-Hand Beam Row (not from Table 7.10):** Assumed $11^\circ$, $465\text{ N}$, and $+10\text{ N}\cdot\text{m}$ illustrate scalar $-sF$ bookkeeping only—**uncited** as a beam derivation in `alpha_war_calculations.json` (`inputs_are_uncited`: true). Do not merge with the matched rollout interface force (#5463).
 
 ## Running the Suite & Tests
 
