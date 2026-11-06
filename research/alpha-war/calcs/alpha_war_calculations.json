@@ -692,12 +692,17 @@
   },
   "study_6_shaft_flex_contribution": {
     "upstream_drift_matched_3link_study": {
+      "model": "UpstreamDrift reduced planar 3-link with lumped shaft-bending coordinate (FlexibleShaftParams.reference); gravity on; shoulder/wrist damping on",
       "sample_time_s": 0.4275,
       "shaft_deflection_deg": -3.5791729236945047,
       "shaft_elastic_moment_nm": 4.99746816133607,
       "shaft_damping_moment_nm": -0.08326019457155094,
+      "shaft_interface_force_xy_n": [
+        8.725711164527151,
+        55.69147164755206
+      ],
       "shaft_interface_force_norm_n": 56.3708971863749,
-      "distal_angular_accel_contributions_rad_s2": {
+      "distal_angular_accel_contributions_flexible_rad_s2": {
         "control": -401.5533362381442,
         "momentum": 57.05151844088546,
         "gravity": 1.8621578063940536,
@@ -706,16 +711,27 @@
         "shaft_damping": -5.419256782678103,
         "total": 24.771448908567404
       },
+      "distal_angular_accel_contributions_rigid_rad_s2": {
+        "control": 58.83827519951244,
+        "momentum": -22.82582051696625,
+        "gravity": -3.2076713145038975,
+        "joint_damping": -7.792137040568801,
+        "shaft_elastic": 0.0,
+        "shaft_damping": 0.0,
+        "total": 25.01264632747349
+      },
       "rigid_wrist_angle_at_same_time_rad": 0.3561863964205145,
       "flexible_wrist_angle_at_same_time_rad": 0.3768046621468738
     },
     "two_hand_beam_rebound_wrench_model": {
+      "scenario": "standalone hypothetical scaling \u2014 not derived from the matched 3-link rollout above; no stated EI, lever length, or boundary conditions; do not infer population shaft behavior",
+      "inputs_are_uncited": true,
       "lead_deflection_deg": 11.0,
       "grip_separation_m": 0.0762,
-      "opposed_hand_force_magnitude_n": 465.0,
-      "force_couple_from_shaft_rebound_nm": -35.433,
-      "active_right_wrist_torque_nm": 10.0,
-      "net_equivalent_grip_couple_nm": -25.433
+      "opposed_hand_force_magnitude_n_assumed": 465.0,
+      "force_couple_from_assumed_opposed_forces_nm": -35.433,
+      "active_right_wrist_torque_nm_assumed": 10.0,
+      "net_scalar_sum_of_assumed_nm": -25.433
     }
   }
 }

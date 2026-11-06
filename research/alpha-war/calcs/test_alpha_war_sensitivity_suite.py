@@ -121,22 +121,29 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
         self.assertTrue(np.isclose(attr["zero_grip_separation_moment_nm"], 0.0, atol=1e-12))
 
     def test_study_6_shaft_flex_contribution(self) -> None:
-        """Verify matched 3-link flexible shaft decomposition and beam rebound couple."""
+        """Verify matched 3-link flexible/rigid shaft decomposition and hypothetical relabel."""
         res = run_study_6_shaft_flex_contribution()
-        contrib = res["upstream_drift_matched_3link_study"][
-            "distal_angular_accel_contributions_rad_s2"
-        ]
-        sum_terms = (
-            contrib["control"]
-            + contrib["momentum"]
-            + contrib["gravity"]
-            + contrib["joint_damping"]
-            + contrib["shaft_elastic"]
-            + contrib["shaft_damping"]
-        )
-        self.assertTrue(np.isclose(sum_terms, contrib["total"], atol=1e-6))
+        for study_key in (
+            "distal_angular_accel_contributions_flexible_rad_s2",
+            "distal_angular_accel_contributions_rigid_rad_s2",
+        ):
+            contrib = res["upstream_drift_matched_3link_study"][study_key]
+            sum_terms = (
+                contrib["control"]
+                + contrib["momentum"]
+                + contrib["gravity"]
+                + contrib["joint_damping"]
+                + contrib["shaft_elastic"]
+                + contrib["shaft_damping"]
+            )
+            self.assertTrue(np.isclose(sum_terms, contrib["total"], atol=1e-6))
         rebound = res["two_hand_beam_rebound_wrench_model"]
-        self.assertLess(rebound["net_equivalent_grip_couple_nm"], -20.0)
+        self.assertTrue(rebound["inputs_are_uncited"])
+        self.assertIn("hypothetical", rebound["scenario"].lower())
+        self.assertIn(
+            "opposed_hand_force_magnitude_n_assumed",
+            rebound,
+        )
 
 
 if __name__ == "__main__":

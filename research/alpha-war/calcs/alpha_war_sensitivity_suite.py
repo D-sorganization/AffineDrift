@@ -672,6 +672,11 @@ def run_study_5_closed_loop_and_identifiability() -> dict[str, Any]:
     }
 
 
+def _sum_distal_accel_terms(contributions: dict[str, np.ndarray], index: int) -> dict[str, float]:
+    """Return summed distal (third joint) acceleration terms from a rollout trace."""
+    return {name: float(np.sum(vec[index])) for name, vec in contributions.items()}
+
+
 def run_study_6_shaft_flex_contribution() -> dict[str, Any]:
     """Study 6: Matched flexible vs. rigid shaft rebound contribution using UpstreamDrift."""
     params_flex = FlexibleShaftParams.reference()
@@ -684,6 +689,9 @@ def run_study_6_shaft_flex_contribution() -> dict[str, Any]:
     f_interface_all = shaft_interface_force(trace_flex, params_flex)
     f_interface = f_interface_all[idx_imp]
 
+    flex_terms = _sum_distal_accel_terms(trace_flex.contributions, idx_imp)
+    rigid_terms = _sum_distal_accel_terms(trace_rigid.contributions, idx_imp)
+
     s_grip = 0.0762
     f_opposed_n = 465.0
     c_shaft_rebound_nm = -s_grip * f_opposed_n
@@ -692,24 +700,34 @@ def run_study_6_shaft_flex_contribution() -> dict[str, Any]:
 
     return {
         "upstream_drift_matched_3link_study": {
+            "model": (
+                "UpstreamDrift reduced planar 3-link with lumped shaft-bending coordinate "
+                "(FlexibleShaftParams.reference); gravity on; shoulder/wrist damping on"
+            ),
             "sample_time_s": float(trace_flex.t[idx_imp]),
             "shaft_deflection_deg": float(np.rad2deg(state_imp[2])),
             "shaft_elastic_moment_nm": float(-params_flex.shaft_stiffness_nm_rad * state_imp[2]),
             "shaft_damping_moment_nm": float(-params_flex.shaft_damping_nms_rad * state_imp[5]),
+            "shaft_interface_force_xy_n": [float(f_interface[0]), float(f_interface[1])],
             "shaft_interface_force_norm_n": float(np.linalg.norm(f_interface)),
-            "distal_angular_accel_contributions_rad_s2": {
-                k: float(np.sum(v[idx_imp])) for k, v in trace_flex.contributions.items()
-            },
+            "distal_angular_accel_contributions_flexible_rad_s2": flex_terms,
+            "distal_angular_accel_contributions_rigid_rad_s2": rigid_terms,
             "rigid_wrist_angle_at_same_time_rad": float(trace_rigid.state[idx_imp, 1]),
             "flexible_wrist_angle_at_same_time_rad": float(state_imp[1]),
         },
         "two_hand_beam_rebound_wrench_model": {
+            "scenario": (
+                "standalone hypothetical scaling — not derived from the matched 3-link rollout "
+                "above; no stated EI, lever length, or boundary conditions; do not infer "
+                "population shaft behavior"
+            ),
+            "inputs_are_uncited": True,
             "lead_deflection_deg": 11.0,
             "grip_separation_m": s_grip,
-            "opposed_hand_force_magnitude_n": f_opposed_n,
-            "force_couple_from_shaft_rebound_nm": float(c_shaft_rebound_nm),
-            "active_right_wrist_torque_nm": float(tau_wrist_active_nm),
-            "net_equivalent_grip_couple_nm": float(c_net_nm),
+            "opposed_hand_force_magnitude_n_assumed": f_opposed_n,
+            "force_couple_from_assumed_opposed_forces_nm": float(c_shaft_rebound_nm),
+            "active_right_wrist_torque_nm_assumed": float(tau_wrist_active_nm),
+            "net_scalar_sum_of_assumed_nm": float(c_net_nm),
         },
     }
 
