@@ -690,6 +690,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5409 · MM-1: Motion-Measurement Article Plan, Verified References and Registry Mapping (Plan Only, No Publication)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5409
+- **Branch:** merged via #5482
+- **PR:** #5482
+- **Paths:** see #5482
+- **Started:** 2026-11-06
+- **Last verified:** 2026-11-06 (`d79abfb0`; collated from changes/5409-mm-1-motion-measurement-article-plan-ver.md)
+- **Summary:** MM-1: motion-measurement article plan, verified references and registry mapping (plan only, no publication)
+- **Next step:** Shipped in PR #5482.
+
+### DL-#5253 · Measure Math-Rendering Cost on Theory Part 1 From the Nightly Lighthouse Report (Script, Test, Evidence Doc; No SSR Prototype Yet)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5253
+- **Branch:** merged via #5486
+- **PR:** #5486
+- **Paths:** see #5486
+- **Started:** 2026-11-06
+- **Last verified:** 2026-11-06 (`5f1506ce`; collated from changes/5253-measure-math-rendering-cost-on-theory-pa.md)
+- **Summary:** Measure math-rendering cost on Theory Part 1 from the nightly Lighthouse report (script, test, evidence doc; no SSR prototype yet)
+- **Next step:** Shipped in PR #5486.
+
 ### DL-#5426 · Add the VIS-SITE-4 Draft Page Embedding the AD-Generated ZTCF Explainer Through Vis-Video, Honestly Labelled as Not a Traced UpstreamDrift Render; Allow Leading ../ Media Paths in the Shortcode
 
 - **State:** shipped
