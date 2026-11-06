@@ -64,7 +64,8 @@ def _quoted(results: dict[str, Any]) -> list[str]:
 def test_article_quotes_only_generated_numbers() -> None:
     """Every generated number appears in the prose, and every figure has alt text."""
     text = ARTICLE.read_text(encoding="utf-8")
-    assert "Draft; Routed on the Public Site" in text
+    assert "draft: true" in text
+    assert "Unpublished Draft Source" in text
     assert "#5284" in text
     assert "**seven** unknowns" in text
     assert "open, **High**" in text or "High**-severity" in text
