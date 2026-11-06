@@ -30,6 +30,10 @@ def test_dieter_definitions_and_single_equation():
     assert "Zero-Velocity Counterfactual (ZVCF)" in content
     assert "M^{-1}\\tau" in content or "M(q)^{-1} \\tau" in content
     assert "ZTCF + ZVCF = Total Acceleration" in content or "ZTCF + ZVCF" in content
+    assert "../NOTATION.md" in content
+    assert "joint coordinates" in content.lower()
+    assert "two piles" in content.lower()
+    assert "testable hypothesis" in content.lower()
 
     # Exactly one displayed equation block ($$...$$)
     displayed_equations = re.findall(r"\$\$.*?\$\$", content, flags=re.DOTALL)

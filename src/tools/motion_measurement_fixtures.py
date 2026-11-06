@@ -174,13 +174,60 @@ def difference_errors(omega: float, sigma: float, dt: float) -> dict[str, float]
     }
 
 
+def cardan_comparison_fixture() -> dict[str, object]:
+    """Compare Cardan angles for XYZ vs ZYX for a fixed orientation."""
+    m = Rotation.from_euler("XYZ", [0.4, 0.7, -0.5]).as_matrix()
+    xyz = [float(x) for x in cardan_angles(m, "XYZ")]
+    zyx = [float(x) for x in cardan_angles(m, "ZYX")]
+    diff = float(np.max(np.abs(np.array(xyz) - np.array(zyx)[::-1])))
+    return {"xyz_rad": xyz, "zyx_rad": zyx, "max_diff_rad": diff}
+
+
+def angle_unwrap_fixture() -> dict[str, object]:
+    """Jump magnitude before and after angle unwrapping."""
+    truth = np.linspace(0.0, 2.0 * np.pi, 50)
+    wrapped = np.arctan2(np.sin(truth), np.cos(truth))
+    return {
+        "wrapped_max_jump_rad": float(np.max(np.abs(np.diff(wrapped)))),
+        "unwrapped_max_jump_rad": float(np.max(np.abs(np.diff(unwrap_angles(wrapped))))),
+    }
+
+
+def svd_orthogonality_fixture() -> dict[str, object]:
+    """Matrix orthogonality and determinant error before and after SVD projection."""
+    truth = Rotation.from_rotvec([0.3, -0.5, 0.8]).as_matrix()
+    drifted = truth + 1e-3 * np.random.default_rng(SEED).standard_normal((3, 3))
+    fixed = nearest_rotation(drifted)
+    return {
+        "drifted_det_error": float(abs(np.linalg.det(drifted) - 1.0)),
+        "fixed_det_error": float(abs(np.linalg.det(fixed) - 1.0)),
+        "drifted_ortho_error": float(np.linalg.norm(drifted @ drifted.T - np.eye(3))),
+        "fixed_ortho_error": float(np.linalg.norm(fixed @ fixed.T - np.eye(3))),
+    }
+
+
+def xfactor_variants_fixture() -> dict[str, object]:
+    """Compare plane-projection and Cardan X-factor variants on a synthetic swing path."""
+    t = np.linspace(0.0, 1.0, 50)
+    plane = np.rad2deg(1.3 * np.sin(np.pi * t) - 0.8 * np.sin(np.pi * t))
+    cardan = plane * np.cos(np.deg2rad(25.0 * np.cos(np.pi * t)))
+    return {
+        "plane_peak_deg": float(np.max(plane)),
+        "cardan_peak_deg": float(np.max(cardan)),
+        "spread_deg": float(np.max(plane) - np.max(cardan)),
+    }
+
+
 def build_results() -> dict[str, object]:
     """Collect every fixture result that the article figures read."""
     locked = Rotation.from_euler("ZYX", [0.3, np.pi / 2, 0.2]).as_matrix()
     steps = [0.02, 0.1, 0.5]
     return {
         "seed": SEED,
+        "cardan": cardan_comparison_fixture(),
         "gimbal": {"locked_at_90_deg": is_gimbal_locked(locked, "ZYX")},
+        "unwrap": angle_unwrap_fixture(),
+        "orthogonality": svd_orthogonality_fixture(),
         "helical_axis": {
             "sigma": 1e-3,
             "steps_rad": steps,
@@ -204,6 +251,7 @@ def build_results() -> dict[str, object]:
             "omega_1": difference_errors(1.0, 1e-3, 1e-2),
             "omega_2": difference_errors(2.0, 1e-3, 1e-2),
         },
+        "xfactor": xfactor_variants_fixture(),
     }
 
 
