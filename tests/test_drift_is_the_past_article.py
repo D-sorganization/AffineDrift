@@ -69,3 +69,63 @@ def test_analogies_and_figures_with_alt_text():
     assert "fig-alt=" in content
     assert "fig-vector-split" in content
     assert "fig-divergence" in content
+
+
+def test_accuracy_1_ztcf_is_not_limp_and_includes_karl_quote():
+    """Verify ZTCF is not described as 'limp' and includes Karl's phrasing (#5475)."""
+    content = ARTICLE_PATH.read_text(encoding="utf-8")
+    assert (
+        "limp" not in content.lower()
+    ), "Article should not describe ZTCF as 'limp' (contradicts NOTATION.md)"
+    assert "flaccid" not in content.lower()
+    assert "the joints stay connected; we just stop pushing" in content.lower()
+    assert "passive" in content.lower() and "tissue" in content.lower()
+
+
+def test_accuracy_2_joint_space_vs_clubhead_kinematics_aligned():
+    """Verify boxed joint equation and Cartesian clubhead acceleration are aligned (#5475)."""
+    content = ARTICLE_PATH.read_text(encoding="utf-8")
+    assert "joint" in content.lower()
+    assert (
+        "\\dot{J}" in content
+        or "J\\dot{q}" in content
+        or "velocity-dependent kinematic" in content.lower()
+        or "kinematic" in content.lower()
+    )
+
+
+def test_accuracy_3_tee_section_hedged_as_hypothesis():
+    """Verify the amateur vs. elite distinction is hedged as a testable hypothesis (#5475)."""
+    content = ARTICLE_PATH.read_text(encoding="utf-8")
+    assert "testable hypothesis" in content.lower() or "hypothesis" in content.lower()
+    assert (
+        "cohort" in content.lower()
+        or "validation" in content.lower()
+        or "measured" in content.lower()
+    )
+
+
+def test_prose_and_housekeeping_corrections():
+    """Verify prose and nit corrections 4-9 (#5475)."""
+    content = ARTICLE_PATH.read_text(encoding="utf-8")
+    # 4: drift includes passive loads in the model, not just momentum + gravity
+    assert (
+        "passive loads" in content.lower()
+        or "passive tissue" in content.lower()
+        or "passive elasticity" in content.lower()
+    )
+    # 5: force equal to clubhead's weight, not '9.8 m/s² on the clubhead'
+    assert "per second squared on the clubhead" not in content.lower()
+    assert "clubhead's weight" in content.lower() or "weight of the clubhead" in content.lower()
+    # 6: control acts through posture the past created; only tau is new
+    assert "only" in content.lower() and "\\tau" in content
+    # 7: playground push notes single instant vs buildup over time
+    assert "single instant" in content.lower()
+    # 8: downswing duration hedged (roughly 230-260 ms)
+    assert "230" in content and "260" in content
+    # 9: Karl lead-in, pointwise qualifier, verified date, for a given model
+    assert "mass times acceleration equals the forces, split into two piles" in content.lower()
+    assert "pointwise zero-torque counterfactual" in content.lower()
+    assert "for a given model" in content.lower()
+    assert 'date: "date unverified"' not in content.lower()
+    assert 'date-source: "unverified"' not in content.lower()
