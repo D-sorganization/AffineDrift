@@ -82,10 +82,12 @@ def _ensure_upstream_logging_pkg_shim() -> None:
         _cfg = types.ModuleType(cfg_name)
 
         def get_logger(name: str) -> logging.Logger:
+            """Return a stdlib logger for ``name`` (compat stub for sparse UpstreamDrift)."""
             return logging.getLogger(name)
 
         def setup_logging() -> None:
-            return
+            """No-op when the real ``logging_config`` package is unavailable."""
+            return None
 
         _cfg.get_logger = get_logger
         _cfg.setup_logging = setup_logging
