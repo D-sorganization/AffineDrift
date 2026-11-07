@@ -102,8 +102,33 @@ def _glob_to_regex(pattern: str) -> re.Pattern[str]:
 @functools.lru_cache(maxsize=32)
 def load_render_rules(
     root: Path = ROOT,
-) -> tuple[tuple[re.Pattern[str], ...], tuple[re.Pattern[str], ...]]:
-    """Load include and exclude regexes from _quarto.yml, falling back to ROOT or defaults."""
+) -> tuple[tuple[re.Pattern[str], ...], tuple[re.Pattern[str], ...], frozenset[str]]:
+    """Load include/exclude regexes and literal exclusion paths from _quarto.yml.
+
+    Literal exclusions are ``!path`` rules with no glob characters (``*``, ``?``,
+    ``**``). Those documents are intentionally not part of the published site; pins
+    inside them must be ignored for reconciliation so drafts can keep citation
+    links without implying a public route (#5362, #4145).
+    """
+    raw_rules = _load_render_rules_list(root)
+
+    include_patterns: list[re.Pattern[str]] = []
+    exclude_patterns: list[re.Pattern[str]] = []
+    literal_excludes: set[str] = set()
+    for rule in raw_rules:
+        if rule.startswith("!"):
+            body = rule[1:]
+            exclude_patterns.append(_glob_to_regex(body))
+            if "*" not in body and "?" not in body:
+                literal_excludes.add(body)
+        else:
+            include_patterns.append(_glob_to_regex(rule))
+    return tuple(include_patterns), tuple(exclude_patterns), frozenset(literal_excludes)
+
+
+@functools.lru_cache(maxsize=32)
+def _load_render_rules_list(root: Path) -> tuple[str, ...]:
+    """Return the ``project.render`` list from _quarto.yml, else defaults."""
     quarto_yml = root / "_quarto.yml"
     if not quarto_yml.is_file() and root != ROOT:
         quarto_yml = ROOT / "_quarto.yml"
@@ -119,15 +144,7 @@ def load_render_rules(
             pass
     if not raw_rules:
         raw_rules = list(DEFAULT_RENDER_RULES)
-
-    include_patterns: list[re.Pattern[str]] = []
-    exclude_patterns: list[re.Pattern[str]] = []
-    for rule in raw_rules:
-        if rule.startswith("!"):
-            exclude_patterns.append(_glob_to_regex(rule[1:]))
-        else:
-            include_patterns.append(_glob_to_regex(rule))
-    return tuple(include_patterns), tuple(exclude_patterns)
+    return tuple(raw_rules)
 
 
 def _is_scannable(path: Path) -> bool:
@@ -159,7 +176,7 @@ def _is_site_source(path: Path, root: Path = ROOT) -> bool:
         return False
     if any(part.startswith("_") for part in rel_path.parts):
         return False
-    include_patterns, exclude_patterns = load_render_rules(root)
+    include_patterns, exclude_patterns, _literal = load_render_rules(root)
     if any(rx.match(posix) for rx in exclude_patterns):
         return False
     return any(rx.match(posix) for rx in include_patterns)
@@ -241,19 +258,23 @@ def scan_site_pins(root: Path) -> tuple[dict[str, list[str]], list[str]]:
     """Return {full_sha: [routes]} and findings for abbreviated SHAs."""
     pins: dict[str, set[str]] = {}
     findings: list[str] = []
+    _, _, literal_excludes = load_render_rules(root)
     sources = site_sources(root, include_partials=True)
     parents = include_parents(root, sources)
     for source in sources:
+        posix = source.as_posix()
         text = (root / source).read_text(encoding="utf-8", errors="replace")
         for match in LINK_PATTERN.finditer(text):
             sha = match.group(1).lower()
             if not FULL_SHA.fullmatch(sha):
-                findings.append(f"{source.as_posix()}: abbreviated UpstreamDrift pin {sha}")
+                findings.append(f"{posix}: abbreviated UpstreamDrift pin {sha}")
                 continue
             routes = routes_for(source, parents, root=root)
+            if not routes and posix in literal_excludes:
+                continue
             if not routes:
                 findings.append(
-                    f"{source.as_posix()}: UpstreamDrift pin {sha[:8]} sits in a partial that "
+                    f"{posix}: UpstreamDrift pin {sha[:8]} sits in a partial that "
                     "no rendered page includes"
                 )
                 continue
