@@ -1,0 +1,30 @@
+---
+title: "Motion Measurement, Part 1: Representing Orientation"
+description: "Segment frames, Cardan sequences, composition, quaternions, and screw axes in human motion capture."
+draft: true
+listing: false
+---
+
+## Overview
+
+Measuring human segment orientation begins with physical sensors—optical markers or inertial measurement units (IMUs)—and ends with mathematical representations. Core representations (rotation matrices, Euler angles, gimbal lock, axis-angle, unit quaternions, and double cover) are established in [Rotation Representations: A Cross-Reference Guide](../../../articles/rotation-representations-reference.qmd). This article focuses on measurement realities, sequence dependence, and finite screw axes. IMU sensor fusion and magnetic drift are omitted per the article scope (PLAN.md).
+
+## 1.1 Frames and Measurement
+
+Human movement analysis tracks rigid segments (pelvis, thorax, limbs) by establishing anatomical or technical coordinate frames (Figure F1). An anatomical frame is defined by palpable bony landmarks (e.g., ASIS, PSIS, C7, suprasternal notch), whereas a technical frame is defined by marker clusters or sensor cases. Two laboratories tracking the "same" subject can report markedly different joint angles if marker placement, anatomical landmark calibration, or frame alignment differ by even a few millimetres.
+
+## 1.2 Cardan and Euler Sequences
+
+Cardan sequences (permutations of XYZ) parameterise orientation into three successive rotations about moving axes. As covered in [Rotation Representations](../../../articles/rotation-representations-reference.qmd), intrinsic ZYX and XYZ sequences produce fundamentally different angle trajectories for identical three-dimensional rotations (Figure F2). Synthetic tests in `motion_measurement_fixtures.py` show angle discrepancies exceeding 0.1 rad for the same orientation. Near a middle angle of $\pm 90^\circ$, gimbal lock destroys the third degree of freedom and amplifies noise.
+
+## 1.3 Matrices and Composition
+
+Direction cosine matrices $R \in SO(3)$ describe active rotations of column vectors with $R^TR=I$ and $\det R = 1$. When composing segment transforms across a kinematic chain, order matters: $R_{AC} = R_{AB} R_{BC}$. Measurement noise corrupts matrix orthogonality; numerical re-orthogonalisation via singular value decomposition (SVD) recovers the nearest proper rotation matrix without arbitrary distortion.
+
+## 1.4 Axis-Angle and Quaternions
+
+A rotation vector $\rho = \theta n$ and its unit quaternion equivalent $q = (\cos(\theta/2), n\sin(\theta/2))$ avoid coordinate singularities (Figure F3). Because $q$ and $-q$ represent the same physical rotation (the double cover $S^3 \to SO(3)$), time-series of unit quaternions require hemisphere continuity unwrapping: consecutive quaternions must satisfy $q_k \cdot q_{k-1} \ge 0$ before applying digital filters.
+
+## 1.5 Screw Axis
+
+By Chasles' theorem, any spatial displacement decomposes into a translation along and a rotation about a unique directed line: the finite helical axis (Figure F4). Woltring et al. (1985, *J Biomech* 18(5):379-389) showed that estimating helical axis orientation from noisy landmarks is ill-conditioned at small rotation magnitudes: direction error scales roughly as $\sigma / \Delta\theta$. For moving axes on coning trajectories, finite-difference step size creates a U-shaped total error curve balancing noise amplification against kinematic truncation bias.
