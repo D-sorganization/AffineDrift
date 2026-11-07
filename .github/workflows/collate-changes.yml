@@ -66,7 +66,7 @@ jobs:
           path: .rm-tools
           token: ${{ steps.app-token.outputs.token }}
           # Cone mode (#9507): non-cone leaves core.sparseCheckout set in
-          # reused runner workspaces. Only scripts/automerge_guard.py is used.
+          # reused runner workspaces. scripts/pr_update_guard.py and scripts/automerge_guard.py are used.
           sparse-checkout: scripts
 
       - name: Isolate Python tool cache (prevent shared-cache races)
@@ -128,6 +128,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           BRANCH: bot/collate-changes
           REPO_SLUG: ${{ github.repository }}
+          UPDATE_GUARD: .rm-tools/scripts/pr_update_guard.py
           GUARD: .rm-tools/scripts/automerge_guard.py
         shell: bash
         run: |
@@ -138,11 +139,11 @@ jobs:
           fi
           OWNER="${REPO_SLUG%%/*}"
           PR_NUM=$(gh api "repos/$REPO_SLUG/pulls?state=open&head=$OWNER:$BRANCH" --jq '.[0].number // empty')
-          # A reviewer's hold must survive: a push newer than their disarm
-          # would make the guard treat the hold as superseded and re-arm.
-          if [ -n "$PR_NUM" ] && ! python3 "$GUARD" "$REPO_SLUG" "$PR_NUM"; then
-            echo "::warning::Collation PR #$PR_NUM is held by a reviewer; leaving it untouched."
-            echo "OUTCOME=collation PR #$PR_NUM held; not updated" >> "$GITHUB_ENV"
+          # A queued, held, or unverified PR cannot safely be rewritten: its
+          # current head may be part of merge-queue validation.
+          if [ -n "$PR_NUM" ] && ! python3 "$UPDATE_GUARD" "$REPO_SLUG" "$PR_NUM"; then
+            echo "::warning::Collation PR #$PR_NUM is not editable; update deferred (queued, held, or status unavailable)."
+            echo "OUTCOME=collation PR #$PR_NUM not editable; update deferred" >> "$GITHUB_ENV"
             exit 0
           fi
           git config user.name "github-actions[bot]"
