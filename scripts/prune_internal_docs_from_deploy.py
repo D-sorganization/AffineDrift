@@ -23,6 +23,8 @@ logger = logging.getLogger(__name__)
 INTERNAL_DEPLOY_DIRECTORIES = (
     Path("articles/tangent-hyperplane-contraction"),
     Path("articles/tangent-hyperplane-articles/Drafts_Original_Articles"),
+    Path("docs/development"),
+    Path("research"),
 )
 INTERNAL_DEPLOY_FILES = (
     Path("articles/tangent-hyperplane-articles/Tangent_Hyperplanes.html"),

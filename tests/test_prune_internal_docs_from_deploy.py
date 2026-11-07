@@ -32,8 +32,10 @@ def test_prune_internal_deploy_artifacts_removes_excluded_html_trees(tmp_path: P
     public = docs / "articles/theory-part1.html"
     draft = docs / "articles/tangent-hyperplane-articles/Drafts_Original_Articles/draft.html"
     retired = docs / "articles/tangent-hyperplane-contraction/index.html"
+    dev_critique = docs / "docs/development/motion-measurement/critiques/mm5-panel-review.html"
+    research_critique = docs / "research/motion-measurement/critiques/mm5-panel-review.html"
     wrist_claude = docs / "content/wrist-as-universal-joint/Wrist_Universal_Claude.html"
-    for path in (public, draft, retired, wrist_claude):
+    for path in (public, draft, retired, dev_critique, research_critique, wrist_claude):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("<h1>Page</h1>", encoding="utf-8")
 
@@ -42,10 +44,13 @@ def test_prune_internal_deploy_artifacts_removes_excluded_html_trees(tmp_path: P
     assert public.is_file()
     assert not draft.exists()
     assert not retired.exists()
+    assert not dev_critique.exists()
+    assert not research_critique.exists()
     assert not wrist_claude.exists()
     assert {path.name for path in deleted} == {
         "draft.html",
         "index.html",
+        "mm5-panel-review.html",
         "Wrist_Universal_Claude.html",
     }
 
