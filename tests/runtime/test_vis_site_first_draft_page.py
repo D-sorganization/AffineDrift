@@ -22,7 +22,7 @@ from pathlib import Path
 from scripts import check_figure_projection_records as gate
 from src.tools.site_page_scan import parse_front_matter
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PAGE = ROOT / "pages" / "ud-render-draft.qmd"
 UD_COMMIT_SHORT = "b753c279"
 UD_RUN_SHORT = "44c11639c1f3"
