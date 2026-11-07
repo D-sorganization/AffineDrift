@@ -19,9 +19,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = REPO_ROOT / ".github" / "workflows"
 CONFLICT_DISARM = WORKFLOWS / "conflict-disarm.yml"
 INTERNAL_PREFIX = "D-sorganization/Repository_Management/.github/workflows/"
-# RM #2427: report-only PR body lint; pinned SHA, no PR-head checkout in caller.
+# RM #2427: PR body lint; pinned SHA, no PR-head checkout in caller.
 ALLOWED_RM_REUSABLE_PR_BODY_LINT = (
-    f"{INTERNAL_PREFIX}reusable-pr-body-lint.yml@" "d3c5ff3fcb21e15997ca8668b8c9278e2e25dcff"
+    f"{INTERNAL_PREFIX}reusable-pr-body-lint.yml@" "3b5e9f54febbd730bc2a650dc9193d26922ff49f"
 )
 FLEET_WORKFLOWS_CONFLICT_DISARM = (
     "D-sorganization/fleet-workflows/.github/workflows/reusable-conflict-disarm.yml"
