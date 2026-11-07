@@ -34,7 +34,7 @@ KWARG = re.compile(r'(\w+)="([^"]*)"')
 def _embed_kwargs() -> dict[str, str]:
     assert PAGE.is_file(), f"{PAGE} does not exist"
     shortcodes = re.findall(r"\{\{<\s*vis-video\b(.*?)>\}\}", PAGE.read_text(encoding="utf-8"))
-    assert len(shortcodes) == 1, f"expected exactly 1 vis-video embed, got {len(shortcodes)}"
+    assert len(shortcodes) == 1, f"expected 1 vis-video embed, got {len(shortcodes)}"
     return dict(KWARG.findall(shortcodes[0]))
 
 
@@ -47,38 +47,33 @@ def test_page_is_an_unlisted_draft() -> None:
 
 def test_page_has_approval_and_assessment_board_banner() -> None:
     text = PAGE.read_text(encoding="utf-8")
-    assert "Dieter's approval" in text, "draft page must state Dieter's approval is required"
-    assert (
-        "Assessment Board gate" in text
-    ), "draft page must state Assessment Board gate is required"
+    assert "Dieter's approval" in text, "Dieter's approval is required"
+    assert "Assessment Board gate" in text, "Assessment Board gate is required"
 
 
 def test_page_embeds_vis_video_with_resolving_media() -> None:
     kwargs = _embed_kwargs()
     for key in ("src", "poster", "captions"):
-        assert key in kwargs, f"vis-video missing required attribute: {key}"
+        assert key in kwargs, f"missing vis-video attribute: {key}"
         media_path = (PAGE.parent / kwargs[key]).resolve()
-        assert media_path.is_file(), f"vis-video {key} '{kwargs[key]}' does not resolve to a file"
+        assert media_path.is_file(), f"{key} '{kwargs[key]}' not found"
 
 
 def test_provenance_caption_and_projection_record() -> None:
     kwargs = _embed_kwargs()
-    assert (
-        kwargs.get("record") == FIGURE_MAP_RECORD
-    ), f"record must be {FIGURE_MAP_RECORD}, got {kwargs.get('record')}"
-    assert (ROOT / kwargs["record"]).is_file(), f"record file {kwargs['record']} must exist"
+    rec = kwargs.get("record")
+    assert rec == FIGURE_MAP_RECORD, f"record must be {FIGURE_MAP_RECORD}, got {rec}"
+    assert (ROOT / kwargs["record"]).is_file(), f"record file {kwargs['record']} not found"
 
     caption = kwargs.get("caption", "")
-    assert UD_COMMIT_SHORT in caption, f"caption must cite UD commit {UD_COMMIT_SHORT}"
-    assert UD_RUN_SHORT in caption, f"caption must cite UD run {UD_RUN_SHORT}"
-    assert UD_MODEL in caption, f"caption must cite UD model {UD_MODEL}"
+    assert UD_COMMIT_SHORT in caption, f"must cite UD commit {UD_COMMIT_SHORT}"
+    assert UD_RUN_SHORT in caption, f"must cite UD run {UD_RUN_SHORT}"
+    assert UD_MODEL in caption, f"must cite UD model {UD_MODEL}"
     assert "#5423" in caption, "caption must reference the #5423 audit"
 
 
 def test_embedded_figures_pass_projection_gate() -> None:
     text = PAGE.read_text(encoding="utf-8")
-    assert "fig_ztcf_drift_control.svg" in text, "page should reference the traced top pick figure"
+    assert "fig_ztcf_drift_control.svg" in text, "must reference traced top pick figure"
     figs = gate.embedded_figures(ROOT, PAGE)
-    assert any(
-        "fig_ztcf_drift_control.svg" in f for f in figs
-    ), f"fig_ztcf_drift_control.svg must be embedded; got {figs}"
+    assert any("fig_ztcf_drift_control.svg" in f for f in figs), "figure must be embedded"
