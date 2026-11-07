@@ -1,7 +1,6 @@
 ---
 issue: 5176
 summary: "Reconcile launch-outline candidates with pending rights-ledger rows"
-dl_state: "in_review"
 branch: "codex/5176-outline-ledger-candidates"
 owner: "codex"
 next_step: "Review the planning inventory; exact versions and rights decisions remain owner-gated"
