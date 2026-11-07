@@ -930,10 +930,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5426
 - **Branch:** merged via #5468
-- **PR:** #5468, #5471
+- **PR:** #5468, #5471, #5540
 - **Paths:** see #5468
 - **Started:** 2026-11-05
-- **Last verified:** 2026-11-05 (`ad26a4ac`; collated from changes/5426-draft-page-support-vis-video-reaches-sha.md)
+- **Last verified:** 2026-11-07 (`da6d08ed`; collated from changes/5426-vis-site-first-draft-page.md)
 - **Summary:** Add the VIS-SITE-4 draft page embedding the AD-generated ZTCF explainer through vis-video, honestly labelled as not a traced UpstreamDrift render; allow leading ../ media paths in the shortcode
 - **Next step:** Shipped in PR #5468.
 
