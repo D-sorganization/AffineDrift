@@ -787,10 +787,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5476
 - **Branch:** merged via #5518
-- **PR:** #5518
+- **PR:** #5518, #5538
 - **Paths:** articles/slack-takeup-identifiability.qmd _quarto.yml scripts/check_companion_pins.py tests/test_companion_pins.py tests/test_slack_takeup_article.py
 - **Started:** 2026-11-07
-- **Last verified:** 2026-11-07 (`23e831b4`; collated from changes/5476-slack-takeup-feynman.md)
+- **Last verified:** 2026-11-07 (`22add9c7`; collated from changes/5476-slack-takeup-feynman-corrections.md)
 - **Summary:** Slack Take-Up witness Feynman/Karl pass as offline draft (#5518)
 - **Next step:** Shipped in PR #5518.
 
