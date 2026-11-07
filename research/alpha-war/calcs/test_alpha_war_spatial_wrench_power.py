@@ -26,6 +26,7 @@ class TestAlphaWarSpatialWrenchPower(unittest.TestCase):
     """Lock dual wrench/twist power pairing and Poinsot transport."""
 
     def test_issue_5459_concrete_triple_product_regression(self) -> None:
+        """Lock the concrete triple-product values from issue #5459."""
         r = np.array([1.0, 0.0, 0.0])
         force = np.array([0.0, 1.0, 0.0])
         omega = np.array([0.0, 0.0, 1.0])
@@ -33,6 +34,7 @@ class TestAlphaWarSpatialWrenchPower(unittest.TestCase):
         self.assertAlmostEqual(triple_product_lhs(r, force, omega), 1.0)
 
     def test_moment_transport_matches_poinsot(self) -> None:
+        """Transported wrench moment matches the Poinsot formula."""
         r_ba = np.array([0.12, -0.03, 0.08])
         force = np.array([4.0, -1.5, 2.0])
         moment_a = np.array([0.5, 1.2, -0.4])
@@ -43,6 +45,7 @@ class TestAlphaWarSpatialWrenchPower(unittest.TestCase):
         np.testing.assert_allclose(wrench_b[3:6], moment_b)
 
     def test_power_invariant_under_change_of_reference_point(self) -> None:
+        """Mechanical power is unchanged after co-adjoint wrench and adjoint twist transport."""
         rng = np.random.default_rng(5459)
         for _ in range(32):
             force = rng.normal(size=3)
