@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-07 | #5534 | MM-6: Quarto render verification with resolving citations and F1-F8 figures |
 | 2026-11-07 | #5533 | Use pr_update_guard preflight in collate-changes.yml so dirty collation PRs can rebuild |
 | 2026-11-07 | #5524 | Document redirect for unpublished Slack Take-Up article URL (#5362, deploy URL stability) |
 | 2026-11-07 | #5511 | Extend deploy-pages timeout for large site sync (fleet-main-health) |
