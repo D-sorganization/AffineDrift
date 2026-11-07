@@ -35,6 +35,36 @@ LEGACY_MATH_POLYFILL = re.compile(
     r"polyfill\.min\.js\?features=es6[\"']></script>\s*",
     re.IGNORECASE,
 )
+SITEMAP_URL_BLOCK = re.compile(
+    r"\s*<url>\s*<loc>https?://[^/<]+/(?P<rel_path>[^<]+)</loc>.*?</url>",
+    re.DOTALL,
+)
+
+
+def _is_internal_route(rel_path: str) -> bool:
+    normalized = rel_path.lstrip("/")
+    if any(normalized == f.as_posix() for f in INTERNAL_DEPLOY_FILES):
+        return True
+    return any(
+        normalized == d.as_posix() or normalized.startswith(f"{d.as_posix()}/")
+        for d in INTERNAL_DEPLOY_DIRECTORIES
+    )
+
+
+def strip_internal_sitemap_entries(docs_dir: Path) -> bool:
+    """Remove pruned internal routes from ``sitemap.xml`` if present."""
+    sitemap = docs_dir / "sitemap.xml"
+    if not sitemap.is_file():
+        return False
+    original = sitemap.read_text(encoding="utf-8")
+    sanitized = SITEMAP_URL_BLOCK.sub(
+        lambda m: "" if _is_internal_route(m.group("rel_path")) else m.group(0),
+        original,
+    )
+    if sanitized != original:
+        sitemap.write_text(sanitized, encoding="utf-8")
+        return True
+    return False
 
 
 def strip_legacy_math_polyfill(docs_dir: Path) -> list[Path]:
@@ -85,6 +115,7 @@ def prune_internal_deploy_artifacts(docs_dir: Path) -> list[Path]:
         shutil.rmtree(target_dir)
         deleted.extend(files)
 
+    strip_internal_sitemap_entries(docs_dir)
     return deleted
 
 
