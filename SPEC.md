@@ -232,6 +232,30 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-07 | #5533 | Use pr_update_guard preflight in collate-changes.yml so dirty collation PRs can rebuild |
+| 2026-11-07 | #5524 | Document redirect for unpublished Slack Take-Up article URL (#5362, deploy URL stability) |
+| 2026-11-07 | #5511 | Extend deploy-pages timeout for large site sync (fleet-main-health) |
+| 2026-11-07 | #5518 | Slack Take-Up witness Feynman/Karl pass as offline draft (#5518) |
+| 2026-11-07 | #5492 | Lay review fixes for Drift vs Control article and ZTCF draft page |
+| 2026-11-07 | #5525 | Feynman and Karl accuracy and prose corrections for Drift Is the Past |
+| 2026-11-07 | #5491 | Correct Alpha War koike2019joint bibliography metadata |
+| 2026-11-07 | #5498 | Align proximal-distal article ZVCF prose with NOTATION (#5498) |
+| 2026-11-07 | #5506 | Align Physics of Golf ch06 ZVCF with NOTATION (control operand) |
+| 2026-11-07 | #5474 | Draft 3D golfer viewer: vanilla-JS perspective SVG viewer playing a small synthetic stick-figure clip, offline, no new dependencies |
+| 2026-11-07 | #5527 | MM-5: review panel critique across math, measurement, numerical, and pedagogy seats with draft refinements |
+| 2026-11-07 | #5515 | MM-4: draft Part 1 and Part 2 for motion measurement with metric convention cards |
+| 2026-11-07 | #5512 | MM-3: Figures F1-F8 and small interactive companion for motion measurement |
+| 2026-11-07 | #5490 | MM-2: seeded analytic rotation fixtures and calculations for the motion-measurement article (tests first) |
+| 2026-11-07 | #5479 | Wire build manifest and CycloneDX SBOM into Deploy Website; publish as a 90-day workflow artifact |
+| 2026-11-07 | #5495 | Retarget Slack Take-Up witness article DL from #5136 (#5282 option a) |
+| 2026-11-07 | #5520 | Add validated three-run Lighthouse math-cost summaries and diagnostic baseline receipts |
+| 2026-11-07 | #5521 | Reconcile launch-outline candidates with pending rights-ledger rows |
+| 2026-11-07 | #5516 | Add humanoid phase-0 index and upstream reuse map contract tests |
+| 2026-11-07 | #5484 | Add the UpstreamDrift reuse map with contract-validation checklists (phase 0, docs only) |
+| 2026-11-07 | #5523 | Leave modified keyboard shortcuts untouched by lazy search |
+| 2026-11-07 | #5362 | Unpublish Slack Take-Up witness article pending publication gate (#5136) |
+| 2026-11-07 | #5505 | Grandfather evidence-rung qualified token in drift lay guide front matter |
+| 2026-11-07 | #5522 | Bump PR body lint caller pin to 3b5e9f54febbd730bc2a650dc9193d26922ff49f and drop report_only |
 | 2026-11-06 | #5482 | MM-1: motion-measurement article plan, verified references and registry mapping (plan only, no publication) |
 | 2026-11-06 | #5486 | Measure math-rendering cost on Theory Part 1 from the nightly Lighthouse report (script, test, evidence doc; no SSR prototype yet) |
 | 2026-11-06 | #5477 | SBOM generator: scripts/write_sbom.py emits a deterministic CycloneDX 1.5 JSON SBOM from requirements-docker.lock and package-lock.json, with --check for staleness (publication and deploy wiring remain) |
