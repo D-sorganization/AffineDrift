@@ -742,6 +742,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5414 · MM-6: Quarto Render Verification With Resolving Citations and F1-F8 Figures
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5414
+- **Branch:** merged via #5534
+- **PR:** #5534
+- **Paths:** see #5534
+- **Started:** 2026-11-07
+- **Last verified:** 2026-11-07 (`a36721df`; collated from changes/5414-mm6-quarto-render.md)
+- **Summary:** MM-6: Quarto render verification with resolving citations and F1-F8 figures
+- **Next step:** Shipped in PR #5534.
+
 ### DL-#5532 · Use Pr_Update_Guard Preflight in collate-changes.yml so Dirty Collation PRs Can Rebuild
 
 - **State:** shipped
