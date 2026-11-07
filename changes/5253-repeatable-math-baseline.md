@@ -1,7 +1,6 @@
 ---
 issue: 5253
 summary: "Add validated three-run Lighthouse math-cost summaries and diagnostic baseline receipts"
-dl_state: "in_review"
 branch: "codex/5253-repeatable-math-baseline"
 owner: "codex"
 next_step: "Review the baseline slice; retain SSR and pinned local-build comparison as open acceptance"
