@@ -7,7 +7,7 @@ listing: false
 
 ## Overview
 
-Part 2 examines the transformation of measured orientation into joint kinematics and velocity metrics. Foundations of rotation algebra are referenced from [Rotation Representations: A Cross-Reference Guide](../../../articles/rotation-representations-reference.qmd). Here we analyze Joint Coordinate Systems (JCS), Poisson angular velocity estimation, filtering artifacts, golf X-factor definitions, and kinematic sequence timing.
+Part 2 examines the transformation of measured orientation into joint kinematics and velocity metrics. Foundations of rotation algebra are referenced from [Rotation Representations: A Cross-Reference Guide](../../../articles/rotation-representations-reference.qmd), with interactive 3D demonstrations accessible in the [Interactive Companion](interactive_companion.html). Here we analyze Joint Coordinate Systems (JCS), Poisson angular velocity estimation, filtering artifacts, golf X-factor definitions, and kinematic sequence timing.
 
 ## 2.1 Joint Coordinate Systems
 
@@ -15,7 +15,7 @@ Clinical and biomechanical standards describe relative joint motion using Joint 
 
 ## 2.2 Angular Velocity
 
-Segment angular velocity $\omega$ represents an instantaneous vector in $\mathbb{R}^3$, distinct from rates of Euler angles (Figure F6). It is related to rotation matrix derivatives via Poisson's equation $\dot{R} = [\omega]_\times R$ (global) or $\dot{R} = R [\omega_{\mathrm{local}}]_\times$ (segment-local). As demonstrated in `motion_measurement_fixtures.py`, reading Euler angle differences directly as angular velocity components introduces substantial errors (>0.1 rad/s on smooth synthetic paths), amplifying dramatically as the middle angle approaches gimbal lock. Robust differentiation calculates $\omega$ from finite orientation differences: $\omega \approx \mathrm{rotvec}(R_{k+1} R_{k-1}^T) / (2 \Delta t)$.
+Segment angular velocity $\omega$ represents an instantaneous vector in $\mathbb{R}^3$, distinct from rates of Euler angles (Figure F6). It is related to rotation matrix derivatives via Poisson's equation $\dot{R} = [\omega]_\times R$ (global spatial) or $\dot{R} = R [\omega_{\mathrm{local}}]_\times$ (segment-local), where $[\omega]_\times \in \mathfrak{so}(3)$ is the skew-symmetric cross-product matrix. As demonstrated in `motion_measurement_fixtures.py`, reading Euler angle differences directly as angular velocity components introduces substantial errors (>0.1 rad/s on smooth synthetic paths), amplifying dramatically as the middle angle approaches gimbal lock. Robust differentiation calculates $\omega$ from finite orientation differences: $\omega \approx \mathrm{rotvec}(R_{k+1} R_{k-1}^T) / (2 \Delta t)$.
 
 ## 2.3 Noise and Filtering
 
@@ -29,7 +29,7 @@ X-factor measures the relative axial orientation between thorax and pelvis (Figu
 3. *Position proxy*: Linear distances between shoulder and hip markers.
 4. *Legacy Euler yaw*: Difference of independent global heading angles.
 
-When the torso flexes or bends laterally, 2D line projections introduce substantial geometric crosstalk, whereas 3D JCS axial rotation isolates torsion from trunk tilt and lateral bend.
+When the torso flexes or bends laterally, 2D line projections introduce substantial geometric crosstalk (distorting relative turn by 10°–15° during transition and impact), whereas 3D JCS axial rotation isolates torsion from trunk tilt and lateral bend. Furthermore, commercial launch monitor tracking (e.g., TrackMan horizontal line-of-sight) differs systematically from biomechanical systems (AMM, ISB JCS) that measure spinal-axis torsion.
 
 ## 2.5 Kinematic Sequence
 
@@ -53,7 +53,7 @@ Every metric below carries a formal 7-field convention specification.
 ### Convention Card 1: X-factor variants
 - **Frame**: Thorax segment frame relative to pelvis segment frame (or each relative to laboratory global frame).
 - **Axes**: ISB trunk coordinate system; Z longitudinal (spine), Y lateral, X anterior.
-- **Sequence**: Intrinsic ZXY Cardan sequence (JCS axial) vs horizontal plane projection (line turn) vs independent ZYX yaw.
+- **Sequence**: Intrinsic ZXY Cardan sequence (JCS axial) vs horizontal plane projection (line turn, subject to 10°–15° tilt crosstalk) vs independent ZYX yaw.
 - **Sign**: Positive indicates thorax rotated further clockwise/closed to pelvis (backswing stretch in right-handed swing).
 - **Velocity component**: Relative axial angular velocity about thorax longitudinal axis.
 - **Events**: Address (ADD), Top of Backswing (TB), Maximum Stretch (MS), Impact (IMP).
@@ -70,7 +70,7 @@ Every metric below carries a formal 7-field convention specification.
 
 ### Convention Card 3: Shoulder and pelvis turn
 - **Frame**: Segment anatomical frame (thorax or pelvis) relative to laboratory global frame.
-- **Axes**: Global vertical $Z_{\mathrm{global}}$ for heading, or segment longitudinal axis for axial rotation.
+- **Axes**: Global vertical $Z_{\mathrm{global}}$ for heading (TrackMan style), or segment longitudinal axis for axial rotation (AMM/ISB style).
 - **Sequence**: Intrinsic ZYX Euler angles (heading, tilt, roll) or projected line angle.
 - **Sign**: Positive counter-clockwise viewed from above (closed backswing for right-handed golfer).
 - **Velocity component**: Angular velocity about global vertical axis or segment anatomical axis.

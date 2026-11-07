@@ -7,11 +7,11 @@ listing: false
 
 ## Overview
 
-Measuring human segment orientation begins with physical sensors—optical markers or inertial measurement units (IMUs)—and ends with mathematical representations. Core representations (rotation matrices, Euler angles, gimbal lock, axis-angle, unit quaternions, and double cover) are established in [Rotation Representations: A Cross-Reference Guide](../../../articles/rotation-representations-reference.qmd). This article focuses on measurement realities, sequence dependence, and finite screw axes. IMU sensor fusion and magnetic drift are omitted per the article scope (PLAN.md).
+Measuring human segment orientation begins with physical sensors—optical markers or inertial measurement units (IMUs)—and ends with mathematical representations. Core representations (rotation matrices, Euler angles, gimbal lock, axis-angle, unit quaternions, and double cover) are established in [Rotation Representations: A Cross-Reference Guide](../../../articles/rotation-representations-reference.qmd). This article focuses on measurement realities, sequence dependence, and finite screw axes. IMU sensor fusion and magnetic drift are omitted per the article scope (PLAN.md). Readers can interactively inspect 3D sequence dependence and gimbal lock in the [Interactive Companion](interactive_companion.html).
 
 ## 1.1 Frames and Measurement
 
-Human movement analysis tracks rigid segments (pelvis, thorax, limbs) by establishing anatomical or technical coordinate frames (Figure F1). An anatomical frame is defined by palpable bony landmarks (e.g., ASIS, PSIS, C7, suprasternal notch), whereas a technical frame is defined by marker clusters or sensor cases. Two laboratories tracking the "same" subject can report markedly different joint angles if marker placement, anatomical landmark calibration, or frame alignment differ by even a few millimetres.
+Human movement analysis tracks rigid segments (pelvis, thorax, limbs) by establishing anatomical or technical coordinate frames (Figure F1). All segment and laboratory systems follow the right-handed Cartesian convention ($X \times Y = Z$), ensuring that positive rotations obey the right-hand grip rule. An anatomical frame is defined by palpable bony landmarks (e.g., ASIS, PSIS, C7, suprasternal notch), whereas a technical frame is defined by marker clusters or sensor cases. Two laboratories tracking the "same" subject can report markedly different joint angles if marker placement, anatomical landmark calibration, or frame alignment differ by even a few millimetres.
 
 ## 1.2 Cardan and Euler Sequences
 
@@ -23,7 +23,7 @@ Direction cosine matrices $R \in SO(3)$ describe active rotations of column vect
 
 ## 1.4 Axis-Angle and Quaternions
 
-A rotation vector $\rho = \theta n$ and its unit quaternion equivalent $q = (\cos(\theta/2), n\sin(\theta/2))$ avoid coordinate singularities (Figure F3). Because $q$ and $-q$ represent the same physical rotation (the double cover $S^3 \to SO(3)$), time-series of unit quaternions require hemisphere continuity unwrapping: consecutive quaternions must satisfy $q_k \cdot q_{k-1} \ge 0$ before applying digital filters.
+A rotation vector $\rho = \theta n$ and its unit quaternion equivalent $q = (\cos(\theta/2), n\sin(\theta/2))$ avoid coordinate singularities (Figure F3). Because $q$ and $-q$ represent the same physical rotation (the double cover $S^3 \to SO(3)$), time-series of unit quaternions require hemisphere continuity unwrapping: consecutive quaternions must satisfy $q_k \cdot q_{k-1} \ge 0$ before applying digital filters. Intuitively, a continuous $360^\circ$ spatial rotation around an axis takes $q$ to $-q$; a full $720^\circ$ rotation is required to return the unit quaternion to its identity state ($+1$). Without enforcing hemisphere sign-continuity, digital smoothing across an antipodal boundary causes artificial norm collapse.
 
 ## 1.5 Screw Axis
 
