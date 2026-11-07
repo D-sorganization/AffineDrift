@@ -16,7 +16,7 @@ evidence-rung: "manufactured-fixture"
 prerequisites:
   - "articles/after-one-solution-null-space-exploration.html"
 summary-plain: "When a train starts, the slack in each coupling is taken up one after another, starting at the engine. This page asks whether small gaps at the hands could show which hand is driving a golf club. In made-up computer models the answer is sometimes, but a small, unknown tightness at the start can fake the same pattern."
-abstract: "Two hands on one club form a closed chain (a loop of parts joined at both ends, here hand, club, hand), so a rigid model cannot say how the torque on the club is shared between them. This draft tests, on manufactured models only, whether the order and timing of slack take-up events supply the missing observations. A four-car train whose couplers start with slack recovers the driven end every time; started taut, it does not. A hand-club-hand chain recovers which hand supplies more torque above a pass bar the author set after seeing results only when gaps exist, no preload is present, the unknown side parameters (the nuisance ranges, such as gap sizes and starting positions) are bounded, and the classifier assumptions read fairly on held-out trials. An independent first-order representation has an exactly blind direction and an exact counterexample built from a solved starting position. Nothing here is a result about a golfer."
+abstract: "Two hands on one club form a closed chain (a loop of parts joined at both ends, here hand, club, hand), so a rigid model cannot say how the torque on the club is shared between them. This draft tests, on manufactured models only, whether the order and timing of slack take-up events supply the missing observations. A four-car train whose couplers start with slack recovers the driven end every time; started taut, it does not. A hand-club-hand chain recovers which hand supplies more torque above a pass bar (set by the author after seeing results) only when gaps exist, no preload is present, the unknown side parameters (the nuisance ranges, such as gap sizes and starting positions) are bounded, and the classifier assumptions read fairly on held-out trials. An independent first-order representation has an exactly blind direction and an exact counterexample built from a solved starting position. Nothing here is a result about a golfer."
 key-takeaways:
   - "In a one-ended train starting from rest with slack in its couplers, take-up order identifies the driven end; that is the analogy's positive control, not a result about hands."
   - "In these toy models, with both hands driving, the unknown starting slack of each hand enters the event times on the same footing as the torque split, so the split is not identifiable from event times alone."
@@ -34,6 +34,8 @@ caveats:
 changes:
   - date: "2026-10-24"
     description: "First draft for review (#5136), including the independent verification in PR #5140."
+  - date: "2026-11-01"
+    description: "Accuracy and review revisions (#5136)."
   - date: "2026-11-06"
     description: "Feynman/Karl copy pass (#5476): status note, abstract, unit count and prose nits."
 bibliography:
@@ -71,13 +73,13 @@ Here is the puzzle. A golfer holds the club with a lead hand (the top hand on th
 
 A railway review defines slack action as "the progressive increase or decrease of inter-wagon distance being propagated through the train", and describes a start from a compressed train in which the locomotive moves, takes up the slack to the first wagon, and the momentum "would progress along the train" [@wagner2021draftgear]. The order of those take-up events is a record of where the pull came from.
 
-A club held in two hands is different in one important way. Each hand applies a force and a couple to the club. A couple is a pure twist, like turning a key, with no push. The motion of the club fixes only the sum of all of these: the total push-and-twist, which engineers call the net wrench. Whatever part of the two hands' loads cancels on the club, such as the hands twisting against each other, leaves no trace in the club's motion. In the record (the project's earlier research), this cancelling set is the kernel of the grasp map $G$, the $6\times12$ matrix that turns the two hands' loads into the net wrench, and it has six dimensions (`UpstreamDrift:docs/research/loop_nullspace/loop_nullspace.tex` L524 at [`3fd2a59e`](https://github.com/D-sorganization/UpstreamDrift/blob/3fd2a59e390523169df846a3bbb395a6203c382c/docs/research/loop_nullspace/loop_nullspace.tex#L524)). Put plainly, there are six independent ways for the hands to fight each other without the club noticing. This page calls them the six hidden fighting directions.
+A club held in two hands is different in one important way. Each hand applies a force and a couple to the club. A couple is a pure twist, like turning a key, with no push. The motion of the club fixes only the sum of all of these: the total push-and-twist, which engineers call the net wrench. Whatever part of the two hands' loads cancels on the club, such as the hands twisting against each other, leaves no trace in the club's motion. In the record (the project's earlier research), this canceling set is the kernel of the grasp map $G$, the $6\times12$ matrix that turns the two hands' loads into the net wrench, and it has six dimensions (`UpstreamDrift:docs/research/loop_nullspace/loop_nullspace.tex` L524 at [`3fd2a59e`](https://github.com/D-sorganization/UpstreamDrift/blob/3fd2a59e390523169df846a3bbb395a6203c382c/docs/research/loop_nullspace/loop_nullspace.tex#L524)). Put plainly, there are six independent ways for the hands to fight each other without the club noticing. This page calls them the six hidden fighting directions.
 
 Picture two movers lifting a sofa. Watch the sofa rise and you know their total lift, but not who is doing more. They can also squeeze the sofa between them as hard as they like and it won't budge; that squeeze is one of the hidden fighting directions. The question here is the same one asked of the hands: if each mover's grip is a little loose, does the moment each grip bites tell you who is doing the work?
 
 So any calculation that works backwards from the club's motion has to pick a split between the hands, and the usual way to pick one is a choice, not a measurement. Working backwards from motion to the loads that caused it is called inverse dynamics; the split it must pick is called the allocation, and regularization means picking one split by a stated preference (for example, the smallest loads). In the record's words, closed-chain inverse dynamics is therefore underdetermined, and "Regularization selects an allocation consistent with a penalty; it does not measure the selected internal forces" ([Inverse Dynamics](inverse-dynamics.html), L54 at [`20584d47`](https://github.com/D-sorganization/AffineDrift/blob/20584d47702c3b6f50a14728efc2fe2855561241/articles/inverse-dynamics.qmd#L54)).
 
-So here is the hypothesis under test. It is a hypothesis, not a finding. Small gaps or compliances at the hands, wrists and forearms engage in an order and with latencies that act as extra observations, and so shrink the set of allocations that fit the data. Think of a loose spanner on a nut: it turns a little before it bites, and the moment it bites is something you could time. If the hypothesis were true, the clanks would tell us something the club's motion cannot. Nobody yet knows whether hands and wrists even have gaps like this. The hypothesis restates the open High critique `nullspace_interpretation` ([critiques/adjudication-summary.md](https://github.com/D-sorganization/AffineDrift/blob/20584d47702c3b6f50a14728efc2fe2855561241/critiques/adjudication-summary.md#L36) L36) as a computation.
+So here is the hypothesis under test. It is a hypothesis, not a finding. Small gaps or compliances at the hands, wrists and forearms engage in an order and with latencies that act as extra observations, and so shrink the set of allocations that fit the data. Think of a loose wrench on a nut: it turns a little before it bites, and the moment it bites is something you could time. If the hypothesis were true, the clanks would tell us something the club's motion cannot. Nobody yet knows whether hands and wrists even have gaps like this. The hypothesis restates the open, High-severity critique `nullspace_interpretation` ([critiques/adjudication-summary.md](https://github.com/D-sorganization/AffineDrift/blob/20584d47702c3b6f50a14728efc2fe2855561241/critiques/adjudication-summary.md#L36) L36) as a computation.
 
 Here is where we end up, so you can watch for it on the way. A one-ended train passes the test, as it should. Two hands driving one club pass only in tidy cases. An independent check finds an exact blind spot and an exact counterexample. It also corrected one of the proposal's expectations: the proposal's expected result was that event timing would see three of the six hidden fighting directions, the twist and bending couples, but in an idealized best case wrist slack could see five, two of them only faintly (@sec-toy-c).
 
@@ -209,7 +211,7 @@ An analogy is a tool, and every tool has edges. Here are six places where the tr
 3. **Memory and direction.** Real draft gear has "a hysteresis loop due to the different behaviour in loading and unloading" [@bosso2020longtrain], and backlash keeps memory ([Sources of Nonlinearity](sources-of-nonlinearity.html#backlash-mechanical-play)). The dead zones here are memoryless, so history effects are untested.
 4. **Two drivers.** The train has one engine. Two hands can push against each other with zero net load, so take-up can reflect the internal squeeze rather than its source (@sec-first-order).
 5. **Active elements.** Couplers are passive. Muscles change stiffness and preload within a swing, so the "slack" is itself controlled. That is not modeled here.
-6. **Bandwidth.** The take-up times quoted on this page, from the matched pair and the solved-start counterexample, lie between 5.84 ms and 22.03 ms; that range covers only the quoted times, not every simulated trial. Every take-up time quoted on this page falls after the earlier H10 model's 5 ms window (@sec-record) closes, so that model could not have seen any of the train-style take-up events in @sec-toy-a, and a test of the idea needs a recording window that runs well past its 5 ms. Impact contact is shorter than any neural correction ([Heavy Hit and Impact Coupling](technology-heavy-hit-impact-coupling.html#sec-impact-timescales)).
+6. **Bandwidth.** The take-up times quoted on this page, from the matched pair and the solved-start counterexample, lie between 5.84 ms and 22.03 ms; that range covers only the quoted times, not every simulated trial. Every take-up time quoted on this page falls after the earlier H10 model's 5 ms window (@sec-record) closes, so that model could not have seen any of the train-style take-up events in @sec-toy-a, and a test of the idea needs a recording window that runs well past its 5 ms. Impact contact is shorter than both the take-up clanks and any neural correction ([Heavy Hit and Impact Coupling](technology-heavy-hit-impact-coupling.html#sec-impact-timescales)).
 
 ## What Would Falsify the Idea, and What to Measure {#sec-falsifiers}
 
@@ -237,11 +239,6 @@ Measurement is worth planning only for the regimes that passed here. The plan wo
 - [The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html): the projector algebra behind @eq-nullity.
 - [Classic Sources of Nonlinearity in Mechanical Systems](sources-of-nonlinearity.html#deadzone): dead zones and backlash.
 
-## References {.unnumbered}
-
-::: {#refs}
-:::
-
 ## Appendix: The Record Statements in Full {#sec-record-table .appendix}
 
 | Statement | Status | Source (pinned) |
@@ -258,3 +255,8 @@ Measurement is worth planning only for the regimes that passed here. The plan wo
 | Synthetic bilateral allocation recovery under adverse perturbation is "Negative" | Modeled (limit) | [Bilateral Hand-Wrench Validation](../models/bilateral-hand-wrench-validation.html) L159 |
 
 : Record statements this page builds on. UpstreamDrift paths are under `docs/research/` at commit [`3fd2a59e`](https://github.com/D-sorganization/UpstreamDrift/tree/3fd2a59e390523169df846a3bbb395a6203c382c/docs/research); AffineDrift line numbers are at commit [`20584d47`](https://github.com/D-sorganization/AffineDrift/tree/20584d47702c3b6f50a14728efc2fe2855561241). {#tbl-record}
+
+## References {.unnumbered}
+
+::: {#refs}
+:::

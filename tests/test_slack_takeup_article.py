@@ -71,7 +71,7 @@ def test_article_quotes_only_generated_numbers() -> None:
     assert "open, **High**" in text or "High**-severity" in text
     assert "held-out trials" in text
     assert "## References" in text and "## Appendix" in text
-    assert text.find("## References") < text.find("## Appendix")
+    assert text.find("## Appendix") < text.find("## References")
     assert "each mover's grip" in text
     assert "summarize" in text
     missing = [
