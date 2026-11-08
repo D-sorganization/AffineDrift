@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-08 | #5548 | Clarify nested PDF/LFS intent and reproducible build-artifact retention policy |
 | 2026-11-08 | #5545 | retry live public site verification on transient subresource 5xx and remote cell failures |
 | 2026-11-07 | #5540 | VIS-SITE-4: first draft page with embedded UD render tracing the #5423 audit top pick through vis-video |
 | 2026-11-07 | #5538 | Feynman corrections for Slack Take-Up as a Witness |

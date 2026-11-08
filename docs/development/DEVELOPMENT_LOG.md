@@ -742,6 +742,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5543 · Clarify Nested PDF/LFS Intent and Reproducible Build-Artifact Retention Policy
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5543
+- **Branch:** agy/5543-nested-pdf-lfs-retention-policy
+- **PR:** #5548
+- **Paths:** see #5548
+- **Started:** 2026-11-08
+- **Last verified:** 2026-11-08 (`8b36a9c9`; collated from changes/5543-clarify-nested-pdf-lfs-intent-and-reprod.md)
+- **Summary:** Clarify nested PDF/LFS intent and reproducible build-artifact retention policy
+- **Next step:** Shipped in PR #5548.
+
 ### DL-#5544 · Retry Live Public Site Verification on Transient Subresource 5Xx and Remote Cell Failures
 
 - **State:** shipped
