@@ -742,6 +742,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5544 · Retry Live Public Site Verification on Transient Subresource 5Xx and Remote Cell Failures
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5544
+- **Branch:** merged via #5545
+- **PR:** #5545
+- **Paths:** see #5545
+- **Started:** 2026-11-08
+- **Last verified:** 2026-11-08 (`c049fc27`; collated from changes/5544-verify-public-site-retry.md)
+- **Summary:** retry live public site verification on transient subresource 5xx and remote cell failures
+- **Next step:** Shipped in PR #5545.
+
 ### DL-#5414 · MM-6: Quarto Render Verification With Resolving Citations and F1-F8 Figures
 
 - **State:** shipped
