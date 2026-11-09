@@ -11,6 +11,8 @@ from numpy.typing import NDArray
 type Vec2 = NDArray[np.float64]
 type Mat2 = NDArray[np.float64]
 
+GRAVITY_M_S2 = 9.81
+
 
 @dataclass(frozen=True)
 class DoublePendulumParams:
@@ -22,7 +24,7 @@ class DoublePendulumParams:
     r_g2: float
     i_g2: float
     m1: float
-    g: float = 9.81
+    g: float = GRAVITY_M_S2
 
     @property
     def j1(self) -> float:
