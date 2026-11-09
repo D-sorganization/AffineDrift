@@ -30,7 +30,10 @@ def transport_wrench(wrench_a: Wrench6, r_ba: Vec3) -> Wrench6:
 
 
 def mechanical_power(wrench: Wrench6, twist: Twist6) -> float:
-    """Mechanical power with force-first wrench ``[R; M]`` and twist ``[ω; v]``."""
+    """Mechanical power with force-first wrench ``[R; M]`` and twist ``[ω; v]``.
+
+    Uses the dual pairing ``R·v + M·ω``, not the naive dot ``wrench.T @ twist``.
+    """
     w = np.asarray(wrench, dtype=np.float64).reshape(6)
     v = np.asarray(twist, dtype=np.float64).reshape(6)
     return float(w[0:3] @ v[3:6] + w[3:6] @ v[0:3])

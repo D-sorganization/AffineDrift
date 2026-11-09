@@ -552,11 +552,14 @@ $$
 P = \mathbf{R} \cdot \left[ \mathbf{v}_M + \boldsymbol{\omega} \times (\mathbf{r}_G - \mathbf{r}_M) \right] + \mathbf{M}_G \cdot \boldsymbol{\omega} = \mathbf{R} \cdot \mathbf{v}_G + \mathbf{M}_G \cdot \boldsymbol{\omega}
 $$
 
-**The Power Invariance Theorem:**
+**The Power Invariance Theorem (hand contact power on the club):**
 
 $$
-P = \underbrace{\mathbf{R} \cdot \mathbf{v}_M}_{\text{Grip Linear Power}} + \underbrace{\mathbf{C}_h \cdot \boldsymbol{\omega}}_{\text{Couple Power}} = \underbrace{\mathbf{R} \cdot \mathbf{v}_G}_{\text{COM Linear Power}} + \underbrace{\mathbf{M}_G \cdot \boldsymbol{\omega}}_{\text{COM Moment Power}} \equiv \frac{d}{dt}(E_{\text{kinetic}})
+P_{\text{hand}\rightarrow\text{club}} = \underbrace{\mathbf{R} \cdot \mathbf{v}_M}_{\text{Grip Linear Power}} + \underbrace{\mathbf{C}_h \cdot \boldsymbol{\omega}}_{\text{Couple Power}} = \underbrace{\mathbf{R} \cdot \mathbf{v}_G}_{\text{COM Linear Power}} + \underbrace{\mathbf{M}_G \cdot \boldsymbol{\omega}}_{\text{COM Moment Power}}
 $$
+
+**Model scope (rigid club, §3.1–3.3):** The boxed identity holds for the **hand–club contact wrench** on a **rigid** assembly with evaluation points fixed on the body. $\mathbf{C}_h$ is the pure hand couple about $M$ (grip contact moments, not gravity on the shaft nor aerodynamic resultants). The kinetic-energy rate of the club alone is
+$\frac{d}{dt}E_{\text{kinetic, club}} = P_{\text{hand}\rightarrow\text{club}} + P_{\text{gravity}} + P_{\text{aero}} + \cdots$ when those external powers are included; hand power alone is **not** identified with $\dot{E}_{\text{kinetic}}$ in the unrestricted problem.
 
 **Adjudication of [@nesbit2005work] and Olson's Critique (April 2, 2022):**  
 In their 2005 paper _Work and Power Analysis of the Golf Swing_, Nesbit and Serrano partitioned energy into joint rotational work and body segment work. They asserted that because there is no relative linear displacement _at_ an anatomical joint, joint contact forces do no linear work, categorizing all force-based energy transfer under whole-body linear kinetics.
@@ -1135,7 +1138,7 @@ If an inverse-dynamics software program assumes the swing took place inside a va
 
 1. **Bilateral Contact Wrench Mapping:** Let the lead hand ($L$) and trail hand ($T$) exert contact forces $\mathbf{f}_L, \mathbf{f}_T \in \mathbb{R}^3$ at discrete contact centers $\mathbf{r}_L = -\frac{s}{2}\hat{\mathbf{e}}_x$ and $\mathbf{r}_T = +\frac{s}{2}\hat{\mathbf{e}}_x$, separated by grip distance $s = 0.0762\text{ m}$ ($3.0\text{ in}$). The resultant wrench $\mathbf{W}_M \in \mathbb{R}^6$ at mid-hands is:
    $$\mathbf{W}_M = \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_M \end{bmatrix} = \mathbf{A}_F \begin{bmatrix} \mathbf{f}_L \\ \mathbf{f}_T \end{bmatrix}$$
-   where the grasp mapping matrix $\mathbf{A}_F \in \mathbb{R}^{6 \times 6}$ has $\operatorname{rank}(\mathbf{A}_F) = 5$ and $\operatorname{nullity}(\mathbf{A}_F) = 1$, with normalized null vector $\mathbf{v}_{\text{null}} = \frac{1}{\sqrt{2}}\begin{bmatrix} +1 & 0 & 0 & -1 & 0 & 0 \end{bmatrix}^\top$ corresponding to internal axial squeeze/tension along the shaft.
+   where the grasp mapping matrix $\mathbf{A}_F \in \mathbb{R}^{6 \times 6}$ has $\operatorname{rank}(\mathbf{A}_F) = 5$ and $\operatorname{nullity}(\mathbf{A}_F) = 1$, with normalized null vector $\mathbf{v}_{\text{null}} = \frac{1}{\sqrt{2}}\begin{bmatrix} +1 & 0 & 0 & -1 & 0 & 0 \end{bmatrix}^\top$ corresponding to internal axial squeeze/tension along the shaft. With twist $\mathbf{V}_M=[\boldsymbol{\omega}^\top,\mathbf{v}_M^\top]^\top$, instantaneous hand power is $\mathcal{P}=\mathbf{R}\cdot\mathbf{v}_M+\mathbf{M}_M\cdot\boldsymbol{\omega}$ (Appendix A), not $\mathbf{W}_M^\top\mathbf{V}_M$.
 2. **Full 12-DOF Bilateral Wrench Map (Forces + Free Wrist Couples):** When each hand exerts both a 3D contact force and a 3D free wrist couple, $\mathbf{w}_{\text{hands}} = [\mathbf{f}_L^\top, \boldsymbol{\tau}_L^\top, \mathbf{f}_T^\top, \boldsymbol{\tau}_T^\top]^\top \in \mathbb{R}^{12}$, the grasp matrix $\mathbf{A}_W \in \mathbb{R}^{6 \times 12}$ is:
    $$\mathbf{A}_W = \begin{bmatrix} \mathbf{I}_3 & \mathbf{0}_3 & \mathbf{I}_3 & \mathbf{0}_3 \\ [\mathbf{r}_L]_\times & \mathbf{I}_3 & [\mathbf{r}_T]_\times & \mathbf{I}_3 \end{bmatrix}, \quad \operatorname{rank}(\mathbf{A}_W) = 6, \quad \operatorname{nullity}(\mathbf{A}_W) = 12 - 6 = 6$$
 3. **Formal Observability Theorem:** Because $\mathbf{A}_W$ maps a 12-DOF split-grip input space onto a 6-DOF net club wrench with a 6-dimensional nullspace, 6-DOF lumped-wrench inverse dynamics cannot uniquely resolve 12-DOF split-grip forces or anatomical single-hand torques without explicit bilateral contact constraints or independent 6-axis load cells under each hand (see Appendix C for the full SVD proof).
@@ -1776,9 +1779,13 @@ Let $\mathcal{F}_0$ be a fixed inertial reference frame. The motion of a rigid b
 $$\mathbf{V}_P = \begin{bmatrix} \boldsymbol{\omega} \\ \mathbf{v}_P \end{bmatrix} \in \mathbb{R}^6$$
 where $\boldsymbol{\omega} \in \mathbb{R}^3$ is the angular velocity of the body and $\mathbf{v}_P \in \mathbb{R}^3$ is the linear velocity of point $P$.
 
-The dual space of forces and moments is the space of spatial forces (wrenches) $\mathbf{W}_P \in \operatorname{se}^*(3)$:
+The dual space of forces and moments is the space of spatial forces (wrenches) $\mathbf{W}_P \in \operatorname{se}^*(3)$. This draft keeps **force-first** stacking to match grasp maps in §6 and Appendix C:
 $$\mathbf{W}_P = \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_P \end{bmatrix} \in \mathbb{R}^6$$
-where $\mathbf{R} \in \mathbb{R}^3$ is the resultant linear force and $\mathbf{M}_P \in \mathbb{R}^3$ is the resultant moment about point $P$.
+where $\mathbf{R} \in \mathbb{R}^3$ is the resultant contact force and $\mathbf{M}_P \in \mathbb{R}^3$ is the moment **about point $P$ on the club**. With twist $\mathbf{V}_P=[\boldsymbol{\omega}^\top,\mathbf{v}_P^\top]^\top$, the dual mechanical power pairing is
+$$\mathcal{P} = \mathbf{R}\cdot\mathbf{v}_P + \mathbf{M}_P\cdot\boldsymbol{\omega}$$
+(not the raw Euclidean dot $\mathbf{W}_P^\top\mathbf{V}_P$, which would permute force and moment slots).
+
+**Assumptions:** Appendix A treats the club as a **rigid body**; $P$ is a **body-fixed** material point; transport moves the evaluation station without changing $\mathbf{R}$ or $\boldsymbol{\omega}$. A hand wrench $\mathbf{W}_M$ is the **grip contact resultant**, distinct from the total external moment that would appear in a full multibody model with distributed gravity and segment coupling.
 
 ### A.2 The Wrench Adjoint Transport Operator
 
@@ -1787,29 +1794,30 @@ $$\mathbf{V}_B = \mathbf{Ad}_{g_{BA}} \mathbf{V}_A = \begin{bmatrix} \mathbf{I}_
 where $[\mathbf{r}]_\times \in \mathbb{R}^{3 \times 3}$ is the standard skew-symmetric cross-product matrix:
 $$[\mathbf{r}]_\times = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0 \end{bmatrix}$$
 
-Because physical power is invariant under coordinate changes, the wrench transforms via the dual (co-adjoint) operator:
-$$\mathcal{P} = \mathbf{W}_B^\top \mathbf{V}_B = \mathbf{W}_A^\top \mathbf{V}_A$$
-$$\mathbf{W}_A^\top \mathbf{V}_A = \mathbf{W}_B^\top (\mathbf{Ad}_{g_{BA}} \mathbf{V}_A) \implies \mathbf{W}_A = \mathbf{Ad}_{g_{BA}}^\top \mathbf{W}_B$$
+Because $\mathcal{P}=\mathbf{R}\cdot\mathbf{v}+\mathbf{M}\cdot\boldsymbol{\omega}$ is invariant under the twist adjoint $\mathbf{V}_B=\mathbf{Ad}_{g_{BA}}\mathbf{V}_A$, the wrench satisfies the **co-adjoint** transport (force-first stacking):
+$$\mathcal{P}=\mathcal{P}_A=\mathcal{P}_B \quad\Rightarrow\quad \mathbf{W}_B = \mathbf{Ad}_{g_{BA}}^{-\top}\mathbf{W}_A.$$
+With $\mathbf{W}=[\mathbf{R}^\top,\mathbf{M}^\top]^\top$ this is **not** the same $6\times6$ block as $\mathbf{Ad}_{g_{BA}}$ on twists; for force-first components,
+$$\mathbf{Ad}_{g_{BA}}^{-\top}=\begin{bmatrix}\mathbf{I}_3&\mathbf{0}_3\\ -[\mathbf{r}_{BA}]_\times&\mathbf{I}_3\end{bmatrix},\qquad
+\mathbf{W}_B=\begin{bmatrix}\mathbf{R}\\ \mathbf{M}_B\end{bmatrix}=\mathbf{Ad}_{g_{BA}}^{-\top}\begin{bmatrix}\mathbf{R}\\ \mathbf{M}_A\end{bmatrix}.$$
 
-Inverting this relationship gives the spatial wrench transport law from point $A$ to point $B$:
-$$\mathbf{W}_B = \mathbf{Ad}_{g_{BA}}^{-\top} \mathbf{W}_A = \begin{bmatrix} \mathbf{I}_3 & \mathbf{0}_3 \\ -[\mathbf{r}_{BA}]_\times & \mathbf{I}_3 \end{bmatrix} \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_A \end{bmatrix}$$
-
-Multiplying out the matrix rows gives the component equations:
-$$\mathbf{R}_B = \mathbf{R}_A = \mathbf{R}$$
-$$\mathbf{M}_B = \mathbf{M}_A - [\mathbf{r}_{BA}]_\times \mathbf{R} = \mathbf{M}_A - (\mathbf{r}_B - \mathbf{r}_A) \times \mathbf{R}$$
-This completes the formal proof of the Poinsot transport theorem used throughout Chapters 6 and 7.
+Componentwise (Poinsot, unchanged $\mathbf{R}$):
+$$\mathbf{R}_B = \mathbf{R}_A = \mathbf{R}, \qquad
+\mathbf{M}_B = \mathbf{M}_A - (\mathbf{r}_B - \mathbf{r}_A)\times\mathbf{R}.$$
+Regression checks for this transport and the power pairing live in `research/alpha-war/calcs/test_alpha_war_spatial_wrench_power.py`.
 
 ### A.3 Step-by-Step Proof of Mechanical Work and Power Invariance
 
-We verify that transporting the evaluation point does not alter the computed mechanical work or power delivered by the hands to the club:
-$$\mathcal{P}_B = \mathbf{W}_B^\top \mathbf{V}_B = \mathbf{R}^\top \mathbf{v}_B + \mathbf{M}_B^\top \boldsymbol{\omega}$$
+We verify that transporting the evaluation point does not alter $\mathcal{P}=\mathbf{R}\cdot\mathbf{v}+\mathbf{M}\cdot\boldsymbol{\omega}$ for the hand–club wrench:
+$$\mathcal{P}_B = \mathbf{R}\cdot\mathbf{v}_B + \mathbf{M}_B\cdot\boldsymbol{\omega}.$$
 Substitute $\mathbf{v}_B = \mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}$ and $\mathbf{M}_B = \mathbf{M}_A - \mathbf{r}_{BA} \times \mathbf{R}$:
-$$\mathcal{P}_B = \mathbf{R}^\top (\mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}) + (\mathbf{M}_A - \mathbf{r}_{BA} \times \mathbf{R})^\top \boldsymbol{\omega}$$
-Using the scalar triple product identity $\mathbf{a}^\top (\mathbf{b} \times \mathbf{c}) = (\mathbf{a} \times \mathbf{b})^\top \mathbf{c}$:
-$$\mathbf{R}^\top (\boldsymbol{\omega} \times \mathbf{r}_{BA}) = (\mathbf{R} \times \boldsymbol{\omega})^\top \mathbf{r}_{BA} = -(\boldsymbol{\omega} \times \mathbf{R})^\top \mathbf{r}_{BA} = -(\mathbf{r}_{BA} \times \mathbf{R})^\top \boldsymbol{\omega}$$
-The cross terms cancel identically:
-$$\mathcal{P}_B = \mathbf{R}^\top \mathbf{v}_A + \mathbf{M}_A^\top \boldsymbol{\omega} = \mathcal{P}_A$$
-Power is strictly invariant. Changing the moment evaluation point shifts energy attribution between linear translation ($\mathbf{R}^\top \mathbf{v}$) and rotation ($\mathbf{M}^\top \boldsymbol{\omega}$), but preserves total power.
+$$\mathcal{P}_B = \mathbf{R}\cdot (\mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}) + \mathbf{M}_A\cdot\boldsymbol{\omega} - (\mathbf{r}_{BA} \times \mathbf{R})\cdot\boldsymbol{\omega}.$$
+Using cyclic permutation of the scalar triple product ($\mathbf{R}\cdot(\boldsymbol{\omega}\times\mathbf{r}_{BA})=(\mathbf{r}_{BA}\times\mathbf{R})\cdot\boldsymbol{\omega}$):
+$$\mathbf{R}\cdot(\boldsymbol{\omega}\times\mathbf{r}_{BA}) - (\mathbf{r}_{BA}\times\mathbf{R})\cdot\boldsymbol{\omega}=0.$$
+Thus
+$$\mathcal{P}_B = \mathbf{R}\cdot\mathbf{v}_A + \mathbf{M}_A\cdot\boldsymbol{\omega} = \mathcal{P}_A.$$
+**Concrete check (issue #5459):** $\mathbf{r}=(1,0,0)$, $\mathbf{R}=(0,1,0)$, $\boldsymbol{\omega}=(0,0,1)$ gives $\mathbf{R}\cdot(\boldsymbol{\omega}\times\mathbf{r})=+1$ and $(\mathbf{r}\times\mathbf{R})\cdot\boldsymbol{\omega}=+1$, so the corrected cancellation uses equal signs—not the erroneous $-1$ step in older drafts.
+
+Power is strictly invariant. Changing the moment evaluation point shifts energy attribution between linear translation ($\mathbf{R}\cdot\mathbf{v}$) and rotation ($\mathbf{M}\cdot\boldsymbol{\omega}$), but preserves total $\mathcal{P}$.
 
 ### A.4 Newton–Euler Equations About an Arbitrary Moving Point
 

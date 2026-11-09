@@ -25,6 +25,19 @@ from alpha_war_spatial_wrench import (  # noqa: E402
 class TestAlphaWarSpatialWrenchPower(unittest.TestCase):
     """Lock dual wrench/twist power pairing and Poinsot transport."""
 
+    def test_force_first_pairing_differs_from_naive_dot_product(self) -> None:
+        """Naive W.T @ V permutes force/moment slots; dual power uses R.v + M.omega."""
+        force = np.array([0.0, 1.0, 0.0])
+        moment = np.array([2.0, 0.0, 0.0])
+        omega = np.array([0.0, 0.0, 1.0])
+        vel = np.array([3.0, 0.0, 0.0])
+        wrench = np.concatenate([force, moment])
+        twist = np.concatenate([omega, vel])
+        naive = float(wrench @ twist)
+        dual = mechanical_power(wrench, twist)
+        self.assertAlmostEqual(dual, force @ vel + moment @ omega)
+        self.assertNotAlmostEqual(naive, dual)
+
     def test_issue_5459_concrete_triple_product_regression(self) -> None:
         """Lock the concrete triple-product values from issue #5459."""
         r = np.array([1.0, 0.0, 0.0])
