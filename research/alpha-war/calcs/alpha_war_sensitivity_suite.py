@@ -352,6 +352,8 @@ def run_study_2_couple_vs_sum_of_moments() -> dict[str, Any]:
 
 def run_study_3_frame_conventions() -> dict[str, Any]:
     """Study 3: Coordinate frame transformations and sign flips across 4 conventions."""
+    from alpha_war_roll_projection import couple_vector_fsp_to_club  # noqa: PLC0415
+
     m_fsp = np.array([4.5, 8.0, -15.0])
 
     tutelman = {
@@ -369,15 +371,16 @@ def run_study_3_frame_conventions() -> dict[str, Any]:
     club_roll_sweep = []
     for phi_deg in [0.0, 30.0, 45.0, 60.0, 90.0, 120.0, 150.0, 180.0]:
         phi = math.radians(phi_deg)
-        m_alpha_club = float(m_fsp[2] * math.cos(phi) + m_fsp[1] * math.sin(phi))
-        m_beta_club = float(-m_fsp[2] * math.sin(phi) + m_fsp[1] * math.cos(phi))
+        gamma, beta, alpha = couple_vector_fsp_to_club(
+            float(m_fsp[0]), float(m_fsp[1]), float(m_fsp[2]), phi
+        )
         club_roll_sweep.append(
             {
                 "clubface_roll_rel_fsp_deg": phi_deg,
-                "club_frame_alpha_couple_nm": m_alpha_club,
-                "club_frame_beta_couple_nm": m_beta_club,
-                "club_frame_gamma_couple_nm": float(m_fsp[0]),
-                "alpha_sign": "positive" if m_alpha_club > 0 else "negative",
+                "club_frame_alpha_couple_nm": alpha,
+                "club_frame_beta_couple_nm": beta,
+                "club_frame_gamma_couple_nm": gamma,
+                "alpha_sign": "positive" if alpha > 0 else "negative",
             }
         )
 
