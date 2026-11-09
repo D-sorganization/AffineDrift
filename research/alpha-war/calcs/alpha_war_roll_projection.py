@@ -38,7 +38,11 @@ def couple_vector_fsp_to_club(
     return float(m_club[0]), float(m_club[1]), float(m_club[2])
 
 
-def alpha_couple_in_club_frame(m_in_plane_nm: float, m_out_of_plane_nm: float, phi_rad: float) -> float:
+def alpha_couple_in_club_frame(
+    m_in_plane_nm: float,
+    m_out_of_plane_nm: float,
+    phi_rad: float,
+) -> float:
     """Return club-frame alpha projection M_alpha,club(phi) for fixed FSP couple components."""
     return m_in_plane_nm * math.cos(phi_rad) + m_out_of_plane_nm * math.sin(phi_rad)
 
@@ -48,6 +52,10 @@ def illustrative_alpha_zero_crossing_deg(m_in_plane_nm: float, m_out_of_plane_nm
     return math.degrees(math.atan2(-m_in_plane_nm, m_out_of_plane_nm))
 
 
-def couple_spatial_norm_nm(m_shaft_nm: float, m_out_of_plane_nm: float, m_in_plane_nm: float) -> float:
+def couple_spatial_norm_nm(
+    m_shaft_nm: float,
+    m_out_of_plane_nm: float,
+    m_in_plane_nm: float,
+) -> float:
     """Euclidean norm of the spatial couple vector (frame-invariant)."""
     return math.sqrt(m_shaft_nm**2 + m_out_of_plane_nm**2 + m_in_plane_nm**2)
