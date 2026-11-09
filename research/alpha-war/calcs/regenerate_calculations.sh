@@ -34,5 +34,6 @@ if [[ "${HEAD}" != "${PIN_COMMIT}" && "${HEAD}" != "${PIN_COMMIT:0:12}"* ]]; the
 fi
 
 export ALPHA_WAR_UPSTREAM_DRIFT_ROOT
+export ALPHA_WAR_INTEGRATION_REQUIRED=1
 python3 "${CALCS_DIR}/alpha_war_sensitivity_suite.py"
 python3 -m unittest discover -s "${CALCS_DIR}" -p "test_alpha_war_*.py" -v

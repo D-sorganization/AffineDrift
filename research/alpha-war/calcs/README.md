@@ -84,7 +84,8 @@ For an **illustrative** late-downswing couple $\mathbf{M}_{\text{FSP}} = (M_{\te
 git clone https://github.com/D-sorganization/UpstreamDrift.git /tmp/UpstreamDrift
 cd /tmp/UpstreamDrift && git checkout "$(jq -r .commit /path/to/AffineDrift/research/alpha-war/calcs/upstream_drift.lock.json)"
 
-# 2. Regenerate JSON + run tests (fails closed if pin or hashes mismatch)
+# 2. Regenerate JSON + run tests (fails closed if pin or hashes mismatch; sets
+#    ``ALPHA_WAR_INTEGRATION_REQUIRED=1`` so UpstreamDrift integration tests cannot skip)
 export ALPHA_WAR_UPSTREAM_DRIFT_ROOT=/tmp/UpstreamDrift
 bash research/alpha-war/calcs/regenerate_calculations.sh
 
