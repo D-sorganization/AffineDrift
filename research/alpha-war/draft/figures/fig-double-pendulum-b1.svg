@@ -1,6 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="640" height="320" viewBox="0 0 640 320" role="img">
   <title>Planar double pendulum: absolute angles and hinge torques (Appendix B.1)</title>
-  <desc>Schematic arm link with angle theta1 from horizontal, club link with angle theta2, wrist hinge torque tau2 and shoulder torque tau1, and cock angle phi equals theta2 minus theta1. Positive uncocking is counterclockwise.</desc>
+  <desc>Arm angle theta1 and club angle theta2 are both measured from the horizontal reference at shoulder O. Cock angle phi is the relative hinge angle at the wrist. Shoulder torque tau1 and wrist torque tau2 use positive counterclockwise sense.</desc>
+  <defs>
+    <marker id="arrow-ccw" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 L2,4 Z" fill="#333"/>
+    </marker>
+  </defs>
   <line x1="80" y1="240" x2="560" y2="240" stroke="#999" stroke-width="1" stroke-dasharray="4 4"/>
   <text x="90" y="258" font-size="12" fill="#555">horizontal reference</text>
   <circle cx="120" cy="240" r="6" fill="#333"/>
@@ -9,13 +14,15 @@
   <text x="200" y="175" font-size="14" fill="#1f77b4">arm L1</text>
   <line x1="260" y1="130" x2="420" y2="70" stroke="#d62728" stroke-width="5"/>
   <text x="340" y="88" font-size="14" fill="#d62728">club (COM at r_G2)</text>
-  <path d="M 120 240 A 80 80 0 0 0 200 185" fill="none" stroke="#333" stroke-width="1.5"/>
-  <text x="165" y="225" font-size="15">theta1</text>
-  <path d="M 260 130 A 70 70 0 0 0 330 95" fill="none" stroke="#333" stroke-width="1.5"/>
-  <text x="300" y="118" font-size="15">theta2</text>
-  <path d="M 248 145 A 35 35 0 0 0 275 112" fill="none" stroke="#9467bd" stroke-width="2"/>
-  <text x="268" y="142" font-size="14" fill="#9467bd">phi</text>
+  <path id="theta1-arc-from-horizontal" d="M 205 240 A 85 85 0 0 0 198 162" fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="158" y="218" font-size="15">theta1</text>
+  <path id="theta2-arc-from-horizontal" d="M 215 240 A 115 115 0 0 0 228 135" fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="218" y="198" font-size="15">theta2</text>
+  <path id="phi-hinge-arc" d="M 275 118 A 32 32 0 0 1 305 102" fill="none" stroke="#9467bd" stroke-width="2"/>
+  <text x="292" y="128" font-size="14" fill="#9467bd">phi</text>
+  <path id="tau1-arrow" d="M 88 208 Q 72 240 88 272" fill="none" stroke="#2ca02c" stroke-width="2.5" marker-end="url(#arrow-ccw)"/>
+  <text x="52" y="242" font-size="13" fill="#2ca02c">tau1 (+CCW)</text>
+  <path id="tau2-arrow" d="M 285 95 Q 305 130 272 148" fill="none" stroke="#2ca02c" stroke-width="2.5" marker-end="url(#arrow-ccw)"/>
+  <text x="312" y="118" font-size="13" fill="#2ca02c">tau2 (+CCW)</text>
   <text x="400" y="52" font-size="12">+CCW uncocking (positive release)</text>
-  <text x="430" y="150" font-size="13">tau2 at wrist hinge</text>
-  <text x="90" y="200" font-size="13">tau1 at shoulder</text>
 </svg>

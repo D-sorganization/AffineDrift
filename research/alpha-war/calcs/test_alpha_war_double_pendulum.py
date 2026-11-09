@@ -70,10 +70,19 @@ class TestAlphaWarDoublePendulum(unittest.TestCase):
         self.assertIn("unconditional mathematical necessity", b1.lower())
 
     def test_b1_diagram_file_exists_with_labels(self) -> None:
-        """Schematic documents absolute angles and torque directions."""
+        """Schematic documents absolute angles at O, hinge phi, and torque arrows."""
         svg = (DRAFT / "figures" / "fig-double-pendulum-b1.svg").read_text(encoding="utf-8")
-        for label in ("theta1", "theta2", "tau2", "tau1", "phi"):
-            self.assertIn(label, svg)
+        for element_id in (
+            "theta1-arc-from-horizontal",
+            "theta2-arc-from-horizontal",
+            "phi-hinge-arc",
+            "tau1-arrow",
+            "tau2-arrow",
+        ):
+            self.assertIn(f'id="{element_id}"', svg)
+        self.assertIn('marker-end="url(#arrow-ccw)"', svg)
+        self.assertIn("theta1", svg)
+        self.assertIn("theta2", svg)
 
 
 if __name__ == "__main__":
