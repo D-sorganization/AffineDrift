@@ -90,6 +90,34 @@ Geometry alone does not guarantee a successful controller. Local stabilization t
 
 [Part 2](./part-2-dynamics.html) derives the first variation along a trajectory. [Part 4](./part-4-residuals-curvature.html) then separates its finite prediction error from measurement and model error.
 
+## Lie Groups: Trivialisations and Chart Changes on $SO(3)$
+
+Rotation updates are usually written in one of two **trivialisations**. A **left** (body-fixed) increment satisfies
+
+$$
+R_{k+1}=R_k\exp\!\bigl(\widehat{\omega_b}\,\Delta t\bigr),
+$$
+
+while a **right** (spatial) increment satisfies
+
+$$
+R_{k+1}=\exp\!\bigl(\widehat{\omega_s}\,\Delta t\bigr)\,R_k.
+$$
+
+At a fixed attitude $R_k$, the charts are related by $\omega_s=R_k\omega_b$. A numerically linearised one-step map in the body chart yields a Jacobian $A_b$; the spatial Jacobian $A_s$ for the same physical flow satisfies the **adjoint** similarity $A_s=R_k A_b R_k^\top$ to numerical tolerance on random trajectories (checked in `tests/test_lie_group_tangent_transform.py`).
+
+Changing coordinates along a moving motion uses the rule derived in the unified thesis for $A(t)$:
+
+$$
+A_y=(\dot T+T A_x)T^{-1},
+$$
+
+with $T(t)=D\psi(\bar x(t))$. For a quaternion chart $q$ and a $ZYX$ Euler chart $\phi(q)$, the Euler linearisation matches this rule with $T=D\phi$ and $A_x$ the quaternion-step Jacobian.
+
+**Engine comparison:** Pinocchio integrates on $SE(3)/SO(3)$ with Lie-group tangents in a local frame; MuJoCo uses unit quaternions with its own tangent convention. Their discrete $A(t)$ matrices are comparable only after applying the trivialisation and chart transforms above—not by comparing raw Jacobians entrywise.
+
+References: [@lohmiller1998contraction]; [@kong2024saltation]; Manchester and Slotine on control contraction metrics ([doi:10.1109/TAC.2017.2668380](https://doi.org/10.1109/TAC.2017.2668380)); Tassa, Erez and Todorov on online trajectory optimisation ([doi:10.1109/IROS.2012.6386025](https://doi.org/10.1109/IROS.2012.6386025)). See also the [Screw Theory Reference](../screw-theory-reference.html) for $\widehat{\cdot}$, twists, and rigid-body conventions.
+
 ## Related Articles
 
 ::: {.callout-note title="See Also"}
