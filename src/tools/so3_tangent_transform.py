@@ -101,6 +101,7 @@ def omega_evolution_jacobian_body(
     """Finite-difference Jacobian d omega_body^+ / d omega_body for one body step."""
 
     def step(omega: Vec3) -> Vec3:
+        """One body-frame integration step mapped back to body angular rate."""
         rotation_next = propagate_rotation_body(rotation, omega, dt)
         return so3_vee(rotation.T @ rotation_next) / dt
 
@@ -116,6 +117,7 @@ def omega_evolution_jacobian_spatial(
     """Finite-difference Jacobian d omega_spatial^+ / d omega_spatial for one spatial step."""
 
     def step(omega: Vec3) -> Vec3:
+        """One spatial integration step mapped back to spatial angular rate."""
         rotation_next = propagate_rotation_spatial(rotation, omega, dt)
         return so3_vee(rotation_next @ rotation.T) / dt
 
