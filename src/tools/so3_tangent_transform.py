@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import cast
 
 import numpy as np
 from numpy.typing import NDArray
@@ -38,7 +39,10 @@ def so3_expm(omega: Vec3, dt: float) -> Mat3:
         return np.eye(3, dtype=np.float64) + so3_hat(omega) * dt
     axis = omega / np.linalg.norm(omega)
     hat = so3_hat(axis)
-    return np.eye(3, dtype=np.float64) + np.sin(angle) * hat + (1.0 - np.cos(angle)) * (hat @ hat)
+    return cast(
+        Mat3,
+        np.eye(3, dtype=np.float64) + np.sin(angle) * hat + (1.0 - np.cos(angle)) * (hat @ hat),
+    )
 
 
 def propagate_rotation_body(rotation: Mat3, omega_body: Vec3, dt: float) -> Mat3:
@@ -80,7 +84,7 @@ def chart_pushforward_matrix(
 ) -> Mat3:
     """Return A_y = (Tdot + T A_x) T^{-1} from the coordinate-change rule."""
     transform_inv = np.linalg.inv(transform)
-    return (transform_dot + transform @ linearisation_x) @ transform_inv
+    return cast(Mat3, (transform_dot + transform @ linearisation_x) @ transform_inv)
 
 
 def body_to_spatial_omega(rotation: Mat3, omega_body: Vec3) -> Vec3:
