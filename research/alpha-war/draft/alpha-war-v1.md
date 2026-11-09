@@ -1856,9 +1856,13 @@ This single equation encapsulates why sign comparisons across camps are invalid 
 
 ### B.1 Planar Double Pendulum Equations of Motion
 
+![Appendix B.1 schematic: absolute arm angle theta1, club angle theta2, cock angle phi, shoulder torque tau1, and wrist hinge torque tau2 with positive uncocking counterclockwise.](figures/fig-double-pendulum-b1.svg){fig-alt="Planar double-pendulum schematic labeling O, L1, theta1, theta2, phi, tau1, and tau2 with CCW positive uncocking"}
+
 Consider a planar double pendulum representing the arm segment (link 1, length $L_1$, mass $m_1$, moment of inertia $I_1$ about proximal pivot $O$) and club segment (link 2, length $L_2$, COM distance $r_{G2}$, mass $m_2$, central inertia $I_{G2}$).
 
-Let $\theta_1(t)$ be the arm angle relative to horizontal, and $\theta_2(t)$ be the club angle. The hinge angle (wrist cock) is $\phi = \theta_2 - \theta_1$.
+Let $\theta_1(t)$ be the **absolute** arm angle measured counterclockwise from horizontal, and $\theta_2(t)$ the **absolute** club angle in the same sense. Active torques $\tau_1$ (shoulder) and $\tau_2$ (wrist hinge) follow the sign convention in Figure B.1: **positive $\tau_2$ accelerates uncocking** ($\dot{\phi}>0$). The hinge angle (wrist cock) is $\phi = \theta_2 - \theta_1$.
+
+Regression checks for the mass matrix and $\tau_2=0$ substitution are in `research/alpha-war/calcs/test_alpha_war_double_pendulum.py`. A **negative** hinge torque is **not** an unconditional mathematical necessity—it follows only when passive coupling, gravity, and the chosen $\ddot{\theta}_1$, $\dot{\theta}_1$, and $\phi$ produce $\tau_2<0$ under the equations below.
 
 The kinetic energy $T$ and potential energy $V$ are:
 $$T = \frac{1}{2} J_1 \dot{\theta}_1^2 + \frac{1}{2} m_2 \left[ L_1^2 \dot{\theta}_1^2 + r_{G2}^2 \dot{\theta}_2^2 + 2 L_1 r_{G2} \dot{\theta}_1 \dot{\theta}_2 \cos(\theta_2 - \theta_1) \right] + \frac{1}{2} I_{G2} \dot{\theta}_2^2$$
@@ -1867,7 +1871,8 @@ where $J_1 = I_{1,O} + m_2 L_1^2$.
 The Euler–Lagrange equations yield:
 $$\begin{bmatrix} M_{11} & M_{12}(\phi) \\ M_{21}(\phi) & M_{22} \end{bmatrix} \begin{bmatrix} \ddot{\theta}_1 \\ \ddot{\theta}_2 \end{bmatrix} + \begin{bmatrix} -m_2 L_1 r_{G2} \dot{\theta}_2^2 \sin\phi \\ +m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi \end{bmatrix} + \begin{bmatrix} G_1(\theta_1) \\ G_2(\theta_2) \end{bmatrix} = \begin{bmatrix} \tau_1 - \tau_2 \\ \tau_2 \end{bmatrix}$$
 where:
-$$M_{11} = J_1, \quad M_{22} = I_{G2} + m_2 r_{G2}^2, \quad M_{12} = M_{21} = m_2 L_1 r_{G2} \cos\phi$$
+$$M_{11} = J_1 + m_2 L_1^2 = I_{1,O} + 2 m_2 L_1^2, \quad M_{22} = I_{G2} + m_2 r_{G2}^2, \quad M_{12} = M_{21} = m_2 L_1 r_{G2} \cos\phi$$
+(the $m_2 L_1^2$ term is the second contribution from the club translational kinetic energy in $T$, in addition to the $m_2 L_1^2$ already inside $J_1$)
 
 ### B.2 Analytic Isolation of Wrist Hinge Torque ($\tau_2$) and Putnam Decomposition
 
@@ -1890,7 +1895,7 @@ If the club reaches its natural kinematic uncocking acceleration ($\ddot{\theta}
 $$\ddot{\theta}_2 = \frac{\tau_2 - M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi}{M_{22}}$$
 Setting active muscular torque to zero ($\tau_2 = 0$, a "free hinge"):
 $$\ddot{\theta}_{2,\text{free}} = \frac{m_2 L_1 r_{G2} (\dot{\theta}_1^2 \sin\phi - \ddot{\theta}_1 \cos\phi)}{M_{22}} \gg 0$$
-Passive interaction forces alone accelerate the clubhead to over $100\text{ mph}$. If the golfer attempts to slow down the release or maintain forward shaft lean, they must actively apply a **negative hinge torque** ($\tau_2 < 0$) to retard this passive uncocking.
+Passive interaction forces alone can accelerate the clubhead to over $100\text{ mph}$ in the late-downswing parameter range stated above. **If** the golfer attempts to slow that passive uncocking or maintain forward shaft lean **while** those interaction terms dominate, the **same** equations yield $\tau_2 < 0$ for the hinge torque that balances the prescribed motion—a **scenario-dependent** sign, not a theorem requiring negative hand torque in every swing.
 
 ### B.3 Constrained Two-Arm Closed-Loop KKT Dynamics
 

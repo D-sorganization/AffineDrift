@@ -21,6 +21,7 @@ This directory contains the reproducible calculation and simulation suite suppor
 - `test_alpha_war_hand_force_bounds.py`: Verifies couple–force algebra and draft CLM-SGN-05 wording.
 - `test_alpha_war_sensitivity_suite.py`: Integration tests (require pinned UpstreamDrift; skipped when env unset).
 - `test_alpha_war_reproducibility.py`: Lock/manifest/golden-number guards (no UpstreamDrift checkout required).
+- `alpha_war_double_pendulum.py` / `test_alpha_war_double_pendulum.py`: Appendix B.1 inertia and free-hinge algebra (#5460).
 
 ## UpstreamDrift Modules Used (Read-Only)
 
