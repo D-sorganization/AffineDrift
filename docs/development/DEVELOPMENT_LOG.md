@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5551 · Freeze the Dated Option A Input Definitions, rad-Space Bound Scope, and Single-Fixture Claim Boundary for Slice 1 Of #5550.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5551
+- **Branch:** staff/issue-remediator-5550-a80e94
+- **PR:** #5552
+- **Paths:** see #5552
+- **Started:** 2026-11-09
+- **Last verified:** 2026-11-09 (`ab4f73d9`; collated from changes/5551-option-a-preregistration-amendment.md)
+- **Summary:** Freeze the dated Option A input definitions, rad-space bound scope, and single-fixture claim boundary for Slice 1 of #5550.
+- **Next step:** Merge Slice 1; later slices require separate dispatch and prior merges.
+
 ### DL-#5508 · Extend Deploy-Pages Timeout for Large Site Sync (Fleet-Main-Health)
 
 - **State:** in_review
