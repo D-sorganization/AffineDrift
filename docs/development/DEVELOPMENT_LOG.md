@@ -755,6 +755,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#2845 · Reject Hosted Runner Routing Guard Runs on All PRs Without Bypass Job
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #2845
+- **Branch:** agy/2845-remove-bypass-check
+- **PR:** #5571
+- **Paths:** see #5571
+- **Started:** 2026-11-10
+- **Last verified:** 2026-11-10 (`058c0ae7`; collated from changes/2845-reject-hosted-runner-routing-guard-runs.md)
+- **Summary:** Reject hosted runner routing guard runs on all PRs without bypass job
+- **Next step:** Shipped in PR #5571.
+
 ### DL-#5566 · Fix Discrete-Time LTV Reachability Gramian Backward Recursion in Correction_Authority_Evaluator
 
 - **State:** shipped
