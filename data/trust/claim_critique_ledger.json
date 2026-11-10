@@ -491,9 +491,32 @@
       "critique_id": "crit-tip-mass-omission",
       "source_path": "critiques/tip_mass_omission.md",
       "severity": "critical",
-      "disposition": "open",
+      "disposition": "responded",
       "affected_pages": ["articles/theory-part1.qmd"],
-      "related_claim_ids": []
+      "related_claim_ids": [],
+      "adjudication": {
+        "rationale": "The WEB-06.3 drift-versus-control sandbox now defaults to a driver-scale club payload (mass, center of mass along link 2, and rotary inertia about the wrist) instead of a 0.6 kg midpoint point mass. Appendix B flexible-shaft free-tip boundary conditions and the full Lagrangian tip-mass integrals remain open.",
+        "evidence_paths": [
+          "tests/test_issue_5627_sandbox_club_defaults.py",
+          "tests/test_drift_control_sandbox_widget.py",
+          "src/affine_control/double_pendulum_affine.py"
+        ],
+        "verification_commit": "42c5e516f5fdf2274fbd0112e2dd735e3a086c74",
+        "verified_on": "2026-11-10",
+        "reviewer": "cursor-cloud-adud-20261110-a2",
+        "falsifier": "The sandbox again defaults to an unrealistic club mass or places the club center of mass at the link midpoint with zero rotary inertia.",
+        "uncertainty": "This response addresses the rigid double-pendulum sandbox only; the distributed shaft and mass-loaded tip boundary in Appendix B are not closed.",
+        "next_gate": "Integrate discrete clubhead kinetic energy and mass-loaded tip boundary conditions into the Part 1 flexible-shaft derivation, then re-adjudicate."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-11-10",
+          "commit": "42c5e516f5fdf2274fbd0112e2dd735e3a086c74",
+          "rationale": "Issue #5627: realistic sandbox club defaults and inertia-aware link 2."
+        }
+      ]
     },
     {
       "critique_id": "crit-validation-dimensionality-gap",

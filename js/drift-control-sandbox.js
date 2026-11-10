@@ -12,18 +12,23 @@ function assert(condition, message) {
 }
 
 /** Mirrors double_pendulum_affine.py::DoublePendulumParams. */
-function makeParams({m1, m2, l1, l2, gravity = 9.81}) {
-  const params = {m1, m2, l1, l2, gravity};
-  for (const [name, value] of Object.entries(params)) {
+function makeParams({m1, m2, l1, l2, l_c2, I_c2, gravity = 9.81}) {
+  const lc2 = l_c2 === undefined ? l2 / 2.0 : l_c2;
+  const ic2 = I_c2 === undefined ? 0.0 : I_c2;
+  const params = {m1, m2, l1, l2, l_c2: lc2, I_c2: ic2, gravity};
+  for (const name of ['m1', 'm2', 'l1', 'l2', 'l_c2', 'gravity']) {
+    const value = params[name];
     assert(Number.isFinite(value) && value > 0, `${name} must be finite and positive`);
   }
+  assert(Number.isFinite(ic2) && ic2 >= 0, 'I_c2 must be finite and nonnegative');
   return Object.freeze(params);
 }
 
-/** Mirrors dynamics.py::double_pendulum_mass_matrix. */
+/** Mirrors double_pendulum_affine.py::DoublePendulumParams.mass_matrix. */
 function massMatrix(q, p) {
-  const off = 0.5 * p.m2 * p.l1 * p.l2 * Math.cos(q[0] - q[1]);
-  return [[(p.m1 / 4.0 + p.m2) * (p.l1 * p.l1), off], [off, p.m2 * (p.l2 * p.l2) / 4.0]];
+  const lc2 = p.l_c2;
+  const off = p.m2 * p.l1 * lc2 * Math.cos(q[0] - q[1]);
+  return [[(p.m1 / 4.0 + p.m2) * (p.l1 * p.l1), off], [off, p.m2 * lc2 * lc2 + p.I_c2]];
 }
 
 /** Mirrors dynamics.py::christoffel_coriolis (central differences, step 1e-6). */
@@ -54,9 +59,9 @@ function christoffelCoriolis(massMatrixFn, q, qd, step = 1e-6) {
   return coriolis;
 }
 
-/** Mirrors dynamics.py::double_pendulum_coriolis. */
+/** Closed-form Christoffel Coriolis for double_pendulum_affine mass matrix. */
 function coriolis(q, qd, p) {
-  const k = 0.5 * p.m2 * p.l1 * p.l2 * Math.sin(q[0] - q[1]);
+  const k = p.m2 * p.l1 * p.l_c2 * Math.sin(q[0] - q[1]);
   return [[0.0, k * qd[1]], [-k * qd[0], 0.0]];
 }
 
@@ -81,14 +86,14 @@ function solve2(a, b) {
 
 /** Mirrors double_pendulum_affine.py::potential. */
 function potential(q, p) {
-  return -p.gravity * ((0.5 * p.m1 + p.m2) * p.l1 * Math.cos(q[0]) + 0.5 * p.m2 * p.l2 * Math.cos(q[1]));
+  return -p.gravity * ((0.5 * p.m1 + p.m2) * p.l1 * Math.cos(q[0]) + p.m2 * p.l_c2 * Math.cos(q[1]));
 }
 
 /** Mirrors double_pendulum_affine.py::grad_potential. */
 function gradPotential(q, p) {
   return [
     p.gravity * (0.5 * p.m1 + p.m2) * p.l1 * Math.sin(q[0]),
-    p.gravity * 0.5 * p.m2 * p.l2 * Math.sin(q[1]),
+    p.gravity * p.m2 * p.l_c2 * Math.sin(q[1]),
   ];
 }
 
@@ -167,7 +172,15 @@ function simulate(p, q0, qd0, torque, horizon, steps) {
 
 /** Declared illustrative scenario; scripts/generate_widget_parity.py pins the same values. */
 const DEFAULTS = Object.freeze({
-  params: {m1: 7.0, m2: 0.6, l1: 0.75, l2: 1.1, gravity: 9.81},
+  params: {
+    m1: 7.0,
+    m2: 0.32,
+    l1: 0.75,
+    l2: 1.1,
+    l_c2: 0.84,
+    I_c2: 0.043,
+    gravity: 9.81,
+  },
   q0: [2.6, 4.2],
   qd0: [0.0, 0.0],
   horizon: 0.5,

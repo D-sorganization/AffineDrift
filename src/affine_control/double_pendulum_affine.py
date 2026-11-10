@@ -31,14 +31,22 @@ from numpy.typing import ArrayLike, NDArray
 
 from src.affine_control.dynamics import (
     double_pendulum_coriolis,
-    double_pendulum_mass_matrix,
     planar_double_pendulum_trajectory,
 )
 from src.core.constants import GRAVITY_M_S2
 
 type Array = NDArray[np.float64]
 
+#: Default club segment for the WEB-06.3 sandbox (issue #5627): ~0.32 kg, COM ~0.84 m from grip.
+SANDBOX_CLUB_COM_M = 0.84
+SANDBOX_CLUB_INERTIA_KG_M2 = 0.043
+SANDBOX_CLUB_MASS_KG = 0.32
+
 __all__ = [
+    "SANDBOX_CLUB_COM_M",
+    "SANDBOX_CLUB_INERTIA_KG_M2",
+    "SANDBOX_CLUB_MASS_KG",
+    "SANDBOX_DEFAULT_PARAMS",
     "DoublePendulumParams",
     "SandboxSample",
     "affine_split",
@@ -53,13 +61,15 @@ __all__ = [
 
 @dataclass(frozen=True)
 class DoublePendulumParams:
-    """Masses (kg), link lengths (m) and gravity (m/s^2); all finite and positive."""
+    """Masses (kg), link lengths (m), optional club COM/inertia, and gravity (m/s^2)."""
 
     m1: float
     m2: float
     l1: float
     l2: float
     gravity: float = GRAVITY_M_S2
+    l_c2: float | None = None
+    I_c2: float = 0.0
 
     def __post_init__(self) -> None:
         """Reject non-finite or non-positive parameters (fail closed)."""
@@ -67,10 +77,39 @@ class DoublePendulumParams:
             value = getattr(self, name)
             if not (math.isfinite(value) and value > 0.0):
                 raise ValueError(f"{name} must be finite and positive, got {value!r}")
+        if self.l_c2 is None:
+            object.__setattr__(self, "l_c2", self.l2 / 2.0)
+        elif not (math.isfinite(self.l_c2) and self.l_c2 > 0.0):
+            raise ValueError(f"l_c2 must be finite and positive, got {self.l_c2!r}")
+        if not (math.isfinite(self.I_c2) and self.I_c2 >= 0.0):
+            raise ValueError(f"I_c2 must be finite and nonnegative, got {self.I_c2!r}")
+
+    @property
+    def club_com_from_grip_m(self) -> float:
+        """Distance along link 2 from the wrist (grip) to the club mass center."""
+        return float(self.l_c2)
 
     def mass_matrix(self, q: Array) -> Array:
-        """``M(q)`` from :func:`double_pendulum_mass_matrix` with these parameters."""
-        return double_pendulum_mass_matrix(q, self.m1, self.m2, self.l1, self.l2)
+        """Planar inertia with link 1 midpoint mass and link 2 mass at ``l_c2`` plus ``I_c2``."""
+        q1, q2 = float(q[0]), float(q[1])
+        off = self.m2 * self.l1 * float(self.l_c2) * math.cos(q1 - q2)
+        return np.array(
+            [
+                [(self.m1 / 4.0 + self.m2) * self.l1**2, off],
+                [off, self.m2 * float(self.l_c2) ** 2 + self.I_c2],
+            ]
+        )
+
+
+SANDBOX_DEFAULT_PARAMS = DoublePendulumParams(
+    m1=7.0,
+    m2=SANDBOX_CLUB_MASS_KG,
+    l1=0.75,
+    l2=1.1,
+    l_c2=SANDBOX_CLUB_COM_M,
+    I_c2=SANDBOX_CLUB_INERTIA_KG_M2,
+    gravity=GRAVITY_M_S2,
+)
 
 
 @dataclass(frozen=True)
@@ -85,10 +124,10 @@ class SandboxSample:
 
 
 def potential(q: Array, params: DoublePendulumParams) -> float:
-    """Gravitational potential ``V = -g [(m1/2 + m2) l1 cos q1 + m2 (l2/2) cos q2]``."""
+    """Gravitational potential with link 2 mass at ``l_c2`` along the club."""
     p = params
     upper = (0.5 * p.m1 + p.m2) * p.l1 * math.cos(q[0])
-    return -p.gravity * (upper + 0.5 * p.m2 * p.l2 * math.cos(q[1]))
+    return -p.gravity * (upper + p.m2 * float(p.l_c2) * math.cos(q[1]))
 
 
 def grad_potential(q: Array, params: DoublePendulumParams) -> Array:
@@ -97,7 +136,7 @@ def grad_potential(q: Array, params: DoublePendulumParams) -> Array:
     return np.array(
         [
             p.gravity * (0.5 * p.m1 + p.m2) * p.l1 * math.sin(q[0]),
-            p.gravity * 0.5 * p.m2 * p.l2 * math.sin(q[1]),
+            p.gravity * p.m2 * float(p.l_c2) * math.sin(q[1]),
         ]
     )
 
@@ -123,9 +162,9 @@ def affine_split(
     q = np.asarray(q, dtype=float)
     qd = np.asarray(qd, dtype=float)
     mass = params.mass_matrix(q)
-    bias = double_pendulum_coriolis(q, qd, params.m2, params.l1, params.l2) @ qd + grad_potential(
-        q, params
-    )
+    bias = double_pendulum_coriolis(
+        q, qd, params.m2, params.l1, params.l2, params.l_c2
+    ) @ qd + grad_potential(q, params)
     drift = np.linalg.solve(mass, -bias)
     input_qdd = np.linalg.solve(mass, np.asarray(torque, dtype=float))
     return drift, input_qdd
