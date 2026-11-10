@@ -13,7 +13,10 @@ if str(CALCS_DIR) not in sys.path:
 
 from alpha_war_hand_force_bounds import (  # noqa: E402
     GRIP_SEPARATION_M,
+    GRIP_SPAN_M,
+    contact_force_range,
     differential_force_y_from_force_couple,
+    force_couple_with_free_wrist_torque,
     newtons_to_lbf,
     opposed_pure_couple_contact_forces_y,
     reconstruct_force_couple_mid_nm,
@@ -58,6 +61,33 @@ class TestAlphaWarHandForceBounds(unittest.TestCase):
         couple = reconstruct_force_couple_mid_nm(f_lead_y, f_trail_y)
         self.assertAlmostEqual(couple, -18.60, places=2)
 
+    def test_contact_force_range_bounds_point_load_at_upper_end(self) -> None:
+        """Point loads at hand centres equal the C/s upper bound of the force range."""
+        f_min, f_max = contact_force_range(TARGET_COUPLE_NM)
+        f_lead_y, _ = opposed_pure_couple_contact_forces_y(TARGET_COUPLE_NM)
+        self.assertAlmostEqual(f_max, abs(f_lead_y), places=1)
+        self.assertAlmostEqual(f_min, TARGET_COUPLE_NM / GRIP_SPAN_M, places=1)
+
+    def test_contact_force_range_scales_linearly(self) -> None:
+        """Doubling couple doubles forces; doubling separation halves the upper bound."""
+        lo, hi = contact_force_range(TARGET_COUPLE_NM)
+        lo2, hi2 = contact_force_range(2.0 * TARGET_COUPLE_NM)
+        self.assertAlmostEqual(lo2, 2.0 * lo)
+        self.assertAlmostEqual(hi2, 2.0 * hi)
+        _, hi_wide = contact_force_range(
+            TARGET_COUPLE_NM, grip_separation_m=2.0 * GRIP_SEPARATION_M
+        )
+        self.assertAlmostEqual(hi_wide, 0.5 * hi)
+
+    def test_free_wrist_torque_reduces_required_differential_force(self) -> None:
+        """+10 N·m free torque lets +30 N·m total couple use 262 N differential force."""
+        tau_free = 10.0
+        target_cf = TARGET_COUPLE_NM - tau_free
+        f_lead_y, f_trail_y = opposed_pure_couple_contact_forces_y(target_cf)
+        total = force_couple_with_free_wrist_torque(f_lead_y, f_trail_y, tau_free_nm=tau_free)
+        self.assertAlmostEqual(total, TARGET_COUPLE_NM, places=6)
+        self.assertAlmostEqual(abs(f_lead_y), 262.5, places=0)
+
 
 class TestAlphaWarDraftHandForceBoundProse(unittest.TestCase):
     """Draft must state corrected forces and reclassified CLM-SGN-05 (#5464)."""
@@ -66,6 +96,18 @@ class TestAlphaWarDraftHandForceBoundProse(unittest.TestCase):
     def setUpClass(cls) -> None:
         """Load the v1 draft once for prose assertions."""
         cls.draft_text = (ALPHA_WAR_DIR / "draft" / "alpha-war-v1.md").read_text(encoding="utf-8")
+
+    def test_executive_summary_does_not_claim_unqualified_impossibility(self) -> None:
+        """Executive summary must not state unconditional fascicle-speed impossibility."""
+        exec_block = self.draft_text.split("## 2. The Passive Whip")[1].split("### 3. Two Hands")[0]
+        self.assertNotIn("simply cannot shorten that fast", exec_block.lower())
+        self.assertIn("predict", exec_block.lower())
+
+    def test_box_31_states_contact_force_range(self) -> None:
+        """Box 3.1 must document the C/ℓ ≤ F ≤ C/s force-couple range."""
+        box = self.draft_text.split("Box 3.1:")[1].split("## 3.2")[0]
+        self.assertIn("|C_{F,M}|}{\\ell}", box)
+        self.assertIn("|C_{F,M}|}{s}", box)
 
     def test_section_5a_per_hand_lbf_not_halved(self) -> None:
         """§5A.1 must report 88.5 lbf per hand, not a halved 44–45 lbf range."""

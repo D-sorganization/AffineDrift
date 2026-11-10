@@ -27,9 +27,12 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from alpha_war_json_compare import compare_study_blocks  # noqa: E402
+from alpha_war_manifest import MANIFEST_PATH, write_standalone_manifest  # noqa: E402
 from alpha_war_upstream import (  # noqa: E402
     WSCG_REL,
     build_generation_provenance,
+    load_export,
     prepare_upstream_context,
 )
 from scipy.signal import butter, filtfilt
@@ -101,7 +104,7 @@ from scripts.research.proximal_distal_energy.two_hand_wrench import (
 )
 
 LOGGER = logging.getLogger(__name__)
-SUITE_VERSION = "2026-11-05-repro-pin"
+SUITE_VERSION = "2026-11-10-repro-slices-2-5"
 OUT_OF_PLANE_AXIS = np.array([0.0, -1.0, 1.0]) / np.sqrt(2.0)
 WSCG_RAW_DIR = UPSTREAM_DRIFT_ROOT / WSCG_REL
 CALCS_DIR = Path(__file__).resolve().parent
@@ -717,19 +720,26 @@ def main() -> None:
         "study_6_shaft_flex_contribution": run_study_6_shaft_flex_contribution(),
     }
     json_path = CALCS_DIR / "alpha_war_calculations.json"
+    prior = load_export(json_path) if json_path.is_file() else {}
     provenance = build_generation_provenance(
         _UPSTREAM,
         suite_version=SUITE_VERSION,
         studies=results,
     )
     json_path.write_text(
-        json.dumps({"generation_provenance": provenance, **results}, indent=2),
+        json.dumps({"generation_provenance": provenance, **results}, indent=2) + "\n",
         encoding="utf-8",
     )
-    manifest_path = CALCS_DIR / "alpha_war_regeneration_manifest.json"
-    manifest_path.write_text(json.dumps(provenance, indent=2), encoding="utf-8")
+    compare_summary = None
+    if prior:
+        compare_summary = compare_study_blocks(prior, load_export(json_path))
+    write_standalone_manifest(
+        provenance,
+        output_json_path=json_path,
+        compare_summary=compare_summary,
+    )
     LOGGER.info("Wrote calculation results to %s", json_path)
-    LOGGER.info("Wrote regeneration manifest to %s", manifest_path)
+    LOGGER.info("Wrote regeneration manifest to %s", MANIFEST_PATH)
 
 
 if __name__ == "__main__":

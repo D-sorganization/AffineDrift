@@ -14,16 +14,20 @@ This directory contains the reproducible calculation and simulation suite suppor
 - `alpha_war_sensitivity_suite.py`: Executable Python calculation suite implementing six studies using `UpstreamDrift` wrench, identifiability, closed-loop, and flexible-shaft modules.
 - `alpha_war_upstream.py`: Resolves `ALPHA_WAR_UPSTREAM_DRIFT_ROOT`, verifies the pinned commit and WSCG CSV hashes, and builds regeneration provenance.
 - `upstream_drift.lock.json`: Pinned UpstreamDrift repository URL, commit SHA, and SHA-256 digests of WSCG CSV inputs.
+- `requirements.lock`: Pinned Python/NumPy/SciPy versions for calcs regeneration (#5465 slice 1).
 - `alpha_war_calculations.json`: Machine-readable output (includes `generation_provenance`).
-- `alpha_war_regeneration_manifest.json`: Standalone provenance manifest (output hash, inputs, commit).
+- `alpha_war_regeneration_manifest.json`: Standalone provenance manifest (``output_json_sha256``, inputs, dependency versions).
 - `regenerate_calculations.sh`: Fails unless `ALPHA_WAR_UPSTREAM_DRIFT_ROOT` points at the locked commit; reruns the suite and unit tests.
 - `alpha_war_roll_projection.py`: FSP→club roll rotation matrix and `M_alpha,club(phi)` projection (Study 3 / Box 2.1; #5461).
 - `test_alpha_war_roll_projection.py`: Orthonormal round-trip, norm invariance, and illustrative φ* guards (no UpstreamDrift).
-- `alpha_war_hand_force_bounds.py`: Box 3.1 opposed hand-shear arithmetic for §5A.1 (force couple reconstruction; #5464).
+- `alpha_war_hand_force_bounds.py`: Box 3.1 opposed hand-shear arithmetic and ``C/ℓ ≤ F ≤ C/s`` contact-force range for §5A.1 (#5464).
 - `test_alpha_war_hand_force_bounds.py`: Verifies couple–force algebra and draft CLM-SGN-05 wording.
+- `alpha_war_hill_sensitivity.py` / `test_alpha_war_hill_sensitivity.py`: Hill $F/F_0$ table and §8.1 Koike triplet guards (#5464).
 - `test_alpha_war_sensitivity_suite.py`: Integration tests (require pinned UpstreamDrift; skipped when env unset).
 - `test_alpha_war_reproducibility.py`: Lock/manifest/golden-number guards (no UpstreamDrift checkout required).
 - `alpha_war_double_pendulum.py` / `test_alpha_war_double_pendulum.py`: Appendix B.1 inertia and free-hinge algebra (#5460).
+- `alpha_war_json_compare.py` / `test_alpha_war_json_compare.py`: Tolerant study-block comparison (#5465 slices 2–4).
+- `alpha_war_manifest.py`: Standalone manifest v2 (generator and lock digests; slice 3).
 - `alpha_war_spatial_wrench.py` / `test_alpha_war_spatial_wrench_power.py`: Appendix A force-first wrench transport and dual power pairing (#5459).
 
 ## UpstreamDrift Modules Used (Read-Only)

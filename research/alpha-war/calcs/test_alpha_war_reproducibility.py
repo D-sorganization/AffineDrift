@@ -12,7 +12,7 @@ CALCS_DIR = Path(__file__).resolve().parent
 if str(CALCS_DIR) not in sys.path:
     sys.path.insert(0, str(CALCS_DIR))
 
-from alpha_war_upstream import LOCK_PATH  # noqa: E402
+from alpha_war_upstream import LOCK_PATH, REQUIREMENTS_LOCK_PATH, sha256_file  # noqa: E402
 
 CALC_JSON = CALCS_DIR / "alpha_war_calculations.json"
 MANIFEST_JSON = CALCS_DIR / "alpha_war_regeneration_manifest.json"
@@ -50,10 +50,34 @@ class TestAlphaWarReproducibility(unittest.TestCase):
         self.assertIn("wscg_input_sha256", prov)
         self.assertIn("study_1_grip_point_transport", payload)
 
-    def test_manifest_includes_numpy_version(self) -> None:
-        """Regeneration manifest must pin the NumPy version used for the export."""
+    def test_manifest_versions_match_calcs_lock(self) -> None:
+        """Manifest NumPy/SciPy versions must match research/alpha-war/calcs/requirements.lock."""
+        lock = json.loads(REQUIREMENTS_LOCK_PATH.read_text(encoding="utf-8"))
         manifest = json.loads(MANIFEST_JSON.read_text(encoding="utf-8"))
-        self.assertRegex(str(manifest.get("numpy_version", "")), r"^\d+\.\d+")
+        self.assertEqual(manifest.get("numpy_version"), lock["numpy"])
+        self.assertEqual(manifest.get("scipy_version"), lock["scipy"])
+
+    def test_manifest_output_json_sha256_matches_committed_file(self) -> None:
+        """Manifest must record SHA-256 of committed alpha_war_calculations.json bytes."""
+        manifest = json.loads(MANIFEST_JSON.read_text(encoding="utf-8"))
+        digest = sha256_file(CALC_JSON)
+        self.assertEqual(manifest.get("output_json_sha256"), digest)
+
+    def test_manifest_records_calcs_requirements_lock_hash(self) -> None:
+        """Manifest must pin the requirements.lock digest."""
+        manifest = json.loads(MANIFEST_JSON.read_text(encoding="utf-8"))
+        self.assertEqual(
+            manifest.get("calcs_requirements_lock_sha256"), sha256_file(REQUIREMENTS_LOCK_PATH)
+        )
+
+    def test_manifest_v2_records_generator_and_lock_hashes(self) -> None:
+        """Manifest v2 must hash generator sources and the UpstreamDrift lock file."""
+        manifest = json.loads(MANIFEST_JSON.read_text(encoding="utf-8"))
+        self.assertEqual(manifest.get("manifest_schema"), "alpha-war-regen-manifest/v2")
+        gen_hashes = manifest.get("generator_source_sha256")
+        self.assertIsInstance(gen_hashes, dict)
+        self.assertIn("alpha_war_sensitivity_suite.py", gen_hashes)
+        self.assertRegex(str(manifest.get("upstream_drift_lock_sha256", "")), r"^[0-9a-f]{64}$")
 
     def test_regenerate_script_enforces_integration_gate(self) -> None:
         """Full regen must set ALPHA_WAR_INTEGRATION_REQUIRED so skips cannot pass."""
