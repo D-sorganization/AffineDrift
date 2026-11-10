@@ -116,7 +116,7 @@ def _git_commit_timestamps(
 ) -> list[str]:
     """Return ISO-8601 UTC commit timestamps in ``[since, until]`` touching ``pathspec``."""
     git_bin = shutil.which("git") or "/usr/bin/git"
-    result = subprocess.run(  # noqa: S603
+    result = subprocess.run(  # noqa: S603 -- reason: fixed args
         [
             git_bin,
             "log",

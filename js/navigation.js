@@ -655,3 +655,29 @@ export function initSkipToContent() {
         }
     });
 }
+
+/**
+ * Add a close button to Quarto's docked sidebar (issue #5325).
+ *
+ * On phones the sidebar opens as an off-canvas panel over a scrim. The button
+ * closes it through Quarto's own toggle, so Bootstrap's collapse state, the
+ * toggle's aria-expanded and the headroom header stay in sync, then returns
+ * focus to that toggle. CSS hides the button on desktop.
+ */
+export function initSidebarClose() {
+    const sidebar = document.getElementById("quarto-sidebar");
+    const toggle = document.querySelector(".quarto-btn-toggle");
+    if (!sidebar || !toggle || sidebar.querySelector(".sidebar-close")) return;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "sidebar-close";
+    button.setAttribute("aria-label", "Close navigation");
+    button.setAttribute("aria-controls", "quarto-sidebar");
+    button.innerHTML = '<span aria-hidden="true">&times;</span>';
+    button.addEventListener("click", () => {
+        toggle.click();
+        toggle.focus();
+    });
+    sidebar.prepend(button);
+}

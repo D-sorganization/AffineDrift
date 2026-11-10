@@ -344,19 +344,27 @@ $$a(x^r,u,t)-a(x^0,0,t)=a_0(x^r,t)-a_0(x^0,t)+H(x^r,t)u.$$
 
 An identity checked once does not establish correct integration. Also check forward/inverse closure, constraint residuals, appropriate energy or power balance, and step refinement of the stated output. A constant acceleration can be very large while its state Jacobian has only zero eigenvalues; that fact alone introduces no fast damped mode.
 
-### Zero-Velocity Evaluation Is a Different Intervention
+### Instantaneous Decomposition and the Zero-Velocity Counterfactual
 
-For an unconstrained model, the instantaneous ZVCF slice is
+For an unconstrained second-order mechanical model with generalized coordinates $q$, generalized velocities $\dot q$, and declared control torques $\tau$, the instantaneous control component is the **Zero-Velocity Counterfactual (ZVCF)**:
 
-$$a_{\mathrm{ZVCF}}(q,z,t)=-M(q)^{-1}h(q,0,z,t).$$
+$$a_{\mathrm{ZVCF}}(q,\tau)=M(q)^{-1}\tau.$$
 
-With identical remaining state, parameters and load protocol, define
+This evaluates the acceleration produced when velocities and gravity are turned off, matching the original MATLAB `SCRIPT_ZVCF_GENERATOR.m` definition. Concurrently, the **Zero-Torque Counterfactual (ZTCF)** isolates autonomous drift:
 
-$$a_{\mathrm{velocity}}=a_0(q,v,z,t)-a_{\mathrm{ZVCF}}(q,z,t).$$
+$$a_{\mathrm{ZTCF}}(q,\dot q)=M(q)^{-1}\left(-C(q,\dot q)\dot q - g(q) - \tau_{\mathrm{passive}}\right).$$
 
-The second subtraction isolates the effects changed by the specified velocity reset. It does not equal the difference between applied input and configuration-only drift. Gravity is the only surviving bias only in a model whose other retained loads vanish at zero velocity. Elastic strain, internal-state forces and prescribed loads can remain.
+At any fixed state $(q, \dot q)$ and applied torque $\tau$, total acceleration is their exact sum:
 
-State which velocities are reset, including any stored in internal states, and check constraint feasibility before evaluating. A moving constraint $q=t$ requires $\dot q=1$ and does not permit zero velocity. A feasible reset changes kinetic energy and is distinct from removing an applied torque. Integrating after a reset creates a separate initial-state intervention; it is not the instantaneous ZVCF evaluation itself.
+$$a(q,\dot q,\tau)=a_{\mathrm{ZTCF}}(q,\dot q)+a_{\mathrm{ZVCF}}(q,\tau).$$
+
+::: {.callout-note}
+## Exactness at Fixed State vs. Forward Trajectories
+1. **Pointwise Exactness**: The decomposition $a = a_{\mathrm{ZTCF}} + a_{\mathrm{ZVCF}}$ is an exact linear identity at any instantaneous state $(q, \dot q)$ because inverse inertia linearly distributes generalized forces: $M(q)^{-1}(\tau_{\mathrm{drift}} + \tau) = M(q)^{-1}\tau_{\mathrm{drift}} + M(q)^{-1}\tau$.
+2. **Trajectories Do Not Add**: Forward-integrated counterfactual trajectories do **not** generally sum: $x(t) \neq x_{\mathrm{ZTCF}}(t) + x_{\mathrm{ZVCF}}(t)$. Because nonlinear dynamics couple position, velocity, and torque over time ($\dot x = f(x) + G(x)u$), counterfactual states diverge onto different trajectories where Coriolis, centrifugal, and gravitational forces are evaluated at different configurations.
+3. **Control-Affine Mapping and IAA**: In first-order state-space form $\dot x = f(x) + G(x)u$, $a_{\mathrm{ZTCF}}$ maps to the autonomous drift vector field $f(x)$ while $a_{\mathrm{ZVCF}}$ maps to the control vector field $G(x)u$. In biomechanical Induced Acceleration Analysis (IAA), this corresponds to partitioning total instantaneous acceleration into autonomous contributions (inertial velocity coupling and gravity) and actuator-induced accelerations without double-counting static biases.
+4. **Historical Naming Note**: Earlier AffineDrift revisions (notably AD Decision 4 / UD #11553) and some literature applied the label "ZVCF" to the static gravity-and-configuration-only slice ($u=0, \dot q=0$). Under the restored canonical convention matching MATLAB `SCRIPT_ZVCF_GENERATOR.m`, ZVCF designates the control component ($M(q)^{-1}\tau$), while the gravity-only evaluation is termed the static or zero-velocity zero-torque acceleration.
+:::
 
 ### Practical Considerations
 
