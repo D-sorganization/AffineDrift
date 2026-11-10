@@ -121,15 +121,26 @@ def double_integrator_position_interval(
     return (center - radius, center + radius)
 
 
+def margin_to_correction_target(
+    interval: tuple[float, float], target: float, tolerance: float, required_task_error: float
+) -> tuple[bool, float]:
+    """Return recoverability and signed margin to the declared correction target."""
+    if not isfinite(tolerance) or tolerance < 0.0:
+        raise ValueError("tolerance must be finite and nonnegative")
+    lower, upper = interval
+    if target < lower - tolerance or target > upper + tolerance:
+        signed = min(target - upper, lower - target)
+        return False, signed
+    clearance = min(upper - target, target - lower)
+    margin = clearance - tolerance if required_task_error == 0.0 else clearance
+    return margin >= 0.0, margin
+
+
 def _margin_to_target(
     interval: tuple[float, float], target: float, tolerance: float, required_task_error: float
 ) -> float:
     """Return signed clearance from the reachable interval to the correction target."""
-    lower, upper = interval
-    if target < lower - tolerance or target > upper + tolerance:
-        return min(target - upper, lower - target)
-    clearance = min(upper - target, target - lower)
-    return clearance - tolerance if required_task_error == 0.0 else clearance
+    return margin_to_correction_target(interval, target, tolerance, required_task_error)[1]
 
 
 def evaluate_double_integrator_correction_authority(

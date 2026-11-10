@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import StrEnum
 from math import isfinite
 from typing import Literal
 
 import numpy as np
 from numpy.typing import NDArray
 
+from src.affine_control.correction_authority_contract import margin_to_correction_target
 from src.affine_control.reachability import (
     _GRAMIAN_OPS_PER_STEP,
     LinearScalarSystem,
@@ -18,6 +20,13 @@ from src.affine_control.reachability_protocol import ReachabilityIllConditionedE
 
 type Array = NDArray[np.float64]
 IllConditionedMode = Literal["raise", "indeterminate"]
+
+
+class InputSetNorm(StrEnum):
+    """Declared bound on actuator commands used for reachable-set support."""
+
+    PEAK_PER_CHANNEL = "peak_per_channel"
+    ENERGY = "energy"
 
 
 @dataclass(frozen=True)
@@ -92,16 +101,23 @@ def instantaneous_step_dcr(step: LTVLinearizationStep, input_bound: float) -> fl
     return drift_norm / capacity
 
 
-def _margin_to_target(
-    interval: tuple[float, float], target: float, tolerance: float, required_task_error: float
-) -> tuple[bool, float]:
-    """Return recoverability flag and signed margin to the target interval."""
-    lower, upper = interval
-    if target < lower - tolerance or target > upper + tolerance:
-        return False, min(target - upper, lower - target)
-    clearance = min(upper - target, target - lower)
-    margin = clearance - tolerance if required_task_error == 0.0 else clearance
-    return margin >= 0.0, margin
+def _peak_input_support_radius(
+    steps: tuple[LTVLinearizationStep, ...],
+    task_direction: Array,
+    input_bound: float,
+) -> float:
+    """Exact support function of the reachable set under peak-per-channel input bounds."""
+    if input_bound < 0.0 or not isfinite(input_bound):
+        raise ValueError("input_bound must be finite and nonnegative")
+    direction = np.asarray(task_direction, dtype=np.float64).reshape(-1)
+    state_dim = direction.shape[0]
+    phi_to_end = np.eye(state_dim, dtype=np.float64)
+    support = 0.0
+    for step in reversed(steps):
+        effect = phi_to_end.T @ direction
+        support += input_bound * float(np.sum(np.abs(step.input_matrix.T @ effect)))
+        phi_to_end = step.state_matrix @ phi_to_end
+    return support
 
 
 def _backward_controllability_gramians(
@@ -141,15 +157,22 @@ def _propagate_nominal(steps: tuple[LTVLinearizationStep, ...], initial_state: A
 
 def _task_output_interval(
     gramian: Array,
+    steps: tuple[LTVLinearizationStep, ...],
     task_direction: Array,
     center_state: Array,
     input_bound: float,
-    horizon_steps: int,
+    input_set_norm: InputSetNorm,
 ) -> tuple[float, float]:
-    """Project reachable ellipsoid onto task direction to form interval."""
+    """Project the reachable set onto the task direction (peak or energy norm)."""
     direction = np.asarray(task_direction, dtype=np.float64).reshape(-1)
     center = float(direction @ center_state)
-    radius = input_bound * float(np.sqrt(float(direction @ gramian @ direction) * horizon_steps))
+    if input_set_norm is InputSetNorm.PEAK_PER_CHANNEL:
+        radius = _peak_input_support_radius(steps, direction, input_bound)
+    else:
+        horizon_steps = len(steps)
+        radius = input_bound * float(
+            np.sqrt(float(direction @ gramian @ direction) * horizon_steps)
+        )
     return (center - radius, center + radius)
 
 
@@ -176,6 +199,7 @@ def _evaluate_single_step(
     kappa_max: float,
     ill_conditioned_mode: IllConditionedMode,
     return_gramians: bool,
+    input_set_norm: InputSetNorm,
 ) -> CorrectionAuthorityStepResult | Indeterminate:
     """Evaluate correction authority at a single step along the trajectory."""
     form = float(direction @ gramian @ direction)
@@ -195,9 +219,11 @@ def _evaluate_single_step(
         except ReachabilityIllConditionedError as error:
             return _handle_ill_conditioned(error, ill_conditioned_mode)
         interval = _task_output_interval(
-            gramian, direction, center_state, input_bound, len(remaining)
+            gramian, remaining, direction, center_state, input_bound, input_set_norm
         )
-    recoverable, margin = _margin_to_target(interval, target, tolerance, required_task_error)
+    recoverable, margin = margin_to_correction_target(
+        interval, target, tolerance, required_task_error
+    )
     return CorrectionAuthorityStepResult(
         recoverable=recoverable,
         margin=margin,
@@ -217,12 +243,15 @@ def evaluate_correction_authority_along_trajectory(
     kappa_max: float,
     ill_conditioned_mode: IllConditionedMode = "indeterminate",
     return_gramians: bool = False,
+    input_set_norm: InputSetNorm = InputSetNorm.PEAK_PER_CHANNEL,
 ) -> tuple[CorrectionAuthorityStepResult | Indeterminate, ...]:
     """Evaluate correction authority, DCR, and Gramian conditioning along a trajectory."""
     if not isfinite(kappa_max) or kappa_max <= 0.0:
         raise ValueError("kappa_max must be finite and positive")
     if not isfinite(input_bound) or input_bound < 0.0:
         raise ValueError("input_bound must be finite and nonnegative")
+    if not isfinite(tolerance) or tolerance < 0.0:
+        raise ValueError("tolerance must be finite and nonnegative")
     if not steps:
         raise ValueError("at least one LTV step is required")
     direction = np.asarray(task_direction, dtype=np.float64).reshape(-1)
@@ -249,6 +278,7 @@ def evaluate_correction_authority_along_trajectory(
             kappa_max=kappa_max,
             ill_conditioned_mode=ill_conditioned_mode,
             return_gramians=return_gramians,
+            input_set_norm=input_set_norm,
         )
         for idx, step in enumerate(steps)
     )

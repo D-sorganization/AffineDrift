@@ -73,12 +73,12 @@ def _evaluate(
     "steps,input_bound,required,tol,oracle,tol_margin",
     [
         (
-            _double_integrator_steps(1.0, 32),
+            _double_integrator_steps(1.0, 128),
             1.0,
             0.3,
             0.05,
             evaluate_double_integrator_correction_authority(0.3, 0, 0, 1, 1, 0.05),
-            0.08,
+            0.02,
         ),
         (
             (_scalar_step(LinearScalarSystem(0, 0, 0, 2), 0.5),),
@@ -107,6 +107,15 @@ def test_evaluator_matches_dispatch1_oracles(
     assert result.recoverable is oracle.recoverable
     if oracle.margin is not None:
         assert result.margin == pytest.approx(oracle.margin, abs=tol_margin)
+
+
+def test_peak_bound_unreachable_when_exceeds_exact_double_integrator_reach() -> None:
+    """Peak L-infinity support must not mark 0.55 reach as recoverable at u_bar=1 (#5567)."""
+    steps = _double_integrator_steps(1.0, 32)
+    terminal = _evaluate(steps, np.zeros(2), 1.0, 0.55, 0.05)[0]
+    assert not isinstance(terminal, Indeterminate)
+    assert terminal.recoverable is False
+    assert terminal.margin < 0.0
 
 
 def test_rank_deficient_and_dcr_helpers() -> None:
