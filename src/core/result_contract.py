@@ -78,6 +78,7 @@ class ResultMixin:
     status: ResultStatus
 
     def __post_init__(self) -> None:
+        """Validate that status is a ResultStatus member."""
         raw_status: object = self.status
         if not isinstance(raw_status, ResultStatus):
             t = type(raw_status).__name__
@@ -85,14 +86,17 @@ class ResultMixin:
 
     @property
     def success(self) -> bool:
+        """Return True if the result status is SUCCEEDED."""
         return self.status is ResultStatus.SUCCEEDED
 
     @property
     def ok(self) -> bool:
+        """Return True if the result status is SUCCEEDED."""
         return self.status is ResultStatus.SUCCEEDED
 
     @property
     def converged(self) -> bool:
+        """Return True if the result status is SUCCEEDED."""
         return self.status is ResultStatus.SUCCEEDED
 
 
