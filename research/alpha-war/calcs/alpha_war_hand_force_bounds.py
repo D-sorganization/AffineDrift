@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 GRIP_SEPARATION_M = 0.0762
+GRIP_SPAN_M = 0.18
 NEWTONS_PER_LBF = 4.4482216152605
 
 
@@ -68,3 +69,42 @@ def reconstruct_force_couple_mid_nm(
 def newtons_to_lbf(force_n: float) -> float:
     """Convert newtons to pound-force."""
     return force_n / NEWTONS_PER_LBF
+
+
+def contact_force_range(
+    force_couple_mid_nm: float,
+    grip_separation_m: float = GRIP_SEPARATION_M,
+    grip_span_m: float = GRIP_SPAN_M,
+) -> tuple[float, float]:
+    """Return per-side force magnitudes ``(C/ℓ, C/s)`` for a pure force couple.
+
+    Lower bound ``C/ℓ`` applies when opposed loads act at the grip extremes;
+    upper bound ``C/s`` applies for point loads at the hand centres (Box 3.1).
+
+    Args:
+        force_couple_mid_nm: Target force couple magnitude at mid-hands (N·m).
+        grip_separation_m: Hand-centre separation along the shaft (m).
+        grip_span_m: Full two-hand grip span ℓ along the shaft (m).
+
+    Returns:
+        ``(min_per_side_n, max_per_side_n)`` in newtons.
+    """
+    if grip_separation_m <= 0.0:
+        raise ValueError("grip_separation_m must be positive")
+    if grip_span_m <= 0.0:
+        raise ValueError("grip_span_m must be positive")
+    magnitude = abs(force_couple_mid_nm)
+    return (magnitude / grip_span_m, magnitude / grip_separation_m)
+
+
+def force_couple_with_free_wrist_torque(
+    f_lead_y: float,
+    f_trail_y: float,
+    tau_free_nm: float = 0.0,
+    grip_separation_m: float = GRIP_SEPARATION_M,
+) -> float:
+    """Return total mid-hands couple including free wrist torques (N·m).
+
+    Uses ``C_h = C_F,M + τ_free`` with ``C_F,M = -s·F_d,y`` (Box 3.1).
+    """
+    return reconstruct_force_couple_mid_nm(f_lead_y, f_trail_y, grip_separation_m) + tau_free_nm
