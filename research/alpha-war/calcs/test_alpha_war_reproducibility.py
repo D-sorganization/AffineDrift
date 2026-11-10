@@ -16,6 +16,8 @@ from alpha_war_upstream import LOCK_PATH  # noqa: E402
 
 CALC_JSON = CALCS_DIR / "alpha_war_calculations.json"
 MANIFEST_JSON = CALCS_DIR / "alpha_war_regeneration_manifest.json"
+REGENERATE_SH = CALCS_DIR / "regenerate_calculations.sh"
+README = CALCS_DIR / "README.md"
 
 
 class TestAlphaWarReproducibility(unittest.TestCase):
@@ -47,6 +49,23 @@ class TestAlphaWarReproducibility(unittest.TestCase):
         self.assertRegex(str(prov.get("upstream_commit", "")), r"^[0-9a-f]{40}$")
         self.assertIn("wscg_input_sha256", prov)
         self.assertIn("study_1_grip_point_transport", payload)
+
+    def test_manifest_includes_numpy_version(self) -> None:
+        """Regeneration manifest must pin the NumPy version used for the export."""
+        manifest = json.loads(MANIFEST_JSON.read_text(encoding="utf-8"))
+        self.assertRegex(str(manifest.get("numpy_version", "")), r"^\d+\.\d+")
+
+    def test_regenerate_script_enforces_integration_gate(self) -> None:
+        """Full regen must set ALPHA_WAR_INTEGRATION_REQUIRED so skips cannot pass."""
+        script = REGENERATE_SH.read_text(encoding="utf-8")
+        self.assertIn("ALPHA_WAR_INTEGRATION_REQUIRED=1", script)
+        self.assertIn("ALPHA_WAR_UPSTREAM_DRIFT_ROOT", script)
+
+    def test_readme_documents_optional_upstream_skips(self) -> None:
+        """Default unittest skips are not a reproducibility proof without regen."""
+        readme = README.read_text(encoding="utf-8")
+        self.assertIn("regenerate_calculations.sh", readme)
+        self.assertIn("skipped when env unset", readme.lower())
 
     def test_golden_table7_anchors_unchanged(self) -> None:
         """Key draft Table 7 / ZTCF numbers must match the stored export."""
