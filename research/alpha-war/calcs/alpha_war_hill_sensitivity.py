@@ -38,10 +38,10 @@ def hill_sensitivity_rows(
     fascicle_length_m: float = 0.05,
     vmax_lengths_per_s: float = 8.0,
     a_rel: float = A_REL_DEFAULT,
-) -> list[dict[str, float]]:
+) -> list[dict[str, float | str]]:
     """Build illustrative ``v/v_max`` and ``F/F0`` rows for club vs wrist-relative rates."""
     vmax_m_s = vmax_lengths_per_s * fascicle_length_m
-    rows: list[dict[str, float]] = []
+    rows: list[dict[str, float | str]] = []
     for label, omega in (("omega_club", omega_club_rad_s), ("omega_rel", omega_rel_rad_s)):
         v_m = fascicle_velocity_m_s(moment_arm_m, omega)
         v_ratio = v_m / vmax_m_s
