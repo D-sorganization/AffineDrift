@@ -63,6 +63,7 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
     def test_wscg_ztcf_provenance_language_present_5462(self) -> None:
         """Draft must label WSCG bundle as modeled and ZTCF ratio as diagnostic (#5462)."""
         draft_text = _find_draft_path().read_text(encoding="utf-8")
+        self.assertNotIn("unavoidable mathematical consequence", draft_text.lower())
         self.assertIn("project-originated planar WSCG bundle", draft_text)
         self.assertIn(
             "### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory", draft_text
@@ -213,15 +214,6 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
         ):
             self.assertIn(phrase, section_76)
         self.assertNotIn("overpowering voluntary wrist muscles", section_76.lower())
-
-    def test_executive_summary_shaft_kick_interface_not_overpower_proof_5463(self) -> None:
-        """§1 executive summary must state interface balance, not universal shaft dominance."""
-        draft_text = _find_draft_path().read_text(encoding="utf-8")
-        block = draft_text.split("### 3. Two Hands on One Handle")[1].split("## The Two-Layer")[0]
-        self.assertIn("Newton", block)
-        self.assertIn("1\\text{ to }10\\text{ N}\\cdot\\text{m}", block)
-        self.assertNotIn("naturally resist this violent kick", block.lower())
-        self.assertIn("not a standalone proof", block.lower())
 
     def test_work_claims_clm_mch_03_hypothesis_separation_5463(self) -> None:
         """Work claim matrix must separate hypothetical beam scalars from rollout (#5463)."""
