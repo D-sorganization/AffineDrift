@@ -1057,18 +1057,20 @@ Thus $\dot x=(\dot\theta,-g\sin\theta/L)+(0,1/(mL^2))u$. At the same state, the 
 
 For a separate illustrative model, let the supporting body have positive pivot inertia $I_0$ and its center of mass at the pivot. Attach a distributed shaft with density $\mu$, a point head mass $m_H$ at the tip, and one dimensionless assumed shape $\phi(s)=(s/L)^2$. This example neglects head rotary inertia and offset; the previous foundational example retains both. Neither is calibrated golf equipment.
 
+For an inextensible centerline, include quadratic axial foreshortening
+$u(s)=\tfrac12\eta^2\int_0^s\phi'(\xi)^2\,d\xi$ (for $\phi(s)=(s/L)^2$, $u(s)=\tfrac{2s^3\eta^2}{3L^4}$).
 The world placement of each shaft point is
 
 $$
 p(s,\theta,\eta)=R(\theta)
-\begin{bmatrix}\phi(s)\eta\\-s\end{bmatrix},
+\begin{bmatrix}\phi(s)\eta\\-(s-u(s))\end{bmatrix},
 $$
 
-where $R$ is the planar rotation and $\eta$ is a signed displacement in meters. Its Jacobian columns are $R(s,\phi\eta)^\top$ and $R(\phi,0)^\top$. Direct integration of $\tfrac12\mu\|\dot p\|^2$ and the head energy yields
+where $R$ is the planar rotation and $\eta$ is a signed displacement in meters. The axial term enforces geometric stiffening under spin. Direct integration of $\tfrac12\mu\|\dot p\|^2$ and the head energy yields
 
 $$
-T=\tfrac12(J_0+A\eta^2)\dot\theta^2
-+B\dot\theta\dot\eta+\tfrac12A\dot\eta^2,
+T=\tfrac12\Bigl(J_0-\tfrac{A}{3}\eta^2\Bigr)\dot\theta^2
++B(\eta)\dot\theta\dot\eta+\tfrac12A(\eta)\dot\eta^2,
 $$
 
 with
@@ -1085,16 +1087,16 @@ The gravity and elastic potential is
 
 $$
 U=g\bigl[P(1-\cos\theta)+Q\eta\sin\theta\bigr]
-+\tfrac12k\eta^2,
++\tfrac12k\eta^2+U_{\mathrm{axial}}(\theta,\eta),
 $$
 
-where $P=\mu L^2/2+m_HL$ and $Q=\mu L/3+m_H$. In particular, $\partial_\eta U$ contains gravity even at zero deflection. With modal damping $c\dot\eta$, Euler–Lagrange gives
+where $P=\mu L^2/2+m_HL$, $Q=\mu L/3+m_H$, and $U_{\mathrm{axial}}$ collects the $O(\eta)$ axial gravity correction from foreshortening. In particular, $\partial_\eta U$ contains gravity even at zero deflection. With modal damping $c\dot\eta$, Euler–Lagrange gives
 
 $$
 \begin{aligned}
-\begin{bmatrix}J_0+A\eta^2&B\\B&A\end{bmatrix}
+\begin{bmatrix}J_0-\tfrac{A}{3}\eta^2&B(\eta)\\B(\eta)&A(\eta)\end{bmatrix}
 \begin{bmatrix}\ddot\theta\\\ddot\eta\end{bmatrix}
-&+\begin{bmatrix}2A\eta\dot\theta\dot\eta\\-A\eta\dot\theta^2\end{bmatrix}\\
+&+\begin{bmatrix}-2\tfrac{A}{3}\eta\dot\theta\dot\eta\\ \tfrac{A}{3}\eta\dot\theta^2\end{bmatrix}\\
 &+\begin{bmatrix}g(P\sin\theta+Q\eta\cos\theta)\\gQ\sin\theta+k\eta+c\dot\eta\end{bmatrix}
 =\begin{bmatrix}u\\0\end{bmatrix}.
 \end{aligned}
@@ -1103,11 +1105,12 @@ $$ {#eq-pendulum_flex_block}
 The complete lower equation is therefore
 
 $$
-A\ddot\eta=-B\ddot\theta+A\eta\dot\theta^2
--gQ\sin\theta-k\eta-c\dot\eta.
+A\ddot\eta=-B(\eta)\ddot\theta-\tfrac{A}{3}\eta\dot\theta^2
+-gQ\sin\theta-k\eta-c\dot\eta+\cdots,
 $$ {#eq-eta_planar}
 
-This displays the coupling, centrifugal, modal-gravity, elastic, and damping terms explicitly. It is not generally just a base-acceleration-driven oscillator with constant frequency. With $h$ equal to all displayed non-acceleration terms,
+where the ellipsis denotes the axial gravity correction from $U_{\mathrm{axial}}$. Centrifugal loads now stiffen the modal coordinate ($k_{\mathrm{eff}}$ gains $(A/3)\dot\theta^2$).
+This displays the coupling, centrifugal stiffening, modal-gravity, elastic, and damping terms explicitly. It is not generally just a base-acceleration-driven oscillator with constant frequency. With $h$ equal to all displayed non-acceleration terms,
 
 $$
 \begin{bmatrix}\ddot\theta\\\ddot\eta\end{bmatrix}
