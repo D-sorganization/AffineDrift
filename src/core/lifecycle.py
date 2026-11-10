@@ -104,6 +104,7 @@ class LifecycleFailure:
     message: str
 
     def __post_init__(self) -> None:
+        """Validate that code, stage, and message are non-empty strings."""
         items = ((self.code, "code"), (self.stage, "stage"), (self.message, "message"))
         for val, name in items:
             if not isinstance(val, str) or not val.strip():
@@ -120,6 +121,7 @@ class LifecycleSnapshot:
     schema_version: int = 1
 
     def __post_init__(self) -> None:
+        """Validate snapshot status, schema version, outcome, and failure invariants."""
         raw_status: Any = self.status
         if not isinstance(raw_status, LifecycleStatus):
             t = type(raw_status).__name__
@@ -142,16 +144,20 @@ class LifecycleSnapshot:
 
     @property
     def done(self) -> bool:
+        """Return True if the snapshot status is terminal."""
         return is_terminal(self.status)
 
     @property
     def ok(self) -> bool:
+        """Return True if the snapshot status is SUCCEEDED."""
         return self.status is LifecycleStatus.SUCCEEDED
 
     @property
     def cancelled(self) -> bool:
+        """Return True if the snapshot status is CANCELLED."""
         return self.status is LifecycleStatus.CANCELLED
 
     @property
     def success(self) -> bool:
+        """Return True if the snapshot status is SUCCEEDED (alias for ok)."""
         return self.ok
