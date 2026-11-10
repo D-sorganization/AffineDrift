@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-10 | #5583 | Add result contract, solver truth tables, and vocabulary gates |
+| 2026-11-10 | #5564 | Option A A-4 comparison module, golden metrics JSON, claim ad-dcr-003, results note |
 | 2026-11-10 | #5582 | Add stdlib lifecycle transition kernel and ADR-0004 per owner decision |
 | 2026-11-10 | #5571 | Reject hosted runner routing guard runs on all PRs without bypass job |
 | 2026-11-10 | #5569 | fix discrete-time LTV reachability Gramian backward recursion in correction_authority_evaluator |
