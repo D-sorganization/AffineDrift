@@ -145,14 +145,51 @@
       "critique_id": "crit-geometric-stiffness-omission",
       "source_path": "critiques/geometric_stiffness_omission.md",
       "severity": "medium",
-      "disposition": "open",
+      "disposition": "resolved",
       "affected_pages": [
         "articles/theory-part1.qmd",
         "articles/theory-part4.qmd",
         "articles/drifter-manifesto.qmd",
         "articles/affine-nature-golf-swing.qmd"
       ],
-      "related_claim_ids": []
+      "related_claim_ids": [],
+      "contradiction_markers": [
+        "+A\\eta\\dot\\theta^2",
+        "J_0+A\\eta^2",
+        "\\begin{bmatrix}\\phi(s)\\eta\\\\-s\\end{bmatrix}"
+      ],
+      "adjudication": {
+        "rationale": "The planar flexible-pendulum benchmark now includes axial foreshortening, reversing centrifugal softening to geometric stiffening with quadrature-backed tests.",
+        "evidence_paths": [
+          "tests/test_modal_pendulum_rigor.py",
+          "tests/test_modal_pendulum_foreshortening.py",
+          "src/tools/modal_pendulum_foreshortening.py",
+          "articles/theory-part4.qmd",
+          "critiques/geometric_stiffness_omission.md"
+        ],
+        "verification_commit": "dd623a2be2e5852e453d809b9f50a8f19bdce91e",
+        "verified_on": "2026-11-10",
+        "reviewer": "cursor-cloud-adud-20261110-a1 protected review",
+        "falsifier": "A maintained canonical page reintroduces transverse-only placement without foreshortening and recovers k-A*omega^2 centrifugal softening.",
+        "uncertainty": "Correction is limited to the stated planar benchmark, not a calibrated club or 3-D shaft model.",
+        "next_gate": "Extend foreshortening consistently in higher-dimensional modal golf models without duplicating Part 4 prose."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-11-10",
+          "commit": "dd623a2be2e5852e453d809b9f50a8f19bdce91e",
+          "rationale": "Foreshortening and stiffening terms added with independent quadrature checks."
+        },
+        {
+          "from": "responded",
+          "to": "resolved",
+          "on": "2026-11-10",
+          "commit": "dd623a2be2e5852e453d809b9f50a8f19bdce91e",
+          "rationale": "Quadrature-backed tests and Part 1/4 prose published."
+        }
+      ]
     },
     {
       "critique_id": "crit-hard-constraint-fallacy",
