@@ -755,6 +755,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#2845 · Reject Hosted Runner Routing Guard Runs on All PRs Without Bypass Job
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #2845
+- **Branch:** agy/2845-remove-bypass-check
+- **PR:** #5571
+- **Paths:** see #5571
+- **Started:** 2026-11-10
+- **Last verified:** 2026-11-10 (`058c0ae7`; collated from changes/2845-reject-hosted-runner-routing-guard-runs.md)
+- **Summary:** Reject hosted runner routing guard runs on all PRs without bypass job
+- **Next step:** Shipped in PR #5571.
+
+### DL-#5566 · Fix Discrete-Time LTV Reachability Gramian Backward Recursion in Correction_Authority_Evaluator
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5566
+- **Branch:** merged via #5569
+- **PR:** #5569
+- **Paths:** see #5569
+- **Started:** 2026-11-10
+- **Last verified:** 2026-11-10 (`897d2c55`; collated from changes/5566-ltv-gramian-recursion.md)
+- **Summary:** fix discrete-time LTV reachability Gramian backward recursion in correction_authority_evaluator
+- **Next step:** Shipped in PR #5569.
+
 ### DL-#5543 · Clarify Nested PDF/LFS Intent and Reproducible Build-Artifact Retention Policy
 
 - **State:** shipped
