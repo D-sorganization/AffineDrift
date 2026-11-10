@@ -35,5 +35,20 @@ fi
 
 export ALPHA_WAR_UPSTREAM_DRIFT_ROOT
 export ALPHA_WAR_INTEGRATION_REQUIRED=1
+BACKUP_JSON="${CALCS_DIR}/.alpha_war_calculations.pre_regen.json"
+cp "${CALCS_DIR}/alpha_war_calculations.json" "${BACKUP_JSON}"
 python3 "${CALCS_DIR}/alpha_war_sensitivity_suite.py"
+python3 -c "
+from pathlib import Path
+import sys
+sys.path.insert(0, '${CALCS_DIR}')
+from alpha_war_json_compare import compare_export_files
+summary = compare_export_files(
+    Path('${BACKUP_JSON}'),
+    Path('${CALCS_DIR}/alpha_war_calculations.json'),
+)
+if summary.get('mismatch_count', 0):
+    raise SystemExit(f'regenerated studies exceed tolerance: {summary}')
+print('regeneration_compare', summary)
+"
 python3 -m unittest discover -s "${CALCS_DIR}" -p "test_alpha_war_*.py" -v

@@ -4,6 +4,7 @@
 | --- | --- | --- | --- |
 | `Jules-Redundant-Issue-Closer.yml` | `contents: read, issues: write` | none | none |
 | `Jules-Redundant-PR-Closer.yml` | `contents: read, pull-requests: write, issues: write` | none | none |
+| `alpha-war-calcs-integration.yml` | `contents: read` | none | none |
 | `anti-phantom-merge.yml` | `contents: read, pull-requests: write, issues: read` | none | none |
 | `architecture-map-contract.yml` | `contents: read` | none | none |
 | `block-self-merge.yml` | `contents: read` | none | none |
@@ -20,12 +21,3 @@
 | `local-only-runner-guard.yml` | `contents: read` | none | none |
 | `release.yml` | `contents: write` | none | none |
 | `spec-check.yml` | `contents: read, pull-requests: write` | `L54: github.event.pull_request.base.sha` | none |
-
-## Summary of Findings
-
-- **Top-level `permissions`**: All 18 workflows under `.github/workflows` explicitly declare top-level `permissions:` (`0` missing).
-- **Action SHA pinning (`uses:`)**: All 18 workflows have `0` unpinned action references (`conflict-disarm.yml` references the allowed fleet reusable workflow `D-sorganization/Repository_Management/.github/workflows/reusable-conflict-disarm.yml@main`; all other actions use 40-character commit SHAs).
-- **Untrusted `run:` interpolations (`${{ github.event.* }}`)**:
-  - `lint-workflow-files.yml` (`L81`): interpolates `github.event.pull_request.number` (integer PR number).
-  - `spec-check.yml` (`L54`): interpolates `github.event.pull_request.base.sha` (40-hex commit SHA).
-  - No workflow interpolates user-controlled text fields (`issue.title`, `issue.body`, `pull_request.title`, `pull_request.body`, `comment.body`, or `head.ref`) directly into `run:`.
