@@ -4,6 +4,7 @@
 | --- | --- | --- | --- |
 | `Jules-Redundant-Issue-Closer.yml` | `contents: read, issues: write` | none | none |
 | `Jules-Redundant-PR-Closer.yml` | `contents: read, pull-requests: write, issues: write` | none | none |
+| `alpha-war-calcs-integration.yml` | `contents: read` | none | none |
 | `anti-phantom-merge.yml` | `contents: read, pull-requests: write, issues: read` | none | none |
 | `architecture-map-contract.yml` | `contents: read` | none | none |
 | `block-self-merge.yml` | `contents: read` | none | none |
