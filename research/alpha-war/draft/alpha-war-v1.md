@@ -863,7 +863,7 @@ Table 5A.1 summarizes published **measurement, analytical, and author-simulation
 | **Tutelman (2018–2021)** [@tutelman2018alpha]                                    | Analytical Mechanics Deconstruction   | Grip Couple ($M$) vs COM Moment ($G$)                        | Grip couple is **NEGATIVE**; COM moment stays positive via pull                      |
 | **Koike et al. (2006–2019)** [@koike2006grip; @koike2016forces; @koike2019joint] | Physical Split-Grip Load Cells        | Direct Bilateral Shear Forces ($\mathbf{F}_L, \mathbf{F}_T$) | Opposed force couple is **NEGATIVE** ($\approx -10\text{ N}\cdot\text{m}$)           |
 | **Choi et al. (2020)** [@choi2020grip]                                           | Instrumented Split-Grip Sensors       | Multi-Axis Hand Wrenches                                     | Sign change propagates proximally from shoulder to wrist                             |
-| **Grober (2020 arXiv)** [@grober2020forces]                                      | Analytical Double-Pendulum Derivation | Analytical Joint Torque $\tau(t)$                            | Proven mathematically **NEGATIVE** via centripetal hub term                          |
+| **Grober (2020 arXiv)** [@grober2020forces]                                      | Analytical Double-Pendulum Derivation | Analytical Joint Torque $\tau(t)$                            | Planar model predicts **NEGATIVE** hinge torque under stated centripetal/curvature loading—not a general on-course measurement proof |
 | **Olson (2020–2026)** [Author Simulation]                                        | Multi-Body Constrained KKT Dynamics   | Drift vs Control Hand Wrench                                 | **86.04%** same-state modeled magnitude ratio $C_{\alpha,\text{ZTCF}} / C_{\alpha,\text{BASE}}$ at $t=0.2151\text{ s}$ (WSCG KKT sim; not independent measurement) |
 
 : Table 5A.1: Master synthesis of published measurement, analytical, and modeled-simulation evidence regarding in-plane hand kinetics near impact. {#tbl-evidence-synthesis}
@@ -1730,8 +1730,8 @@ To assist both engineering researchers and golf instructors, this glossary organ
   _Plain English:_ The forward bending of the golf shaft toward the target just before impact, springing forward like a diving board to kick the clubhead into the ball.
   _Mechanical Definition:_ The dynamic forward bending of the golf shaft toward the target in the late downswing, wherein stored elastic strain energy unloads rapidly to kick the clubhead through impact.
 - **Zero-Torque Counterfactual (ZTCF):**
-  _Plain English:_ A baseline computer simulation where the golfer swings with normal body and arm speed, but completely shuts off their wrist muscles entering impact, proving how much of the release happens automatically.
-  _Mechanical Definition:_ A computational baseline simulation in `UpstreamDrift` that models the club under identical proximal kinematics but with wrist actuator torques set identically to zero, isolating purely passive dynamic contributions.
+  _Plain English:_ A **project-originated planar simulation** on the bundled WSCG trajectory where wrist torque commands are zeroed at each instant while the recorded closed-chain motion is retained (a stitched, pointwise torque-cut). The **86.04%** figure is a same-state **modeled** magnitude ratio at one time sample—not a measured share of physiological muscle torque or a relaxed-grip field trial.
+  _Mechanical Definition:_ In `UpstreamDrift`, a branch that sets $\mathbf{Q}_{\text{wrist}} \equiv 0$ while constraints, inertia, and base kinematic closure remain active along the bundled trajectory; $|C_{\alpha,\text{ZTCF}}|/|C_{\alpha,\text{BASE}}|$ is a diagnostic ratio from that simulator, not proof of autonomous release after muscles fully relax.
 
 ## 9.4 Signal Processing, Sensors & Mathematical Tools
 

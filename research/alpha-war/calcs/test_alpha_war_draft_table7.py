@@ -69,6 +69,17 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
             "### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory", draft_text
         )
         self.assertIn("measured share of physiological muscle torque", draft_text)
+        grober_row = next(
+            ln for ln in draft_text.splitlines() if "Grober (2020 arXiv)" in ln and "|" in ln
+        )
+        self.assertNotIn("Proven mathematically", grober_row)
+        self.assertIn("centripetal", grober_row.lower())
+        ztcf_gloss = draft_text.split("- **Zero-Torque Counterfactual (ZTCF):**")[1].split(
+            "## 9.4", 1
+        )[0]
+        self.assertIn("stitched", ztcf_gloss.lower())
+        self.assertNotIn("proving how much", ztcf_gloss.lower())
+        self.assertNotIn("completely shuts off", ztcf_gloss.lower())
         claims = (ALPHA_WAR_DIR / "work" / "03_claims.md").read_text(encoding="utf-8")
         self.assertIn("86.04", claims)
         self.assertIn("measured muscle share", claims)
