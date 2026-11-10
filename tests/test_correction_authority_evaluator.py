@@ -45,6 +45,14 @@ def _double_integrator_steps(horizon: float, steps: int) -> tuple[LTVLinearizati
     return tuple(LTVLinearizationStep(a, b, np.zeros(2)) for _ in range(steps))
 
 
+def _double_integrator_zoh_steps(horizon: float, steps: int) -> tuple[LTVLinearizationStep, ...]:
+    """Zero-order-hold discretization matching ``double_integrator_position_interval`` (#5567)."""
+    dt = horizon / steps
+    a = np.array([[1.0, dt], [0.0, 1.0]])
+    b = np.array([[0.5 * dt * dt], [dt]])
+    return tuple(LTVLinearizationStep(a, b, np.zeros(2)) for _ in range(steps))
+
+
 def _evaluate(
     steps: tuple[LTVLinearizationStep, ...],
     initial_state: np.ndarray,
@@ -113,12 +121,12 @@ def test_peak_double_integrator_support_matches_closed_form() -> None:
     """Discrete peak-per-channel support converges to 0.5 u T^2/2 along position (#5567)."""
     from src.affine_control.correction_authority_evaluator import _peak_input_support_radius
 
-    steps = _double_integrator_steps(1.0, 1024)
+    steps = _double_integrator_zoh_steps(1.0, 32)
     radius = _peak_input_support_radius(steps, np.array([1.0, 0.0]), 1.0)
-    assert radius == pytest.approx(0.5, abs=1e-3)
+    assert radius == pytest.approx(0.5, abs=1e-12)
     terminal = _evaluate(steps, np.zeros(2), 1.0, 0.3, 0.05)[0]
     assert not isinstance(terminal, Indeterminate)
-    assert terminal.margin == pytest.approx(0.2, abs=1e-3)
+    assert terminal.margin == pytest.approx(0.2, abs=1e-12)
     assert terminal.recoverable is True
 
 
