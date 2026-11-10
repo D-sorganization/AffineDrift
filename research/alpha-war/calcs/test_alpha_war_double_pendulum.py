@@ -118,6 +118,23 @@ class TestAlphaWarDoublePendulum(unittest.TestCase):
         )
         self.assertNotAlmostEqual(dd_full, dd_passive, places=3)
 
+    def test_passive_formula_matches_row2_without_gravity(self) -> None:
+        """Interaction-only pass-through equals row-2 tau2=0 when G2 is zeroed."""
+        state = PendulumState(1.05, 2.35, 12.0, 9.0)
+        params = DoublePendulumParams(
+            i1_o=DEFAULT_PARAMS.i1_o,
+            m1=DEFAULT_PARAMS.m1,
+            m2=DEFAULT_PARAMS.m2,
+            l1=DEFAULT_PARAMS.l1,
+            r_g2=DEFAULT_PARAMS.r_g2,
+            i_g2=DEFAULT_PARAMS.i_g2,
+            g=0.0,
+        )
+        theta1_ddot = -18.0
+        dd_passive = passive_release_accel_formula(params, state, theta1_ddot)
+        dd_full = free_hinge_theta2_accel(params, state, theta1_ddot)
+        self.assertAlmostEqual(dd_passive, dd_full, places=9)
+
     def test_negative_hinge_torque_not_universal_at_near_zero_speed(self) -> None:
         """Small arm speed does not force large negative muscular tau2."""
         state = PendulumState(1.2, 2.0, 0.4, 0.2)

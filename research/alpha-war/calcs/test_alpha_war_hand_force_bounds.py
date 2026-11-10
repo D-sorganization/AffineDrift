@@ -92,5 +92,23 @@ class TestAlphaWarDraftHandForceBoundProse(unittest.TestCase):
             self.assertIn(phrase, section_5a.lower())
 
 
+class TestAlphaWarWorkClaimsHandBound5464(unittest.TestCase):
+    """Work claim matrix must mirror §5A.1 hand-force bound wording (#5464)."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """Load work/03_claims.md once."""
+        claims_path = ALPHA_WAR_DIR / "work" / "03_claims.md"
+        cls.claims_text = claims_path.read_text(encoding="utf-8")
+
+    def test_clm_sgn_05_per_hand_lbf_in_work_claims(self) -> None:
+        """CLM-SGN-05 row reports ~88.5 lbf per hand, not ~89 or halved load."""
+        row = next(ln for ln in self.claims_text.splitlines() if "CLM-SGN-05" in ln)
+        self.assertIn("88.5 lbf", row)
+        self.assertIn("per hand", row)
+        self.assertNotIn("~89 lbf", row)
+        self.assertIn("not impossibility", row)
+
+
 if __name__ == "__main__":
     unittest.main()

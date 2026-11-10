@@ -172,13 +172,8 @@ def free_hinge_theta2_accel(
 def passive_release_accel_formula(
     params: DoublePendulumParams, state: PendulumState, theta1_ddot: float
 ) -> float:
-    """Draft B.2 displayed pass-through formula (coupling only; gravity handled separately)."""
+    """Row-2 interaction pass-through at tau2=0 without gravity (see full free_hinge helper)."""
     phi = hinge_angle(state)
-    m22 = params.i_g2 + params.m2 * params.r_g2**2
-    numer = (
-        params.m2
-        * params.l1
-        * params.r_g2
-        * (state.theta1_dot**2 * math.sin(phi) - theta1_ddot * math.cos(phi))
-    )
-    return float(numer / m22)
+    m = mass_matrix(params, phi)
+    c = velocity_quadratic_terms(params, state)
+    return float(-(m[1, 0] * theta1_ddot + c[1]) / m[1, 1])

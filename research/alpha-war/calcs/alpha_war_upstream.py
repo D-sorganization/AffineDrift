@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 CALCS_DIR = Path(__file__).resolve().parent
 LOCK_PATH = CALCS_DIR / "upstream_drift.lock.json"
 ENV_ROOT = "ALPHA_WAR_UPSTREAM_DRIFT_ROOT"
@@ -158,4 +160,5 @@ def build_generation_provenance(
         "output_json": "alpha_war_calculations.json",
         "studies_sha256": studies_sha256,
         "python_version": sys.version.split()[0],
+        "numpy_version": np.__version__,
     }

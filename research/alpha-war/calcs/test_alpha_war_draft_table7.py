@@ -68,6 +68,10 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
             "### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory", draft_text
         )
         self.assertIn("measured share of physiological muscle torque", draft_text)
+        claims = (ALPHA_WAR_DIR / "work" / "03_claims.md").read_text(encoding="utf-8")
+        self.assertIn("86.04", claims)
+        self.assertIn("measured muscle share", claims)
+        self.assertIn("modeled", claims.lower())
 
     def test_s_star_illustrative_vs_simulated_and_claim_verdicts(self) -> None:
         """Illustrative (+0.213 m) and simulated (+0.737 m) s* and CLM relabels must exist."""
@@ -209,6 +213,17 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
         ):
             self.assertIn(phrase, section_76)
         self.assertNotIn("overpowering voluntary wrist muscles", section_76.lower())
+
+    def test_work_claims_clm_mch_03_hypothesis_separation_5463(self) -> None:
+        """Work claim matrix must separate hypothetical beam scalars from rollout (#5463)."""
+        claims_path = ALPHA_WAR_DIR / "work" / "03_claims.md"
+        claims_text = claims_path.read_text(encoding="utf-8")
+        row = next(ln for ln in claims_text.splitlines() if "CLM-MCH-03" in ln)
+        self.assertIn("scenario-dependent", row.lower())
+        self.assertIn("#5463", row)
+        narrative = claims_text.split("### Claim CLM-MCH-03:")[1].split("---", 1)[0]
+        self.assertIn("hypothetical", narrative.lower())
+        self.assertIn("not** interchangeable", narrative)
 
 
 if __name__ == "__main__":

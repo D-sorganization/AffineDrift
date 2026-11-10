@@ -16,33 +16,52 @@ def skew(v: Vec3) -> NDArray[np.float64]:
     return np.array([[0.0, -z, y], [z, 0.0, -x], [-y, x, 0.0]], dtype=np.float64)
 
 
-def wrench_adjoint_inverse_transpose(r_ba: Vec3) -> NDArray[np.float64]:
-    """Co-adjoint matrix mapping wrench at A to wrench at B (``r_BA = r_B - r_A``)."""
-    s = -skew(r_ba)
-    upper = np.hstack([np.eye(3), np.zeros((3, 3))])
-    lower = np.hstack([s, np.eye(3)])
-    return np.vstack([upper, lower])
+def dual_pairing_matrix() -> NDArray[np.float64]:
+    """Block-swap matrix ``P`` so ``power = W.T @ P @ V`` for force-first ``W`` and twist ``V``."""
+    eye = np.eye(3)
+    zeros = np.zeros((3, 3))
+    return np.vstack([np.hstack([zeros, eye]), np.hstack([eye, zeros])])
+
+
+def twist_adjoint(r_ba: Vec3) -> NDArray[np.float64]:
+    """Twist adjoint ``Ad`` (angular-first ``V=[ω;v]``): ``V_B = Ad V_A`` for ``r_BA``."""
+    s = skew(r_ba)
+    eye = np.eye(3)
+    zeros = np.zeros((3, 3))
+    return np.vstack([np.hstack([eye, zeros]), np.hstack([-s, eye])])
+
+
+def twist_adjoint_inverse_transpose(r_ba: Vec3) -> NDArray[np.float64]:
+    """``Ad^{-T}`` acting on angular-first twists (not on force-first wrenches)."""
+    s = skew(r_ba)
+    eye = np.eye(3)
+    zeros = np.zeros((3, 3))
+    return np.vstack([np.hstack([eye, -s]), np.hstack([zeros, eye])])
+
+
+def force_first_wrench_transport_matrix(r_ba: Vec3) -> NDArray[np.float64]:
+    """Map force-first wrench at A to B: ``W_B = P Ad^{-T} P W_A`` (Poinsot moment term)."""
+    p = dual_pairing_matrix()
+    return p @ twist_adjoint_inverse_transpose(r_ba) @ p
 
 
 def transport_wrench(wrench_a: Wrench6, r_ba: Vec3) -> Wrench6:
-    """Transport spatial wrench from frame A to B along displacement ``r_ba``."""
-    return wrench_adjoint_inverse_transpose(r_ba) @ np.asarray(wrench_a, dtype=np.float64)
+    """Transport spatial wrench ``[R; M]`` from frame A to B along displacement ``r_ba``."""
+    transport = force_first_wrench_transport_matrix(r_ba)
+    return transport @ np.asarray(wrench_a, dtype=np.float64)
 
 
 def mechanical_power(wrench: Wrench6, twist: Twist6) -> float:
-    """Mechanical power with force-first wrench ``[R; M]`` and twist ``[ω; v]``."""
+    """Mechanical power ``W.T @ P @ V`` with force-first ``W=[R;M]`` and ``V=[ω;v]``."""
     w = np.asarray(wrench, dtype=np.float64).reshape(6)
     v = np.asarray(twist, dtype=np.float64).reshape(6)
-    return float(w[0:3] @ v[3:6] + w[3:6] @ v[0:3])
+    pairing = dual_pairing_matrix()
+    return float(w @ pairing @ v)
 
 
 def twist_at_b(twist_a: Twist6, r_ba: Vec3) -> Twist6:
     """Adjoint transport of twist from A to B."""
-    s = skew(r_ba)
-    upper = np.hstack([np.eye(3), np.zeros((3, 3))])
-    lower = np.hstack([-s, np.eye(3)])
-    adj = np.vstack([upper, lower])
-    return adj @ np.asarray(twist_a, dtype=np.float64)
+    return twist_adjoint(r_ba) @ np.asarray(twist_a, dtype=np.float64)
 
 
 def poinsot_moment_transport(moment_a: Vec3, force: Vec3, r_ba: Vec3) -> Vec3:
