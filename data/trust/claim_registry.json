@@ -611,6 +611,57 @@
       ],
       "page_id": "ad-impact-interval-conservation",
       "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "On one fixed MuJoCo swing-and-recovery simulation fixture, an offline correction-authority check sometimes flags earlier than a tracking-error threshold on unrecoverable trials, but it also flags every recovered trial in this bundle. That pattern does not show a ready-to-use detector for real swings or humanoids."
+          },
+          "claim_id": "ad-dcr-003",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is the vendored deterministic trace, the recomputed comparison metrics, and executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "The vendored eight-trial fixture reproduces materially different detection rates or lead-time summaries under the committed comparison JSON.",
+            "The rad-space affine correction-authority bound automatically certifies the separate metre-space task readout on this fixture without an explicit, validated mapping."
+          ],
+          "limitations": [
+            "Results apply only to the vendored rad-space fixture, horizon, torque cap, and perturbation grid.",
+            "Metre-space distal-tip pass/fail is a separate readout; nonlinear forward kinematics does not transfer the rad-space bound.",
+            "A null or negative preregistered prediction is not a coaching prescription or population claim."
+          ],
+          "next_validation_gate": "Assessment Board review before any public correction-authority claim; additional fixtures require a new preregistration amendment.",
+          "population": "Declared MuJoCo swing-and-recovery simulation trials only; no humanoid or golfer population is inferred.",
+          "software_provenance": [
+            {
+              "path": "src/affine_control/option_a_comparison.py",
+              "repository": "D-sorganization/AffineDrift"
+            },
+            {
+              "path": "tests/test_option_a_comparison.py",
+              "repository": "D-sorganization/AffineDrift"
+            }
+          ],
+          "technical_anchor": "claim-ad-dcr-003",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "On the vendored humanoid Option A trace, correction-authority margins from the offline LTV Gramian evaluator flag all eight trials, yielding unit false-positive rate on recovered trials despite positive median lead-time advantage on the two unrecoverable trials. The comparison is simulation-only and does not establish finite-horizon reachability in metre space."
+          },
+          "title": "Option A Fixture Comparison Records an Early-Flag Advantage With Spurious Recovered-Trial Flags",
+          "uncertainty": {
+            "statement": "Model-form, linearization, and task-coordinate uncertainty are not fully propagated beyond the declared singularity gate counts.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The vendored trace bytes, provenance digest, and committed comparison JSON match the recorded fixtures.",
+            "Detectors use the preregistered rad-space task direction, recovery threshold, and torque bound declared in the analysis contract."
+          ]
+        }
+      ],
+      "page_id": "ad-humanoid-option-a-comparison",
+      "source_path": "docs/development/option-a-comparison-results-2026-11-10.md"
     }
   ],
   "schema_version": "1.0.0"
