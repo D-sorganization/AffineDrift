@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from alpha_war_flexible_shaft_params import reference_stiffness_metadata  # noqa: E402
 from alpha_war_json_compare import compare_study_blocks  # noqa: E402
 from alpha_war_manifest import MANIFEST_PATH, write_standalone_manifest  # noqa: E402
 from alpha_war_upstream import (  # noqa: E402
@@ -674,12 +675,19 @@ def run_study_6_shaft_flex_contribution() -> dict[str, Any]:
     tau_wrist_active_nm = 10.0
     c_net_nm = c_shaft_rebound_nm + tau_wrist_active_nm
 
+    stiffness_meta = reference_stiffness_metadata(
+        shaft_stiffness_nm_rad=float(params_flex.shaft_stiffness_nm_rad),
+        distal_head_mass_kg=float(params_flex.distal_head_mass_kg),
+        distal_shaft_length_m=float(params_flex.distal_shaft_length_m),
+        gravity_planar_m_s2=float(params_flex.gravity_m_s2),
+    )
     return {
         "upstream_drift_matched_3link_study": {
             "model": (
                 "UpstreamDrift reduced planar 3-link with lumped shaft-bending coordinate "
                 "(FlexibleShaftParams.reference); gravity on; shoulder/wrist damping on"
             ),
+            "model_parameters": stiffness_meta,
             "sample_time_s": float(trace_flex.t[idx_imp]),
             "shaft_deflection_deg": float(np.rad2deg(state_imp[2])),
             "shaft_elastic_moment_nm": float(-params_flex.shaft_stiffness_nm_rad * state_imp[2]),
