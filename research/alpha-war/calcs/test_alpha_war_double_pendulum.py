@@ -118,6 +118,20 @@ class TestAlphaWarDoublePendulum(unittest.TestCase):
         )
         self.assertNotAlmostEqual(dd_full, dd_passive, places=3)
 
+    def test_passive_release_closed_form_sign_without_gravity(self) -> None:
+        """tau2=0 coupling numerator must negate both M21 ddot1 and the sin(phi) term."""
+        state = PendulumState(1.05, 2.35, 12.0, 9.0)
+        phi = hinge_angle(state)
+        m = mass_matrix(DEFAULT_PARAMS, phi)
+        k_couple = DEFAULT_PARAMS.m2 * DEFAULT_PARAMS.l1 * DEFAULT_PARAMS.r_g2
+        theta1_ddot = -18.0
+        dd_closed = -(
+            k_couple * math.cos(phi) * theta1_ddot
+            + k_couple * math.sin(phi) * state.theta1_dot**2
+        ) / m[1, 1]
+        dd_helper = passive_release_accel_formula(DEFAULT_PARAMS, state, theta1_ddot)
+        self.assertAlmostEqual(dd_helper, dd_closed, places=9)
+
     def test_passive_formula_matches_row2_without_gravity(self) -> None:
         """Interaction-only pass-through equals row-2 tau2=0 when G2 is zeroed."""
         state = PendulumState(1.05, 2.35, 12.0, 9.0)

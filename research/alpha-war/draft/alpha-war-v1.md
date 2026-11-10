@@ -1902,7 +1902,7 @@ Both passive interaction terms drive the unhinging of the club!
 If the club reaches its natural kinematic uncocking acceleration ($\ddot{\theta}_2 > 0$), row 2 gives
 $$\ddot{\theta}_2 = \frac{\tau_2 - M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi - G_2(\theta_2)}{M_{22}}.$$
 Setting active muscular torque to zero ($\tau_2 = 0$, a "free hinge"):
-$$\ddot{\theta}_{2,\text{free}} = \frac{-M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi - G_2(\theta_2)}{M_{22}} = \frac{m_2 L_1 r_{G2} (\ddot{\theta}_1 \cos\phi - \dot{\theta}_1^2 \sin\phi) - G_2(\theta_2)}{M_{22}}.$$
+$$\ddot{\theta}_{2,\text{free}} = \frac{-M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi - G_2(\theta_2)}{M_{22}} = \frac{m_2 L_1 r_{G2} \bigl(-\ddot{\theta}_1 \cos\phi - \dot{\theta}_1^2 \sin\phi\bigr) - G_2(\theta_2)}{M_{22}}.$$
 The $-G_2$ term is retained here; the interaction-only pass-through in `alpha_war_double_pendulum.py` omits gravity and is not this full free-hinge identity.
 Passive interaction forces alone can accelerate the clubhead to over $100\text{ mph}$ in the late-downswing parameter range stated above. **If** the golfer attempts to slow that passive uncocking or maintain forward shaft lean **while** those interaction terms dominate, the **same** equations yield $\tau_2 < 0$ for the hinge torque that balances the prescribed motion—a **scenario-dependent** sign, not a theorem requiring negative hand torque in every swing.
 
