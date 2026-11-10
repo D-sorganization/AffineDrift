@@ -151,6 +151,7 @@ def _lead_time(flag_time: float | None, failure_time: float | None) -> float | N
 
 
 def _median_or_none(values: tuple[float, ...]) -> float | None:
+    """Return the median of finite samples, or None when the tuple is empty."""
     if not values:
         return None
     median_value = np.median(np.asarray(values, dtype=np.float64))
@@ -234,6 +235,7 @@ def _horizon_sweep(trace: OptionATrace) -> tuple[bool, tuple[str, ...]]:
     )
 
     def step_builder(horizon_s: float) -> tuple[LTVLinearizationStep, ...]:
+        """Truncate the trial LTV prefix to the requested horizon in seconds."""
         step_count = max(1, int(round(horizon_s / dt)))
         return all_steps[: min(step_count, len(all_steps))]
 
