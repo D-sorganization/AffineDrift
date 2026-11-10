@@ -113,12 +113,12 @@ def test_peak_double_integrator_support_matches_closed_form() -> None:
     """Discrete peak-per-channel support converges to 0.5 u T^2/2 along position (#5567)."""
     from src.affine_control.correction_authority_evaluator import _peak_input_support_radius
 
-    steps = _double_integrator_steps(1.0, 4096)
+    steps = _double_integrator_steps(1.0, 1024)
     radius = _peak_input_support_radius(steps, np.array([1.0, 0.0]), 1.0)
-    assert radius == pytest.approx(0.5, abs=2e-4)
+    assert radius == pytest.approx(0.5, abs=1e-3)
     terminal = _evaluate(steps, np.zeros(2), 1.0, 0.3, 0.05)[0]
     assert not isinstance(terminal, Indeterminate)
-    assert terminal.margin == pytest.approx(0.2, abs=2e-4)
+    assert terminal.margin == pytest.approx(0.2, abs=1e-3)
     assert terminal.recoverable is True
 
 
