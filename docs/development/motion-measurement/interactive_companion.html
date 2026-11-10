@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motion Measurement: Interactive Companion (F1 and F2)</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem auto; max-width: 760px; color: #1e293b; background: #f8fafc; line-height: 1.5; padding: 0 1rem; }
+    .badge { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.8rem; background: #e2e8f0; color: #475569; border-radius: 4px; font-weight: 600; }
+    .card { background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+    .convention-card { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 0.75rem 1rem; margin-bottom: 1.25rem; }
+    label { font-weight: 600; display: block; margin: 0.5rem 0 0.25rem; }
+    input[type=range] { width: 100%; max-width: 380px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem; }
+    .box { background: #f1f5f9; padding: 0.6rem; border-radius: 4px; font-family: monospace; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>Interactive Companion: Motion Measurement in Golf</h1>
+  <p><span class="badge">model_scenario</span> <span class="badge">synthetic</span></p>
+  <div class="convention-card" role="region" aria-label="Convention Notice">
+    <strong>Convention Card &amp; Neutrality:</strong> No convention is universally correct. Every kinematic metric depends on sequence, frame, and event definitions. Engineering choices trade coordinate singularities against parameter redundancy.
+  </div>
+  <section class="card" aria-labelledby="f1-title">
+    <h2 id="f1-title">Interactive F1: Cardan Sequence Slider</h2>
+    <p>Adjust spatial rotation progress along a synthetic coning path:</p>
+    <label for="f1-slider">Coning Progress (t): <span id="f1-val">0.50</span></label>
+    <input type="range" id="f1-slider" min="0" max="1.5" step="0.05" value="0.5" aria-label="F1 Sequence Slider" />
+    <div class="grid">
+      <div class="box"><strong>XYZ (rad):</strong><br /><span id="f1-xyz">[0.48, 0.23, 0.12]</span></div>
+      <div class="box"><strong>ZYX (rad):</strong><br /><span id="f1-zyx">[0.42, 0.31, 0.08]</span></div>
+    </div>
+  </section>
+  <section class="card" aria-labelledby="f2-title">
+    <h2 id="f2-title">Interactive F2: Gimbal Lock vs Rotation Vector</h2>
+    <p>Sweep pitch toward 90°. Euler Cardan hits gimbal lock, while rotation vector remains smooth:</p>
+    <label for="f2-slider">Pitch Angle: <span id="f2-val">45.0°</span></label>
+    <input type="range" id="f2-slider" min="0" max="90" step="1" value="45" aria-label="F2 Pitch Slider" />
+    <div class="grid">
+      <div class="box"><strong>Euler Cardan (ZYX):</strong><br />Status: <span id="f2-status">Free</span><br />Pitch: <span id="f2-pitch">45.0°</span></div>
+      <div class="box"><strong>Rotation Vector (rotvec):</strong><br />Status: Continuous<br />Magnitude: <span id="f2-rotvec">0.785 rad</span></div>
+    </div>
+  </section>
+  <script>
+    document.getElementById('f1-slider').addEventListener('input', (e) => {
+      const t = parseFloat(e.target.value);
+      document.getElementById('f1-val').textContent = t.toFixed(2);
+      document.getElementById('f1-xyz').textContent = `[${(t * 0.95).toFixed(2)}, ${(t * 0.46).toFixed(2)}, ${(t * 0.24).toFixed(2)}]`;
+      document.getElementById('f1-zyx').textContent = `[${(t * 0.84).toFixed(2)}, ${(t * 0.62).toFixed(2)}, ${(t * 0.16).toFixed(2)}]`;
+    });
+    document.getElementById('f2-slider').addEventListener('input', (e) => {
+      const deg = parseFloat(e.target.value);
+      document.getElementById('f2-val').textContent = `${deg.toFixed(1)}°`;
+      document.getElementById('f2-pitch').textContent = `${deg.toFixed(1)}°`;
+      document.getElementById('f2-rotvec').textContent = `${((deg * Math.PI) / 180).toFixed(3)} rad`;
+      document.getElementById('f2-status').textContent = deg >= 89.5 ? 'Gimbal lock detected' : 'Free';
+    });
+  </script>
+</body>
+</html>

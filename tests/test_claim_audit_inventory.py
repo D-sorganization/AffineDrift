@@ -467,7 +467,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/validation-roadmap.html",
             "/pages/Golf_Control_Theory.html",
             "/pages/scope-and-limits.html",
-            "/articles/slack-takeup-identifiability.html",
+            "/articles/slack-management-linked-systems.html",
         }
         and (
             record["route"] == "/"
@@ -549,9 +549,16 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     fdm_p01 = _find_route(inventory, "/articles/forward_dynamics_matching/01_problem.html")
     assert fdm_p01["status"] == "reviewed"
     assert fdm_p01["review"]["source_path"] == "articles/forward_dynamics_matching/01_problem.qmd"
-    slack_witness = _find_route(inventory, "/articles/slack-takeup-identifiability.html")
-    assert slack_witness["status"] == "reviewed"
-    assert slack_witness["review"]["source_path"] == "articles/slack-takeup-identifiability.qmd"
+    slack_management = _find_route(inventory, "/articles/slack-management-linked-systems.html")
+    assert slack_management["status"] == "reviewed"
+    assert slack_management["review"]["source_path"] == (
+        "articles/slack-management-linked-systems.qmd"
+    )
+    drift_past = _find_route(inventory, "/articles/drift-is-the-past-control-is-the-present.html")
+    assert drift_past["status"] == "reviewed"
+    assert drift_past["review"]["source_path"] == (
+        "articles/drift-is-the-past-control-is-the-present.qmd"
+    )
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )
