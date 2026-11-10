@@ -809,13 +809,9 @@ $$
 \tau(t) = I_c \ddot{\theta}_c + m_c d_{G/M} a_{\text{grip}} \sin(\theta_c - \phi)
 $$
 
-Because the centripetal acceleration of the grip ($a_{\text{grip}}$) surges to over $300\text{ m/s}^2$ as the hands round the bottom of the hub path, the second term creates a massive forward angular acceleration that exceeds the physical angular acceleration of the club ($\ddot{\theta}_c$). Consequently, to satisfy Newton's second law, the applied wrist torque $\tau(t)$ **must turn negative**:
+Under the **prescribed** hub accelerations, velocities, and hinge angles in Grober's analytical model, the second term can exceed $\ddot{\theta}_c$ in magnitude. Satisfying Newton's second law with those prescribed kinematics can then require **negative** wrist torque $\tau(t)$ at that instant—a **scenario-dependent** sign within the stated idealization, not a theorem for every measured swing (compare Appendix B.1 conditional logic).
 
-$$
-\tau(t) < 0
-$$
-
-Grober demonstrated that negative alpha torque is not a stylistic quirk or an athletic flaw; it is an unavoidable mathematical consequence of driving a two-link kinetic chain with an accelerating hub.
+Grober's negative $\tau$ is therefore a consequence of the modeled loading state, not a universal physiological mandate.
 
 ---
 
@@ -842,7 +838,7 @@ Under explicit geometric assumptions on the two-hand grip, the author derived **
    - **Muscle-fascicle shortening velocity** $v_m$ (m/s): along fascicle lines after pennation and moment arms ($v_m \approx r_m \omega_{\text{rel}}$ in the simplest one-DOF reduction).
    Substituting $\omega_{\text{club}}$ directly into A.V. Hill's relation $(F + a)(v + b) = (F_0 + a)b$ **without** validated $F_0$, $a$, $b$, moment arms, and multijoint transmission does **not** prove that a $+30\text{ N}\cdot\text{m}$ force couple is impossible. The draft therefore treats late-impact **positive** force couples above ergonomic static benchmarks as a **bounded working hypothesis** (CLM-SGN-05), not a settled impossibility theorem. Contact shear may be supplied proximally or passively (interaction torque, shaft rebound); dynamic capacity is tracked separately under CLM-MCH-01.
 
-Table 5A.1 summarizes the empirical and analytical evidence base compiled across the research literature:
+Table 5A.1 summarizes published **measurement, analytical, and author-simulation** entries compiled across the research literature (WSCG/UpstreamDrift rows are **project-originated planar simulations**, not independent field replication):
 
 | Research Team / Source                                                           | Methodology & Instrumentation         | Metric Evaluated & Reference Station                         | Key Finding at Impact Window ($t \in [-40, 0]\text{ ms}$)                            |
 | :------------------------------------------------------------------------------- | :------------------------------------ | :----------------------------------------------------------- | :----------------------------------------------------------------------------------- |
@@ -856,7 +852,7 @@ Table 5A.1 summarizes the empirical and analytical evidence base compiled across
 | **Grober (2020 arXiv)** [@grober2020forces]                                      | Analytical Double-Pendulum Derivation | Analytical Joint Torque $\tau(t)$                            | Proven mathematically **NEGATIVE** via centripetal hub term                          |
 | **Olson (2020–2026)** [Author Simulation]                                        | Multi-Body Constrained KKT Dynamics   | Drift vs Control Hand Wrench                                 | **86.04%** same-state modeled magnitude ratio $C_{\alpha,\text{ZTCF}} / C_{\alpha,\text{BASE}}$ at $t=0.2151\text{ s}$ (WSCG KKT sim; not independent measurement) |
 
-: Table 5A.1: Master synthesis of empirical, analytical, and sensor evidence regarding in-plane hand kinetics near impact. {#tbl-evidence-synthesis}
+: Table 5A.1: Master synthesis of published measurement, analytical, and modeled-simulation evidence regarding in-plane hand kinetics near impact. {#tbl-evidence-synthesis}
 
 With the theoretical foundations and the competing evidence of both camps fully established, we turn in Chapters 6 through 10 to the measurement artifacts, numerical simulation experiments, and the synthesis and open test protocols.
 

@@ -63,6 +63,7 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
     def test_wscg_ztcf_provenance_language_present_5462(self) -> None:
         """Draft must label WSCG bundle as modeled and ZTCF ratio as diagnostic (#5462)."""
         draft_text = _find_draft_path().read_text(encoding="utf-8")
+        self.assertNotIn("unavoidable mathematical consequence", draft_text.lower())
         self.assertIn("project-originated planar WSCG bundle", draft_text)
         self.assertIn(
             "### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory", draft_text
