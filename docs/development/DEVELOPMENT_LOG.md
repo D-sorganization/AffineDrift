@@ -755,6 +755,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5565 · Add Stdlib Lifecycle Transition Kernel and ADR-0004 per Owner Decision
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5565
+- **Branch:** agy/5565-lifecycle-kernel
+- **PR:** #5582
+- **Paths:** see #5582
+- **Started:** 2026-11-10
+- **Last verified:** 2026-11-10 (`156edf1a`; collated from changes/5565-lifecycle-kernel.md)
+- **Summary:** Add stdlib lifecycle transition kernel and ADR-0004 per owner decision
+- **Next step:** Shipped in PR #5582.
+
 ### DL-#2845 · Reject Hosted Runner Routing Guard Runs on All PRs Without Bypass Job
 
 - **State:** shipped

@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-10 | #5582 | Add stdlib lifecycle transition kernel and ADR-0004 per owner decision |
 | 2026-11-10 | #5571 | Reject hosted runner routing guard runs on all PRs without bypass job |
 | 2026-11-10 | #5569 | fix discrete-time LTV reachability Gramian backward recursion in correction_authority_evaluator |
 | 2026-11-09 | #5552 | Freeze the dated Option A input definitions, rad-space bound scope, and single-fixture claim boundary for Slice 1 of #5550. |
