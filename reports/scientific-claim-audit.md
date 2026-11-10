@@ -23,7 +23,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/core-theses-registry.html` | `articles/core-theses-registry.qmd` | 14 |
 | `/articles/degrees-of-freedom-and-dimensionality.html` | `articles/degrees-of-freedom-and-dimensionality.qmd` | 1 |
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 7 |
-| `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 16 |
+| `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 17 |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
 | `/articles/forward_dynamics_matching/01_problem.html` | `articles/forward_dynamics_matching/01_problem.qmd` | 1 |
