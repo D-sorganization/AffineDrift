@@ -39,6 +39,12 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
     def setUp(self) -> None:
         """Skip the suite when ``ALPHA_WAR_UPSTREAM_DRIFT_ROOT`` is unset."""
         if run_study_1_grip_point_transport is None:
+            if os.environ.get("ALPHA_WAR_INTEGRATION_REQUIRED") == "1":
+                raise AssertionError(
+                    "ALPHA_WAR_INTEGRATION_REQUIRED=1 but UpstreamDrift is not configured; "
+                    "set ALPHA_WAR_UPSTREAM_DRIFT_ROOT to the pinned clone "
+                    "(see regenerate_calculations.sh)"
+                )
             self.skipTest(
                 "Set ALPHA_WAR_UPSTREAM_DRIFT_ROOT to a pinned UpstreamDrift clone "
                 "(see upstream_drift.lock.json)"
