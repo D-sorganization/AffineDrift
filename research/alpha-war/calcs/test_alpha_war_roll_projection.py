@@ -118,6 +118,15 @@ class TestAlphaWarDraftRollFrameProse(unittest.TestCase):
         self.assertIn("\\leftarrow\\text{FSP}", self.draft_text)
         self.assertIn("rotation matrix transforming coordinates", self.draft_text)
 
+    def test_box_2_1_zero_degree_step_matches_plus_sine_formula(self) -> None:
+        """Box 2.1 numeric demo at phi=0 must use M_in cos + M_out sin, not minus on M_out."""
+        box = self.draft_text.split("Box 2.1:")[1].split(":::")[0]
+        self.assertIn(
+            "M_{\\text{in}}\\cos 0^\\circ + M_{\\text{out}}\\sin 0^\\circ", box
+        )
+        self.assertNotIn("-15.0(1.0) - 8.0(0.0)", box)
+        self.assertIn("\\operatorname{atan2}\\bigl(-M_{\\text{in}}, M_{\\text{out}}\\bigr)", box)
+
 
 if __name__ == "__main__":
     unittest.main()
