@@ -68,6 +68,10 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
             "### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory", draft_text
         )
         self.assertIn("measured share of physiological muscle torque", draft_text)
+        claims = (ALPHA_WAR_DIR / "work" / "03_claims.md").read_text(encoding="utf-8")
+        self.assertIn("86.04", claims)
+        self.assertIn("measured muscle share", claims)
+        self.assertIn("modeled", claims.lower())
 
     def test_s_star_illustrative_vs_simulated_and_claim_verdicts(self) -> None:
         """Illustrative (+0.213 m) and simulated (+0.737 m) s* and CLM relabels must exist."""
