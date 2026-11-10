@@ -28,8 +28,8 @@ class DoublePendulumParams:
 
     @property
     def j1(self) -> float:
-        """Arm inertia about the proximal pivot including remote club point mass."""
-        return self.i1_o + self.m2 * self.l1**2
+        """Arm rotational inertia about O (club translation handled via COM speed)."""
+        return self.i1_o
 
 
 @dataclass(frozen=True)
@@ -50,7 +50,7 @@ def hinge_angle(state: PendulumState) -> float:
 def mass_matrix(params: DoublePendulumParams, phi: float) -> Mat2:
     """Return 2x2 mass matrix M(phi) as the velocity Hessian of draft T."""
     m12 = params.m2 * params.l1 * params.r_g2 * math.cos(phi)
-    m11 = params.j1 + params.m2 * params.l1**2
+    m11 = params.i1_o + params.m2 * params.l1**2
     return np.array(
         [
             [m11, m12],
@@ -83,10 +83,10 @@ def gravity_generalized(params: DoublePendulumParams, state: PendulumState) -> V
 
 
 def kinetic_energy(params: DoublePendulumParams, state: PendulumState) -> float:
-    """Kinetic energy T from draft B.1."""
+    """Kinetic energy T from draft B.1 (split form equivalent to COM kinematics)."""
     phi = hinge_angle(state)
     c = math.cos(phi)
-    t = 0.5 * params.j1 * state.theta1_dot**2
+    t = 0.5 * params.i1_o * state.theta1_dot**2
     inner = (
         params.l1**2 * state.theta1_dot**2
         + params.r_g2**2 * state.theta2_dot**2
@@ -94,6 +94,18 @@ def kinetic_energy(params: DoublePendulumParams, state: PendulumState) -> float:
     )
     t += 0.5 * params.m2 * inner + 0.5 * params.i_g2 * state.theta2_dot**2
     return float(t)
+
+
+def kinetic_energy_from_com_kinematics(params: DoublePendulumParams, state: PendulumState) -> float:
+    """Kinetic energy from independent planar position kinematics (COM velocity)."""
+    t1, t2 = state.theta1, state.theta2
+    v1, v2 = state.theta1_dot, state.theta2_dot
+    vx = -params.l1 * math.sin(t1) * v1 - params.r_g2 * math.sin(t2) * v2
+    vy = params.l1 * math.cos(t1) * v1 + params.r_g2 * math.cos(t2) * v2
+    v_com_sq = vx * vx + vy * vy
+    return float(
+        0.5 * params.i1_o * v1 * v1 + 0.5 * params.m2 * v_com_sq + 0.5 * params.i_g2 * v2 * v2
+    )
 
 
 def _kinetic_at_vel(

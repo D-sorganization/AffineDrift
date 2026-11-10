@@ -503,10 +503,10 @@ How can a golfer accelerate the clubhead forward if the hand couple $C_\alpha$ i
 As demonstrated mathematically by Miura (2001) and elaborated by [@nesbit2009hub], the clubhead of a golf club does not require an active wrist couple to accelerate. When a golfer pulls the grip inward along a curved path toward the body (centripetal acceleration), the tension force $\mathbf{R}$ acts on the club. If the shaft is not perpendicular to the pull vector, the inward pull exerts a component that accelerates the clubhead tangentially:
 
 $$
-\dot{\omega} = \frac{C_\alpha + R_n\,d_{G/M}\sin\beta}{I_G + m_c d_{G/M}^2}
+\dot{\omega} = \frac{C_\alpha + R_n\,d_{G/M}\sin\beta + m_c\,d_{G/M}\,a_{g,\perp}}{I_G + m_c d_{G/M}^2}
 $$
 
-where $\beta$ is the uncocking angle and $R_n$ is the centripetal grip tension. In the late downswing, $R_n$ exceeds $300\text{ to }500\text{ N}$. Even a tiny angular misalignment $\sin\beta$ produces a forward accelerating torque $R_n d_{G/M}\sin\beta > +40\text{ N}\cdot\text{m}$ that overwhelms a negative hand couple $C_\alpha = -15\text{ N}\cdot\text{m}$. The clubhead surges forward _because_ of the grip pull, not because of hand pushing.
+where $\beta$ is the uncocking angle, $R_n$ is the centripetal grip tension (normal to the hub path), and $a_{g,\perp}$ is the grip acceleration component perpendicular to the shaft line $M\!\to\!G$ (parametric acceleration from the curved hub path). The $m_c d_{G/M} a_{g,\perp}$ term is required whenever the grip reference point accelerates; Appendix B.1–B.2 derive the same structure for a two-link chain with $\tau_2 = I_c \ddot{\theta}_2 + m_c d_{G/M} a_{\text{grip}} \sin(\theta_c - \phi) + \cdots$. In the late downswing, $R_n$ often exceeds $300\text{ to }500\text{ N}$ and $|a_{g,\perp}|$ can exceed $200\text{ m/s}^2$ on the hub path. Even a tiny angular misalignment $\sin\beta$ can produce a forward accelerating torque $R_n d_{G/M}\sin\beta > +40\text{ N}\cdot\text{m}$ that overwhelms a negative hand couple $C_\alpha = -15\text{ N}\cdot\text{m}$ **when those passive loads dominate**—not as an unconditional sign theorem (see §5.5 and B.1).
 
 ::: {.callout-note title="Box 3.3: Power and Work Flow Invariance Across Reference Points"}
 **Plain-language lead:** Although shifting the reference point changes whether energy looks like it is entering the club as a translational pull or a rotational twist, the total rate of energy delivered to the club is strictly identical under any reference point.
@@ -806,13 +806,9 @@ $$
 \tau(t) = I_c \ddot{\theta}_c + m_c d_{G/M} a_{\text{grip}} \sin(\theta_c - \phi)
 $$
 
-Because the centripetal acceleration of the grip ($a_{\text{grip}}$) surges to over $300\text{ m/s}^2$ as the hands round the bottom of the hub path, the second term creates a massive forward angular acceleration that exceeds the physical angular acceleration of the club ($\ddot{\theta}_c$). Consequently, to satisfy Newton's second law, the applied wrist torque $\tau(t)$ **must turn negative**:
+When the centripetal acceleration of the grip ($a_{\text{grip}}$) surges to over $300\text{ m/s}^2$ as the hands round the bottom of the hub path, Grober's second term can create a large passive contribution that **often** exceeds the club's inertial term $\ddot{\theta}_c$ in late-downswing parameter ranges. Under those **prescribed** hub accelerations, velocities, and hinge angles, satisfying Newton's second law with the observed $\ddot{\theta}_c$ can require $\tau(t) < 0$—a **scenario-dependent** sign, not a theorem that every skilled swing must exhibit negative wrist torque regardless of loading (Appendix B.1 states the conditional logic explicitly).
 
-$$
-\tau(t) < 0
-$$
-
-Grober demonstrated that negative alpha torque is not a stylistic quirk or an athletic flaw; it is an unavoidable mathematical consequence of driving a two-link kinetic chain with an accelerating hub.
+Grober's result is therefore best read as a **mechanistic explanation** for negative alpha torque in hub-dominated late release, aligned with Camp B kinematics, rather than as a universal necessity claim independent of grip forces and boundary torques.
 
 ---
 
@@ -1865,14 +1861,13 @@ Let $\theta_1(t)$ be the **absolute** arm angle measured counterclockwise from h
 Regression checks for the mass matrix and $\tau_2=0$ substitution are in `research/alpha-war/calcs/test_alpha_war_double_pendulum.py`. A **negative** hinge torque is **not** an unconditional mathematical necessity—it follows only when passive coupling, gravity, and the chosen $\ddot{\theta}_1$, $\dot{\theta}_1$, and $\phi$ produce $\tau_2<0$ under the equations below.
 
 The kinetic energy $T$ and potential energy $V$ are:
-$$T = \frac{1}{2} J_1 \dot{\theta}_1^2 + \frac{1}{2} m_2 \left[ L_1^2 \dot{\theta}_1^2 + r_{G2}^2 \dot{\theta}_2^2 + 2 L_1 r_{G2} \dot{\theta}_1 \dot{\theta}_2 \cos(\theta_2 - \theta_1) \right] + \frac{1}{2} I_{G2} \dot{\theta}_2^2$$
-where $J_1 = I_{1,O} + m_2 L_1^2$.
+$$T = \frac{1}{2} I_{1,O} \dot{\theta}_1^2 + \frac{1}{2} m_2 \left[ L_1^2 \dot{\theta}_1^2 + r_{G2}^2 \dot{\theta}_2^2 + 2 L_1 r_{G2} \dot{\theta}_1 \dot{\theta}_2 \cos(\theta_2 - \theta_1) \right] + \frac{1}{2} I_{G2} \dot{\theta}_2^2$$
+equivalent to $T = \tfrac{1}{2} I_{1,O} \dot{\theta}_1^2 + \tfrac{1}{2} m_2 |\mathbf{v}_{G2}|^2 + \tfrac{1}{2} I_{G2} \dot{\theta}_2^2$ for planar COM kinematics (verified independently in `alpha_war_double_pendulum.py`).
 
 The Euler–Lagrange equations yield:
 $$\begin{bmatrix} M_{11} & M_{12}(\phi) \\ M_{21}(\phi) & M_{22} \end{bmatrix} \begin{bmatrix} \ddot{\theta}_1 \\ \ddot{\theta}_2 \end{bmatrix} + \begin{bmatrix} -m_2 L_1 r_{G2} \dot{\theta}_2^2 \sin\phi \\ +m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi \end{bmatrix} + \begin{bmatrix} G_1(\theta_1) \\ G_2(\theta_2) \end{bmatrix} = \begin{bmatrix} \tau_1 - \tau_2 \\ \tau_2 \end{bmatrix}$$
 where:
-$$M_{11} = J_1 + m_2 L_1^2 = I_{1,O} + 2 m_2 L_1^2, \quad M_{22} = I_{G2} + m_2 r_{G2}^2, \quad M_{12} = M_{21} = m_2 L_1 r_{G2} \cos\phi$$
-(the $m_2 L_1^2$ term is the second contribution from the club translational kinetic energy in $T$, in addition to the $m_2 L_1^2$ already inside $J_1$)
+$$M_{11} = I_{1,O} + m_2 L_1^2, \quad M_{22} = I_{G2} + m_2 r_{G2}^2, \quad M_{12} = M_{21} = m_2 L_1 r_{G2} \cos\phi$$
 
 ### B.2 Analytic Isolation of Wrist Hinge Torque ($\tau_2$) and Putnam Decomposition
 
