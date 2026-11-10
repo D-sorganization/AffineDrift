@@ -123,17 +123,26 @@ def _peak_input_support_radius(
 def _backward_controllability_gramians(
     steps: tuple[LTVLinearizationStep, ...],
 ) -> tuple[Array, ...]:
-    """Compute finite-horizon controllability Gramians via backward recursion."""
+    """Compute horizon-end reachability Gramians W(k,N) in state coordinates at step N.
+
+    Accumulates backward using the exact discrete-time LTV state-transition recursion:
+        W(k, N) = W(k+1, N) + Φ(N, k+1) B_k B_kᵀ Φ(N, k+1)ᵀ
+    carrying the transition operator backward via:
+        Φ(N, k) = Φ(N, k+1) @ A_k, with base case Φ(N, N) = I.
+    """
     if not steps:
         raise ValueError("at least one LTV step is required")
     state_dim = steps[0].state_matrix.shape[0]
-    gramian_next = np.zeros((state_dim, state_dim), dtype=np.float64)
+    phi = np.eye(state_dim, dtype=np.float64)
+    gramian = np.zeros((state_dim, state_dim), dtype=np.float64)
     gramians_reversed: list[Array] = []
     for step in reversed(steps):
         a, b = step.state_matrix, step.input_matrix
-        gramian = a @ gramian_next @ a.T + b @ b.T
-        gramian_next = 0.5 * (gramian + gramian.T)
-        gramians_reversed.append(gramian_next)
+        term = phi @ b
+        gramian = gramian + term @ term.T
+        gramian_sym = 0.5 * (gramian + gramian.T)
+        gramians_reversed.append(gramian_sym)
+        phi = phi @ a
     return tuple(reversed(gramians_reversed))
 
 
