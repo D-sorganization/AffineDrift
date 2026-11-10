@@ -17,6 +17,8 @@ This directory contains the reproducible calculation and simulation suite suppor
 - `alpha_war_calculations.json`: Machine-readable output (includes `generation_provenance`).
 - `alpha_war_regeneration_manifest.json`: Standalone provenance manifest (output hash, inputs, commit).
 - `regenerate_calculations.sh`: Fails unless `ALPHA_WAR_UPSTREAM_DRIFT_ROOT` points at the locked commit; reruns the suite and unit tests.
+- `alpha_war_roll_projection.py`: FSP→club roll rotation matrix and `M_alpha,club(phi)` projection (Study 3 / Box 2.1; #5461).
+- `test_alpha_war_roll_projection.py`: Orthonormal round-trip, norm invariance, and illustrative φ* guards (no UpstreamDrift).
 - `alpha_war_hand_force_bounds.py`: Box 3.1 opposed hand-shear arithmetic for §5A.1 (force couple reconstruction; #5464).
 - `test_alpha_war_hand_force_bounds.py`: Verifies couple–force algebra and draft CLM-SGN-05 wording.
 - `test_alpha_war_sensitivity_suite.py`: Integration tests (require pinned UpstreamDrift; skipped when env unset).
