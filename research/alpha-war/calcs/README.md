@@ -21,6 +21,7 @@ This directory contains the reproducible calculation and simulation suite suppor
 - `test_alpha_war_roll_projection.py`: Orthonormal round-trip, norm invariance, and illustrative φ* guards (no UpstreamDrift).
 - `alpha_war_hand_force_bounds.py`: Box 3.1 opposed hand-shear arithmetic and ``C/ℓ ≤ F ≤ C/s`` contact-force range for §5A.1 (#5464).
 - `test_alpha_war_hand_force_bounds.py`: Verifies couple–force algebra and draft CLM-SGN-05 wording.
+- `alpha_war_hill_sensitivity.py` / `test_alpha_war_hill_sensitivity.py`: Hill $F/F_0$ table and §8.1 Koike triplet guards (#5464).
 - `test_alpha_war_sensitivity_suite.py`: Integration tests (require pinned UpstreamDrift; skipped when env unset).
 - `test_alpha_war_reproducibility.py`: Lock/manifest/golden-number guards (no UpstreamDrift checkout required).
 - `alpha_war_spatial_wrench.py` / `test_alpha_war_spatial_wrench_power.py`: Appendix A force-first wrench transport and dual power pairing (#5459).

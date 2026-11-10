@@ -6,5 +6,5 @@ next_step: "Merge after CI on research/alpha-war-thesis"
 branch: "cursor/5464-work-claims-hand-bound-3977"
 ---
 
-Closes remaining acceptance slices 1–2: qualified executive-summary muscle-speed prose,
-``contact_force_range`` algebra, and Box 3.1 / §5A.1 range documentation.
+Slices 1–2: executive-summary qualification, ``contact_force_range``, Box 3.1 range.
+Follow-on in same PR: §8.1 Koike force–couple reconciliation and Hill sensitivity module.
