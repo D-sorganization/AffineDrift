@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-10 | #5569 | fix discrete-time LTV reachability Gramian backward recursion in correction_authority_evaluator |
 | 2026-11-09 | #5552 | Freeze the dated Option A input definitions, rad-space bound scope, and single-fixture claim boundary for Slice 1 of #5550. |
 | 2026-11-08 | #5548 | Clarify nested PDF/LFS intent and reproducible build-artifact retention policy |
 | 2026-11-08 | #5545 | retry live public site verification on transient subresource 5xx and remote cell failures |
