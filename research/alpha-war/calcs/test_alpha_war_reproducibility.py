@@ -70,6 +70,15 @@ class TestAlphaWarReproducibility(unittest.TestCase):
             manifest.get("calcs_requirements_lock_sha256"), sha256_file(REQUIREMENTS_LOCK_PATH)
         )
 
+    def test_manifest_v2_records_generator_and_lock_hashes(self) -> None:
+        """Manifest v2 must hash generator sources and the UpstreamDrift lock file."""
+        manifest = json.loads(MANIFEST_JSON.read_text(encoding="utf-8"))
+        self.assertEqual(manifest.get("manifest_schema"), "alpha-war-regen-manifest/v2")
+        gen_hashes = manifest.get("generator_source_sha256")
+        self.assertIsInstance(gen_hashes, dict)
+        self.assertIn("alpha_war_sensitivity_suite.py", gen_hashes)
+        self.assertRegex(str(manifest.get("upstream_drift_lock_sha256", "")), r"^[0-9a-f]{64}$")
+
     def test_regenerate_script_enforces_integration_gate(self) -> None:
         """Full regen must set ALPHA_WAR_INTEGRATION_REQUIRED so skips cannot pass."""
         script = REGENERATE_SH.read_text(encoding="utf-8")

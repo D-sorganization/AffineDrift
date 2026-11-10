@@ -96,6 +96,11 @@ def verify_pinned_commit(root: Path, lock: dict[str, Any] | None = None) -> str:
     return head
 
 
+def load_export(path: Path) -> dict[str, Any]:
+    """Load ``alpha_war_calculations.json`` or another JSON export."""
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def sha256_file(path: Path) -> str:
     """Return hex SHA-256 digest of ``path``."""
     digest = hashlib.sha256()

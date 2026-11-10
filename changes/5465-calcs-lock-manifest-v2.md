@@ -6,5 +6,5 @@ next_step: "Merge after CI; slice 2 needs pinned UpstreamDrift regen"
 branch: "cursor/5465-repro-manifest-gate-3977"
 ---
 
-Adds `research/alpha-war/calcs/requirements.lock`, records SciPy and `output_json_sha256`
-in the regeneration manifest, and exact version guards in reproducibility tests.
+Adds calcs lock, manifest v2 hashes, tolerant JSON compare, pinned UpstreamDrift regen
+workflow, and integration fail-closed gate (#5465 slices 1–5).
