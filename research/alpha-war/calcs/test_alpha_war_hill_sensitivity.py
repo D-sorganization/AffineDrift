@@ -50,6 +50,7 @@ class TestAlphaWarKoikeSection81Consistency(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
+        """Load the v1 draft once for §8.1 prose guards."""
         cls.draft_text = (ALPHA_WAR_DIR / "draft" / "alpha-war-v1.md").read_text(encoding="utf-8")
 
     def test_koike_forces_reconstruct_with_stated_free_torque_credit(self) -> None:
