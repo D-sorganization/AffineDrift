@@ -25,6 +25,11 @@ class TestTheoryPart1MathBuildCompare(unittest.TestCase):
         self.assertEqual(payload["katex_metadata_override"], KATEX_METADATA)
         self.assertIn("not server-side", str(payload["note"]))
 
+    def test_katex_override_uses_quarto_colon_metadata(self) -> None:
+        """Quarto -M nested keys use colons, not equals signs."""
+        self.assertIn(":method:katex", KATEX_METADATA)
+        self.assertNotIn("=", KATEX_METADATA)
+
     @patch("scripts.theory_part1_math_build_compare._render_once", side_effect=[10.0, 9.5])
     @patch("scripts.theory_part1_math_build_compare._quarto_available", return_value=True)
     def test_compare_invokes_two_renders(

@@ -40,7 +40,7 @@ python3 scripts/lighthouse_math_cost.py REPORT.json
 
 ## Branch-local KaTeX profile (build-time delta, not production)
 
-The compare script passes `-M format.html.html-math-method.method=katex` for a
+The compare script passes `-M format.html.html-math-method:method:katex` for a
 branch-local override (not production). Reproduce wall-clock build delta:
 
 ```bash

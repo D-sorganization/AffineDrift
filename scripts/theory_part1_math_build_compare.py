@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 THEORY_PART1 = REPO_ROOT / "articles" / "theory-part1.qmd"
-KATEX_METADATA = "format.html.html-math-method.method=katex"
+KATEX_METADATA = "format.html.html-math-method:method:katex"
 DEFAULT_LABEL = "mathjax_gate"
 PROTOTYPE_LABEL = "katex_prototype"
 
