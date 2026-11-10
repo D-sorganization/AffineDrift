@@ -287,7 +287,7 @@ Consider an **illustrative** late-downswing loading state where the golfer exert
 
 1. At $\phi_{\text{roll}} = 0^\circ$ (square face):
    $$
-   M_{\alpha,\text{club}}(0^\circ) = -15.0(1.0) - 8.0(0.0) = -15.00\text{ N}\cdot\text{m} \quad \text{(Negative)}
+   M_{\alpha,\text{club}}(0^\circ) = M_{\text{in}}\cos 0^\circ + M_{\text{out}}\sin 0^\circ = -15.0(1.0) + 8.0(0.0) = -15.00\text{ N}\cdot\text{m} \quad \text{(Negative)}
    $$
 2. At $\phi_{\text{roll}} = 45^\circ$:
    $$
