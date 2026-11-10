@@ -33,10 +33,7 @@ class TestAlphaWarHillSensitivity5464(unittest.TestCase):
 
     def test_omega_club_substitution_is_more_pessimistic(self) -> None:
         """Using ``omega_club`` instead of ``omega_rel`` lowers predicted ``F/F0``."""
-        rows = {
-            r["kinematic_label"]: r
-            for r in hill_sensitivity_rows(omega_rel_rad_s=15.0)
-        }
+        rows = {r["kinematic_label"]: r for r in hill_sensitivity_rows(omega_rel_rad_s=15.0)}
         self.assertEqual(rows["omega_club"]["f_over_f0"], 0.0)
         self.assertGreater(rows["omega_rel"]["f_over_f0"], 0.0)
         self.assertLess(rows["omega_club"]["f_over_f0"], rows["omega_rel"]["f_over_f0"])
