@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -36,6 +37,17 @@ DEFAULT_PARAMS = DoublePendulumParams(
     i_g2=0.08,
 )
 
+FIG_SHOULDER_O = (120.0, 240.0)
+FIG_WRIST = (260.0, 130.0)
+FIG_CLUB_TIP = (420.0, 70.0)
+FIG_ARM_TIP = (260.0, 130.0)
+
+
+def _svg_path_endpoint(path_d: str) -> tuple[float, float]:
+    """Parse the terminal x,y coordinates from a compact M…A… SVG path."""
+    tokens = path_d.replace(",", " ").split()
+    return float(tokens[-2]), float(tokens[-1])
+
 
 class TestAlphaWarDoublePendulum(unittest.TestCase):
     """Lock B.1 inertia matrix, tau2=0 substitution, and conditional release prose."""
@@ -62,6 +74,7 @@ class TestAlphaWarDoublePendulum(unittest.TestCase):
         m_analytic = mass_matrix(DEFAULT_PARAMS, phi)
 
         def _t_com(v1: float, v2: float) -> float:
+            """Kinetic energy at perturbed velocities for numeric Hessian sampling."""
             return kinetic_energy_from_com_kinematics(
                 DEFAULT_PARAMS, PendulumState(state.theta1, state.theta2, v1, v2)
             )
@@ -139,6 +152,43 @@ class TestAlphaWarDoublePendulum(unittest.TestCase):
         self.assertIn('marker-end="url(#arrow-ccw)"', svg)
         self.assertIn("theta1", svg)
         self.assertIn("theta2", svg)
+
+    def test_b1_theta2_arc_matches_club_direction_from_shoulder(self) -> None:
+        """theta2 arc endpoint must match the absolute O-to-club direction."""
+        svg = (DRAFT / "figures" / "fig-double-pendulum-b1.svg").read_text(encoding="utf-8")
+        match = re.search(r'id="theta2-arc-from-horizontal" d="([^"]+)"', svg)
+        self.assertIsNotNone(match)
+        path_d = match.group(1) if match else ""
+        ex, ey = _svg_path_endpoint(path_d)
+        ox, oy = FIG_SHOULDER_O
+        cx, cy = FIG_CLUB_TIP
+        expected = math.atan2(oy - cy, cx - ox)
+        drawn = math.atan2(oy - ey, ex - ox)
+        self.assertAlmostEqual(drawn, expected, places=2)
+
+    def test_b1_theta1_arc_matches_arm_direction_from_shoulder(self) -> None:
+        """theta1 arc endpoint must match the absolute O-to-arm direction."""
+        svg = (DRAFT / "figures" / "fig-double-pendulum-b1.svg").read_text(encoding="utf-8")
+        match = re.search(r'id="theta1-arc-from-horizontal" d="([^"]+)"', svg)
+        self.assertIsNotNone(match)
+        path_d = match.group(1) if match else ""
+        ex, ey = _svg_path_endpoint(path_d)
+        ox, oy = FIG_SHOULDER_O
+        ax, ay = FIG_ARM_TIP
+        expected = math.atan2(oy - ay, ax - ox)
+        drawn = math.atan2(oy - ey, ex - ox)
+        self.assertAlmostEqual(drawn, expected, places=2)
+
+    def test_b1_tau2_arrow_bulges_outward_for_ccw_uncocking(self) -> None:
+        """tau2 arc start should lie on the club side, outside the hinge, for +CCW."""
+        svg = (DRAFT / "figures" / "fig-double-pendulum-b1.svg").read_text(encoding="utf-8")
+        match = re.search(r'id="tau2-arrow" d="([^"]+)"', svg)
+        self.assertIsNotNone(match)
+        tokens = (match.group(1) if match else "").replace(",", " ").split()
+        start_x, start_y = float(tokens[1]), float(tokens[2])
+        wx, wy = FIG_WRIST
+        self.assertGreater(start_x, wx + 20.0)
+        self.assertLess(start_y, wy)
 
 
 if __name__ == "__main__":
