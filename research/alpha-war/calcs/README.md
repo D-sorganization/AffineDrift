@@ -14,8 +14,9 @@ This directory contains the reproducible calculation and simulation suite suppor
 - `alpha_war_sensitivity_suite.py`: Executable Python calculation suite implementing six studies using `UpstreamDrift` wrench, identifiability, closed-loop, and flexible-shaft modules.
 - `alpha_war_upstream.py`: Resolves `ALPHA_WAR_UPSTREAM_DRIFT_ROOT`, verifies the pinned commit and WSCG CSV hashes, and builds regeneration provenance.
 - `upstream_drift.lock.json`: Pinned UpstreamDrift repository URL, commit SHA, and SHA-256 digests of WSCG CSV inputs.
+- `requirements.lock`: Pinned Python/NumPy/SciPy versions for calcs regeneration (#5465 slice 1).
 - `alpha_war_calculations.json`: Machine-readable output (includes `generation_provenance`).
-- `alpha_war_regeneration_manifest.json`: Standalone provenance manifest (output hash, inputs, commit).
+- `alpha_war_regeneration_manifest.json`: Standalone provenance manifest (``output_json_sha256``, inputs, dependency versions).
 - `regenerate_calculations.sh`: Fails unless `ALPHA_WAR_UPSTREAM_DRIFT_ROOT` points at the locked commit; reruns the suite and unit tests.
 - `alpha_war_roll_projection.py`: FSP→club roll rotation matrix and `M_alpha,club(phi)` projection (Study 3 / Box 2.1; #5461).
 - `test_alpha_war_roll_projection.py`: Orthonormal round-trip, norm invariance, and illustrative φ* guards (no UpstreamDrift).

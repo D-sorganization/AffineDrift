@@ -31,6 +31,7 @@ from alpha_war_upstream import (  # noqa: E402
     WSCG_REL,
     build_generation_provenance,
     prepare_upstream_context,
+    sha256_file,
 )
 from scipy.signal import butter, filtfilt
 
@@ -101,7 +102,7 @@ from scripts.research.proximal_distal_energy.two_hand_wrench import (
 )
 
 LOGGER = logging.getLogger(__name__)
-SUITE_VERSION = "2026-11-05-repro-pin"
+SUITE_VERSION = "2026-11-10-calcs-lock"
 OUT_OF_PLANE_AXIS = np.array([0.0, -1.0, 1.0]) / np.sqrt(2.0)
 WSCG_RAW_DIR = UPSTREAM_DRIFT_ROOT / WSCG_REL
 CALCS_DIR = Path(__file__).resolve().parent
@@ -726,6 +727,7 @@ def main() -> None:
         json.dumps({"generation_provenance": provenance, **results}, indent=2),
         encoding="utf-8",
     )
+    provenance["output_json_sha256"] = sha256_file(json_path)
     manifest_path = CALCS_DIR / "alpha_war_regeneration_manifest.json"
     manifest_path.write_text(json.dumps(provenance, indent=2), encoding="utf-8")
     LOGGER.info("Wrote calculation results to %s", json_path)

@@ -13,9 +13,11 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import scipy
 
 CALCS_DIR = Path(__file__).resolve().parent
 LOCK_PATH = CALCS_DIR / "upstream_drift.lock.json"
+REQUIREMENTS_LOCK_PATH = CALCS_DIR / "requirements.lock"
 ENV_ROOT = "ALPHA_WAR_UPSTREAM_DRIFT_ROOT"
 WSCG_REL = Path("docs/research/proximal_distal_energy_transfer/data/wscg_two_hand_raw")
 WSCG_CASES = ("base", "ztcf", "delta")
@@ -39,6 +41,17 @@ def load_lock() -> dict[str, Any]:
     if not LOCK_PATH.is_file():
         raise UpstreamDriftReproError(f"Missing dependency lock: {LOCK_PATH}")
     return json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+
+
+def load_calcs_requirements_lock() -> dict[str, str]:
+    """Load ``requirements.lock`` (Python/NumPy/SciPy pins for calcs regeneration)."""
+    if not REQUIREMENTS_LOCK_PATH.is_file():
+        raise UpstreamDriftReproError(f"Missing calcs requirements lock: {REQUIREMENTS_LOCK_PATH}")
+    payload = json.loads(REQUIREMENTS_LOCK_PATH.read_text(encoding="utf-8"))
+    for key in ("python", "numpy", "scipy"):
+        if key not in payload:
+            raise UpstreamDriftReproError(f"requirements.lock missing required key: {key}")
+    return {k: str(payload[k]) for k in ("python", "numpy", "scipy")}
 
 
 def resolve_upstream_root() -> Path:
@@ -150,6 +163,7 @@ def build_generation_provenance(
     """Build provenance metadata for a regeneration run."""
     lock = load_lock()
     studies_sha256 = hashlib.sha256(json.dumps(studies, indent=2).encode("utf-8")).hexdigest()
+    req_lock = load_calcs_requirements_lock()
     return {
         "upstream_repository": lock.get("repository"),
         "upstream_commit": ctx.commit,
@@ -159,6 +173,12 @@ def build_generation_provenance(
         "suite_version": suite_version,
         "output_json": "alpha_war_calculations.json",
         "studies_sha256": studies_sha256,
+        "studies_payload_note": (
+            "SHA-256 of json.dumps(study_* blocks, indent=2); not the committed JSON file bytes"
+        ),
+        "calcs_requirements_lock_sha256": sha256_file(REQUIREMENTS_LOCK_PATH),
         "python_version": sys.version.split()[0],
         "numpy_version": np.__version__,
+        "scipy_version": scipy.__version__,
+        "calcs_requirements_lock": req_lock,
     }
