@@ -129,8 +129,14 @@ def margin_to_correction_target(
         raise ValueError("tolerance must be finite and nonnegative")
     lower, upper = interval
     if target < lower - tolerance or target > upper + tolerance:
-        signed = min(target - upper, lower - target)
+        signed = target - lower if target < lower else target - upper
         return False, signed
+    if target < lower:
+        margin = (lower - target) - tolerance
+        return margin >= 0.0, margin
+    if target > upper:
+        margin = (target - upper) - tolerance
+        return margin >= 0.0, margin
     clearance = min(upper - target, target - lower)
     margin = clearance - tolerance if required_task_error == 0.0 else clearance
     return margin >= 0.0, margin

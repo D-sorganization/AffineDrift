@@ -116,7 +116,7 @@ def _peak_input_support_radius(
     for step in reversed(steps):
         effect = phi_to_end.T @ direction
         support += input_bound * float(np.sum(np.abs(step.input_matrix.T @ effect)))
-        phi_to_end = step.state_matrix @ phi_to_end
+        phi_to_end = phi_to_end @ step.state_matrix
     return support
 
 

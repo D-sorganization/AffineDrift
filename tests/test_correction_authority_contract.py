@@ -13,6 +13,7 @@ from src.affine_control.correction_authority_contract import (
     evaluate_double_integrator_correction_authority,
     evaluate_planar_rank_deficient_authority,
     evaluate_scalar_correction_authority,
+    margin_to_correction_target,
     preregistered_humanoid_correction_authority_protocol,
     validate_correction_authority_protocol,
 )
@@ -138,6 +139,32 @@ def test_validate_rejects_protocol_without_hypotheses() -> None:
 def test_contract_rejects_forbidden_overclaim_phrasing(phrase: str) -> None:
     with pytest.raises(ValueError, match="authority boundary"):
         reject_forbidden_protocol_phrases(phrase)
+
+
+@pytest.mark.parametrize(
+    ("interval", "target", "tolerance", "recoverable", "margin"),
+    (
+        ((0.0, 1.0), 0.5, 0.1, True, 0.4),
+        ((0.0, 1.0), -0.1, 0.1, True, 0.0),
+        ((0.0, 1.0), -0.100001, 0.1, False, pytest.approx(-0.100001)),
+        ((0.0, 1.0), -0.2, 0.1, False, pytest.approx(-0.2)),
+        ((0.0, 1.0), 1.1, 0.1, True, 0.0),
+        ((0.0, 1.0), 1.100001, 0.1, False, pytest.approx(0.100001)),
+    ),
+)
+def test_margin_to_correction_target_tolerance_band(
+    interval: tuple[float, float],
+    target: float,
+    tolerance: float,
+    recoverable: bool,
+    margin: object,
+) -> None:
+    got_rec, got_margin = margin_to_correction_target(interval, target, tolerance, 0.0)
+    assert got_rec is recoverable
+    if isinstance(margin, float):
+        assert got_margin == pytest.approx(margin, abs=1e-12)
+    else:
+        assert got_margin == margin
 
 
 @pytest.mark.content_lint
