@@ -1421,6 +1421,20 @@ $$\mathbf{v}_{\text{null}} = \begin{bmatrix} +0.7071 & 0 & 0 & -0.7071 & 0 & 0 \
 
 This study runs the matched **reduced planar 3-link** flexible-shaft rollout in `UpstreamDrift` (`FlexibleShaftParams.reference`: lumped bending coordinate, linear stiffness $k$, gravity on, shoulder/wrist damping on) side by side with the **exact rigid-shaft reduction** of the same parameters. It separates the **model-predicted** interface load and distal angular-acceleration breakdown from a **standalone hypothetical** push--pull scaling that uses fixed inputs ($11^\circ$, $465\text{ N}$, $+10\text{ N}\cdot\text{m}$) that are **not** derived from that rollout. The hypothetical block illustrates how large assumed opposed forces map to a force couple at the grip; it is **not** a second measurement of the $56\text{ N}$ interface resultant in Table 7.10 and must not be read as population-level proof that the shaft **establishes** a negative net hand couple.
 
+### Reference Stiffness, Frequency, and Planar Gravity (`FlexibleShaftParams.reference`)
+
+The matched rollout uses UpstreamDrift’s **reference** lumped-shaft parameters. The linear bending stiffness is **`k = 80\ \mathrm{N{\cdot}rad^{-1}}`** on the shaft-flex coordinate. Under oracle 3 (clamp the proximal segment, release from a small deflection), the equivalent small-oscillation frequency is
+
+$$
+f_{\mathrm{shaft}} = \frac{1}{2\pi}\sqrt{\frac{k}{m_{\mathrm{head}}\,b^{2}}},
+\qquad
+\mathrm{cpm} = 60\,f_{\mathrm{shaft}},
+$$
+
+with **`m_{\mathrm{head}} = 0.20\ \mathrm{kg}`** (distal head mass) and **`b = 0.55\ \mathrm{m}`** (distal shaft segment length), giving **`f_{\mathrm{shaft}} \approx 5.79\ \mathrm{Hz}`** and **`{\approx}347\ \mathrm{cpm}`**—stiffer than a typical ${\approx}250\ \mathrm{cpm}$ driver rating, so the reference case tends to **understate** lead deflection for a given tip load.
+
+Planar gravity in the reference case is **`g_{\parallel} = 8.033\ \mathrm{m\,s^{-2}}`**, interpreted as the in-plane component of **`9.81\ \mathrm{m\,s^{-2}}`** when the functional swing plane is tilted **`35^\circ`** from horizontal, i.e. **`g_{\parallel} \approx 9.81\cos 35^\circ \approx 8.04\ \mathrm{m\,s^{-2}}`** (the pinned **`8.033`** rounds slightly). These scalars are exported in `alpha_war_calculations.json` under `model_parameters` for Study 6.
+
 ### How to Read Table 7.10 and Table 7.11
 
 - **Table 7.10** reports **stored generalized-acceleration contributions** for the **distal (clubhead) degree of freedom** at $t = 0.4275\text{ s}$: each row sums with the others to the **total** distal $\ddot{q}$ on that coordinate (control, gyroscopic or coupling ``momentum'' terms, gravity, joint damping, and—for the flexible model only—shaft elastic and shaft damping). The rigid column lists the **same term names**; shaft spring and shaft dashpot are identically zero. The proximal shaft-interface resultant in the plane has norm $\|\mathbf{F}\| \approx 56.4\text{ N}$ with components $(F_x, F_y) \approx (8.73, 55.69)\text{ N}$—a **vector magnitude**, not a single transverse component.
