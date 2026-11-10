@@ -24,6 +24,7 @@ from alpha_war_flexible_shaft_params import (  # noqa: E402
 
 
 def _find_draft_path() -> Path:
+    """Return alpha-war-v1.md if present, else alpha-war-v0.md."""
     v1 = ALPHA_WAR_DIR / "draft" / "alpha-war-v1.md"
     if v1.exists():
         return v1

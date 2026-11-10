@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from typing import Any
 
-G_STANDARD_M_S2 = 9.81
+GRAVITY_M_S2 = 9.81
 SWING_PLANE_TILT_FROM_HORIZONTAL_DEG = 35.0
 REFERENCE_SHAFT_STIFFNESS_NM_RAD = 80.0
 REFERENCE_GRAVITY_PLANAR_M_S2 = 8.033
@@ -17,7 +17,7 @@ def planar_gravity_m_s2(
     tilt_from_horizontal_deg: float = SWING_PLANE_TILT_FROM_HORIZONTAL_DEG,
 ) -> float:
     """Return gravity projected into a swing plane tilted from horizontal by ``tilt``."""
-    return G_STANDARD_M_S2 * math.cos(math.radians(tilt_from_horizontal_deg))
+    return GRAVITY_M_S2 * math.cos(math.radians(tilt_from_horizontal_deg))
 
 
 def lumped_shaft_natural_frequency_hz(
@@ -62,7 +62,7 @@ def reference_stiffness_metadata(
         "distal_shaft_length_m": float(distal_shaft_length_m),
         "gravity_planar_m_s2": float(gravity_planar_m_s2),
         "swing_plane_tilt_from_horizontal_deg": float(swing_plane_tilt_deg),
-        "standard_gravity_m_s2": G_STANDARD_M_S2,
+        "standard_gravity_m_s2": GRAVITY_M_S2,
         "planar_gravity_from_tilt_m_s2": float(projected),
         "lumped_shaft_natural_frequency_hz": float(hz),
         "lumped_shaft_equivalent_cpm": float(
