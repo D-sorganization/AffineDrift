@@ -1138,7 +1138,7 @@ If an inverse-dynamics software program assumes the swing took place inside a va
 
 1. **Bilateral Contact Wrench Mapping:** Let the lead hand ($L$) and trail hand ($T$) exert contact forces $\mathbf{f}_L, \mathbf{f}_T \in \mathbb{R}^3$ at discrete contact centers $\mathbf{r}_L = -\frac{s}{2}\hat{\mathbf{e}}_x$ and $\mathbf{r}_T = +\frac{s}{2}\hat{\mathbf{e}}_x$, separated by grip distance $s = 0.0762\text{ m}$ ($3.0\text{ in}$). The resultant wrench $\mathbf{W}_M \in \mathbb{R}^6$ at mid-hands is:
    $$\mathbf{W}_M = \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_M \end{bmatrix} = \mathbf{A}_F \begin{bmatrix} \mathbf{f}_L \\ \mathbf{f}_T \end{bmatrix}$$
-   where the grasp mapping matrix $\mathbf{A}_F \in \mathbb{R}^{6 \times 6}$ has $\operatorname{rank}(\mathbf{A}_F) = 5$ and $\operatorname{nullity}(\mathbf{A}_F) = 1$, with normalized null vector $\mathbf{v}_{\text{null}} = \frac{1}{\sqrt{2}}\begin{bmatrix} +1 & 0 & 0 & -1 & 0 & 0 \end{bmatrix}^\top$ corresponding to internal axial squeeze/tension along the shaft. With twist $\mathbf{V}_M=[\boldsymbol{\omega}^\top,\mathbf{v}_M^\top]^\top$, instantaneous hand power is $\mathcal{P}=\mathbf{R}\cdot\mathbf{v}_M+\mathbf{M}_M\cdot\boldsymbol{\omega}$ (Appendix A), not $\mathbf{W}_M^\top\mathbf{V}_M$.
+   where the grasp mapping matrix $\mathbf{A}_F \in \mathbb{R}^{6 \times 6}$ has $\operatorname{rank}(\mathbf{A}_F) = 5$ and $\operatorname{nullity}(\mathbf{A}_F) = 1$, with normalized null vector $\mathbf{v}_{\text{null}} = \frac{1}{\sqrt{2}}\begin{bmatrix} +1 & 0 & 0 & -1 & 0 & 0 \end{bmatrix}^\top$ corresponding to internal axial squeeze/tension along the shaft. With twist $\mathbf{V}_M=[\boldsymbol{\omega}^\top,\mathbf{v}_M^\top]^\top$, instantaneous hand power is $\Pi=\mathbf{R}\cdot\mathbf{v}_M+\mathbf{M}_M\cdot\boldsymbol{\omega}$ (Appendix A), not $\mathbf{W}_M^\top\mathbf{V}_M$.
 2. **Full 12-DOF Bilateral Wrench Map (Forces + Free Wrist Couples):** When each hand exerts both a 3D contact force and a 3D free wrist couple, $\mathbf{w}_{\text{hands}} = [\mathbf{f}_L^\top, \boldsymbol{\tau}_L^\top, \mathbf{f}_T^\top, \boldsymbol{\tau}_T^\top]^\top \in \mathbb{R}^{12}$, the grasp matrix $\mathbf{A}_W \in \mathbb{R}^{6 \times 12}$ is:
    $$\mathbf{A}_W = \begin{bmatrix} \mathbf{I}_3 & \mathbf{0}_3 & \mathbf{I}_3 & \mathbf{0}_3 \\ [\mathbf{r}_L]_\times & \mathbf{I}_3 & [\mathbf{r}_T]_\times & \mathbf{I}_3 \end{bmatrix}, \quad \operatorname{rank}(\mathbf{A}_W) = 6, \quad \operatorname{nullity}(\mathbf{A}_W) = 12 - 6 = 6$$
 3. **Formal Observability Theorem:** Because $\mathbf{A}_W$ maps a 12-DOF split-grip input space onto a 6-DOF net club wrench with a 6-dimensional nullspace, 6-DOF lumped-wrench inverse dynamics cannot uniquely resolve 12-DOF split-grip forces or anatomical single-hand torques without explicit bilateral contact constraints or independent 6-axis load cells under each hand (see Appendix C for the full SVD proof).
@@ -1782,9 +1782,9 @@ where $\boldsymbol{\omega} \in \mathbb{R}^3$ is the angular velocity of the body
 The dual space of forces and moments is the space of spatial forces (wrenches) $\mathbf{W}_P \in \operatorname{se}^*(3)$. This draft keeps **force-first** stacking to match grasp maps in §6 and Appendix C:
 $$\mathbf{W}_P = \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_P \end{bmatrix} \in \mathbb{R}^6$$
 where $\mathbf{R} \in \mathbb{R}^3$ is the resultant contact force and $\mathbf{M}_P \in \mathbb{R}^3$ is the moment **about point $P$ on the club**. With twist $\mathbf{V}_P=[\boldsymbol{\omega}^\top,\mathbf{v}_P^\top]^\top$ (angular-first), define the **block-swap pairing matrix**
-$$\mathcal{P}=\begin{bmatrix}\mathbf{0}_3&\mathbf{I}_3\\ \mathbf{I}_3&\mathbf{0}_3\end{bmatrix}$$
+$$\mathbf{P}=\begin{bmatrix}\mathbf{0}_3&\mathbf{I}_3\\ \mathbf{I}_3&\mathbf{0}_3\end{bmatrix}$$
 so the dual mechanical power is
-$$\mathcal{P} = \mathbf{W}_P^\top \mathcal{P}\,\mathbf{V}_P = \mathbf{R}\cdot\mathbf{v}_P + \mathbf{M}_P\cdot\boldsymbol{\omega}$$
+$$\Pi = \mathbf{W}_P^\top \mathbf{P}\,\mathbf{V}_P = \mathbf{R}\cdot\mathbf{v}_P + \mathbf{M}_P\cdot\boldsymbol{\omega}$$
 (not the raw Euclidean dot $\mathbf{W}_P^\top\mathbf{V}_P$, which would permute force and moment slots).
 
 **Assumptions:** Appendix A treats the club as a **rigid body**; $P$ is a **body-fixed** material point; transport moves the evaluation station without changing $\mathbf{R}$ or $\boldsymbol{\omega}$. A hand wrench $\mathbf{W}_M$ is the **grip contact resultant**, distinct from the total external moment that would appear in a full multibody model with distributed gravity and segment coupling.
@@ -1796,11 +1796,11 @@ $$\mathbf{V}_B = \mathbf{Ad}_{g_{BA}} \mathbf{V}_A = \begin{bmatrix} \mathbf{I}_
 where $[\mathbf{r}]_\times \in \mathbb{R}^{3 \times 3}$ is the standard skew-symmetric cross-product matrix:
 $$[\mathbf{r}]_\times = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0 \end{bmatrix}$$
 
-Power invariance uses the swap pairing: $\mathcal{P}_A=\mathbf{W}_A^\top\mathcal{P}\mathbf{V}_A=\mathcal{P}_B=\mathbf{W}_B^\top\mathcal{P}\mathbf{V}_B$ with $\mathbf{V}_B=\mathbf{Ad}_{g_{BA}}\mathbf{V}_A$. Because $\mathcal{P}$ is self-inverse,
-$$\mathbf{W}_B^\top\mathcal{P}\mathbf{Ad}_{g_{BA}}=\mathbf{W}_A^\top\mathcal{P}
+Power invariance uses the swap pairing: $\Pi_A=\mathbf{W}_A^\top\mathbf{P}\mathbf{V}_A=\Pi_B=\mathbf{W}_B^\top\mathbf{P}\mathbf{V}_B$ with $\mathbf{V}_B=\mathbf{Ad}_{g_{BA}}\mathbf{V}_A$. Because $\mathbf{P}$ is self-inverse,
+$$\mathbf{W}_B^\top\mathbf{P}\mathbf{Ad}_{g_{BA}}=\mathbf{W}_A^\top\mathbf{P}
 \quad\Longrightarrow\quad
 \mathbf{W}_B=\mathbf{T}^{(\mathrm{wrench})}_{B\leftarrow A}\mathbf{W}_A,\qquad
-\mathbf{T}^{(\mathrm{wrench})}_{B\leftarrow A}=\mathcal{P}\,\mathbf{Ad}_{g_{BA}}^{-\top}\mathcal{P}.$$
+\mathbf{T}^{(\mathrm{wrench})}_{B\leftarrow A}=\mathbf{P}\,\mathbf{Ad}_{g_{BA}}^{-\top}\mathbf{P}.$$
 Here $\mathbf{Ad}_{g_{BA}}^{-\top}$ is the inverse-transpose of the **twist** adjoint above (acting on angular-first twists only). It must **not** be applied directly to a force-first wrench $\mathbf{W}=[\mathbf{R}^\top,\mathbf{M}^\top]^\top$ under an ordinary transpose—that permutation is wrong. The correct force-first map is the sandwiched operator $\mathbf{T}^{(\mathrm{wrench})}_{B\leftarrow A}$.
 
 Expanding the block form (Poinsot, unchanged $\mathbf{R}$):
@@ -1812,17 +1812,17 @@ Regression checks for this transport and the power pairing live in `research/alp
 
 ### A.3 Step-by-Step Proof of Mechanical Work and Power Invariance
 
-We verify that transporting the evaluation point does not alter $\mathcal{P}=\mathbf{R}\cdot\mathbf{v}+\mathbf{M}\cdot\boldsymbol{\omega}$ for the hand–club wrench:
-$$\mathcal{P}_B = \mathbf{R}\cdot\mathbf{v}_B + \mathbf{M}_B\cdot\boldsymbol{\omega}.$$
+We verify that transporting the evaluation point does not alter $\Pi=\mathbf{R}\cdot\mathbf{v}+\mathbf{M}\cdot\boldsymbol{\omega}$ for the hand–club wrench:
+$$\Pi_B = \mathbf{R}\cdot\mathbf{v}_B + \mathbf{M}_B\cdot\boldsymbol{\omega}.$$
 Substitute $\mathbf{v}_B = \mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}$ and $\mathbf{M}_B = \mathbf{M}_A - \mathbf{r}_{BA} \times \mathbf{R}$:
-$$\mathcal{P}_B = \mathbf{R}\cdot (\mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}) + \mathbf{M}_A\cdot\boldsymbol{\omega} - (\mathbf{r}_{BA} \times \mathbf{R})\cdot\boldsymbol{\omega}.$$
+$$\Pi_B = \mathbf{R}\cdot (\mathbf{v}_A + \boldsymbol{\omega} \times \mathbf{r}_{BA}) + \mathbf{M}_A\cdot\boldsymbol{\omega} - (\mathbf{r}_{BA} \times \mathbf{R})\cdot\boldsymbol{\omega}.$$
 Using cyclic permutation of the scalar triple product ($\mathbf{R}\cdot(\boldsymbol{\omega}\times\mathbf{r}_{BA})=(\mathbf{r}_{BA}\times\mathbf{R})\cdot\boldsymbol{\omega}$):
 $$\mathbf{R}\cdot(\boldsymbol{\omega}\times\mathbf{r}_{BA}) - (\mathbf{r}_{BA}\times\mathbf{R})\cdot\boldsymbol{\omega}=0.$$
 Thus
-$$\mathcal{P}_B = \mathbf{R}\cdot\mathbf{v}_A + \mathbf{M}_A\cdot\boldsymbol{\omega} = \mathcal{P}_A.$$
+$$\Pi_B = \mathbf{R}\cdot\mathbf{v}_A + \mathbf{M}_A\cdot\boldsymbol{\omega} = \Pi_A.$$
 **Concrete check (issue #5459):** $\mathbf{r}=(1,0,0)$, $\mathbf{R}=(0,1,0)$, $\boldsymbol{\omega}=(0,0,1)$ gives $\mathbf{R}\cdot(\boldsymbol{\omega}\times\mathbf{r})=+1$ and $(\mathbf{r}\times\mathbf{R})\cdot\boldsymbol{\omega}=+1$, so the corrected cancellation uses equal signs—not the erroneous $-1$ step in older drafts.
 
-Power is strictly invariant. Changing the moment evaluation point shifts energy attribution between linear translation ($\mathbf{R}\cdot\mathbf{v}$) and rotation ($\mathbf{M}\cdot\boldsymbol{\omega}$), but preserves total $\mathcal{P}$.
+Power is strictly invariant. Changing the moment evaluation point shifts energy attribution between linear translation ($\mathbf{R}\cdot\mathbf{v}$) and rotation ($\mathbf{M}\cdot\boldsymbol{\omega}$), but preserves total $\Pi$.
 
 ### A.4 Newton–Euler Equations About an Arbitrary Moving Point
 
@@ -1858,7 +1858,7 @@ Before comparing numerical curves across the Alpha War literature, each investig
 
 #### Explicit Transformation Between Camp B ($\mathcal{F}_{\text{FSP}}$ at $M$) and Camp A ($\mathcal{F}_{\text{club}}$ at Station $s_P$)
 
-Let the hands apply a resultant force $\mathbf{R}_{\text{FSP}} = [R_x, R_y, R_z]^\top$ and pure couple $\mathbf{C}_{\text{FSP},M} = [C_\gamma, C_\beta, C_\alpha]^\top$ at mid-hands $M$ ($s_M = 0$) in $\mathcal{F}_{\text{FSP}}$. First, transporting the reference point along the shaft by signed distance $s_P$ toward the clubhead ($+\hat{\mathbf{e}}_t$) via the force-first wrench map $\mathbf{T}^{(\mathrm{wrench})}_{P\leftarrow M}=\mathcal{P}\mathbf{Ad}_{g_{PM}}^{-\top}\mathcal{P}$ (equivalently the Poinsot moment law) yields the FSP moment at station $P$:
+Let the hands apply a resultant force $\mathbf{R}_{\text{FSP}} = [R_x, R_y, R_z]^\top$ and pure couple $\mathbf{C}_{\text{FSP},M} = [C_\gamma, C_\beta, C_\alpha]^\top$ at mid-hands $M$ ($s_M = 0$) in $\mathcal{F}_{\text{FSP}}$. First, transporting the reference point along the shaft by signed distance $s_P$ toward the clubhead ($+\hat{\mathbf{e}}_t$) via the force-first wrench map $\mathbf{T}^{(\mathrm{wrench})}_{P\leftarrow M}=\mathbf{P}\mathbf{Ad}_{g_{PM}}^{-\top}\mathbf{P}$ (equivalently the Poinsot moment law) yields the FSP moment at station $P$:
 $$\mathbf{M}_{\text{FSP},P}(s_P) = \begin{bmatrix} M_{\gamma,P} \\ M_{\beta,P} \\ M_{\alpha,P} \end{bmatrix} = \begin{bmatrix} C_\gamma \\ C_\beta + s_P R_z \\ C_\alpha - s_P R_y \end{bmatrix}$$
 Second, rotating from $\mathcal{F}_{\text{FSP}}$ into the club-fixed frame $\mathcal{F}_{\text{club}}$ through the shaft roll angle $\phi_{\text{roll}}$ gives the exact cross-camp mapping for the reported alpha moment:
 $$M_{\alpha,\text{club},P}(\phi_{\text{roll}}, s_P) = \left(C_\alpha - s_P R_y\right)\cos\phi_{\text{roll}} + \left(C_\beta + s_P R_z\right)\sin\phi_{\text{roll}}$$
