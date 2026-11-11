@@ -26,7 +26,7 @@ Minimum durations enforced on receipts: G1 $\ge 0.85$ s, G2 $\ge 1.20$ s, G3 $\g
 
 [`AcceptanceGates`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/acceptance.py) holds frozen SI thresholds. Kinematic RMSE gates use metres unless noted.
 
-### 2.1 Kinematic RMSE by horizon
+### 2.1 Kinematic RMSE by Horizon
 
 | Gate field | G1 | G2 | G3 (driver) | G3 (iron) |
 | ---------- | -- | -- | ----------- | --------- |
@@ -38,7 +38,7 @@ Minimum durations enforced on receipts: G1 $\ge 0.85$ s, G2 $\ge 1.20$ s, G3 $\g
 
 When a receipt reports `pelvis_yaw_error_pct` instead of radians, G1 compares against **5.0 %** (`g1_pelvis_yaw_error_pct`).
 
-### 2.2 Shared physical limits
+### 2.2 Shared Physical Limits
 
 | Quantity | Threshold | Default / note |
 | -------- | --------- | -------------- |
@@ -58,7 +58,7 @@ When a receipt reports `pelvis_yaw_error_pct` instead of radians, G1 compares ag
 
 Native kinematic-fit lanes (`native`, `drake_native_fit`, `crocoddyl_native_fit`) mark contact-audit gates **not applicable** (`NATIVE_FIT_LANES`).
 
-### 2.3 Metric definitions
+### 2.3 Metric Definitions
 
 Standard receipt metrics are computed in [`tour_metrics.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/tour_metrics.py):
 
@@ -70,7 +70,7 @@ Standard receipt metrics are computed in [`tour_metrics.py`](https://github.com/
 
 The two-window optimiser’s internal scoring uses a **last-frame** terminal residual with weight $25^2$ in the objective (see §3); gates still compare the receipt’s stored `terminal_marker_rmse_m`, which may come from `compute_shared_metrics` or replay qualification.
 
-### 2.4 Gate statuses and verdict rule
+### 2.4 Gate Statuses and Verdict Rule
 
 Each gate has status: `passed`, `failed`, `missing`, `not_applicable`, or `disclosed` ([`GateStatus`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/acceptance.py)).
 
@@ -118,7 +118,7 @@ Typical `--out` run:
 5. **Optional filters** — `--shooting-fit`, `--zmp-filter`, `--centroidal-filter` refine or qualify the tracked trajectory.
 6. **Receipt** — `receipt.json` aggregates address, IK, dynamics, controller metadata, and gate evaluation.
 
-### 4.2 Computed-torque controller
+### 4.2 Computed-Torque Controller
 
 From [`pipeline/constants.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/pipeline/constants.py) and [`tracking_controller.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/tracking_controller.py):
 
@@ -127,7 +127,7 @@ From [`pipeline/constants.py`](https://github.com/D-sorganization/UpstreamDrift/
 - Tracking backend **`--tracking {kkt, mj-inverse, wrench-qp}`** (default KKT computed torque).
 - Trajectory optimiser option **`--trajectory-optimiser mjx-knots`** for the JAX knot path.
 
-### 4.3 Selected CLI flags
+### 4.3 Selected CLI Flags
 
 | Flag | Effect |
 | ---- | ------ |
