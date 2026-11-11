@@ -136,12 +136,11 @@ set, together with model and estimation uncertainty:
 
 $$
 \mathcal{T}(t) =
-\{x : \|x - x_{\text{nom}}(t)\| \leq \eta(t)\},
+\{x : \|x - x_{\text{nom}}(t)\| \leq \rho_{\mathrm{tube}}(t)\},
 $$
 
-where $\eta(t)$ must enclose reachable errors. A Taylor-validity radius alone
-does not establish containment. For a discrete local error model, a sufficient
-fixed-set condition is $A_KE\oplus W\subseteq E$, together with admissible initial
+where $\rho_{\mathrm{tube}}(t)$ must enclose reachable errors. A Taylor-validity radius alone
+does not establish containment. For a discrete local error model, the **robust positively invariant (RPI)** fixed-set condition $A_KE\oplus W\subseteq E$ is sufficient, together with admissible initial
 error, feedback inputs, and tightened nominal constraints. A nonlinear or hybrid
 application needs the corresponding reachable/invariant-set and feasibility checks.
 
@@ -157,8 +156,8 @@ motion couples earlier state preparation to a brief impact event:
   "failed residual management" without accounting for soft tissue, muscle
   activation, measurement noise, and model error.
 
-For a smooth terminal output with derivative $C_T$, the leading contribution of
-a remainder generated at time $s$ is weighted by $C_T\Phi(T,s)$. This connects
+For a smooth terminal output with Jacobian $J_y=Dc(x(T))$, the leading contribution of
+a remainder generated at time $s$ is weighted by $J_y\Phi(T,s)$. This connects
 proximal motion, actuation, compliance, and the remaining correction time to
 clubface, velocity, and strike-location errors. Event-based outputs also require
 contact-time and reset sensitivity. Ball launch predictions need a collision
