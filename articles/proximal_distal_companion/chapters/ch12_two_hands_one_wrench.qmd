@@ -17,19 +17,20 @@ club wrench. Club motion alone cannot reveal the hidden allocation.
 
 ## How the Mechanism Works
 
-Let hand forces be $\mathbf F_L$ and $\mathbf F_R$ at positions
-$\mathbf r_L$ and $\mathbf r_R$ relative to club reference $O$. Include direct
-hand or wrist moments $\mathbf M_L$ and $\mathbf M_R$. The equivalent club wrench
+Use the same lead/trail convention as @sec-lay-ch04: $L$ and $T$ name the lead and
+trail contacts. Let hand forces be $\mathbf F_L$ and $\mathbf F_T$ at positions
+$\mathbf r_L$ and $\mathbf r_T$ relative to club reference $O$. Include direct
+hand or wrist moments $\mathbf M_L$ and $\mathbf M_T$. The equivalent club wrench
 is
 
 $$
-\mathbf F_O=\mathbf F_L+\mathbf F_R,
+\mathbf F_O=\mathbf F_L+\mathbf F_T,
 $$
 
 $$
-\mathbf M_O=\mathbf M_L+\mathbf M_R+
+\mathbf M_O=\mathbf M_L+\mathbf M_T+
 \mathbf r_L\times\mathbf F_L+
-\mathbf r_R\times\mathbf F_R.
+\mathbf r_T\times\mathbf F_T.
 $$
 
 All components use the same orthonormal axes at the same instant; each position
@@ -41,16 +42,16 @@ A flexible club also has deformation modes that a single resultant does not desc
 
 ### Common and Differential Modes
 
-Define $\mathbf F_c=(\mathbf F_L+\mathbf F_R)/2$ and
-$\mathbf F_d=(\mathbf F_L-\mathbf F_R)/2$. Let $\mathbf r_c$ locate the contact midpoint
-relative to $O$, and $\mathbf d=\mathbf r_L-\mathbf r_R$ point from the right
-contact to the left. Then, exactly,
+Define $\mathbf F_c=(\mathbf F_L+\mathbf F_T)/2$ and
+$\mathbf F_d=(\mathbf F_L-\mathbf F_T)/2$. Let $\mathbf r_c$ locate the contact midpoint
+relative to $O$, and $\mathbf d=\mathbf r_T-\mathbf r_L$ point from the lead contact
+to the trail. Then, exactly,
 
 $$
 \begin{aligned}
 \mathbf F_O&=2\mathbf F_c,\\
-\mathbf M_O&=\mathbf M_L+\mathbf M_R
- +2\mathbf r_c\times\mathbf F_c+\mathbf d\times\mathbf F_d.
+\mathbf M_O&=\mathbf M_L+\mathbf M_T
+ +2\mathbf r_c\times\mathbf F_c-\mathbf d\times\mathbf F_d.
 \end{aligned}
 $$
 
@@ -84,7 +85,7 @@ most direct route to individual hand wrenches.
 For two point forces at distinct locations, with no free contact moments, the map is
 
 $$
-G=\begin{bmatrix}I&I\\\left[\mathbf r_L\right]_\times&\left[\mathbf r_R\right]_\times\end{bmatrix},
+G=\begin{bmatrix}I&I\\\left[\mathbf r_L\right]_\times&\left[\mathbf r_T\right]_\times\end{bmatrix},
 \qquad [\mathbf r]_\times\mathbf f=\mathbf r\times\mathbf f.
 $$
 
@@ -150,7 +151,7 @@ deforming grip or shaft, use actual local velocities and rotations. A single
 rigid-body power formula is insufficient. Power and energy residuals test these
 ledgers separately from action-reaction closure.
 
-The [archived spatial contact test](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/spatial_forward_contact_study.json)
+The [archived spatial contact test](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/data/spatial_forward_contact_study.json)
 uses MuJoCo and Pinocchio for independent kinematics and forward dynamics, but
 shares the contact law and time-stepping scheme. Agreement tests those engine
 implementations under shared assumptions; it cannot independently validate the
@@ -292,7 +293,7 @@ position and sensor orientation should propagate to couple sign and magnitude.
 
 ### Why Closure Is Not Calibration
 
-A [pinned synthetic sensor qualification](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/bilateral_wrench_sensor_qualification.json)
+A [pinned synthetic sensor qualification](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/data/bilateral_wrench_sensor_qualification.json)
 makes the distinction quantitative. Its net-wrench-only inverse closes the
 resultant to numerical tolerance while giving 11.86 N component-wise RMSE across
 the six hand-force components and 29.05 N RMSE for its declared axial scalar.
@@ -339,7 +340,7 @@ benefit is unsupported. A feeling of connection is not yet a measured state.
 
 Treating each hand as a single contact point is convenient, and the natural
 worry is that the convenience is doing the work. A
-[registered reduced-model comparison](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/articulated_distributed_grip_atlas.json)
+[registered reduced-model comparison](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/data/articulated_distributed_grip_atlas.json)
 examines one part of that question.
 
 Each hand was replaced by one, three, or five tension fibers spread across a
@@ -428,8 +429,7 @@ The same internal wrench can arise from different muscles and co-contraction.
 Technique claims need participant-level evidence.
 
 **Go Deeper:** Read the complete
-[two-hand wrench mechanics](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd),
-the [forward constrained model](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05b_forward_two_hand.qmd),
-and the instrumented-grip literature [@choi2020grip; @koike2016instrumented]. The technical
-chapter links follow upstream development; numerical claims above use the
-explicitly pinned artifacts so their definitions remain inspectable.
+[two-hand wrench mechanics](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd),
+the [forward constrained model](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch05b_forward_two_hand.qmd),
+and the instrumented-grip literature [@choi2020grip; @koike2016instrumented]. Numerical
+claims above use explicitly pinned artifacts so their definitions remain inspectable.
