@@ -263,9 +263,7 @@ T=\tfrac12\Bigl(J_0-\tfrac{A}{3}\eta^2\Bigr)\dot\theta^2
 +B(\eta)\dot\theta\dot\eta+\tfrac12A(\eta)\dot\eta^2,
 $$
 
-with $B(\eta)=B-\beta_B\eta^2$, $A(\eta)=A+\beta_A\eta^2$, and published coefficients matching `src/tools/modal_pendulum_foreshortening.py`.
-
-with
+with $B(\eta)=B-\beta_B\eta^2$, $A(\eta)=A+\beta_A\eta^2$, and published coefficients matching `src/tools/modal_pendulum_foreshortening.py`. The foreshortening quadrature gives $\beta_B$ and $\beta_A$ as the $\eta^2$ inertia corrections (for the illustrative parameters below, $\beta_B\approx 0.397\ \mathrm{kg\,m}$ and $\beta_A\approx 0.317\ \mathrm{kg}$).
 
 $$
 \begin{aligned}
@@ -288,16 +286,18 @@ $$
 \begin{aligned}
 \begin{bmatrix}J_0-\tfrac{A}{3}\eta^2&B(\eta)\\B(\eta)&A(\eta)\end{bmatrix}
 \begin{bmatrix}\ddot\theta\\\ddot\eta\end{bmatrix}
-&+\begin{bmatrix}-2\tfrac{A}{3}\eta\dot\theta\dot\eta\\ \tfrac{A}{3}\eta\dot\theta^2\end{bmatrix}\\
+&+\begin{bmatrix}-2\tfrac{A}{3}\eta\dot\theta\dot\eta-2\beta_B\eta\dot\eta^2\\ \tfrac{A}{3}\eta\dot\theta^2+\beta_A\eta\dot\eta^2\end{bmatrix}\\
 &+\begin{bmatrix}g(P\sin\theta+Q\eta\cos\theta)\\gQ\sin\theta+k\eta+c\dot\eta\end{bmatrix}
 =\begin{bmatrix}u\\0\end{bmatrix}.
 \end{aligned}
 $$ {#eq-pendulum_flex_block}
 
+The $\dot\eta^2$ loads are not modal damping: they follow from $\partial B/\partial\eta$ and $\partial A/\partial\eta$ in the configuration-dependent inertia, the same Christoffel structure as in @eq-appendix_eom. The reference implementation assembles the complete bias in `velocity_bias`.
+
 The complete lower equation is therefore
 
 $$
-A\ddot\eta=-B(\eta)\ddot\theta-\tfrac{A}{3}\eta\dot\theta^2
+A(\eta)\ddot\eta=-B(\eta)\ddot\theta-\tfrac{A}{3}\eta\dot\theta^2-\beta_A\eta\dot\eta^2
 -gQ\sin\theta-k\eta-c\dot\eta+\cdots,
 $$ {#eq-eta_planar}
 

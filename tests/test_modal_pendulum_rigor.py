@@ -10,10 +10,13 @@ from scipy.linalg import eigh
 from scipy.spatial.transform import Rotation
 
 from src.tools.modal_pendulum_foreshortening import (
+    CROSS_MASS_ETA2,
     DAMPING,
+    GEOMETRIC_STIFFENING_RATIO,
     GRAVITY_M_S2,
     HEAD_MASS,
     LENGTH,
+    MODAL_MASS_ETA2,
     STIFFNESS,
     A,
     B,
@@ -40,6 +43,37 @@ def test_complete_mass_matches_distributed_placement_energy() -> None:
     assembled = mass_from_quadrature(eta, theta, nodes, weights)
     np.testing.assert_allclose(assembled, mass(eta), atol=1e-10)
     assert np.linalg.eigvalsh(assembled).min() > 0
+
+
+def _leading_foreshortening_velocity_bias(
+    eta: float, theta_rate: float, modal_rate: float
+) -> np.ndarray:
+    """Christoffel loads from configuration-dependent ``B(eta)`` and ``A(eta)``."""
+    return np.array(
+        [
+            modal_rate
+            * (
+                -2 * GEOMETRIC_STIFFENING_RATIO * A * eta * theta_rate
+                - 2 * CROSS_MASS_ETA2 * eta * modal_rate
+            ),
+            GEOMETRIC_STIFFENING_RATIO * A * eta * theta_rate**2
+            + MODAL_MASS_ETA2 * eta * modal_rate**2,
+        ]
+    )
+
+
+def test_published_flex_pendulum_equation_includes_mass_derivative_velocity_terms() -> None:
+    text = (ROOT / "articles" / "theory-part4.qmd").read_text(encoding="utf-8")
+    for snippet in ("-2\\beta_B\\eta\\dot\\eta^2", "\\beta_A\\eta\\dot\\eta^2", "velocity_bias"):
+        assert snippet in text
+
+
+def test_leading_euler_lagrange_velocity_terms_match_mass_derivatives() -> None:
+    samples = [(0.4, 0.02, 8.0, -0.3), (-0.5, 0.02, 8.0, -0.3), (0.0, 0.03, 45.0, 0.0)]
+    for _theta, eta, theta_rate, modal_rate in samples:
+        leading = _leading_foreshortening_velocity_bias(eta, theta_rate, modal_rate)
+        reference = velocity_bias(_theta, eta, theta_rate, modal_rate)
+        np.testing.assert_allclose(leading, reference, atol=0.05)
 
 
 def test_quadrature_bias_matches_declared_velocity_loads() -> None:
@@ -243,6 +277,7 @@ def test_appendix_editions_preserve_reproducibility_and_validation_limits(name: 
         "A Fully Specified Flexible Pendulum",
         "4.341333",
         "foreshortening",
+        "beta_B",
         "centrifugal stiffening",
         "loaded mass inner product",
         "coordinate sign is a convention",
