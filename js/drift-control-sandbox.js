@@ -59,7 +59,7 @@ function christoffelCoriolis(massMatrixFn, q, qd, step = 1e-6) {
   return coriolis;
 }
 
-/** Closed-form Christoffel Coriolis for double_pendulum_affine mass matrix. */
+/** Mirrors dynamics.py::double_pendulum_coriolis for the affine mass matrix. */
 function coriolis(q, qd, p) {
   const k = p.m2 * p.l1 * p.l_c2 * Math.sin(q[0] - q[1]);
   return [[0.0, k * qd[1]], [-k * qd[0], 0.0]];
