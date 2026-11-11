@@ -485,6 +485,30 @@ categories:
 | Workflow ID | Title | Kind | Support Tier | Availability | Verification Method |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 {wf_table}
+
+## Local Installation and Verification
+
+Run these commands from the AffineDrift repository root after installing the Python 3.11 or 3.12
+environment described in the project README:
+
+```bash
+python3 -m pip install -e ".[dev]"
+python3 scripts/ci/verify_installation.py
+python3 -m scripts.companion_workflows execute --workflow-id installation-verification
+```
+
+**Expected result:** both verification commands exit with code `0` when the pinned companion provider
+contract is satisfied. A zero exit code does not imply that every optional engine or GUI extra is
+installed.
+
+To run another governed workflow after installation succeeds:
+
+```bash
+python3 -m scripts.companion_workflows execute --workflow-id reference-double-pendulum-simulation
+```
+
+**Expected result:** exit code `0` and workflow artifacts under `dist/companion-workflows/artifacts/`
+matching the catalog's declared SHA-256 evidence for that workflow id.
 """
 
     def generate_provenance(self) -> str:
