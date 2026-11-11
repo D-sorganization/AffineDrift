@@ -55,6 +55,7 @@ def scalar_gradient_example(
 
 
 def _sin_forcing(omega: float, times: Vector) -> Vector:
+    """Return sin(omega t) at each collocation node time."""
     return np.sin(omega * times)
 
 
