@@ -12,7 +12,7 @@ This document serves as the single source of truth for parameter definitions acr
 
 ## UpstreamDrift Runtime Defaults (Pin `625a16e68`)
 
-Values below come from UpstreamDrift `src/shared/python/core/physics_constants.py` and the modules named in [UpstreamDrift Physics Models](articles/upstreamdrift-physics-models.html). They are **program defaults**, not automatic site replacements for derivations in the textbook.
+Values below come from UpstreamDrift `src/shared/python/core/physics_constants.py` and the modules named in [UpstreamDrift Physics Models](../articles/upstreamdrift-physics-models.html). They are **program defaults**, not automatic site replacements for derivations in the textbook.
 
 | Quantity | Symbol (site) | UpstreamDrift value | Unit | Provenance string in code | Primary module |
 | --- | --- | --- | --- | --- | --- |
