@@ -44,6 +44,7 @@ _COMPILED = tuple((re.compile(pat), label) for pat, label in LEGACY_ZVCF_PATTERN
 
 
 def _is_generated(relative: str) -> bool:
+    """Return whether ``relative`` points at a generated mirror path."""
     return any(relative.startswith(prefix) for prefix in GENERATED_PREFIXES)
 
 
