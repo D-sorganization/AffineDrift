@@ -34,9 +34,21 @@ $$
 P^-_{k+1}=A_kP_kA_k^T+Q_k.
 $$
 
-At an observation, the Jacobian $H_k=\partial h/\partial x$ produces the innovation and Kalman gain. The EKF is computationally efficient when derivatives are available and uncertainty remains local. It can fail when the posterior is strongly nonlinear, multimodal, or near constraints that make Gaussian linearization misleading. Angle wrapping and contact events require special handling.
+At an observation, the Jacobian $H_k=\partial h/\partial x$ produces the innovation $\nu_k=y_k-h(\hat x_k^-)$, gain, and update
 
-The unscented Kalman filter (UKF) propagates a set of deterministically chosen sigma points through nonlinear functions, then reconstructs mean and covariance. It avoids explicit Jacobians and can capture some curvature more faithfully than first-order linearization. It still represents uncertainty with a single Gaussian and can behave poorly under multimodality or hard mode switches. Both methods need physically sensible covariance scaling and consistent treatment of constrained coordinates.
+$$
+K_k=P_k^-H_k^T(H_k P_k^- H_k^T+R_k)^{-1},\qquad
+\hat x_k^+=\hat x_k^-+K_k\nu_k,\qquad
+P_k^+=(I-K_k H_k)P_k^-.
+$$
+
+The EKF is computationally efficient when derivatives are available and uncertainty remains local. It can fail when the posterior is strongly nonlinear, multimodal, or near constraints that make Gaussian linearization misleading. Angle wrapping and contact events require special handling.
+
+### Scalar Kalman Update (Worked Step)
+
+For scalar state $x$, observation $y=x+v$, $H=1$, and $P^-=1$, $R=4$, suppose $y=3$ and $\hat x^-=0$. Then $\nu=3$, $K=1/(1+4)=0.2$, $\hat x^+=0.6$, and $P^+=0.8$. This one step is the pattern every vector filter repeats.
+
+The unscented Kalman filter (UKF) propagates $2n+1$ sigma points $\mathcal{X}_i$ through $f$ and $h$, with weights $W_i^{(m)}$ and $W_i^{(c)}$ fixed by the spread parameters $\alpha$, $\beta$, and $\kappa$. Means and covariances are weighted sums of propagated points—for example $\hat x^+=\sum_i W_i^{(m)} f(\mathcal{X}_i)$—rather than Jacobians of $f$. It avoids explicit linearization and can capture some curvature more faithfully than the EKF. It still represents uncertainty with a single Gaussian and can behave poorly under multimodality or hard mode switches. Both methods need physically sensible covariance scaling and consistent treatment of constrained coordinates.
 
 For kinematic fitting, the EKF/UKF can jointly track $q$ and $\dot q$ from noisy marker positions without direct numerical second differentiation. However, if the model parameter vector is augmented into the state, parameter learning can be slow or confounded with process noise. A parameter that changes gradually should not be treated as arbitrary high-variance motion state. Alternatives include batch smoothing, dual estimation, or hierarchical Bayesian parameter inference.
 
@@ -50,7 +62,14 @@ Ensemble and particle methods are not automatic remedies for unknown inputs. If 
 
 ## Smoothing and Joint Trajectory Estimation
 
-A classical Rauch–Tung–Striebel (RTS) smoother runs a forward Kalman filter and a backward pass to refine the state history using future observations. For nonlinear dynamics, extended or unscented smoothing variants approximate the same logic. Batch nonlinear least squares and multiple shooting provide alternatives: optimize a complete state trajectory and parameters while penalizing observation residuals and dynamics defects. Direct collocation similarly enforces discretized dynamics at mesh points.
+A classical Rauch–Tung–Striebel (RTS) smoother runs a forward Kalman filter and a backward pass to refine the state history using future observations. For linear-Gaussian models the backward RTS gain is
+
+$$
+C_k=P_k^-A_k^T(P_{k+1}^-)^{-1},\qquad
+\hat x_k^{s}=\hat x_k^++C_k(\hat x_{k+1}^{s}-\hat x_{k+1}^-),
+$$
+
+with a matching covariance correction. For nonlinear dynamics, extended or unscented smoothing variants approximate the same logic. Batch nonlinear least squares and multiple shooting provide alternatives: optimize a complete state trajectory and parameters while penalizing observation residuals and dynamics defects. Direct collocation similarly enforces discretized dynamics at mesh points.
 
 Consider a one-dimensional point mass with noisy position samples $y_k=x_k+v_k$ and a model $\ddot x=a(u;\theta)$. Differentiating observed positions twice yields a noisy acceleration estimate. A smoother instead estimates a sequence $(x_k,\dot x_k)$ that balances the position observations against integrated acceleration dynamics. The posterior covariance shows where velocity and acceleration are poorly determined, especially near trial boundaries or long gaps. This uncertainty should propagate to parameter estimates. A smooth curve alone is not evidence that the assumed force law is correct: compare innovations, residual structure, and forward predictions.
 
