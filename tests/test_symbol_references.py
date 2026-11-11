@@ -124,7 +124,7 @@ def test_parse_reads_key_tex_name_and_definition() -> None:
     [
         ("no markers here", "markers"),
         (_table(), "no symbol rows"),
-            (_table("| `f` | $f$ | Drift | Def | extra |"), "four or nine cells"),
+        (_table("| `f` | $f$ | Drift | Def | extra |"), "four or nine cells"),
         (_table("| `f` | $f$ | Drift | One. |", "| `f` | $f$ | Drift | Two. |"), "duplicate"),
         (_table("| `f-1` | $f$ | Drift | One. |"), "key"),
         (_table("| `f` | f | Drift | One. |"), "TeX"),
