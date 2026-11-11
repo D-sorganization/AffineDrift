@@ -325,6 +325,8 @@ I_0^A a_0+p_0^A=0,\qquad a_0=-(I_0^A)^{-1}p_0^A.
 $$
 
 
+Here $a_0$ is the fictitious spatial acceleration from the same gravity-offset convention as the fixed base: for uniform vertical gravity $g$, the fixed-base section sets $a_0=(0,-g)$ while $p_i^A$ omits gravity as a body load. The outward pass propagates joint accelerations from this fictitious root acceleration unchanged. The physical root spatial acceleration is $a_0^{\mathrm{phys}}=a_0+(0,-g)$ in that component convention (zero angular fictitious part plus the world gravity vector expressed in the root frame). A single free body at rest with no external wrench has $p_0^A=0$, so the displayed solve returns $a_0=0$ but $a_0^{\mathrm{phys}}$ is free fall with acceleration $g$.
+
 Implement this expression as a $6\times6$ solve. The matrix is the entire articulated subtree's inertia at the current configuration, not the isolated base's constant rigid inertia. Its factorization can be reused only while the quantities on which it depends remain unchanged. The remaining outward acceleration recovery is the same as before.
 
 ### Contact Does Not Automatically Fix the Base
@@ -355,6 +357,8 @@ $$
 I_0^A a_0=w_0-p_0^A.
 $$
 
+
+As above, $a_0$ is fictitious; recover $a_0^{\mathrm{phys}}=a_0+(0,-g)$ before interpreting pelvis acceleration or comparing with accelerometers.
 
 Count a wrench exactly once. An unknown ground reaction belongs to the constraint calculation, while a measured ground wrench can be supplied as known data within its measurement uncertainty. These choices answer different forward or inverse questions.
 
