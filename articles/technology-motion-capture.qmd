@@ -46,6 +46,8 @@ $$
 
 Noise generally prevents exact ray intersection. A fit may then minimize image reprojection error; a bundle adjustment can jointly refine camera and point parameters. Neither method creates missing geometric information. Small intersection angles, uncertain distortion, occlusion, mistaken marker identities and unsynchronized cameras can make the result poor even when an optimizer returns a smooth answer. With coincident camera centres, additional orientations alone do not supply a stereo baseline for an isolated point.
 
+For the least-squares problem, default weights, CLI stages, and on-disk artifacts used in UpstreamDrift’s markerless golf pipeline, see the site reference [UpstreamDrift Capture-to-Model Pipeline](../pages/upstreamdrift-capture-to-model-pipeline.html), which cites [`bundle.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/bundle.py) and related modules at a pinned commit.
+
 A rectified two-camera example makes the sensitivity visible. With focal length $f$ in pixels, baseline $B$ in metres and disparity $d$ in pixels, depth is $Z=fB/d$. Holding calibrated $f,B$ fixed, a small disparity standard uncertainty $\sigma_d$ gives
 
 $$
