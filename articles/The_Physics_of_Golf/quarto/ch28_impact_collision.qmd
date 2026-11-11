@@ -91,6 +91,21 @@ impulse. This produces gear effect. Local face bulge and roll also change the
 normal, while face compliance can vary with strike position. Ball-speed loss
 cannot universally be assigned to only one of these mechanisms.
 
+::: {.callout-important}
+## Worked Off-Centre Impact and Gear Effect {#ex-gear_effect}
+
+Take a free rigid head with $M=0.200\,\mathrm{kg}$, ball mass $m=0.04593\,\mathrm{kg}$, normal unit vector $\hat n$ in the impact plane, heel–toe offset $r=0.020\,\mathrm m\,\hat y$ (perpendicular to $\hat n$), and yaw inertia $I_{zz}=4.5\times10^{-4}\,\mathrm{kg\,m^2}$ about the vertical axis through the centre of mass. With $\hat n=\hat x$ and $r\cdot\hat n=0$,
+$$
+\frac1{M_{\rm eff}}=\frac1M+\frac{r^2}{I_{zz}}
+=5+\frac{0.02^2}{4.5\times10^{-4}}\simeq5.889\ \mathrm{kg^{-1}},
+$$
+so $M_{\rm eff}\simeq0.170\,\mathrm{kg}$ (about $15\%$ below $M$). For illustrative $e=0.83$, centred impact gives ball-speed ratio $(1+e)/(1+m/M)\simeq1.488$; the heel-offset strike gives $(1+e)/(1+m/M_{\rm eff})\simeq1.440$, i.e. about **$3.2%$** lower normalized ball speed at the same incident club speed.
+
+A normal impulse magnitude $J$ produces head angular velocity change $\Delta\boldsymbol\omega=I_c^{-1}(\mathbf r\times J\hat n)$. With $J=J\hat x$ and $\mathbf r=0.02\,\hat y$, $\mathbf r\times J\hat n=0.02J\,\hat z$, so the head gains positive yaw rate $\Delta\omega_z\simeq0.02J/I_{zz}$. The contact-point velocity on the face changes by $\Delta\mathbf v_c=\Delta\boldsymbol\omega\times\mathbf r$, adding tangential motion at the strike that—together with friction and ball compliance—feeds **gear-effect sidespin** (hook/slice tendency from yaw and face bulge). @fig-gear-effect_impact sketches $\hat n$, $\mathbf r$, $J\hat n$ and the resulting $\Delta\boldsymbol\omega$.
+
+<img src="../figures/gear_effect_impact.svg" alt="Schematic of off-centre impact: impact normal n-hat, offset vector r from center of mass to contact, normal impulse J along n-hat, and head yaw angular velocity delta-omega about the vertical axis.">
+:::
+
 ## Oblique Contact and Spin
 
 Let $\hat n$ point from face into ball and split impulse into normal and

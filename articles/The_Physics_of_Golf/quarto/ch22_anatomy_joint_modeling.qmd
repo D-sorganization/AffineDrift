@@ -95,6 +95,8 @@ $$
 
 Both columns remain orthogonal for every $\alpha$. The ideal two-axis joint therefore does not lock because its own axes align. A driveshaft assembled using a Cardan joint has additional shaft-axis and transmission geometry; its operating limits are not a proof that this two-coordinate joint loses rank. Likewise, a wrist–club task map can be singular even when the local joint rate map has rank two.
 
+The moving normal $\mathbf n=\mathbf e_x\times R_x(\alpha)\mathbf e_y$ is the **Grood–Suntay floating axis**: body-fixed first axis, body-fixed third axis, and their common perpendicular as the reference for the middle rotation [@Grood1983]. ISB reporting standards adopt this joint coordinate system (JCS) construction for clinical motion description [@Wu2002; @Wu2005].
+
 The forbidden instantaneous angular-velocity direction is the moving normal $n=e_x\times R_x(\alpha)e_y$. For example, at $\alpha=\pi/2$, the allowed second-axis velocity points along A's $z$ direction. A rule that permanently forbids rotation around A's $z$ direction would reject legitimate universal-joint motion. At $\alpha=\pi/2,\beta=0$, $R e_z=-e_y$, directly disproving the fixed-normal rule.
 
 This rate map also determines which moment components drive the coordinates. If $m$ is an applied relative moment expressed in A, virtual power gives
@@ -197,6 +199,12 @@ R_{PF}=R_P^T R_F.
 $$
 
 Changing both laboratory orientations by the same rigid rotation leaves this relative orientation unchanged. Increasing a pelvis-turn angle therefore does not uniquely prescribe a change in hip rotation: the femur and foot may also move. Coordinate components obtained from different Euler sequences are not directly interchangeable.
+
+### ISB Joint Coordinate Systems and This Book's Frames {#sec-isb_jcs}
+
+Biomechanical software (OpenSim, Visual3D, and many motion-capture pipelines) expects joint angles reported in **ISB joint coordinate systems** built on the Grood–Suntay construction [@Grood1983; @Wu2002; @Wu2005]. For each articulation the STC specifies a **segment coordinate system** on each bone—typically $\mathbf X$ anterior, $\mathbf Y$ superior, $\mathbf Z$ right—and a **per-joint sequence** of flexion–extension, ab/adduction or floating-axis rotation, and internal–external rotation. Hip, knee and ankle use a **Cardan** (flexion / floating-axis / axial-rotation) layout; the glenohumeral joint is commonly described with a **Y–X–Y** humerothoracic sequence in [@Wu2005].
+
+The [spine modeling chapter](./ch21_spine_modeling.qmd#anatomy-of-the-spinethe-hardware) uses a right-handed segment triad with $\mathbf x$ anterior, $\mathbf y$ left and $\mathbf z$ superior. Relative to the ISB convention ($\mathbf X$ anterior, $\mathbf Y$ superior, $\mathbf Z$ right), the fixed permutation $(X,Y,Z)_{\rm ISB}\to(x,z,-y)_{\rm book}$ maps ISB components into this book's spine frames when only the axis triad changes. Joint angles are **not** preserved under that map unless each rotation sequence and reference posture are reapplied; compare reported angles only after transforming both position and derivative maps consistently. When exporting to OpenSim or published kinematics, state the ISB joint, sequence and reference posture explicitly rather than relabelling Euler angles from an unstated convention.
 
 ### Limits, Impingement and Model Selection
 

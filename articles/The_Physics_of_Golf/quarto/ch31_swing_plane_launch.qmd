@@ -598,6 +598,29 @@ to negative spin, arbitrary speeds or extreme launch angles.
 
 : Manufactured Local Surface: Coupled Launch and Spin Change Which Angle Is Best. These Are Calculated Examples, Not Golf Fitting Data. {#tbl-launch-angle-opt}
 
+The same launch state integrated with the simplified **ball-flight model** from @eq-ball-trajectory in the [aerodynamics chapter](./ch19_aerodynamic_drag.qmd#eq-ball-trajectory)—quasi-steady drag and lift with illustrative $C_D=0.15$, $C_L=0.25$, $\rho=1.2\ \mathrm{kg/m^3}$, ball mass $0.04593\ \mathrm{kg}$, $140\ \mathrm{mph}$ ball speed—gives the carry values below. They are **not** fitted to launch-monitor data; constant coefficients omit dimple and spin-axis effects, so absolute yards stay below tour carry while **relative** launch sensitivity remains visible.
+
+| **Launch** | **Spin** | **Quadratic model carry** | **Point-mass flight integration carry** |
+| --- | --- | --- | --- |
+| $13^\circ$ | 2,200 RPM | 228.8 yd | $\simeq143$ yd |
+| $14^\circ$ | 2,200 RPM | 228.8 yd | $\simeq151$ yd |
+| $14.5^\circ$ | 2,200 RPM | 229.7 yd | $\simeq154$ yd |
+| $16^\circ$ | 2,200 RPM | 228.8 yd | $\simeq165$ yd |
+
+The quadratic surface makes $13^\circ$ and $16^\circ$ equal at fixed spin; the flight integration instead **monotonically favors higher launch** in this coefficient set. Neither table replaces instrument calibration.
+
+::: {.callout-note}
+## Reported Launch Monitor Ranges {#tbl-launch-ranges}
+
+| **Quantity** | **Reported range** | **Study** | **Sample / club / instrument** | **Definition** |
+| --- | --- | --- | --- | --- |
+| Driver ball speed (skilled males) | $110.4\pm4.8\ \mathrm{mph}$ | [@han2019] | $n=63$, handicap $\le3$; driver; mocap | Max test-session clubhead/ball speed |
+| Horizontal face influence on launch direction (driver) | $76\%\pm8\%$ weight on $\phi$ | [@wood2018launch] | Filtered driver subset in study protocol | Horizontal launch azimuth vs face/path |
+| Manufactured quadratic carry (this chapter) | $228$–$230\ \mathrm{yd}$ at $140\ \mathrm{mph}$, $14^\circ$–$14.5^\circ$ | Explicit teaching surface | N/A — not empirical | @eq-spin_distance with stated coefficients |
+
+Use instrument-specific definitions (e.g. whether speed is measured at the face center or post-impact) before comparing any model column to a monitor export.
+:::
+
 At fixed 2,200 RPM the optimum angle is $14.5^\circ$, because
 $\delta\theta^*=-b\delta\Omega/a=0.5^\circ$. Calling a reduction from
 $16^\circ$ to $13^\circ$ an improvement would be wrong in this explicit
