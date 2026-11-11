@@ -17,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 NOTATION_PATH = ROOT / "NOTATION.md"
 REGISTRY_PATH = ROOT / "data" / "symbol_references.json"
-SCHEMA = "affinedrift/symbol-references/v1"
+SCHEMA = "affinedrift/symbol-references/v2"
 ANCHOR = "/pages/notation.html#equation-symbol-definitions"
 
 _START = "<!-- SYMBOL-REFERENCES:START -->"
@@ -26,6 +26,7 @@ _END = "<!-- SYMBOL-REFERENCES:END -->"
 _KEY_RE = re.compile(r"^[A-Za-z][A-Za-z0-9]*$")
 _CODE_RE = re.compile(r"^`([^`]*)`$")
 _TEX_RE = re.compile(r"^\$([^$]+)\$$")
+_OPTIONAL_FIELDS = ("unit", "shape", "frame", "sign", "source_anchor")
 
 
 @dataclass(frozen=True)
@@ -36,6 +37,11 @@ class SymbolReference:
     tex: str
     name: str
     definition: str
+    unit: str | None = None
+    shape: str | None = None
+    frame: str | None = None
+    sign: str | None = None
+    source_anchor: str | None = None
 
 
 def _cells(row: str) -> list[str]:
@@ -43,14 +49,18 @@ def _cells(row: str) -> list[str]:
     return [cell.strip() for cell in row.strip().strip("|").split("|")]
 
 
+def _opt(value: str) -> str | None:
+    return value if value and value != "—" else None
+
+
 def _parse_row(row: str) -> SymbolReference:
     """Parse one symbol row; raises ``ValueError`` on any malformed cell."""
     cells = _cells(row)
-    if len(cells) != 4:
-        raise ValueError(f"symbol row must have four cells: {row!r}")
-    if not all(cells):
-        raise ValueError(f"symbol row has an empty cell: {row!r}")
-    raw_key, raw_tex, name, definition = cells
+    if len(cells) not in {4, 9}:
+        raise ValueError(f"symbol row must have four or nine cells: {row!r}")
+    if not all(cells[:4]):
+        raise ValueError(f"symbol row has an empty required cell: {row!r}")
+    raw_key, raw_tex, name, definition, *extra = cells
     code = _CODE_RE.match(raw_key)
     key = code.group(1) if code else raw_key
     if not _KEY_RE.match(key):
@@ -58,7 +68,12 @@ def _parse_row(row: str) -> SymbolReference:
     tex = _TEX_RE.match(raw_tex)
     if tex is None:
         raise ValueError(f"symbol cell must be inline TeX like $f(x)$: {raw_tex!r}")
-    return SymbolReference(key, tex.group(1).strip(), name, definition)
+    opts: dict[str, str | None] = {}
+    if extra:
+        if len(extra) != len(_OPTIONAL_FIELDS):
+            raise ValueError(f"optional metadata must include five cells: {row!r}")
+        opts = dict(zip(_OPTIONAL_FIELDS, (_opt(item) for item in extra), strict=True))
+    return SymbolReference(key, tex.group(1).strip(), name, definition, **opts)
 
 
 def parse_symbol_table(text: str) -> tuple[SymbolReference, ...]:
@@ -82,14 +97,26 @@ def parse_symbol_table(text: str) -> tuple[SymbolReference, ...]:
     return refs
 
 
+def _symbol_payload(ref: SymbolReference) -> dict[str, str]:
+    payload = {
+        "key": ref.key,
+        "tex": ref.tex,
+        "name": ref.name,
+        "definition": ref.definition,
+    }
+    for field in _OPTIONAL_FIELDS:
+        value = getattr(ref, field)
+        if value is not None:
+            payload[field] = value
+    return payload
+
+
 def render_registry(refs: tuple[SymbolReference, ...]) -> str:
     """Deterministic JSON registry text with one trailing newline."""
     payload = {
         "schema": SCHEMA,
         "source": "NOTATION.md",
         "anchor": ANCHOR,
-        "symbols": [
-            {"key": r.key, "tex": r.tex, "name": r.name, "definition": r.definition} for r in refs
-        ],
+        "symbols": [_symbol_payload(ref) for ref in refs],
     }
     return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
