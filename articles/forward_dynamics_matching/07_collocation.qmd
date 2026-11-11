@@ -8,7 +8,7 @@ Direct collocation turns a continuous-time optimal-control problem into a sparse
 
 ## Continuous Problem
 
-Let $\dot{x}=f(x,u,p)$ over $t\in[0,T]$. A tracking objective may be written $J = \int_0^T [r_y(x,p,t)^T W_y r_y(x,p,t) + l_u(u) + l_p(p)] dt + \Phi(x(T),p)$,
+Let $\dot{x}=f(x,u,p)$ over $t\in[0,T]$. A tracking objective may be written $J = \int_0^T [r_y(x,p,t)^T W_y r_y(x,p,t) + l_u(u)] dt + l_p(p) + \Phi(x(T),p)$,
 
 subject to path constraints $g(x,u,p)\leq0$, endpoint constraints, and perhaps a phase-dependent contact model. Here $r_y=h(x,p)-y$ is a measurement residual. If parameters are static, they are shared throughout the trajectory. If they are slowly varying, a state equation or temporal prior should describe that evolution explicitly; independently fitting each time point's dimensions makes no physical sense.
 
@@ -26,7 +26,7 @@ Collocation states are independent decision variables during optimization. There
 
 ## Objective Construction
 
-A useful objective separates data terms from regularization: $J_{data}=\sum_{k,s}\rho(L_{k,s}^{-1}(h_s(x_k,p)-y_{k,s}))$, $J_{reg}=\lambda_u\sum_k\|u_k\|^2+\lambda_s\sum_k\|u_{k+1}-u_k\|^2/h_k+(p-p_0)^T\Lambda_p(p-p_0)$.
+A useful objective separates data terms from regularization: $J_{data}=\sum_{k,s}\rho(L_{k,s}^{-1}(h_s(x_k,p)-y_{k,s}))$, $J_{reg}=\lambda_u\sum_k h_k\|u_k\|^2+\lambda_s\sum_k\|u_{k+1}-u_k\|^2/h_k+(p-p_0)^T\Lambda_p(p-p_0)$.
 
 The data term should use sensor-specific covariances or carefully justified weights. Robust losses can protect against outliers. Control effort, smoothness, parameter priors, and residual-actuator penalties should remain separately reported. An arbitrary weight can make a preferred outcome look optimal while hiding a large error elsewhere. Weights can be selected from measurement uncertainty, prior uncertainty, or an explicitly stated scientific tradeoff; sensitivity plots should show whether conclusions depend on them.
 
@@ -63,7 +63,7 @@ For scalar dynamics $\dot{x}=f(x)$, exact integration over a short interval is $
 
 Consider $\dot{x}=\sin(\omega t)$ on one period $[0,2\pi/\omega]$ with $x(0)=0$. The exact solution is $x(t)=(1-\cos(\omega t))/\omega$. It returns to zero at the final node, while reaching the interior maximum $2/\omega$ at the midpoint. A transcription or diagnostic that checks only endpoint values can therefore report a zero net change while completely missing the excursion. The trapezoidal formula on the whole period also gives zero increment because both endpoint derivatives vanish, so its interval defect is zero when both endpoint states are set to zero. Yet the within-interval state error is $2/\omega$ at midperiod.
 
-Refine the interval by adding the midpoint $t=\pi/\omega$. The observed or collocated midpoint state now exposes the excursion; the two half-period increments are each $2/\omega$, and the node trajectory can represent the maximum. In real fitting, observations may not be available exactly at the most informative point, so evaluate dense-output defects and compare against independently integrated states at interior check points. If the model has characteristic frequency $\omega$, an interval much longer than $1/\omega$ cannot resolve its curvature even if endpoint defects are small. Adaptive refinement should place nodes where dense integration error, state curvature, force changes, or contact transitions exceed a declared tolerance.
+Refine instead to quarter-period nodes $t=0,\pi/(2\omega),\pi/\omega,3\pi/(2\omega),2\pi/\omega$. Trapezoidal defects with $x(0)=0$ then give $x(\pi/\omega)=\pi/(2\omega)\approx 1.57/\omega$, below the exact midpoint $2/\omega$ by about twenty-one percent, which shows partial resolution and second-order convergence under refinement. By contrast, the two-node-half-period layout leaves $\dot x=\sin(\omega t)$ zero at every listed node, so defects vanish while the colocated states remain at zero and miss the excursion entirely; the exact half-period state increments are $+2/\omega$ and $-2/\omega$, not both $+2/\omega$. An *observed* midpoint marker can expose the peak even when collocation does not. Hermite–Simpson collocation at the period midpoint samples $\pm 1$ between nodes and tracks the increment more closely. In real fitting, observations may not be available exactly at the most informative point, so evaluate dense-output defects and compare against independently integrated states at interior check points. If the model has characteristic frequency $\omega$, an interval much longer than $1/\omega$ cannot resolve its curvature even if endpoint defects are small. Adaptive refinement should place nodes where dense integration error, state curvature, force changes, or contact transitions exceed a declared tolerance. Run `python3 scripts/reproduce_fdm_worked_examples.py` for the trapezoid numbers at $\omega=1$.
 
 This example distinguishes algebraic feasibility of a coarse transcription from accuracy of the represented continuous trajectory. Refinement should be assessed on held-out interior checks as well as the objective: halve the maximum step, reintegrate, and verify that marker residuals, forces, peak states, and key parameter estimates converge. A model whose reported fit changes materially under modest mesh refinement is not numerically settled.
 
