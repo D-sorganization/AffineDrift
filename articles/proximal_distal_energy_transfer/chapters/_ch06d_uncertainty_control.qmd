@@ -153,8 +153,11 @@ The three-dimensional point-force map has rank 5/nullity 1 for separated
 contacts and rank 3/nullity 3 for coincident contacts. Its force and moment rows
 are normalized with a declared 0.10 m length. A 1 micrometre separation remains
 rank 5 at relative SVD tolerances $10^{-12}$ and $10^{-8}$ but is classified
-rank 3 at $10^{-6}$. Thus geometry, units, scaling, and tolerance are part of
-the result rather than incidental solver settings.
+rank 3 at $10^{-6}$ because the registered rule keeps singular values only when
+$\sigma_i > \texttt{rtol}\cdot\max(m,n)\cdot\sigma_{\max}$ (with
+$\max(m,n)=6$ on the $3\times2$ map, an effective threshold of about
+$6\times10^{-6}$ relative to the leading value). Thus geometry, units, scaling,
+and tolerance are part of the result rather than incidental solver settings.
 
 The complete contract, source digests, scale alternatives, adverse cases, and
 reproduction commands remain in the immutable UpstreamDrift
@@ -196,18 +199,22 @@ not be read as a stable estimate of a population Pareto set.
 ## Bounded Test of Delayed Opposing Command
 
 Hypothesis H4 asks whether a delayed actuator can benefit from an anticipatory
-opposing command. In the held-out ensemble, early restrain raises the
-10th-percentile delivery speed to 4.706 m/s compared with 4.417 m/s for late
-drive, but worsens mean face/path error from 1.58 to 5.44 degrees. Thus H4 is
-supported only as a conditional lower-tail speed result for these bounded
-model schedules. It does not demonstrate human preactivation, neural timing,
-or a generally superior strategy.
+opposing command. On the six-point held-out ensemble ($n=6$, paired by seed),
+early restrain raises the interpolated tenth-percentile delivery speed to
+4.706 m/s compared with 4.417 m/s for late drive (about 0.29 m/s, or 6.5%), but
+worsens mean face/path error from 1.58 to 5.44 degrees. The paired per-case speed
+gain spans 0.25 to 0.37 m/s with median 0.32 m/s. That pattern is consistent
+with H4 in these six paired cases only; it is not a validated population lower
+tail, a neural claim, or a generally superior strategy.
 
-Numerical closure remains materially below the reported effects across all
-rollouts: the maximum position-constraint residual is
-$9.99\times10^{-11}$ m, velocity-constraint residual
-$2.40\times10^{-15}$ m/s, KKT residual $1.90\times10^{-13}$, and
-contact-power residual $6.40\times10^{-14}$ W.
+Constraint and identity residuals on this ensemble are at machine precision:
+maximum position $9.99\times10^{-11}$ m, velocity
+$2.40\times10^{-15}$ m/s, KKT $1.90\times10^{-13}$, and contact-power
+$6.40\times10^{-14}$ W. The same 4 ms projected integrator nonetheless carries
+a worst normalized work--energy residual of 3.77% on the registered pathway
+audit, comparable in order to the 6.5% speed contrast above. Reproduce the
+paired contrasts and closure figures with
+[`scripts/verify_pde_monograph_numerical_claims.py`](https://github.com/D-sorganization/AffineDrift/blob/main/scripts/verify_pde_monograph_numerical_claims.py).
 
 ## Claims, Falsifiers, and Next Measurements
 
