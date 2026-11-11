@@ -141,9 +141,13 @@ near end; it is not automatically the shoulder. A real golfer's grip translates
 and rotates, so a single fixed-pivot shaft example does not represent all
 shoulder, wrist, and club angular speeds.
 
-For $L=1.1$ m, $d=0.01$ m, $C_n=0.5$, $\rho=1.225$ kg/m$^3$,
+At $\mathrm{Re}\approx3.4\times10^4$ on $d=0.01$ m in Equation~\ref{eq:drag_reynolds}, a smooth
+circular cylinder in crossflow is in the subcritical regime with a
+$dL$-referenced drag coefficient near $1.0$--$1.2$
+\citep{schlichting2000boundary}. For this normal-crossflow line model we take
+$C_n\approx1.1$. For $L=1.1$ m, $d=0.01$ m, $C_n=1.1$, $\rho=1.225$ kg/m$^3$,
 $\omega=25$ rad/s, and $a=0$, the resisting moment magnitude is
-0.700595 N m. The near-end-pivot head speed in this same toy geometry would be
+1.54131 N m. The near-end-pivot head speed in this same toy geometry would be
 27.5 m/s. It would be inconsistent to combine that shaft calculation with a
 50 m/s head while claiming one rigid fixed-pivot motion. A different motion
 model can produce different local speeds, but must specify how.
@@ -151,7 +155,8 @@ model can produce different local speeds, but must specify how.
 The generalized load contribution of a segment depends on its velocity
 Jacobian and the chosen output, not merely its speed or mass. Arm, torso,
 shaft, and head contributions should therefore be integrated with compatible
-kinematics. There is no universal 40/40/20 percentage split. The component
+kinematics. Informal swing summaries sometimes assign fixed percentage shares of
+aerodynamic work among arm, shaft, and head; no such split is universal. The component
 that dominates force need not dominate a selected joint moment, work integral,
 or change in endpoint club speed.
 
@@ -309,8 +314,9 @@ bottom is 5 J. With
  \label{eq:drag_pendulum_energy}
 \end{equation}
 the first bottom crossing without drag has speed $|\omega|=\sqrt5$, about
-2.23607 rad/s. A speed of 85 rad/s would require 7225 J of kinetic energy for
-this inertia, which the stated zero-input initial state cannot supply.
+2.23607 rad/s. Terminal kinetic energy scales as $I\omega^2/2$; speeds far
+above $\sqrt{5}$ rad/s in this zero-input model would require additional initial
+energy or input not present in the stated initial state.
 
 For a second independent check, set $y(\theta)=\omega^2$ along the falling
 branch, where $\omega<0$. Write the gravity coefficient as $k=5$ N m and

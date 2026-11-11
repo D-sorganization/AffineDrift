@@ -195,29 +195,29 @@ the Schur complement of the remaining coordinates $r$. These are different exper
 ## A Computed Matrix and Its Inverse
 
 []{#triple_pendulum_mass_numerical}
-Use $L=(0.4,0.3,0.5)\ \mathrm m$, $m=(2,0.5,0.2)\ \mathrm{kg}$, $I=(0.05,0.01,0.01)\ \mathrm{kg\,m^2}$ and $c_i=L_i/2$. This is a manufactured short-club chain, not calibrated adult-driver anthropometry. At $q=(50,90,100)^\circ$,
+Use $L=(0.4,0.3,0.5)\ \mathrm m$, $m=(2,0.5,0.2)\ \mathrm{kg}$, $I=(0.05,0.01,0.01)\ \mathrm{kg\,m^2}$ and $c_i=L_i/2$. This is a manufactured short-club chain, not calibrated adult-driver anthropometry. At $q=(50,80,100)^\circ$, the same configuration used in the bias, release, and rollout examples below,
 
 $$
 M\simeq\begin{bmatrix}
-0.259148&0.036844&0.000199\\
-0.036844&0.056541&0.019895\\
-0.000199&0.019895&0.022500
+0.277295&0.045918&-0.000105\\
+0.045918&0.056541&0.019895\\
+-0.000105&0.019895&0.022500
 \end{bmatrix}\ \mathrm{kg\,m^2}.
 $$
 []{#eq-triple_mass_numerical}
 
-The unrounded matrix has eigenvalues approximately $0.012310$, $0.060183$ and $0.265696\ \mathrm{kg\,m^2}$. Its computed inverse is
+The unrounded matrix has eigenvalues approximately $0.011742$, $0.058074$ and $0.286519\ \mathrm{kg\,m^2}$. Its computed inverse is
 
 $$
 M^{-1}\simeq\begin{bmatrix}
-4.45187&-4.19125&3.66665\\
--4.19125&29.62083&-26.15467\\
-3.66665&-26.15467&67.53886
+4.48547&-5.29873&4.70620\\
+-5.29873&31.93439&-28.26215\\
+4.70620&-28.26215&69.45672
 \end{bmatrix}\ (\mathrm{kg\,m^2})^{-1}.
 $$
 []{#eq-triple_mass_inverse_numerical}
 
-An incremental $1\ \mathrm{N\,m}$ at joint 3 therefore changes the acceleration vector by approximately $(3.67,-26.15,67.54)\ \mathrm{rad/s^2}$. The free apparent inertia at that coordinate is $0.01481\ \mathrm{kg\,m^2}$, compared with $M_{33}=0.02250$ when the other accelerations are fixed. A large response can amplify disturbances as well as useful inputs; it does not prove high precision.
+An incremental $1\ \mathrm{N\,m}$ at joint 3 therefore changes the acceleration vector by approximately $(4.71,-28.26,69.46)\ \mathrm{rad/s^2}$. The free apparent inertia at that coordinate is $0.01481\ \mathrm{kg\,m^2}$, compared with $M_{33}=0.02250$ when the other accelerations are fixed. A large response can amplify disturbances as well as useful inputs; it does not prove high precision.
 
 :::
 
@@ -245,6 +245,22 @@ c_3=\beta\sin(q_2+q_3)v_1^2
 +\gamma\sin q_3(v_1+v_2)^2.
 $$
 []{#eq-coriolis_club_example}
+
+The proximal and middle components expand to
+
+$$
+\begin{aligned}
+c_1&=-2v_1v_2(\alpha\sin q_2+\beta\sin(q_2+q_3))
+-2v_1v_3(\beta\sin(q_2+q_3)+\gamma\sin q_3)\\
+&\quad-v_2^2(\alpha\sin q_2+\beta\sin(q_2+q_3))
+-2v_2v_3(\beta\sin(q_2+q_3)+\gamma\sin q_3)\\
+&\quad-v_3^2(\beta\sin(q_2+q_3)+\gamma\sin q_3),\\
+c_2&=-2\gamma v_1v_3\sin q_3-2\gamma v_2v_3\sin q_3-\gamma v_3^2\sin q_3\\
+&\quad+v_1^2(\alpha\sin q_2+\beta\sin(q_2+q_3)).
+\end{aligned}
+$$
+
+At $q=(50,80,100)^\circ$ and $v=(12,20,25)\ \mathrm{rad/s}$ with the preceding parameters, $c\simeq(-79.666,-25.210,15.127)\ \mathrm{N\,m}$ and $g\simeq(5.749,0.639,-0.376)\ \mathrm{N\,m}$.
 
 There is no $\partial M_{23}/\partial q_2$ contribution because $M_{23}=d+\gamma\cos q_3$ is independent of $q_2$. Also, $v_3$ cancels from this particular generalized component, although it remains in the other components and therefore can affect $\ddot q_3$ through the coupled solve. Neither $c_3$ nor $-c_3/M_{33}$ alone is the freely responding club acceleration.
 

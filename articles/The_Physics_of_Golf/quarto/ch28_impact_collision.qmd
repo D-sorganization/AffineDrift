@@ -83,8 +83,9 @@ For a multibody model with mass matrix $M_q$ and contact Jacobian $J_P$,
 the corresponding directional inverse mass is
 $\hat n^TJ_PM_q^{-1}J_P^T\hat n$, modified by active constraints.
 Flexible modes, boundary conditions, and contact duration require a compatible
-dynamic model. There is no general rule that shaft and arm coupling always
-add 10--20 percent to clubhead effective mass.
+dynamic model. Shaft--arm coupling can change the effective normal-direction
+inertia at impact, but the shift is model-dependent rather than a universal
+10--20 percent correction.
 
 Off-centre impact changes head rotation, contact velocity, and tangential
 impulse. This produces gear effect. Local face bulge and roll also change the
@@ -153,7 +154,9 @@ equal and opposite offsets from that face direction.
 For a centred symmetric impact on a nonspinning ball, the ideal spin direction
 is parallel to $\hat v\times\hat n$. The cross product degenerates at zero
 obliquity. Use its projections in a declared launch frame to calculate axis
-tilt; a tan/tan rule is not a general three-dimensional identity. Gear effect
+tilt uses the components of $\hat v\times\hat n$ in the declared launch frame;
+planar tangent-ratio shortcuts are not a general three-dimensional identity.
+Gear effect
 and asymmetric or rotating contact require additional terms.
 
 In a normal-only model with $C=(1+e)/(1+m/M_{\rm eff})$,
