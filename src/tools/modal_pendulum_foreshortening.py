@@ -104,6 +104,7 @@ def quadrature_nodes(degree: int = 12) -> tuple[np.ndarray, np.ndarray]:
 
 
 def _rotation(theta: float) -> np.ndarray:
+    """Return the planar rotation matrix for angle ``theta``."""
     cos_t, sin_t = np.cos(theta), np.sin(theta)
     return np.array([[cos_t, -sin_t], [sin_t, cos_t]])
 
@@ -165,6 +166,7 @@ def christoffel_bias_from_quadrature(
 def _potential_gradient_quadrature(
     theta: float, eta: float, nodes: np.ndarray, weights: np.ndarray, eps: float = 1e-7
 ) -> np.ndarray:
+    """Central-difference gradient of the quadrature potential in ``(theta, eta)``."""
     return np.array(
         [
             (
@@ -182,6 +184,7 @@ def _potential_gradient_quadrature(
 
 
 def _mass_at(theta: float, eta: float, nodes: np.ndarray, weights: np.ndarray) -> np.ndarray:
+    """Return the inertia matrix at the given ``(theta, eta)`` configuration."""
     return mass_from_quadrature(eta, theta, nodes, weights)
 
 
@@ -195,7 +198,10 @@ def _christoffel_symbol(
     weights: np.ndarray,
     eps: float,
 ) -> float:
+    """Christoffel symbol Γ^k_ij for configuration metric derivatives."""
+
     def shift(angle_delta: float, modal_delta: float) -> np.ndarray:
+        """Evaluate inertia after a finite shift in ``theta`` and ``eta``."""
         return _mass_at(theta + angle_delta, eta + modal_delta, nodes, weights)
 
     dM_ij_dk = (
