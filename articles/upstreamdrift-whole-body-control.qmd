@@ -1,0 +1,70 @@
+---
+title: "Whole-Body Control in UpstreamDrift"
+description: "Inverse-dynamics QP structure, task hierarchy, friction pyramid, and known limitations on UpstreamDrift main."
+author: "Dieter Olson"
+date: "2026-11-11"
+date-source: "implementation-audit"
+date-modified: "2026-11-11"
+categories:
+  - reference
+  - robotics
+status: "published"
+audience-level: "research"
+evidence-rung: "code-audit"
+upstream-pin: "3afe09c1ed0247a459d16bf75cf0b28bb64f584a"
+---
+
+Whole-body control (WBC) in UpstreamDrift is implemented by `WholeBodyController` (`src/robotics/control/whole_body/wbc_controller.py`) with tasks in `task.py` and QP assembly in `qp_solver.py`. This page states what **main** at [`3afe09c1`](https://github.com/D-sorganization/UpstreamDrift/commit/3afe09c1ed0247a459d16bf75cf0b28bb64f584a) actually solves.
+
+::: {.callout-warning}
+## Pending Fix for Contact Torques and Hierarchy
+
+[UpstreamDrift PR #15025](https://github.com/D-sorganization/UpstreamDrift/pull/15025) (issue #15012) corrects contact-consistent torques on actuated joints and reworks strict hierarchical (HQP) level ordering. On **current main**, hierarchical levels are visited in **descending numeric `Task.priority`** while `task.py` documents **0 = highest**—treat hierarchical solutions as unreliable until that PR merges. Weighted-sum mode (`WBCConfig.use_hierarchical=False`) is unaffected by the ordering bug but shares the same post-solve torque extraction path.
+:::
+
+## Dynamics and Decision Variables
+
+With $n_v$ velocity degrees of freedom and $3 n_c$ contact force variables, the weighted or hierarchical solve stacks decision vector $\mathbf{x} = [\ddot{\mathbf{q}}, \mathbf{f}_c]$.
+
+Soft tasks minimize $\sum_i \|\mathbf{J}_i \ddot{\mathbf{q}} - \mathbf{b}_i\|_W^2$ (task Jacobians are $n_{\mathrm{task}}\times n_v$).
+
+When contacts exist, equality constraints enforce
+
+$$
+\mathbf{M}(\mathbf{q})\,\ddot{\mathbf{q}} - \mathbf{J}_c^{\mathsf T}\mathbf{f}_c = -\mathbf{nle},
+$$
+
+with **`n_v` rows**—all degrees of freedom, including actuated joints—using only the **linear** $3\times n_v$ blocks of each contact Jacobian (rotational rows dropped for point contacts).
+
+Joint torques are **not** QP decision variables. They are recovered after the solve as
+
+$$
+\boldsymbol{\tau} = \mathbf{M}\ddot{\mathbf{q}} + \mathbf{nle} - \sum_i \mathbf{J}_{c,i}^{\mathsf T}\mathbf{f}_{c,i},
+$$
+
+then clipped to `torque_limits` if configured (`_extract_solution_from_x`).
+
+## Friction Pyramid
+
+For each contact, normal force $f_z \ge 0$ is enforced via $-f_z \le 0$. Tangential forces use a **four-sided pyramid** with coefficient **`mu = 0.5`** hard-coded in `_build_inequality_constraints` (not a circumscribed cone factor). This is a linearized Coulomb model, not a second-order cone.
+
+## Task Priority Convention (Document Once)
+
+`Task.priority` is documented as **0 = highest** (`task.py:54`). Strict hierarchy builds a null-space projector from equality rows accumulated at each level (`_build_priority_level_cost`).
+
+On main, `_solve_hierarchical` iterates `sorted(priority_groups.items(), reverse=True)`, so larger integers are processed first—**opposite** the docstring convention. Prefer weighted mode or wait for PR #15025 before trusting cascade results.
+
+## Configuration Defaults
+
+| Field | Default | Role |
+|------|---------|------|
+| `dt` | `0.001` s | Velocity-limit to acceleration bound |
+| `regularization` | `1e-6` | $\ddot{\mathbf{q}}$ Tikhonov term |
+| `contact_force_regularization` | `1e-4` | Contact force penalty |
+| `use_hierarchical` | `True` | HQP vs weighted sum |
+| Contact force bounds | $\pm 10{,}000$ N | Numerical stability |
+
+## Related Reading
+
+- [Humanoid Balance Quantities in UpstreamDrift](upstreamdrift-humanoid-balance.html) — ZMP and capture point.
+- [UpstreamDrift Learning, RL, and Analytics](upstreamdrift-learning-analytics.html) — RL environments (no bundled PPO trainer).

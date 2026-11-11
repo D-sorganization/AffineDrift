@@ -1,0 +1,123 @@
+---
+title: "UpstreamDrift Learning, RL, and Analytics"
+description: "SG hole MDP, shot-pattern scoring, RL environments, launch-monitor import, imitation stack, and domain-randomization defaults."
+author: "Dieter Olson"
+date: "2026-11-11"
+date-source: "implementation-audit"
+date-modified: "2026-11-11"
+categories:
+  - reference
+  - tools
+status: "published"
+audience-level: "research"
+evidence-rung: "code-audit"
+upstream-pin: "3afe09c1ed0247a459d16bf75cf0b28bb64f584a"
+---
+
+Implementation reference for learning and analytics modules at UpstreamDrift [`3afe09c1`](https://github.com/D-sorganization/UpstreamDrift/commit/3afe09c1ed0247a459d16bf75cf0b28bb64f584a). Paths are under the UpstreamDrift repository unless noted.
+
+## Strokes-Gained Hole MDP (`sg_optimizer`)
+
+**Modules:** `src/shared/python/sg_optimizer/mdp/value_iteration.py`, `course/rasterize.py`, `shot_model/distributions.py`, `data/sg_optimizer/baselines/pga_tour.yaml`.
+
+### State, Grid, and “Expected Strokes”
+
+- Course lies are rasterized to integer codes `LIE_CODES`: tee=0, fairway=1, rough=2, trees=3, sand=4, water=5, ob=6, green=7, holed=8 (`rasterize.py`).
+- Green cells are terminal for the putter; `strategy.py` maps green→holed for value termination.
+- `HoleMDP` value iteration estimates **strokes-to-hole-out from each cell** under a **player dispersion profile** and `pga_tour.yaml` baseline—not Broadie’s published tour tables alone. Dispersion uses `TiltedBivariateGaussian`: $\Delta_\|$ past target, $\Delta_\perp$ **left-positive**, correlation $\rho$.
+- Bellman backup (vectorized): for each cell, sample `n_samples` shot outcomes (common random numbers optional), cost $1 + \text{extra} + V(s')$; hazards (water/OB/off-grid) add **drop penalty** $1 + V_{\mathrm{current}}$ (`value_iteration.py` ~371–373).
+- Aim angles are **pin-relative** (0° points at the pin from each cell).
+
+Numbers flagged `# ESTIMATE:` in `pga_tour.yaml` (e.g. per-club $\rho$) are not direct Broadie tabulations.
+
+See also [On the Limits of Strokes-Gained Inference](strokes-gained-limitations.html) for population vs optimisation semantics.
+
+## Shot-Pattern Scoring Kernel
+
+**Module:** `src/tools/shot_pattern_analysis/scoring.py`.
+
+Putting on the green uses Broadie Eq. 7 form $E_{\mathrm{green}} = 2 - p_1 + p_3$ with:
+
+| Quantity | Value in code |
+|----------|----------------|
+| $\sigma_{\mathrm{angle}}$ | $1.46^\circ$ |
+| $\sigma_{\mathrm{distance}}$ | $0.057$ (yd scaling in denominator) |
+| $p_3$ logistic | $1/(1+\exp(5.49 - 0.106\cdot\mathrm{ft} + 0.000563\cdot\mathrm{ft}^2)) - 0.00398$ |
+| Table 9 approach range | 10–600 yd piecewise-linear tables in-file |
+
+The three-putt curve is an **anchor-reconciled approximation** (docstring notes Eq. 6 coefficient ordering issues in the paper). Approach tables cite Broadie (2011) PDF SHA pinned in `SOURCE_PDF_SHA256`.
+
+The AffineDrift simulation article [Straight, Draw, and Fade](shot-pattern-analysis.html) adds a **methods box** below with these equations for cross-checking reported SG deltas.
+
+## RL Environments
+
+**Modules:** `src/learning/rl/humanoid_envs.py`, `configs.py`; base class `base_env.py`.
+
+| Env | Termination (defaults) | Reward structure |
+|-----|------------------------|------------------|
+| `HumanoidWalkEnv` | `base_height < 0.3` m; tilt proxy `up_z < 0.8` from quaternion $(w,x,y,z)$ | $\exp(-\|\mathbf{v}_{xy}-\mathbf{v}_{\mathrm{target}}\|)$ weighted + alive + **raw** $\|\boldsymbol{\tau}\|^2$ energy penalty |
+| `HumanoidStandEnv` | Similar balance thresholds | Posture + energy (see module) |
+
+**Observation:** concatenation of enabled blocks from `ObservationConfig.get_obs_dim`—defaults include joint pos/vel only ($2 n_{\mathrm{joints}}$). IMU adds 6 (3 accel + 3 gyro) if enabled.
+
+**Action:** joint torques by default (`ActionMode.TORQUE`).
+
+**Trainer:** no PPO/SB3 bundle in-repo; attach an external trainer to the Gymnasium API.
+
+Tilt test uses `up_z = 1 - 2(x^2 + y^2)$ with scalar-first quaternion order from `get_base_orientation()`.
+
+## Domain Randomization Defaults
+
+**Module:** `src/learning/sim2real/domain_randomization.py`.
+
+`DomainRandomizationConfig` applies **independent uniform multipliers** per family on main:
+
+| Parameter | Default range |
+|-----------|----------------|
+| mass | 0.8–1.2× |
+| friction | 0.5–1.5× |
+| damping | 0.8–1.2× |
+| motor | 0.9–1.1× |
+| **gravity magnitude** | **9.5–10.1 m/s²** with `randomize_gravity=True` |
+
+[Geometry of Motion Volume 0, Machine Learning](articles/The_Geometry_of_Motion/quarto/vol0_ch12_machine_learning.html) now carries a boxed note reconciling this with the textbook guidance on correlated mass/inertia perturbations.
+
+## Launch-Monitor Import Contract
+
+**Canonical layer:** Tools `src/shared/python/launch_monitor/` (imported via `src/tools/launch_monitor_model`).
+
+- **33** canonical metrics in `METRICS` (`schema.py`); storage SI (m, m/s, rad, rad/s).
+- **Default display unit map:** lengths default to **yards** when header and mapping lack units (`profiles.py` `_defaults()`).
+- **Unit resolution order:** explicit `ColumnMapping.source_unit` → parsed header → profile default (`importer.py` ~247–257).
+- **Profile detection:** signature match score; **`confidence < 0.5` → generic profile**.
+- **No per-vendor sign normalisation** beyond unit conversion—vendor conventions in [Launch Monitor Vendor Reference](launch-monitor-vendor-reference.html) are not auto-corrected at import.
+
+## Neural Proposal vs Chapter Families
+
+| Module | What ships |
+|--------|------------|
+| `src/shared/python/neural_motion/proposals/model.py` | Time-**mean** masked trajectory features → MLP → `tanh`×`CONTROL_SCALE` heads; mixture + mode bias |
+| `motion_matching.inverse` + `training/runtime/adapters/pytorch_cvae.py` | CVAE proposal path (separate from `neural_motion`) |
+
+[Forward Surrogates and Multimodal Inverse Proposals](articles/forward_dynamics_matching/26_neural_proposals.html) includes a repository status table.
+
+## Imitation Stack (Simplified GAIL)
+
+**Modules:** `src/learning/imitation/_bc.py`, `_dagger.py`, `_gail.py`.
+
+Shipped GAIL uses a discriminator on $(s,a)$ pairs; **policy actions for the discriminator are generated with Gaussian exploration noise on expert states without environment rollouts** (`_gail.py` ~237–238). Treat it as a teaching scaffold, not full generative adversarial imitation with on-policy sampling.
+
+## Tour Baselines Naming
+
+| Package | Purpose |
+|---------|---------|
+| `src/shared/python/tour_baselines/` | Mocap swing / Matched Swing Program capture baselines |
+| `data/sg_optimizer/baselines/pga_tour.yaml` | Dispersion + scoring baselines for the hole MDP |
+
+Do not interchange these when auditing expected-strokes numbers.
+
+## Related Articles
+
+- [Humanoid Balance Quantities](upstreamdrift-humanoid-balance.html)
+- [Whole-Body Control](upstreamdrift-whole-body-control.html)
+- [Launch Monitor Vendor Reference](launch-monitor-vendor-reference.html)

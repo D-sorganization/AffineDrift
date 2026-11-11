@@ -86,6 +86,10 @@ The accompanying flight plates show 100 verified replays per pattern, selected b
 
 ## Scoring and Model Limits
 
+::: {.callout-note title="Scoring function in UpstreamDrift code"}
+The conditional scorer in `src/tools/shot_pattern_analysis/scoring.py` uses Broadie-style approach tables (10–600 yd) and green putting with $E_{\mathrm{green}} = 2 - p_1 + p_3$, $\sigma_{\mathrm{angle}} = 1.46^\circ$, $\sigma_{\mathrm{distance}} = 0.057$, and a logistic three-putt approximation (anchor-reconciled; see module docstring). SG deltas at the $10^{-4}$–$10^{-2}$ stroke scale should be judged against this explicit approximation, not against live tour tables alone.
+:::
+
 Driver scoring assumes a flat 400 m tee opportunity with fairway and rough regions. Seven-iron and wedge scoring use hypothetical approach opportunities with a centered green. First ground contact is treated as the final lie; bounce, roll, hazards, wind variation, and elevation are not modeled. The scoring reference is a historical population benchmark with an approximate putting fit, not a current player-specific model.
 
 Paired bootstrap intervals quantify Monte Carlo sampling variation for the simulated populations. They do not include uncertainty in clubhead properties, impact law, flight physics, course geometry, scoring assumptions, or human delivery distributions. The primitive Gaussian errors and their correlations are sensitivity inputs, not measured player variability. Empirical qualification remains open.
