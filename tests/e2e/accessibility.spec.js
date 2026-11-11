@@ -8,11 +8,6 @@ const CONTRAST_ROUTES = [
   "/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html",
 ];
 
-// Instant HTTP redirects destroy the Playwright execution context mid-scan.
-const CONTRAST_ROUTE_EXCLUSIONS = new Set([
-  "/models/models-myosim.html",
-]);
-
 // Home page, an article, and a stand-in for the "Start Here" page proposed
 // in WEB-01.1 (pages/start-here.qmd does not exist yet, so pages/overview.qmd
 // — the closest existing entry-style page — is used instead; see issue #4566).
@@ -40,9 +35,7 @@ async function publishedRoutes(page) {
   const routes = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(
     (match) => new URL(match[1]).pathname,
   );
-  return [...new Set([...CONTRAST_ROUTES, ...routes])].filter(
-    (route) => !CONTRAST_ROUTE_EXCLUSIONS.has(route),
-  );
+  return [...new Set([...CONTRAST_ROUTES, ...routes])];
 }
 
 async function findContrastFailures(page) {
