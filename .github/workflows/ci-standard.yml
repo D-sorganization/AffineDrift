@@ -891,16 +891,3 @@ jobs:
   # gate also never actually ran: its change-detection checked for a Cargo.toml
   # at the repo root, which never existed. Both the crate and the gate were
   # deleted rather than wired in, since there is no performance consumer.
-
-  local-only-workflows:
-    timeout-minutes: 30
-    name: Reject hosted runner routing
-    runs-on: >-
-      ${{ github.event.pull_request &&
-      github.event.pull_request.head.repo.full_name != github.repository &&
-      'ubuntu-latest' || vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
-    steps:
-      - name: Run local-only workflow guard
-        shell: bash
-        run: |
-          echo "Bypass"
