@@ -69,6 +69,7 @@ QMD_FILES = [
     "models-drake.qmd",
     "models-mujoco.qmd",
     "models-myosim.qmd",
+    "models-myosuite.qmd",
     "models-opensim.qmd",
     "models-pendulum.qmd",
     "models-pinocchio.qmd",

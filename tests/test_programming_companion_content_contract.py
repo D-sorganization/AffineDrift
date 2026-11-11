@@ -70,7 +70,8 @@ def test_provider_dependent_surfaces_fail_closed_with_governing_issues() -> None
         "AffineDrift/issues/4030",
     )
 
-    assert "Unavailable until reviewed evidence is pinned" in source
+    assert "Pinned catalog available" in source
+    assert "programming/index.html" in source
     for issue in (*provider_issues, *consumer_issues):
         assert issue in source, f"Missing governing issue link: {issue}"
 
@@ -103,7 +104,7 @@ def test_legacy_engine_guides_are_retained_as_deferred_editorial_references() ->
         "models-drake.html",
         "models-pinocchio.html",
         "models-opensim.html",
-        "models-myosim.html",
+        "models-myosuite.html",
         "models-simulink.html",
         "models-pendulum.html",
     ):

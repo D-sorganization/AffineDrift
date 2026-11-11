@@ -6,7 +6,7 @@ categories:
 ---
 
 ::: {.callout-note title="Provider Pin"}
-Generated from the provider-published UpstreamDrift artifact `upstreamdrift-companion-27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da` (manifest SHA-256 `a1c9a799ecceb4e81f28c50755fb50ad28f390ed8db335b64ecb89028f910b06`; attestation: verified: gh attestation verify (actions/attest-build-provenance); installed 2026-09-03). The provider marks this catalog **draft**: Engine capability claims require qualification evidence. Documentation and screenshot inventories require their governed provider slices. See the [freshness dashboard](freshness.html).
+Generated from the provider-published UpstreamDrift artifact `upstreamdrift-companion-d56e3709e65a01f70dbd1a8db86856a160a8559d` (manifest SHA-256 `062555ae7fd9cf3ef32aa84d343535064c1ac351e3b0c03e3f71214a49be0548`; attestation: skipped; installed 2026-11-11). The provider marks this catalog **draft**: 13 of 17 engine capabilities remain unqualified pending exact passing evidence. 16 of 20 documentation records are not current (unknown=16). 71 visible programs have no governed documentation record. Known gaps remain visible with owning issues: #8853. Screenshot inventory requires its governed provider slice (#9191). See the [freshness dashboard](freshness.html).
 :::
 
 ## Authority Boundary
@@ -16,7 +16,7 @@ Generated from the provider-published UpstreamDrift artifact `upstreamdrift-comp
 > registered on and the provider's parity state for it.
 > **This does not establish** scientific validation or equivalence between solver implementations.
 
-## Feature Surface Parity (41 Records)
+## Feature Surface Parity (71 Records)
 
 Parity state is the provider's own classification: `parity` (all registered surfaces agree),
 `gap` (a surface is missing or partial; the tracking issue is linked), or `exempt` (parity is
@@ -26,44 +26,74 @@ not validation.
 
 | Feature ID | Title | Surfaces | Parity State | Parity Issue | Scientific Qualification |
 | :--- | :--- | :--- | :---: | :---: | :--- |
-| `analysis.analysis_tools_api` | Analysis Tools REST endpoints (swing metrics, biomechanics) | `api`, `web` | `gap` | [#7448](https://github.com/D-sorganization/UpstreamDrift/issues/7448) | `unqualified` — Feature parity record only |
-| `analysis.counterfactuals` | ZTCF/ZVCF + induced-acceleration counterfactuals | `pyqt` | `gap` | [#7450](https://github.com/D-sorganization/UpstreamDrift/issues/7450) | `unqualified` — Feature parity record only |
+| `analysis.analysis_tools_api` | Analysis Tools REST endpoints (swing metrics, biomechanics) | `api`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `analysis.counterfactuals` | ZTCF/ZVCF + induced-acceleration counterfactuals | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `analysis.cross_engine_robustness` | Cross-engine robustness dashboard (perturbation/CV) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `analysis.grip_wrench` | Per-hand grip wrench on the club (weld multipliers and efc_force): overlay glyphs and force/couple plots | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `analysis.ground_reaction` | Ground reaction plots: per-foot and net force (N and body weights), vertical load share, CoP path, free moment and moment about CoM | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `analysis.impact_parameters` | Impact parameters panel (speed, attack angle, path, face, face-to-path, dynamic loft, spin loft) relative to a target line | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `analysis.static_plots` | Static analysis plots (20+ plot types) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `biomech.exercise_injury_dashboards` | Exercise + injury-risk biomechanics dashboards | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
+| `biomechanics.anatomical_event_table` | Anatomical Event Table of Wrist and Forearm Terms at Swing Events | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `canonical_core.workspaces` | Canonical-core estimation/comparison workspaces | `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `chat.live_context` | Live app/engine context in chat | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `chat.transport` | AI chat transport (message send/stream) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `diagnostics.integrations_health` | Diagnostics + integrations-health panel | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `docs.document_library` | Document library / project map viewer | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
-| `engines.dashboards` | Per-engine interactive dashboards (Drake/MuJoCo/Pinocchio) | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
+| `drake.gui_force_overlay` | Drake GUI force/torque arrows and live tension/compression shading | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `engines.dashboards` | Per-engine interactive dashboards (Drake, JaxSim, MuJoCo, Pinocchio) | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
 | `engines.load_and_simulate` | Engine load/probe + basic simulation loop | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
-| `export.recordings_downloads` | Export/recording parity (HDF5/MAT/C3D/CSV/video, persisted recordings) | `api`, `pyqt` | `gap` | [#7451](https://github.com/D-sorganization/UpstreamDrift/issues/7451) | `unqualified` — Feature parity record only |
+| `export.recordings_downloads` | Export/recording parity (HDF5/MAT/C3D/CSV/video, persisted recordings) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `export.video_speed_variants` | Time-based native video export with full-, half- and quarter-speed clips and an impact slow-motion clip | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
 | `launcher.docker_management` | Docker engine management dialog | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
 | `launcher.embedded_tabs_docks` | Embedded tool host (tabs + docks) | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
 | `launcher.mcp_config` | MCP server configuration writer/preferences | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
 | `launcher.tile_grid` | Launcher tile grid from shared manifest | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
-| `launcher.tile_web_reachability` | Manifest tile web-reachability contract (route / native-window / unavailable) | `pyqt`, `web` | `gap` | [#7461](https://github.com/D-sorganization/UpstreamDrift/issues/7461) | `unqualified` — Feature parity record only |
+| `launcher.tile_web_reachability` | Manifest tile web-reachability contract (route / native-window / unavailable) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `lifting.five_lift_viewing` | Weightlifting viewing and analysis for the five lifts (squat, deadlift, bench press, snatch, clean and jerk): lift selection, barbell, hand-force and GRF overlays, plots | `api`, `pyqt`, `web` | `gap` | [#11748](https://github.com/D-sorganization/UpstreamDrift/issues/11748) | `unqualified` — Feature parity record only |
+| `loop_nullspace_exploration` | Closed-loop null-space exploration (NSX): invariants, envelopes, hand split and diagnostics from one plot model, with a registry preset selector | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `loop_nullspace_variability` | Closed-loop null-space variability and consistency (NSX-100): kernel heatmap, variance budget, strategy Pareto and face dispersion from the plot model 2.0.0 sensitivity panels, with disturbance, mechanism, strategy, outcome-priority and engine controls | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `mocap.breadth` | Motion-capture breadth (C3D upload/playback, OpenPose source) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
-| `onboarding.about_version` | About/version info + onboarding | `pyqt` | `gap` | [#7459](https://github.com/D-sorganization/UpstreamDrift/issues/7459) | `unqualified` — Feature parity record only |
+| `mujoco.force_overlays` | MuJoCo GUI force/torque overlays drawn through the shared glyph renderers (native viewer and MeshCat) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `onboarding.about_version` | About/version info + onboarding | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `opencap.session_import` | OpenCap session import action and OpenSim engine handoff | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `optimization.swing_optimizer` | Swing Optimizer (trajectory optimization GUI) | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
 | `platform.aip_protocol` | AI Protocol (AIP) structured method dispatch | `api` | `parity` | — | `unqualified` — Feature parity record only |
+| `render.body_appearance` | Golfer body appearance with a visible head, face and neck in every engine render | `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `render.club_head_and_ball` | Realistic Club Head And Ball Rendering | `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `reporting.swing_report_dialog` | Swing Report Full/Custom Plot Selection and Package Export | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `settings.desktop_only_tabs` | Desktop-only settings tabs (MCP Servers, Processes, Startup/Docker, Layout, Performance) | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
 | `settings.preferences` | Settings/preferences surface + persistence | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `sidekick.terminal_repl_jupyter_skills` | Sidekick OS terminal / REPL / Jupyter / skills | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
-| `simulation.controls_wiring` | Web SimulationControls wiring (camera presets, recording toggle, trajectory export, force overlays, actuator controls) | `pyqt`, `web` | `gap` | [#7452](https://github.com/D-sorganization/UpstreamDrift/issues/7452) | `unqualified` — Feature parity record only |
+| `simulation.controls_wiring` | Web SimulationControls wiring (camera presets, recording toggle, trajectory export, force overlays, actuator controls) | `api`, `pyqt`, `web` | `parity` | [#7452](https://github.com/D-sorganization/UpstreamDrift/issues/7452) | `unqualified` — Feature parity record only |
 | `simulation.golf_suite_batch` | Golf Simulation Suite (parameter sweeps, batch runs) | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
 | `simulation.realtime_ws_stream` | Live simulation data over WebSocket pub-sub | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `simulation.shot_tracer` | Shot Tracer / ball-flight visualization | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `simulation.swing_objective_lab` | Swing Objective Lab — mechanism-vs-outcome downswing comparison | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
-| `tools.bunkershot3d_workbench` | BunkerShot3D designer workbench (W2 sole parameters, W3 sand condition, F0 dynamic-RFT shot, W7 metrics, playability window, bounce utilisation, animated sole load field, 3-D shot animation through the ADR-0027 viewport, linked scalar traces with a validity band, F1 sand-field cross-sections, A/B comparison, validity verdict) | `pyqt` | `gap` | [#8607](https://github.com/D-sorganization/UpstreamDrift/issues/8607) | `unqualified` — Feature parity record only |
-| `tools.character_builder` | Character Builder (humanoid URDF generation) | `api`, `pyqt`, `web` | `gap` | [#7448](https://github.com/D-sorganization/UpstreamDrift/issues/7448) | `unqualified` — Feature parity record only |
-| `tools.data_explorer` | Data Explorer (import/filter/visualize datasets) | `api`, `web` | `gap` | [#7448](https://github.com/D-sorganization/UpstreamDrift/issues/7448) | `unqualified` — Feature parity record only |
+| `tools.bunkershot3d_workbench` | BunkerShot3D designer workbench (W2 sole parameters, W3 sand condition, F0 dynamic-RFT shot, W7 metrics, playability window, bounce utilisation, animated sole load field, 3-D shot animation through the ADR-0027 viewport, linked scalar traces with a validity band, F1 sand-field cross-sections, A/B comparison, validity verdict) | `api`, `pyqt`, `web` | `gap` | [#12536](https://github.com/D-sorganization/UpstreamDrift/issues/12536) | `unqualified` — Feature parity record only |
+| `tools.capture_rig` | Capture Rig camera controller with the live view as the central pane and every control in a movable dock (step rail with the next action, settings tabs, action grid, log drawer) with saved layouts, themed header with status strip and workflow-grouped actions that reflow to fit a narrow pane, transport-style recorder (countdown, presets, REC readout, live view during the take), overlay player, camera-subset matching (variants), model-on-video overlays, provenance viewer and manual point annotation/editing; layout model with named layout presets, an interactive layout editor, live preview and playback composited through the chosen multiview layout, and composite multiview video export; non-destructive swing trim/crop and separate video export, visible capture library with durable swing notes, import/open/edit, archive/restore and storage management; saved coaching lines/arrows/circles/ellipses/rectangles with selection, resize, undo/redo, frame visibility and annotated still/video exports; reference comparison and overlay player force/torque vector arrow layers (FTO-25, #11310) | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
+| `tools.character_builder` | Character Builder (spec-native character, presets, engine export) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `tools.character_builder_grip` | Grip presets and sliders (weak, neutral, strong, Palmer overlap, Woods interlock, ten-finger; rotation, palm diagonal, spacing, style) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `tools.data_explorer` | Data Explorer (import/filter/visualize datasets) | `api`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `tools.dataset_generator` | Swing dataset generation and import | `api`, `web` | `parity` | — | `unqualified` — Feature parity record only |
-| `tools.launch_monitor_analytics` | Launch-monitor import, interdependency analysis, monitor comparison, dispersion, and longitudinal trends | `api`, `pyqt` | `gap` | [#8364](https://github.com/D-sorganization/UpstreamDrift/issues/8364) | `unqualified` — Feature parity record only |
+| `tools.golf_simulator` | Golf Simulator capability-aware controls and replay submission | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `tools.launch_monitor_analytics` | Launch-monitor import, interdependency analysis, monitor comparison, dispersion, and longitudinal trends | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `tools.matched_swing_browser` | Matched Swing Results Browser | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `tools.matlab_suite` | MATLAB/Simscape model suite | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
-| `tools.model_explorer` | Model Explorer (browse/select/build URDF-MJCF) | `api`, `pyqt`, `web` | `gap` | [#7448](https://github.com/D-sorganization/UpstreamDrift/issues/7448) | `unqualified` — Feature parity record only |
+| `tools.model_explorer` | Model Explorer (browse/select/build URDF-MJCF) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `tools.model_explorer.frankenstein_assembly` | Frankenstein drag-and-drop assembly with typed attachment ports | `api`, `pyqt` | `gap` | [#11651](https://github.com/D-sorganization/UpstreamDrift/issues/11651) | `unqualified` — Feature parity record only |
+| `tools.model_explorer.results_playback` | Model Explorer results playback on the shared-appearance golfer | `pyqt` | `gap` | [#12878](https://github.com/D-sorganization/UpstreamDrift/issues/12878) | `unqualified` — Feature parity record only |
+| `tools.motion_matching` | Motion Matching tour-average and club-only Excel matching | `pyqt` | `parity` | — | `unqualified` — Feature parity record only |
+| `tools.native_viewer_export` | Native per-engine viewer video export (CLI) | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
+| `tools.necromatcher` | Historical Player Library And Source Review | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `tools.pose_editing` | Pose Studio interactive pose editing | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
+| `tools.putting_analytics` | Putting analytics studies | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `tools.putting_green` | Putting green simulation | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
-| `tools.rate_of_closure` | Rate of Closure Impact Explorer (swing-impact-flight-putting simulation suite) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `tools.putting_studio` | Standalone offline putting studio (HTML client of the shared putting core) | `pyqt`, `web` | `exempt` | — | `unqualified` — Feature parity record only |
+| `tools.rate_of_closure` | Rate of Closure Impact Explorer (swing-impact-flight-putting simulation suite) | `api`, `pyqt`, `web` | `gap` | [#11987](https://github.com/D-sorganization/UpstreamDrift/issues/11987) | `unqualified` — Feature parity record only |
+| `tools.shot_pattern_analysis` | Shot Pattern Analysis Workbench | `pyqt` | `exempt` | — | `unqualified` — Feature parity record only |
+| `tools.spine_study` | Segmental spine study execution and model asset selection | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `tools.spine_viewer` | Segmental spine viewer (per-level load heatmaps from study receipts) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
 | `tools.terrain_engine` | Terrain and topography configuration | `api`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `tools.video_analyzer` | Video Analyzer (pose tracking and force/torque overlay) | `api`, `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
+| `visualization.force_color_controls` | Shared Segment Force Color Controls | `pyqt`, `web` | `parity` | — | `unqualified` — Feature parity record only |
