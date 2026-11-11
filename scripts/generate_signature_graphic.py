@@ -44,7 +44,7 @@ DT = 0.002
 HORIZON = 1.0
 #: The highlighted state is this far along the driven run, s.
 MARK_TIME = 0.2
-#: Arrows show the change of state over this interval, s.
+#: Tangent vectors in the graphic are drawn at this time scale for visibility, s.
 ARROW_DT = 0.35
 
 WIDTH, HEIGHT = 480, 340
@@ -164,6 +164,8 @@ def _marker(css: str, size: float) -> str:
 def long_description(scene: Scene) -> str:
     """Plain-text long description with the drawn numbers."""
     theta, omega = scene.mark
+    drift_theta, drift_omega = scene.drift
+    push_theta, push_omega = scene.push
     return (
         "The horizontal axis is the pendulum angle from straight down, in radians; the "
         "vertical axis is its angular velocity, in radians per second. Faint arrows show "
@@ -171,11 +173,13 @@ def long_description(scene: Scene) -> str:
         f"Both runs start at rest at an angle of {THETA0} rad. The dashed curve is the "
         "zero-torque run, which follows the drift alone. The solid curve is the run under a "
         f"constant {TORQUE:g} N m pivot torque, which swings faster and further. At the "
-        f"marked state, angle {theta:.2f} rad and angular velocity {omega:.2f} rad/s, three "
-        f"arrows show the change over {ARROW_DT} s: the drift arrow "
-        f"({scene.drift[0]:.2f}, {scene.drift[1]:.2f}) per second, the push arrow "
-        f"(0, {scene.push[1]:.2f}) per second, which only changes angular velocity because "
-        "torque acts on acceleration, and their sum, the state velocity the run actually has."
+        f"marked state, angle {theta:.2f} rad and angular velocity {omega:.2f} rad/s, "
+        "three tangent arrows are drawn scaled by "
+        f"{ARROW_DT:g} s for visibility (not the state change over {ARROW_DT:g} s): the drift "
+        f"arrow has components ({drift_theta:.2f} rad/s, {drift_omega:.2f} rad/s²), the push "
+        f"arrow (0 rad/s, {push_omega:.2f} rad/s²), which only changes angular velocity "
+        "because torque acts on acceleration, and their sum, the actual state velocity "
+        f"({drift_theta + push_theta:.2f} rad/s, {drift_omega + push_omega:.2f} rad/s²)."
     )
 
 
