@@ -552,7 +552,7 @@ The URDF specification defines **exactly six** joint types: `revolute`, `continu
 For the teaching **two-hand grip** on a spanning tree, attach the club to the lead hand in URDF and close the trail hand with MuJoCo equality constraints that URDF cannot express:
 
 ```xml
-<!-- MJCF fragment: trail-hand weld to club (names match teaching model) -->
+<!-- MJCF fragment: second-hand weld (body names must match your MJCF/URDF import) -->
 <mujoco>
   <equality>
     <weld name="trail_grip" body1="trail_hand" body2="club"
