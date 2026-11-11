@@ -1,0 +1,9 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-gom-vol0-ch12}
+
+::: {.callout-note appearance="simple"}
+The regression demo in this chapter is an AffineDrift teaching stub (`src/tools/learning_examples.py`). When a swing or humanoid study moves from exposition to numerical optimization inside UpstreamDrift, the backend registry at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da) records which solver backends exist and which problem classes each serves.
+
+- **Optimizer backend registry:** [`backend_registry.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/optimization/backend_registry.py) — typed lookup for Ipopt, SNOPT, CasADi, and related engines (see UpstreamDrift ADR-0050).
+
+**Convention note:** listing a backend as importable is not a validation of humanoid-scale problem sizes; read the registry test module and the cited ADR before asserting runtime or convergence.
+:::
