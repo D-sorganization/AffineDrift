@@ -1,0 +1,142 @@
+---
+title: "UpstreamDrift: Headless Simulation and Agent Use"
+description: "Run UpstreamDrift without the GUI using ud-sim, register the ud-sim-mcp server for agents, and compare with the versioned REST simulate route."
+toc: true
+page-layout: article
+categories:
+- site-information
+---
+
+UpstreamDrift exposes a **durable headless run path** for scripts and AI agents:
+case JSON in, run records and artifacts out. This page summarizes the interfaces
+verified against upstream main at commit `625a16e6897b` (2026-11-11). Deep
+wire-level detail lives in upstream
+[`docs/development/sim_run_mcp.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/docs/development/sim_run_mcp.md)
+and schema
+[`schemas/sim-run-v1.json`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/schemas/sim-run-v1.json).
+
+Complete the [getting-started install](upstreamdrift-getting-started.html) before running the examples below.
+
+## First Diagnostic
+
+After a successful install, list registered launcher capabilities:
+
+```bash
+python -m src.shared.python.feature_registry
+```
+
+Use this when a tile or engine fails to load; it prints the feature registry the
+launcher expects.
+
+## Headless CLI (`ud-sim`)
+
+Console entry point `ud-sim` (module `src.sim_run.cli`) accepts simulation case
+JSON from a file, from `--case`, or from stdin (`-`). It writes durable
+`RunRecord` and `ResultEnvelope` JSON under `--results-root` (default
+`./sim_results`) and prints JSON (or a summary) on stdout.
+
+### Minimal Worked Example
+
+The upstream unit tests use this fixture case (pendulum benchmark engine):
+
+```json
+{
+  "engine_type": "golf_swing_pendulum",
+  "duration": 1.0,
+  "timestep": 0.01,
+  "initial_state": {"q": [0.0, 0.0]},
+  "timeout_seconds": 15.0,
+  "tags": {"batch": "ci_test"}
+}
+```
+
+Save it as `case.json`, then:
+
+```bash
+ud-sim run case.json --results-root ./sim_results --run-id demo_pendulum_01
+```
+
+On success:
+
+- stdout contains a JSON run summary (`status`: `succeeded`, `run_id`, …).
+- `./sim_results/<run_id>/record.json` holds the durable record.
+- Result trajectories and artifact paths referenced in the envelope land under the same run directory.
+
+Inspect a completed run:
+
+```bash
+ud-sim runs list --results-root ./sim_results
+```
+
+Presets and reproduction (`ud-sim preset`, `ud-sim reproduce`) are documented in
+upstream `src/sim_run/preset_run.py` and the README **Running the Platform** section.
+
+## MCP Server (`ud-sim-mcp`)
+
+For local agents (Cursor, Claude Desktop, Codex, Grok Bot), UpstreamDrift ships a
+**stdio Model Context Protocol** adapter — no network listeners. After
+`pip install -e ".[dev]"`, the console script `ud-sim-mcp` is available.
+
+Typical host configuration (from upstream docs):
+
+```json
+{
+  "mcpServers": {
+    "ud-sim-mcp": {
+      "command": "ud-sim-mcp",
+      "args": [],
+      "env": {
+        "UPSTREAMDRIFT_PRIVATE_MODE": "0",
+        "UPSTREAMDRIFT_AGENT_API_TOKEN": "optional-token"
+      }
+    }
+  }
+}
+```
+
+### Tool Surface
+
+| Tool | Purpose |
+| --- | --- |
+| `describe_engines` | Registered engines, capabilities, and `RunRequest` JSON Schema |
+| `submit_run` | Validate case JSON and execute in an isolated worker subprocess |
+| `get_run` | Fetch status, timestamps, and result envelope by `run_id` |
+| `fetch_artifact` | Read an artifact path from a run directory (traversal-guarded) |
+
+When `UPSTREAMDRIFT_PRIVATE_MODE=1` (alias `UD_PRIVATE_MODE`), `submit_run` is
+denied at the service boundary; read-only tools still honor auth settings.
+
+## REST Path (Live API Server)
+
+Headless batch runs should use **`ud-sim`**, not HTTP. When you start the
+interactive stack (`python launch_upstream_drift.py` or `--api-only`), the
+versioned route below submits a one-shot simulation through the web API layer:
+
+```python
+import requests
+
+resp = requests.post(
+    "http://localhost:8000/api/v1/simulate",
+    json={"engine_type": "mujoco", "duration": 0.5},
+    timeout=30,
+)
+resp.raise_for_status()
+print(resp.json())
+```
+
+Whether a request succeeds still depends on engine availability, model assets, and
+valid inputs. Open the running server's `/docs` endpoint for the live OpenAPI
+contract.
+
+## Agents Reading This Site
+
+Machine-readable entry points at the site root:
+
+- [`/llms.txt`](https://affinedrift.com/llms.txt) — concise page index for agents
+- [`/llms-full.txt`](https://affinedrift.com/llms-full.txt) — extended index with UpstreamDrift wiring
+
+## Related Articles
+
+- [UpstreamDrift: Getting Started](upstreamdrift-getting-started.html)
+- [Overview](overview.html#upstreamdrift-the-software)
+- [Programming Companion](../models/programming/index.html)
