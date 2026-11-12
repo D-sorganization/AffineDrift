@@ -82,26 +82,21 @@ and the [Models page](../models/models.html) for the AffineDrift link map.
 
 ### Quick Start
 
-The upstream README at the cited snapshot requires Python 3.11 or 3.12
-(`requires-python = ">=3.11,<3.13"`). The repository does not use Git LFS. The
-`vendor/ud-tools` submodule is mandatory — the platform will not import without it.
+The pinned package metadata declares `requires-python = ">=3.11"`. That is the
+lowest version that will install. It is not a promise that every later version works.
+Python 3.11 and 3.12 are the tested interpreter minors at that revision. (A minor
+version is one like 3.12.) The metadata declaration does not establish support for untested interpreter minors
+such as Python 3.13.
 
-```bash
-git clone https://github.com/D-sorganization/UpstreamDrift.git
-cd UpstreamDrift
-git submodule update --init --recursive vendor/ud-tools
-
-pip install -e ".[dev]"
-
-python scripts/ci/verify_installation.py
-python launch_upstream_drift.py
-```
+AffineDrift publishes the checked clone, submodule, and install sequence on
+[UpstreamDrift: Getting Started](upstreamdrift-getting-started.html) and
+[Headless Simulation and Agent Use](upstreamdrift-headless-and-agents.html).
+At that revision, `python scripts/ci/verify_installation.py` remains the install
+verification entry point named in the upstream CI contract.
 
 For UI work without a real engine, `GOLF_USE_MOCK_ENGINE=1` selects the
 mock engine. Its output is synthetic. Do not present it as a physics
-result. AffineDrift publishes the checked install sequence on
-[UpstreamDrift: Getting Started](upstreamdrift-getting-started.html) and
-[Headless Simulation and Agent Use](upstreamdrift-headless-and-agents.html).
+result.
 
 ### A Real API Example
 
