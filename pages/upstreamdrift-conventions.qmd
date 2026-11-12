@@ -9,7 +9,7 @@ categories:
 caveats:
   evidence-level: "Convention inventory tied to a pinned UpstreamDrift commit"
   establishes:
-    - "How UpstreamDrift spells floating-base state, quaternions, spatial vectors, gravity, and world frames at commit c8814a1b9d."
+    - "How UpstreamDrift spells floating-base state, quaternions, spatial vectors, gravity, and world frames at commit c8814a1b9d120ce382ee1de9a6583bb5ef569a15."
     - "Where engine adapters convert to canonical-v2 and what remains engine-native when adapters are bypassed."
   does-not-establish:
     - "That every AffineDrift article uses the same world frame or path sign as the code tables below."
@@ -20,7 +20,7 @@ UpstreamDrift is the implementation authority for multibody state, mocap registr
 flight physics, and analytics kernels that AffineDrift cites. This page records **what
 the code fixes at one commit**, not what every article on this site assumes. All
 UpstreamDrift evidence links below use the frozen revision
-[`c8814a1b9d`](https://github.com/D-sorganization/UpstreamDrift/tree/c8814a1b9d)
+[`c8814a1b9d120ce382ee1de9a6583bb5ef569a15`](https://github.com/D-sorganization/UpstreamDrift/tree/c8814a1b9d120ce382ee1de9a6583bb5ef569a15)
 (re-checked 2026-11-10 against issue #5619).
 
 AffineDrift's normative symbol layer remains
@@ -34,12 +34,12 @@ NOTATION repair is tracked separately ([#5589](https://github.com/D-sorganizatio
 
 | Quantity | UpstreamDrift canonical-v2 | Evidence |
 | --- | --- | --- |
-| Length, mass, time | SI (m, kg, s) | [`docs/conventions/canonical-v2.md`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/docs/conventions/canonical-v2.md#L19-L30) |
-| World frame | Z-up, right-handed | [`canonical-v2.md` §1](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/docs/conventions/canonical-v2.md#L27-L28) |
-| Gravity | **`g = [0, 0, -9.80665]` m/s²** | [`canonical-v2.md` §1](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/docs/conventions/canonical-v2.md#L29) and [`velocity_conventions.py` `CANONICAL_GRAVITY_INERTIAL`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/engine_core/velocity_conventions.py#L22-L23) |
-| Dynamic state angles | Radians in `canonical-v2` `q`/`v` | [`canonical-v2.md` §1–2](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/docs/conventions/canonical-v2.md#L25-L26) |
-| Pose interchange (`canonical-v1`) | Intrinsic **XYZ Euler in degrees** for pelvis + joint dict in degrees | [`pose_interchange/canonical.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/pose_interchange/canonical.py#L10-L18), [`se3.py` `R = Rx·Ry·Rz`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/pose_interchange/se3.py#L45-L47) |
-| OpenSim / Simscape pose import | Degrees at adapter boundary | [`cross_engine_conventions.md` §B](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/docs/user_guide/pose_studio/cross_engine_conventions.md#L44-L52) |
+| Length, mass, time | SI (m, kg, s) | [`docs/conventions/canonical-v2.md`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/docs/conventions/canonical-v2.md#L19-L30) |
+| World frame | Z-up, right-handed | [`canonical-v2.md` §1](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/docs/conventions/canonical-v2.md#L27-L28) |
+| Gravity | **`g = [0, 0, -9.80665]` m/s²** | [`canonical-v2.md` §1](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/docs/conventions/canonical-v2.md#L29) and [`velocity_conventions.py` `CANONICAL_GRAVITY_INERTIAL`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/engine_core/velocity_conventions.py#L22-L23) |
+| Dynamic state angles | Radians in `canonical-v2` `q`/`v` | [`canonical-v2.md` §1–2](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/docs/conventions/canonical-v2.md#L25-L26) |
+| Pose interchange (`canonical-v1`) | Intrinsic **XYZ Euler in degrees** for pelvis + joint dict in degrees | [`pose_interchange/canonical.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/pose_interchange/canonical.py#L10-L18), [`se3.py` `R = Rx·Ry·Rz`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/pose_interchange/se3.py#L45-L47) |
+| OpenSim / Simscape pose import | Degrees at adapter boundary | [`cross_engine_conventions.md` §B](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/docs/user_guide/pose_studio/cross_engine_conventions.md#L44-L52) |
 
 Many AffineDrift articles use **`9.81`** or **radians-only** notation; do not silently equate them with UpstreamDrift arrays.
 
@@ -48,11 +48,11 @@ Many AffineDrift articles use **`9.81`** or **radians-only** notation; do not si
 **`canonical-v1`** (`CanonicalPose`, convention tag `canonical-v1`): pelvis translation (m) +
 intrinsic XYZ Euler (**degrees**) + joint-angle dict (**degrees**). Velocities are out of scope;
 Pose Studio materialises `v = 0` at import
-([`canonical.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/pose_interchange/canonical.py#L10-L20)).
+([`canonical.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/pose_interchange/canonical.py#L10-L20)).
 
 **`canonical-v2`** (frozen dynamic contract, ADR-0026): configuration `q`, velocity `v`,
 acceleration `a`, metadata `convention="canonical-v2"`, `frame="world_Zup"`, `units="SI"`
-([`canonical-v2.md`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/docs/conventions/canonical-v2.md#L33-L36)).
+([`canonical-v2.md`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/docs/conventions/canonical-v2.md#L33-L36)).
 
 For a floating base and `n_j` internal joints:
 
@@ -60,36 +60,36 @@ For a floating base and `n_j` internal joints:
 - **`v`** (length `6 + n_j`): `[base_linear_world_m/s, base_angular_body_rad/s, joint_rates…]`
 - **`nq = nv + 1`** because the unit quaternion is not a free tangent coordinate; integrate with
   `integrate(q, dq)`, never `q + dq`
-  ([`canonical-v2.md` §2](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/docs/conventions/canonical-v2.md#L38-L58)).
+  ([`canonical-v2.md` §2](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/docs/conventions/canonical-v2.md#L38-L58)).
 
 ## Per-Engine Native vs Canonical-V2 {#per-engine-table}
 
 Conversions run **only at the engine adapter boundary** unless noted. Low-level
 `get_state()` calls that return raw `qpos`/`qvel` (MuJoCo) or Pinocchio `data` are
 **not** canonical unless routed through the adapter/CC contract
-([`canonical-v2.md` §3 intro](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/docs/conventions/canonical-v2.md#L60-L66)).
+([`canonical-v2.md` §3 intro](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/docs/conventions/canonical-v2.md#L60-L66)).
 
 | Engine | Native floating-base `q` | Native quaternion order | Native base velocity / spatial order | Converted at adapter | **Not** converted by default |
 | --- | --- | --- | --- | --- | --- |
-| **MuJoCo / MJX** | `[xyz, quat_wxyz, …]` | w-first `(w,x,y,z)` | Free-joint `qvel`: linear in **world**, angular in **body** (matches v2 base block) | Quaternion order only at pose-IO boundary; `canonical-v2` state mapping per CC-10 | Raw [`physics_engine.get_state`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L254-L258) returns native `qpos`/`qvel` |
+| **MuJoCo / MJX** | `[xyz, quat_wxyz, …]` | w-first `(w,x,y,z)` | Free-joint `qvel`: linear in **world**, angular in **body** (matches v2 base block) | Quaternion order only at pose-IO boundary; `canonical-v2` state mapping per CC-10 | Raw [`physics_engine.get_state`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L254-L258) returns native `qpos`/`qvel` |
 | **Pinocchio** | `[xyz, quat_xyzw]` | **w-last** `(x,y,z,w)` | Free-flyer linear & angular in **body/local** frame; Jacobian native `[linear; angular]` | Reorder quaternion; rotate base linear vel/accel to world via `velocity_map` (CC-9); **restack** spatial Jacobian to `[angular; linear]` | Internal `data.q`, `data.v` until adapter export |
 | **Drake** | `QuaternionFloatingJoint`: `[quat_wxyz, xyz]` or URDF RPY `[xyz, rpy]` | w-first for quaternion joint | Spatial Jacobian `[angular; linear]` in Drake native API | Base block reorder + RPY path via `se3` (CC-28) | Internal `MultibodyPlant` state vector layout |
-| **JaxSim** | `[xyz, quat_wxyz, joints…]` in backend data | w-first | Backend default **mixed**: body angular + world linear at COM | Reads/writes **canonical** `[angular; linear]` base `v` via [`velocity_conventions`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/engine_core/velocity_conventions.py); see [`jaxsim_backend.py` `get_state`/`set_state`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/engines/physics_engines/jaxsim/jaxsim_backend.py#L100-L131) | Native JaxSim tape if bypassing backend wrapper |
+| **JaxSim** | `[xyz, quat_wxyz, joints…]` in backend data | w-first | Backend default **mixed**: body angular + world linear at COM | Reads/writes **canonical** `[angular; linear]` base `v` via [`velocity_conventions`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/engine_core/velocity_conventions.py); see [`jaxsim_backend.py` `get_state`/`set_state`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/engines/physics_engines/jaxsim/jaxsim_backend.py#L100-L131) | Native JaxSim tape if bypassing backend wrapper |
 | **MyoSuite** | MuJoCo MJCF free joint (same as MuJoCo row) | w-first | MuJoCo free-joint `qvel` pattern | Same family as MuJoCo CC-10 / MyoSuite adapter | Activation & muscle states (not part of `q`,`v` contract) |
 | **OpenSim** | `FreeJoint` coordinates (often XYZ Euler) | n/a (Euler joints) | Per-coordinate speeds, **degrees** on disk | Degrees → radians at pose boundary (CC-10) | `.osim` shoulder **Y sign flips** per model |
 | **Simscape** | Parameter-bus start pose, **degrees** | n/a | Pose import only (no shared v2 dynamics export) | Degrees → radians at boundary | Simulink internal states |
 
 **Spatial Jacobian contract (suite-wide):** combined `spatial` Jacobian is **`[angular; linear]`** rows
-([`engine_core/capabilities.py` `SPATIAL_JACOBIAN_ORDER`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/engine_core/capabilities.py#L28-L36)).
+([`engine_core/capabilities.py` `SPATIAL_JACOBIAN_ORDER`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/engine_core/capabilities.py#L28-L36)).
 Pinocchio's native frame Jacobian is transposed to that order in
-[`pinocchio_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L551-L562).
+[`pinocchio_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L551-L562).
 Drake exposes the same stacking in
-[`drake_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/engines/physics_engines/drake/python/drake_physics_engine.py#L607-L616).
+[`drake_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/engines/physics_engines/drake/python/drake_physics_engine.py#L607-L616).
 
 **Pose Studio cross-engine table** (pelvis prefix, joint units, quaternion order):
-[`cross_engine_conventions.md` §A–C](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/docs/user_guide/pose_studio/cross_engine_conventions.md#L21-L66).
+[`cross_engine_conventions.md` §A–C](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/docs/user_guide/pose_studio/cross_engine_conventions.md#L21-L66).
 MuJoCo ↔ Pinocchio quaternion swap example:
-[`pinocchio_interface.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/pinocchio_interface.py#L183-L206).
+[`pinocchio_interface.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/pinocchio_interface.py#L183-L206).
 
 ## Spatial Twist, Wrench, and Control Notation in Code {#spatial-vectors}
 
@@ -108,26 +108,26 @@ is in use.
 
 | Frame id | Axes (summary) | Typical use | Evidence |
 | --- | --- | --- | --- |
-| **ADR-0041 mocap world** | x → target, y **up**, z → golfer's **right** | Pinhole reconstruction, camera rig | [`cameras.py` module doc](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/motion_capture/reconstruct/cameras.py#L1-L8) |
-| **Canonical z-up registration** | x → target, y → golfer's **left**, z **up** | Marker YAML, registration import | [`registration.py` `canonical_z_up_to_adr0041_world`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/motion_capture/reference/registration.py#L45-L57) |
-| **ISB-style golfer lab** | Built from explicit up/target/handedness | Trunk/pelvis anatomical angles | [`trunk_pelvis.py` header](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/anatomical_angles/trunk_pelvis.py#L1-L10) |
-| **Impact parameters (ADR-0041 default)** | Z-up; golfer faces **−X**; target **−Y** | Launch-monitor-style club metrics | [`impact_parameters/__init__.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/impact_parameters/__init__.py#L7-L37) |
-| **Ball flight integrator** | Z-up; **+X** forward at azimuth 0; **+Y left** | Trajectory / spin vector | [`flight_models.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/physics/flight_models.py#L228-L248) |
+| **ADR-0041 mocap world** | x → target, y **up**, z → golfer's **right** | Pinhole reconstruction, camera rig | [`cameras.py` module doc](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/motion_capture/reconstruct/cameras.py#L1-L8) |
+| **Canonical z-up registration** | x → target, y → golfer's **left**, z **up** | Marker YAML, registration import | [`registration.py` `canonical_z_up_to_adr0041_world`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/motion_capture/reference/registration.py#L45-L57) |
+| **ISB-style golfer lab** | Built from explicit up/target/handedness | Trunk/pelvis anatomical angles | [`trunk_pelvis.py` header](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/anatomical_angles/trunk_pelvis.py#L1-L10) |
+| **Impact parameters (ADR-0041 default)** | Z-up; golfer faces **−X**; target **−Y** | Launch-monitor-style club metrics | [`impact_parameters/__init__.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/impact_parameters/__init__.py#L7-L37) |
+| **Ball flight integrator** | Z-up; **+X** forward at azimuth 0; **+Y left** | Trajectory / spin vector | [`flight_models.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/physics/flight_models.py#L228-L248) |
 
 **Camera storage convention:** extrinsics are **`T_world_from_camera`** (not world-from-camera
 inversion). OpenCV camera axes: **+z forward, +y down**
-([`cameras.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/motion_capture/reconstruct/cameras.py#L3-L8)).
+([`cameras.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/motion_capture/reconstruct/cameras.py#L3-L8)).
 AffineDrift [Motion Capture](../articles/technology-motion-capture.html) discusses
 `P = K[R|t]` with world→camera; multiply through the stored direction when fitting UD calibrations.
 
 **Registration map** (canonical z-up → ADR-0041):
 `x_w = x_c`, `y_w = z_c`, `z_w = -y_c`
-([`registration.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/motion_capture/reference/registration.py#L52-L57)).
+([`registration.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/motion_capture/reference/registration.py#L52-L57)).
 
 ## Impact Parameters, Club Path, and Face Signs {#impact-parameters}
 
 Definitions are in
-[`impact_parameters/__init__.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/impact_parameters/__init__.py#L7-L37):
+[`impact_parameters/__init__.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/impact_parameters/__init__.py#L7-L37):
 
 - Target basis: **`x_t`** along target, **`z_t`** up, **`y_t = z_t × x_t`** (left of target for a right-handed golfer).
 - **Club path** positive = in-to-out; **face angle** positive = open; signs pick up a handedness factor `s = ±1`.
@@ -142,7 +142,7 @@ Compare carefully with AffineDrift articles that declare y-up target frames or p
 
 In the unified flight models, spin builds as
 `[backspin·sin(az), -backspin·cos(az), sidespin]` with Z-up and **+Y left**
-([`flight_models.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/physics/flight_models.py#L239-L248)).
+([`flight_models.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/physics/flight_models.py#L239-L248)).
 Positive spin-axis tilt can curve the ball **left** relative to that frame—opposite to many
 monitor exports that treat positive tilt as **fade/right** unless converted.
 
@@ -150,7 +150,7 @@ monitor exports that treat positive tilt as **fade/right** unless converted.
 
 Ground reaction uses force **by the ground on the foot**, Z-up world,
 CoP valid only when **`F_z ≥ COP_MIN_FZ_N`**, and **`None`/NaN gaps—not zero—when unavailable**
-([`ground_reaction.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/biomechanics/ground_reaction.py#L1-L22)).
+([`ground_reaction.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/biomechanics/ground_reaction.py#L1-L22)).
 Grip wrench summaries use **force by the hand on the club**, reduced to the grip midpoint, with
 documented `split_method` when two-hand allocation is indeterminate (manual ch10–11; see biomechanics modules).
 
@@ -158,8 +158,8 @@ documented `split_method` when two-hand allocation is indeterminate (manual ch10
 
 | Tool / module | Horizontal plane convention | "95%" ellipse meaning | Evidence |
 | --- | --- | --- | --- |
-| **SG optimizer** `TiltedBivariateGaussian` | Δ⊥ **positive = left** of target (yards) | `confidence_ellipse`: **`a`, `b` are semi-axes** at level *p* (χ²₂ scaling inside) | [`distributions.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/sg_optimizer/shot_model/distributions.py#L28-L36), [§ellipse](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/shared/python/sg_optimizer/shot_model/distributions.py#L88-L98) |
-| **Shot pattern analysis** | **`x` downrange, `y` right** (metres) | Empirical/HDR bins in density tools—not the same object as a Gaussian semi-axis | [`dispersion_stats.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/tools/shot_pattern_analysis/dispersion_stats.py#L136-L138) |
+| **SG optimizer** `TiltedBivariateGaussian` | Δ⊥ **positive = left** of target (yards) | `confidence_ellipse`: **`a`, `b` are semi-axes** at level *p* (χ²₂ scaling inside) | [`distributions.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/sg_optimizer/shot_model/distributions.py#L28-L36), [§ellipse](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/sg_optimizer/shot_model/distributions.py#L88-L98) |
+| **Shot pattern analysis** | **`x` downrange, `y` right** (metres) | Empirical/HDR bins in density tools—not the same object as a Gaussian semi-axis | [`dispersion_stats.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/tools/shot_pattern_analysis/dispersion_stats.py#L136-L138) |
 | AffineDrift [Shot Pattern Analysis](../articles/shot-pattern-analysis.html) | States lateral **positive right** | Describes binned HDR, not χ² covariance ellipses |
 
 **Conversion cheat sheet:** `y_left = −y_right`; correlation **ρ** changes sign when flipping lateral;
@@ -178,7 +178,7 @@ reference table** (full NOTATION harmonisation remains out of scope here).
 | Euler pose | [NOTATION.md](https://github.com/D-sorganization/AffineDrift/blob/main/NOTATION.md#L188-L203) extrinsic Z-Y-X radians | **`canonical-v1` intrinsic XYZ degrees** | Reorder rotation sequence and convert units before Pose Studio import |
 | Spatial 6-vectors | Mix of angular-first, linear-first, and force-first wrenches across books | Suite Jacobian and canonical-v2 base `v`: **angular then linear**; separate wrench policies in biomechanics modules | Permute blocks consistently; check power pairing `WᵀV` |
 | Gravity magnitude | Often `9.81` in prose | **`9.80665`** m/s² | Use UD constant when reproducing UD numbers |
-| Camera extrinsics | Textbook `P=K[R|t]` world→camera | Stored **`T_world_from_camera`** | Invert/transpose per [`cameras.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d/src/motion_capture/reconstruct/cameras.py#L3-L8) |
+| Camera extrinsics | Textbook `P=K[R|t]` world→camera | Stored **`T_world_from_camera`** | Invert/transpose per [`cameras.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/motion_capture/reconstruct/cameras.py#L3-L8) |
 
 ## Using This Page With Models and Agents {#usage}
 
