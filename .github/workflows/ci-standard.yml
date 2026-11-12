@@ -433,7 +433,6 @@ jobs:
         # aborts before any test runs.
         run: |
           if sudo -n true 2>/dev/null; then
-            sudo rm -f /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock /var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin
             sudo rm -f /etc/apt/sources.list.d/*chrome* /etc/apt/sources.list.d/*google*
             sudo sed -i '/dl\.google\.com/d' /etc/apt/sources.list 2>/dev/null || true
             APT_READY=false

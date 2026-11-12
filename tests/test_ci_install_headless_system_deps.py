@@ -122,3 +122,16 @@ def test_ci_standard_invokes_shared_bootstrap() -> None:
     workflow = REPO_ROOT / ".github" / "workflows" / "ci-standard.yml"
     text = workflow.read_text(encoding="utf-8")
     assert text.count("bash scripts/ci/install_headless_system_deps.sh") >= 2
+
+
+def test_ci_standard_qt_step_never_unlinks_apt_lock_files() -> None:
+    workflow = REPO_ROOT / ".github" / "workflows" / "ci-standard.yml"
+    text = workflow.read_text(encoding="utf-8")
+    marker = "name: Install Qt system libraries"
+    start = text.index(marker)
+    next_job = text.find("\n  tests:", start)
+    qt_block = text[start:next_job] if next_job != -1 else text[start : start + 4000]
+    for path in FORBIDDEN_LOCK_PATHS:
+        assert (
+            path not in qt_block
+        ), f"Qt apt bootstrap in ci-standard.yml must not unlink apt/dpkg lock {path!r}"
