@@ -467,12 +467,9 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/validation-roadmap.html",
             "/pages/Golf_Control_Theory.html",
             "/pages/scope-and-limits.html",
-<<<<<<< HEAD
             "/pages/upstreamdrift-capture-to-model-pipeline.html",
-=======
             "/pages/upstreamdrift-getting-started.html",
             "/pages/upstreamdrift-headless-and-agents.html",
->>>>>>> origin/main
             "/articles/slack-management-linked-systems.html",
         }
         and (
