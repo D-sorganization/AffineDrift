@@ -117,6 +117,7 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "pics",
         "references",
         "reports",
+        # Motion-measurement epic (#5408) critique tree; thesis collateral (#5466) uses the same layout.
         "research",
         "repositories",
         "resources",

@@ -165,7 +165,8 @@
         "sha256",
         "bytes",
         "source_license",
-        "source_url"
+        "source_url",
+        "run"
       ],
       "properties": {
         "id": { "type": "string", "minLength": 1 },
@@ -207,7 +208,30 @@
           "type": "string",
           "format": "uri",
           "pattern": "^https://"
-        }
+        },
+        "run": { "$ref": "#/$defs/run" }
+      }
+    },
+    "run": {
+      "description": "UpstreamDrift run identity; names mirror run-manifest-v1 (UpstreamDrift #14431). run_id is the SHA-256 of the canonical run manifest.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_id",
+        "model_revision",
+        "run_id",
+        "ud_commit",
+        "claim_class"
+      ],
+      "properties": {
+        "model_id": { "type": "string", "pattern": "\\S" },
+        "model_revision": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{40}|sha256:[0-9a-f]{64})$"
+        },
+        "run_id": { "$ref": "#/$defs/sha256" },
+        "ud_commit": { "$ref": "#/$defs/revision" },
+        "claim_class": { "enum": ["derived", "model_scenario", "observed"] }
       }
     }
   }

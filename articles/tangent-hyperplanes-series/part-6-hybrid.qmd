@@ -1,5 +1,5 @@
 ---
-title: "Tangent Hyperplanes VI: Hybrid Systems"
+title: "Tangent-Space Series, Part 6: Hybrid Systems"
 description: "How tangent-space reasoning changes across impacts, guards, and mode switches."
 aliases:
   - ../tangent-hyperplane-articles/Drafts_Original_Articles/Advanced_Integral_Expansions_Package/01_Hamiltonian_and_Adjoint.html
@@ -16,15 +16,15 @@ This article connects smooth variational dynamics with event sensitivity. The lo
 
 ## Declare the Mode, Guard and Reset
 
-In mode $i$, let $\dot x=f_i(x,t)$. A guard $g(x,t)=0$ triggers a transition to mode $j$ with reset $x^+=R(x^-,t)$. The vector fields here include the specified input policy; when that policy is state dependent, its derivatives belong in the closed-loop Jacobian.
+In mode $i$, let $\dot x=f_i(x,t)$. A guard $h(x,t)=0$ triggers a transition to mode $j$ with reset $x^+=R(x^-,t)$. The vector fields here include the specified input policy; when that policy is state dependent, its derivatives belong in the closed-loop Jacobian.
 
 Within a smooth mode, $\dot\xi=A_i(t)\xi$ propagates an initial-state variation. Independent input variations add the usual forcing term. At a state-triggered event, however, the perturbed trajectory generally reaches the guard at a different time. Applying only $D_xR$ misses that timing effect.
 
 Assume a single isolated transition, differentiable fields, guard and reset near the event, and the same transition sequence for nearby trajectories. Write
 
 $$
-n=\nabla_xg(x^-,t_e),\qquad
-\gamma=\partial_tg+n^Tf^-\ne0.
+n=\nabla_x h(x^-,t_e),\qquad
+\gamma=\partial_t h+n^Tf^-\ne0.
 $$
 
 Here $f^-=f_i(x^-,t_e)$ and $f^+=f_j(R(x^-,t_e),t_e)$. The condition $\gamma\ne0$ is transversality: the trajectory crosses the moving guard with nonzero normal speed.
@@ -50,11 +50,11 @@ $$
 \begin{aligned}
 \xi^+&=\Xi\xi^-,\\
 \Xi&=D_xR+
-\frac{(f^+-D_xR f^--\partial_tR)n^T}{\partial_tg+n^Tf^-}.
+\frac{(f^+-D_xR f^--\partial_tR)n^T}{\partial_t h+n^Tf^-}.
 \end{aligned}
 $$
 
-The autonomous guard/reset formula is the special case $\partial_tg=0$, $\partial_tR=0$. Explicit time dependence in the vector fields alone does not require these derivatives to be nonzero.
+The autonomous guard/reset formula is the special case $\partial_t h=0$, $\partial_tR=0$. Explicit time dependence in the vector fields alone does not require these derivatives to be nonzero.
 
 This is a same-time derivative map built from local flow continuations. It is not the difference between two physical trajectories evaluated at their separate impact instants. For an observation after both nearby events, compose the pre-event transition matrix, $\Xi$, and the post-event transition matrix. Direct parameter or input dependence in the guard or reset needs its own additional derivative terms.
 
@@ -104,6 +104,6 @@ Also distinguish a clubhead state at a fixed time from its state when it reaches
 
 - **[Tangent-Space Series](../../pages/tangent-hyperplanes.html)** — The series hub: full reading order, provenance, and companion material
 - **[Force and Mobility Ellipsoids](../force-mobility-matrices.html)** — State-dependent mobility across contact modes: the smooth-case picture that saltation maps interrupt
-- **[Tangent Hyperplanes V: Contraction](part-5-contraction.html)** — The previous part of the series
-- **[Tangent Hyperplanes VII: Residual-Aware Control](part-7-residual-aware.html)** — The next part of the series
+- **[Part 5: Contraction](part-5-contraction.html)** — The previous part of the series
+- **[Part 7: Residual-Aware Control](part-7-residual-aware.html)** — The next part of the series
 :::

@@ -62,6 +62,7 @@ EXPECTED_MENU_ITEMS: dict[str, list[tuple[str, str]]] = {
         ("Force Measurement", "articles/technology-force-measurement.html"),
         ("Motion Capture", "articles/technology-motion-capture.html"),
         ("Launch Monitors", "articles/technology-launch-monitors.html"),
+        ("Slack in Linked Systems", "articles/slack-management-linked-systems.html"),
         ("The Reference-Point Problem", "articles/reference-point-problem.html"),
     ],
     "Tools": [

@@ -114,7 +114,7 @@ That interpretation leaves a first-order question unanswered:
 
 For experimental contrast, the finite model inputs are labeled "early drive" and "retain early/release late." They are not a survey of coaching doctrine or coaching cues. The comparison tests a behavior established in double-pendulum studies since the 1960s: higher modeled clubhead speeds can occur when distal drive is delayed [@cochran1968; @jorgensen1970; @milburn1982; @pickering1999; @sprigings2000; @sprigings2002]. The contribution here is a reproducible force, power, work, and counterfactual audit rather than a claim of novelty for delayed release.
 
-This study approaches the question with *counterfactual dynamics*. A **pointwise ZTCF sample**, or pointwise drift vector, is the acceleration the model evaluates at one achieved state with applied control removed. A **stitched pointwise ZTCF trace** collects those same-state samples without integrating them. A **forward or branched ZTCF trajectory** integrates the drift after a torque killswitch and is required to test persistence. The **control contribution** is the same-state difference between total and drift acceleration. A **ZVCF is not the control contribution**: it is a separate zero-velocity construction used to isolate configuration-dependent terms under a declared convention.
+This study approaches the question with *counterfactual dynamics*. A **pointwise ZTCF sample**, or pointwise drift vector, is the acceleration the model evaluates at one achieved state with applied control removed. A **stitched pointwise ZTCF trace** collects those same-state samples without integrating them. A **forward or branched ZTCF trajectory** integrates the drift after a torque killswitch and is required to test persistence. The **same-state control contribution** is the generalized-force image of declared control. Under the canonical **Zero-Velocity Counterfactual (ZVCF)** protocol it is the **pointwise ZVCF (control) acceleration**: torques on, velocities reset for evaluation, and gravity excluded from the ZVCF operand so gravity is counted once in drift (see [NOTATION](../NOTATION.md)). **Same-state control matches pointwise ZVCF (control)**; do not abbreviate the separate static zero-velocity bias $-M^{-1}h(q,0,\cdot)$ as ZVCF.
 
 ::: {.callout-important}
 ### Definition Alignment & Cross-Reference
@@ -128,7 +128,7 @@ f(\mathbf x)=
 G(\mathbf x)=\begin{pmatrix}0\\M^{-1}\end{pmatrix}.
 $$
 
-This displayed form uses the two declared torque channels and viscous damping. Other passive, contact or external loads must be retained according to the actual model. The same-state control contribution is $G(\mathbf x)u$. A stitched trace evaluates $f$ at successive achieved states; it must not be used to infer persistence. A forward or branched ZTCF integrates $f$ after setting the declared applied torque channels to zero. ZVCF evaluates the declared model at zero velocity and must not be relabeled as pure control.
+This displayed form uses the two declared torque channels and viscous damping. Other passive, contact or external loads must be retained according to the actual model. The same-state control contribution is $G(\mathbf x)u$, which corresponds to $a_{\mathrm{ZVCF}}=M^{-1}B u$ under the canonical ZVCF operand at $\dot{\mathbf q}=\mathbf 0$ with gravity counted in drift. A stitched trace evaluates $f$ at successive achieved states; it must not be used to infer persistence. A forward or branched ZTCF integrates $f$ after setting the declared applied torque channels to zero.
 :::
 
 ### Research Questions
@@ -1173,9 +1173,9 @@ The MacKenzie-compatible primary estimand is the linear force-work delivered by
 the golfer to the club divided by achieved hand-path length, $W_{\mathrm{linear}}/L_H$.
 It is evaluated at the wrist in the open chains and at the net mid-grip point in
 the closed loop. Table @tbl-hand-path-attribution reports the signed reference-case
-values. ZVCF is projected onto the achieved path only as a configuration-dependent
-diagnostic; because the ZVCF evaluation has zero velocity, it does not traverse that
-path itself.
+values. Pointwise **ZVCF (control)** components are projected onto the achieved path for
+comparison; the underlying ZVCF operand uses zero joint velocity and does not integrate
+along that path.
 
 | Model Tier | Trajectory Status | Path [m] | Total Work [J] | Drift Work [J] | Control Work [J] | Total $\overline{F}_{\parallel}$ [N] | Drift [N] | Control [N] |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -1196,7 +1196,7 @@ declared mechanical model. This does not make the motion effortless: the
 counterfactual does not observe muscle force, co-contraction, passive tissue
 loading, stabilization, or metabolic cost.
 
-![Total, Drift, Control, and ZVCF Hand-Path Components Across the Three Model Tiers.](figures/proximal_distal_energy_transfer/fig_hand_path_components.svg){#fig-hand-path-components fig-alt="Time histories compare total hand-path force with same-state drift, control, and separately defined zero-velocity diagnostic components for the double-pendulum, one-arm, and two-arm cases."}
+![Total, Drift, Control, and ZVCF Hand-Path Components Across the Three Model Tiers.](figures/proximal_distal_energy_transfer/fig_hand_path_components.svg){#fig-hand-path-components fig-alt="Time histories compare total hand-path force with same-state drift, same-state control (pointwise ZVCF operand), and the separate static zero-velocity bias for the double-pendulum, one-arm, and two-arm cases."}
 
 #### Geometry and Force-Vector Mechanisms
 
@@ -1208,7 +1208,7 @@ drift vector while still satisfying the same-state closure identity. The
 two-hand row retains both contact forces because equal-and-opposite differential
 loading can create a couple without changing the common resultant.
 
-![Same-State Force Vectors and Achieved Hand-Path Tangents.](figures/proximal_distal_energy_transfer/fig_hand_path_force_vectors.svg){#fig-hand-path-vectors fig-alt="Model poses show achieved hand-path tangents and separately scaled total, drift, control, and ZVCF force vectors, including both hand contacts in the closed-loop model."}
+![Same-State Force Vectors and Achieved Hand-Path Tangents.](figures/proximal_distal_energy_transfer/fig_hand_path_force_vectors.svg){#fig-hand-path-vectors fig-alt="Model poses show achieved hand-path tangents and separately scaled total, drift, control (ZVCF operand), and static zero-velocity bias force vectors, including both hand contacts in the closed-loop model."}
 
 #### Impulse, Work, Power, Joint, and Time-Window Structure
 
@@ -1305,11 +1305,14 @@ $$
 where the terms are the configuration-dependent, velocity-dependent,
 control-induced, and other-external-load contributions. This is the additive
 identity: **configuration + velocity + control + other external load**. A
-pointwise ground-reaction ZTCF retains configuration, velocity, and declared
-non-control external loads while setting controllable generalized torques to
-zero. A pointwise ground-reaction ZVCF retains configuration and applied loads
-while setting velocity to zero. ZTCF and ZVCF overlap in the
-configuration/external terms and must not be added as complementary causes.
+pointwise ground-reaction **ZTCF** evaluation zeros declared applied generalized
+torques while retaining configuration, velocity, and declared non-control loads.
+A pointwise ground-reaction **ZVCF** evaluation reports the **control-induced**
+reaction contribution under the same canonical operand as body acceleration
+(applied torques on, joint velocities reset for evaluation; gravity counted in
+drift per NOTATION). The **zero-velocity / zero-torque** support reaction in the
+benchmark below is a separate static diagnostic and is not abbreviated as ZVCF.
+ZTCF- and ZVCF-labeled pieces share configuration-dependent structure; **ZTCF and ZVCF overlap** in that shared structure and must not be tallied as complementary causes without the affine decomposition at one state.
 
 The first executable benchmark uses the fixed shoulder of the same planar
 double pendulum as an ideal support. Across 161 achieved states, total, ZTCF,

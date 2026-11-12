@@ -178,6 +178,10 @@ ALLOWLISTED_NAV_SHORT_FORMS: frozenset[tuple[str, str]] = frozenset(
         ("articles/technology-force-measurement.qmd", "Force Measurement"),
         ("articles/technology-motion-capture.qmd", "Motion Capture"),
         ("articles/technology-launch-monitors.qmd", "Launch Monitors"),
+        (
+            "articles/slack-management-linked-systems.qmd",
+            "Slack in Linked Systems",
+        ),
         ("articles/technology-club-fitting.qmd", "Club Fitting Simulation"),
         (
             "articles/technology-heavy-hit-impact-coupling.qmd",
@@ -191,6 +195,10 @@ ALLOWLISTED_NAV_SHORT_FORMS: frozenset[tuple[str, str]] = frozenset(
         (
             "articles/The_Geometry_of_Motion/quarto/volume2.qmd",
             "Volume II: Control Is Motion",
+        ),
+        (
+            "articles/drift-is-the-past-control-is-the-present.qmd",
+            "Lay Guide: Drift & Control",
         ),
     }
 )

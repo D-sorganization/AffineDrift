@@ -29,7 +29,8 @@ def test_article_uses_canonical_pointwise_terminology() -> None:
     assert "stitched pointwise ZTCF trace" in text
     assert "must not be used to infer persistence" in text
     assert "forward or branched ZTCF trajectory" in text
-    assert "ZVCF is not the control contribution" in text
+    assert "**Same-state control matches pointwise ZVCF (control)**" in text
+    assert "do not abbreviate the separate static zero-velocity bias" in text
     assert "pointwise drift vector" in text
 
 

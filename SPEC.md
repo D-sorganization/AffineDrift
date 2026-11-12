@@ -232,6 +232,84 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-11 | #5629 | WEB-06.3 sandbox club defaults with COM/inertia; drift-plus-control caption units. |
+| 2026-11-10 | #5583 | Add result contract, solver truth tables, and vocabulary gates |
+| 2026-11-10 | #5564 | Option A A-4 comparison module, golden metrics JSON, claim ad-dcr-003, results note |
+| 2026-11-10 | #5582 | Add stdlib lifecycle transition kernel and ADR-0004 per owner decision |
+| 2026-11-10 | #5571 | Reject hosted runner routing guard runs on all PRs without bypass job |
+| 2026-11-10 | #5569 | fix discrete-time LTV reachability Gramian backward recursion in correction_authority_evaluator |
+| 2026-11-09 | #5552 | Freeze the dated Option A input definitions, rad-space bound scope, and single-fixture claim boundary for Slice 1 of #5550. |
+| 2026-11-08 | #5548 | Clarify nested PDF/LFS intent and reproducible build-artifact retention policy |
+| 2026-11-08 | #5545 | retry live public site verification on transient subresource 5xx and remote cell failures |
+| 2026-11-07 | #5540 | VIS-SITE-4: first draft page with embedded UD render tracing the #5423 audit top pick through vis-video |
+| 2026-11-07 | #5538 | Feynman corrections for Slack Take-Up as a Witness |
+| 2026-11-07 | #5534 | MM-6: Quarto render verification with resolving citations and F1-F8 figures |
+| 2026-11-07 | #5533 | Use pr_update_guard preflight in collate-changes.yml so dirty collation PRs can rebuild |
+| 2026-11-07 | #5524 | Document redirect for unpublished Slack Take-Up article URL (#5362, deploy URL stability) |
+| 2026-11-07 | #5511 | Extend deploy-pages timeout for large site sync (fleet-main-health) |
+| 2026-11-07 | #5518 | Slack Take-Up witness Feynman/Karl pass as offline draft (#5518) |
+| 2026-11-07 | #5492 | Lay review fixes for Drift vs Control article and ZTCF draft page |
+| 2026-11-07 | #5525 | Feynman and Karl accuracy and prose corrections for Drift Is the Past |
+| 2026-11-07 | #5491 | Correct Alpha War koike2019joint bibliography metadata |
+| 2026-11-07 | #5498 | Align proximal-distal article ZVCF prose with NOTATION (#5498) |
+| 2026-11-07 | #5506 | Align Physics of Golf ch06 ZVCF with NOTATION (control operand) |
+| 2026-11-07 | #5474 | Draft 3D golfer viewer: vanilla-JS perspective SVG viewer playing a small synthetic stick-figure clip, offline, no new dependencies |
+| 2026-11-07 | #5527 | MM-5: review panel critique across math, measurement, numerical, and pedagogy seats with draft refinements |
+| 2026-11-07 | #5515 | MM-4: draft Part 1 and Part 2 for motion measurement with metric convention cards |
+| 2026-11-07 | #5512 | MM-3: Figures F1-F8 and small interactive companion for motion measurement |
+| 2026-11-07 | #5490 | MM-2: seeded analytic rotation fixtures and calculations for the motion-measurement article (tests first) |
+| 2026-11-07 | #5479 | Wire build manifest and CycloneDX SBOM into Deploy Website; publish as a 90-day workflow artifact |
+| 2026-11-07 | #5495 | Retarget Slack Take-Up witness article DL from #5136 (#5282 option a) |
+| 2026-11-07 | #5520 | Add validated three-run Lighthouse math-cost summaries and diagnostic baseline receipts |
+| 2026-11-07 | #5521 | Reconcile launch-outline candidates with pending rights-ledger rows |
+| 2026-11-07 | #5516 | Add humanoid phase-0 index and upstream reuse map contract tests |
+| 2026-11-07 | #5484 | Add the UpstreamDrift reuse map with contract-validation checklists (phase 0, docs only) |
+| 2026-11-07 | #5523 | Leave modified keyboard shortcuts untouched by lazy search |
+| 2026-11-07 | #5362 | Unpublish Slack Take-Up witness article pending publication gate (#5136) |
+| 2026-11-07 | #5505 | Grandfather evidence-rung qualified token in drift lay guide front matter |
+| 2026-11-07 | #5522 | Bump PR body lint caller pin to 3b5e9f54febbd730bc2a650dc9193d26922ff49f and drop report_only |
+| 2026-11-06 | #5482 | MM-1: motion-measurement article plan, verified references and registry mapping (plan only, no publication) |
+| 2026-11-06 | #5486 | Measure math-rendering cost on Theory Part 1 from the nightly Lighthouse report (script, test, evidence doc; no SSR prototype yet) |
+| 2026-11-06 | #5477 | SBOM generator: scripts/write_sbom.py emits a deterministic CycloneDX 1.5 JSON SBOM from requirements-docker.lock and package-lock.json, with --check for staleness (publication and deploy wiring remain) |
+| 2026-11-05 | #5471 | Draft-page support: vis-video reaches shared static media via leading ../, and drafts are skipped by the site gate, search index and public manifest |
+| 2026-11-05 | #5468 | Add the VIS-SITE-4 draft page embedding the AD-generated ZTCF explainer through vis-video, honestly labelled as not a traced UpstreamDrift render; allow leading ../ media paths in the shortcode |
+| 2026-11-05 | #5456 | Trace 201 proximal-distal figures through a UD figure-map record and check it against the pinned UD map in CI |
+| 2026-11-05 | #5455 | Figure gate accepts UD figure-map records: a separate record kind that traces UD-projected figures to their run by sha256 and run_id, without mocap review attestations |
+| 2026-11-05 | #5438 | Restore ZVCF=control and ZTCF=drift in NOTATION.md and mechanics includes (#5430) |
+| 2026-11-05 | #5458 | Add the accessible vis-video shortcode for local WebM/MP4 embeds (poster, captions, lazy, no autoplay, provenance record) and trace embedded videos in the figure gate |
+| 2026-11-05 | #5457 | Draft site visual-placement audit table for VIS-SITE (page, concept, proposed visual, UD source, priority) |
+| 2026-11-04 | #5452 | Update critiques responses to reflect ZVCF = control and instant-vs-trajectory distinction. |
+| 2026-11-04 | #5451 | Exactness box for ZTCF/ZVCF decomposition, control-affine / IAA comparison, and naming note. |
+| 2026-11-04 | #5446 | Add lay guide to ZTCF and ZVCF reconciling time and active/passive lenses with snapshot caveats and mechanics baselines (#5440) |
+| 2026-11-04 | #5449 | Figure exemptions now state provenance: the proximal-distal figures projected from the pinned UpstreamDrift release cite its commit with a hash pin and an explicit no-run-identity marker, the companion figures name their generator scripts, and the rest are marked origin unrecorded |
+| 2026-11-04 | #5445 | CI gate: a non-draft page may embed a figure only when a verified projection record traces it or an explicit, reasoned exemption covers it; draft pages warn |
+| 2026-11-04 | #5442 | Add the provenance caption shortcode: a figure caption naming the UpstreamDrift model, run_id, commit and claim class, linked only to the public UD repo (fail closed on bad values) |
+| 2026-11-04 | #5436 | Retire hyperplane display titles in the compact tangent-space series (Parts 1–7) and hub. |
+| 2026-11-04 | #5428 | Bind every markerless-mocap projection artifact to its UpstreamDrift model_id, run_id, ud_commit and claim class (fail closed) |
+| 2026-11-04 | #5435 | Evidence check asserts drift+control=total and ZVCF=control |
+| 2026-11-04 | #5437 | Rewrite Decision 4: ZVCF = control; terminology gate flags gravity-only ZVCF and ZTCF+control-preserved double count. |
+| 2026-11-03 | #5390 | Add report-only pr-body-lint pull_request_target caller (RM reusable workflow) and contract test. |
+| 2026-11-03 | #5386 | Build manifest writer: scripts/write_build_manifest.py records the commit, Quarto version and lockfile SHA-256 digests against schemas/build-manifest.schema.json, with --check for staleness (SBOM and deploy wiring remain) |
+| 2026-11-03 | #5348 | Mobile MathJax minScale, math-mobile CSS, and diagram min-width floors |
+| 2026-11-03 | #5385 | Phone layout audit manifest: Playwright mobile smoke and Lighthouse read one route and viewport set (iPhone 390x844, Android 360x800) |
+| 2026-11-03 | #5382 | Seed the exact-key Quarto E2E render cache on main push so PRs and merge groups can restore it (WEB-13.1 #4595) |
+| 2026-11-03 | #5309 | Panel-refined draft of Managing Slack in Linked Systems (do not merge); Publish panel-refined Managing Slack in Linked Systems (#5135, #5309) |
+| 2026-11-02 | #5360 | Restore swallowed LaTeX escapes in After One Solution and gate articles/*.qmd control bytes |
+| 2026-11-02 | #5361 | Add label-merge-guard workflow enforcing do-not-merge and do-not-automate holds |
+| 2026-11-02 | #5328 | Add phone-side padding on full-layout main content (#5323) |
+| 2026-11-02 | #5357 | Backlog slice delivery for #5317; Backlog slice delivery for #5318; Backlog slice delivery for #5321 |
+| 2026-11-02 | #5349 | Backlog slice delivery for #5185 |
+| 2026-11-02 | #5345 | Weekly Python and npm patch bumps; pytest held at 9.1.x per pyproject cap |
+| 2026-11-02 | #5356 | Backlog slice delivery for #5320 |
+| 2026-11-02 | #5343 | Service worker: update notice only when a cached asset really changed, network-first JSON/CSV data, compact phone notice |
+| 2026-11-02 | #5340 | Phone-viewport Playwright smoke spec in e2e-tests and a warn-only nightly Lighthouse mobile baseline |
+| 2026-11-02 | #5339 | Coarse-pointer 44px touch targets for site chrome: secondary-nav sidebar toggle, title-block category chips, Code tools button |
+| 2026-11-02 | #5335 | Phones: the <=480px display-math step-down goes from 0.85em to 0.82em, so theory-part1's near-fit equations no longer scroll at 390px; title-block meta headings, category chips and the BibTeX citation block hold a 12px floor |
+| 2026-11-02 | #5337 | Phone off-canvas docked sidebar: bounded width, 44px rows, current-page bar, dimmed scrim and close button |
+| 2026-11-02 | #5333 | Conflict Disarm now calls the public fleet-workflows reusable workflow pinned to 367b182c instead of an inlined sweep; dry_run stays true by default, and a contract test guards the uses: ref and the full-SHA pin |
+| 2026-11-02 | #5330 | Coarse-pointer 44px touch targets for sandbox, converter, dataset explorer, maturity badge |
+| 2026-11-02 | #5311 | Slack take-up: first-publication date and open post-hoc pass-bar disclosure |
+| 2026-11-01 | #5310 | Rename citation key koike2020 to choi2020grip (Choi and Park 2020) across the series |
 | 2026-11-01 | #5308 | Apply Karl lay-reader and Feynman prose refinements to Slack Take-Up as a Witness |
 | 2026-11-01 | #5270 | Retire remaining 'hyperplane' display text in the manuscript terminology heading and the book Ch.4 blurb; mathematical object names were already disambiguated |
 | 2026-11-01 | #5305 | Cross-Browser Nightly renders the site once in a build-site job; the firefox and webkit legs download it instead of each rendering under a 45-minute timeout |

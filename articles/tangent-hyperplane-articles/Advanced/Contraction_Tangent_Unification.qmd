@@ -115,7 +115,7 @@ Contraction shrinks every differential length in the chosen metric. Volume shrin
 
 ### Disturbances and Interconnections
 
-Suppose one trajectory receives an added disturbance whose norm in the certified metric is bounded by $\bar d$. Under the same region and regularity conditions, a comparison inequality gives
+Suppose one trajectory receives an added disturbance whose norm in the certified metric is bounded by $\bar d$. Under the same region and regularity conditions, Lohmiller and Slotine's contraction robustness result gives an **incremental input-to-state bound**
 $$
 d_M(t)\leq e^{-\lambda(t-t_0)}d_M(t_0)
 +\frac{\bar d}{\lambda}\left(1-e^{-\lambda(t-t_0)}\right).
@@ -319,13 +319,13 @@ A low-dimensional factorization $a\approx Wc$ is a candidate description of reco
 
 For mechanics
 $$
-D(q)\ddot q+h(q,v)=B(q)\tau,\qquad v=\dot q,
+M(q)\ddot q+h(q,v)=B(q)\tau,\qquad v=\dot q,
 $$
-define $a_q=D^{-1}(B\tau-h)$ as the acceleration function. Its configuration derivative in direction $\delta q$ is
+define $a_q=M^{-1}(B\tau-h)$ as the acceleration function. Its configuration derivative in direction $\delta q$ is
 $$
-D_qa_q[\delta q]=D^{-1}\left(D_qB[\delta q]\tau-D_qh[\delta q]-D_qD[\delta q]a_q\right),
+D_qa_q[\delta q]=M^{-1}\left(D_qB[\delta q]\tau-D_qh[\delta q]-D_qM[\delta q]a_q\right),
 $$
-and $D_va_q=-D^{-1}D_vh$, $D_\tau a_q=D^{-1}B$ under the stated $q$-only inertia and input map. The first-order state Jacobian has top blocks $(0,I)$ and bottom blocks $(D_qa_q,D_va_q)$. Omitting the derivative of inertia or the velocity dependence of the Coriolis load changes the predicted perturbation dynamics. Closed loops add reaction derivatives; muscle-driven models add their internal-state blocks.
+and $D_va_q=-M^{-1}D_vh$, $D_\tau a_q=M^{-1}B$ under the stated $q$-only inertia and input map. The first-order state Jacobian has top blocks $(0,I)$ and bottom blocks $(D_qa_q,D_va_q)$. Omitting the derivative of inertia or the velocity dependence of the Coriolis load changes the predicted perturbation dynamics. Closed loops add reaction derivatives; muscle-driven models add their internal-state blocks.
 
 ### Impedance Is Part of the Dynamics
 
@@ -374,11 +374,11 @@ satisfies $A_e^\top P+PA_e=-I$. It gives the valid rate $1/(2\lambda_{\max}(P))\
 
 ### Saltation and Mode Changes
 
-A contact model needs a guard, pre- and post-contact vector fields, and a reset map. For a smooth non-grazing event $g(x,t)=0$ with reset $x^+=R(x^-,t)$, the first-order sensitivity across the event is
+A contact model needs a guard, pre- and post-contact vector fields, and a reset map. For a smooth non-grazing event $h(x,t)=0$ with reset $x^+=R(x^-,t)$, the first-order sensitivity across the event is
 $$
 \Xi=D_xR+
 \frac{F^+-D_xR\,F^- -\partial_tR}
-{D_xg\,F^-+\partial_tg}\,D_xg.
+{D_x h\,F^-+\partial_t h}\,D_x h.
 $$
 This is the saltation matrix. It includes event-time shifts as well as reset derivatives; see the [saltation review](https://arxiv.org/abs/2306.06862). The denominator must be nonzero, and a consistent coordinate representation and event sequence are required. Grazing, simultaneous contacts, and changes in effective state dimension need additional analysis.
 
