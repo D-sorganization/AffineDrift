@@ -26,6 +26,13 @@ the swing plane, $\theta_2$ the wrist angle of the club relative to the
 arm, and the club's absolute angle is
 $\theta_{\mathrm{club}} = \theta_1 + \theta_2$.
 
+The wrist hinge is an ideal revolute joint with **no hard joint stop** or
+anatomical range guard in the E1 plant. Representative programs can therefore
+fold the club to relative wrist angles well past typical human cocking limits;
+@sec-results records the committed minimum $\theta_2$ values alongside impact
+speed so readers can see when speed gains depend on unbounded folding rather
+than on declared actuator torque alone.
+
 Rollouts use the ODE reference backend (analytic dynamics, fixed-step
 RK4) with $\Delta t = 1$ ms over a 0.9 s horizon. Every rollout starts
 from the same top-of-backswing state,
