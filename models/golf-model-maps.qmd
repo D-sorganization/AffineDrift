@@ -1,0 +1,45 @@
+---
+title: "Golf Model Maps"
+description: "Degree-of-freedom and joint tables for UpstreamDrift golf multibody models, pinned to a fixed provider commit."
+categories:
+- models
+---
+
+This reference maps generalized coordinates to named joints for the motor-driven
+MuJoCo golf humanoids shipped in UpstreamDrift. Tables are generated from
+vendored MJCF snapshots; they do not document MyoSuite muscle actuation or
+Simscape export columns.
+
+::: {.callout-note title="Authority Boundary"}
+**This establishes** `qpos` / velocity index order, joint type, axis, limit, actuator
+name, and closed-loop equality constraints for four MuJoCo golf XML definitions at a
+pinned UpstreamDrift commit.
+
+**This does not establish** `golfer-scapula/2.0` Simscape conventions, ISB anatomical
+angle definitions, pose-estimator included angles, or hand-split grasp coordinates.
+Those items remain open under [AffineDrift #5621](https://github.com/D-sorganization/AffineDrift/issues/5621).
+:::
+
+## MuJoCo Motor-Driven Humanoids {#sec-mujoco-golf-maps}
+
+Regenerate after changing the manifest pin:
+
+```bash
+python3 -m scripts.generate_golf_model_maps
+```
+
+{{< include _generated/golf-model-maps-mujoco.qmd >}}
+
+## How to Read `q[i]` {#sec-reading-q}
+
+Use the `qpos` index for configuration components and the `v` index for generalized
+velocities. Motor actuators act on the listed hinge joints. `weld` and `connect`
+equalities enforce grip closure and (in the advanced model) hip attachment without
+adding independent coordinates; their forces depend on the MuJoCo solver.
+
+## Related Articles
+
+- [MuJoCo Models](models-mujoco.html)
+- [Model Ladder and Selection Protocol](model-ladder.html)
+- [The Physics of Golf, Chapter 23: URDF Robot Models](../articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html)
+- [UpstreamDrift Educational Integration](../articles/upstreamdrift-educational-integration.html)
