@@ -63,7 +63,6 @@ def test_provider_dependent_surfaces_fail_closed_with_governing_issues() -> None
     )
     consumer_issues = (
         "AffineDrift/issues/4023",
-        "AffineDrift/issues/4024",
         "AffineDrift/issues/4025",
         "AffineDrift/issues/4028",
         "AffineDrift/issues/4029",
@@ -113,3 +112,11 @@ def test_legacy_engine_guides_are_retained_as_deferred_editorial_references() ->
 
 def test_research_readiness_route_remains_discoverable() -> None:
     assert "research-protocol-readiness.html" in _hub()
+
+
+def test_installation_onboarding_does_not_cite_closed_issue_4024() -> None:
+    source = _hub()
+    assert "AffineDrift/issues/4024" not in source
+    assert "quarto preview" in source
+    assert "CONTRIBUTING.md" in source
+    assert "python scripts/ci/verify_installation.py" in source

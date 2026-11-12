@@ -50,6 +50,61 @@ def test_books_series_page_links_to_each_book() -> None:
     assert "human-motor-control.html" in series_page
 
 
+VOLUME_I_CHAPTER_HTML = (
+    "ch01_foundations.html",
+    "ch02_variational.html",
+    "ch03_superposition.html",
+    "ch03b_induced_acceleration_biomechanics.html",
+    "ch04_contraction.html",
+    "ch05_optimal_control.html",
+    "ch06_duality.html",
+    "ch07_counterfactuals.html",
+    "ch08_applications.html",
+    "ch09_parallel_mechanisms_constrained_dynamics.html",
+)
+
+
+def test_geometry_of_motion_volume_i_book_page_links_rendered_chapters() -> None:
+    """Volume I Books landing must link to published GoM chapter HTML, not deny they exist."""
+    landing = (BOOKS_DIR / "tangent-space-methods.qmd").read_text(encoding="utf-8")
+    assert "No Volume I chapter has its own web page yet" not in landing
+    for chapter_html in VOLUME_I_CHAPTER_HTML:
+        assert chapter_html in landing, f"Missing Volume I chapter link: {chapter_html}"
+
+
+def test_geometry_of_motion_volume_ii_book_page_links_html_monograph() -> None:
+    """Volume II Books landing must expose the rendered volume2.html monograph and manuscript titles."""
+    landing = (BOOKS_DIR / "control-is-motion.qmd").read_text(encoding="utf-8")
+    assert "volume2.html" in landing
+    assert "Throwing Away the Target" not in landing
+    assert "Motion, Targets, and Timing" in landing
+    assert "Orbital Stability and Transverse Linearization" in landing
+    assert "volume2.html#trajectory-optimization" in landing
+    assert "volume2.html#ch-underactuation" in landing
+
+
+def test_geometry_of_motion_volume0_chapter_blurbs_match_topics() -> None:
+    """Volume 0 landing chapter lines must not misplace geodesic metrics in the rotations chapter."""
+    volume0 = (
+        REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "volume0.qmd"
+    ).read_text(encoding="utf-8")
+    assert "geodesic metrics" not in volume0
+    assert "geodesics/shortest rotation paths" in volume0
+    assert "SLERP" in volume0
+
+
+def test_stale_gom_audit_runbooks_removed_from_manuscript_tree() -> None:
+    """Sandbox-era audit markdown must not remain beside LaTeX sources."""
+    gom_root = REPO_ROOT / "articles" / "The_Geometry_of_Motion"
+    for stale_name in (
+        "AUDIT_INDEX.md",
+        "QUICK_REFERENCE.md",
+        "BIBLIOGRAPHY_AUDIT_REPORT.md",
+        "PR_INSTRUCTIONS.md",
+    ):
+        assert not (gom_root / stale_name).exists(), stale_name
+
+
 def test_textbook_landing_pages_contain_chapter_links() -> None:
     """Textbook landing pages must contain tables of contents linking to their chapters."""
     physics_index = (

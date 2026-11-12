@@ -13,15 +13,25 @@ Four seats:
 3. **Numerical rigor** — reproducible calculations, units, stress tests on any code-backed claims.
 4. **Lay reader** — plain-language lead, jargon budget, callout structure.
 
-## Status (initial scaffold)
+## Draft paths (closed 2026-11-11)
 
-| Seat            | Verdict   | Follow-ups |
-| --------------- | --------- | ---------- |
-| Rigid-body math | Pending   | —          |
-| Measurement     | Pending   | —          |
-| Numerical       | Pending   | —          |
-| Lay reader      | Pending   | —          |
+| Part | Path |
+| ---- | ---- |
+| Part 1 | `docs/development/motion-measurement/part-1-representing-orientation.qmd` |
+| Part 2 | `docs/development/motion-measurement/part-2-joint-coordinates-velocity-consequences.qmd` |
+| Figures | `docs/development/motion-measurement/figures/f1_cardan_sequences.svg` … `f8_xfactor_variants.svg` |
+| Interactive | `docs/development/motion-measurement/interactive_companion.html` |
 
-## Required next step
+Full disposition table: `mm5-panel-review.md` in this directory.
 
-Bind this critique log to the **concrete draft paths** (Quarto `.qmd` or `research/…`) once the slice that carries the motion-measurement series lands in-repo for review. Until then, this file records the panel structure only.
+## Status (panel closed)
+
+| Seat            | Verdict  | Follow-ups |
+| --------------- | -------- | ---------- |
+| Rigid-body math | NOMINAL  | Findings F-MATH-* addressed in Part 1–2 |
+| Measurement     | NOMINAL  | Findings F-GOLF-* addressed or deferred per table |
+| Numerical       | NOMINAL  | F-NUM-* addressed; filter optimization deferred to UD#14427 |
+| Lay reader      | NOMINAL  | F-PED-* addressed |
+
+**Panel constitution:** Sequential subscription-agent review against cited literature and
+in-repo fixtures—not an independent multi-human expert panel.

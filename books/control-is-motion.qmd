@@ -43,21 +43,22 @@ one requires an explicit transverse chart (such as a moving family of transverse
 **Distinctions from classical setpoint control:**
 - **Reference object:** The nominal target is a geometric curve or orbit $\mathcal{O} = \{x^*(t)\}$, not an isolated static point.
 - **Orbital stability versus timed tracking:** Stability of an orbit requires that the distance to the orbit for trajectories starting close to $\mathcal{O}$ remains small for all forward time ($\operatorname{dist}(x(t), \mathcal{O}) < \epsilon$), and asymptotic orbital stability requires that the distance to the orbit tends to zero ($\lim_{t \to \infty} \operatorname{dist}(x(t), \mathcal{O}) = 0$). This is distinct from timed tracking convergence ($\|x(t) - x^*(t)\| \to 0$): an orbitally stable cycle can attract nearby trajectories while a non-zero asymptotic phase offset $\phi$ persists ($\|x(t) - x^*(t + \phi)\| \to 0$ with $\phi \neq 0$), leaving a persistent time-synchronized tracking error.
-- **Finite-horizon athletic maneuvers:** A finite golf stroke (downswing duration $\sim 250\text{--}350\,\mathrm{ms}$) is not an infinite-time periodic orbit. For such motions, the appropriate certificates are finite-horizon reachability containment, transverse tube invariance, or terminal hitting-set tolerances over a bounded phase interval $[0, \theta_{\mathrm{impact}}]$, rather than asymptotic limit-cycle convergence.
+- **Finite-horizon athletic maneuvers:** A finite golf stroke (downswing duration on the order of $250\text{--}350\,\mathrm{ms}$ in skilled motion-capture cohorts [@Cheon2014GolfJerk]) is not an infinite-time periodic orbit. For such motions, the appropriate certificates are finite-horizon reachability containment, transverse tube invariance, or terminal hitting-set tolerances over a bounded phase interval $[0, \theta_{\mathrm{impact}}]$, rather than asymptotic limit-cycle convergence.
 - **Geometry and manifold constraints:** Control design respects the manifold geometry of the configuration space; coordinate-invariant formulations avoid chart singularities.
 - **Zero-input drift versus physical passivity:** The zero-input vector field $f(x)$ represents the unforced mathematical drift of the state equations, but it is not inherently physically passive. Establishing physical passivity requires declaring a system port $(u, y)$, a non-negative storage function $V(x) \ge 0$ (such as mechanical kinetic plus potential energy), and verifying the dissipation inequality $\dot{V} \le u^\top y$. Algebraic input coordinate shifts (such as non-zero nominal bias forces) move terms between drift and input, which can destroy passivity with respect to the shifted port.
 
 **Required guardrail:** A phase coordinate is useful only when its domain, monotonicity condition, reset behavior, and failure cases are stated. A shoulder angle, foot-contact event, or other physical marker is not automatically a global clock replacement; it must remain well defined and locally ordered over the portion of state space being controlled.
 
 **Relationship to established theory:** CIM is not a distinct mathematical axiom system. It is an organizing perspective that builds on established control literature:
-- Maneuver regulation and path following for unconstrained nonlinear systems (Hauser & Hindman, 1995).
-- Transverse linearization, moving coordinate frames, and periodic orbit stabilization (Shiriaev, Freidovich & Gusev, 2010; Manchester, 2010, 2011).
-- Virtual constraints and hybrid zero dynamics for underactuated locomotion (Westervelt et al., 2007).
-- Transverse LQR, trajectory funnels, and phase-independent regulation in underactuated mechanics (Tedrake, MIT Underactuated Robotics).
+- Maneuver regulation and path following for feedback-linearizable systems [@HauserHindman1995].
+- Transverse linearization, moving coordinate frames, and periodic orbit stabilization [@Shiriaev2010; @ManchesterSlotineTransverse2013; @ManchesterSlotine2017].
+- Virtual constraints and hybrid zero dynamics for underactuated locomotion [@WesterveltGrizzle2007].
+- Transverse LQR, trajectory funnels, and phase-independent regulation in underactuated mechanics [@TedrakeTrajectoryFoundations; @MajumdarTedrake2017].
 :::
 
 
 
+[Read Volume II on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html){.resource-link}
 [View Reviewed Main Source Manuscript](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/main.tex){.resource-link}
 
 ## Scientific Status
@@ -81,17 +82,19 @@ The bridge manifest labels the listed Jupyter notebooks **scaffolded**. That sta
 
 {{< include ../_includes/notebook-binder-launch.qmd >}}
 
-## Chapter 1: Throwing Away the Target {#book2-ch1}
+## Chapter 1: Motion, Targets, and Timing {#book2-ch1}
 
-Reframes tracking as trajectory shaping rather than endpoint chasing.
+Relates swing outcomes to feasible motion, timed tracking, and orbital formulations without replacing classical control theory.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#throwing-away-the-target){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch01_throwing_away_the_target.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch1_throwing_away_the_target.ipynb){.resource-link}
 
 ## Chapter 2: Curves in State Space {#book2-ch2}
 
-Treats motion as geometry on state manifolds and their tangent bundles.
+Develops arc length, curvature, moving frames, and timing limits for curves in Euclidean state coordinates.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#curves-in-state-space){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch02_curves_in_state_space.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch2_curves_in_state_space.ipynb){.resource-link}
 
@@ -99,13 +102,15 @@ Treats motion as geometry on state manifolds and their tangent bundles.
 
 Builds the manifold representation needed for coordinate-robust trajectory control.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#configuration-manifolds){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch03_configuration_manifolds.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch3_configuration_manifolds.ipynb){.resource-link}
 
-## Chapter 4: Orbital Stability and Transversality {#book2-ch4}
+## Chapter 4: Orbital Stability and Transverse Linearization {#book2-ch4}
 
-Defines cycle stability and phase-consistent perturbation treatment.
+Contrasts timed tracking, orbital stability, and event-based errors with transverse linearization tools.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#orbital-stability-and-transverse-linearization){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch04_orbital_stability_and_transver.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch4_orbital_stability_and_transversality.ipynb){.resource-link}
 
@@ -113,14 +118,16 @@ Defines cycle stability and phase-consistent perturbation treatment.
 
 Explains how passive structure and limited actuation cooperate in simplified skill models.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#ch-underactuation){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex){.resource-link}
 [Open Notebook in Colab](https://colab.research.google.com/github/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch5_underactuation_and_passive_dynamics.ipynb){.resource-link target="_blank"}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch5_underactuation_and_passive_dynamics.ipynb){.resource-link}
 
 ## Chapter 6: Trajectory Optimization {#book2-ch6}
 
-Develops iterative optimization on curved state spaces with dynamics constraints.
+Covers shooting, collocation, and discrete-time optimal control in vector coordinates with explicit dynamics constraints.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#trajectory-optimization){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch06_trajectory_optimization.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch6_trajectory_optimization.ipynb){.resource-link}
 
@@ -128,6 +135,7 @@ Develops iterative optimization on curved state spaces with dynamics constraints
 
 Constructs model- and controller-dependent trajectory tubes that certify finite-horizon invariance, reachability containment, and disturbance attenuation under stated assumptions.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#funnel-synthesis){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch07_funnel_synthesis.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch7_funnel_synthesis.ipynb){.resource-link}
 
@@ -135,6 +143,7 @@ Constructs model- and controller-dependent trajectory tubes that certify finite-
 
 Uses intrinsic phase coordinates to coordinate movement timing and corrections.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#phase-variable-control){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch08_phase_variable_control.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch8_phase_variable_control.ipynb){.resource-link}
 
@@ -142,13 +151,15 @@ Uses intrinsic phase coordinates to coordinate movement timing and corrections.
 
 Adds uncertainty-aware trajectory reasoning for biological and robotic systems.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#stochastic-trajectories-motor-variability){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch09_stochastic_trajectories_motor_.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch9_stochastic_trajectories_and_motor_variability.ipynb){.resource-link}
 
 ## Chapter 10: Learning to Move {#book2-ch10}
 
-Connects adaptation and learned policies to geometric control primitives.
+Separates iterative learning control, policy search, and system identification as distinct repetition-domain updates.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#learning-to-move){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch10_learning_to_move.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch10_learning_to_move.ipynb){.resource-link}
 
@@ -158,6 +169,7 @@ Integrates the volume's methods in a full motion-analysis workflow.
 
 “Complete Golf Swing” is the canonical manuscript chapter title, not a claim that the workflow, model, or evidence is complete.
 
+[Read this chapter on the web](../articles/The_Geometry_of_Motion/quarto/volume2.html#case-study-the-complete-golf-swing){.resource-link}
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_II/chapters/ch11_case_study_the_complete_golf_s.tex){.resource-link}
 [View Notebook on GitHub](https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol2_ch11_case_study_complete_golf_swing.ipynb){.resource-link}
 
