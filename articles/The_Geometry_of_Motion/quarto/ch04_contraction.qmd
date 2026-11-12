@@ -127,6 +127,21 @@ holds throughout them. The order is the positive-semidefinite matrix order: $H\p
 
 The rate has units of inverse time. The factor two applies to squared length; length decays at rate $\lambda$. The inequality is linear in an unknown metric for a fixed field and fixed rate, but jointly choosing the rate and metric introduces the product $\lambda M$.
 
+When $M$ is uniformly bounded above and below on the certified set, a rate-$\lambda$ certificate bounds every Lyapunov exponent of the linearized flow by $-\lambda$ over that set. On a periodic orbit, the Floquet multiplier on the tangent direction $\dot x=f(x)$ equals unity because $\frac{d}{dt}f(x(t))=Df(x(t))f(x(t))$.
+
+## Transformed Tangent Coordinates and the Jacobian $F$
+[]{#sec-ch4:theta-factor}
+
+Following Lohmiller and Slotine, factor a metric as $M=\Theta^\top\Theta$ with invertible $\Theta(x,t)$ (defined only up to a left orthogonal factor; $\Theta$ need not integrate to a global coordinate change). Define transformed incremental coordinates $\delta z=\Theta\delta x$. Differentiation along the variational equation $\dot{\delta x}=A\delta x$ gives
+$$
+\dot{\delta z}=(\dot\Theta+\Theta A)\Theta^{-1}\delta z=:F\delta z.
+$$ {#eq-ch4:lohmiller-F}
+Here $F$ is the transformed variational Jacobian; it is not the drift field $f(x,t)$ used in controlled equations. Expanding the symmetric part yields the equivalence used in the cascade hypothesis:
+$$
+\Theta^\top(F+F^\top)\Theta=\dot M+MA+A^\top M.
+$$ {#eq-ch4:F-metric-equivalence}
+Thus $\operatorname{sym}(F)\preceq-\lambda I$ in transformed coordinates matches @eq-ch4:contraction-LMI when $M=\Theta^\top\Theta$.
+
 ## Complete Proof of Exponential Convergence
 
 ::: {.callout-note}
@@ -500,6 +515,12 @@ The associated gain $K(x,t)=\tfrac12\rho(x,t)G(x,t)^TM(x,t)$ is independent of $
 $u(s)=u_*-\int_0^sK(c(r),t)c_r(r)\,dr$.
 Transporting that curve with its controls, or recomputing suitable geodesics in a sampled/continuous construction under the theorem's conditions, converts differential contraction into finite tracking. Path existence, solution existence and controller regularity are part of the result. A domain restriction or an actuator limit must be incorporated explicitly; the unconstrained theorem does not certify saturation, muscle activation limits or unilateral ground contact.
 
+::: {.callout-note}
+### Worked CCM on a Cubic Restoring Term
+
+For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$, the feedback $u=x_1^3-k_px_1-k_dx_2$ with $k_p,k_d>0$ gives the linear closed loop $\dot x_1=x_2$, $\dot x_2=-k_px_1-k_dx_2$. Choose $M=I$ and solve the Lyapunov equation for $A=[[0,1],[-k_p,-k_d]]$ to obtain a constant contraction metric. With $k_p=k_d=1$, one solution is $M=\operatorname{diag}(1,1)$ and the differential gain $K=-[k_p,k_d]$ matches the Jacobian of the implemented feedback, so the control contraction conditions reduce to the displayed linear contraction inequality on that metric.
+:::
+
 ### Computational Approaches
 
 []{#sum-of-squares-sos-method}
@@ -617,7 +638,7 @@ $$
 
 No feedback input appears in this equation. It has an unstable equilibrium at the origin and an attracting nonconstant periodic orbit. Two solutions at different phases on that orbit cannot converge to each other at the same clock time. Full contraction on a domain containing the complete orbit is therefore impossible in a uniformly nondegenerate metric.
 
-### Metric Synthesis via Parameterization
+### Why a Diagonal State-Dependent Metric Cannot Work
 
 For a diagonal candidate
 []{#eq-ch4:vdp-metric-ansatz}
@@ -647,9 +668,9 @@ $$
 
 The condition is $H\preceq0$, not componentwise inequalities on its off-diagonal entries. In two dimensions this requires $H_{11}\leq0$, $H_{22}\leq0$ and $\det H\geq0$. If $m_1$ is a positive constant, $H_{11}=2\lambda m_1>0$ for every positive requested rate. That alone disproves this entire candidate class for full contraction, at every point.
 
-### Solution Strategy
+### Transverse Contraction Is the Right Question
 
-The formerly proposed example
+A diagonal state-dependent metric candidate illustrates the obstruction:
 []{#eq-ch4:vdp-metric-solution}
 
 
@@ -660,7 +681,7 @@ M(x_1)=\operatorname{diag}\bigl(1,1.2(1+1.5x_1^2)\bigr),\quad
 $$
 
 
-is retained only as a falsification exercise. At the origin its residual is
+At the origin its residual is
 []{#eq-ch4:vdp-check}
 
 
@@ -671,6 +692,8 @@ $$
 
 
 Its velocity weight increases with $|x_1|$, not toward the origin. No successful optimizer or experimentally measured rate is claimed. The diagonal obstruction is stronger than a finite grid of violations.
+
+For an autonomous field on a nontrivial periodic orbit, $\delta x(t)=f(x(t))$ satisfies $\dot{\delta x}=A(x(t))f(x(t))$ and therefore remains bounded away from zero along the orbit. With a uniformly bounded metric, that direction alone obstructs full-state contraction at fixed clock time.
 
 The appropriate orbital question allows phase alignment. Transverse contraction tests decay only for nonzero tangent directions satisfying $\delta x^TMf=0$, with the associated field/metric derivatives and domain conditions. Manchester and Slotine's transverse framework [@ManchesterSlotineTransverse2013] requires a compact, smoothly path-connected, strictly forward-invariant set and appropriate regularity; an absence of equilibria distinguishes a nontrivial cycle from an equilibrium limit. It establishes convergence after a time reparameterization, not same-time tracking of a prescribed phase. We do not assert that the rejected diagonal candidate satisfies a transverse certificate.
 

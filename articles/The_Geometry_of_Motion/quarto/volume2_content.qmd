@@ -1324,7 +1324,7 @@ lie in the image of $B$, and a feasible solution must satisfy input bounds.
 Different columns can have different torque limits and biological costs.
 The scalar curvature does not establish this feasibility. A guide can provide
 normal reaction without actuator work; gravity can supply some acceleration
-while changing potential energy. The feasible timing calculation in Chapter 2
+while changing potential energy. The feasible timing calculation in @sec-curves-in-state-space
 is therefore still required.
 
 Geodesic curvature is not obtained by subtracting a scalar coordinate curvature
@@ -1511,7 +1511,7 @@ same time. These are different perturbations. Their importance depends on
 the task and on which variables the path contains. A configuration path
 omits velocity; a mechanical state-space path includes it. Sliding along
 the latter is therefore not permission to choose an arbitrary speed along
-the former. The compatibility conditions from Chapter 1 still apply.
+the former. The compatibility conditions from @sec-throwing-away-the-target still apply.
 
 Timed tracking compares $x(t)$ with a feasible reference $x_d(t)$ at the same
 clock time. Orbital analysis compares a state with an invariant trajectory
@@ -1613,7 +1613,7 @@ Primes here mean derivatives with respect to nominal time $\tau$, and dots
 mean actual physical time. We used $T^TE'=-T'^TE$. The denominator must remain
 nonzero; forward progression additionally requires $\dot\tau>0$. At the
 reference $\dot\tau=1$ and $\dot\xi=0$. This is the nominal-time version of
-Chapter 2's arc-length equations, with its parameter factors made explicit.
+@sec-curves-in-state-space's arc-length equations, with its parameter factors made explicit.
 
 Linearization at fixed phase gives
 $$
@@ -1634,7 +1634,7 @@ The derivation assumes an autonomous plant and feedforward evaluated at the
 estimated phase. Explicit time dependence, an independent clock-driven input,
 or a dynamic phase estimator adds variables or coupling terms. For a manifold
 state use compatible local charts, connections, or group coordinates as in
-Chapter 3. The fixed-chart formula should not be applied unchanged to an
+@sec-configuration-manifolds. The fixed-chart formula should not be applied unchanged to an
 arbitrary position-dependent metric. Under a different path parameter, both
 the speed and cost integration measure must be transformed consistently.
 
@@ -1983,8 +1983,7 @@ for $b=1$ and $b=2$. Explain why multiplier data alone cannot determine a gain.
 ongoing noise, phase uncertainty, and impact-output sensitivity. Specify an
 intervention and held-out evidence that would distinguish competing explanations.
 
-## Underactuation and Passive Dynamics
-[]{#ch-underactuation}
+## Underactuation and Passive Dynamics {#sec-ch-underactuation}
 
 > ### How One Input Moves Several Links
 > Moving the hands can accelerate a club even when a simplified model applies
@@ -2225,6 +2224,10 @@ perturbations, while preparation changes the nominal trajectory itself. These
 mechanisms can coexist. A zero-torque comparison does not identify their unique
 biological contributions, and a simulated advantage must survive measurement
 and model-sensitivity checks before becoming a coaching recommendation.
+
+### Zero-Dynamics With a Harmonic Forcing Term
+
+Consider the scalar zero dynamics $\ddot q_u+cq_u=\sin t$. For $c\neq1$, a bounded particular solution is $q_u^{\mathrm{part}}=\sin t/(c-1)$ and the homogeneous part is oscillatory when $c>0$, undamped when $c=0$, and hyperbolic when $c<0$. At resonance ($c=1$), no solution of the form $A\sin t$ exists; subtracting any bounded particular solution leaves the secularly growing mode $t\cos t$, so bounded perturbations do not guarantee bounded forced motion on that manifold.
 
 ### Exercises
 
@@ -2504,7 +2507,7 @@ and reset/guard constraints, or a contact formulation whose approximation
 and convergence are explicitly assessed.
 
 If the clubhead point is $r(q)$, its velocity is $J_r(q)v$ and its speed is
-$\|J_rv\|$. With the absolute planar angles of Chapter 5,
+$\|J_rv\|$. With the absolute planar angles of @sec-ch-underactuation,
 $$
 \|\dot r\|^2=l_1^2\dot\theta_1^2+l_2^2\dot\theta_2^2
  +2l_1l_2\cos(\theta_1-\theta_2)\dot\theta_1\dot\theta_2.
@@ -2584,7 +2587,7 @@ constraint risk with declared weights makes the tradeoffs explicit. For a
 nonquadratic expected cost, the mean trajectory alone generally does not
 determine the expectation.
 
-At an event, Chapter 4 gives the output sensitivity to a fixed-time state
+At an event, @sec-orbital-stability-and-transverse-linearization gives the output sensitivity to a fixed-time state
 perturbation just before the nominal event:
 $$
 C_e=H_x-\frac{(H_xf+H_t)h_x}{h_t+h_xf},\qquad
@@ -2594,7 +2597,7 @@ Here $y=H(x,t)$ is a smooth pre-event output and $h=0$ is the regular guard.
 The approximation assumes small perturbations and the same event sequence;
 parameter/measurement uncertainty and cross-covariances add further terms.
 If post-impact states are compared at a common time, use the reset and
-saltation map from Chapter 4. Near grazing or changing contact order, these
+saltation map from @sec-orbital-stability-and-transverse-linearization. Near grazing or changing contact order, these
 local derivatives can fail.
 
 For an actual hitting event, $h(x(t_e),t_e)=0$ by definition for trajectories
@@ -2897,7 +2900,7 @@ If $s$ ranges from zero to one and this bound holds while solutions remain admis
 
 A shoulder angle may reverse, a hand-path projection may repeat, and the top of a backswing may have zero angular speed. Use a restricted downswing interval, additional state information, or explicit phase charts and transition rules. A single smooth real-valued state function cannot increase strictly around an entire periodic orbit: after one period the state, and therefore that function, returns to its original value. Rhythmic models instead use a circular phase, an unwrapped phase with additional memory, or a coordinate reset.
 
-The phase must also be estimable from the available measurements. For a local estimate $\hat x=x+\delta x$, the first-order phase error is $\delta s\approx\nabla\phi^\top\delta x$. A poorly conditioned projection amplifies measurement error; different full states with the same marker can demand different controls. Filtering trades noise against lag, and a nominally monotone marker need not remain monotone after measurement noise. Chapter 9 develops the additional changes required for a diffusion model.
+The phase must also be estimable from the available measurements. For a local estimate $\hat x=x+\delta x$, the first-order phase error is $\delta s\approx\nabla\phi^\top\delta x$. A poorly conditioned projection amplifies measurement error; different full states with the same marker can demand different controls. Filtering trades noise against lag, and a nominally monotone marker need not remain monotone after measurement noise. @sec-stochastic-trajectories-motor-variability develops the additional changes required for a diffusion model.
 
 ### Virtual Constraints Live in Configuration Space
 
@@ -3157,7 +3160,7 @@ ds=\left[\nabla\phi^\top f+
 \tfrac12\operatorname{tr}(GG^\top D^2\phi)\right]dt
 +\nabla\phi^\top G\,dW .
 $$
-The second-derivative term changes phase drift, and nonzero diffusion along the phase generally prevents strictly monotone sample paths. Positive expected progress does not restore the deterministic monotonicity assumption of Chapter 8. A filtered physical progress variable, event-based phase estimator, or colored-noise model must state how it handles this distinction.
+The second-derivative term changes phase drift, and nonzero diffusion along the phase generally prevents strictly monotone sample paths. Positive expected progress does not restore the deterministic monotonicity assumption of @sec-phase-variable-control. A filtered physical progress variable, event-based phase estimator, or colored-noise model must state how it handles this distinction.
 
 Build a golf analysis in stages: identify the mechanical and observation models; estimate force-noise statistics at a stated bandwidth; propagate initial-state and process uncertainty under the actual feedback and limits; then evaluate first-contact outcomes. Include estimation errors and delays rather than granting the controller exact state information. Linear-quadratic-Gaussian separation results do not automatically apply to control-dependent diffusion, nonlinear contacts, or constrained actuators.
 
