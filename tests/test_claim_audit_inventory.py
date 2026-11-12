@@ -469,6 +469,8 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/scope-and-limits.html",
             "/pages/upstreamdrift-engine-protocol.html",
             "/pages/upstreamdrift-conventions.html",
+            "/pages/upstreamdrift-getting-started.html",
+            "/pages/upstreamdrift-headless-and-agents.html",
             "/articles/slack-management-linked-systems.html",
         }
         and (
@@ -567,6 +569,12 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     conventions_ref = _find_route(inventory, "/pages/upstreamdrift-conventions.html")
     assert conventions_ref["status"] == "reviewed"
     assert conventions_ref["review"]["source_path"] == "pages/upstreamdrift-conventions.qmd"
+    getting_started = _find_route(inventory, "/pages/upstreamdrift-getting-started.html")
+    assert getting_started["status"] == "reviewed"
+    assert getting_started["review"]["source_path"] == "pages/upstreamdrift-getting-started.qmd"
+    headless_agents = _find_route(inventory, "/pages/upstreamdrift-headless-and-agents.html")
+    assert headless_agents["status"] == "reviewed"
+    assert headless_agents["review"]["source_path"] == "pages/upstreamdrift-headless-and-agents.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )

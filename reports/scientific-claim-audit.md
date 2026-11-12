@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 291
+- Reviewed: 293
 - Deferred: 0
 - Exempt: 3
 
@@ -275,6 +275,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
 | `/pages/upstreamdrift-conventions.html` | `pages/upstreamdrift-conventions.qmd` | 3 |
 | `/pages/upstreamdrift-engine-protocol.html` | `pages/upstreamdrift-engine-protocol.qmd` | 3 |
+| `/pages/upstreamdrift-getting-started.html` | `pages/upstreamdrift-getting-started.qmd` | 4 |
+| `/pages/upstreamdrift-headless-and-agents.html` | `pages/upstreamdrift-headless-and-agents.qmd` | 4 |
 | `/pages/validation-roadmap.html` | `pages/validation-roadmap.qmd` | 3 |
 | `/repositories/repositories-2d-model.html` | `repositories/repositories-2d-model.qmd` | 1 |
 | `/repositories/repositories-3d-model.html` | `repositories/repositories-3d-model.qmd` | 1 |
@@ -573,6 +575,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
 | `ad-route-b17914b25e54` | `/pages/upstreamdrift-conventions.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8c492a8af56b` | `/pages/upstreamdrift-engine-protocol.html` | Reviewed | — | None | None | 0 |
+| `ad-route-9c6939ff17a2` | `/pages/upstreamdrift-getting-started.html` | Reviewed | — | None | None | 0 |
+| `ad-route-32c9c92fc181` | `/pages/upstreamdrift-headless-and-agents.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f75062776350` | `/pages/validation-roadmap.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8544bec56dfb` | `/reports/scientific-claim-audit.html` | Exempt | — | None | None | 0 |
 | `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Reviewed | — | None | None | 0 |
