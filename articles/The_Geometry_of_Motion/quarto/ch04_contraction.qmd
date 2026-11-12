@@ -518,7 +518,9 @@ Transporting that curve with its controls, or recomputing suitable geodesics in 
 ::: {.callout-note}
 ### Worked CCM on a Cubic Restoring Term
 
-For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$, the feedback $u=x_1^3-k_px_1-k_dx_2$ with $k_p,k_d>0$ gives the linear closed loop $\dot x_1=x_2$, $\dot x_2=-k_px_1-k_dx_2$. Choose $M=I$ and solve the Lyapunov equation for $A=[[0,1],[-k_p,-k_d]]$ to obtain a constant contraction metric. With $k_p=k_d=1$, one solution is $M=\operatorname{diag}(1,1)$ and the differential gain $K=-[k_p,k_d]$ matches the Jacobian of the implemented feedback, so the control contraction conditions reduce to the displayed linear contraction inequality on that metric.
+For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$ with $G=[0,1]^\top$, the feedback $u=x_1^3-k_px_1-k_dx_2$ with $k_p,k_d>0$ yields the linear closed loop $\dot x_1=x_2$, $\dot x_2=-k_px_1-k_dx_2$ and the constant Jacobian $A_{\mathrm{cl}}=[[0,1],[-k_p,-k_d]]$. The identity metric is not a strict contraction metric for $A_{\mathrm{cl}}$: for $M=I$, $A_{\mathrm{cl}}^TM+MA_{\mathrm{cl}}=\operatorname{diag}(0,-2k_d)$ is only negative semidefinite. Solving $A_{\mathrm{cl}}^TM+MA_{\mathrm{cl}}=-I$ gives a constant metric; with $k_p=k_d=1$, one choice is $M=[[3/2,1/2],[1/2,1]]$, which certifies a positive contraction rate on that field (@sec-ch4:example).
+
+For control contraction metrics, the drift Jacobian is $A(x)=[[0,1],[-3x_1^2,0]]$ while $\partial u/\partial x=[3x_1^2-k_p,\,-k_d]$, so the differential gain $K(x)=[k_p-3x_1^2,\,k_d]$ in $\delta u=-K\delta x$ is state-dependent and is not the constant row $-[k_p,k_d]$. Nevertheless $A(x)-GK(x)=A_{\mathrm{cl}}$ everywhere, so with this constant $M$ and $\dot M=0$ the CCM residual reduces to the same linear contraction inequality on $A_{\mathrm{cl}}$.
 :::
 
 ### Computational Approaches
