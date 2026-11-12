@@ -51,7 +51,7 @@ exceptions to these conventions. Reusing a letter does not identify two physical
     \item[$G(\state)\control$] Control vector field: state-derivative contribution from the declared control channel.
     \item[$\dot{\state} = f(\state) + G(\state)\control$] The control-affine system equation.
     \item[$\state^{\mathrm{ZTCF}}(t)$] Forward Zero-Torque Counterfactual trajectory (evolution of the declared effective plant with $\control = \bm{0}$).
-    \item[$\bm{a}_{\mathrm{ZVCF}}(\bm{q},\bm{z})$] Instantaneous Zero-Velocity Counterfactual acceleration with velocity and declared control set to zero.
+    \item[$\bm{a}_{\mathrm{ZVCF}}(\bm{q},\bm{z};\bm{\tau})$] Pointwise ZVCF control acceleration $M(\bm{q})^{-1}\bm{\tau}$ at $\dot{\bm{q}}=\bm{0}$ (see \texttt{NOTATION.md}).
     \item[$\mathrm{DCR}_{W,\mathcal{U}}(\state)$] Drift-Control Ratio: $\norm{W\bm{a}_{\mathrm{drift}}}/(\sup_{u\in\mathcal{U}}\norm{W\bm{B}_a u}+\varepsilon)$. Declare the acceleration map $\bm{B}_a$ after solving constraints, feasible input set $\mathcal{U}$, weighting $W$ and positive regularizer $\varepsilon$ in the denominator's units. This pointwise norm ratio is not a reachability certificate.
 \end{description}
 

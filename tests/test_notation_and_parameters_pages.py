@@ -46,3 +46,12 @@ def test_notation_md_has_no_duplicate_heading_or_toc() -> None:
 def test_parameters_md_has_no_duplicate_heading() -> None:
     text = (REPO_ROOT / "PARAMETERS.md").read_text(encoding="utf-8")
     assert "# Canonical Parameters Reference" not in text
+
+
+def test_parameters_md_lists_sourced_ball_mass_and_impact_chapter() -> None:
+    """Issue #5595: table must source ball mass and point COR work to ch28, not ch10–12."""
+    text = (REPO_ROOT / "PARAMETERS.md").read_text(encoding="utf-8")
+    assert "0.04593" in text
+    assert "ch28" in text.lower() or "ch28" in text
+    assert "Ch 10-12" not in text
+    assert "Ch 1-31" not in text

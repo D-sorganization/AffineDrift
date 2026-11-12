@@ -23,7 +23,25 @@ The book develops that question from measurement and inverse dynamics through sh
 
 Start with the problem formulation and the two UpstreamDrift review chapters for the shortest route to current capabilities and gaps. Read the classical methods before the adaptive chapters if trajectory estimation is unfamiliar. The final design and synthesis chapters combine those foundations into a proposed implementation and research program.
 
-Each chapter includes assumptions, failure modes, worked arguments, and exercises with solution sketches. Mathematical examples are synthetic or derived. Historical numerical values are attributed to checked-in upstream receipts and remain conditional on their recorded model and run.
+Each method chapter includes assumptions, failure modes, worked arguments, and exercises with solution sketches. Survey chapters (2, 3, and 24) summarize evidence without exercise blocks. Mathematical examples are synthetic or derived. Historical numerical values are attributed to checked-in upstream receipts and remain conditional on their recorded model and run.
+
+The Quarto book title is *Matching Forward Dynamics to Kinematic Data* (`_quarto.yml`); this landing page keeps the short name *Forward Dynamics Matching* for navigation.
+
+## Book Notation Conventions
+
+This book follows [NOTATION.md](../../NOTATION.md) for site-wide symbols. A few symbols are overloaded across chapters; the table below fixes meanings for this book only. Do not read them as overriding NOTATION.md globally.
+
+| Topic | This book | Meaning |
+| --- | --- | --- |
+| Physical parameters | $p$ or $\theta$ | Body and model parameters $p$ in early chapters; $\theta$ when estimation is explicit. Control basis coefficients may also be called $\theta$ in shooting and collocation—context distinguishes them. |
+| Bias / velocity loads | $b$ or $h$ | Net non-control bias in $M\dot v + b = \cdots$ (ch. 1); $h$ in gradient and contact chapters collects gravity, Coriolis, and passive terms. |
+| Coriolis term | $C(q,\dot q)\dot q$ | Matrix form per NOTATION.md; not a standalone vector $C$. |
+| Kinematic map | $N_{\mathrm{kin}}(q)$ | $\dot q = N_{\mathrm{kin}}(q)v$. Distinct from null-space basis $N$ in NOTATION.md. |
+| Holonomic constraints | $c(q)=0$, $J_c=\partial c/\partial q$ | Position constraints; velocity form $J_c N_{\mathrm{kin}} v = 0$. Lowercase $g(q)$ is reserved for gravity. |
+| Contact gap | $\phi(q)\ge 0$ | Unilateral signed distance; not a constraint function $c$. |
+| Structure / model index | $k$ | Discrete model or basis index in adaptive design chapters; $d$ counts mechanical dimension when stated explicitly. |
+| Fit objective | $\mathcal{J}$ | Tracking or NLP objective. Constraint Jacobian remains $J$ or $J_c$. |
+| Activation time constants | $\tau_{\mathrm{act}}$, $\tau_{\mathrm{deact}}$ | Muscle activation ODE; $\tau$ alone means joint torque. |
 
 ## Foundations and the Existing Program
 
@@ -57,6 +75,8 @@ Each chapter includes assumptions, failure modes, worked arguments, and exercise
 22. [Learning-Based Tracking and Iterative Control](22_learning_tracking.html)
 
 The appendix, [Forward Surrogates and Multimodal Inverse Proposals](26_neural_proposals.html), develops learned acceleration and native reranking in detail.
+
+[Motion-Matching Runtime Reference](27_runtime_reference.html) documents acceptance gates, the two-window native problem, the ground-support pipeline, contact law, and programme vocabulary as implemented in UpstreamDrift (Refs #5622).
 
 ## Engineering and Publication
 

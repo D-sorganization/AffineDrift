@@ -18,9 +18,7 @@ The following workflows provide protective governance:
 
 | Workflow | Purpose | Status |
 |----------|---------|--------|
-| Jules-Redundant-PR-Closer.yml | Deduplicates agent PRs by priority | ✅ Active |
-| Jules-Redundant-Issue-Closer.yml | Deduplicates agent issues by priority | ✅ Active |
-| Agent-Governance-Check.yml | Enforces governance requirements | ✅ Active |
+| Conflict Disarm | Resolves eligible stale/conflicting PRs | ✅ Active |
 
 **Backup Schedule:**
 - PR deduplication: Every PR event + 3-hourly automatic check
@@ -90,32 +88,8 @@ All autonomous agents MUST follow this protocol:
 
 ## Troubleshooting
 
-### Duplicate Issues Still Appearing
-
-1. Check that Jules-Redundant-Issue-Closer.yml is active:
-   ```bash
-   gh workflow list -q '.[].name | select(. | contains("Redundant"))'
-   ```
-
-2. Check recent workflow runs:
-   ```bash
-   gh run list --workflow=Jules-Redundant-Issue-Closer.yml --limit 5
-   ```
-
-3. If workflow never runs, manually trigger it:
-   ```bash
-   gh workflow run "Agent Redundant Issue Closer" --ref main
-   ```
-
-### Duplicate PRs Not Being Closed
-
-1. Check Jules-Redundant-PR-Closer.yml is active
-2. Verify the PRs reference the same issue via "Fixes #N"
-3. Check that closing agent has higher priority than affected PRs
-4. Manually trigger if needed:
-   ```bash
-   gh workflow run "Agent Redundant PR Closer" --ref main
-   ```
+Conflict Disarm is the active workflow for eligible stale or conflicting PRs. Check its recent runs with
+`gh run list --workflow="Conflict Disarm" --limit 5`.
 
 ### New Agent Deployment
 
