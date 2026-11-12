@@ -1,4 +1,4 @@
-# Control Is Motion - Complete Textbook
+# Control Is Motion — Complete Textbook
 
 > **Status: archival LaTeX source (not rendered to the website).**
 > This directory holds the standalone LaTeX/PDF manuscript of _Control Is Motion_.
@@ -7,124 +7,108 @@
 > `../The_Geometry_of_Motion/quarto/volume2_content.qmd`), which is the maintained,
 > rendered edition. There are no `.qmd` files here, so nothing in this directory is
 > picked up by the site render glob (`articles/**/*.qmd`) or linked from navigation.
-> Keep edits in the Geometry of Motion Volume II source; this manuscript is retained
-> for provenance and the compiled `Control_Is_Motion_Complete.pdf` only.
+> Keep editorial changes in the Geometry of Motion Volume II source; this manuscript
+> is retained for provenance and the compiled `Control_Is_Motion_Complete.pdf`.
 
 ## Book Overview
 
-This textbook presents a revolutionary framework for nonlinear control theory,
-shifting from the classical "setpoint control" paradigm to a "trajectory control"
-approach specifically designed for systems that move through the world.
+**Title:** Control Is Motion  
+**Subtitle:** Geometry, Feasible Dynamics, and Robust Outcomes
+
+The manuscript develops trajectory-based nonlinear control for systems whose
+objectives are defined along motions and at events (contacts, guards), not only
+at equilibria. The golf swing is a recurring motivating example; claims are
+scoped to stated models, contact laws, and feedback assumptions.
 
 ## Key Themes
 
-- **Control is Motion, not Destination**: The fundamental insight that control
-  systems should be designed around trajectories, not fixed points
-- **Moving Target Systems**: Systems whose objectives are defined by kinematics
-  at specific intersections, independent of timing
-- **Geometric Approach**: Treating trajectories as geometric objects with
-  intrinsic curvature and structure
-- **Underactuation as Advantage**: Exploiting passive dynamics rather than
-  fighting them
+- **Motion, targets, and timing:** Useful outcomes depend on how a feasible
+  trajectory is generated and timed, not on tracking a single static setpoint.
+- **Geometry of paths:** Arc length, curvature, and manifold structure separate
+  path shape from timing where the model allows.
+- **Orbital and transverse stability:** Stability of a motion can be studied on a
+  moving orbit; this complements classical Lyapunov analysis rather than
+  replacing it.
+- **Underactuation and passive dynamics:** Passive coupling and zero dynamics are
+  modeled explicitly; they are analysis tools, not automatic design advantages.
+- **Scoped certificates:** Funnels, tubes, and optimization statements carry
+  explicit assumptions; the golf case study is a protocol, not a finished
+  musculoskeletal identification or certificate.
 
 ## Chapter Summary
 
-### Chapter 1: Throwing Away the Target
+### Chapter 1: Motion, Targets, and Timing
 
-- Introduces the central thesis: "Control is motion"
-- Contrasts classical setpoint control with trajectory control
-- Defines moving target systems using the golf swing as primary example
-- Establishes the philosophical and mathematical foundation
+- Defines moving-target systems and the "control is motion" organizing perspective
+- Contrasts trajectory objectives with setpoint control without discarding classical tools
+- Introduces golf delivery, timing, and impact outputs as the primary example
 
 ### Chapter 2: Curves in State Space
 
-- Mathematical treatment of trajectories as geometric curves
-- Arc length parameterization and path-timing separation
-- Curvature, torsion, and their relationship to control difficulty
-- Frenet-Serret frames and coordinate-independent descriptions
+- Trajectories as geometric curves; path–timing separation where valid
+- Curvature, torsion, and Frenet–Serret descriptions
+- Limits on arc-length derivatives and speed-dependent corrections
 
 ### Chapter 3: Configuration Manifolds
 
-- Beyond Euclidean state spaces: Lie groups and curved manifolds
-- Special treatment of rotational motion and SO(3)
-- Riemannian metrics derived from kinetic energy
-- Constraints and submanifolds in mechanical systems
+- Configuration manifolds, Lie groups, and SO(3) attitude kinematics
+- Metrics from kinetic energy; constraints as submanifolds
+- Frame consistency for velocity errors and feedforward transport
 
 ### Chapter 4: Orbital Stability and Transverse Linearization
 
-- Rethinking stability for moving systems
-- Orbital stability vs. classical Lyapunov stability
-- Transverse linearization and moving Poincaré sections
-- Floquet theory for periodic motions
+- Orbital versus time-stamped tracking stability
+- Transverse linearization and moving Poincaré sections (sufficient conditions)
+- Floquet tools; cautions on timing shifts and invented amplification profiles
 
 ### Chapter 5: Underactuation and Passive Dynamics
 
-- Embracing underactuation as a design principle
-- Zero dynamics and the structure of underactuated systems
-- The whip effect and sequential energy transfer
-- Applications to the golf swing kinetic chain
+- Underactuated structure, zero dynamics, and sequential energy transfer
+- Golf-relevant whip and release mechanisms with explicit modeling limits
+- Chow–Rashevskii and small-time local controllability caveats
 
 ### Chapter 6: Trajectory Optimization
 
-- Moving target optimal control problems
-- Direct collocation methods for complex systems
-- Multi-phase optimization and cost function design
-- From optimization to implementable trajectories
+- Moving-target optimal control and direct transcription ideas
+- Multi-phase costs and implementable trajectory extraction
 
 ### Chapter 7: Funnel Synthesis
 
-- Beyond point tracking: finite-time guarantees
-- Forward invariant funnels and barrier functions
-- Sum-of-squares programming for funnel computation
-- Robust funnels under model uncertainty
+- Tubes, barrier conditions, and event-based impact certificates
+- Explicit limits on optimality claims and disturbance/saturation interaction
 
 ### Chapter 8: Phase-Variable Control
 
-- Decoupling path shape from timing
-- Virtual constraints and hybrid zero dynamics
-- Central pattern generators as phase oscillators
-- Applications to locomotion and rhythmic motions
+- Virtual constraints, hybrid zero dynamics, and phase oscillators
+- Applications to rhythmic motion and timing coordination
 
 ### Chapter 9: Stochastic Trajectories and Motor Variability
 
-- Signal-dependent noise in biological actuators
-- Minimum-variance theory of human movement
-- Why optimal trajectories are naturally smooth
-- Covariance steering for robust trajectory design
+- Signal-dependent noise and minimum-variance ideas in trajectory design
+- Covariance and robustness considerations for moving systems
 
 ### Chapter 10: Learning to Move
 
-- Iterative learning control for trajectory improvement
-- Policy search and trajectory libraries
-- Maintaining stability while adapting performance
-- Applications to athletic skill development
+- Iterative learning and policy adaptation while preserving stability margins
+- Skill development framed as trajectory improvement, not guaranteed optimality
 
-### Chapter 11: Case Study - The Complete Golf Swing
+### Chapter 11: Case Study: The Complete Golf Swing
 
-- Full application of the entire framework
-- 15-DOF musculoskeletal model optimization
-- Funnel synthesis for the complete swing
-- Integration of all theoretical concepts
+- End-to-end modeling and verification protocol for address through follow-through
+- **Does not** report a solved musculoskeletal optimization, an experimentally
+  identified golfer, or a computed nonlinear golf-swing certificate (see chapter
+  text for disclaimers)
 
-## Technical Features
+## Build Notes
 
-- Rigorous mathematical treatment with geometric insight
-- Extensive use of examples from athletics and robotics
-- Practical algorithms and computational methods
-- End-of-chapter exercises ranging from conceptual to computational
-- Beautiful visual presentations using TikZ graphics
+- Canonical concatenated source: `Control_Is_Motion_Complete.tex` (tracked).
+- Optional chapter concatenation: `python3 compile_book.py` from this directory
+  (repo-relative paths; does not overwrite this summary).
+- PDF builds: `latexmk` on `Control_Is_Motion_Complete.tex` when a local TeX stack
+  is available.
 
 ## Target Audience
 
-- Graduate students in robotics, control theory, and biomechanics
-- Researchers working on underactuated systems and trajectory control
-- Engineers designing systems for complex motions
-- Anyone interested in the intersection of control theory and human movement
-
-## Unique Contributions
-
-This textbook is the first comprehensive treatment of trajectory-based control
-theory for moving target systems. It bridges classical control theory with
-modern geometric methods, providing both theoretical foundations and practical
-tools for designing controllers for systems that must move through the world
-with purpose and precision.
+Graduate students and researchers in robotics, control, and biomechanics who need
+geometric language for trajectories, contacts, and underactuated motion—with claims
+stated at the level of explicit models.

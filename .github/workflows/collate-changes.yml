@@ -11,7 +11,7 @@ name: Collate Change Fragments
 # Ported from Repository_Management's collate-changes.yml (Repository_Management#1976).
 # It never pushes to main: it proposes the result on the reused branch
 # bot/collate-changes and arms auto-merge through Repository_Management's
-# scripts/automerge_guard.py (checked out read-only, as Jules-Redundant-PR-Closer.yml does),
+# scripts/automerge_guard.py (checked out read-only, using a read-only checkout),
 # which honours reviewer holds.
 #
 # Push-only on purpose: in the merge queue (merge_group) the PR number is not
@@ -43,12 +43,23 @@ jobs:
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 10
     steps:
+      - name: Validate fleet app secrets
+        shell: bash
+        env:
+          FLEET_APP_ID: ${{ secrets.FLEET_APP_ID }}
+          FLEET_APP_PRIVATE_KEY: ${{ secrets.FLEET_APP_PRIVATE_KEY }}
+        run: |
+          if [ -z "$FLEET_APP_ID" ] || [ -z "$FLEET_APP_PRIVATE_KEY" ]; then
+            echo "::error::Set FLEET_APP_ID and FLEET_APP_PRIVATE_KEY before running this workflow."
+            exit 1
+          fi
+
       - name: Generate fleet app token
         id: app-token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v1.1.1
         with:
-          client-id: ${{ secrets.JULES_APP_ID }}
-          private-key: ${{ secrets.JULES_APP_PRIVATE_KEY }}
+          client-id: ${{ secrets.FLEET_APP_ID }}
+          private-key: ${{ secrets.FLEET_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
