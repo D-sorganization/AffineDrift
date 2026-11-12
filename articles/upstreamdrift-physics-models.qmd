@@ -22,6 +22,7 @@ categories:
 - impact-ball-flight
 - tools
 - reference
+css: ../css/upstreamdrift-physics-models.css
 ---
 
 ::: {.callout-important}
@@ -54,11 +55,9 @@ The site rolling law in [putting-roll-models](putting-roll-models.html) uses $\d
 ::: {.callout-warning}
 ## MISMATCH (G1): Full $g$ Gradient in Roll
 
-| | |
-|---|---|
-| **UpstreamDrift** | `$g_{x,y} = -g\nabla h$` in slide and roll (`solver.py`, `_derivative`) |
-| **AffineDrift site** | Gravitational term scaled by $1/(1+\alpha)$ in roll |
-| **Tracker** | [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010) |
+- **UpstreamDrift:** `$g_{x,y} = -g\nabla h$` in slide and roll (`solver.py`, `_derivative`).
+- **AffineDrift site:** Gravitational term scaled by $1/(1+\alpha)$ in roll.
+- **Tracker:** [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
 
 Example at 3 % downhill, Stimp 10, pure roll at 1.5 m/s: the code path is ~33 % longer than the site's $(5/7)g$ roll model for the same inputs (review finding on #5624).
 :::
