@@ -17,11 +17,13 @@ from alpha_war_spatial_wrench import (  # noqa: E402
     force_first_wrench_transport_matrix,
     mechanical_power,
     poinsot_moment_transport,
+    point_force_power_oracle,
     transport_wrench,
     triple_product_lhs,
     triple_product_rhs,
     twist_adjoint,
     twist_adjoint_inverse_transpose,
+    twist_at_b,
 )
 
 
@@ -89,6 +91,28 @@ class TestAlphaWarSpatialWrenchPower(unittest.TestCase):
             self.assertAlmostEqual(mechanical_power(wrench_a, twist_a), p_a)
             self.assertAlmostEqual(mechanical_power(wrench_b, twist_b), p_b)
             self.assertAlmostEqual(p_a, p_b, places=9)
+
+    def test_point_force_oracle_matches_dual_power_at_any_station(self) -> None:
+        """Power from F at C via F·v_C agrees with wrench pairing after transport."""
+        rng = np.random.default_rng(5463)
+        for _ in range(24):
+            force = rng.normal(size=3)
+            r_ca = rng.normal(size=3)
+            omega = rng.normal(size=3)
+            vel_a = rng.normal(size=3)
+            r_ba = rng.normal(size=3)
+            oracle = point_force_power_oracle(force, r_ca, omega, vel_a)
+            moment_a = np.cross(r_ca, force)
+            wrench_a = np.concatenate([force, moment_a])
+            twist_a = np.concatenate([omega, vel_a])
+            self.assertAlmostEqual(mechanical_power(wrench_a, twist_a), oracle, places=10)
+            wrench_b = transport_wrench(wrench_a, r_ba)
+            twist_b = twist_at_b(twist_a, r_ba)
+            vel_b = twist_b[3:6]
+            r_cb = r_ca - r_ba
+            oracle_b = point_force_power_oracle(force, r_cb, omega, vel_b)
+            self.assertAlmostEqual(mechanical_power(wrench_b, twist_b), oracle_b, places=10)
+            self.assertAlmostEqual(oracle, oracle_b, places=10)
 
 
 if __name__ == "__main__":

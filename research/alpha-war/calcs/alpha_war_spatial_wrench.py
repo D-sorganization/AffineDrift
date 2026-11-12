@@ -17,7 +17,7 @@ def skew(v: Vec3) -> NDArray[np.float64]:
 
 
 def dual_pairing_matrix() -> NDArray[np.float64]:
-    """Block-swap matrix ``P`` so ``power = W.T @ P @ V`` for force-first ``W`` and twist ``V``."""
+    """Block-swap ``J_sw`` for force-first wrench power ``W.T @ J_sw @ V``."""
     eye = np.eye(3)
     zeros = np.zeros((3, 3))
     return np.vstack([np.hstack([zeros, eye]), np.hstack([eye, zeros])])
@@ -57,6 +57,17 @@ def mechanical_power(wrench: Wrench6, twist: Twist6) -> float:
     v = np.asarray(twist, dtype=np.float64).reshape(6)
     pairing = dual_pairing_matrix()
     return float(w @ pairing @ v)
+
+
+def point_force_power_oracle(
+    force: Vec3,
+    r_force_from_station: Vec3,
+    omega: Vec3,
+    vel_station: Vec3,
+) -> float:
+    """Instantaneous power from force ``F`` at material offset ``r``; no wrench transport."""
+    vel_at_force = vel_station + np.cross(omega, r_force_from_station)
+    return float(force @ vel_at_force)
 
 
 def twist_at_b(twist_a: Twist6, r_ba: Vec3) -> Twist6:
