@@ -22,6 +22,8 @@ def test_green_simulation_uses_putting_roll_slip_convention() -> None:
     assert "signed slip $u=v-s$" not in text
     assert "v_{\\mathrm{ff}}" in text
     assert "v_{\\mathrm{proxy}}" in text
+    assert "v_0-\\frac{\\alpha s_0}{1+\\alpha}" in text
+    assert "\\frac{v_0-\\alpha s_0}{1+\\alpha}" not in text
 
 
 def test_putting_roll_penner_capture_uses_distinct_symbol() -> None:
@@ -51,6 +53,8 @@ def test_impact_reference_disambiguates_reused_symbols() -> None:
     assert "\\mathbf{v}_{\\mathrm{rel}}" in text
     assert "\\mathbf{v}_{\\mathrm{cp}}" in text
     assert "horizontal launch $\\beta_h$" in text
+    assert re.search(r"\\kappa=0\.4.*\\theta_\*", text) is not None
+    assert re.search(r"\\alpha=0\.4.*\\theta_\*", text) is None
 
 
 def test_shot_pattern_has_checkable_methods_and_verified_date() -> None:

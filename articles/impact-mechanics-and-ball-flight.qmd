@@ -283,7 +283,7 @@ $$
 \frac{1}{\mu(1+e_n)(1+1/\kappa)}.
 $$
 
-For assumed $\mu=0.18$, $e_n=0.9$, and $\alpha=0.4$, $\theta_*\approx39.9^\circ$, or $\Phi_*\approx50.1^\circ$. Increasing friction decreases this threshold measured from the surface and increases its complement measured from the normal.
+For assumed $\mu=0.18$, $e_n=0.9$, and $\kappa=0.4$, $\theta_*\approx39.9^\circ$, or $\Phi_*\approx50.1^\circ$. Increasing friction decreases this threshold measured from the surface and increases its complement measured from the normal.
 
 These are deductions from the stated plane model, not a universal driver or wedge threshold. Cross's low-speed granite experiments distinguish sliding and gripping and show why tangential elasticity can exceed a rolling approximation. Their conditions and fitted coefficients should not be transferred directly to a high-speed club impact. [Cross, 2002](https://www.physics.usyd.edu.au/~cross/PUBLICATIONS/GripSlip.pdf).
 
@@ -318,9 +318,9 @@ Take an initially stationary, unspun ball and a head whose centre moves at 48 m/
 ```python
 import numpy as np
 
-m, radius, alpha = 0.04593, 0.021335, 0.4
+m, radius, kappa = 0.04593, 0.021335, 0.4
 head_mass = 0.2
-ball_inertia = alpha * m * radius**2
+ball_inertia = kappa * m * radius**2
 head_inertia = 0.0004 * np.eye(3)
 ball_lever = np.array([-radius, 0.0, 0.0])
 head_lever = np.array([0.04, 0.0, 0.02])
