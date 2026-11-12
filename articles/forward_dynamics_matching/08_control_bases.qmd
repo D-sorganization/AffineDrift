@@ -8,7 +8,14 @@ description: "Control Parameterizations and Continuation Methods: forward dynami
 
 A forward dynamics model maps initial state, controls, parameters, and numerical solver settings to a trajectory. Matching therefore depends strongly on how control is represented. Let the sampled dynamics be $x_{k+1}=\Phi_k(x_k,u_k,\theta)$, with observations $y_k=H(x_k)+\epsilon_k$. An optimizer may choose every control sample, a lower-dimensional basis, a feedback policy, or a structured actuator waveform. Each choice changes the feasible trajectories and the dimension and conditioning of the search. A good parameterization encodes known regularity and actuator structure without forcing the answer toward an unsupported prior.
 
-Piecewise-constant controls are simple: one $u_j$ applies over a time interval. Piecewise-linear controls reduce discontinuities, but require a precise endpoint and interpolation rule. Cubic splines provide smooth derivatives, although unconstrained spline coefficients can overshoot actuator limits between knots. B-splines with nonnegative basis functions make convex bounds easier to enforce. Fourier bases compactly represent periodic motion but impose periodicity and can ring near abrupt events. Wavelets or local radial basis functions give localized flexibility at the cost of more coefficients.
+Piecewise-constant controls are simple: one $u_j$ applies over a time interval. Piecewise-linear controls reduce discontinuities, but require a precise endpoint and interpolation rule. Cubic splines provide smooth derivatives, although unconstrained spline coefficients can overshoot actuator limits between knots. B-splines with nonnegative basis functions make convex bounds easier to enforce. On an interval with knot vector $\{t_i\}$, the degree-$p$ B-spline basis satisfies the Cox–de Boor recursion
+
+$$
+B_{i,0}(t)=\mathbf{1}_{[t_i,t_{i+1})}(t),\qquad
+B_{i,p}(t)=\frac{t-t_i}{t_{i+p}-t_i}B_{i,p-1}(t)+\frac{t_{i+p+1}-t}{t_{i+p+1}-t_{i+1}}B_{i+1,p-1}(t),
+$$
+
+and a control trajectory is $u(t)=\sum_i c_i B_{i,p}(t)$. Bernstein polynomials on $[0,1]$ are the special case $B_{i,n}(t)=\binom{n}{i}t^i(1-t)^{n-i}$; they are nonnegative on the interval and convex combinations of control points stay inside the convex hull—useful for bound constraints. Muscle synergies (low-rank combinations of a few time-varying synergies) are another compact basis when EMG or coordination priors support them. Fourier bases compactly represent periodic motion but impose periodicity and can ring near abrupt events. Wavelets or local radial basis functions give localized flexibility at the cost of more coefficients.
 
 Control knot placement should follow physics and data. Uniform time knots can waste variables in slow phases and undersample rapid transitions. Event-aligned knots may help at impact or release, but event time itself may be uncertain. Adaptive knot refinement should be driven by a declared residual or defect criterion and logged as part of the optimization. Comparing a high-knot model to a low-knot model without matching regularization or effective degrees of freedom is not a fair comparison.
 
