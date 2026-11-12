@@ -41,7 +41,9 @@ STANDALONE = (Path("articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Uni
 PREFIXES = ("sec", "eq", "fig", "tbl", "thm", "lst", "wrn")
 _ALT = "|".join(PREFIXES)
 
-DEFINITION = re.compile(r"\{#((?:" + _ALT + r")-[A-Za-z0-9_:.-]+)\}")
+DEFINITION = re.compile(
+    r"\{#((?:" + _ALT + r")-[A-Za-z0-9_:.-]+)(?:\s+[^}]*)?\}"
+)
 REFERENCE = re.compile(r"(?<![\w`])@((?:" + _ALT + r")-[A-Za-z0-9_:.-]+)")
 HEADING = re.compile(r"^\s*#{1,6}\s")
 FENCE = re.compile(r"^\s*(```+|~~~+)")
