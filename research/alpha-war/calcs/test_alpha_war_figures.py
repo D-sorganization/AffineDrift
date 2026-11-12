@@ -48,6 +48,12 @@ class TestAlphaWarFigures(unittest.TestCase):
         ):
             self.assertTrue((FIG_DIR / name).is_file(), name)
 
+    def test_fig_coordinate_frames_hierarchy_roll_formula(self) -> None:
+        """Fig 2.3 roll callout must match Box 2.1 M_in cos + M_out sin convention."""
+        svg = (FIG_DIR / "fig-coordinate-frames-hierarchy.svg").read_text(encoding="utf-8")
+        self.assertIn("M_in·cos(phi) + M_out·sin(phi)", svg)
+        self.assertNotIn("M_in·cos(phi) - M_out·sin(phi)", svg)
+
     def test_fig1_transport_stations_matches_json(self) -> None:
         """Fig 1 must plot M(s)=C-s*R_y with simulated and illustrative s* from JSON."""
         main()

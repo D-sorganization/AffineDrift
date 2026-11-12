@@ -70,7 +70,7 @@ A golfer does not hold a golf club with a single pinpoint clamp; the lead and tr
 
 2. **Layer 2 — Physics and Measurement Sensitivity:**  
    Even when both camps evaluate the identical point on the handle, reported torque values diverge due to subtle methodological choices:
-   - **Coordinate Frame Roll Bleed:** Resolving torques in a rotating clubface frame causes large out-of-plane bending loads to project falsely onto the uncocking axis as the clubface rolls square into the ball.
+   - **Coordinate Frame Roll Bleed:** Resolving torques in a rotating clubface frame re-expresses the same spatial couple on rolling body axes; club-fixed alpha components remain valid, but cross-camp sign comparisons fail unless roll angle $\phi_{\text{roll}}$ is declared.
    - **Numerical Filtering Cutoffs:** Low-pass filtering through the violent impact collision bleeds post-impact shock artifacts backward into pre-impact samples.
    - **Closed-Chain Biomechanical Indeterminacy:** Two hands grasping a single rigid handle create a closed kinematic loop where internal grip forces cannot be uniquely determined from optical motion tracking alone.
 
@@ -740,7 +740,7 @@ An objective adjudication requires weighing Camp A's genuine contributions along
 ### Methodological Criticisms of Camp A
 
 - **Proprietary Black-Box Architecture:** The algorithms powering _Jacobs 3D_ were never published in peer-reviewed engineering literature. Independent researchers could not audit the exact mathematical equations, coordinate transformations, reference stations, or numerical filtering cutoffs used to generate their positive alpha curves.
-- **Frame-Switching Ambiguity:** Jacobs 3D publications routinely resolved torques in a rotating club-fixed frame ($\mathcal{F}_{\text{club}}$). As proven in Box 2.1, resolving torques in a frame that rolls with the clubface causes out-of-plane bending loads ($M_{\text{out}}$) to project directly onto the alpha axis, creating positive torque artifacts that vanish when evaluated in the Functional Swing Plane.
+- **Frame-Switching Ambiguity:** Jacobs 3D publications routinely resolved torques in a rotating club-fixed frame ($\mathcal{F}_{\text{club}}$). Box 2.1 shows that the club-fixed alpha projection $M_{\alpha,\text{club}}(\phi_{\text{roll}})$ is a valid body-axis component of the same spatial couple; it becomes misleading only when plotted against FSP alpha curves without the explicit roll transform $\mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}})$.
 - **Conflation of Muscular Effort with Mechanical Work:** Camp A frequently conflated isometric muscular tension with positive mechanical work. A muscle can be fully activated and producing extreme isometric tension while contracting at zero velocity (doing zero work) or lengthening under external load (doing negative work).
 
 ---

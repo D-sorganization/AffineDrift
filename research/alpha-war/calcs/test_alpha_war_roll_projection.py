@@ -81,7 +81,7 @@ class TestAlphaWarRollProjection(unittest.TestCase):
         self.assertAlmostEqual(alpha_at_star, 0.0, places=6)
 
     def test_alpha_at_zero_and_ninety_degrees(self) -> None:
-        """Zero roll matches M_in; 90 deg roll matches M_out for illustrative inputs."""
+        """Zero roll matches M_in; ±90 deg roll matches ±M_out for illustrative inputs."""
         self.assertAlmostEqual(
             alpha_couple_in_club_frame(
                 ILLUSTRATIVE_M_IN_PLANE_NM,
@@ -98,6 +98,15 @@ class TestAlphaWarRollProjection(unittest.TestCase):
                 math.pi / 2.0,
             ),
             ILLUSTRATIVE_M_OUT_OF_PLANE_NM,
+            places=9,
+        )
+        self.assertAlmostEqual(
+            alpha_couple_in_club_frame(
+                ILLUSTRATIVE_M_IN_PLANE_NM,
+                ILLUSTRATIVE_M_OUT_OF_PLANE_NM,
+                -math.pi / 2.0,
+            ),
+            -ILLUSTRATIVE_M_OUT_OF_PLANE_NM,
             places=9,
         )
 
@@ -124,6 +133,20 @@ class TestAlphaWarDraftRollFrameProse(unittest.TestCase):
         self.assertIn("M_{\\text{in}}\\cos 0^\\circ + M_{\\text{out}}\\sin 0^\\circ", box)
         self.assertNotIn("-15.0(1.0) - 8.0(0.0)", box)
         self.assertIn("\\operatorname{atan2}\\bigl(-M_{\\text{in}}, M_{\\text{out}}\\bigr)", box)
+
+    def test_frame_hierarchy_figure_matches_roll_projection_formula(self) -> None:
+        """Fig 2.3 callout must display M_in cos + M_out sin, consistent with Box 2.1."""
+        fig_path = ALPHA_WAR_DIR / "draft" / "figures" / "fig-coordinate-frames-hierarchy.svg"
+        svg = fig_path.read_text(encoding="utf-8")
+        self.assertIn("M_in·cos(phi) + M_out·sin(phi)", svg)
+        self.assertNotIn("M_in·cos(phi) - M_out·sin(phi)", svg)
+
+    def test_camp_a_frame_switching_treats_club_alpha_as_valid_component(self) -> None:
+        """§4 methodological critique must not dismiss club-frame alpha as a false torque."""
+        marker = "### Methodological Criticisms of Camp A"
+        section = self.draft_text.split(marker)[1].split("---")[0]
+        self.assertIn("valid body-axis component", section)
+        self.assertNotIn("torque artifacts", section)
 
 
 if __name__ == "__main__":
