@@ -13,6 +13,7 @@ import json
 import re
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -108,6 +109,14 @@ def parse_npm_lock(text: str) -> list[dict[str, Any]]:
     return [_component("npm", n, v, h) for (n, v), h in found.items()]
 
 
+def _normalize_git_commit_timestamp(iso: str) -> str:
+    """Return a UTC ``YYYY-MM-DDTHH:MM:SSZ`` string from git ``%cI`` output."""
+    instant = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+    if instant.tzinfo is None:
+        instant = instant.replace(tzinfo=UTC)
+    return instant.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def _commit_timestamp(repo_root: Path) -> str:
     result = subprocess.run(
         ["git", "show", "-s", "--format=%cI", "HEAD"],
@@ -117,7 +126,7 @@ def _commit_timestamp(repo_root: Path) -> str:
         check=True,
         timeout=15,
     )
-    return result.stdout.strip()
+    return _normalize_git_commit_timestamp(result.stdout.strip())
 
 
 def build_sbom(repo_root: Path = ROOT) -> dict[str, Any]:
