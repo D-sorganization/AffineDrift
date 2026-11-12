@@ -4,6 +4,20 @@ description: "Pinned UpstreamDrift physics defaults for flight, impact, putting 
 author: "Dieter Olson"
 date: "2026-11-11"
 date-source: "editorial-board-review"
+date-modified: "2026-11-11"
+last-reviewed: "2026-11-11"
+canonical: "/articles/upstreamdrift-physics-models.html"
+status: "available"
+audience-level: "research"
+evidence-rung: "qualified-simulation"
+summary-plain: "Pinned UpstreamDrift defaults for putting, ball flight, impact, bunker, grip, metrics, and injury heuristics at a fixed commit, compared with AffineDrift derivations. Site–code disagreements are flagged with tracker links rather than silently rewriting textbook equations."
+abstract: "Implementation inventory for shared UpstreamDrift physics modules at commit 625a16e68: putting roll and capture rules, registered flight models and Rust kernel parameters, gear-effect and impact defaults, injury load bands, and ancillary bunker and metrics paths. Each row cites module locations and records mismatches against AffineDrift site models with links to AffineDrift #5624 and UpstreamDrift #15010/#15011."
+key-takeaways:
+  - "UpstreamDrift putting roll uses the full $-g\\nabla h$ gradient in roll, unlike the site's $(5/7)g$-scaled roll law."
+  - "Hole capture in code follows a chord bound near 1.64 m/s centre speed, not the finite-ball or Penner forms on the site."
+  - "Default ball-flight APIs differ from the Naruo quartic treatment on the impact reference page; carry can spread tens of yards across registered models."
+  - "Injury heuristics in code use discrete spinal load bands that do not match ch. 21 spine derivations verbatim."
+  - "MISMATCH callouts link code-side remediation to UpstreamDrift #15010 and #15011 without changing site derivations here."
 categories:
 - impact-ball-flight
 - tools
