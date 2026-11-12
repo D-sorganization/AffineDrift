@@ -21,7 +21,7 @@ evidence-rung: "mathematical-identity"
 filters:
   - ../scripts/filters/golfers-coaches.lua
 golfers-coaches:
-  takeaway: "The wrist acts as an articulated joint where passive constraint loads transmit forces from the arms to the shaft. Changing grip orientation alters how wrist flexion and deviation couple to clubface rotation, meaning grip choice changes mechanical coupling rather than muscle strength alone."
+  takeaway: "Constraint moments at the wrist enforce the allowed degrees of freedom and can transmit arm loads to the club, but they also depend on active joint torques and on wrist compliance—they are not purely passive. Changing grip orientation alters how flexion and deviation couple to clubface rotation, so grip geometry changes mechanical coupling rather than replacing muscle effort alone."
   questions:
     - "How does a golfer's neutral grip alignment affect the natural release pattern of the clubface?"
     - "Can face-angle inconsistency be addressed by aligning grip geometry rather than adding active wrist effort?"
@@ -42,8 +42,13 @@ the same chain. This article derives those connections using an ideal two-axis
 wrist model, then identifies the measurements needed to qualify it. The result
 is a testable grip-geometry hypothesis, not a demonstrated ranking of finger
 and palm grips. Mechanical identities and illustrative numerical examples are
-verified here; human performance and the author's historical Simscape model
-are not validated by those checks.
+verified here; human performance and replay of the historical Simscape wrist
+experiments are not validated by those checks. Archival Simscape sources for
+the universal-joint comparison live in
+[UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift/blob/d56e3709e65a01f70dbd1a8db86856a160a8559d/src/engines/Simscape_Multibody_Models/3D_Golf_Model/matlab/src/model/Kinetically_Driven_Universal_Joint.slx)
+and the surrounding
+[GolfSwing3D\_Kinetic](https://github.com/D-sorganization/UpstreamDrift/blob/d56e3709e65a01f70dbd1a8db86856a160a8559d/src/engines/Simscape_Multibody_Models/3D_Golf_Model/matlab/src/model/GolfSwing3D_Kinetic.slx)
+assembly; AffineDrift does not ship reproduced outputs from those models.
 
 ::: {.callout-note}
 ## In Plain Language
@@ -535,6 +540,11 @@ Changing “base on follower” to “follower on base” reverses the composite
 These are software definitions; they do not identify which options were used
 in a historical model. [MathWorks, Universal Joint](https://www.mathworks.com/help/sm/ref/universaljoint.html),
 [force and torque sensing](https://www.mathworks.com/help/sm/ug/force-and-torque-sensing.html).
+The motivating historical exploration used the fleet-archived
+[Kinetically Driven Universal Joint](https://github.com/D-sorganization/UpstreamDrift/blob/d56e3709e65a01f70dbd1a8db86856a160a8559d/src/engines/Simscape_Multibody_Models/3D_Golf_Model/matlab/src/model/Kinetically_Driven_Universal_Joint.slx)
+block inside
+[GolfSwing3D\_Kinetic](https://github.com/D-sorganization/UpstreamDrift/blob/d56e3709e65a01f70dbd1a8db86856a160a8559d/src/engines/Simscape_Multibody_Models/3D_Golf_Model/matlab/src/model/GolfSwing3D_Kinetic.slx);
+this article's checks do not re-run or validate those simulations.
 
 Consequently, a difference between a two-input torque vector and a sensed
 three-component wrench is not evidence that mysterious extra torque has
