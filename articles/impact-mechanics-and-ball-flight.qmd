@@ -32,7 +32,7 @@ A derived identity, an assumed model parameter, and a measured result have diffe
 
 Use a right-handed frame with $x$ along the target line, $y$ up, and $z$ right when looking along the target line. The face normal $\mathbf n$ points toward the ball. Unless a source specifies otherwise, incoming club quantities refer to immediately before first contact and outgoing ball quantities to separation. Maximum-compression values cannot be substituted into pre-impact restitution formulas.
 
-Head inertia tensors and all vectors in the impulse calculation are expressed in the same world frame at the frozen contact configuration. A scalar ball inertia denotes an isotropic sphere.
+Head inertia tensors and all vectors in the impulse calculation are expressed in the same world frame at the frozen contact configuration. A scalar ball inertia denotes an isotropic sphere. This article uses target-line $x$, vertical $y$ and golfer-right $z$ at contact; [NOTATION.md](../NOTATION.md) lists the site default ($X$ forward, $Y$ lateral, $Z$ up) where other pages differ.
 :::
 
 ## Part I: Delivered Pose, Velocity, and Deformation
@@ -132,7 +132,7 @@ This is a frozen-geometry rigid-impulse approximation. In a resolved collision, 
 Define the ball-surface velocity relative to the head surface:
 
 $$
-\mathbf w^-=
+\mathbf{v}_{\mathrm{cp}}^-=
 \mathbf v_b^-+\boldsymbol\omega_b^-\times\mathbf r_b
 -\mathbf v_c^--\boldsymbol\omega_c^-\times\mathbf r_c.
 $$
@@ -140,7 +140,7 @@ $$
 Let $[\mathbf r]_\times\mathbf a=\mathbf r\times\mathbf a$. Substituting the four momentum changes gives
 
 $$
-\mathbf w^+=\mathbf w^-+W\mathbf J,
+\mathbf{v}_{\mathrm{cp}}^+=\mathbf{v}_{\mathrm{cp}}^-+W\mathbf J,
 $$
 
 $$
@@ -159,10 +159,10 @@ If support constraints or other bodies matter, the effective operator must inste
 
 ### II.1 Normal Restitution and Its Scalar Limit {#sec-normal}
 
-Let $w_n=\mathbf n^{\mathsf T}\mathbf w$, with $w_n^-<0$ for approach. A Newton normal-restitution law is
+Let $v_n=\mathbf n^{\mathsf T}\mathbf{v}_{\mathrm{cp}}$, with $v_n^-<0$ for approach. A Newton normal-restitution law is
 
 $$
-w_n^+=-e_n w_n^-.
+v_n^+=-e_n v_n^-.
 $$
 
 With $\mathbf J=J_n\mathbf n+\mathbf J_t$, it requires
@@ -170,7 +170,7 @@ With $\mathbf J=J_n\mathbf n+\mathbf J_t$, it requires
 $$
 (\mathbf n^{\mathsf T}W\mathbf n)J_n
 +\mathbf n^{\mathsf T}W\mathbf J_t
-=-(1+e_n)w_n^-.
+=-(1+e_n)v_n^-.
 $$
 
 The familiar scalar effective-mass formula follows only when tangential coupling is absent or the tangential impulse is known to vanish. For a spherical ball,
@@ -185,7 +185,7 @@ $$
 and the decoupled normal impulse is
 
 $$
-J_n=\frac{-(1+e_n)w_n^-}{1/m+1/M_{\rm eff}}.
+J_n=\frac{-(1+e_n)v_n^-}{1/m+1/M_{\rm eff}}.
 $$
 
 For a stationary ball, a head translating normally at speed $V$, and a normal through the head centre of mass, $M_{\rm eff}=M$. The outgoing ball normal speed is then
@@ -201,16 +201,16 @@ This is not a general formula for the magnitude of ball velocity in an oblique s
 For the closed, frozen-geometry model, the total kinetic-energy change is
 
 $$
-\Delta K=(\mathbf w^-)^{\mathsf T}\mathbf J
+\Delta K=(\mathbf{v}_{\mathrm{cp}}^-)^{\mathsf T}\mathbf J
 +\frac12\mathbf J^{\mathsf T}W\mathbf J.
 $$
 
-This provides a useful independent check on an implemented contact law. For example, a common scalar restitution law in every direction, $\mathbf w^+=-e\mathbf w^-$, gives
+This provides a useful independent check on an implemented contact law. For example, a common scalar restitution law in every direction, $\mathbf{v}_{\mathrm{cp}}^+=-e\mathbf{v}_{\mathrm{cp}}^-$, gives
 
 $$
 \Delta K=
 -\frac12(1-e^2)
-(\mathbf w^-)^{\mathsf T}W^{-1}\mathbf w^-\leq0
+(\mathbf{v}_{\mathrm{cp}}^-)^{\mathsf T}W^{-1}\mathbf{v}_{\mathrm{cp}}^-\leq0
 $$
 
 when $0\leq e\leq1$. That law is an algebraic example, not a substitute for friction-cone and contact-history checks.
@@ -242,9 +242,9 @@ The same vector budget covers both tangential directions. Satisfying it is not s
 A tangential restitution model can prescribe
 
 $$
-\mathbf w_t^+=-e_t\mathbf w_t^-,
+\mathbf{v}_{\mathrm{cp},t}^+=-e_t\mathbf{v}_{\mathrm{cp},t}^-,
 \qquad
-\mathbf w_t=(I-\mathbf n\mathbf n^{\mathsf T})\mathbf w.
+\mathbf{v}_{\mathrm{cp},t}=(I-\mathbf n\mathbf n^{\mathsf T})\mathbf{v}_{\mathrm{cp}}.
 $$
 
 Together with normal restitution, this supplies three algebraic conditions for $\mathbf J$. The solved impulse must still be admissible and energetically consistent. A resolved compliant-contact law instead evolves compression, shear, slip, and force over time.
@@ -253,7 +253,7 @@ Together with normal restitution, this supplies three algebraic conditions for $
 
 For insight, consider an initially unspun sphere incident on an infinitely massive fixed plane at speed $V$. Let $\theta$ be the angle **from the surface**, so the normal approach speed is $V\sin\theta$ and tangential speed is $V\cos\theta$. The complementary angle from the normal is $\Phi=90^\circ-\theta$.
 
-Assume isotropic inertia $I_b=\alpha mR^2$, zero normal-force moment, and full sliding without slip reversal. Then
+Assume isotropic inertia $I_b=\kappa mR^2$, zero normal-force moment, and full sliding without slip reversal. Then
 
 $$
 J_n=m(1+e_n)V\sin\theta,\qquad
@@ -264,7 +264,7 @@ and the dimensionless outgoing spin is
 
 $$
 \frac{R|\omega_b^+|}{V}
-=\frac{\mu(1+e_n)}{\alpha}\sin\theta.
+=\frac{\mu(1+e_n)}{\kappa}\sin\theta.
 $$
 
 If normalised instead by the incoming **tangential** speed $V\cos\theta$, the right side contains $\tan\theta$. Those normalisations must not be confused.
@@ -273,14 +273,14 @@ In the zero-slip-at-separation approximation,
 
 $$
 \frac{R|\omega_b^+|}{V}
-=\frac{\cos\theta}{1+\alpha}.
+=\frac{\cos\theta}{1+\kappa}.
 $$
 
 The sliding branch reaches that condition at
 
 $$
 \tan\theta_*=
-\frac{1}{\mu(1+e_n)(1+1/\alpha)}.
+\frac{1}{\mu(1+e_n)(1+1/\kappa)}.
 $$
 
 For assumed $\mu=0.18$, $e_n=0.9$, and $\alpha=0.4$, $\theta_*\approx39.9^\circ$, or $\Phi_*\approx50.1^\circ$. Increasing friction decreases this threshold measured from the surface and increases its complement measured from the normal.
@@ -358,7 +358,7 @@ The geometric face centre is not automatically the projected centre of mass or c
 
 ### Pre-Existing Rotation and Gear Effect Share the Contact Law
 
-Head angular velocity before impact enters $\mathbf w^-$. Rotation generated by the impulse enters $W\mathbf J$. Neither contribution is missing from a consistent rigid-body model.
+Head angular velocity before impact enters $\mathbf{v}_{\mathrm{cp}}^-$. Rotation generated by the impulse enters $W\mathbf J$. Neither contribution is missing from a consistent rigid-body model.
 
 Changing pre-impact rotation while holding centre velocity fixed differs from changing it while holding contact velocity fixed. The [rotation-induced spin derivation](rotation-induced-spin.html) demonstrates both cases, including why $\omega_b=5\omega_c/7$ is not a universal centred-strike prediction.
 
@@ -380,13 +380,13 @@ Those conclusions require the mechanical symmetry, not merely the existence of t
 
 ### IV.3 What Launch Ratios Measure {#sec-weighting}
 
-For horizontal launch $\beta$, face angle $\phi$, and path $\psi$, an empirical launch ratio is
+For horizontal launch $\beta_h$, face angle $\phi$, and path $\psi$, an empirical launch ratio is
 
 $$
-k_h=\frac{\beta-\psi}{\phi-\psi}.
+k_h=\frac{\beta_h-\psi}{\phi-\psi}.
 $$
 
-For small angles, a constant-ratio approximation gives $\beta\approx k_h\phi+(1-k_h)\psi$. A ratio near one indicates launch close to the face angle; it is not a statement that this fraction of force, energy, or causal influence belongs to the face.
+For small angles, a constant-ratio approximation gives $\beta_h\approx k_h\phi+(1-k_h)\psi$. A ratio near one indicates launch close to the face angle; it is not a statement that this fraction of force, energy, or causal influence belongs to the face.
 
 The ratio is ill-conditioned near $\phi=\psi$: small angle-measurement errors are divided by a small number. Horizontal and vertical ratios also refer to different projections and should not be interchanged.
 
@@ -501,8 +501,8 @@ The collision supplies the ball's launch state. Aerodynamics maps that state to 
 Let $\mathbf r$ and $\mathbf v$ be ground-frame position and velocity, and let $\mathbf u_a(\mathbf r,t)$ be wind velocity in the same frame. Define
 
 $$
-\mathbf w=\mathbf v-\mathbf u_a,\qquad
-V_a=\|\mathbf w\|,\qquad A=\pi R^2.
+\mathbf{v}_{\mathrm{rel}}=\mathbf v-\mathbf u_a,\qquad
+V_a=\|\mathbf{v}_{\mathrm{rel}}\|,\qquad A=\pi R^2.
 $$
 
 For a spherical, spin-averaged model with isotropic moment of inertia $I_b$,
@@ -518,15 +518,15 @@ The position derivative remains the **ground-frame** velocity. Replacing every o
 For nonzero $V_a$, use
 
 $$
-\mathbf F_D=-\tfrac12\rho A C_D V_a\mathbf w.
+\mathbf F_D=-\tfrac12\rho A C_D V_a\mathbf{v}_{\mathrm{rel}}.
 $$
 
-When $\boldsymbol\omega\times\mathbf w\ne0$, define
+When $\boldsymbol\omega\times\mathbf{v}_{\mathrm{rel}}\ne0$, define
 
 $$
 \hat{\boldsymbol\ell}
-=\frac{\boldsymbol\omega\times\mathbf w}
-{\|\boldsymbol\omega\times\mathbf w\|},
+=\frac{\boldsymbol\omega\times\mathbf{v}_{\mathrm{rel}}}
+{\|\boldsymbol\omega\times\mathbf{v}_{\mathrm{rel}}\|},
 \qquad
 \mathbf F_L=\tfrac12\rho A C_L V_a^2\hat{\boldsymbol\ell}.
 $$
@@ -538,17 +538,17 @@ A scalar $C_L$ defined for spin perpendicular to flow cannot automatically descr
 These conventions give two useful checks:
 
 $$
-\mathbf F_D\cdot\mathbf w
+\mathbf F_D\cdot\mathbf{v}_{\mathrm{rel}}
 =-\tfrac12\rho A C_D V_a^3\le0,
 \qquad
-\mathbf F_L\cdot\mathbf w=0.
+\mathbf F_L\cdot\mathbf{v}_{\mathrm{rel}}=0.
 $$
 
 They are air-relative power statements. Wind can supply ground-frame mechanical energy: a ball travelling forward more slowly than a following air mass can experience forward drag. In still air, lift does no instantaneous translational work, but it changes trajectory, flight time, gravity's contribution, and the drag accumulated later. “Lift does no work” does not mean lift has no effect on carry.
 
 ### V.2 A Flight Traces a Path Through Aerodynamic Conditions
 
-With dynamic viscosity $\mu$ and kinematic viscosity $\nu=\mu/\rho$,
+With dynamic viscosity $\eta$ and kinematic viscosity $\nu=\eta/\rho$,
 
 $$
 Re=\frac{2RV_a}{\nu},\qquad
@@ -712,10 +712,10 @@ With isotropic inertia and a torque antiparallel to spin, the spin axis stays fi
 A commonly used model form is
 
 $$
-\dot\omega=-\beta\frac{V_a}{R}\omega.
+\dot\omega=-\lambda_s\frac{V_a}{R}\omega.
 $$
 
-For dimensionless $\beta$ and consistent length/time units, the instantaneous fractional decay rate is $\beta V_a/R$. Its inverse is an **instantaneous** time scale, not a constant for the whole flight.
+For dimensionless $\lambda_s$ and consistent length/time units, the instantaneous fractional decay rate is $\lambda_s V_a/R$. Its inverse is an **instantaneous** time scale, not a constant for the whole flight.
 
 Define air-relative path length
 
@@ -723,11 +723,11 @@ $$
 s_a(t)=\int_0^t V_a(\tau)\,d\tau.
 $$
 
-For constant $\beta$ the exact solution is
+For constant $\lambda_s$ the exact solution is
 
 $$
 \omega(t)=\omega_0
-\exp\!\left[-\frac{\beta}{R}s_a(t)\right].
+\exp\!\left[-\frac{\lambda_s}{R}s_a(t)\right].
 $$
 
 This is exponential in air-relative distance. Replacing $V_a(t)$ by launch speed changes the model.
@@ -740,7 +740,7 @@ $$
 \dot\omega
 =-\frac{\rho A R^2 c}{I_b}\,V_a\omega,
 \qquad
-\beta=\frac{\rho A R^3c}{I_b}.
+\lambda_s=\frac{\rho A R^3c}{I_b}.
 $$
 
 Changing radius to diameter in a definition without changing its coefficient introduces a factor of two. Changing revolutions per second to radians per second introduces $2\pi$. Neither is a physical disagreement.
@@ -808,7 +808,7 @@ A **headwind lowers spin ratio at fixed ground velocity and spin**: the opposing
 For spatially and temporally varying wind,
 
 $$
-\dot{\mathbf w}
+\dot{\mathbf{v}}_{\mathrm{rel}}
 =\dot{\mathbf v}
 -\partial_t\mathbf u_a
 -(\nabla\mathbf u_a)\mathbf v.
@@ -826,7 +826,7 @@ $$
 
 where $p_v$ is water-vapour partial pressure. Increasing $p_v$ reduces density under those fixed conditions. The claim that humidity itself makes the air heavier has the sign wrong. Whether the resulting small density change increases a particular carry is a trajectory question because density scales both drag and lift.
 
-Temperature affects density, viscosity and potentially the impact response of the conditioned ball. Kinematic viscosity already contains density through $\nu=\mu/\rho$; treating its change as independent of density can double-count an effect. Ball-temperature effects also depend on material, conditioning and collision conditions. These mechanisms interact through the trajectory and launch state; they are not independent yardage corrections that can automatically be added.
+Temperature affects density, viscosity and potentially the impact response of the conditioned ball. Kinematic viscosity already contains density through $\nu=\eta/\rho$; treating its change as independent of density can double-count an effect. Ball-temperature effects also depend on material, conditioning and collision conditions. These mechanisms interact through the trajectory and launch state; they are not independent yardage corrections that can automatically be added.
 
 An atmospheric comparison must say what is fixed: launch state, club delivery, ball temperature, pressure, relative humidity, wind profile and landing elevation. A weather effect on a fixed launch is different from a weather effect that also changes the collision.
 

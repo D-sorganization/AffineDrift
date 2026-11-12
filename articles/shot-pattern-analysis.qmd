@@ -3,8 +3,8 @@ title: "Straight, Draw, and Fade: Geometry, Dispersion, and Conditional Scoring"
 subtitle: "A Matched-Delivery Simulation Study Across Three Club Geometries"
 description: "Paired simulations compare straight, draw, and fade dispersion and conditional scoring across three clubs without claiming a best shape for golfers."
 author: "Dieter Olson"
-date: "Date unverified"
-date-source: "unverified"
+date: "2026-10-11"
+date-source: "publication technical review"
 date-modified: "2026-10-11"
 last-reviewed: "2026-10-11"
 canonical: "/articles/shot-pattern-analysis.html"
@@ -45,6 +45,16 @@ The simulations do not use a measured golfer dataset. Their results describe the
 ![Summary of Modeled Shot-Pattern Findings for Driver, Seven Iron, and Pitching Wedge.](shot_pattern_analysis/summary.png){fig-alt="The selected comparisons show club-dependent dispersion and scoring patterns, with no universal winner."}
 
 ## What the Study Compares
+
+::: {.callout-note}
+## Reproducibility Definitions
+
+**Endpoint highest-density regions (HDR).** For each supported endpoint population, lateral and downrange coordinates are histogrammed on a fixed grid matching the upstream density scripts (`D-sorganization/UpstreamDrift` at `docs/research/shot_pattern_analysis/`). Contours trace nested iso-count regions from the empirical mode outward until the enclosed fraction reaches **95%** of supported endpoints; they are not confidence bands for a mean.
+
+**Strokes-gained (SG) baseline.** Conditional SG uses the historical population benchmark documented in the illustrated report and the upstream LaTeX source (`shot_pattern_analysis.tex`, SHA-256 pinned in `reports/shot-pattern-publication/technical-review.md`). It is a modeled scoring reference, not a current player-specific model.
+
+**Delivery errors.** Paired primitive draws apply the declared Gaussian perturbations to face, path, speed, shaft rotation, and strike parameters with correlations fixed in the upstream driver; see the report methods section and manifest `articles/shot_pattern_analysis/asset_manifest.json` for file identities.
+:::
 
 The study varies nominal shot shape, shaft lean, shaft-rotation variability, curve strength, and selected delivery-error profiles. The executed conditions use paired indices: the same seeded primitive error draw is applied across straight, draw, and fade populations. Each feasible pattern and condition attempts 10,000 shots. The executed populations contain 10.44 million attempted shot rows, including unsupported outcomes. Unavailable nominal matches remain separately recorded.
 
