@@ -284,8 +284,10 @@ site registry `data/symbol_references.json` is generated from this table.
 | **DgCR** | Drag–curve ratio (aerodynamic) | (1 - COR) / (1 + COR)                                                                                                         | Dimensionless, 0-1        |
 | **e**    | Coefficient of restitution     | Same as COR                                                                                                                   | Dimensionless             |
 | **v_0**  | Ball velocity (impact)         | Velocity immediately after impact                                                                                             | m/s                       |
-| **α**    | Launch angle                   | Angle above horizontal                                                                                                        | degrees (°) or radians    |
-| **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                         | RPM or rad/s              |
+| **θ**    | Launch elevation               | Angle above horizontal at ball release (Ch. 31)                                                                                 | degrees (°) or radians    |
+| **α**    | Attack (dynamic loft) angle    | Club-face attitude in the swing plane (Ch. 31); not launch elevation                                                            | degrees (°) or radians    |
+| **β**    | Swing-plane inclination        | Plane tilt relative to horizontal (Ch. 31)                                                                                    | degrees (°) or radians    |
+| **φ**    | Slope (putting green)          | Green tilt in Ch. 32; distinct from roll angle φ elsewhere                                                                   | degrees (°) or radians    |
 
 **Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
@@ -379,6 +381,30 @@ Some symbols are used for multiple meanings depending on context. Use surroundin
 use uppercase $G(q)$ for gravity. When a source convention must be quoted,
 identify it as source notation and translate immediately to the canonical
 symbols.
+
+### Physics of Golf Part I Multibody Symbols (Ch. 3–9)
+
+These symbols are shared across the planar multibody chapters that build the
+affine club-arm model. Local redefinitions must be bridged at first use.
+
+| Symbol | Meaning | Rule |
+| ------ | ------- | ---- |
+| **$r_i$** | COM distance from the proximal hinge of link $i$ | Lowercase $r_i$, not $c_i$ |
+| **$c$** or **$c_i$** | Velocity-bias (Christoffel) vector or component | Not a COM distance |
+| **$g_0$** | Gravitational acceleration magnitude | Scalar; $g$ in $V=mgy$ is the same magnitude in planar models |
+| **$\bm g$** or **$g$** | Gravity generalized-force vector | Lowercase; not the input map $G(x)$ |
+| **$J_c$** | Constraint Jacobian | Not $A$ unless the meaning is stated in a chapter-local note |
+| **$\bm S$** | Constraint-space inverse inertia ($J_c M^{-1} J_c^{\mathsf T}$) | Schur complement; not the delivery map |
+| **$h$** | Full bias load in $M\ddot q + h = B u + \cdots$ | Includes velocity terms and gravity unless a chapter lists exclusions |
+
+Second-order equations of motion in this block use $M(q)\ddot q + h(q,\dot q;\,p) = B(q)u + J_c^{\mathsf T}\lambda$ (plus any declared external loads). Gravity belongs in $h$ or in an explicitly named lowercase $\bm g$ vector, never uppercase $G$.
+
+### Motor Control Delay and Activation (Ch. 24–27)
+
+| Symbol | Meaning |
+| ------ | ------- |
+| **$d$** | Sensorimotor delay (seconds) in delayed feedback models |
+| **$T_a$** | First-order muscle or activation time constant (not joint torque $\tau$) |
 
 ### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
 

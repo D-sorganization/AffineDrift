@@ -112,12 +112,12 @@ M(q)\ddot q+c(q,v)+g(q)=\tau.
 $$
 []{#eq-triple_pendulum_eom}
 
-The vector $c$ contains the velocity-dependent inertial terms; it is not itself a Coriolis matrix. The input $\tau_i$ is the net applied joint couple conjugate to relative rate $v_i$, so its mechanical power is $\tau_i v_i$. It is not an individual muscle force or neural excitation.
+The vector $c$ contains the velocity-dependent inertial terms; it is not itself a Coriolis matrix. COM distances are $r_i$ throughout this chapter; $c_i$ always means a bias component. The input $\tau_i$ is the net applied joint couple conjugate to relative rate $v_i$, so its mechanical power is $\tau_i v_i$. It is not an individual muscle force or neural excitation.
 
 :::
 
 
-To verify the gravity convention, set $h_1=m_1c_1+(m_2+m_3)L_1$, $h_2=m_2c_2+m_3L_2$ and $h_3=m_3c_3$. Then $V=-g_0\sum_i h_i\cos\theta_i$ and
+To verify the gravity convention, set $h_1=m_1r_1+(m_2+m_3)L_1$, $h_2=m_2r_2+m_3L_2$ and $h_3=m_3r_3$, with $r_i$ the COM distance from the proximal hinge of link $i$ (as in @sec-03_double_pendulum). Then $V=-g_0\sum_i h_i\cos\theta_i$ and
 
 $$
 g=g_0\begin{bmatrix}
@@ -148,10 +148,10 @@ For compact complete entries, define
 
 $$
 \begin{aligned}
-a&=I_1+m_1c_1^2+(m_2+m_3)L_1^2,\\
-b&=I_2+m_2c_2^2+m_3L_2^2,\qquad d=I_3+m_3c_3^2,\\
-\alpha&=m_2L_1c_2+m_3L_1L_2,\quad
-\beta=m_3L_1c_3,\quad \gamma=m_3L_2c_3.
+a&=I_1+m_1r_1^2+(m_2+m_3)L_1^2,\\
+b&=I_2+m_2r_2^2+m_3L_2^2,\qquad d=I_3+m_3r_3^2,\\
+\alpha&=m_2L_1r_2+m_3L_1L_2,\quad
+\beta=m_3L_1r_3,\quad \gamma=m_3L_2r_3.
 \end{aligned}
 $$
 
@@ -169,7 +169,7 @@ M_{23}&=d+\gamma\cos q_3.
 $$
 
 
-In particular, $M_{11}$ includes all three COM inertias, and both $M_{22}$ and $M_{12}$ include $I_2+I_3$. Their presence follows from the absolute angular rates. Omitting them requires an explicitly justified point-mass approximation, not merely the observation that a club is light. A club generally does not have $c_3=L_3/2$; that is only an assumption in the manufactured examples below.
+In particular, $M_{11}$ includes all three COM inertias, and both $M_{22}$ and $M_{12}$ include $I_2+I_3$. Their presence follows from the absolute angular rates. Omitting them requires an explicitly justified point-mass approximation, not merely the observation that a club is light. A club generally does not have $r_3=L_3/2$; that is only an assumption in the manufactured examples below.
 
 :::
 
@@ -392,7 +392,7 @@ $$
 
 Adding a coordinate does not automatically increase a drift-control ratio. The ratio requires a stated output or state metric, input units, admissible torque set and regularization scale. Comparing $f$ with an unspecified control vector conflates available control capacity with the particular torque a golfer happened to apply. A large instantaneous drift contribution cannot establish negligible future control authority or explain neuromuscular effort by itself.
 
-For the rigid tip position $y=r_{\mathrm{tip}}(q)$, where $c_3$ is replaced by $L_3$ in the COM-position construction,
+For the rigid tip position $y=r_{\mathrm{tip}}(q)$, where $r_3$ is replaced by $L_3$ in the COM-position construction,
 
 $$
 \dot y=J_{\mathrm{tip}}v,\qquad

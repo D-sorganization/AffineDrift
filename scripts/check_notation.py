@@ -37,6 +37,11 @@ BANNED: tuple[tuple[str, str, str], ...] = (
         "uppercase G(x) -- NOTATION.md reserves lowercase g(q) for gravity and "
         "requires uppercase G(x) for the control-affine input map",
     ),
+    (
+        r"M\\ddot\s*q\+h\+G",
+        "equation of motion uses uppercase G for the gravity load",
+        "lowercase g or g(q) for the gravity generalized-force vector per NOTATION.md",
+    ),
 )
 
 COMPILED = tuple((re.compile(pattern), rule, fix) for pattern, rule, fix in BANNED)
