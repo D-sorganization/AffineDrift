@@ -293,6 +293,29 @@ def test_render_excluded_chapters_do_not_produce_routes_and_are_reported(tmp_pat
 
 
 @pytest.mark.unit
+def test_render_excluded_literal_path_skips_pins_without_weakening_glob_excludes(
+    tmp_path: Path,
+) -> None:
+    """A single-file ``!articles/foo.qmd`` exclusion is intentional non-public
+    source; UpstreamDrift links there must not fail the gate as orphan partials."""
+    root = tmp_path / "site"
+    (root / "articles").mkdir(parents=True)
+    (root / "_quarto.yml").write_text(
+        "project:\n  render:\n    - articles/**/*.qmd\n    - '!articles/draft-witness.qmd'\n",
+        encoding="utf-8",
+    )
+    (root / "articles" / "draft-witness.qmd").write_text(
+        f"https://github.com/D-sorganization/UpstreamDrift/blob/{SHA_A}/a.py\n",
+        encoding="utf-8",
+    )
+
+    scanned, findings = pins.scan_site_pins(root)
+
+    assert scanned == {}
+    assert findings == []
+
+
+@pytest.mark.unit
 def test_render_excluded_chapter_included_by_page_resolves_to_page_route(tmp_path: Path) -> None:
     """When a render-excluded chapter is included by a rendered page, its pins
     must resolve to the page route and not emit a dead chapter route (#4145)."""

@@ -108,6 +108,38 @@
     return response;
   }
 
+  // Route a fetch to a strategy (issue #5315). Data files are network-first so
+  // they are never served stale while online; the web manifest stays static.
+  const DATA_PATH = /\.(json|csv)$/i;
+
+  function routeFor(request, origin) {
+    if (request.method !== 'GET' || !request.url.startsWith(origin)) return 'skip';
+    if (request.mode === 'navigate') return 'navigate';
+    const { pathname } = new URL(request.url);
+    if (DATA_PATH.test(pathname) && pathname !== '/manifest.json') return 'data';
+    return 'static';
+  }
+
+  // True only when a cached copy existed and the fresh response differs, so the
+  // update banner never fires for a first fetch or an identical revalidation
+  // (issue #5315). Compares ETag, then Last-Modified, then bytes of clones.
+  async function responseChanged(cached, fresh) {
+    if (!cached || !fresh) return false;
+    for (const header of ['ETag', 'Last-Modified']) {
+      const before = cached.headers.get(header);
+      const after = fresh.headers.get(header);
+      if (before && after) return before !== after;
+    }
+    const [a, b] = await Promise.all([
+      cached.clone().arrayBuffer(),
+      fresh.clone().arrayBuffer(),
+    ]);
+    if (a.byteLength !== b.byteLength) return true;
+    const x = new Uint8Array(a);
+    const y = new Uint8Array(b);
+    return x.some((byte, i) => byte !== y[i]);
+  }
+
   async function broadcastUpdate(clients, payload) {
     const clientList = await clients.matchAll({
       type: 'window',
@@ -127,6 +159,8 @@
     DEFAULT_NAVIGATION_TIMEOUT_MS,
     trimCacheEntries,
     broadcastUpdate,
+    routeFor,
+    responseChanged,
     networkFirstWithTimeout,
     cacheFirst,
   };

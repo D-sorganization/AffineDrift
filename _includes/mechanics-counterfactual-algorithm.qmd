@@ -6,11 +6,13 @@ eliminated or enforced, and what the force output actually measures.
 
 1. At each measured or simulated state, compute $M$, $h$, and the applied
    generalized load $\tau_{\mathrm{ID}}=M\dot v+h$.
-2. Solve $M a_d=-h$. Verify $M a_d+h=0$ and
-   $M(\dot v-a_d)=\tau_{\mathrm{ID}}$ within declared tolerances.
-3. Evaluate $h_0=h(z,0)$ at the declared velocity-reset state. Report the signed
-   configuration drift $-h_0$ or holding load $h_0$, with its convention.
-   Do not use inverse dynamics on $a_{\mathrm{ZVCF}}$ to obtain $h_0$.
+2. Form pointwise ZTCF drift $a_{\mathrm{ZTCF}}=-M^{-1}h(z,v)$ and pointwise
+   ZVCF control $a_{\mathrm{ZVCF}}=M^{-1}\tau_{\mathrm{ID}}$ under the stated
+   ZVCF protocol (zero velocity and no gravity in the control operand). Verify
+   $\dot v=a_{\mathrm{ZTCF}}+a_{\mathrm{ZVCF}}$ within declared tolerances.
+3. Optionally evaluate the zero-velocity baseline $h_0=h(z,0)$ and report
+   $-h_0$ or holding load $h_0$ with its sign convention. Do not label that
+   baseline as ZVCF control.
 4. For reaction forces, solve the constraint/reaction equations twice at the
    **same state**, once with the declared input and once without it. Compare
    homologous outputs in the same frame and at the same reference point.
@@ -23,16 +25,13 @@ eliminated or enforced, and what the force output actually measures.
 Conceptually, the force bookkeeping is:
 
 ```text
-for each actual sample (z, v, acceleration):
+for each actual sample (z, v, tau):
     M = inertia(z)
     h = bias_load(z, v)
-    drift_acceleration = solve(M, -h)
-    applied_load = M @ acceleration + h
-    resultant_load = M @ acceleration
-    drift_load = -h
-    configuration_drift = -bias_load(z, zero_velocity)
-    velocity_drift = drift_load - configuration_drift
-    check(resultant_load == drift_load + applied_load)
+    ztcf_accel = solve(M, -h)              # drift, u = 0
+    zvcf_accel = solve(M, tau)             # control, ZVCF protocol
+    check(acceleration == ztcf_accel + zvcf_accel)
+    zero_velocity_baseline = -bias_load(z, zero_velocity)
 
 forward_ztcf = integrate(drift_field, initial_state, declared_horizon)
 ```

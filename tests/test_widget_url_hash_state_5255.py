@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.tools.utils.widget_url_state_schema import (  # noqa: E402
+from src.tools.utils.widget_url_state_schema import (  # noqa: E402 -- reason: test import order
     load_widget_url_state_schema,
     validate_widget_url_state_payload,
 )
@@ -28,7 +28,7 @@ def _run_node_eval(expr: str) -> dict[str, Any]:
     script = (
         f"const DV = require({json.dumps(str(DCR_JS_PATH))}); console.log(JSON.stringify({expr}));"
     )
-    res = subprocess.run(  # noqa: S603
+    res = subprocess.run(  # noqa: S603 -- reason: fixed args
         [node_bin, "-e", script],
         cwd=REPO_ROOT,
         check=True,

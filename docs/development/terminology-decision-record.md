@@ -59,16 +59,38 @@ activation, EMG, co-contraction, reflex activity, or biological effort.
 **Reasoning:** Impedance can remain in a frozen effective plant and biological
 activation is not identifiable from generalized mechanics alone.
 
-## Decision 4: ZVCF Is an Instantaneous Acceleration
+## Decision 4: ZVCF Is the Control Acceleration (MATLAB Convention)
 
-**DECISION:** ZVCF is the zero-velocity, zero-control drift acceleration at a
-fixed configuration and declared internal state. It is not a state, generalized
-torque, or releasable trajectory.
+**DECISION:** At a fixed configuration, declared internal state, contact mode,
+and frozen parameters, **ZVCF** is the **control** acceleration with generalized
+velocities and gravity removed and the declared applied control retained:
 
-**Migration:** A control-preserving zero-velocity evaluation is renamed
-**zero-velocity control-preserved acceleration**. A force-space image is named
-**ZVCF generalized-force representation**. Neither may use bare ZVCF as though
-it were the canonical object.
+$$
+a_{\mathrm{ZVCF}}(q,z;p)=M(q)^{-1}\tau,
+\qquad \dot q=0,\ u\ \text{on},\ g\ \text{off in the control slice}.
+$$
+
+**ZTCF** names the **drift** acceleration with declared control off and the
+full retained autonomous plant (velocity-dependent terms plus gravity and other
+declared passive loads):
+
+$$
+a_{\mathrm{ZTCF}}(q,\dot q,z;p)=M(q)^{-1}\bigl(-C(q,\dot q)\dot q-g(q)-\text{passive}\bigr),
+\qquad \tau=0.
+$$
+
+At that fixed state only, $a_0=a_{\mathrm{ZTCF}}+a_{\mathrm{ZVCF}}$ with
+gravity counted once in drift, not again in control. Integrated counterfactual
+trajectories do not generally superpose.
+
+**Migration (reverses UD #11553 / the prior Decision 4):** The former
+gravity-only, zero-velocity, zero-torque acceleration $-M(q)^{-1}h(q,0)$ is
+renamed **zero-velocity zero-torque acceleration**. A control-preserving
+zero-velocity evaluation remains **zero-velocity control-preserved
+acceleration**. A force-space image is **ZVCF generalized-force
+representation**. None of these may use bare **ZVCF** for the gravity-only slice.
+ZVCF is an instantaneous acceleration, not a state, generalized torque, or
+releasable trajectory.
 
 ## Decision 5: One DCR Expansion and One Comparable Space
 
@@ -99,8 +121,10 @@ The terminology gate must:
 1. parse canonical entries from `NOTATION.md`;
 2. reject unknown explicit expansions, not merely listed known mistakes;
 3. require a construction qualifier on first ZTCF use;
-4. enforce ZVCF, DCR, and DgCR positive forms; and
-5. fail closed when any enforced acronym lacks an authority entry.
+4. enforce ZVCF, DCR, and DgCR positive forms;
+5. reject ZVCF defined as $-M^{-1}h(q,0)$ and ZTCF summed with
+   $M^{-1}(\tau-g)$ or $M^{-1}(\tau-b(q,0))$ at a fixed state; and
+6. fail closed when any enforced acronym lacks an authority entry.
 
 Historical quotations may remain only through the existing explicit baseline.
 

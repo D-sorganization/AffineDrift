@@ -19,6 +19,7 @@ from scripts.verify_markerless_mocap_projection import (
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = REPO_ROOT / "schemas" / "markerless_mocap_publication_projection_v1.schema.json"
 ADR_PATH = REPO_ROOT / "docs" / "adr" / "0001-markerless-mocap-publication-boundary.md"
+RUN_FIXTURE = REPO_ROOT / "tests" / "fixtures" / "markerless_mocap" / "run_identity.json"
 
 
 def _sha(data: bytes) -> str:
@@ -82,6 +83,7 @@ def _valid_manifest(tmp_path: Path) -> tuple[dict[str, Any], Path]:
                     f"https://github.com/{repository}/blob/{revision}/"
                     "evidence/calibration-summary.json"
                 ),
+                "run": json.loads(RUN_FIXTURE.read_text(encoding="utf-8")),
             }
         ],
     }
@@ -167,6 +169,55 @@ def test_projection_fails_closed_on_boundary_violation(
 
     with pytest.raises(MocapProjectionError, match=message):
         verify_projection_manifest(manifest, projection_root)
+
+
+@pytest.mark.parametrize("field", ["model_id", "run_id", "ud_commit", "claim_class"])
+def test_projection_rejects_artifact_missing_run_identity(tmp_path: Path, field: str) -> None:
+    manifest, projection_root = _valid_manifest(tmp_path)
+    del manifest["artifacts"][0]["run"][field]
+
+    with pytest.raises(MocapProjectionError, match=field):
+        verify_projection_manifest(manifest, projection_root)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("model_id", " ", "model id"),
+        ("model_revision", "main", "model revision"),
+        ("run_id", "run-7", "run id"),
+        ("ud_commit", "abc123", "UD commit"),
+        ("claim_class", "unavailable", "claim class"),
+        ("claim_class", "observed", "claim class"),
+    ],
+)
+def test_projection_rejects_invalid_run_identity(
+    tmp_path: Path, field: str, value: str, message: str
+) -> None:
+    manifest, projection_root = _valid_manifest(tmp_path)
+    manifest["artifacts"][0]["run"][field] = value
+
+    with pytest.raises(MocapProjectionError, match=message):
+        verify_projection_manifest(manifest, projection_root)
+
+
+@pytest.mark.parametrize("field", ["run", "sha256"])
+def test_projection_rejects_artifact_missing_run_or_hash(tmp_path: Path, field: str) -> None:
+    manifest, projection_root = _valid_manifest(tmp_path)
+    del manifest["artifacts"][0][field]
+
+    with pytest.raises(MocapProjectionError, match=field):
+        verify_projection_manifest(manifest, projection_root)
+
+
+def test_schema_requires_artifact_run_identity() -> None:
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    run = schema["$defs"]["run"]
+    fixture = json.loads(RUN_FIXTURE.read_text(encoding="utf-8"))
+
+    assert "run" in schema["$defs"]["artifact"]["required"]
+    assert set(run["required"]) == set(fixture)
+    assert run["additionalProperties"] is False
 
 
 def test_projection_fails_closed_on_missing_or_changed_artifact(tmp_path: Path) -> None:

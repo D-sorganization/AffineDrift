@@ -76,6 +76,12 @@ def process_html(content: str) -> tuple[str, bool]:
 
 def process_site(site_dir: Path) -> bool:
     index_path = site_dir / "search.json"
+    if not index_path.exists():
+        logger.info(
+            "Search index not found at %s (single-file or partial render); skipping search index bounding.",
+            index_path,
+        )
+        return False
     raw = index_path.read_text(encoding="utf-8")
     index = (
         json.dumps(bound_search_index(json.loads(raw)), ensure_ascii=False, separators=(",", ":"))
