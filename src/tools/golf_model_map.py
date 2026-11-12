@@ -74,10 +74,12 @@ def load_manifest(path: Path = DEFAULT_MANIFEST) -> dict[str, Any]:
 
 
 def _sha256_file(path: Path) -> str:
+    """Return the lowercase hex SHA-256 digest of a file's bytes."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _parse_equalities(xml_text: str) -> tuple[EqualityRow, ...]:
+    """Parse MJCF ``<equality>`` children from vendored snapshot text."""
     root = ET.fromstring(xml_text)  # noqa: S314 — trusted vendored MJCF from manifest
     rows: list[EqualityRow] = []
     equality = root.find("equality")
@@ -91,6 +93,7 @@ def _parse_equalities(xml_text: str) -> tuple[EqualityRow, ...]:
 
 
 def _actuator_for_joint(model: Any, joint_id: int) -> tuple[str | None, list[float] | None]:
+    """Return the joint motor name and control range when a single motor drives ``joint_id``."""
     import mujoco
 
     for act_id in range(model.nu):
@@ -179,12 +182,14 @@ def maps_to_document(manifest: dict[str, Any], maps: list[ModelMap]) -> dict[str
 
 
 def _fmt_axis(axis: list[float] | None) -> str:
+    """Format a joint axis vector for markdown tables."""
     if axis is None:
         return "—"
     return f"({axis[0]:g}, {axis[1]:g}, {axis[2]:g})"
 
 
 def _fmt_range(jrange: list[float] | None) -> str:
+    """Format a hinge joint limit in radians for markdown tables."""
     if jrange is None:
         return "—"
     return f"[{jrange[0]:g}, {jrange[1]:g}] rad"
@@ -213,6 +218,7 @@ def render_qmd(manifest: dict[str, Any], maps: list[ModelMap]) -> str:
 
 
 def _render_model_section(model_map: ModelMap) -> list[str]:
+    """Render one model's DOF table and equality-constraint subsection."""
     header = (
         f"### {model_map.title} (`{model_map.model_id}`) " f"{{#{model_map.model_id}-mujoco-map}}"
     )
@@ -284,6 +290,7 @@ def _render_model_section(model_map: ModelMap) -> list[str]:
 
 
 def _render_myosuite_section(manifest: dict[str, Any]) -> list[str]:
+    """Render the MyoSuite asset path table from manifest comments."""
     assets = manifest.get("myosuite_assets")
     if not isinstance(assets, dict):
         return []
