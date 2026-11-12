@@ -169,16 +169,16 @@ $$
 []{#eq-ch7:drift-cor}
 Here “grav” means gravity alone only when $V$ contains only gravitational potential. This is an acceleration decomposition in declared coordinates, not a unique partition of energy transferred between bodies. Individual entries of $C$ are coordinate dependent, and $C$ itself need not be the unique matrix factor of its bias vector $Cv$.
 
-### What a Zero-Velocity Counterfactual Removes
-[]{#def-ch7:ZVCF}
-A pointwise zero-velocity counterfactual (ZVCF) replaces the velocity by zero at fixed configuration and specified internal states. In the simple model above, with $C(q,0)0=0$ and $d(q,0)=0$, the zero-input version is
-[]{#eq-ch7:ZVCF}
+### Zero-Velocity Baseline Acceleration (Not ZVCF)
+[]{#def-ch7:ZVBL}
+At fixed configuration, a **zero-velocity baseline acceleration** replaces the velocity by zero while retaining the full bias load $h$. In the simple model above, with $C(q,0)0=0$ and $d(q,0)=0$, the zero-input version is
+[]{#eq-ch7:ZVBL}
 
 $$
-a_{\mathrm{ZVCF}}=a_0(q,0)=-M(q)^{-1}g_q(q).
+a_{\mathrm{ZVBL}}(q)=a_0(q,0)=-M(q)^{-1}g_q(q).
 $$
 
-A control-preserved velocity reset instead gives $a(q,0,u)=a_0(q,0)+B_a(q,0)u$. Label which version is used. “Zero velocity” is not “static equilibrium”: this acceleration can be nonzero.
+Per [NOTATION.md](../../../NOTATION.md), do not abbreviate this diagnostic as ZVCF; site-wide **ZVCF** names the control operand $M^{-1}\tau$ at $\dot q=0$. A control-preserved velocity reset gives $a(q,0,u)=a_0(q,0)+B_a(q,0)u$, which matches pointwise ZVCF (control) when $u$ is the declared torque channel. Label which version is used. “Zero velocity” is not “static equilibrium”: this acceleration can be nonzero.
 
 In this natural mechanical model,
 []{#eq-ch7:velocity-contribution}

@@ -242,10 +242,10 @@ This contact solution must also satisfy a static-friction capacity condition. Fo
 
 ### 5.2 Uphill, Downhill and the Moving Threshold
 
-Define $a=a_0\cos\beta$ and $s=g\sin\beta/(1+\alpha)$. For a ball already rolling uphill, deceleration is $a+s$; for downhill motion it is $a-s$. Over distance $D$ with specified arrival speed $v_f$,
+Define $a=a_0\cos\beta$ and $a_{\mathrm{sl}}=g\sin\beta/(1+\alpha)$, the along-slope rolling acceleration from gravity when rotational inertia is included. For a ball already rolling uphill, deceleration is $a+a_{\mathrm{sl}}$; for downhill motion it is $a-a_{\mathrm{sl}}$. Over distance $D$ with specified arrival speed $v_f$,
 
 $$
-v_i^2=v_f^2+2(a\pm s)D,
+v_i^2=v_f^2+2(a\pm a_{\mathrm{sl}})D,
 $$
 
 where $+$ is uphill and $-$ is downhill. These are rolling-phase speeds, not uncorrected putter launch speeds. A downhill ball slows only when $a>s$. With the normal-load scaling above, equality occurs at
@@ -263,24 +263,24 @@ At equality an already rolling ball maintains speed; above it the downhill speed
 For a small cross-slope perturbation, take $x$ along the initial rolling direction and $z$ downhill. Write the initial rolling speed as $v_i$ and the unperturbed forward speed as $u(t)=v_i-at>0$. If $w=\dot z$ is small compared with $u$, linearizing the vector equation gives
 
 $$
-\dot w+\frac{a}{u(t)}w=s,\qquad w(0)=0.
+\dot w+\frac{a}{u(t)}w=a_{\mathrm{sl}},\qquad w(0)=0.
 $$
 
 Lateral resistance is proportional to the first-order lateral velocity. It is therefore part of the first-order calculation, not a higher-order correction that can be discarded. Solving the equation and integrating once more yields
 
 $$
-w(t)=\frac{s}{a}u\log\frac{v_i}{u},
+w(t)=\frac{a_{\mathrm{sl}}}{a}u\log\frac{v_i}{u},
 $$
 
 $$
-z(t)=\frac{s}{a^2}\left[
+z(t)=\frac{a_{\mathrm{sl}}}{a^2}\left[
 \frac{v_i^2-u^2}{4}-\frac{u^2}{2}\log\frac{v_i}{u}
 \right].
 $$
 
-As a modest-deflection illustration, use $v_i=2$ m/s, $a=0.55$ m/s², $s=0.0701$ m/s² and $t=2$ s. These approximate a 1% cross-slope with $\alpha=0.4$. Then $u=0.9$ m/s, $x\simeq2.9$ m and $z\simeq0.110$ m. Ignoring lateral resistance would give $st^2/2\simeq0.140$ m; ignoring rotational inertia as well would overstate it further. Numerical integration of the full vector equation tests the perturbation rather than assuming it remains accurate at larger slopes.
+As a modest-deflection illustration, use $v_i=2$ m/s, $a=0.55$ m/s², $a_{\mathrm{sl}}=0.0701$ m/s² and $t=2$ s. These approximate a 1% cross-slope with $\alpha=0.4$. Then $u=0.9$ m/s, $x\simeq2.9$ m and $z\simeq0.110$ m. Ignoring lateral resistance would give $a_{\mathrm{sl}}t^2/2\simeq0.140$ m; ignoring rotational inertia as well would overstate it further. Numerical integration of the full vector equation tests the perturbation rather than assuming it remains accurate at larger slopes.
 
-The formal limit $u\to0$ gives $z\to s v_i^2/(4a^2)$, but $w/u=(s/a)\log(v_i/u)$ grows without bound. The small-direction-change assumption thus fails near a dying putt's endpoint. The limiting expression is not an exact aiming rule or a universal bound. Resolve the curved trajectory and its stopping regime numerically when finite-slope accuracy matters.
+The formal limit $u\to0$ gives $z\to a_{\mathrm{sl}} v_i^2/(4a^2)$, but $w/u=(a_{\mathrm{sl}}/a)\log(v_i/u)$ grows without bound. The small-direction-change assumption thus fails near a dying putt's endpoint. The limiting expression is not an exact aiming rule or a universal bound. Resolve the curved trajectory and its stopping regime numerically when finite-slope accuracy matters.
 
 For a chosen target, aiming angle and arrival speed must be solved together. Adding pace generally changes both time on the slope and the capture window. Comparing greens without specifying whether launch speed, stopping distance or arrival speed is held fixed can hide that dependence.
 
@@ -312,10 +312,10 @@ with $|b|<R_h-R$. Outside this domain the assumed sequence of unsupported flight
 Penner's Equation 23 approximates a broader level-hole capture region by
 
 $$
-v_c(b)=1.63\left[1-\left(\frac{b}{R_h}\right)^2\right]\ \mathrm{m/s}.
+v_{\mathrm P}(b)=1.63\left[1-\left(\frac{b}{R_h}\right)^2\right]\ \mathrm{m/s}.
 $$
 
-The 1.63 m/s central value includes modeled lip interactions. It is a historical model result, not a dimensional consequence of the hole diameter. Inverting this particular fit for $0\le v\le1.63$ m/s gives $b_{\max}=R_h\sqrt{1-v/1.63}$:
+The 1.63 m/s central value includes modeled lip interactions. It is a historical model result, not a dimensional consequence of the hole diameter. Inverting this particular Penner fit for $0\le v\le1.63$ m/s gives $b_{\max}=R_h\sqrt{1-v/1.63}$:
 
 | Arrival Speed (m/s) | Full Width $2b_{\max}$ (mm) | Status |
 |---|---|---|
