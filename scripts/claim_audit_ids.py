@@ -75,6 +75,7 @@ APPLIED_ARTICLE_ROUTES = frozenset(
         "/articles/technology-launch-monitors.html",
         "/articles/technology-motion-capture.html",
         "/articles/upstreamdrift-educational-integration.html",
+        "/articles/upstreamdrift-physics-models.html",
     }
 )
 
