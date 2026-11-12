@@ -80,7 +80,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/rotation-representations-reference.html` | `articles/rotation-representations-reference.qmd` | 1 |
 | `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 5 |
 | `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 8 |
-| `/articles/shot-pattern-analysis.html` | `articles/shot-pattern-analysis.qmd` | 13 |
+| `/articles/shot-pattern-analysis.html` | `articles/shot-pattern-analysis.qmd` | 15 |
 | `/articles/slack-management-linked-systems.html` | `articles/slack-management-linked-systems.qmd` | 8 |
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |

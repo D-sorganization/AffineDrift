@@ -39,5 +39,3 @@ def test_build_article_summary_writes_markdown_with_se_columns() -> None:
     assert "+0.00003" in summary["markdown_table"]
     assert len(summary["exclusion_by_cell"]) == 24
     assert "0.04%" in summary["exclusion_markdown"]
-
-
