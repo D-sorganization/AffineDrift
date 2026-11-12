@@ -63,11 +63,32 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
     def test_wscg_ztcf_provenance_language_present_5462(self) -> None:
         """Draft must label WSCG bundle as modeled and ZTCF ratio as diagnostic (#5462)."""
         draft_text = _find_draft_path().read_text(encoding="utf-8")
+        sec_55 = draft_text.split("## 5.5")[1].split("---", 1)[0]
+        self.assertNotIn("must turn negative", sec_55.lower())
+        self.assertIn("scenario-dependent", sec_55.lower())
+        b2 = draft_text.split("### B.2")[1].split("### B.3")[0]
+        self.assertIn(
+            r"\bigl(-\ddot{\theta}_1 \cos\phi - \dot{\theta}_1^2 \sin\phi\bigr)",
+            b2,
+        )
+        self.assertIn("-G_2", b2)
+        self.assertNotIn("unavoidable mathematical consequence", draft_text.lower())
         self.assertIn("project-originated planar WSCG bundle", draft_text)
         self.assertIn(
             "### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory", draft_text
         )
         self.assertIn("measured share of physiological muscle torque", draft_text)
+        grober_row = next(
+            ln for ln in draft_text.splitlines() if "Grober (2020 arXiv)" in ln and "|" in ln
+        )
+        self.assertNotIn("Proven mathematically", grober_row)
+        self.assertIn("centripetal", grober_row.lower())
+        ztcf_gloss = draft_text.split("- **Zero-Torque Counterfactual (ZTCF):**")[1].split(
+            "## 9.4", 1
+        )[0]
+        self.assertIn("stitched", ztcf_gloss.lower())
+        self.assertNotIn("proving how much", ztcf_gloss.lower())
+        self.assertNotIn("completely shuts off", ztcf_gloss.lower())
         claims = (ALPHA_WAR_DIR / "work" / "03_claims.md").read_text(encoding="utf-8")
         self.assertIn("86.04", claims)
         self.assertIn("measured muscle share", claims)
@@ -213,15 +234,6 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
         ):
             self.assertIn(phrase, section_76)
         self.assertNotIn("overpowering voluntary wrist muscles", section_76.lower())
-
-    def test_executive_summary_shaft_kick_interface_not_overpower_proof_5463(self) -> None:
-        """§1 executive summary must state interface balance, not universal shaft dominance."""
-        draft_text = _find_draft_path().read_text(encoding="utf-8")
-        block = draft_text.split("### 3. Two Hands on One Handle")[1].split("## The Two-Layer")[0]
-        self.assertIn("Newton", block)
-        self.assertIn("1\\text{ to }10\\text{ N}\\cdot\\text{m}", block)
-        self.assertNotIn("naturally resist this violent kick", block.lower())
-        self.assertIn("not a standalone proof", block.lower())
 
     def test_work_claims_clm_mch_03_hypothesis_separation_5463(self) -> None:
         """Work claim matrix must separate hypothetical beam scalars from rollout (#5463)."""

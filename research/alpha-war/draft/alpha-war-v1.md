@@ -848,7 +848,7 @@ Under explicit geometric assumptions on the two-hand grip, the author derived **
 
    **Illustrative Hill sensitivity (provisional parameters; `alpha_war_hill_sensitivity.py`):** with $r_m = 0.02\text{ m}$, fascicle length $0.05\text{ m}$, $v_{\max} = 8$ lengths/s ($0.40\text{ m/s}$), and $a_{\text{rel}} = 0.25$, substituting **club** rate $\omega_{\text{club}} = 35\text{ rad/s}$ ($v_m = 0.70\text{ m/s}$, $F/F_0 = 0$ because $v_m \ge v_{\max}$) is far more pessimistic than **wrist-relative** $\omega_{\text{rel}} = 15\text{ rad/s}$ ($v_m = 0.30\text{ m/s}$, $F/F_0 \approx 0.14$). The executive summary and §5A.1 treat the wrist-relative column as the defensible mapping for wrist **$\tau_{\text{free}}$** capacity; the force-couple term $C_{F,M} = -sF_{d,y}$ is not limited by wrist fascicle speed alone.
 
-Table 5A.1 summarizes the empirical and analytical evidence base compiled across the research literature:
+Table 5A.1 summarizes published **measurement, analytical, and author-simulation** entries compiled across the research literature (WSCG/UpstreamDrift rows are **project-originated planar simulations**, not independent field replication):
 
 | Research Team / Source                                                           | Methodology & Instrumentation         | Metric Evaluated & Reference Station                         | Key Finding at Impact Window ($t \in [-40, 0]\text{ ms}$)                            |
 | :------------------------------------------------------------------------------- | :------------------------------------ | :----------------------------------------------------------- | :----------------------------------------------------------------------------------- |
@@ -859,10 +859,10 @@ Table 5A.1 summarizes the empirical and analytical evidence base compiled across
 | **Tutelman (2018–2021)** [@tutelman2018alpha]                                    | Analytical Mechanics Deconstruction   | Grip Couple ($M$) vs COM Moment ($G$)                        | Grip couple is **NEGATIVE**; COM moment stays positive via pull                      |
 | **Koike et al. (2006–2019)** [@koike2006grip; @koike2016forces; @koike2019joint] | Physical Split-Grip Load Cells        | Direct Bilateral Shear Forces ($\mathbf{F}_L, \mathbf{F}_T$) | Opposed force couple is **NEGATIVE** ($\approx -10\text{ N}\cdot\text{m}$)           |
 | **Choi et al. (2020)** [@choi2020grip]                                           | Instrumented Split-Grip Sensors       | Multi-Axis Hand Wrenches                                     | Sign change propagates proximally from shoulder to wrist                             |
-| **Grober (2020 arXiv)** [@grober2020forces]                                      | Analytical Double-Pendulum Derivation | Analytical Joint Torque $\tau(t)$                            | Proven mathematically **NEGATIVE** via centripetal hub term                          |
+| **Grober (2020 arXiv)** [@grober2020forces]                                      | Analytical Double-Pendulum Derivation | Analytical Joint Torque $\tau(t)$                            | Planar model predicts **NEGATIVE** hinge torque under stated centripetal/curvature loading—not a general on-course measurement proof |
 | **Olson (2020–2026)** [Author Simulation]                                        | Multi-Body Constrained KKT Dynamics   | Drift vs Control Hand Wrench                                 | **86.04%** same-state modeled magnitude ratio $C_{\alpha,\text{ZTCF}} / C_{\alpha,\text{BASE}}$ at $t=0.2151\text{ s}$ (WSCG KKT sim; not independent measurement) |
 
-: Table 5A.1: Master synthesis of empirical, analytical, and sensor evidence regarding in-plane hand kinetics near impact. {#tbl-evidence-synthesis}
+: Table 5A.1: Master synthesis of published measurement, analytical, and modeled-simulation evidence regarding in-plane hand kinetics near impact. {#tbl-evidence-synthesis}
 
 With the theoretical foundations and the competing evidence of both camps fully established, we turn in Chapters 6 through 10 to the measurement artifacts, numerical simulation experiments, and the synthesis and open test protocols.
 
@@ -1726,8 +1726,8 @@ To assist both engineering researchers and golf instructors, this glossary organ
   _Plain English:_ The forward bending of the golf shaft toward the target just before impact, springing forward like a diving board to kick the clubhead into the ball.
   _Mechanical Definition:_ The dynamic forward bending of the golf shaft toward the target in the late downswing, wherein stored elastic strain energy unloads rapidly to kick the clubhead through impact.
 - **Zero-Torque Counterfactual (ZTCF):**
-  _Plain English:_ A baseline computer simulation where the golfer swings with normal body and arm speed, but completely shuts off their wrist muscles entering impact, proving how much of the release happens automatically.
-  _Mechanical Definition:_ A computational baseline simulation in `UpstreamDrift` that models the club under identical proximal kinematics but with wrist actuator torques set identically to zero, isolating purely passive dynamic contributions.
+  _Plain English:_ A **project-originated planar simulation** on the bundled WSCG trajectory where wrist torque commands are zeroed at each instant while the recorded closed-chain motion is retained (a stitched, pointwise torque-cut). The **86.04%** figure is a same-state **modeled** magnitude ratio at one time sample—not a measured share of physiological muscle torque or a relaxed-grip field trial.
+  _Mechanical Definition:_ In `UpstreamDrift`, a branch that sets $\mathbf{Q}_{\text{wrist}} \equiv 0$ while constraints, inertia, and base kinematic closure remain active along the bundled trajectory; $|C_{\alpha,\text{ZTCF}}|/|C_{\alpha,\text{BASE}}|$ is a diagnostic ratio from that simulator, not proof of autonomous release after muscles fully relax.
 
 ## 9.4 Signal Processing, Sensors & Mathematical Tools
 
