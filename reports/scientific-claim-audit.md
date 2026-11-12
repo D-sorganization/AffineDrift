@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 288
+- Reviewed: 291
 - Deferred: 0
 - Exempt: 3
 
@@ -53,6 +53,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/forward_dynamics_matching/24_references.html` | `articles/forward_dynamics_matching/24_references.qmd` | 1 |
 | `/articles/forward_dynamics_matching/25_maintenance.html` | `articles/forward_dynamics_matching/25_maintenance.qmd` | 1 |
 | `/articles/forward_dynamics_matching/26_neural_proposals.html` | `articles/forward_dynamics_matching/26_neural_proposals.qmd` | 1 |
+| `/articles/forward_dynamics_matching/27_runtime_reference.html` | `articles/forward_dynamics_matching/27_runtime_reference.qmd` | 1 |
 | `/articles/forward_dynamics_matching/index.html` | `articles/forward_dynamics_matching/index.qmd` | 1 |
 | `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
 | `/articles/ideomotor-theory-and-predictive-brain.html` | `articles/ideomotor-theory-and-predictive-brain.qmd` | 5 |
@@ -227,12 +228,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 18 |
 | `/models/dataset-explorer.html` | `models/dataset-explorer.qmd` | 16 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
+| `/models/golf-model-maps.html` | `models/golf-model-maps.qmd` | 6 |
 | `/models/hybrid-impact-contact.html` | `models/hybrid-impact-contact.qmd` | 6 |
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
 | `/models/models-drake.html` | `models/models-drake.qmd` | 1 |
 | `/models/models-mujoco.html` | `models/models-mujoco.qmd` | 1 |
 | `/models/models-myosim.html` | `models/models-myosim.qmd` | 1 |
-| `/models/models-myosuite.html` | `models/models-myosuite.qmd` | 1 |
 | `/models/models-opensim.html` | `models/models-opensim.qmd` | 1 |
 | `/models/models-pendulum.html` | `models/models-pendulum.qmd` | 1 |
 | `/models/models-pinocchio.html` | `models/models-pinocchio.qmd` | 1 |
@@ -272,6 +273,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
+| `/pages/upstreamdrift-getting-started.html` | `pages/upstreamdrift-getting-started.qmd` | 4 |
+| `/pages/upstreamdrift-headless-and-agents.html` | `pages/upstreamdrift-headless-and-agents.qmd` | 4 |
 | `/pages/validation-roadmap.html` | `pages/validation-roadmap.qmd` | 3 |
 | `/repositories/repositories-2d-model.html` | `repositories/repositories-2d-model.qmd` | 1 |
 | `/repositories/repositories-3d-model.html` | `repositories/repositories-3d-model.qmd` | 1 |
@@ -347,6 +350,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-ee3b20014eef` | `/articles/forward_dynamics_matching/24_references.html` | Reviewed | — | None | None | 0 |
 | `ad-route-ba22d181565f` | `/articles/forward_dynamics_matching/25_maintenance.html` | Reviewed | — | None | None | 0 |
 | `ad-route-9bcc4dcc73ff` | `/articles/forward_dynamics_matching/26_neural_proposals.html` | Reviewed | — | None | None | 0 |
+| `ad-route-ef89438ec18d` | `/articles/forward_dynamics_matching/27_runtime_reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-578f41d14736` | `/articles/forward_dynamics_matching/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 9 |
 | `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Reviewed | — | None | None | 6 |
@@ -521,12 +525,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-60ee227724f0` | `/models/dataset-explorer.html` | Reviewed | — | None | None | 0 |
 | `ad-route-610504f8ac44` | `/models/equipment-individual-response.html` | Reviewed | — | None | None | 0 |
+| `ad-route-aef29ae465aa` | `/models/golf-model-maps.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cd5e133fe28e` | `/models/hybrid-impact-contact.html` | Reviewed | — | None | None | 0 |
 | `ad-route-25575b069ccb` | `/models/model-ladder.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d6078f8dcbbd` | `/models/models-drake.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e9ad98fb020a` | `/models/models-mujoco.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7900d4c5494f` | `/models/models-myosim.html` | Reviewed | — | None | None | 0 |
-| `ad-route-b97806b7d360` | `/models/models-myosuite.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0daf8c7255f6` | `/models/models-opensim.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0c35be23a4e6` | `/models/models-pendulum.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d93c2572c4de` | `/models/models-pinocchio.html` | Reviewed | — | None | None | 0 |
@@ -567,6 +571,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
+| `ad-route-9c6939ff17a2` | `/pages/upstreamdrift-getting-started.html` | Reviewed | — | None | None | 0 |
+| `ad-route-32c9c92fc181` | `/pages/upstreamdrift-headless-and-agents.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f75062776350` | `/pages/validation-roadmap.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8544bec56dfb` | `/reports/scientific-claim-audit.html` | Exempt | — | None | None | 0 |
 | `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Reviewed | — | None | None | 0 |
