@@ -164,7 +164,7 @@ Use velocities in a declared inertial frame. For rigid-body spin about its cente
 
 **Plain Language:** How quickly an object rotates around an axis and the direction of that axis.
 
-**Technical Definition:** The axial vector omega describing the instantaneous rate and axis of rotation of a rigid body.
+**Technical Definition:** The axial vector $\omega$ describing the instantaneous rate and axis of rotation of a rigid body; direction follows the right-hand rule (thumb along $\omega$, fingers curl in the direction of rotation). Cross products $\mathbf{u}\times\mathbf{v}$ use the same rule (curl fingers from $\mathbf{u}$ toward $\mathbf{v}$; thumb gives the result).
 
 **Symbols / Notation:** $\omega$
 
@@ -260,7 +260,7 @@ Use velocities in a declared inertial frame. For rigid-body spin about its cente
 
 **Plain Language:** The ratio of how fast contacting bodies separate to how fast they approached, measured along the same contact normal.
 
-**Technical Definition:** $e=-v_{\rm rel,n}^+/v_{\rm rel,n}^-$, where signed relative contact-point normal velocities use one declared normal before and after collision, with $v_{\rm rel,n}^-<0$. This differs from ball speed divided by incoming clubhead speed.
+**Technical Definition:** $e=-v_{\rm rel,n}^+/v_{\rm rel,n}^-$, where signed relative contact-point normal velocities use one declared normal before and after collision, with $v_{\rm rel,n}^-<0$. Equivalently $e=-((\mathbf{v}_b^+-\mathbf{v}_c^+)\cdot\mathbf{n})/((\mathbf{v}_b^--\mathbf{v}_c^-)\cdot\mathbf{n})$ (NOTATION.md). This differs from ball speed divided by incoming clubhead speed.
 
 **Symbols / Notation:** $e$, $COR$
 
@@ -558,7 +558,7 @@ Use $\dot q=N(q)v$, any internal-state equations, and compatible constraints. De
 
 **Plain Language:** Variables used to describe a system's configuration, such as joint angles or shaft-deformation amplitudes.
 
-**Technical Definition:** A minimal set $q$ provides local coordinates on the configuration manifold. Redundant representations, such as unit quaternions, require their constraints; a single nonsingular minimal chart need not cover every configuration.
+**Technical Definition:** A minimal set $q$ provides local coordinates on the configuration manifold. Redundant representations, such as unit quaternions (Hamilton algebra, scalar-first storage, active rotations — see NOTATION.md), require their constraints; a single nonsingular minimal chart need not cover every configuration.
 
 **Symbols / Notation:** $q$, $q_i$
 

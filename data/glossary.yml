@@ -76,7 +76,7 @@ angular-momentum:
 angular-velocity:
   name: "Angular Velocity"
   plain: "How quickly an object rotates around an axis and the direction of that axis."
-  technical: "The axial vector omega describing the instantaneous rate and axis of rotation of a rigid body."
+  technical: "The axial vector $\\omega$ describing the instantaneous rate and axis of rotation of a rigid body; direction follows the right-hand rule (thumb along $\\omega$, fingers curl in the direction of rotation). Cross products $\\mathbf{u}\\times\\mathbf{v}$ use the same rule (curl fingers from $\\mathbf{u}$ toward $\\mathbf{v}$; thumb gives the result)."
   symbols:
     - '\omega'
   canonical_page: "articles/rotation-representations-reference.qmd"
@@ -126,7 +126,7 @@ clubhead-speed:
 coefficient-of-restitution:
   name: "Coefficient of Restitution"
   plain: "The ratio of how fast contacting bodies separate to how fast they approached, measured along the same contact normal."
-  technical: "$e=-v_{\\rm rel,n}^+/v_{\\rm rel,n}^-$, where signed relative contact-point normal velocities use one declared normal before and after collision, with $v_{\\rm rel,n}^-<0$. This differs from ball speed divided by incoming clubhead speed."
+  technical: "$e=-v_{\\rm rel,n}^+/v_{\\rm rel,n}^-$, where signed relative contact-point normal velocities use one declared normal before and after collision, with $v_{\\rm rel,n}^-<0$. Equivalently $e=-((\\mathbf{v}_b^+-\\mathbf{v}_c^+)\\cdot\\mathbf{n})/((\\mathbf{v}_b^--\\mathbf{v}_c^-)\\cdot\\mathbf{n})$ (NOTATION.md). This differs from ball speed divided by incoming clubhead speed."
   symbols:
     - "e"
     - "COR"
@@ -264,7 +264,7 @@ forward-dynamics:
 generalized-coordinates:
   name: "Generalized Coordinates"
   plain: "Variables used to describe a system's configuration, such as joint angles or shaft-deformation amplitudes."
-  technical: "A minimal set $q$ provides local coordinates on the configuration manifold. Redundant representations, such as unit quaternions, require their constraints; a single nonsingular minimal chart need not cover every configuration."
+  technical: "A minimal set $q$ provides local coordinates on the configuration manifold. Redundant representations, such as unit quaternions (Hamilton algebra, scalar-first storage, active rotations — see NOTATION.md), require their constraints; a single nonsingular minimal chart need not cover every configuration."
   symbols:
     - "q"
     - "q_i"
