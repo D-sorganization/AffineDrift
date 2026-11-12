@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5627 · WEB-06.3 Sandbox Club Defaults With COM/Inertia; Drift-Plus-Control Caption Units.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5627
+- **Branch:** cursor/5627-sandbox-club-defaults-f3c8
+- **PR:** #5629
+- **Paths:** see #5629
+- **Started:** 2026-11-11
+- **Last verified:** 2026-11-11 (`3673c2e9`; collated from changes/5627-web-06-3-sandbox-club-defaults-with-com.md)
+- **Summary:** WEB-06.3 sandbox club defaults with COM/inertia; drift-plus-control caption units.
+- **Next step:** Independent exact-head review after CI green.
+
 ### DL-#5551 · Freeze the Dated Option A Input Definitions, rad-Space Bound Scope, and Single-Fixture Claim Boundary for Slice 1 Of #5550.
 
 - **State:** in_review
