@@ -202,6 +202,18 @@ The [Python integrator](https://github.com/D-sorganization/Tools/blob/96ab281ef0
 
 In these inspected motion and surface paths, resistance is isotropic and scenario-constant; there is no resolved moisture evolution, calibrated spatial imperfection field, rim-contact dynamics or aerodynamic force. This is a bounded statement about these modules, not a survey of every component or commercial simulator. Omitting wind does not establish that wind is negligible for every condition or accuracy target. An unimplemented effect should enter the model's limitation statement and validation plan, rather than acquire invented constants.
 
+### 4.1 UpstreamDrift `putting_dynamics` at [`625a16e68`](https://github.com/D-sorganization/UpstreamDrift/tree/625a16e6897b88ab29fb5a64c65ecee820dd58f5)
+
+Source inspection for this column is dated **2026-11-11** (`src/shared/python/putting_dynamics/`). It is **not** a re-execution of the launcher tile. Full equations, capture bounds and mismatch flags live on [UpstreamDrift Physics Models](upstreamdrift-physics-models.html). Code-side corrections: [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
+
+| Part | Observed behaviour at the pin | Consequence for interpretation |
+|---|---|---|
+| Motion | RK4 at 2 ms; modes `AIRBORNE → SLIDE → ROLL → REST` | Same step discipline as the Tools audit above, but a different slope term |
+| Slope term | Rolling uses $g_{x,y}=-g\,\nabla h$ without a $(1+\alpha)$ factor | Disagrees with the rolling law derived in [putting-roll-models](putting-roll-models.html) |
+| Capture | Chord bound $v_{\mathrm{capture}}=2\sqrt{R_h^2-b^2}\sqrt{g/(2r)}$ (~1.64 m/s centre) | Neither the finite-ball bound nor the Tools effective-radius proxy |
+| Friction defaults | `mu_slide=0.40`, `mu_static=0.08`, Stimp law uses 1.83 m/s release | Differs from several site examples and from §4 Tools groove derivation |
+| Stopping | Speed $\le 0.005$ m/s plus static-hold test on slope | No separate static rolling-couple feasibility table on the site |
+
 ## 5. Connecting the Layers to a Useful Decision
 
 The [impact treatment](impact-mechanics-and-ball-flight.html) connects putter delivery and contact to launch. The [reference-point discussion](reference-point-problem.html) explains why a velocity or direction must identify its point and frame. A one-degree straight-line direction change gives about 52 mm lateral displacement over 3 m; whether that putt misses depends on the original aim, break, arrival speed and capture model. It is not an unconditional miss theorem.
@@ -223,6 +235,7 @@ A reproducible result should identify the code and surface revision, coordinates
 ## Related Articles
 
 - [The Physics of the Rolling Putt](putting-roll-models.html) — the physical model layers that this implementation companion exercises
+- [UpstreamDrift Physics Models](upstreamdrift-physics-models.html) — shared putting, flight and impact defaults at a pinned commit
 - [Secondary-Axis Stability and Putter Design](secondary-axis-stability.html) — putter delivery and inertial design
 - [On the Limits of Strokes-Gained Inference for Individual Golfers](strokes-gained-limitations.html) — outcome statistics and their inference limits
 - [Launch Monitor Technology: Measurement and Inference](technology-launch-monitors.html) — how launch conditions are measured and what they support

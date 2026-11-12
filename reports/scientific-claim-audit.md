@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 289
+- Reviewed: 292
 - Deferred: 0
 - Exempt: 3
 
@@ -175,6 +175,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/theory-part4.html` | `articles/theory-part4.qmd` | 2 |
 | `/articles/theory-part5.html` | `articles/theory-part5.qmd` | 3 |
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
+| `/articles/upstreamdrift-physics-models.html` | `articles/upstreamdrift-physics-models.qmd` | 1 |
 | `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
 | `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 13 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 31 |
@@ -273,6 +274,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
+| `/pages/upstreamdrift-getting-started.html` | `pages/upstreamdrift-getting-started.qmd` | 4 |
+| `/pages/upstreamdrift-headless-and-agents.html` | `pages/upstreamdrift-headless-and-agents.qmd` | 4 |
 | `/pages/validation-roadmap.html` | `pages/validation-roadmap.qmd` | 3 |
 | `/repositories/repositories-2d-model.html` | `repositories/repositories-2d-model.qmd` | 1 |
 | `/repositories/repositories-3d-model.html` | `repositories/repositories-3d-model.qmd` | 1 |
@@ -470,6 +473,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-b1cfbbbc95cb` | `/articles/theory-part4.html` | Reviewed | — | None | `crit-input-dependent-boundary-conditions` | 0 |
 | `ad-route-125d93f57874` | `/articles/theory-part5.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-simulation-tautology`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Reviewed | — | None | None | 0 |
+| `ad-route-94620488aa0c` | `/articles/upstreamdrift-physics-models.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Reviewed | — | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Reviewed | — | None | `crit-passive-overshoot-artifact`, `crit-static-fallacy-zvcf`, `crit-ztcf-identifiability` | 6 |
 | `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Reviewed | — | None | None | 18 |
@@ -569,6 +573,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
+| `ad-route-9c6939ff17a2` | `/pages/upstreamdrift-getting-started.html` | Reviewed | — | None | None | 0 |
+| `ad-route-32c9c92fc181` | `/pages/upstreamdrift-headless-and-agents.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f75062776350` | `/pages/validation-roadmap.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8544bec56dfb` | `/reports/scientific-claim-audit.html` | Exempt | — | None | None | 0 |
 | `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Reviewed | — | None | None | 0 |
