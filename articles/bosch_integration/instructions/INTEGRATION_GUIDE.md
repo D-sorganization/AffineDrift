@@ -49,9 +49,10 @@ cp bosch_integration/golf_chapter/ch09b_passive_stabilization.tex \
 ```
 
 This chapter extends Chapter 9 (Parallel Mechanisms) with passive stabilization theory.
-It covers: impedance control, pre-tensioning, attractor-fluctuation landscapes,
-drift-control analysis of passive stability, the cost of over-constraint, and
-golf-swing-specific strategies.
+It covers impedance control, pre-tensioning, drift-control analysis of passive
+stability, and the cost of over-constraint. Bosch-style attractor language appears
+only where the text labels it as practitioner vocabulary or hypothesis, not as
+established golf-swing fact.
 
 ### 2. GoM: New Chapter
 
@@ -69,9 +70,10 @@ cp bosch_integration/gom_chapter/ch_biology_nonlinear_dynamics.tex \
 \include{chapters/ch07b_biology_nonlinear}
 ```
 
-This chapter bridges biomechanics (Vol III) and motor control (Vol IV). It covers:
-visco-elastic dynamics, attractor-fluctuation theory, synergies/UCM, impedance control,
-self-organization, and the assembly line hierarchy.
+This chapter bridges biomechanics (Vol III) and motor control (Vol IV). It covers
+visco-elastic dynamics, synergies and UCM-style coordination, impedance control, and
+mechanism–evidence questions for biological state. Practitioner summaries of Bosch's
+framework are translated into dynamics language with explicit scope limits.
 
 ### 3. Bibliography Entries
 
@@ -121,7 +123,7 @@ These are **suggestions** — review each addition for fit with the existing con
 
 ## Compilation Notes
 
-1. Both new chapters use `\citep{}` citations. Ensure `natbib` is loaded (it is in both main documents).
+1. Both new chapters use `\cite{}` citations. Ensure `natbib` is loaded (it is in both main documents).
 2. The Golf chapter uses all custom commands from `golf_physics.sty` — no new packages required.
 3. The GoM chapter uses the GoM series style commands — verify it compiles with `geometry_of_motion.sty`.
 4. TikZ diagrams in both chapters use libraries already loaded in both main documents:
@@ -137,10 +139,10 @@ These are **suggestions** — review each addition for fit with the existing con
    Fix this before adding the new chapter to avoid LaTeX warnings.
 
 2. Some citation keys in the new chapters reference entries that need to be in the bibliography.
-   Verify all `\citep{}` keys resolve after appending the .bib additions.
+   Verify all `\cite{}` keys resolve after appending the .bib additions.
 
-3. The new Golf chapter references ch09 labels (e.g., `\ref{sec:loop_constraints}`,
-   `\ref{eq:xfactor_definition}`). Verify these labels exist in ch09.
+3. The Golf chapter does not cross-reference ch09 labels; no `\ref{sec:loop_constraints}`
+   or `\ref{eq:xfactor_definition}` dependencies are required.
 
 ---
 

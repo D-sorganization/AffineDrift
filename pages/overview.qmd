@@ -91,23 +91,17 @@ Python 3.11 and 3.12 are the tested interpreter minors at that revision. (A mino
 version is one like 3.12.) The metadata declaration does not establish support for untested interpreter minors
 such as Python 3.13.
 
-```bash
-# Clone the public repository
-git clone https://github.com/D-sorganization/UpstreamDrift.git
-cd UpstreamDrift
-
-# Editable development install using tested Python 3.11 or 3.12
-python -m pip install -e ".[dev]"
-
-# Verify the install, then launch the default web UI
-python scripts/ci/verify_installation.py
-upstream-drift
-```
+AffineDrift publishes the checked clone, submodule, and install sequence on
+[UpstreamDrift: Getting Started](upstreamdrift-getting-started.html) and
+[Headless Simulation and Agent Use](upstreamdrift-headless-and-agents.html).
+The UpstreamDrift repository does not use Git LFS; `git submodule update --init --recursive vendor/ud-tools`
+is required before `pip install -e ".[dev]"`. At that revision,
+`python scripts/ci/verify_installation.py` remains the install verification entry point
+named in the upstream CI contract.
 
 For UI work without a real engine, `GOLF_USE_MOCK_ENGINE=1` selects the
 mock engine. Its output is synthetic. Do not present it as a physics
-result. Full pinned instructions:
-[UpstreamDrift Getting Started](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/user_guide/getting_started.md).
+result.
 
 ### A Real API Example
 

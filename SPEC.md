@@ -231,6 +231,7 @@ Rows are keyed by pull request, not by a serial spec version: `| YYYY-MM-DD | #<
 The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-#1520 serial-versioned narrative entries, kept verbatim for traceability. Do not add new ones — new detail goes in the row summary or the pull request.
 
 | Date       | PR    | Changes    |
+| 2026-11-10 | #5585 | Switch Jules workflow credentials to the fleet app and remove Jules closer workflows |
 | ---------- | ----- | ---------- |
 | 2026-11-11 | #5629 | WEB-06.3 sandbox club defaults with COM/inertia; drift-plus-control caption units. |
 | 2026-11-10 | #5583 | Add result contract, solver truth tables, and vocabulary gates |
