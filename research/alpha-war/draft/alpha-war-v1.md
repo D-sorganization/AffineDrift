@@ -70,7 +70,7 @@ A golfer does not hold a golf club with a single pinpoint clamp; the lead and tr
 
 2. **Layer 2 — Physics and Measurement Sensitivity:**  
    Even when both camps evaluate the identical point on the handle, reported torque values diverge due to subtle methodological choices:
-   - **Coordinate Frame Roll Bleed:** Resolving torques in a rotating clubface frame causes large out-of-plane bending loads to project falsely onto the uncocking axis as the clubface rolls square into the ball.
+   - **Coordinate Frame Roll Bleed:** Resolving torques in a rotating clubface frame re-expresses the same spatial couple on rolling body axes; club-fixed alpha components remain valid, but cross-camp sign comparisons fail unless roll angle $\phi_{\text{roll}}$ is declared.
    - **Numerical Filtering Cutoffs:** Low-pass filtering through the violent impact collision bleeds post-impact shock artifacts backward into pre-impact samples.
    - **Closed-Chain Biomechanical Indeterminacy:** Two hands grasping a single rigid handle create a closed kinematic loop where internal grip forces cannot be uniquely determined from optical motion tracking alone.
 
@@ -511,10 +511,10 @@ How can a golfer accelerate the clubhead forward if the hand couple $C_\alpha$ i
 As demonstrated mathematically by Miura (2001) and elaborated by [@nesbit2009hub], the clubhead of a golf club does not require an active wrist couple to accelerate. When a golfer pulls the grip inward along a curved path toward the body (centripetal acceleration), the tension force $\mathbf{R}$ acts on the club. If the shaft is not perpendicular to the pull vector, the inward pull exerts a component that accelerates the clubhead tangentially:
 
 $$
-\dot{\omega} = \frac{C_\alpha + R_n\,d_{G/M}\sin\beta}{I_G + m_c d_{G/M}^2}
+\dot{\omega} = \frac{C_\alpha + R_n\,d_{G/M}\sin\beta + m_c\,d_{G/M}\,a_{g,\perp}}{I_G + m_c d_{G/M}^2}
 $$
 
-where $\beta$ is the uncocking angle and $R_n$ is the centripetal grip tension. In the late downswing, $R_n$ exceeds $300\text{ to }500\text{ N}$. Even a tiny angular misalignment $\sin\beta$ produces a forward accelerating torque $R_n d_{G/M}\sin\beta > +40\text{ N}\cdot\text{m}$ that overwhelms a negative hand couple $C_\alpha = -15\text{ N}\cdot\text{m}$. The clubhead surges forward _because_ of the grip pull, not because of hand pushing.
+where $\beta$ is the uncocking angle, $R_n$ is the centripetal grip tension (normal to the hub path), and $a_{g,\perp}$ is the grip acceleration component perpendicular to the shaft line $M\!\to\!G$ (parametric acceleration from the curved hub path). The $m_c d_{G/M} a_{g,\perp}$ term is required whenever the grip reference point accelerates; Appendix B.1–B.2 derive the same structure for a two-link chain with $\tau_2 = I_c \ddot{\theta}_2 + m_c d_{G/M} a_{\text{grip}} \sin(\theta_c - \phi) + \cdots$. In the late downswing, $R_n$ often exceeds $300\text{ to }500\text{ N}$ and $|a_{g,\perp}|$ can exceed $200\text{ m/s}^2$ on the hub path. Even a tiny angular misalignment $\sin\beta$ can produce a forward accelerating torque $R_n d_{G/M}\sin\beta > +40\text{ N}\cdot\text{m}$ that overwhelms a negative hand couple $C_\alpha = -15\text{ N}\cdot\text{m}$ **when those passive loads dominate**—not as an unconditional sign theorem (see §5.5 and B.1).
 
 ::: {.callout-note title="Box 3.3: Power and Work Flow Invariance Across Reference Points"}
 **Plain-language lead:** Although shifting the reference point changes whether energy looks like it is entering the club as a translational pull or a rotational twist, the total rate of energy delivered to the club is strictly identical under any reference point.
@@ -740,7 +740,7 @@ An objective adjudication requires weighing Camp A's genuine contributions along
 ### Methodological Criticisms of Camp A
 
 - **Proprietary Black-Box Architecture:** The algorithms powering _Jacobs 3D_ were never published in peer-reviewed engineering literature. Independent researchers could not audit the exact mathematical equations, coordinate transformations, reference stations, or numerical filtering cutoffs used to generate their positive alpha curves.
-- **Frame-Switching Ambiguity:** Jacobs 3D publications routinely resolved torques in a rotating club-fixed frame ($\mathcal{F}_{\text{club}}$). As proven in Box 2.1, resolving torques in a frame that rolls with the clubface causes out-of-plane bending loads ($M_{\text{out}}$) to project directly onto the alpha axis, creating positive torque artifacts that vanish when evaluated in the Functional Swing Plane.
+- **Frame-Switching Ambiguity:** Jacobs 3D publications routinely resolved torques in a rotating club-fixed frame ($\mathcal{F}_{\text{club}}$). Box 2.1 shows that the club-fixed alpha projection $M_{\alpha,\text{club}}(\phi_{\text{roll}})$ is a valid body-axis component of the same spatial couple; it becomes misleading only when plotted against FSP alpha curves without the explicit roll transform $\mathbf{R}_{\text{club}\leftarrow\text{FSP}}(\phi_{\text{roll}})$.
 - **Conflation of Muscular Effort with Mechanical Work:** Camp A frequently conflated isometric muscular tension with positive mechanical work. A muscle can be fully activated and producing extreme isometric tension while contracting at zero velocity (doing zero work) or lengthening under external load (doing negative work).
 
 ---
@@ -817,13 +817,9 @@ $$
 \tau(t) = I_c \ddot{\theta}_c + m_c d_{G/M} a_{\text{grip}} \sin(\theta_c - \phi)
 $$
 
-Because the centripetal acceleration of the grip ($a_{\text{grip}}$) surges to over $300\text{ m/s}^2$ as the hands round the bottom of the hub path, the second term creates a massive forward angular acceleration that exceeds the physical angular acceleration of the club ($\ddot{\theta}_c$). Consequently, to satisfy Newton's second law, the applied wrist torque $\tau(t)$ **must turn negative**:
+When the centripetal acceleration of the grip ($a_{\text{grip}}$) surges to over $300\text{ m/s}^2$ as the hands round the bottom of the hub path, Grober's second term can create a large passive contribution that **often** exceeds the club's inertial term $\ddot{\theta}_c$ in late-downswing parameter ranges. Under those **prescribed** hub accelerations, velocities, and hinge angles, satisfying Newton's second law with the observed $\ddot{\theta}_c$ can require $\tau(t) < 0$—a **scenario-dependent** sign, not a theorem that every skilled swing must exhibit negative wrist torque regardless of loading (Appendix B.1 states the conditional logic explicitly).
 
-$$
-\tau(t) < 0
-$$
-
-Grober demonstrated that negative alpha torque is not a stylistic quirk or an athletic flaw; it is an unavoidable mathematical consequence of driving a two-link kinetic chain with an accelerating hub.
+Grober's result is therefore best read as a **mechanistic explanation** for negative alpha torque in hub-dominated late release, aligned with Camp B kinematics, rather than as a universal necessity claim independent of grip forces and boundary torques.
 
 ---
 
@@ -852,7 +848,7 @@ Under explicit geometric assumptions on the two-hand grip, the author derived **
 
    **Illustrative Hill sensitivity (provisional parameters; `alpha_war_hill_sensitivity.py`):** with $r_m = 0.02\text{ m}$, fascicle length $0.05\text{ m}$, $v_{\max} = 8$ lengths/s ($0.40\text{ m/s}$), and $a_{\text{rel}} = 0.25$, substituting **club** rate $\omega_{\text{club}} = 35\text{ rad/s}$ ($v_m = 0.70\text{ m/s}$, $F/F_0 = 0$ because $v_m \ge v_{\max}$) is far more pessimistic than **wrist-relative** $\omega_{\text{rel}} = 15\text{ rad/s}$ ($v_m = 0.30\text{ m/s}$, $F/F_0 \approx 0.14$). The executive summary and §5A.1 treat the wrist-relative column as the defensible mapping for wrist **$\tau_{\text{free}}$** capacity; the force-couple term $C_{F,M} = -sF_{d,y}$ is not limited by wrist fascicle speed alone.
 
-Table 5A.1 summarizes the empirical and analytical evidence base compiled across the research literature:
+Table 5A.1 summarizes published **measurement, analytical, and author-simulation** entries compiled across the research literature (WSCG/UpstreamDrift rows are **project-originated planar simulations**, not independent field replication):
 
 | Research Team / Source                                                           | Methodology & Instrumentation         | Metric Evaluated & Reference Station                         | Key Finding at Impact Window ($t \in [-40, 0]\text{ ms}$)                            |
 | :------------------------------------------------------------------------------- | :------------------------------------ | :----------------------------------------------------------- | :----------------------------------------------------------------------------------- |
@@ -863,10 +859,10 @@ Table 5A.1 summarizes the empirical and analytical evidence base compiled across
 | **Tutelman (2018–2021)** [@tutelman2018alpha]                                    | Analytical Mechanics Deconstruction   | Grip Couple ($M$) vs COM Moment ($G$)                        | Grip couple is **NEGATIVE**; COM moment stays positive via pull                      |
 | **Koike et al. (2006–2019)** [@koike2006grip; @koike2016forces; @koike2019joint] | Physical Split-Grip Load Cells        | Direct Bilateral Shear Forces ($\mathbf{F}_L, \mathbf{F}_T$) | Opposed force couple is **NEGATIVE** ($\approx -10\text{ N}\cdot\text{m}$)           |
 | **Choi et al. (2020)** [@choi2020grip]                                           | Instrumented Split-Grip Sensors       | Multi-Axis Hand Wrenches                                     | Sign change propagates proximally from shoulder to wrist                             |
-| **Grober (2020 arXiv)** [@grober2020forces]                                      | Analytical Double-Pendulum Derivation | Analytical Joint Torque $\tau(t)$                            | Proven mathematically **NEGATIVE** via centripetal hub term                          |
+| **Grober (2020 arXiv)** [@grober2020forces]                                      | Analytical Double-Pendulum Derivation | Analytical Joint Torque $\tau(t)$                            | Planar model predicts **NEGATIVE** hinge torque under stated centripetal/curvature loading—not a general on-course measurement proof |
 | **Olson (2020–2026)** [Author Simulation]                                        | Multi-Body Constrained KKT Dynamics   | Drift vs Control Hand Wrench                                 | **86.04%** same-state modeled magnitude ratio $C_{\alpha,\text{ZTCF}} / C_{\alpha,\text{BASE}}$ at $t=0.2151\text{ s}$ (WSCG KKT sim; not independent measurement) |
 
-: Table 5A.1: Master synthesis of empirical, analytical, and sensor evidence regarding in-plane hand kinetics near impact. {#tbl-evidence-synthesis}
+: Table 5A.1: Master synthesis of published measurement, analytical, and modeled-simulation evidence regarding in-plane hand kinetics near impact. {#tbl-evidence-synthesis}
 
 With the theoretical foundations and the competing evidence of both camps fully established, we turn in Chapters 6 through 10 to the measurement artifacts, numerical simulation experiments, and the synthesis and open test protocols.
 
@@ -1285,7 +1281,7 @@ _Critical Dynamic Observations:_
 
 **Plain-language takeaway (Figure 2):** The hands' pure couple turns negative before impact and **tracks the ZTCF branch** on this modeled trajectory (86.04% **signed-component ratio** at minimum couple), even while the total moment about the club's center of mass returns near zero.
 
-![Figure 2: Simulated WSCG time series comparing total hand couple C_alpha,M(t), ZTCF branch couple, and sum of moments about the club center of mass M_alpha,G(t) (N·m vs. time t in s, frame F_FSP, +CCW uncocking sign convention) with ±3.0 N·m inverse-dynamics error-propagation bands and the 86.04% |ZTCF|/|BASE| modeled magnitude ratio at t = 0.2151 s.](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple, ZTCF branch couple, and sum of moments about the club center of mass in frame F_FSP (+CCW uncocking) with inverse-dynamics error-propagation bands and 86.04% |ZTCF|/|BASE| annotation at t = 0.2151 s"}
+![Figure 2: Simulated WSCG time series comparing total hand couple C_alpha,M(t), ZTCF branch couple, and sum of moments about the club center of mass M_alpha,G(t) (N·m vs. time t in s, frame F_FSP, +CCW uncocking sign convention) with grip-force residual error-propagation bands and the 86.04% |ZTCF|/|BASE| modeled magnitude ratio at t = 0.2151 s.](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple, ZTCF branch couple, and sum of moments about the club center of mass in frame F_FSP (+CCW uncocking) with propagated grip-force residual bands and 86.04% |ZTCF|/|BASE| annotation at t = 0.2151 s"}
 
 ---
 
@@ -1373,7 +1369,7 @@ _Summary of Artifacts:_
 
 **Plain-language takeaway (Figure 4):** Low-cutoff smoothing ($<10\text{ Hz}$) erases the late negative couple and can flip its sign, while filtering across ball impact bleeds collision forces backward in time—so kinematics must be truncated at least $20\text{ ms}$ before contact.
 
-![Figure 4: Two-panel Butterworth cutoff sweep (4 to 100 Hz, 2nd-order per pass / effective 4th-order zero-lag filtfilt, frame F_FSP, +CCW uncocking): Panel (a) pre-impact truncation (>=20 ms before contact) versus Panel (b) filtering across impact (collision bleed).](figures/fig-filter-cutoff-sweep.svg){fig-alt="Two-panel plot of filtered alpha couple in newton-meters versus Butterworth cutoff frequency from 4 to 100 Hz comparing Panel (a) pre-impact truncation at least 20 ms before contact against Panel (b) across-impact collision bleed"}
+![Figure 4: Two-panel Butterworth cutoff sweep (4 to 100 Hz, 2nd-order per pass / effective 4th-order zero-lag filtfilt, frame F_FSP, +CCW uncocking): Panel (a) pre-impact truncation (>=20 ms retention boundary) versus Panel (b) filtering across impact (collision bleed).](figures/fig-filter-cutoff-sweep.svg){fig-alt="Two-panel plot of filtered alpha couple in newton-meters versus Butterworth cutoff frequency from 4 to 100 Hz comparing Panel (a) couple at the t equals minus 20 ms retention boundary after pre-impact truncation against Panel (b) across-impact collision bleed at impact"}
 
 ### Table 7.7: Unmodeled Aerodynamic Drag Sensitivity (Moment Arm $r_{\text{head}} = 1.02\text{ m}$)
 
@@ -1744,8 +1740,8 @@ To assist both engineering researchers and golf instructors, this glossary organ
   _Plain English:_ The forward bending of the golf shaft toward the target just before impact, springing forward like a diving board to kick the clubhead into the ball.
   _Mechanical Definition:_ The dynamic forward bending of the golf shaft toward the target in the late downswing, wherein stored elastic strain energy unloads rapidly to kick the clubhead through impact.
 - **Zero-Torque Counterfactual (ZTCF):**
-  _Plain English:_ A baseline computer simulation where the golfer swings with normal body and arm speed, but completely shuts off their wrist muscles entering impact, proving how much of the release happens automatically.
-  _Mechanical Definition:_ A computational baseline simulation in `UpstreamDrift` that models the club under identical proximal kinematics but with wrist actuator torques set identically to zero, isolating purely passive dynamic contributions.
+  _Plain English:_ A **project-originated planar simulation** on the bundled WSCG trajectory where wrist torque commands are zeroed at each instant while the recorded closed-chain motion is retained (a stitched, pointwise torque-cut). The **86.04%** figure is a same-state **modeled** magnitude ratio at one time sample—not a measured share of physiological muscle torque or a relaxed-grip field trial.
+  _Mechanical Definition:_ In `UpstreamDrift`, a branch that sets $\mathbf{Q}_{\text{wrist}} \equiv 0$ while constraints, inertia, and base kinematic closure remain active along the bundled trajectory; $|C_{\alpha,\text{ZTCF}}|/|C_{\alpha,\text{BASE}}|$ is a diagnostic ratio from that simulator, not proof of autonomous release after muscles fully relax.
 
 ## 9.4 Signal Processing, Sensors & Mathematical Tools
 
@@ -1805,13 +1801,13 @@ where $\boldsymbol{\omega} \in \mathbb{R}^3$ is the angular velocity of the body
 
 The dual space of forces and moments is the space of spatial forces (wrenches) $\mathbf{W}_P \in \operatorname{se}^*(3)$. This draft keeps **force-first** stacking to match grasp maps in §6 and Appendix C:
 $$\mathbf{W}_P = \begin{bmatrix} \mathbf{R} \\ \mathbf{M}_P \end{bmatrix} \in \mathbb{R}^6$$
-where $\mathbf{R} \in \mathbb{R}^3$ is the resultant contact force and $\mathbf{M}_P \in \mathbb{R}^3$ is the moment **about point $P$ on the club**. With twist $\mathbf{V}_P=[\boldsymbol{\omega}^\top,\mathbf{v}_P^\top]^\top$ (angular-first), define the **block-swap pairing matrix**
-$$\mathbf{P}=\begin{bmatrix}\mathbf{0}_3&\mathbf{I}_3\\ \mathbf{I}_3&\mathbf{0}_3\end{bmatrix}$$
+where $\mathbf{R} \in \mathbb{R}^3$ is the resultant contact force and $\mathbf{M}_P \in \mathbb{R}^3$ is the moment **about point $P$ on the club**. With twist $\mathbf{V}_P=[\boldsymbol{\omega}^\top,\mathbf{v}_P^\top]^\top$ (angular-first), define the **block-swap pairing matrix** $\mathbf{J}_{\mathrm{sw}}$ (distinct from the evaluation station label $P$):
+$$\mathbf{J}_{\mathrm{sw}}=\begin{bmatrix}\mathbf{0}_3&\mathbf{I}_3\\ \mathbf{I}_3&\mathbf{0}_3\end{bmatrix}$$
 so the dual mechanical power is
-$$\Pi = \mathbf{W}_P^\top \mathbf{P}\,\mathbf{V}_P = \mathbf{R}\cdot\mathbf{v}_P + \mathbf{M}_P\cdot\boldsymbol{\omega}$$
+$$\Pi = \mathbf{W}_P^\top \mathbf{J}_{\mathrm{sw}}\,\mathbf{V}_P = \mathbf{R}\cdot\mathbf{v}_P + \mathbf{M}_P\cdot\boldsymbol{\omega}$$
 (not the raw Euclidean dot $\mathbf{W}_P^\top\mathbf{V}_P$, which would permute force and moment slots).
 
-**Assumptions:** Appendix A treats the club as a **rigid body**; $P$ is a **body-fixed** material point; transport moves the evaluation station without changing $\mathbf{R}$ or $\boldsymbol{\omega}$. A hand wrench $\mathbf{W}_M$ is the **grip contact resultant**, distinct from the total external moment that would appear in a full multibody model with distributed gravity and segment coupling.
+**Assumptions:** Appendix A treats the club as a **rigid body**; $P$ is a **body-fixed** material point; transport moves the evaluation station along the body without changing $\mathbf{R}$ or $\boldsymbol{\omega}$ (parallel-axis Poinsot law on one rigid assembly). **Re-expressing** the same wrench in a rotated body frame additionally applies $\mathrm{blkdiag}(\mathbf{R}_{\mathrm{frame}},\mathbf{R}_{\mathrm{frame}})$ to both $\mathbf{W}$ and $\mathbf{V}$ before pairing. A hand wrench $\mathbf{W}_M$ is the **grip contact resultant**, distinct from the total external moment that would appear in a full multibody model with distributed gravity and segment coupling. **Scope:** power invariance uses a single body $\boldsymbol{\omega}$; elastic shaft storage (Study 6, #5463) is outside this rigid-body identity.
 
 ### A.2 The Wrench Adjoint Transport Operator
 
@@ -1820,11 +1816,11 @@ $$\mathbf{V}_B = \mathbf{Ad}_{g_{BA}} \mathbf{V}_A = \begin{bmatrix} \mathbf{I}_
 where $[\mathbf{r}]_\times \in \mathbb{R}^{3 \times 3}$ is the standard skew-symmetric cross-product matrix:
 $$[\mathbf{r}]_\times = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0 \end{bmatrix}$$
 
-Power invariance uses the swap pairing: $\Pi_A=\mathbf{W}_A^\top\mathbf{P}\mathbf{V}_A=\Pi_B=\mathbf{W}_B^\top\mathbf{P}\mathbf{V}_B$ with $\mathbf{V}_B=\mathbf{Ad}_{g_{BA}}\mathbf{V}_A$. Because $\mathbf{P}$ is self-inverse,
-$$\mathbf{W}_B^\top\mathbf{P}\mathbf{Ad}_{g_{BA}}=\mathbf{W}_A^\top\mathbf{P}
+Power invariance uses the swap pairing: $\Pi_A=\mathbf{W}_A^\top\mathbf{J}_{\mathrm{sw}}\mathbf{V}_A=\Pi_B=\mathbf{W}_B^\top\mathbf{J}_{\mathrm{sw}}\mathbf{V}_B$ with $\mathbf{V}_B=\mathbf{Ad}_{g_{BA}}\mathbf{V}_A$. Because $\mathbf{J}_{\mathrm{sw}}$ is self-inverse,
+$$\mathbf{W}_B^\top\mathbf{J}_{\mathrm{sw}}\mathbf{Ad}_{g_{BA}}=\mathbf{W}_A^\top\mathbf{J}_{\mathrm{sw}}
 \quad\Longrightarrow\quad
 \mathbf{W}_B=\mathbf{T}^{(\mathrm{wrench})}_{B\leftarrow A}\mathbf{W}_A,\qquad
-\mathbf{T}^{(\mathrm{wrench})}_{B\leftarrow A}=\mathbf{P}\,\mathbf{Ad}_{g_{BA}}^{-\top}\mathbf{P}.$$
+\mathbf{T}^{(\mathrm{wrench})}_{B\leftarrow A}=\mathbf{J}_{\mathrm{sw}}\,\mathbf{Ad}_{g_{BA}}^{-\top}\mathbf{J}_{\mathrm{sw}}.$$
 Here $\mathbf{Ad}_{g_{BA}}^{-\top}$ is the inverse-transpose of the **twist** adjoint above (acting on angular-first twists only). It must **not** be applied directly to a force-first wrench $\mathbf{W}=[\mathbf{R}^\top,\mathbf{M}^\top]^\top$ under an ordinary transpose—that permutation is wrong. The correct force-first map is the sandwiched operator $\mathbf{T}^{(\mathrm{wrench})}_{B\leftarrow A}$.
 
 Expanding the block form (Poinsot, unchanged $\mathbf{R}$):
@@ -1882,7 +1878,7 @@ Before comparing numerical curves across the Alpha War literature, each investig
 
 #### Explicit Transformation Between Camp B ($\mathcal{F}_{\text{FSP}}$ at $M$) and Camp A ($\mathcal{F}_{\text{club}}$ at Station $s_P$)
 
-Let the hands apply a resultant force $\mathbf{R}_{\text{FSP}} = [R_x, R_y, R_z]^\top$ and pure couple $\mathbf{C}_{\text{FSP},M} = [C_\gamma, C_\beta, C_\alpha]^\top$ at mid-hands $M$ ($s_M = 0$) in $\mathcal{F}_{\text{FSP}}$. First, transporting the reference point along the shaft by signed distance $s_P$ toward the clubhead ($+\hat{\mathbf{e}}_t$) via the force-first wrench map $\mathbf{T}^{(\mathrm{wrench})}_{P\leftarrow M}=\mathbf{P}\mathbf{Ad}_{g_{PM}}^{-\top}\mathbf{P}$ (equivalently the Poinsot moment law) yields the FSP moment at station $P$:
+Let the hands apply a resultant force $\mathbf{R}_{\text{FSP}} = [R_x, R_y, R_z]^\top$ and pure couple $\mathbf{C}_{\text{FSP},M} = [C_\gamma, C_\beta, C_\alpha]^\top$ at mid-hands $M$ ($s_M = 0$) in $\mathcal{F}_{\text{FSP}}$. First, transporting the reference point along the shaft by signed distance $s_P$ toward the clubhead ($+\hat{\mathbf{e}}_t$) via the force-first wrench map $\mathbf{T}^{(\mathrm{wrench})}_{P\leftarrow M}=\mathbf{J}_{\mathrm{sw}}\mathbf{Ad}_{g_{PM}}^{-\top}\mathbf{J}_{\mathrm{sw}}$ (equivalently the Poinsot moment law) yields the FSP moment at station $P$:
 $$\mathbf{M}_{\text{FSP},P}(s_P) = \begin{bmatrix} M_{\gamma,P} \\ M_{\beta,P} \\ M_{\alpha,P} \end{bmatrix} = \begin{bmatrix} C_\gamma \\ C_\beta + s_P R_z \\ C_\alpha - s_P R_y \end{bmatrix}$$
 Second, rotating from $\mathcal{F}_{\text{FSP}}$ into the club-fixed frame $\mathcal{F}_{\text{club}}$ through the shaft roll angle $\phi_{\text{roll}}$ gives the exact cross-camp mapping for the reported alpha moment:
 $$M_{\alpha,\text{club},P}(\phi_{\text{roll}}, s_P) = \left(C_\alpha - s_P R_y\right)\cos\phi_{\text{roll}} + \left(C_\beta + s_P R_z\right)\sin\phi_{\text{roll}}$$
@@ -1893,18 +1889,22 @@ This single equation encapsulates why sign comparisons across camps are invalid 
 
 ### B.1 Planar Double Pendulum Equations of Motion
 
+![Appendix B.1 schematic: absolute arm angle theta1, club angle theta2, cock angle phi, shoulder torque tau1, and wrist hinge torque tau2 with positive uncocking counterclockwise.](figures/fig-double-pendulum-b1.svg){fig-alt="Planar double-pendulum schematic labeling O, L1, theta1, theta2, phi, tau1, and tau2 with CCW positive uncocking"}
+
 Consider a planar double pendulum representing the arm segment (link 1, length $L_1$, mass $m_1$, moment of inertia $I_1$ about proximal pivot $O$) and club segment (link 2, length $L_2$, COM distance $r_{G2}$, mass $m_2$, central inertia $I_{G2}$).
 
-Let $\theta_1(t)$ be the arm angle relative to horizontal, and $\theta_2(t)$ be the club angle. The hinge angle (wrist cock) is $\phi = \theta_2 - \theta_1$.
+Let $\theta_1(t)$ be the **absolute** arm angle measured counterclockwise from horizontal, and $\theta_2(t)$ the **absolute** club angle in the same sense. Active torques $\tau_1$ (shoulder) and $\tau_2$ (wrist hinge) follow the sign convention in Figure B.1: **positive $\tau_2$ accelerates uncocking** ($\dot{\phi}>0$). The hinge angle (wrist cock) is $\phi = \theta_2 - \theta_1$.
+
+Regression checks for the mass matrix and $\tau_2=0$ substitution are in `research/alpha-war/calcs/test_alpha_war_double_pendulum.py`. A **negative** hinge torque is **not** an unconditional mathematical necessity—it follows only when passive coupling, gravity, and the chosen $\ddot{\theta}_1$, $\dot{\theta}_1$, and $\phi$ produce $\tau_2<0$ under the equations below.
 
 The kinetic energy $T$ and potential energy $V$ are:
-$$T = \frac{1}{2} J_1 \dot{\theta}_1^2 + \frac{1}{2} m_2 \left[ L_1^2 \dot{\theta}_1^2 + r_{G2}^2 \dot{\theta}_2^2 + 2 L_1 r_{G2} \dot{\theta}_1 \dot{\theta}_2 \cos(\theta_2 - \theta_1) \right] + \frac{1}{2} I_{G2} \dot{\theta}_2^2$$
-where $J_1 = I_{1,O} + m_2 L_1^2$.
+$$T = \frac{1}{2} I_{1,O} \dot{\theta}_1^2 + \frac{1}{2} m_2 \left[ L_1^2 \dot{\theta}_1^2 + r_{G2}^2 \dot{\theta}_2^2 + 2 L_1 r_{G2} \dot{\theta}_1 \dot{\theta}_2 \cos(\theta_2 - \theta_1) \right] + \frac{1}{2} I_{G2} \dot{\theta}_2^2$$
+equivalent to $T = \tfrac{1}{2} I_{1,O} \dot{\theta}_1^2 + \tfrac{1}{2} m_2 |\mathbf{v}_{G2}|^2 + \tfrac{1}{2} I_{G2} \dot{\theta}_2^2$ for planar COM kinematics (verified independently in `alpha_war_double_pendulum.py`).
 
 The Euler–Lagrange equations yield:
 $$\begin{bmatrix} M_{11} & M_{12}(\phi) \\ M_{21}(\phi) & M_{22} \end{bmatrix} \begin{bmatrix} \ddot{\theta}_1 \\ \ddot{\theta}_2 \end{bmatrix} + \begin{bmatrix} -m_2 L_1 r_{G2} \dot{\theta}_2^2 \sin\phi \\ +m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi \end{bmatrix} + \begin{bmatrix} G_1(\theta_1) \\ G_2(\theta_2) \end{bmatrix} = \begin{bmatrix} \tau_1 - \tau_2 \\ \tau_2 \end{bmatrix}$$
 where:
-$$M_{11} = J_1, \quad M_{22} = I_{G2} + m_2 r_{G2}^2, \quad M_{12} = M_{21} = m_2 L_1 r_{G2} \cos\phi$$
+$$M_{11} = I_{1,O} + m_2 L_1^2, \quad M_{22} = I_{G2} + m_2 r_{G2}^2, \quad M_{12} = M_{21} = m_2 L_1 r_{G2} \cos\phi$$
 
 ### B.2 Analytic Isolation of Wrist Hinge Torque ($\tau_2$) and Putnam Decomposition
 
@@ -1923,11 +1923,12 @@ In the late downswing release:
 
 Both passive interaction terms drive the unhinging of the club!
 
-If the club reaches its natural kinematic uncocking acceleration ($\ddot{\theta}_2 > 0$):
-$$\ddot{\theta}_2 = \frac{\tau_2 - M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi}{M_{22}}$$
+If the club reaches its natural kinematic uncocking acceleration ($\ddot{\theta}_2 > 0$), row 2 gives
+$$\ddot{\theta}_2 = \frac{\tau_2 - M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi - G_2(\theta_2)}{M_{22}}.$$
 Setting active muscular torque to zero ($\tau_2 = 0$, a "free hinge"):
-$$\ddot{\theta}_{2,\text{free}} = \frac{m_2 L_1 r_{G2} (\dot{\theta}_1^2 \sin\phi - \ddot{\theta}_1 \cos\phi)}{M_{22}} \gg 0$$
-Passive interaction forces alone accelerate the clubhead to over $100\text{ mph}$. If the golfer attempts to slow down the release or maintain forward shaft lean, they must actively apply a **negative hinge torque** ($\tau_2 < 0$) to retard this passive uncocking.
+$$\ddot{\theta}_{2,\text{free}} = \frac{-M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi - G_2(\theta_2)}{M_{22}} = \frac{m_2 L_1 r_{G2} \bigl(-\ddot{\theta}_1 \cos\phi - \dot{\theta}_1^2 \sin\phi\bigr) - G_2(\theta_2)}{M_{22}}.$$
+The $-G_2$ term is retained here; the interaction-only pass-through in `alpha_war_double_pendulum.py` omits gravity and is not this full free-hinge identity.
+Passive interaction forces alone can accelerate the clubhead to over $100\text{ mph}$ in the late-downswing parameter range stated above. **If** the golfer attempts to slow that passive uncocking or maintain forward shaft lean **while** those interaction terms dominate, the **same** equations yield $\tau_2 < 0$ for the hinge torque that balances the prescribed motion—a **scenario-dependent** sign, not a theorem requiring negative hand torque in every swing.
 
 ### B.3 Constrained Two-Arm Closed-Loop KKT Dynamics
 
