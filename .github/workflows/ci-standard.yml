@@ -104,27 +104,7 @@ jobs:
           fi
 
       - name: Install System Dependencies
-        run: |
-          if sudo -n true 2>/dev/null; then
-            APT_READY=false
-            for attempt in 1 2 3; do
-              echo "apt-get update attempt $attempt of 3"
-              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
-                APT_READY=true
-                break
-              fi
-              sleep 20
-            done
-            if [ "$APT_READY" = "true" ]; then
-              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
-              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
-            else
-              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
-            fi
-          else
-            echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
-          fi
+        run: bash scripts/ci/install_headless_system_deps.sh
 
       - run: pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
 
@@ -270,6 +250,12 @@ jobs:
         run: |
           python3 scripts/check_terminology.py \
             --baseline config/terminology-baseline.json
+      - name: Verify Canonical Parameters Registry
+        # PARAMETERS.md is generated from data/canonical_parameters.json and must
+        # stay aligned with sourced UpstreamDrift constants (#5595).
+        run: |
+          python3 -m scripts.check_parameters \
+            --baseline config/parameters-baseline.json
       - name: Verify Governance Vocabulary Stays Out of Reader Prose
         # Reader-facing pages borrowed internal governance jargon -- governed,
         # qualified, provenance, protected, fail-closed -- from the site's own
@@ -453,7 +439,6 @@ jobs:
         # aborts before any test runs.
         run: |
           if sudo -n true 2>/dev/null; then
-            sudo rm -f /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock /var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin
             sudo rm -f /etc/apt/sources.list.d/*chrome* /etc/apt/sources.list.d/*google*
             sudo sed -i '/dl\.google\.com/d' /etc/apt/sources.list 2>/dev/null || true
             APT_READY=false
@@ -645,27 +630,7 @@ jobs:
 
       - name: Install System Dependencies
         if: steps.e2e_changes.outputs.run == 'true'
-        run: |
-          if sudo -n true 2>/dev/null; then
-            APT_READY=false
-            for attempt in 1 2 3; do
-              echo "apt-get update attempt $attempt of 3"
-              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
-                APT_READY=true
-                break
-              fi
-              sleep 20
-            done
-            if [ "$APT_READY" = "true" ]; then
-              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
-              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
-            else
-              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
-            fi
-          else
-            echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
-          fi
+        run: bash scripts/ci/install_headless_system_deps.sh
 
       - name: Install Dependencies
         if: steps.e2e_changes.outputs.run == 'true'
