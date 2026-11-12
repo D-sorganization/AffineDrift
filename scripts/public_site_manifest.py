@@ -13,10 +13,17 @@ import json
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
 from bs4 import BeautifulSoup, Tag
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.tools.site_page_scan import is_draft  # noqa: E402 -- reason: sys.path modified above
 
 MANIFEST_SCHEMA_VERSION = "affinedrift/public-site-manifest/v1"
 IGNORED_HTML_DIRECTORIES = frozenset({"content", "coverage", "lcov-report", "site_libs", "src"})
@@ -133,8 +140,17 @@ def _is_quarto_alias_stub(path: Path) -> bool:
     )
 
 
-def _html_paths(docs_dir: Path) -> list[Path]:
-    """Return public HTML paths relative to ``docs_dir`` in stable order."""
+def _is_draft_render(relative_path: Path, source_root: Path) -> bool:
+    """Return whether the page's source sets ``draft: true`` (Quarto writes an empty stub)."""
+    source = _source_for(relative_path, source_root)
+    return source is not None and source.endswith(".qmd") and is_draft(source_root / source)
+
+
+def _html_paths(docs_dir: Path, source_root: Path) -> list[Path]:
+    """Return public HTML paths relative to ``docs_dir`` in stable order.
+
+    Alias redirect stubs and renders of draft sources are not public pages.
+    """
     if not docs_dir.is_dir():
         raise ValueError(f"rendered public HTML directory does not exist: {docs_dir}")
 
@@ -143,6 +159,7 @@ def _html_paths(docs_dir: Path) -> list[Path]:
         for path in docs_dir.rglob("*.html")
         if not any(part in IGNORED_HTML_DIRECTORIES for part in path.relative_to(docs_dir).parts)
         and not _is_quarto_alias_stub(path)
+        and not _is_draft_render(path.relative_to(docs_dir), source_root)
     ]
     if not paths:
         raise ValueError(f"rendered public HTML directory contains no pages: {docs_dir}")
@@ -269,7 +286,9 @@ def build_manifest(
     if not source_root.is_dir():
         raise ValueError(f"source root does not exist: {source_root}")
 
-    pages = [_page_record(path, docs_dir, source_root) for path in _html_paths(docs_dir)]
+    pages = [
+        _page_record(path, docs_dir, source_root) for path in _html_paths(docs_dir, source_root)
+    ]
     pages.sort(key=lambda page: (page["route"] != "/", page["route"].casefold()))
     routes = [page["route"] for page in pages]
     if len(routes) != len(set(routes)):

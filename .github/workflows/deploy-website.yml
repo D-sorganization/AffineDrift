@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
           cache: "pip"
@@ -183,6 +183,26 @@ jobs:
       - name: Prune internal artifacts from deploy output
         run: python3 scripts/prune_internal_docs_from_deploy.py --docs-dir _site
 
+      - name: Write and verify build manifest and SBOM (#5319)
+        # Provenance for this exact commit and its pinned lockfiles. Written
+        # outside _site on purpose: these are retained workflow evidence, not
+        # public pages, so they never enter the public-site manifest.
+        run: |
+          python3 -m scripts.write_build_manifest
+          python3 -m scripts.write_sbom
+          python3 -m scripts.write_build_manifest --check
+          python3 -m scripts.write_sbom --check
+
+      - name: Upload build manifest and SBOM
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: build-provenance-${{ github.sha }}
+          path: |
+            artifacts/build-manifest.json
+            artifacts/sbom.cdx.json
+          if-no-files-found: error
+          retention-days: 90
+
       - name: Generate revision-bound public site manifest
         run: |
           python3 scripts/public_site_manifest.py \
@@ -245,7 +265,9 @@ jobs:
           path: _site
 
   deploy:
-    timeout-minutes: 30
+    # Pages sync can exceed the deploy-pages default step timeout (10m); keep headroom
+    # for install + live verification (#5508).
+    timeout-minutes: 60
     if: github.repository == 'D-sorganization/AffineDrift'
     environment:
       name: github-pages
@@ -274,6 +296,9 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
+        with:
+          # action default is 600000 (10m); large _site uploads can sit in syncing_files longer.
+          timeout: 2400000
 
       - name: Verify Deployment Manifest and Every Public Page
         run: |

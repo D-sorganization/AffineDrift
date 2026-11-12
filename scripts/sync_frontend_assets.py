@@ -55,6 +55,8 @@ CANONICAL_JS_NAMES = (
     "section-fade.js",
     "arm-viewer.js",
     "arm-viewer-data.js",
+    "motion-clip-viewer.js",
+    "motion-clip-data.js",
     "swing-viewer.js",
     "swing-viewer-data.js",
     "service-worker-updates.js",

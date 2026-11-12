@@ -63,6 +63,7 @@ def test_core_theses_from_4522_are_registered() -> None:
         "ad-ztcf-001",
         "ad-zvcf-001",
         "ad-dcr-002",
+        "ad-dcr-003",
         "ad-superpos-001",
         "ad-pds-001",
         "ad-icc-001",

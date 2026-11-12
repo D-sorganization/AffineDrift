@@ -84,7 +84,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
 
@@ -207,6 +207,15 @@ jobs:
         # silently wrong output, exit 0 -- so reading the source is the only way
         # to catch it before the site does.
         run: python3 scripts/check_quarto_xrefs.py
+      - name: Verify Published Figures Have Projection Records
+        # VIS-EVIDENCE-3 (#5421): a non-draft page may embed a figure only when a
+        # verified projection record in evidence/projections/ traces it or an
+        # explicit, reasoned exemption covers it. Draft pages only warn.
+        run: python3 scripts/check_figure_projection_records.py
+      - name: Verify UD Figure-Map Records Against the Pinned UD Map
+        # VIS-EVIDENCE-5 (#5454): each record's source, run_id and model_id must
+        # equal the UpstreamDrift figure_run_map.json at the record's pinned commit.
+        run: python3 scripts/ud_figure_map_records.py
       - name: Verify Each Page Renders One Title
         # Two failures that look like nothing in the source. A YAML 'title:'
         # beside a body H1 renders the title twice, separately numbered, which
@@ -232,6 +241,11 @@ jobs:
         # cannot carry an {#eq-} label, so the cross-reference gate sees nothing
         # unresolved either.
         run: python3 scripts/check_display_math.py
+      - name: Verify Article Sources Have No Control Characters
+        # PR #5152 corrupted LaTeX when a shell write interpreted \t and \v in
+        # \top, \times, and \varnothing as TAB and vertical tab. Only LF is
+        # allowed below U+0020 in articles/*.qmd.
+        run: python3 scripts/check_article_control_characters.py
       - name: Verify No LaTeX Quotation Marks In Prose
         # LaTeX quotes as ``opening'' and TeX curls it; markdown does not, so
         # the .tex -> .qmd conversions shipped the raw marks: the Geometry of
@@ -428,7 +442,7 @@ jobs:
         python: ["3.12"]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python }}
       - name: Install Qt system libraries
@@ -521,7 +535,7 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ".nvmrc"
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
       - name: Install Dependencies
@@ -605,7 +619,7 @@ jobs:
         if: steps.e2e_changes.outputs.run == 'true'
         with:
           node-version-file: ".nvmrc"
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         if: steps.e2e_changes.outputs.run == 'true'
         with:
           python-version: "3.12"
@@ -877,16 +891,3 @@ jobs:
   # gate also never actually ran: its change-detection checked for a Cargo.toml
   # at the repo root, which never existed. Both the crate and the gate were
   # deleted rather than wired in, since there is no performance consumer.
-
-  local-only-workflows:
-    timeout-minutes: 30
-    name: Reject hosted runner routing
-    runs-on: >-
-      ${{ github.event.pull_request &&
-      github.event.pull_request.head.repo.full_name != github.repository &&
-      'ubuntu-latest' || vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
-    steps:
-      - name: Run local-only workflow guard
-        shell: bash
-        run: |
-          echo "Bypass"
