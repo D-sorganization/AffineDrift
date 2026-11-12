@@ -28,7 +28,7 @@ The objective is an intelligible chain from **delivery → contact → launch �
 
 Use a world frame with $x$ forward along the target line, $y$ up and $z$ right. Bold vectors below are three-dimensional unless a horizontal heightfield coordinate is specified. Let $R$ be ball radius, $m$ mass, $I=\alpha mR^2$ its isotropic inertia and $\mathbf n$ the upward plane normal. The illustrative homogeneous sphere has $\alpha=2/5$; a real ball's inertia is a property to identify.
 
-The measured level-green roll-out calibration is $a_0=v_s^2/(2L_s)$, assuming pure rolling and constant deceleration over distance $L_s$. With the conventional $v_s=1.83$ m/s and a reading $S$ in feet, $a_0\approx5.49/S$ m/s². This is a conditional calibration, not an exact release-speed derivation from ramp geometry. The companion distinguishes the groove geometry and the empirical convention. The fixed-plane derivations below assume continuous contact and neglect aerodynamic loading, spin about the normal, and deformation except through an effective resistance law.
+The measured level-green roll-out calibration is $a_0=v_s^2/(2L_s)$, assuming pure rolling and constant deceleration over distance $L_s$. With the conventional $v_s=1.83$ m/s and a reading $S$ in feet, $a_0\approx5.49/S$ m/s². This is a conditional calibration, not an exact release-speed derivation from ramp geometry. The companion distinguishes the groove geometry and the empirical convention. The fixed-plane derivations below assume continuous contact and neglect aerodynamic loading, spin about the normal, and deformation except through an effective resistance law. Signed slip follows the rolling-putt companion: $s=v-R\omega$ on a straight level line, with $u(t)$ reserved for forward center speed along that line in break formulas there.
 :::
 
 ## 1. Ball Dynamics and Mode Changes
@@ -38,31 +38,33 @@ The measured level-green roll-out calibration is $a_0=v_s^2/(2L_s)$, assuming pu
 On a fixed plane, the slip at the contact point is
 
 $$
-\mathbf u=\mathbf v-R\boldsymbol\omega\times\mathbf n,
+\mathbf s=\mathbf v-R\boldsymbol\omega\times\mathbf n,
 \qquad \mathbf g_\parallel=\mathbf g-(\mathbf g\cdot\mathbf n)\mathbf n.
 $$
 
-For $\mathbf u\ne\mathbf0$, an ideal Coulomb sliding model is
+For $\mathbf s\ne\mathbf0$, an ideal Coulomb sliding model is
 
 $$
 \begin{aligned}
-\mathbf F_t&=-\mu_kN\frac{\mathbf u}{\|\mathbf u\|},\\
+\mathbf F_t&=-\mu_kN\frac{\mathbf s}{\|\mathbf s\|},\\
 m\dot{\mathbf v}&=m\mathbf g_\parallel+\mathbf F_t,\\
 I\dot{\boldsymbol\omega}&=(-R\mathbf n)\times\mathbf F_t,
 \qquad N=mg\cos\beta .
 \end{aligned}
 $$
 
-Here $\beta$ is the plane's inclination. Friction opposes **slip**, which need not point along the center velocity. For a straight level putt, define signed forward spin speed $s=R\omega$ and signed slip $u=v-s$. Positive slip slows translation and increases forward spin; overspin, $u<0$, reverses both changes. Treating every $s\ge v$ state as pure rolling loses this distinction.
+Here $\beta$ is the plane's inclination. Friction opposes **slip**, which need not point along the center velocity. For a straight level putt, define signed slip $s=v-R\omega$. Positive slip slows translation and increases forward spin; overspin, $s<0$, reverses both changes. Treating slip as negligible whenever $R\omega\ge v$ loses this distinction.
 
 With constant sliding friction, no other tangential loads and no reversal of the travel direction during the transition,
 
 $$
 \begin{aligned}
-t_r&=\frac{|v_0-s_0|}{\mu_k g(1+1/\alpha)},\\
-v_r=s_r&=\frac{v_0+\alpha s_0}{1+\alpha}.
+t_r&=\frac{|s_0|}{\mu_k g(1+1/\alpha)},\\
+v_r&=\frac{v_0+\alpha R\omega_0}{1+\alpha}=v_0-\frac{\alpha s_0}{1+\alpha},
 \end{aligned}
 $$
+
+with $s_0=v_0-R\omega_0$ and $s=0$ at pure roll.
 
 The familiar $v_r=5v_0/7$ follows only for the homogeneous sphere with zero initial spin on level ground. It is not a universal transition speed on a side slope. A vector contact law is needed when the slip and travel directions separate.
 
@@ -94,13 +96,13 @@ Under this particular couple law, a moving downhill ball accelerates when $\tan\
 
 ### 1.3 Events, Rest and Capture Need Separate Rules
 
-**Locate transitions within steps.** Fixed-step and adaptive integrators can both use event localization. In the straight sliding reduction, a signed $u=v-s$ can supply a sign-changing event. The norm $\|\mathbf u\|$ is nonnegative and nonsmooth at zero; ordinary sign-change bisection cannot automatically locate its zero. General sliding-to-sticking transitions require a declared contact algorithm, tolerance and feasibility check, not an unexplained scalar crossing.
+**Locate transitions within steps.** Fixed-step and adaptive integrators can both use event localization. In the straight sliding reduction, the signed slip $s=v-R\omega$ can supply a sign-changing event. The norm $\|\mathbf s\|$ is nonnegative and nonsmooth at zero; ordinary sign-change bisection cannot automatically locate its zero. General sliding-to-sticking transitions require a declared contact algorithm, tolerance and feasibility check, not an unexplained scalar crossing.
 
 An event root can be accurate relative to an interpolated trajectory while the trajectory itself remains inaccurate. Refine the integration and event tolerances together. A small root tolerance alone gives no machine-precision physical event time. Standard sign-change detection may also miss tangencies or multiple crossings within one step; these limitations are stated in the [SciPy event documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html). A putt can cross into and out of a hole disc between two outside samples. Bound the step length relative to the feature, inspect the swept path, or otherwise establish that the event cannot be skipped.
 
 **Rest is an equilibrium decision.** The unit vector $\hat{\mathbf v}$ is undefined at zero speed. A low-speed numerical threshold is useful for detecting a candidate stop, but permanent rest requires force and moment balance under a separately declared static traction and rolling-resistance law. Sliding static friction by itself does not define the maximum resisting rolling couple. An uphill ball may momentarily reach zero speed and reverse; variable terrain may later flatten. The moving-downhill threshold above therefore neither proves rest stability nor maps all points from which a putt can never stop. Report a time-limit exit separately from rest.
 
-**Capture is another approximation.** The companion compares a finite-ball free-fall geometry with a separate historical capture fit. In its central, straight-path finite-ball construction, the horizontal budget is $D-R$, where $D$ is hole diameter, giving $v_c=(D-R)\sqrt{g/(2R)}\approx1.31$ m/s for the declared dimensions. This does not establish a universal capture threshold: off-center geometry, rim contact, spin and deformation change the outcome. The full-domain and off-center assumptions are in the companion.
+**Capture is another approximation.** The companion compares a finite-ball free-fall geometry with a separate historical capture fit. In its central, straight-path finite-ball construction, the horizontal budget is $D-R$, where $D$ is hole diameter, giving $v_{\mathrm{ff}}=(D-R)\sqrt{g/(2R)}\approx1.31$ m/s for the declared dimensions. Penner's historical fit $v_{\mathrm P}$ and the implemented-code proxy $v_{\mathrm{proxy}}$ are defined in the companion and in §4 below; they are not interchangeable with $v_{\mathrm{ff}}$. This does not establish a universal capture threshold: off-center geometry, rim contact, spin and deformation change the outcome. The full-domain and off-center assumptions are in the companion.
 
 Do not substitute a point-chord formula and call it the same finite-ball calculation. Nor does choosing a lower central speed threshold establish conservative classification for every off-center arrival. A binary capture proxy can miss a true capture and accept an implausible one. A three-dimensional contact simulation offers a different model, whose rim shape, contact law and discretization also need verification and measurement validation. Neither a detailed animation nor a convenient inequality settles lip-outs by itself.
 
@@ -194,7 +196,7 @@ Their ground-plane coordinates use $x$ forward and $y$ left. To compare them wit
 | Browser dispersion | `puttingDispersion.ts` implements summary statistics and the report wire; its documentation keeps Monte Carlo execution Python-authoritative | A report reader is not an independent browser implementation of the sampler |
 | Import | `PuttingControls.tsx` calls `puttingGreenImport.ts`, selecting the Tools wire or UpstreamDrift topography reader | The source contains an import path; this review has not qualified every producer/export combination or the live explorer deployment |
 
-The implemented capture proxy uses $R_h=0.054$ m and $v_c=R_h\sqrt{g/(2R)}\approx0.819$ m/s, with $R_{\rm eff}=R_h\sqrt{1-(v/v_c)^2}$ below $v_c$ and zero above it. The code tests distance from a sampled position to the hole center against that radius. This is neither a continuously localized impact parameter nor Penner's separate historical fit. At zero speed its effective radius reaches the full hole radius; the finite-ball clearance and lip-contact qualifications remain relevant. The lower central threshold does not justify calling every prediction conservative.
+The implemented capture proxy uses $R_h=0.054$ m and $v_{\mathrm{proxy}}=R_h\sqrt{g/(2R)}\approx0.819$ m/s, with $R_{\rm eff}=R_h\sqrt{1-(v/v_{\mathrm{proxy}})^2}$ below $v_{\mathrm{proxy}}$ and zero above it. The code tests distance from a sampled position to the hole center against that radius. This is neither a continuously localized impact parameter nor Penner's $v_{\mathrm P}$ fit nor the companion's $v_{\mathrm{ff}}$ construction. At zero speed its effective radius reaches the full hole radius; the finite-ball clearance and lip-contact qualifications remain relevant. The lower central threshold does not justify calling every prediction conservative.
 
 The [Python integrator](https://github.com/D-sorganization/Tools/blob/96ab281ef0af185640e93571dd4bf2b94ff761a5/src/shared/python/swing_sim/putting/green.py), [capture module](https://github.com/D-sorganization/Tools/blob/96ab281ef0af185640e93571dd4bf2b94ff761a5/src/shared/python/swing_sim/putting/capture.py) and [TypeScript integrator](https://github.com/D-sorganization/rate-of-closure-explorer/blob/af7f2682213f57bb2e95052fed6d5b0740596cbd/src/model/puttingGreen.ts) make these differences inspectable. The [TypeScript reference tests](https://github.com/D-sorganization/rate-of-closure-explorer/blob/af7f2682213f57bb2e95052fed6d5b0740596cbd/src/model/puttingGreen.test.ts) pin selected Python-derived results. Passing those fixtures can catch regressions within their coverage; it cannot show that the physical assumptions are correct or guarantee that all future versions agree.
 

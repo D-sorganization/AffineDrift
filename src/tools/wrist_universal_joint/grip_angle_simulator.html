@@ -429,6 +429,10 @@
                     <div class="info-box">
                         <strong>Moments of Inertia</strong>
                         <div id="inertia-display">Iα = 0.0000 kg·m²<br>Iγ = 0.0000 kg·m²</div>
+                        <p class="inertia-note" style="font-size: 0.82em; color: #6c757d; margin-top: 8px; line-height: 1.35;">
+                            Iα is a simple transverse estimate from shaft and head geometry.
+                            Iγ = 0.5 Iα is illustrative only—not a measured club I<sub>∥</sub> ≪ I<sub>⊥</sub> ratio.
+                        </p>
                     </div>
                 </div>
 
@@ -750,7 +754,9 @@
             inertiaDisplay.textContent = '';
             inertiaDisplay.appendChild(document.createTextNode(`Iα = ${I_alpha.toFixed(4)} kg·m²`));
             inertiaDisplay.appendChild(document.createElement('br'));
-            inertiaDisplay.appendChild(document.createTextNode(`Iγ = ${I_gamma.toFixed(4)} kg·m²`));
+            inertiaDisplay.appendChild(
+                document.createTextNode(`Iγ = ${I_gamma.toFixed(4)} kg·m² (illustrative 0.5×Iα)`)
+            );
 
             const grip_angle = parseInt(document.getElementById('grip-angle').value);
             const wrist_angle = parseInt(document.getElementById('wrist-angle').value);
