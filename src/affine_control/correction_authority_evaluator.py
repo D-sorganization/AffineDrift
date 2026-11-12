@@ -29,6 +29,20 @@ class InputSetNorm(StrEnum):
     ENERGY = "energy"
 
 
+def _coerce_input_set_norm(value: InputSetNorm | str) -> InputSetNorm:
+    """Normalize API ``input_set_norm`` to a declared :class:`InputSetNorm` member."""
+    if isinstance(value, InputSetNorm):
+        return value
+    if isinstance(value, str):
+        try:
+            return InputSetNorm(value)
+        except ValueError as exc:
+            raise ValueError(
+                "input_set_norm must be 'peak_per_channel' or 'energy', " f"got {value!r}"
+            ) from exc
+    raise TypeError(f"input_set_norm must be InputSetNorm or str, got {type(value).__name__}")
+
+
 @dataclass(frozen=True)
 class LTVLinearizationStep:
     """Single discrete-time LTV linearization step (A_k, B_k, d_k)."""
@@ -175,7 +189,7 @@ def _task_output_interval(
     """Project the reachable set onto the task direction (peak or energy norm)."""
     direction = np.asarray(task_direction, dtype=np.float64).reshape(-1)
     center = float(direction @ center_state)
-    if input_set_norm is InputSetNorm.PEAK_PER_CHANNEL:
+    if input_set_norm == InputSetNorm.PEAK_PER_CHANNEL:
         radius = _peak_input_support_radius(steps, direction, input_bound)
     else:
         horizon_steps = len(steps)
@@ -252,9 +266,10 @@ def evaluate_correction_authority_along_trajectory(
     kappa_max: float,
     ill_conditioned_mode: IllConditionedMode = "indeterminate",
     return_gramians: bool = False,
-    input_set_norm: InputSetNorm = InputSetNorm.PEAK_PER_CHANNEL,
+    input_set_norm: InputSetNorm | str = InputSetNorm.PEAK_PER_CHANNEL,
 ) -> tuple[CorrectionAuthorityStepResult | Indeterminate, ...]:
     """Evaluate correction authority, DCR, and Gramian conditioning along a trajectory."""
+    input_set_norm = _coerce_input_set_norm(input_set_norm)
     if not isfinite(kappa_max) or kappa_max <= 0.0:
         raise ValueError("kappa_max must be finite and positive")
     if not isfinite(input_bound) or input_bound < 0.0:

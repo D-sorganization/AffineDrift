@@ -16,6 +16,7 @@ from src.affine_control.correction_authority_contract import (
 )
 from src.affine_control.correction_authority_evaluator import (
     Indeterminate,
+    InputSetNorm,
     LTVLinearizationStep,
     _backward_controllability_gramians,
     backward_gramian_operation_count,
@@ -119,6 +120,52 @@ def test_evaluator_matches_dispatch1_oracles(
     assert result.recoverable is oracle.recoverable
     if oracle.margin is not None:
         assert result.margin == pytest.approx(oracle.margin, abs=tol_margin)
+
+
+def test_input_set_norm_string_peak_matches_enum_two_step_scalar() -> None:
+    """String peak_per_channel must not fall through to the energy-bound radius (#5567)."""
+    steps = (
+        LTVLinearizationStep(np.array([[1.0]]), np.array([[1.0]]), np.array([0.0])),
+        LTVLinearizationStep(np.array([[1.0]]), np.array([[0.5]]), np.array([0.0])),
+    )
+    kwargs = dict(
+        steps=steps,
+        initial_state=np.array([0.0]),
+        input_bound=1.0,
+        required_task_error=0.0,
+        task_direction=np.array([1.0]),
+        tolerance=0.0,
+        kappa_max=1e12,
+    )
+    enum_terminal = evaluate_correction_authority_along_trajectory(
+        **kwargs, input_set_norm=InputSetNorm.PEAK_PER_CHANNEL
+    )[0]
+    string_terminal = evaluate_correction_authority_along_trajectory(
+        **kwargs, input_set_norm="peak_per_channel"
+    )[0]
+    energy_terminal = evaluate_correction_authority_along_trajectory(
+        **kwargs, input_set_norm=InputSetNorm.ENERGY
+    )[0]
+    assert not isinstance(enum_terminal, Indeterminate)
+    assert not isinstance(string_terminal, Indeterminate)
+    assert string_terminal.margin == pytest.approx(enum_terminal.margin)
+    assert enum_terminal.margin == pytest.approx(1.5)
+    assert energy_terminal.margin == pytest.approx(1.5811388300841898, abs=1e-9)
+
+
+def test_input_set_norm_invalid_value_raises_clear_error() -> None:
+    steps = (LTVLinearizationStep(np.array([[1.0]]), np.array([[1.0]]), np.array([0.0])),)
+    with pytest.raises(ValueError, match="input_set_norm"):
+        evaluate_correction_authority_along_trajectory(
+            steps=steps,
+            initial_state=np.array([0.0]),
+            input_bound=1.0,
+            required_task_error=0.0,
+            task_direction=np.array([1.0]),
+            tolerance=0.0,
+            kappa_max=1e12,
+            input_set_norm="legacy_outer",
+        )
 
 
 def test_peak_double_integrator_support_matches_closed_form() -> None:
