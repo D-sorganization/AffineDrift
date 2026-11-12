@@ -28,6 +28,17 @@ def test_ch03b_uses_hm_not_p_for_constrained_acceleration_operator() -> None:
     assert r"\mathcal{H}_M Q_0" in text
 
 
+def test_ch03b_gamma_sign_matches_notation_registry() -> None:
+    text = _read(
+        "articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd"
+    )
+    assert r"J_c\dot v=-\gamma" in text
+    assert r"\gamma=\dot J_c v" in text
+    assert r"\gamma=-\dot J_c v" not in text
+    assert r"J_c\ddot q=\gamma" not in text
+    assert r"a_c&=-M^{-1}J_c^{\mathsf T}K_c^{-1}\gamma" in text
+
+
 def test_ch07_constrained_symbols_match_ch09_registry() -> None:
     text = _read("articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.qmd")
     assert r"J_c\dot v=-\gamma" in text
