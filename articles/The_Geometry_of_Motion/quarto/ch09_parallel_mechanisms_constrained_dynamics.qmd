@@ -109,7 +109,15 @@ Connection coefficients can be nonzero in curvilinear coordinates on a flat spac
 ## Eliminating Reactions Without Losing Their Input Dependence
 []{#sec-ch9-control-affine}
 
-Define $K_c=J_cM^{-1}J_c^\top\succ0$ and $\gamma=\dot J_cv$. The acceleration constraint and force balance give
+At the acceleration level, $J_c\dot v=-\gamma$ with $\gamma=\dot J_cv$, and unconstrained dynamics would give $M\dot v=Bu-h$. Eliminating $\lambda$ from the saddle-point balance yields the linear system implementers solve directly:
+$$
+\begin{bmatrix}M&-J_c^\top\\J_c&0\end{bmatrix}
+\begin{bmatrix}\dot v\\\lambda\end{bmatrix}
+=\begin{bmatrix}Bu-h\\-\gamma\end{bmatrix}.
+$$ {#eq-ch9:kkt-acceleration}
+Under regularity, block elimination reproduces @eq-ch9:multiplier and the reduced fields @eq-ch9:drift and @eq-ch9:input-field below. Those reduced accelerations are Gauss's least-constraint (minimum kinetic-energy) correction of a trial acceleration in the $M$-metric—the continuous-time form associated with Udwadia and Kalaba's generalized $\mathbf{A}^+$ construction.
+
+Define $K_c=J_cM^{-1}J_c^\top\succ0$. The Schur-complement multiplier is
 $$
  \lambda=-K_c^{-1}\left[J_cM^{-1}(Bu-h)+\gamma\right].
 $$ {#eq-ch9:multiplier}
@@ -168,7 +176,7 @@ $$
 $$
 The Euclidean pseudoinverse minimizes Euclidean norm; it minimizes kinetic energy only under the corresponding metric choice. Position-level feasibility and finite-time task execution still require integration and input checks.
 
-Muscle allocation is another inverse problem. If a signed moment-arm matrix $R(q)$ maps muscle forces $s$ to required joint load $\tau$, one may solve $Rs=\tau$ with $0\le s\le s_{\max}$ and a chosen objective such as $\sum_i(s_i/A_i)^p$. For $p=2$ and fixed positive areas this is a convex quadratic objective with linear constraints. A nonzero-load solution is not in $\ker R$; differences between unconstrained solutions lie in $\ker R$. Capacity limits and activation dynamics can remove that freedom. Selecting one solution with an objective supplies a modeling assumption, not a measurement of the nervous system's objective [@Zajac1989].
+Muscle allocation is another inverse problem. If a signed moment-arm matrix $R(q)$ maps muscle forces $s$ to required joint load $\tau$, one may solve $Rs=\tau$ with $0\le s\le s_{\max}$ and a chosen objective such as $\sum_i(s_i/A_i)^p$. For $p=2$ and fixed positive areas this is a convex quadratic objective with linear constraints. A nonzero-load solution is not in $\ker R$; differences between unconstrained solutions lie in $\ker R$. Capacity limits and activation dynamics can remove that freedom. Selecting one solution with an objective supplies a modeling assumption, not a measurement of the nervous system's objective. The stress-power static-optimization objective $\sum_i(s_i/A_i)^p$ is attributed to Crowninshield and Brand [@CrowninshieldBrand1981]; activation and muscle–tendon dynamics remain discussed separately by [@Zajac1989].
 
 ## Twists, Wrenches, and a Two-Hand Grip
 []{#sec-ch9-screw-theory}
@@ -342,9 +350,12 @@ For a checkable example, choose $I=1$, $a=(0,k s_1)^\top$, and $H=I_2+aa^\top$. 
 ## Numerical Methods That Preserve the Stated Problem
 []{#sec-ch9-numerics}
 
-The position-constrained first-order mechanical DAE is ordinarily differentiation index three under regularity assumptions. Differentiating position once yields velocity consistency and twice yields an algebraic equation for $\lambda$; differentiating that relation yields a differential equation for the multiplier. Position to velocity to acceleration is two differentiations, not three. This terminology does not make a twice-differentiated constraint automatically stable under time stepping.
+The position-constrained first-order mechanical DAE is ordinarily differentiation index three under regularity assumptions. Counting constraint differentiations: one gives velocity consistency ($J_cv=0$), two give an algebraic equation for $\lambda$ at fixed $(q,v)$, and three yield a differential equation for $\dot\lambda$. An acceleration-level formulation (index one) imposes $J_c\dot v+\gamma=0$ directly, as in @eq-ch9:kkt-acceleration. A Baumgarte-stabilized variant replaces the lower block by
+$$
+J_c\dot v+\gamma+2\alpha J_cv+\beta^2\Phi=0.
+$$ {#eq-ch9:baumgarte-rhs}
 
-Baumgarte stabilization replaces the acceleration equation by $J_c\dot v+\gamma+2\alpha J_cv+\beta^2\Phi=0$. In continuous arithmetic the violation obeys $\ddot\Phi+2\alpha\dot\Phi+\beta^2\Phi=0$. Positive gains damp errors, but $\alpha$ and $\beta$ have inverse-time units, and large gains can make integration stiff. Constraint scaling and time-step studies are necessary. Stabilization introduces corrective forces and does not guarantee exact energy conservation.
+In continuous arithmetic the violation obeys $\ddot\Phi+2\alpha\dot\Phi+\beta^2\Phi=0$. Positive gains damp errors, but $\alpha$ and $\beta$ have inverse-time units, and large gains can make integration stiff. Constraint scaling and time-step studies are necessary. Stabilization introduces corrective forces and does not guarantee exact energy conservation.
 
 A local Newton correction for position may use
 $$

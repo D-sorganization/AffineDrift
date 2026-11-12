@@ -337,28 +337,26 @@ The undamped pendulum's bottom is stable but not attractive because its locally 
 ### Reachability and the Gramian
 
 For a continuous-time LTI system with unrestricted inputs, controllability means that any initial state can be driven to any terminal state over any prescribed positive horizon. Its equivalent rank condition is
-[]{#eq-controllability_matrix}
-
 $$
 \mathcal C=[B\ AB\ \cdots\ A^{n-1}B],\qquad \operatorname{rank}\mathcal C=n.
-$$
-[]{#def-controllability_def}
-[]{#thm-controllability_rank}
-[]{#thm-kalman_controllability}
-To see why, define
-[]{#eq-state_gramian}
+$$ {#eq-controllability-matrix}
 
+::: {#thm-kalman-controllability}
+### Kalman Controllability Rank Condition
+
+The pair $(A,B)$ is controllable if and only if $\operatorname{rank}\mathcal C=n$ in @eq-controllability-matrix.
+:::
+
+To see why, define the finite-time controllability Gramian
 $$
 W(T)=\int_0^T e^{As}BB^Te^{A^Ts}\,ds,\qquad
  z^TW(T)z=\int_0^T\|B^Te^{A^Ts}z\|^2\,ds.
-$$
+$$ {#eq-state-gramian}
 
-If the right side vanishes, continuity makes the integrand zero throughout the interval. Differentiating its analytic factor at zero gives $B^T(A^T)^jz=0$ for every $j$. Conversely, vanishing through $j=n-1$ implies vanishing for every power by Cayley--Hamilton, and hence for the exponential. Thus $W$ is positive definite exactly when $\mathcal C$ has full row rank. For $d=x_f-e^{AT}x_0$, the input
-[]{#eq-state_steering}
-
+If the right side vanishes, continuity makes the integrand zero throughout the interval. Differentiating its analytic factor at zero gives $B^T(A^T)^jz=0$ for every $j$. Conversely, vanishing through $j=n-1$ implies vanishing for every power by Cayley--Hamilton, and hence for the exponential. Thus $W$ is positive definite exactly when $\mathcal C$ has full row rank. For $d=x_f-e^{AT}x_0$, the steering input
 $$
 u(t)=B^Te^{A^T(T-t)}W(T)^{-1}d
-$$
+$$ {#eq-state-steering}
 
 reaches $x_f$. Substitution into the solution formula verifies it. It minimizes the unweighted integral of $u^Tu$ among such inputs, by orthogonality to the nullspace of the endpoint operator. This is a squared-input cost, not generally mechanical energy or metabolic effort.
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Install headless browser / GL packages for Playwright on GitHub-hosted runners.
-# Mirrors the resilience patterns from the tests job Qt apt step (lock cleanup,
-# broken Google Chrome apt sources, retries, non-fatal last resort).
+# Mirrors resilience patterns from the tests job Qt apt step: never unlink apt/dpkg
+# lock files (wait via DPkg::Lock::Timeout), strip broken Google Chrome apt sources,
+# retries, and non-fatal last resort.
 set -euo pipefail
 
 if ! sudo -n true 2>/dev/null; then
@@ -9,12 +10,6 @@ if ! sudo -n true 2>/dev/null; then
   exit 0
 fi
 
-sudo rm -f \
-  /var/lib/apt/lists/lock \
-  /var/cache/apt/archives/lock \
-  /var/lib/dpkg/lock \
-  /var/cache/apt/pkgcache.bin \
-  /var/cache/apt/srcpkgcache.bin
 sudo rm -f /etc/apt/sources.list.d/*chrome* /etc/apt/sources.list.d/*google*
 # Drop dl.google.com chrome lists that break apt on hosted runners.
 sudo sed -i '/dl\.google\.com/d' /etc/apt/sources.list 2>/dev/null || true
