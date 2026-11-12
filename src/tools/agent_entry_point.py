@@ -47,6 +47,7 @@ class AgentManifest:
 
 
 def _page(raw: dict[str, Any]) -> AgentPage:
+    """Parse one manifest page entry."""
     artifacts = raw.get("artifacts") or []
     if not isinstance(artifacts, list):
         raise ValueError("artifacts must be a list when present")
@@ -79,12 +80,14 @@ def load_manifest(text: str) -> AgentManifest:
 
 
 def _abs_url(site_url: str, path: str) -> str:
+    """Return an absolute URL for a site-relative or external path."""
     if path.startswith("http://") or path.startswith("https://"):
         return path
     return f"{site_url}{path}"
 
 
 def _link_line(site_url: str, page: AgentPage) -> str:
+    """Format one llms.txt bullet with title, URL, and summary."""
     url = _abs_url(site_url, page.path)
     return f"- [{page.title}]({url}): {page.summary}"
 

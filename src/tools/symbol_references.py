@@ -50,6 +50,7 @@ def _cells(row: str) -> list[str]:
 
 
 def _opt(value: str) -> str | None:
+    """Normalize optional table cells; em dash means omitted."""
     return value if value and value != "—" else None
 
 
@@ -98,6 +99,7 @@ def parse_symbol_table(text: str) -> tuple[SymbolReference, ...]:
 
 
 def _symbol_payload(ref: SymbolReference) -> dict[str, str]:
+    """Serialize one symbol for JSON, omitting unset optional fields."""
     payload = {
         "key": ref.key,
         "tex": ref.tex,
