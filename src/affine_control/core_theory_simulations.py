@@ -101,6 +101,7 @@ class ModalResponseBars:
 
 
 def _fixture_initial_state(pin: dict) -> tuple[Array, Array]:
+    """Load ``(q, qd)`` from the JSON fixture path referenced by a figure pin."""
     fixture = json.loads((REPO_ROOT / pin["model_fixture"]).read_text(encoding="utf-8"))
     q = np.asarray(fixture["state"]["q"], dtype=float)
     qd = np.asarray(fixture["state"]["qd"], dtype=float)
@@ -169,6 +170,7 @@ def _position_superposition_error(
     grad = partial(grad_potential, params=params)
 
     def run(torque: Array) -> list[tuple[float, Array, Array]]:
+        """Integrate the pinned pendulum under constant generalized torque."""
         return planar_double_pendulum_trajectory(
             params.mass_matrix, grad, q0, qd0, torque, horizon, steps
         )
@@ -232,6 +234,7 @@ def superposition_breakdown_series(
 
 
 def _phi_without_gravity(q: Array, qd: Array, torque: Array) -> Array:
+    """Return ``M^{-1}(tau - C(q, qdot) qdot)`` for the unit mid-link pendulum."""
     mass = double_pendulum_mass_matrix(q, 1.0, 1.0, 1.0, 1.0)
     bias = double_pendulum_coriolis(q, qd, 1.0, 1.0, 1.0) @ qd
     return np.linalg.solve(mass, torque - bias)
