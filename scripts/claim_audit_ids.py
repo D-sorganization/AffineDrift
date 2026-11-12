@@ -75,13 +75,10 @@ APPLIED_ARTICLE_ROUTES = frozenset(
         "/articles/technology-launch-monitors.html",
         "/articles/technology-motion-capture.html",
         "/articles/upstreamdrift-educational-integration.html",
-<<<<<<< HEAD
         "/articles/upstreamdrift-humanoid-balance.html",
         "/articles/upstreamdrift-learning-analytics.html",
-        "/articles/upstreamdrift-whole-body-control.html",
-=======
         "/articles/upstreamdrift-physics-models.html",
->>>>>>> origin/main
+        "/articles/upstreamdrift-whole-body-control.html",
     }
 )
 
