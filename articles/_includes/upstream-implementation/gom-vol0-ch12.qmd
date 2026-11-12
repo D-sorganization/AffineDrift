@@ -1,9 +1,10 @@
 ## Where This Lives in UpstreamDrift {#sec-upstream-implementation-gom-vol0-ch12}
 
 ::: {.callout-note appearance="simple"}
-The regression demo in this chapter is an AffineDrift teaching stub (`src/tools/learning_examples.py`). When a swing or humanoid study moves from exposition to numerical optimization inside UpstreamDrift, the backend registry at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da) records which solver backends exist and which problem classes each serves.
+The regression demo in this chapter is an AffineDrift teaching stub (`src/tools/learning_examples.py`). When a swing or humanoid study moves from exposition to numerical optimization inside UpstreamDrift, start from the pinned trajectory-optimization stack at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
 
-- **Optimizer backend registry:** [`backend_registry.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/optimization/backend_registry.py) — typed lookup for Ipopt, SNOPT, CasADi, and related engines (see UpstreamDrift ADR-0050).
+- **Scipy swing optimizer:** [`swing_optimizer.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/optimization/swing_optimizer.py) — multi-objective waypoint optimization on the shared closed-form swing model (`scipy.optimize` path).
+- **CasADi transcription backend:** [`casadi_backend.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/optimization/casadi_backend.py) — direct transcription with symbolic RNEA dynamics and an IPOPT solve when the optional `casadi` extra is installed.
 
-**Convention note:** listing a backend as importable is not a validation of humanoid-scale problem sizes; read the registry test module and the cited ADR before asserting runtime or convergence.
+**Convention note:** AffineDrift illustrates learning objectives in closed form; production UpstreamDrift runs still require explicit model assets, constraint sets and solver configuration before any policy-gradient or trajectory result is interpreted as validated.
 :::
