@@ -1,6 +1,6 @@
 # Workflow Inventory
 
-This directory contains the 13 documented GitHub Actions workflow files for the AffineDrift
+This directory contains the documented GitHub Actions workflow files for the AffineDrift
 repository. Edits are governed by
 [`Repository_Management/docs/architecture/WORKFLOW_GOVERNANCE.md`](https://github.com/D-sorganization/Repository_Management/blob/main/docs/architecture/WORKFLOW_GOVERNANCE.md):
 keep changes minimal, never rename a workflow file or the `quality-gate` job,
@@ -36,8 +36,6 @@ and reference the governing campaign issue in the PR body.
 | Workflow                           | Purpose                                                                                                                      | Triggers                                                |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | `collate-changes.yml`              | Folds merged change fragments into `SPEC.md` and `DEVELOPMENT_LOG.md`, then deletes them (RM-5, Repository_Management#1976). | `push` to `main` touching `changes/**`, manual dispatch |
-| `Jules-Redundant-Issue-Closer.yml` | Closes duplicate agent-filed issues.                                                                                         | Every 6 hours                                           |
-| `Jules-Redundant-PR-Closer.yml`    | Closes superseded agent PRs.                                                                                                 | Every 3 hours                                           |
 
 ## Notes
 
