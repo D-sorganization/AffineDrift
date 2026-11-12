@@ -1,0 +1,42 @@
+---
+title: "Golfer in Motion: 3D Viewer (Draft)"
+description: "Draft: a lightweight in-browser 3D viewer playing a small synthetic stick-figure golf swing"
+draft: true
+listing: false
+categories:
+- tools
+caveats:
+  evidence-level: "Synthetic illustration (no measured or simulated motion)"
+  establishes:
+    - "The browser can play a small 3D motion clip offline, with no WebGL and no third-party library."
+  does-not-establish:
+    - "Any measured, simulated or physically accepted swing: the clip is hand-shaped from keyframed angles."
+    - "Licensed motion capture or a traced UpstreamDrift render: neither is used here."
+  next-gate: "Replace the synthetic clip with a sanitized clip exported from an accepted UpstreamDrift model."
+---
+
+::: {.callout-warning title="Draft: Not Published"}
+This page is a draft for review. It is not listed or published.
+:::
+
+The viewer below plays a **synthetic** stick-figure golf swing. The motion is
+hand-shaped from a few keyframed angles. It is not licensed motion capture and
+not a traced UpstreamDrift render. Drag the view slider to walk around the
+figure; press Play to watch the swing at slow speed. Read the caveats with the figure.
+
+```{=html}
+<figure class="swing-viewer motion-viewer" id="motion-viewer" aria-describedby="motion-viewer-caption">
+<div class="sv-stage"></div>
+<div class="sv-controls">
+<button type="button" class="sv-play" aria-pressed="false">Play</button>
+<label class="sv-slider-label">Frame <input type="range" class="sv-slider" min="0" max="0" step="1" value="0"></label>
+</div>
+<label class="av-yaw-label">View angle <input type="range" class="mv-yaw" min="-180" max="180" step="5" value="30"></label>
+<p class="sv-readout" aria-live="polite"></p>
+<ul class="av-caveats mv-caveats" aria-label="Caveats of the synthetic clip"></ul>
+<figcaption id="motion-viewer-caption">A Synthetic Stick-Figure Golf Swing in 3D, drawn as SVG with a perspective projection. Hand-shaped motion, not measured; not licensed motion capture and not a traced UpstreamDrift render. It plays at slow speed only when you press Play.</figcaption>
+<noscript><p>The viewer needs JavaScript. The clip is a synthetic, hand-shaped stick-figure swing, not measured motion.</p></noscript>
+</figure>
+<script src="../js/motion-clip-data.js"></script>
+<script src="../js/motion-clip-viewer.js"></script>
+```

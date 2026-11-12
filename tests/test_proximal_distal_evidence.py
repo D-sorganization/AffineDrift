@@ -53,13 +53,13 @@ def _pinned_manifest(artifact_path: Path) -> dict[str, object]:
                             "total": 10.0,
                             "drift": 8.0,
                             "control": 2.0,
-                            "zvcf": 1.0,
+                            "zvcf": 2.0,
                         },
                         "mean_force_n": {
                             "total": 10.0,
                             "drift": 8.0,
                             "control": 2.0,
-                            "zvcf": 1.0,
+                            "zvcf": 2.0,
                         },
                     },
                     "closure": {
@@ -184,6 +184,50 @@ def test_pinned_state_requires_every_declared_model_result(tmp_path: Path) -> No
     errors = validate_manifest(manifest, tmp_path)
 
     assert any("missing model results: two_arm" in error for error in errors)
+
+
+def test_pinned_state_rejects_nonclosing_drift_control_sum(tmp_path: Path) -> None:
+    artifact = tmp_path / "figure.svg"
+    artifact.write_text("<svg/>", encoding="utf-8")
+    manifest = _pinned_manifest(artifact)
+    evidence = manifest["evidence"]
+    assert isinstance(evidence, dict)
+    results = evidence["results"]
+    assert isinstance(results, dict)
+    double = results["double_pendulum"]
+    assert isinstance(double, dict)
+    estimand = double["primary_estimand"]
+    assert isinstance(estimand, dict)
+    force_work = estimand["force_work_j"]
+    assert isinstance(force_work, dict)
+    force_work["total"] = 10.0
+    force_work["drift"] = 8.0
+    force_work["control"] = 1.0
+
+    errors = validate_manifest(manifest, tmp_path)
+
+    assert any("drift + control" in error for error in errors)
+
+
+def test_pinned_state_rejects_zvcf_not_matching_control(tmp_path: Path) -> None:
+    artifact = tmp_path / "figure.svg"
+    artifact.write_text("<svg/>", encoding="utf-8")
+    manifest = _pinned_manifest(artifact)
+    evidence = manifest["evidence"]
+    assert isinstance(evidence, dict)
+    results = evidence["results"]
+    assert isinstance(results, dict)
+    double = results["double_pendulum"]
+    assert isinstance(double, dict)
+    estimand = double["primary_estimand"]
+    assert isinstance(estimand, dict)
+    force_work = estimand["force_work_j"]
+    assert isinstance(force_work, dict)
+    force_work["zvcf"] = force_work["control"] + 1.0
+
+    errors = validate_manifest(manifest, tmp_path)
+
+    assert any("zvcf must equal control" in error for error in errors)
 
 
 def test_pinned_state_rejects_nonclosing_or_nonfinite_results(tmp_path: Path) -> None:

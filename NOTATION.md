@@ -14,7 +14,7 @@ intent by itself.
 | Acronym  | Canonical Expansion          | First-Use Qualifiers                           |
 | -------- | ---------------------------- | ---------------------------------------------- |
 | **ZTCF** | Zero-Torque Counterfactual   | pointwise, stitched, forward, branched, family |
-| **ZVCF** | Zero-Velocity Counterfactual | instantaneous                                  |
+| **ZVCF** | Zero-Velocity Counterfactual | control, instantaneous                         |
 | **DCR**  | Drift-Control Ratio          | ratio                                          |
 | **DgCR** | Drag-Curve Ratio             | ratio                                          |
 
@@ -62,7 +62,7 @@ The construction must be qualified on first use. ZTCF does not mean “no
 muscle,” “no EMG,” or “flaccid body.” It means zero value in the declared
 applied-control channel under the stated frozen-plant assumptions.
 
-### Instantaneous ZVCF
+### Pointwise ZTCF Drift and ZVCF Control
 
 For second-order dynamics
 
@@ -70,22 +70,49 @@ $$
 M(q)\ddot q+h(q,\dot q,z;p)=B(q)u,
 $$
 
-the **instantaneous Zero-Velocity Counterfactual (ZVCF) acceleration** is
+evaluate two **pointwise** accelerations at the same achieved state
+$(q,\dot q,z;p)$. The historical acronym **ZVCF** (Zero-Velocity
+Counterfactual) names the **control** operand in the original MATLAB pipeline
+(`SCRIPT_ZVCF_GENERATOR.m`): torques on, generalized velocities zeroed, and
+gravity excluded from the ZVCF operand so gravity is counted once in drift.
+
+The **pointwise ZTCF (drift) acceleration** sets the declared applied control
+to zero while retaining the full bias load:
 
 $$
-a_{\mathrm{ZVCF}}(q,z;p)
-=-M(q)^{-1}h(q,0,z_0;p),
+a_{\mathrm{ZTCF}}(q,\dot q,z;p)=-M(q)^{-1}h(q,\dot q,z;p),
 \qquad u=0.
 $$
 
-All generalized velocities and declared velocity-like internal states are
-zeroed; configuration, contact mode, non-velocity internal state, and frozen
-parameters are held fixed. The ZVCF is an instantaneous acceleration, not a
-state or a releasable trajectory. It includes retained configuration-dependent
-autonomous loads and excludes both velocity-dependent terms and the direct
-control contribution. A generalized-force image may be reported as a **ZVCF
-generalized-force representation**, but that representation is not the ZVCF
-itself.
+It contains velocity-dependent terms, gravity, passive loads, and compatible
+constraint reactions declared in $h$.
+
+The **pointwise ZVCF (control) acceleration** applies the measured or declared
+generalized control under the ZVCF evaluation protocol (zero velocity, no
+gravity in the control operand):
+
+$$
+a_{\mathrm{ZVCF}}(q,z;p;\tau)=M(q)^{-1}\tau,
+\qquad \dot q=0,\ u=\tau,
+$$
+
+with gravity omitted from the ZVCF side under the stated model convention.
+Equivalently, $a_{\mathrm{ZVCF}}=M(q)^{-1}B(q)u$ when $\tau=B(q)u$.
+
+Because the equation is affine in $u$ at fixed $(q,z,p)$, the achieved
+acceleration superposes exactly:
+
+$$
+\ddot q=a_{\mathrm{ZTCF}}(q,\dot q,z;p)+a_{\mathrm{ZVCF}}(q,z;p;\tau).
+$$
+
+Integrated forward or branched ZTCF trajectories do **not** generally add to
+integrated ZVCF evaluations; the identity is instantaneous at a fixed state
+only.
+
+A separate **zero-velocity baseline acceleration**
+$-M(q)^{-1}h(q,0,z;p)$ isolates configuration-dependent bias at zero velocity;
+do not abbreviate that diagnostic as ZVCF.
 
 ### DCR and DgCR
 
