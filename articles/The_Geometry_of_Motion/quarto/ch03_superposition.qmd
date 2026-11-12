@@ -2,6 +2,7 @@
 title: "Superposition: From Linear to Affine"
 description: "Examines instantaneous input superposition in control-affine mechanical systems and distinguishes local acceleration addition from trajectory addition."
 css: ch03_superposition.css
+bibliography: ../geometry_of_motion.bib
 ---
 
 A golfer's effort, posture, motion, contact with the ground, and flexible equipment act together. The useful question is not whether one of these explains the swing by itself. It is which mathematical operation allows their effects to be separated, what is held fixed during that operation, and what must be recomputed when the motion changes. This chapter develops that distinction from mechanics, then connects it to energy transfer, constraints, actuator limits, accessibility, and feedback control.
@@ -80,7 +81,7 @@ c_i=\sum_{j,k}\Gamma_{ijk}v_jv_k,
 $$
 These are Christoffel symbols of the first kind. The second-kind coefficients $\Gamma^i{}_{jk}=\sum_\ell(M^{-1})_{i\ell}\Gamma_{\ell jk}$ act at acceleration level. Adding $\Gamma^i{}_{jk}v_jv_k$ directly to $M\dot v$ mixes those levels. One consistent choice is $C_{ij}=\sum_k\Gamma_{ijk}v_k$, so that $Cv=c$ and $\dot M-2C$ is skew symmetric. The matrix $C$ is not unique, whereas the mechanically specified vector $c$ is fixed.
 
-With no potential gradient, damping, or applied nonconstraint force, the free equation is $\ddot q^i+\Gamma^i{}_{jk}\dot q^j\dot q^k=0$: a geodesic of the kinetic metric. A gravity-driven swing is not such a free geodesic merely because commanded torque is zero. For background on the force-level derivation, see the [Modern Robotics Lagrangian dynamics transcript](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-1-lagrangian-formulation-of-dynamics-part-2-of-2/).
+With no potential gradient, damping, or applied nonconstraint force, the free equation is $\ddot q^i+\Gamma^i{}_{jk}\dot q^j\dot q^k=0$: a geodesic of the kinetic metric. A gravity-driven swing is not such a free geodesic merely because commanded torque is zero. Lynch and Park derive the equivalent Lagrangian dynamics [@Lynch2017].
 
 Solving the regular equation gives
 $$
@@ -248,7 +249,7 @@ $$
 I\ddot q=-mgl\sin q+\tau,\qquad
 E=\frac12I\dot q^2+mgl(1-\cos q),\qquad \dot E=\tau\dot q.
 $$
-This is a teaching model, not a fitted golf swing. Its standard phase-space and energy structure are described in the [MIT Underactuated Robotics pendulum chapter](https://underactuated.mit.edu/pend.html).
+This is a teaching model, not a fitted golf swing. Its standard phase-space and energy structure appear in the underactuated-robotics pendulum notes [@TedrakeTrajectoryFoundations].
 
 At the same state with $q=\pi/6$, the baseline acceleration is $-4.905$ rad/s$^2$. Torques of $5$, $2.5$, and $7.5$ N m give respectively $0.095$, $-2.405$, and $2.595$ rad/s$^2$. The identity is
 $$
@@ -302,7 +303,7 @@ A system with input $u$ and output $y$ is passive on a stated domain if it has a
 $$
 S(x(t))-S(x(0))\le\int_0^t u(s)^Ty(s)\,ds
 $$
-for admissible trajectories. A storage bounded below can be shifted by a constant to be nonnegative. Equality describes a lossless system and can hold away from equilibrium. Positive dissipation is a stronger property than passivity; neither should be substituted for the other. See the definitions and pendulum example in [Khalil's passivity lecture](https://www.egr.msu.edu/~khalil/NonlinearControl/Slides-Full/Lect_12.pdf).
+for admissible trajectories. A storage bounded below can be shifted by a constant to be nonnegative. Equality describes a lossless system and can hold away from equilibrium. Positive dissipation is a stronger property than passivity; neither should be substituted for the other. Khalil's nonlinear-systems treatment defines passivity and the pendulum example [@Khalil2002].
 
 For the mechanical model, $S=E-E_{\min}$ is available when energy has a lower bound on the domain. The effort port is $(u,B^Tv)$. A nonzero external load $Q_e$ must be included as another power port, or its power must be accounted for separately. Omitting it can falsely classify an externally driven subsystem as passive or active. The dissipative assumption is $v^TDv\ge0$; a general appeal to thermodynamics does not establish that an arbitrary fitted matrix satisfies it.
 
@@ -364,7 +365,7 @@ For an idealized fixed-field DC motor, with armature inductance $L$, resistance 
 $$
 L\dot i=V-Ri-k_e\omega,\qquad \tau_m=k_t i.
 $$
-These are the electrical and torque relations in the [University of Michigan DC motor model](https://ctms.engin.umich.edu/CTMS/?example=MotorSpeed&section=SystemModeling). Torque and back-EMF constants have different units even when their numerical SI values coincide for consistent ideal conventions.
+These are the standard electrical and torque relations in an ideal fixed-field DC motor model [@Lynch2017]. Torque and back-EMF constants have different units even when their numerical SI values coincide for consistent ideal conventions.
 
 If electrical transients can be neglected, the algebraic approximation is
 $$
@@ -376,7 +377,7 @@ $$
 \le\tau_m\le
 \frac{k_t}{R}(V_{\max}-k_e\omega).
 $$
-It is generally offset rather than symmetric about zero. Intersect it with $[-k_ti_{\max},k_ti_{\max}]$ when a current limit is imposed. These are ideal steady electrical feasibility bounds; thermal limits, available regenerative operation, drive switching, and finite current slew can impose further restrictions. Torque at the load also depends on rotor acceleration, friction, and gearing. For a rigid ideal gear ratio $N=\omega_m/\omega_{\rm load}$, motor inertia contributes $N^2J_m$ at the load coordinate. The [Modern Robotics actuation transcript](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-9-actuation-gearing-and-friction/) explains this reflected-inertia effect.
+It is generally offset rather than symmetric about zero. Intersect it with $[-k_ti_{\max},k_ti_{\max}]$ when a current limit is imposed. These are ideal steady electrical feasibility bounds; thermal limits, available regenerative operation, drive switching, and finite current slew can impose further restrictions. Torque at the load also depends on rotor acceleration, friction, and gearing. For a rigid ideal gear ratio $N=\omega_m/\omega_{\rm load}$, motor inertia contributes $N^2J_m$ at the load coordinate. Lynch and Park explain this reflected-inertia effect [@Lynch2017].
 
 Keeping current as a state instead of eliminating it gives a voltage-affine extended model. At a frozen $(q,v,i)$, voltage initially changes $\dot i$; it does not instantly replace the existing electromagnetic torque. Similarly, zero excitation in a muscle model can leave activation and elastic tension nonzero. An additional actuator state may preserve command affinity while changing the immediate input directions and the meaning of zero-input motion. Whether it does so must be checked from the chosen actuator equations.
 
@@ -404,9 +405,9 @@ The bracket has a configuration component, not merely an acceleration in an unac
 
 ### Accessibility Is Not Controllability
 
-For smooth driftless systems with reversible controls containing a neighborhood of zero, a bracket-generating distribution yields local connectivity through admissible motions under the hypotheses of the Chow--Rashevskii theorem. The [LaValle driftless-system discussion](https://lavalle.pl/planning/node835.html) states the setting explicitly. Input bounds and a nonreversible drift require a different conclusion. Accessibility concerns the interior of reachable sets; it does not assert that every nearby state can be reached in arbitrarily short time. Fixed-time accessibility is another distinct property.
+For smooth driftless systems with reversible controls containing a neighborhood of zero, a bracket-generating distribution yields local connectivity through admissible motions under the hypotheses of the Chow--Rashevskii theorem [@LaValle2006]. Input bounds and a nonreversible drift require a different conclusion. Accessibility concerns the interior of reachable sets; it does not assert that every nearby state can be reached in arbitrarily short time. Fixed-time accessibility is another distinct property.
 
-A simple illustration is $\dot x_1=u$, $\dot x_2=x_1^2$. Its drift and control brackets span both directions, but $x_2$ never decreases along a physical trajectory, even with both signs of $u$ available. Starting at the origin, nearby points with negative $x_2$ are unreachable. This is the counterexample in [LaValle's treatment of systems with drift](https://lavalle.pl/planning/node836.html). Algebraic rank alone does not remove that one-way restriction.
+A simple illustration is $\dot x_1=u$, $\dot x_2=x_1^2$. Its drift and control brackets span both directions, but $x_2$ never decreases along a physical trajectory, even with both signs of $u$ available. Starting at the origin, nearby points with negative $x_2$ are unreachable. LaValle gives this counterexample for systems with drift [@LaValle2006]. Algebraic rank alone does not remove that one-way restriction.
 
 For a golf mechanism, a proposed transfer into an unactuated shaft mode must be established from the actual inertia, elastic coupling, forcing, and boundary conditions. Coupling can arise from a spring even with a diagonal mass matrix. Conversely, an off-diagonal mass entry or a named bracket is not evidence that a particular sequencing maneuver is feasible, beneficial, or robust over a finite downswing. Reachability, energy availability, contact feasibility, and the terminal clubhead objective must be checked together.
 

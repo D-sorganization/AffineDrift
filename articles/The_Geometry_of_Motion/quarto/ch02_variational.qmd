@@ -2,6 +2,7 @@
 title: "Variational Dynamics and the Moving Frame"
 description: "Derives first-variation dynamics along reference motions, state transition matrices, and moving frame representations for swing sensitivity analysis."
 css: ../../../css/variational-chapter.css
+bibliography: ../geometry_of_motion.bib
 ---
 
 Two swings can pass through almost the same pose and then produce different impact conditions. The difference may come from velocity, retained muscle or shaft states, contact conditions, or a changed command. Variational dynamics asks a precise local question: along a declared reference motion, how does a small change in state or input change a later outcome? It provides the derivative of a model prediction. It does not identify the golfer's neural strategy from motion alone.
@@ -123,7 +124,7 @@ Later times occur on the left. This is a time-ordered sum, not an unrestricted a
 $$
 \|\Phi_k(t,s)\|\le\frac{(L\Delta)^k}{k!}.
 $$
-The exponential majorant proves absolute and uniform convergence on this bounded interval. Passing to the integral equation identifies the sum with its unique solution. More generally, local integrability of $\|A\|$ suffices; the short treatment by [Baake and Schlaegel](https://arxiv.org/abs/1011.1775) supplies that version.
+The exponential majorant proves absolute and uniform convergence on this bounded interval. Passing to the integral equation identifies the sum with its unique solution. More generally, local integrability of $\|A\|$ suffices; Baake and Schlägel supply that version [@BaakeSchlaegel2011].
 
 A direct check makes order tangible. Apply $A_1=\begin{pmatrix}0&1\\0&0\end{pmatrix}$ for one unit of time and then $A_2=\begin{pmatrix}0&0\\1&0\end{pmatrix}$ for one unit. Each squares to zero, so
 $$
@@ -388,7 +389,7 @@ The STM is the derivative, or tangent pushforward, of the specified flow with re
 
 Integrating the full STM adds $n^2$ state variables. A dense product $A\Phi$ costs $O(n^3)$ per right-hand-side evaluation, plus the cost of obtaining $A$. If only a few initial directions are needed, propagate an $n\times r$ sensitivity block instead. If only a few scalar output gradients are needed, an adjoint may be preferable. Sparse products, Jacobian-vector products and matrix-exponential actions can avoid forming dense matrices. No single method is uniformly cheapest across dimensions, structures, output requests and tolerances.
 
-Analytic derivatives and automatic differentiation should be checked against independent directional differences where feasible. A derivative can faithfully differentiate the wrong force law. Integrate the reference state and sensitivities consistently, use scales appropriate to each block, refine tolerances or the time step, and compare the final task output and derivative. The [MIT trajectory-linearization treatment](https://underactuated.mit.edu/lqr.html) connects these derivatives to local trajectory feedback while keeping the reference feasible.
+Analytic derivatives and automatic differentiation should be checked against independent directional differences where feasible. A derivative can faithfully differentiate the wrong force law. Integrate the reference state and sensitivities consistently, use scales appropriate to each block, refine tolerances or the time step, and compare the final task output and derivative. The underactuated-robotics trajectory-linearization notes connect these derivatives to local trajectory feedback while keeping the reference feasible [@TedrakeTrajectoryFoundations].
 
 ### Matrix Exponentials and Conditioning
 
@@ -397,7 +398,7 @@ $$
 e^Z\approx\left[r_m(2^{-s}Z)\right]^{2^s},
 \qquad r_m=N_m/D_m.
 $$
-Modern algorithms choose a diagonal $[m/m]$ Padé degree and scaling according to error estimates, then solve the matrix-polynomial system rather than forming its denominator inverse. The [Al-Mohy--Higham analysis](https://doi.org/10.1137/09074721X) explains how unnecessary scaling can worsen rounding error. A fixed $[7/8]$ rule and threshold are not a general guarantee of machine accuracy. Backward error, conditioning of the matrix-exponential problem and roundoff together determine forward accuracy; consult the numerical library's documented algorithm and verify the application.
+Modern algorithms choose a diagonal $[m/m]$ Padé degree and scaling according to error estimates, then solve the matrix-polynomial system rather than forming its denominator inverse. The Al–Mohy and Higham scaling-and-squaring analysis explains how unnecessary scaling can worsen rounding error [@AlMohyHigham2009]. A fixed $[7/8]$ rule and threshold are not a general guarantee of machine accuracy. Backward error, conditioning of the matrix-exponential problem and roundoff together determine forward accuracy; consult the numerical library's documented algorithm and verify the application.
 
 For a dense fixed-degree approximant, polynomial evaluation and a solve have cubic scaling, with additional cubic work for each squaring. Constants, selected degree, structure and reuse matter. An adaptive ODE solver's cost depends on accepted and rejected steps, not simply the number of requested output samples. For time-varying coefficients, repeatedly applying frozen exponentials also introduces a time-discretization error.
 
@@ -420,7 +421,7 @@ The new triangular factor multiplies on the left. During the interval, one propa
 
 ### Symplectic Structure and Energy
 
-For an autonomous unforced canonical Hamiltonian system, the exact flow preserves its Hamiltonian and symplectic form. A symplectic numerical map satisfies $(D\Psi_h)^T\mathbb J D\Psi_h=\mathbb J$ and hence preserves canonical volume. Volume preservation alone is weaker in dimensions above two. A generic explicit RK4 method is not symplectic, but implicit midpoint and Gauss Runge--Kutta methods are symplectic under their defining assumptions; [Hairer's symplectic-integration lectures](https://www.unige.ch/~hairer/poly_geoint/week2.pdf) derive these examples.
+For an autonomous unforced canonical Hamiltonian system, the exact flow preserves its Hamiltonian and symplectic form. A symplectic numerical map satisfies $(D\Psi_h)^T\mathbb J D\Psi_h=\mathbb J$ and hence preserves canonical volume. Volume preservation alone is weaker in dimensions above two. A generic explicit RK4 method is not symplectic, but implicit midpoint and Gauss Runge--Kutta methods are symplectic under their defining assumptions [@HairerLubichWanner2006].
 
 For separable $H(q,p)=T(p)+V(q)$, kick-drift symplectic Euler gives
 $$
@@ -444,7 +445,7 @@ A discrete action $\sum_k L_d(q_k,q_{k+1})$, varied with fixed endpoints, gives
 $$
 D_2L_d(q_{k-1},q_k)+D_1L_d(q_k,q_{k+1})=0.
 $$
-For a regular discrete Lagrangian these equations define a local map. Its discrete Legendre transforms $p_k=-D_1L_d(q_k,q_{k+1})$ and $p_{k+1}=D_2L_d(q_k,q_{k+1})$ place it in canonical phase space, where the unforced map is symplectic. Momentum preservation follows for symmetries actually retained by the discrete Lagrangian; see [West's variational-integrator account](https://lagrangeweb.web.engr.illinois.edu/var_int/). Forced, constrained and nonsmooth extensions require their corresponding formulations. Differentiating a symplectic map preserves its tangent symplectic identity in canonical coordinates, but does not guarantee faster optimization or make a generic position/velocity Jacobian canonically symplectic.
+For a regular discrete Lagrangian these equations define a local map. Its discrete Legendre transforms $p_k=-D_1L_d(q_k,q_{k+1})$ and $p_{k+1}=D_2L_d(q_k,q_{k+1})$ place it in canonical phase space, where the unforced map is symplectic. Momentum preservation follows for symmetries actually retained by the discrete Lagrangian [@MarsdenWest2001]. Forced, constrained and nonsmooth extensions require their corresponding formulations. Differentiating a symplectic map preserves its tangent symplectic identity in canonical coordinates, but does not guarantee faster optimization or make a generic position/velocity Jacobian canonically symplectic.
 
 ## Reproducible Checks
 

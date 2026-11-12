@@ -43,17 +43,17 @@ one requires an explicit transverse chart (such as a moving family of transverse
 **Distinctions from classical setpoint control:**
 - **Reference object:** The nominal target is a geometric curve or orbit $\mathcal{O} = \{x^*(t)\}$, not an isolated static point.
 - **Orbital stability versus timed tracking:** Stability of an orbit requires that the distance to the orbit for trajectories starting close to $\mathcal{O}$ remains small for all forward time ($\operatorname{dist}(x(t), \mathcal{O}) < \epsilon$), and asymptotic orbital stability requires that the distance to the orbit tends to zero ($\lim_{t \to \infty} \operatorname{dist}(x(t), \mathcal{O}) = 0$). This is distinct from timed tracking convergence ($\|x(t) - x^*(t)\| \to 0$): an orbitally stable cycle can attract nearby trajectories while a non-zero asymptotic phase offset $\phi$ persists ($\|x(t) - x^*(t + \phi)\| \to 0$ with $\phi \neq 0$), leaving a persistent time-synchronized tracking error.
-- **Finite-horizon athletic maneuvers:** A finite golf stroke (downswing duration $\sim 250\text{--}350\,\mathrm{ms}$) is not an infinite-time periodic orbit. For such motions, the appropriate certificates are finite-horizon reachability containment, transverse tube invariance, or terminal hitting-set tolerances over a bounded phase interval $[0, \theta_{\mathrm{impact}}]$, rather than asymptotic limit-cycle convergence.
+- **Finite-horizon athletic maneuvers:** A finite golf stroke (downswing duration on the order of $250\text{--}350\,\mathrm{ms}$ in skilled motion-capture cohorts [@Cheon2014GolfJerk]) is not an infinite-time periodic orbit. For such motions, the appropriate certificates are finite-horizon reachability containment, transverse tube invariance, or terminal hitting-set tolerances over a bounded phase interval $[0, \theta_{\mathrm{impact}}]$, rather than asymptotic limit-cycle convergence.
 - **Geometry and manifold constraints:** Control design respects the manifold geometry of the configuration space; coordinate-invariant formulations avoid chart singularities.
 - **Zero-input drift versus physical passivity:** The zero-input vector field $f(x)$ represents the unforced mathematical drift of the state equations, but it is not inherently physically passive. Establishing physical passivity requires declaring a system port $(u, y)$, a non-negative storage function $V(x) \ge 0$ (such as mechanical kinetic plus potential energy), and verifying the dissipation inequality $\dot{V} \le u^\top y$. Algebraic input coordinate shifts (such as non-zero nominal bias forces) move terms between drift and input, which can destroy passivity with respect to the shifted port.
 
 **Required guardrail:** A phase coordinate is useful only when its domain, monotonicity condition, reset behavior, and failure cases are stated. A shoulder angle, foot-contact event, or other physical marker is not automatically a global clock replacement; it must remain well defined and locally ordered over the portion of state space being controlled.
 
 **Relationship to established theory:** CIM is not a distinct mathematical axiom system. It is an organizing perspective that builds on established control literature:
-- Maneuver regulation and path following for unconstrained nonlinear systems (Hauser & Hindman, 1995).
-- Transverse linearization, moving coordinate frames, and periodic orbit stabilization (Shiriaev, Freidovich & Gusev, 2010; Manchester, 2010, 2011).
-- Virtual constraints and hybrid zero dynamics for underactuated locomotion (Westervelt et al., 2007).
-- Transverse LQR, trajectory funnels, and phase-independent regulation in underactuated mechanics (Tedrake, MIT Underactuated Robotics).
+- Maneuver regulation and path following for feedback-linearizable systems [@HauserHindman1995].
+- Transverse linearization, moving coordinate frames, and periodic orbit stabilization [@Shiriaev2010; @ManchesterSlotineTransverse2013; @ManchesterSlotine2017].
+- Virtual constraints and hybrid zero dynamics for underactuated locomotion [@WesterveltGrizzle2007].
+- Transverse LQR, trajectory funnels, and phase-independent regulation in underactuated mechanics [@TedrakeTrajectoryFoundations; @MajumdarTedrake2017].
 :::
 
 
