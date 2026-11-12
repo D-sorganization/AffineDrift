@@ -103,6 +103,12 @@ impulse. This produces gear effect. Local face bulge and roll also change the
 normal, while face compliance can vary with strike position. Ball-speed loss
 cannot universally be assigned to only one of these mechanisms.
 
+\begin{example}{Worked Off-Centre Impact and Gear Effect}{ex:gear_effect}
+Take a free rigid head with $M=0.200\,\mathrm{kg}$, ball mass $m=0.04593\,\mathrm{kg}$, heel--toe offset $r=0.020\,\mathrm m$ perpendicular to $\hat n=\hat x$, and yaw inertia $I_{zz}=4.5\times10^{-4}\,\mathrm{kg\,m^2}$. Then $1/M_{\rm eff}=1/M+r^2/I_{zz}\simeq5.889\ \mathrm{kg^{-1}}$ and $M_{\rm eff}\simeq0.170\,\mathrm{kg}$. With conformance-limit $e=0.83$ \citep{glossaryUSGAEquipment,club_design_cg}, centred impact gives ball-speed ratio $(1+e)/(1+m/M)\simeq1.488$; the offset strike gives $\simeq1.440$, about $3.2\%$ lower. Impulse $J\hat n$ on the ball implies $\Delta\boldsymbol\omega=I_c^{-1}(\mathbf r\times(-J\hat n))$ on the head; with $\mathbf r=0.02\,\hat y$, $\mathbf r\times J\hat n=-0.02J\,\hat z$ and $\Delta\omega_z\simeq+0.02J/I_{zz}$. Here $\Delta\boldsymbol\omega\times\mathbf r$ is along $\hat n$ (the $M_{\rm eff}$ effect), not tangential; gear-effect sidespin needs bulge, roll, or oblique contact (following section).
+
+\includegraphics[width=\linewidth]{figures/gear_effect_impact.pdf}
+\end{example}
+
 \section{Oblique Contact and Spin}
 
 Let $\hat n$ point from face into ball and split impulse into normal and
@@ -241,7 +247,7 @@ launch outcomes, rather than declaring one isolated motion variable optimal.
 
 \section{Exercises}
 \begin{enumerate}
-\item Use $M=0.200$ kg, $m=0.04593$ kg, $v=50$ m/s, $e=0.83$ to compute
+\item Use $M=0.200$ kg, $m=0.04593$ kg, $v=50$ m/s, and conformance-limit $e=0.83$ \citep{glossaryUSGAEquipment,club_design_cg} to compute
 both outgoing velocities, the ball's energy fraction, and total energy loss.
 Verify momentum conservation independently.
 \item At fixed inertia, compare directional effective mass for an impulse

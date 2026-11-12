@@ -1,4 +1,5 @@
 ---
+pagetitle: "The Physics of Putting"
 description: "Putting mechanics connecting stroke motion, impact, slip, rolling resistance, slope and distance calibration."
 css: ../../../css/putting-chapter.css
 ---
@@ -70,6 +71,21 @@ Thus the leading small-time relation is approximately parabolic,
 $y\simeq g\sin\alpha\,x^2/[2(1+\kappa)V^2]$.
 It is not an exact finite-putt parabola when resistance changes the velocity direction and speed. Do not extrapolate this expansion to the stopping time to predict the aim point of a long putt. Hole capture additionally depends on arrival speed and offset; crossing the hole's location is not a capture model.
 
+::: {.callout-tip}
+## Integrated Break and Hole Capture {#ex-putting_break_capture}
+
+On a **level** green ($\alpha=0$), @eq-putting_rolling reduces to constant deceleration $a_0$ along the velocity (here $a_0=0.15\ \mathrm{m/s^2}$ is already the level-green rolling resistance). With $\kappa=2/5$ and $v_0=1.5\ \mathrm{m/s}$, kinematics gives stopping time $t=v_0/a_0\simeq10.0\ \mathrm s$ and distance $d=v_0^2/(2a_0)\simeq7.5\ \mathrm m$ ($\simeq24.6\ \mathrm{ft}$); the factor $1/(1+\kappa)$ in $a_0=c_r g/(1+\kappa)$ already accounts for shared translation-and-spin retardation. On a $2^\circ$ downslope with the same $a_0$, $V=2.0\ \mathrm{m/s}$ across the fall line, the second-order formulas at $t=0.10\ \mathrm s$ yield $x\simeq0.199\ \mathrm m$ and $y\simeq0.00122\ \mathrm m$ (downslope); these match the worked answer below but **do not** predict aim on a $6\ \mathrm m$ breaking putt because resistance and slope reorient the velocity.
+
+**Hole capture:** for a uniform ball at the hole rim, Holmes's model gives a maximum center speed of **$1.626\ \mathrm{m/s}$** for centred capture (including lip roll) [@Holmes1991; @penner2002putting]. Penner summarizes Holmes's impact-parameter boundary as $v_c(\delta)\approx1.63\ \mathrm{m/s}\,[1-(\delta/R_H)^2]$ for impact parameter $\delta$ and hole radius $R_H$. Aim and speed control must satisfy that boundary, not merely pass over the cup.
+
+![Plan View of a Breaking Putt Path Curving Downslope Toward a Hole, With the Holmes Capture Speed Envelope at the Rim.](../figures/putting_break_capture.svg){#fig-putting-break-capture fig-alt="Plan view of a breaking putt curving downslope toward a hole, with the Holmes capture-speed envelope shown at the rim."}
+
+<details>
+<summary>Long Description</summary>
+Top-down view of a putt on tilted ground: the ball path curves downslope toward the hole. A dashed curve marks the Holmes centred capture boundary at the cup rim (maximum arrival speed for lip capture). The layout contrasts break-driven lateral deflection with the speed envelope that separates capture from lipping out or running past.
+</details>
+:::
+
 ## The Stimpmeter and Effective Deceleration {#sec-putting_stimp}
 
 A Stimpmeter reading is a rollout *distance*, conventionally reported in feet, rather than a velocity. The USGA procedure uses repeated rolls in opposite directions on a sufficiently level area and averages the distances; its instructions also distinguish the standard and alternate notches [@USGAStimpmeterReview]. It is a surface-comparison procedure, not a direct measurement of a microscopic friction coefficient.
@@ -125,6 +141,14 @@ Direction and speed errors must also be separated from aiming and green reading.
 2. **A Local Slope Prediction:** Use $\kappa=2/5$, $V=2.0$ m/s, $\alpha=2^\circ$, $a_0=0.15$ m/s$^2$ and $t=0.10$ s. Compute the second-order $x,y$ approximation and compare it with a numerical integration of @eq-putting_rolling. Explain why this is not an aim recommendation for a 20-foot putt with zero arrival speed.
 3. **Separate the Three Stages:** For illustrative Stimp distances 9 and 12 feet, use $v_s=1.83$ m/s to calculate $a_0$. For $D=15$ feet of established rolling, obtain $v_r$, then $U_h$ using a supplied $k_{\mathrm{imp}}=1.5$. Use $L_{\mathrm{eff}}=0.8$ m and $\ell_h=0.9$ m to compute small-angle release amplitudes. Compare their ratio and the exact passive-energy correction. Which measurements would be needed before transferring this calculation to a golfer?
 :::
+
+### Worked Answers {#sec-putting_worked_answers}
+
+1. **Spin and slip:** With $v_0=2.0\ \mathrm{m/s}$, $R\omega_0=3.0\ \mathrm{m/s}$, $\mu_k=0.25$, $g=9.81\ \mathrm{m/s^2}$, $\kappa=2/5$, $s_0=v_0-R\omega_0=-1.0\ \mathrm{m/s}$, $v_r=(v_0+\kappa R\omega_0)/(1+\kappa)=2.2857\ \mathrm{m/s}$, $t_r=\kappa|s_0|/[(1+\kappa)\mu_k g]=0.1165\ \mathrm s$, and slip energy loss $(m/7)s_0^2$ with $m$ the ball mass. Translation **speeds up** during slip while $\dot E=-\mu_k m g|s|<0$.
+
+2. **Local slope:** At $t=0.10\ \mathrm s$, $x\simeq0.199\ \mathrm m$ and $y\simeq0.00122\ \mathrm m$ from the chapter's second-order formulas; a numerical integration of @eq-putting_rolling matches those values at this short time but diverges from the parabolic aim line on longer putts.
+
+3. **Three stages:** $v_s=1.83\ \mathrm{m/s}$ with Stimp lengths $9\ \mathrm{ft}=2.743\ \mathrm m$ and $12\ \mathrm{ft}=3.658\ \mathrm m$ gives $a_0=v_s^2/(2L_s)\simeq0.610$ and $0.458\ \mathrm{m/s^2}$.
 
 
 ::: {.callout-note}
