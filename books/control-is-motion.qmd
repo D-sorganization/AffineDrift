@@ -26,10 +26,10 @@ This page publishes the current chapter map and source links for the active manu
 
 **Task-dependent problem formulations:** Trajectory-centric control is not a universal replacement for classical setpoint regulation or time-indexed tracking. It represents a task-dependent formulation within established control theory, especially valuable for underactuated, ballistic, or rhythmic maneuvers where maintaining the geometric path and energy structure takes precedence over enforcing a rigid clock schedule. When precise time-synchronization or fixed-point holding is demanded by the task, classical timed tracking and equilibrium regulation remain the rigorous and appropriate choices.
 
-**Mathematically:** For a smooth control-affine system $\dot{x} = f(x) + G(x)u$ with a nominal trajectory $(x^*(t), u^*(t))$, perturbations $\delta x(t) = x(t) - x^*(t)$ and $\delta u(t) = u(t) - u^*(t)$ linearize as $\delta \dot{x} = A(t) \delta x + B(t) \delta u$. When local transverse coordinates $z \in \mathbb{R}^{n-1}$ are introduced via a time-dependent moving projection $z = P(t)\delta x$, the chain rule introduces moving-frame terms:
+**Mathematically:** For a smooth control-affine system $\dot{x} = f(x) + G(x)u$ with a nominal trajectory $(x^*(t), u^*(t))$, perturbations $\delta x(t) = x(t) - x^*(t)$ and $\delta u(t) = u(t) - u^*(t)$ linearize as $\delta \dot{x} = A(t) \delta x + B(t) \delta u$. When local transverse coordinates $z \in \mathbb{R}^{n-1}$ are introduced via a phase-dependent normal frame $E(t)\in\mathbb{R}^{n\times(n-1)}$ with $z = E(t)^T\delta x$ (see [NOTATION.md](../NOTATION.md#volume-ii-transverse-coordinates-along-a-nominal-curve); $P(t)=E(t)E(t)^T$ is the accompanying $n\times n$ projector, not $z$ itself), the chain rule gives:
 
 $$
-\dot{z} = \left(\dot{P}(t) + P(t)A(t)\right) \delta x + P(t)B(t) \delta u
+\dot{z} = \left(\dot{E}(t)^T + E(t)^T A(t)\right) \delta x + E(t)^T B(t) \delta u
 $$
 
 An arbitrary matrix projection $P(t)$ is not automatically an autonomous, closed reduced system. To obtain a decoupled transverse subsystem:

@@ -74,7 +74,7 @@ $$
 +\underbrace{\begin{bmatrix}0\\M^{-1}B\end{bmatrix}}_{G(x)}u.
 $$
 
-The kinematic block $v$ belongs to drift. All retained autonomous forces belong to $Q_0$, not just inertial velocity terms and gravity. Distributing the lower block over a declared force partition proves instantaneous closure; it does not prove unique attribution or trajectory superposition. With fixed equality constraints, replace the lower drift block by $PQ_0+a_c$ and the lower input block by $PB$, as derived below.
+The kinematic block $v$ belongs to drift. All retained autonomous forces belong to $Q_0$, not just inertial velocity terms and gravity. Distributing the lower block over a declared force partition proves instantaneous closure; it does not prove unique attribution or trajectory superposition. With fixed equality constraints, replace the lower drift block by $\mathcal{H}_M Q_0+a_c$ and the lower input block by $\mathcal{H}_M B$, as derived below ($\mathcal{H}_M=\Pi_M M^{-1}$, not the projector $\Pi_M$ alone; see [NOTATION.md](../../../../NOTATION.md) and @sec-ch03:constraints).
 
 Input choice matters. If excitation $u$ drives an activation state $a$ through $\dot a=(u-a)/T$ and a unit-mass coordinate obeys $\ddot q=a$, changing $u$ at fixed $a$ produces no immediate acceleration jump. Starting from $a=0$ with unit excitation gives $a(t)=1-e^{-t/T}$ for constant $T>0$. A direct force input would act in the acceleration equation immediately. Both descriptions can be control-affine while having different states and input columns. More elaborate actuator laws must be inspected before affinity in excitation is claimed.
 
@@ -84,7 +84,7 @@ Input choice matters. If excitation $u$ drives an activation state $a$ through $
 
 ### Instantaneous Effects
 
-At a fixed state and within a feasible unchanged mode, changing an applied force by $\Delta Q$ changes acceleration by $M^{-1}\Delta Q$, or $P\Delta Q$ in the constrained case. This is a precisely defined model intervention on an applied-force channel. Removing a muscle, suppressing excitation, or changing a controller can additionally alter passive mechanics, internal states or contact. Those are different experiments.
+At a fixed state and within a feasible unchanged mode, changing an applied force by $\Delta Q$ changes acceleration by $M^{-1}\Delta Q$, or $\mathcal{H}_M\Delta Q$ in the constrained case. This is a precisely defined model intervention on an applied-force channel. Removing a muscle, suppressing excitation, or changing a controller can additionally alter passive mechanics, internal states or contact. Those are different experiments.
 
 ### Cumulative Effects
 
@@ -170,34 +170,32 @@ Electrical-stimulation cycling is another modeling application [@Schutte1993]. I
 Rigid constrained support and deformable contact require different computations. For independent equality constraints in a smooth fixed mode, write
 
 $$
-M\ddot q=Q+A^{\mathsf T}\lambda,\qquad A\ddot q=b.
+M\ddot q=Q+J_c^{\mathsf T}\lambda,\qquad J_c\ddot q=\gamma.
 $$
 
-For stationary holonomic constraints, $A$ is the constraint Jacobian and $b=-\dot A v$ at a position- and velocity-compatible state. Assuming positive-definite $M$ and full row rank of $A$, define
+For stationary holonomic constraints, $J_c$ is the constraint Jacobian and $\gamma=-\dot J_c v$ at a position- and velocity-compatible state. Assuming positive-definite $M$ and full row rank of $J_c$, define the operational-space inertia $K_c=J_cM^{-1}J_c^{\mathsf T}$, projector $\Pi_M=I-M^{-1}J_c^{\mathsf T}K_c^{-1}J_c$, and constrained acceleration operator $\mathcal{H}_M=\Pi_M M^{-1}$:
 
 $$
 \begin{aligned}
-W&=AM^{-1}A^{\mathsf T},\\
-\lambda&=W^{-1}(b-AM^{-1}Q),\\
-P&=M^{-1}-M^{-1}A^{\mathsf T}W^{-1}AM^{-1},\\
-a_c&=M^{-1}A^{\mathsf T}W^{-1}b.
+\lambda&=K_c^{-1}(\gamma-J_cM^{-1}Q),\\
+a_c&=M^{-1}J_c^{\mathsf T}K_c^{-1}\gamma.
 \end{aligned}
 $$
 
-The resulting ledger is $\ddot q=\sum_k PQ_k+a_c$. Count the baseline once: source increments satisfy $APQ_k=0$, while $Aa_c=b$. Adding complete isolated-force solves would repeat the curvature acceleration. $P$ is an inverse-inertia operator, not generally an idempotent Euclidean projection. Dependent constraints need a declared rank treatment instead of inverting singular $W$.
+The resulting ledger is $\ddot q=\sum_k \mathcal{H}_M Q_k+a_c$. Count the baseline once: source increments satisfy $J_c\mathcal{H}_M Q_k=0$, while $J_c a_c=\gamma$. Adding complete isolated-force solves would repeat the curvature acceleration. $\mathcal{H}_M$ is an inverse-inertia operator; $\Pi_M$ is the idempotent $M$-orthogonal projector from @sec-ch03:constraints. Dependent constraints need a declared rank treatment instead of inverting singular $K_c$.
 
-For an algebraic illustration, use the synthetic matrix above, $A=(1,1)$ and $b=2$. The homogeneous responses to $(3,0)$ and $(0,3)$ are $(1,-1)$ and $(-1,1)$, while $a_c=(0,2)$. Their sum is $(0,2)$, not $(0,4)$. The latter answer would count the baseline twice. This example checks accounting, not a particular contact geometry.
+For an algebraic illustration, use the synthetic matrix above, $J_c=(1,1)$ and $\gamma=2$. The homogeneous responses to $(3,0)$ and $(0,3)$ are $(1,-1)$ and $(-1,1)$, while $a_c=(0,2)$. Their sum is $(0,2)$, not $(0,4)$. The latter answer would count the baseline twice. This example checks accounting, not a particular contact geometry.
 
 For unilateral ground contact, reaction sign and friction limits must also hold. A unit mass on a horizontal floor with upward applied force $F$ requires normal reaction $\lambda=9.81-F$ N to stay at rest. Above $F=9.81$ N, that solution requires adhesion; ordinary nonadhesive contact releases. A frozen sticking operator remains an algebraic map but no longer describes the feasible motion.
 
-A compliant contact law can instead supply a force determined by deformation and velocity at the state. Its reaction may change only after a perturbation evolves the state. A finite-step force-removal experiment therefore needs its duration, integration scheme, contact law and comparison output; it is not automatically the same as $P\Delta Q$. The contact methods and attribution conventions are part of the analysis discussed by [@Silverman2014]. Measured ground loads used as prescribed inputs must not also be counted as separately solved reactions.
+A compliant contact law can instead supply a force determined by deformation and velocity at the state. Its reaction may change only after a perturbation evolves the state. A finite-step force-removal experiment therefore needs its duration, integration scheme, contact law and comparison output; it is not automatically the same as $\mathcal{H}_M\Delta Q$. The contact methods and attribution conventions are part of the analysis discussed by [@Silverman2014]. Measured ground loads used as prescribed inputs must not also be counted as separately solved reactions.
 
 ### Physical Outputs and Coordinate Changes
 
 For a physical point $p(q)$ expressed in a fixed inertial frame, let $J=\partial p/\partial q$. Its acceleration ledger is
 
 $$
-\ddot p=\sum_k JPQ_k+Ja_c+\dot Jv.
+\ddot p=\sum_k J\mathcal{H}_M Q_k+Ja_c+\dot Jv.
 $$
 
 The last term accounts for the changing direction and leverage of the kinematic map. A clubhead moving at constant angular speed on a circle has inward acceleration even when the angular acceleration is zero. The acceleration component along the point velocity changes its speed; the perpendicular component changes direction. For nonzero speed $s$, $\dot s=\dot p^{\mathsf T}\ddot p/s$. At rest that unit-tangent expression is undefined.
