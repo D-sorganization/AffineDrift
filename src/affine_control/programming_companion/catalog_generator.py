@@ -497,9 +497,9 @@ python3 scripts/ci/verify_installation.py
 python3 -m scripts.companion_workflows execute --workflow-id installation-verification
 ```
 
-**Expected result:** both verification commands exit with code `0` when the pinned companion provider
-contract is satisfied. A zero exit code does not imply that every optional engine or GUI extra is
-installed.
+**Expected result:** both verification commands exit with code `0` when the pinned companion
+provider contract is satisfied. A zero exit code does not imply that every optional engine or GUI
+extra is installed.
 
 To run another governed workflow after installation succeeds:
 
@@ -507,8 +507,9 @@ To run another governed workflow after installation succeeds:
 python3 -m scripts.companion_workflows execute --workflow-id reference-double-pendulum-simulation
 ```
 
-**Expected result:** exit code `0` and workflow artifacts under `dist/companion-workflows/artifacts/`
-matching the catalog's declared SHA-256 evidence for that workflow id.
+**Expected result:** exit code `0` and workflow artifacts under
+`dist/companion-workflows/artifacts/` matching the catalog's declared SHA-256 evidence for that
+workflow id.
 """
 
     def generate_provenance(self) -> str:
