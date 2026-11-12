@@ -55,7 +55,7 @@ test('article metadata preserves claim limits and links readable prerequisites',
   const prerequisite = page.locator('.page-header-item--prerequisites a');
   await expect(prerequisite).toHaveText('How to Read This Site');
   await expect(page.locator('.page-header-item--published')).toHaveCount(0);
-  await expect(page.locator('#title-block-header .date').first()).toHaveText('Publication date not verified');
+  await expect(page.locator('#title-block-header .date').first()).toHaveText('September 10, 2026');
   await expect(page.getByRole('heading', { name: /^What This Page Does Not Establish/ })).toBeVisible();
   await expect(page.locator('.callout-title-container', { hasText: 'Governed Critiques for This Page' })).toBeVisible();
   await prerequisite.click();

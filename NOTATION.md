@@ -96,8 +96,11 @@ a_{\mathrm{ZVCF}}(q,z;p;\tau)=M(q)^{-1}\tau,
 \qquad \dot q=0,\ u=\tau,
 $$
 
-with gravity omitted from the ZVCF side under the stated model convention.
-Equivalently, $a_{\mathrm{ZVCF}}=M(q)^{-1}B(q)u$ when $\tau=B(q)u$.
+Because the plant is affine in $u$ at fixed $(q,z,p)$, $M^{-1}B(q)u$ does not
+depend on $\dot q$ or on the gravitational part of $h$; the historical
+“zero-velocity, no-gravity” simulation was only a way to compute the control
+operand, not a separate physical state. Equivalently, $a_{\mathrm{ZVCF}}=M(q)^{-1}B(q)u$
+when $\tau=B(q)u$.
 
 Because the equation is affine in $u$ at fixed $(q,z,p)$, the achieved
 acceleration superposes exactly:
