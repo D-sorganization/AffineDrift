@@ -418,6 +418,8 @@ Virtual links represent coordinate frames, not new pieces of anatomical tissue. 
 
 The URDF tree cannot give a child link two parents. Choose a spanning tree and add the omitted rigid closure through the engine's constraint mechanism, or define a compliant attachment with stated force and energy laws. Do not duplicate the club as two independent bodies, silently weld away intended motion, or expect a second parent tag to create a valid two-hand model.
 
+The URDF specification defines exactly six joint types: \texttt{revolute}, \texttt{continuous}, \texttt{prismatic}, \texttt{fixed}, \texttt{floating}, and \texttt{planar}; there is no native ball or universal joint. SDF adds ball, universal, and screw joints and graph topology. MuJoCo closes loops with \texttt{<equality weld/connect>}; Drake uses weld/ball/distance constraints on \texttt{MultibodyPlant}; Pinocchio uses \texttt{RigidConstraintModel}. A trail-hand weld in MJCF (not expressible in URDF) can complete the two-hand grip on a spanning tree.
+
 \section{Building a Full-Body Golf Model}
 \label{sec:golf_urdf}
 

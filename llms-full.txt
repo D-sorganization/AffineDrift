@@ -1,0 +1,33 @@
+# AffineDrift — Full Agent Index
+
+AffineDrift (https://affinedrift.com) is a Quarto educational site. UpstreamDrift is the separate simulation repository it accompanies.
+
+## Site Navigation
+
+| Topic | AffineDrift page | UpstreamDrift module or doc |
+| --- | --- | --- |
+| Install | /pages/upstreamdrift-getting-started.html | README.md Installation; vendor/ud-tools submodule |
+| Headless runs | /pages/upstreamdrift-headless-and-agents.html | src/sim_run/cli.py (`ud-sim`); schemas/sim-run-v1.json |
+| Agent MCP | /pages/upstreamdrift-headless-and-agents.html | src/sim_run/mcp.py (`ud-sim-mcp`); docs/development/sim_run_mcp.md |
+| REST simulate (GUI stack) | /pages/overview.html | POST /api/v1/simulate when API server is running |
+| Program tiles | /models/programming/programs.html | src/config/launcher_manifest.json (companion pin) |
+| Feature diagnostics | /pages/upstreamdrift-headless-and-agents.html | python -m src.shared.python.feature_registry |
+| Notation (ZTCF/ZVCF) | /pages/notation.html | src/shared/python/simulation_backends/ztcf_zvcf.py; engine compute_zvcf naming caveat |
+
+## Headless Worked Example (UpstreamDrift)
+
+Case JSON (from upstream tests/unit/sim_run/test_cli.py):
+
+```json
+{"engine_type": "golf_swing_pendulum", "duration": 1.0, "timestep": 0.01, "initial_state": {"q": [0.0, 0.0]}, "timeout_seconds": 15.0, "tags": {"batch": "ci_test"}}
+```
+
+Command: `ud-sim run case.json --results-root ./sim_results`
+
+## MCP Tools (ud-sim-mcp)
+
+describe_engines, submit_run, get_run, fetch_artifact — stdio only; see upstream .mcp.json and sim_run_mcp_capability_inventory.json.
+
+## License and Evidence
+
+Site prose carries publication-state labels. Executable claims require pinned companion artifacts under models/programming/.

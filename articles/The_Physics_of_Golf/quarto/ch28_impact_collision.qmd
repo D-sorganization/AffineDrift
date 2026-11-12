@@ -95,7 +95,27 @@ impulse. This produces gear effect. Local face bulge and roll also change the
 normal, while face compliance can vary with strike position. Ball-speed loss
 cannot universally be assigned to only one of these mechanisms.
 
-## Oblique Contact and Spin
+::: {.callout-important}
+## Worked Off-Centre Impact and Gear Effect {#ex-gear_effect}
+
+Take a free rigid head with $M=0.200\,\mathrm{kg}$, ball mass $m=0.04593\,\mathrm{kg}$, normal unit vector $\hat n$ in the impact plane, heel–toe offset $r=0.020\,\mathrm m\,\hat y$ (perpendicular to $\hat n$), and yaw inertia $I_{zz}=4.5\times10^{-4}\,\mathrm{kg\,m^2}$ about the vertical axis through the centre of mass. With $\hat n=\hat x$ and $r\cdot\hat n=0$,
+$$
+\frac1{M_{\rm eff}}=\frac1M+\frac{r^2}{I_{zz}}
+=5+\frac{0.02^2}{4.5\times10^{-4}}\simeq5.889\ \mathrm{kg^{-1}},
+$$
+so $M_{\rm eff}\simeq0.170\,\mathrm{kg}$ (about $15\%$ below $M$). With the conformance-limit restitution $e=0.83$ [@glossaryUSGAEquipment; @club_design_cg], centred impact gives ball-speed ratio $(1+e)/(1+m/M)\simeq1.488$; the heel-offset strike gives $(1+e)/(1+m/M_{\rm eff})\simeq1.440$, i.e. about **$3.2\%$** lower normalized ball speed at the same incident club speed.
+
+Impulse $J\hat n$ on the ball implies reaction $-J\hat n$ on the head at the contact point, so $\Delta\boldsymbol\omega=I_c^{-1}\bigl(\mathbf r\times(-J\hat n)\bigr)$. With $\hat n=\hat x$, $J\hat n=J\hat x$, and $\mathbf r=0.02\,\hat y$, $\mathbf r\times J\hat n=0.02J\,(\hat y\times\hat x)=-0.02J\,\hat z$, hence $\mathbf r\times(-J\hat n)=+0.02J\,\hat z$ and $\Delta\omega_z\simeq+0.02J/I_{zz}$. For this planar strike, $\Delta\mathbf v_c=\Delta\boldsymbol\omega\times\mathbf r$ lies along $\hat n$ (the $M_{\rm eff}$ reduction above), not tangential to the face. **Gear-effect sidespin** (@sec-oblique_contact_spin) needs face bulge, roll, or friction coupled to a tilted normal—not this flat-face, centred-normal setup. @fig-gear-effect-impact sketches $\hat n$, $\mathbf r$, $-J\hat n$ on the head, and the resulting $\Delta\boldsymbol\omega$.
+
+![Schematic of Off-Centre Impact: Normal n-Hat, Offset Vector r From Center of Mass to Contact, Normal Impulse J Along n-Hat, and Head Yaw Rate Delta-Omega From a Heel-Offset Strike.](../figures/gear_effect_impact.svg){#fig-gear-effect-impact fig-alt="Off-centre impact schematic: impact normal, offset from center of mass to contact, heel-side normal impulse, and head yaw rate from the offset strike."}
+
+<details>
+<summary>Long Description</summary>
+Plan-view schematic of a rigid clubhead at off-centre impact. The impact normal unit vector points along the face normal into the ball. The offset vector runs from the head center of mass to the contact point on the heel side. The reaction impulse on the head acts opposite to the ball impulse along the impact normal. The induced head yaw rate arises from the heel-offset angular impulse about the center of mass.
+</details>
+:::
+
+## Oblique Contact and Spin {#sec-oblique_contact_spin}
 
 Let $\hat n$ point from face into ball and split impulse into normal and
 tangential components. Neglecting other impulses over the short contact,
@@ -246,7 +266,7 @@ launch outcomes, rather than declaring one isolated motion variable optimal.
 ## Exercises
 
 
-1. Use $M=0.200$ kg, $m=0.04593$ kg, $v=50$ m/s, $e=0.83$ to compute
+1. Use $M=0.200$ kg, $m=0.04593$ kg, $v=50$ m/s, and conformance-limit $e=0.83$ [@glossaryUSGAEquipment; @club_design_cg] to compute
    both outgoing velocities, the ball's energy fraction, and total energy loss.
    Verify momentum conservation independently.
 

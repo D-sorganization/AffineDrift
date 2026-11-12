@@ -91,6 +91,8 @@ For reference axes \(u_A=e_x\), \(u_B=e_y\), use
 
 Both columns remain orthogonal for every \(\alpha\). The ideal two-axis joint therefore does not lock because its own axes align. A driveshaft assembled using a Cardan joint has additional shaft-axis and transmission geometry; its operating limits are not a proof that this two-coordinate joint loses rank. Likewise, a wrist--club task map can be singular even when the local joint rate map has rank two.
 
+The moving normal \(\mathbf n=\mathbf e_x\times R_x(\alpha)\mathbf e_y\) is the Grood--Suntay floating axis: body-fixed first axis, body-fixed third axis, and their common perpendicular \citep{Grood1983}. ISB reporting standards adopt this joint coordinate system construction \citep{Wu2002,Wu2005}.
+
 The forbidden instantaneous angular-velocity direction is the moving normal \(n=e_x\times R_x(\alpha)e_y\). For example, at \(\alpha=\pi/2\), the allowed second-axis velocity points along A's \(z\) direction. A rule that permanently forbids rotation around A's \(z\) direction would reject legitimate universal-joint motion. At \(\alpha=\pi/2,\beta=0\), \(R e_z=-e_y\), directly disproving the fixed-normal rule.
 
 This rate map also determines which moment components drive the coordinates. If \(m\) is an applied relative moment expressed in A, virtual power gives
@@ -193,6 +195,10 @@ R_{PF}=R_P^T R_F.
 \]
 
 Changing both laboratory orientations by the same rigid rotation leaves this relative orientation unchanged. Increasing a pelvis-turn angle therefore does not uniquely prescribe a change in hip rotation: the femur and foot may also move. Coordinate components obtained from different Euler sequences are not directly interchangeable.
+
+\subsection{ISB Joint Coordinate Systems and This Book's Frames}\label{sec:isb_jcs}
+
+Biomechanical software expects joint angles in ISB joint coordinate systems built on the Grood--Suntay construction \citep{Grood1983,Wu2002,Wu2005}. The STC specifies segment coordinate systems with \(\mathbf X\) anterior, \(\mathbf Y\) superior, \(\mathbf Z\) right, and per-joint flexion/floating-axis/axial-rotation sequences; the glenohumeral joint commonly uses a Y--X--Y humerothoracic sequence \citep{Wu2005}. Chapter~21 uses \(\mathbf x\) anterior, \(\mathbf y\) left and \(\mathbf z\) superior. Relative to ISB axes, \((X,Y,Z)_{\rm ISB}\to(x,z,-y)_{\rm book}\) maps the triad only; joint angles require sequence and reference posture to be transformed consistently.
 
 \subsection{Limits, Impingement and Model Selection}\label{limits-impingement-and-model-selection}
 
