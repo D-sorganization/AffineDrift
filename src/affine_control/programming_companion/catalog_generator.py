@@ -488,7 +488,7 @@ categories:
 
 ## Local Installation and Verification
 
-Run these commands from the AffineDrift repository root after installing the Python 3.11 or 3.12
+Run these commands from the UpstreamDrift repository root after installing the Python 3.11 or 3.12
 environment described in the project README:
 
 ```bash
