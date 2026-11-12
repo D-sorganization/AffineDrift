@@ -8,7 +8,23 @@ Muscle-driven matching asks which control history, model parameters, and sometim
 
 ## From Excitation to Motion
 
-A simplified Hill-type muscle-tendon model transforms neural excitation $e$ to activation $a$, activation and muscle-tendon state to force $F_m$, and muscle force through moment arms to joint torque. A first-order activation equation is often represented as $\dot{a}=(e-a)/\tau$, with separate time constants for activation and deactivation. Muscle force depends on active force-length and force-velocity factors, passive fiber force, tendon force-length behavior, and maximum isometric force. The generalized force contribution is $\tau_m(q)=R(q)F_m$, where sign and moment-arm conventions matter. Forward dynamics then evolves the coordinates and muscle states.
+A simplified Hill-type muscle-tendon model transforms neural excitation $e$ to activation $a$, activation and muscle-tendon state to force $F_m$, and muscle force through moment arms to joint torque $\tau_m$. A first-order activation model with separate rise and fall rates is
+
+$$
+\dot a=
+\begin{cases}
+(e-a)/\tau_{\mathrm{act}}, & e\ge a,\\[4pt]
+(e-a)/\tau_{\mathrm{deact}}, & e<a.
+\end{cases}
+$$
+
+The active fiber force follows the Hill composition (length $l$, velocity $v$, pennation angle $\alpha$):
+
+$$
+F_m = F_{\max}\Bigl[a\,f_L(l)\,f_V(v) + f_P(l)\Bigr]\cos\alpha,
+$$
+
+with $f_L$, $f_V$, and $f_P$ the active force-length, force-velocity, and passive curves. Tendon and fiber lengths satisfy serial equilibrium: if $l_{\mathrm{mt}}$ is muscle-tendon length, fiber length $l_f$, and tendon length $l_t$, then $l_{\mathrm{mt}}=l_f\cos\alpha + l_t$ with $F_{\mathrm{tendon}}(l_t)=F_{\mathrm{fiber}}(l_f)$ along the line of action. The generalized force contribution is $\tau_m(q)=R(q)F_m$, where sign and moment-arm conventions matter. Forward dynamics then evolves the coordinates and muscle states.
 
 This chain creates multiple sources of lag and uncertainty. An excitation waveform can lead activation; fiber and tendon dynamics can delay force; joint motion reflects inertia and external loads. Fitting excitation directly to kinematic data without these states may attribute all lag to control timing. Conversely, highly flexible tendon parameters may absorb a bad time offset. Muscle models differ in whether tendon is rigid or elastic, whether equilibrium is solved algebraically, and how pennation and compliant tissues are represented. These choices alter the dynamics and optimization conditioning.
 
@@ -72,7 +88,7 @@ Results should identify the objective and all weights, model version, muscle for
 
 ## Worked Derivation: EMG Delay and Activation
 
-Consider $\dot{a}=(e-a)/\tau$ with constant excitation $e=e_0$ from an initially inactive muscle $a(0)=0$. The solution is $a(t)=e_0(1-\exp(-t/\tau))$. If measured EMG rises at time zero but force is delayed, one plausible explanation is activation dynamics; another is an electromechanical delay $\delta$, tendon compliance, or timing misalignment. For a ramp-like signal, a delay and a larger $\tau$ can produce similar trajectories over a short observation window. Joint kinematics alone may not distinguish them. Multi-channel EMG, tendon/fascicle measurements, repeated activation patterns, or calibrated priors can improve identification. This example explains why simultaneously freeing time offset, activation time constant, and tendon slack length is poorly conditioned.
+Consider $\dot{a}=(e-a)/\tau_{\mathrm{act}}$ with constant excitation $e=e_0$ from an initially inactive muscle $a(0)=0$. The solution is $a(t)=e_0(1-\exp(-t/\tau_{\mathrm{act}}))$. If measured EMG rises at time zero but force is delayed, one plausible explanation is activation dynamics; another is an electromechanical delay $\delta$, tendon compliance, or timing misalignment. For a ramp-like signal, a delay and a larger $\tau_{\mathrm{act}}$ can produce similar trajectories over a short observation window. Joint kinematics alone may not distinguish them. Multi-channel EMG, tendon/fascicle measurements, repeated activation patterns, or calibrated priors can improve identification. This example explains why simultaneously freeing time offset, activation time constant, and tendon slack length is poorly conditioned.
 
 ## Exercises With Solutions
 

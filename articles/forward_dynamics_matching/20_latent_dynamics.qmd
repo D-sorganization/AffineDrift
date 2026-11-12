@@ -31,8 +31,8 @@ To decide whether latent memory is warranted, compare a Markov mechanics baselin
 An unconstrained neural vector field can violate kinematic constraints or produce impossible accelerations. A mechanics-first candidate preserves known equations and lets learned components represent specific residuals:
 
 $$
-M_\theta(q)\ddot q + C_\theta(q,\dot q)+g_\theta(q)
-=B_\theta(q)u+J(q)^T\lambda+r_\phi(q,\dot q,u,z).
+M_\theta(q)\ddot q + C_\theta(q,\dot q)\dot q+g_\theta(q)
+=B_\theta(q)u+J_c(q)^T\lambda+r_\phi(q,\dot q,u,z).
 $$
 
 The residual $r_\phi$ should be bounded or regularized and should not override positive-definite inertia, joint constraints, or contact rules. If a latent state is included, its observation relationship and update dynamics should be stated. For instance, it may represent an activation variable with a first-order lag, but such an interpretation should be supported by independent physiological or control data. Without that evidence, call it a learned memory state.
@@ -82,7 +82,7 @@ Latent models can be excellent predictors while remaining uninterpretable. Flexi
 
 A measured configuration may fail to be Markov for several reasons. Actuator activation can lag a command. A viscoelastic tissue model may require an internal strain variable. A camera pipeline may introduce delay. A contact sensor may omit the current mode. Before increasing latent size, test these alternatives because each suggests a different state equation and different evidence. Delay can often be diagnosed by synchronization checks; actuator lag by measured command-response transients; contact mode by force sensing; viscoelasticity by loading-unloading hysteresis. A generic latent state can predict all of these while identifying none of them.
 
-The Markov property can be probed empirically: find pairs of observations with similar measured (q,qdot,u) but different short-term futures. If the difference is systematic and exceeds noise, then the observed state is insufficient under the current input description. This does not prove that a latent coordinate is physically necessary; hidden control and observation error can also cause the effect. Add candidate history summaries and compare them with explicit physical states. Use held-out sequences where the relevant history differs while the current measured state is similar.
+The Markov property can be probed empirically: find pairs of observations with similar measured $(q,\dot q,u)$ but different short-term futures. If the difference is systematic and exceeds noise, then the observed state is insufficient under the current input description. This does not prove that a latent coordinate is physically necessary; hidden control and observation error can also cause the effect. Add candidate history summaries and compare them with explicit physical states. Use held-out sequences where the relevant history differs while the current measured state is similar.
 
 Representation alignment matters for subject-level studies. Independently trained latent spaces can be rotated, permuted, or sign-flipped. Averaging latent coordinates across subjects is not meaningful until a mapping or alignment criterion is established. A model may instead compare decoded physical predictions or invariant latent distances. If latent dimensions are claimed to correspond to common mechanisms, test that correspondence with shared perturbations and independent measurements.
 
