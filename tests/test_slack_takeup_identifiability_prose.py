@@ -19,6 +19,8 @@ def test_item_2_unit_count_and_damping() -> None:
     """Item 2: Section 3 unit count has seven unknowns and damping is not a Toy B parameter."""
     text = ARTICLE_PATH.read_text(encoding="utf-8")
     assert "**seven** unknowns" in text or "seven unknowns" in text
+    assert "one stiffness scale shared" not in text
+    assert "independent stiffness" in text.lower()
     assert "damping" in text.lower()
     assert (
         "omits a separate damping parameter" in text
