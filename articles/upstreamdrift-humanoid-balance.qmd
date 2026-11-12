@@ -5,6 +5,15 @@ author: "Dieter Olson"
 date: "2026-11-11"
 date-source: "editorial-board-review"
 date-modified: "2026-11-11"
+last-reviewed: "2026-11-11"
+canonical: "/articles/upstreamdrift-humanoid-balance.html"
+summary-plain: "This reference maps ZMP, capture point, and centroidal MPC to UpstreamDrift at a pinned commit. It records sign conventions, defaults, and validity flags. It does not certify hardware walking performance."
+abstract: "Implementation reference for humanoid balance quantities in UpstreamDrift at commit 3afe09c1: ZMP from centroidal kinematics with free-fall guard, finite-difference acceleration caveats, LIPM capture point, and a reduced-state centroidal MPC prototype. Formulas and defaults are tied to cited module paths for audit; walking performance on hardware is out of scope."
+key-takeaways:
+  - "ZMP validity requires an in-polygon horizontal point and avoids trusted acceleration from finite differences alone."
+  - "Capture-point scaling uses omega equals square root of g over relative CoM height with a 0.01 m floor."
+  - "Default support is a centred 0.26 m by 0.15 m rectangle unless a measured foot polygon is supplied."
+  - "Centroidal MPC uses a 50 kg fallback mass when the engine reports no total mass."
 categories:
   - reference
   - robotics
