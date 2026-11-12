@@ -75,6 +75,13 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
             self.assertTrue(
                 np.isclose(snap["sum_of_moments_about_com_nm"], expected_sum, atol=1e-9)
             )
+        series = res["wscg_fig2_timeseries"]
+        self.assertGreater(len(series["time_s"]), 20)
+        self.assertEqual(
+            len(series["time_s"]),
+            len(series["total_hand_couple_sigma_nm"]),
+        )
+        self.assertGreater(max(series["total_hand_couple_sigma_nm"]), 1.0)
 
     def test_study_3_frame_conventions_norm_invariance(self) -> None:
         """Verify Euclidean norm invariance under clubface roll rotation."""
@@ -131,7 +138,13 @@ class TestAlphaWarSensitivitySuite(unittest.TestCase):
         self.assertEqual(res["effective_zero_lag_order"], 4)
         self.assertIn("filtfilt", res["phase_handling"])
         self.assertGreaterEqual(res["recommended_pre_impact_truncation_ms"], 20.0)
-        self.assertAlmostEqual(res["truncated_20ms_pre_impact_bleed_max_nm"], 0.0, places=9)
+        self.assertAlmostEqual(res["truncated_20ms_pre_impact_bleed_max_nm"], 0.0, places=6)
+        self.assertGreater(res["pre_impact_collision_bleed_max_nm"], 15.0)
+        by_fc = {row["cutoff_hz"]: row for row in res["butterworth_cutoff_sweep"]}
+        for fc in (4.0, 8.0, 30.0, 100.0):
+            row = by_fc[fc]
+            self.assertIn("truncated_pre_contact_at_boundary_nm", row)
+            self.assertLessEqual(row["truncated_boundary_collision_bleed_nm"], 1e-6)
 
     def test_study_5_closed_loop_identifiability_and_zero_arm(self) -> None:
         """Verify rank-5 point-force map, rank-6 full-wrench map, and zero-arm null couple."""

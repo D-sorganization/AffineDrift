@@ -20,6 +20,64 @@ def _svg_header(w: int, h: int) -> str:
     )
 
 
+def _nice_step(span: float, target_ticks: int) -> float:
+    """Pick a readable tick step for axis annotation."""
+    if span <= 0:
+        return 1.0
+    raw = span / max(target_ticks, 1)
+    magnitude = 10 ** math.floor(math.log10(raw))
+    for mult in (1.0, 2.0, 2.5, 5.0, 10.0):
+        step = magnitude * mult
+        if step >= raw:
+            return step
+    return magnitude * 10.0
+
+
+def _axis_ticks(
+    t_min: float,
+    t_max: float,
+    v_min: float,
+    v_max: float,
+    tx,
+    ty,
+    *,
+    x0: int,
+    x1: int,
+    y0: int,
+    y1: int,
+) -> list[str]:
+    """Emit numeric x/y tick marks with labels inside a plot panel."""
+    lines: list[str] = []
+    x_step = _nice_step(t_max - t_min, 5)
+    x_start = math.ceil(t_min / x_step) * x_step
+    x_tick = x_start
+    while x_tick <= t_max + 1e-9:
+        px = tx(x_tick)
+        lines.append(f'<line x1="{px:.1f}" y1="{y1}" x2="{px:.1f}" y2="{y1 + 5}" stroke="#333"/>')
+        lines.append(
+            f'<text x="{px:.1f}" y="{y1 + 18}" font-size="9.5" '
+            f'text-anchor="middle">{x_tick:.2f}</text>'
+        )
+        x_tick += x_step
+
+    y_step = _nice_step(v_max - v_min, 5)
+    y_start = math.ceil(v_min / y_step) * y_step
+    y_tick = y_start
+    while y_tick <= v_max + 1e-9:
+        py = ty(y_tick)
+        lines.append(f'<line x1="{x0 - 5}" y1="{py:.1f}" x2="{x0}" y2="{py:.1f}" stroke="#333"/>')
+        lines.append(
+            f'<text x="{x0 - 8}" y="{py + 3.5:.1f}" font-size="9.5" '
+            f'text-anchor="end">{y_tick:.0f}</text>'
+        )
+        y_tick += y_step
+    if v_min <= 0.0 <= v_max:
+        lines.append(
+            f'<text x="{x0 - 8}" y="{ty(0.0) + 3.5:.1f}" font-size="9.5" text-anchor="end">0</text>'
+        )
+    return lines
+
+
 def fig_transport_stations(payload: dict[str, Any]) -> str:
     """Plot M(s) = C_alpha - s*R_y along the shaft with simulated and illustrative s*."""
     study1 = payload["study_1_grip_point_transport"]
@@ -203,8 +261,8 @@ def fig_filter_sweep(payload: dict[str, Any]) -> str:
     rows = study4["butterworth_cutoff_sweep"]
     true_tau = study4["true_couple_at_impact_nm"]
     xs = [r["cutoff_hz"] for r in rows]
-    clean_t0 = [r["clean_filtered_at_impact_nm"] for r in rows]
-    clean_5ms = [r["clean_filtered_5ms_pre_nm"] for r in rows]
+    trunc_boundary = [r["truncated_pre_contact_at_boundary_nm"] for r in rows]
+    trunc_5ms = [r["truncated_pre_contact_5ms_before_boundary_nm"] for r in rows]
     bleed_t0 = [r["across_impact_filtered_at_impact_nm"] for r in rows]
     bleed_5ms = [r["across_impact_filtered_5ms_pre_nm"] for r in rows]
     by_fc = {r["cutoff_hz"]: r for r in rows}
@@ -237,9 +295,10 @@ def fig_filter_sweep(payload: dict[str, Any]) -> str:
 
     y0 = ty(0.0)
     yt = ty(true_tau)
-    c8 = by_fc[8.0]["clean_filtered_at_impact_nm"]
+    t8 = by_fc[8.0]["truncated_pre_contact_at_boundary_nm"]
     b30 = by_fc[30.0]["across_impact_filtered_at_impact_nm"]
     b100 = by_fc[100.0]["across_impact_filtered_at_impact_nm"]
+    c8_full = by_fc[8.0]["clean_filtered_at_impact_nm"]
 
     lines = [
         _svg_header(w, h),
@@ -252,11 +311,11 @@ def fig_filter_sweep(payload: dict[str, Any]) -> str:
         "</text>",
         '<text x="58" y="52" font-size="10.2" fill="#555">'
         "Filter: 2nd-order Butterworth per pass, bidirectional zero-lag filtfilt "
-        "(effective 4th-order) | Truncation: &gt;=20 ms before contact | "
+        "(effective 4th-order) | Retain kinematics through t = -20 ms only in Panel (a) | "
         "Frame: F_FSP (+CCW uncocking)"
         "</text>",
         f'<text x="{p1_x0}" y="72" font-size="11.5" font-weight="bold" fill="#1f77b4">'
-        "Panel (a): Pre-impact truncation (&gt;=20 ms pre-contact)</text>",
+        "Panel (a): Pre-impact truncation (&gt;=20 ms) — couple at retention boundary</text>",
         f'<text x="{p2_x0}" y="72" font-size="11.5" font-weight="bold" fill="#d62728">'
         "Panel (b): Filtering across impact (collision bleed)</text>",
         f'<rect x="{p1_x0}" y="{y_top}" width="{p1_x1 - p1_x0}" height="{y_bot - y_top}" '
@@ -271,15 +330,13 @@ def fig_filter_sweep(payload: dict[str, Any]) -> str:
         'stroke="#2ca02c" stroke-dasharray="3 3"/>',
         f'<line x1="{p2_x0}" y1="{yt:.1f}" x2="{p2_x1}" y2="{yt:.1f}" '
         'stroke="#2ca02c" stroke-dasharray="3 3"/>',
-        f'<polygon points="{band(clean_t0, 2.0, p1_x0, p1_x1)}" '
-        'fill="#1f77b4" fill-opacity="0.18"/>',
         f'<polyline fill="none" stroke="#1f77b4" stroke-width="2.2" '
-        f'points="{pts(clean_t0, p1_x0, p1_x1)}"/>',
+        f'points="{pts(trunc_boundary, p1_x0, p1_x1)}"/>',
         f'<polyline fill="none" stroke="#1f77b4" stroke-width="1.5" '
-        f'stroke-dasharray="5 3" points="{pts(clean_5ms, p1_x0, p1_x1)}"/>',
-        f'<circle cx="{tx(8.0, p1_x0, p1_x1):.1f}" cy="{ty(c8):.1f}" r="4.5" fill="#d62728"/>',
-        f'<text x="{tx(8.0, p1_x0, p1_x1) + 6:.1f}" y="{ty(c8) - 6:.1f}" '
-        f'font-size="10" fill="#d62728">8 Hz sign flip: +{c8:.2f} N·m</text>',
+        f'stroke-dasharray="5 3" points="{pts(trunc_5ms, p1_x0, p1_x1)}"/>',
+        f'<circle cx="{tx(8.0, p1_x0, p1_x1):.1f}" cy="{ty(t8):.1f}" r="4.5" fill="#d62728"/>',
+        f'<text x="{p1_x0 + 8}" y="{ty(t8) - 10:.1f}" font-size="9.5" fill="#d62728">'
+        f"8 Hz at t=-20 ms: {t8:.2f} N·m (full record t=0: {c8_full:+.2f} N·m)</text>",
         f'<text x="{p1_x0 + 8}" y="{yt + 14:.1f}" font-size="10" fill="#2ca02c">'
         f"True pre-impact couple: {true_tau:.2f} N·m</text>",
         f'<polygon points="{band(bleed_t0, 3.5, p2_x0, p2_x1)}" '
@@ -294,6 +351,30 @@ def fig_filter_sweep(payload: dict[str, Any]) -> str:
         f"30 Hz bleed: {b30:.2f} N·m (100 Hz: {b100:.2f} N·m)</text>",
         f'<text x="{p1_x0 + 70}" y="{h - 18}" font-size="11">Butterworth cutoff f_c (Hz)</text>',
         f'<text x="{p2_x0 + 70}" y="{h - 18}" font-size="11">Butterworth cutoff f_c (Hz)</text>',
+        *_axis_ticks(
+            4.0,
+            100.0,
+            ymin,
+            ymax,
+            lambda x: tx(x, p1_x0, p1_x1),
+            ty,
+            x0=p1_x0,
+            x1=p1_x1,
+            y0=y_top,
+            y1=y_bot,
+        ),
+        *_axis_ticks(
+            4.0,
+            100.0,
+            ymin,
+            ymax,
+            lambda x: tx(x, p2_x0, p2_x1),
+            ty,
+            x0=p2_x0,
+            x1=p2_x1,
+            y0=y_top,
+            y1=y_bot,
+        ),
         f'<text x="16" y="{(y_top + y_bot) // 2}" font-size="11" '
         f'transform="rotate(-90 16,{(y_top + y_bot) // 2})">Filtered alpha couple (N·m)</text>',
         "</svg>",
@@ -303,18 +384,35 @@ def fig_filter_sweep(payload: dict[str, Any]) -> str:
 
 def fig_couple_timeseries(payload: dict[str, Any]) -> str:
     """Plot hand couple, ZTCF passive couple, and COM moment over time with error bands."""
-    snaps = payload["study_2_couple_vs_sum_of_moments"]["snapshots"]
-    ts = [s["time_s"] for s in snaps]
-    couple = [s["total_hand_couple_mid_nm"] for s in snaps]
-    ztcf = [s["ztcf_passive_couple_mid_nm"] for s in snaps]
-    com = [s["sum_of_moments_about_com_nm"] for s in snaps]
+    study2 = payload["study_2_couple_vs_sum_of_moments"]
+    snaps = study2["snapshots"]
+    series = study2.get("wscg_fig2_timeseries", {})
+    err_model = study2.get("error_propagation_model", {})
+    if series:
+        ts = series["time_s"]
+        couple = series["total_hand_couple_mid_nm"]
+        ztcf = series["ztcf_passive_couple_mid_nm"]
+        com = series["sum_of_moments_about_com_nm"]
+        couple_sig = series["total_hand_couple_sigma_nm"]
+        ztcf_sig = series["ztcf_passive_couple_sigma_nm"]
+        com_sig = series["sum_of_moments_about_com_sigma_nm"]
+        sigma_note = err_model.get("representative_force_sigma_n", couple_sig[len(couple_sig) // 2])
+    else:
+        ts = [s["time_s"] for s in snaps]
+        couple = [s["total_hand_couple_mid_nm"] for s in snaps]
+        ztcf = [s["ztcf_passive_couple_mid_nm"] for s in snaps]
+        com = [s["sum_of_moments_about_com_nm"] for s in snaps]
+        couple_sig = [3.0] * len(ts)
+        ztcf_sig = [2.5] * len(ts)
+        com_sig = [3.0] * len(ts)
+        sigma_note = 3.0
 
     min_snap = next(s for s in snaps if abs(s["time_s"] - 0.2151) < 1e-4)
     c_min = min_snap["total_hand_couple_mid_nm"]
     z_min = min_snap["ztcf_passive_couple_mid_nm"]
     share_pct = 100.0 * abs(z_min) / abs(c_min)
 
-    w, h, pad_l, pad_r, pad_t, pad_b = 720, 400, 68, 36, 62, 58
+    w, h, pad_l, pad_r, pad_t, pad_b = 760, 400, 72, 48, 62, 58
     tmin, tmax = min(ts), max(ts)
     vmin, vmax = -28.0, 62.0
     span_t = tmax - tmin or 1.0
@@ -334,12 +432,12 @@ def fig_couple_timeseries(payload: dict[str, Any]) -> str:
         d_attr = f' stroke-dasharray="{dash}"' if dash else ""
         return f'<polyline fill="none" stroke="{color}" stroke-width="2.2"{d_attr} points="{pts}"/>'
 
-    def band(series: list[float], sigma: float, color: str) -> str:
-        """Build an error-propagation polygon band around a time series."""
-        hi = [f"{tx(t):.1f},{ty(v + sigma):.1f}" for t, v in zip(ts, series, strict=True)]
+    def band(series: list[float], sigmas: list[float], color: str) -> str:
+        """Build a per-sample error-propagation polygon band around a time series."""
+        hi = [f"{tx(t):.1f},{ty(v + s):.1f}" for t, v, s in zip(ts, series, sigmas, strict=True)]
         lo = [
-            f"{tx(t):.1f},{ty(v - sigma):.1f}"
-            for t, v in zip(reversed(ts), reversed(series), strict=True)
+            f"{tx(t):.1f},{ty(v - s):.1f}"
+            for t, v, s in zip(reversed(ts), reversed(series), reversed(sigmas), strict=True)
         ]
         pts_str = " ".join(hi + lo)
         return f'<polygon points="{pts_str}" fill="{color}" fill-opacity="0.16" stroke="none"/>'
@@ -358,24 +456,26 @@ def fig_couple_timeseries(payload: dict[str, Any]) -> str:
         "</text>",
         '<text x="68" y="54" font-size="10.2" fill="#555">'
         "Frame: F_FSP (functional swing plane) | Sign convention: +CCW uncocking | "
-        "Source: simulated WSCG with ±3.0 N·m inverse-dynamics error-propagation bands"
+        f"Bands: propagated grip-force residual (sigma_force ~ {sigma_note:.1f} N per axis)"
         "</text>",
         f'<line x1="{pad_l}" y1="{h - pad_b}" x2="{w - pad_r}" y2="{h - pad_b}" stroke="#333"/>',
         f'<line x1="{pad_l}" y1="{pad_t}" x2="{pad_l}" y2="{h - pad_b}" stroke="#333"/>',
         f'<line x1="{pad_l}" y1="{y0:.1f}" x2="{w - pad_r}" y2="{y0:.1f}" '
         'stroke="#666" stroke-dasharray="4 3"/>',
-        band(couple, 3.0, "#1f77b4"),
-        band(ztcf, 2.5, "#2ca02c"),
-        band(com, 3.0, "#ff7f0e"),
+        band(couple, couple_sig, "#1f77b4"),
+        band(ztcf, ztcf_sig, "#2ca02c"),
+        band(com, com_sig, "#ff7f0e"),
         poly(couple, "#1f77b4"),
         poly(ztcf, "#2ca02c", "6 4"),
         poly(com, "#ff7f0e"),
         f'<circle cx="{tx(0.2151):.1f}" cy="{ty(c_min):.1f}" r="4.5" fill="#1f77b4"/>',
         f'<circle cx="{tx(0.2151):.1f}" cy="{ty(z_min):.1f}" r="4.5" fill="#2ca02c"/>',
-        f'<text x="{tx(0.2151) - 285:.1f}" y="{ty(c_min) + 14:.1f}" '
-        f'font-size="10.5" fill="#1f77b4">'
-        f"t=0.2151 s (simulated): |ZTCF|/|BASE| = |{z_min:.2f}|/|{c_min:.2f}| = "
-        f"{share_pct:.2f}% (same-state modeled ratio)</text>",
+        f'<text x="{pad_l + 8}" y="{ty(c_min) + 28:.1f}" font-size="10" fill="#1f77b4">'
+        f"t=0.2151 s: |ZTCF|/|BASE| = {share_pct:.2f}% "
+        f"({z_min:.2f}/{c_min:.2f} N·m, modeled ratio)</text>",
+        *_axis_ticks(
+            tmin, tmax, vmin, vmax, tx, ty, x0=pad_l, x1=w - pad_r, y0=pad_t, y1=h - pad_b
+        ),
         f'<text x="{pad_l + 12}" y="{pad_t + 18}" font-size="10.5" fill="#333">'
         "Legend: Blue = Total hand couple C_alpha,M | Green dashed = ZTCF passive | "
         "Orange = COM moment M_alpha,G</text>",

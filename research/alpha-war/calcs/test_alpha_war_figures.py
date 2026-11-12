@@ -126,7 +126,10 @@ class TestAlphaWarFigures(unittest.TestCase):
         self.assertIn(f"{share_pct:.2f}%", svg)
         self.assertIn("ZTCF", svg)
         self.assertIn("<polygon", svg)
-        self.assertIn("error-propagation", svg.lower())
+        self.assertIn("propagated", svg.lower())
+        study2 = payload["study_2_couple_vs_sum_of_moments"]
+        self.assertIn("wscg_fig2_timeseries", study2)
+        self.assertGreater(len(study2["wscg_fig2_timeseries"]["time_s"]), 20)
         self.assertIn("F_FSP", svg)
         self.assertIn("+CCW uncocking", svg)
         self.assertIn("N·m", svg)
@@ -149,8 +152,10 @@ class TestAlphaWarFigures(unittest.TestCase):
         self.assertIn("20 ms", svg)
         self.assertIn("filtfilt", svg)
         self.assertIn("4th-order", svg)
-        self.assertIn(f"+{rows[8.0]['clean_filtered_at_impact_nm']:.2f}", svg)
+        t8 = rows[8.0]["truncated_pre_contact_at_boundary_nm"]
+        self.assertIn(f"{t8:.2f}", svg)
         self.assertIn(f"{rows[30.0]['across_impact_filtered_at_impact_nm']:.2f}", svg)
+        self.assertIn("retention boundary", svg.lower())
         self.assertIn("F_FSP", svg)
         self.assertIn("+CCW uncocking", svg)
         self.assertIn("Plain-language takeaway:", svg)
