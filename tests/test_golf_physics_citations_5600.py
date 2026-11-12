@@ -52,12 +52,30 @@ def test_renamed_bib_keys_exist() -> None:
         _bib_block(key)
 
 
+_CH28_COR_NUMERIC = re.compile(r"\$e=0\.\d+\$")
+_CH28_COR_BIB_KEYS = ("glossaryUSGAEquipment", "club_design_cg")
+
+
+def _ch28_paragraphs_lacking_cor_source(ch28: str) -> list[str]:
+    lacking: list[str] = []
+    for para in re.split(r"\n\s*\n", ch28):
+        if not _CH28_COR_NUMERIC.search(para):
+            continue
+        if not any(key in para for key in _CH28_COR_BIB_KEYS):
+            lacking.append(para.strip()[:160])
+    return lacking
+
+
 def test_ch28_impact_inputs_source_citations() -> None:
     ch28 = _quarto_text("ch28_impact_collision.qmd")
     assert "glossaryUSGAEquipment" in ch28 or "club_design_cg" in ch28
     assert "Cochran1968" in ch28 or "Penner2003" in ch28
-    if "illustrative $e=0.83$" in ch28:
-        assert "Cochran1968" in ch28 or "Penner2003" in ch28
+    assert "illustrative $e=0.83$" not in ch28
+    unsourced = _ch28_paragraphs_lacking_cor_source(ch28)
+    assert not unsourced, (
+        "Each numeric COR ($e=0.xx$) must cite equipment rules in the same paragraph; "
+        f"missing in: {unsourced!r}"
+    )
 
 
 def test_ch25_ucm_literature_cited() -> None:
