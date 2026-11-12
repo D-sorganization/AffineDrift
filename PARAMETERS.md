@@ -15,34 +15,6 @@ Canonical numerical parameters, symbols, and units for _The Physics of Golf_ (ch
 | Driver length (regulation maximum) | $L$ | m | Maximum allowed driver length (46 in) converted to metres. | 1.1684 | USGA Rule 1-1c; UpstreamDrift DRIVER_LENGTH_MAX_M | USGA/R&A Equipment Rules | PoG ch02, PoG ch11 (flexible shaft) | `src/shared/python/core/physics_constants.py` (`DRIVER_LENGTH_MAX_M`) |
 | Clubhead center-of-gravity offset | $r_{CoG}$ | m | Position of the clubhead center of mass relative to the face-centre contact point along the face normal (negative toward the hosel/heel unless a chapter states otherwise). | 0.01–0.05 | Typical driver CG locations relative to face center in equipment catalogs; declare the datum in each derivation | Engineering convention (face-centre datum) | PoG ch04 (forces and torques), GoM Volume I | — |
 
-## UpstreamDrift Runtime Defaults (Pin `625a16e68`)
-
-Values below come from UpstreamDrift `src/shared/python/core/physics_constants.py` and the modules named in [UpstreamDrift Physics Models](../articles/upstreamdrift-physics-models.html). They are **program defaults**, not automatic site replacements for derivations in the textbook.
-
-| Quantity | Symbol (site) | UpstreamDrift value | Unit | Provenance string in code | Primary module |
-| --- | --- | --- | --- | --- | --- |
-| Gravity | $g$ | 9.80665 | m/s² | NIST CODATA 2018 | `physics_constants` |
-| Ball mass | $m$ | 0.04593 | kg | USGA Rule 5-1 | `physics_constants` |
-| Ball radius | $R$ | 0.021335 | m | USGA Rule 5-2 (derived) | `physics_constants` |
-| Ball $I$ | $I$ | $(2/5)mR^2$ | kg·m² | Solid sphere | `physics_constants` |
-| Sea-level air density | $\rho$ | 1.225 | kg/m³ | ISA | `physics_constants` / `atmosphere` |
-| Dynamic viscosity | — | $1.789\times 10^{-5}$ | Pa·s | ISO 2533 | `physics_constants` |
-| Driver COR | $e_n$ | 0.83 | — | USGA/R&A CT limit | `physics_constants` |
-| Putter / green COR | — | 0.78 | — | Uncited contact default | `physics_constants` |
-| Contact time | — | 0.0005 | s | High-speed video (typical) | `physics_constants` |
-| Head MOI | $I_H$ | $4.5\times 10^{-4}$ | kg·m² | Typical driver specs | `physics_constants` |
-| Face friction (impact) | $\mu$ | 0.4 | — | `ImpactParameters` default | `impact_model/types` |
-| Spin decay rate | — | 0.05 | 1/s | Trackman Data (string) | `physics_constants` |
-| Lift cap (Python registry) | — | 0.155 | — | TrackMan calibration | `flight_models` |
-| Lift cap (Rust kernel) | — | 0.26 | — | Module constant | `aerodynamics.rs` |
-| Hole radius | $R_h$ | 0.054 | m | USGA cup | `putting_dynamics/solver` |
-| Centre capture speed | — | ~1.64 | m/s | Chord bound (code) | `putting_dynamics/solver` |
-| Stimp release speed | $v_s$ | 1.83 | m/s | USGA convention | `putting_dynamics/friction` |
-| Flat-track ramp speed | — | ~1.911 | m/s | Closed form $b=0$ | `putting_dynamics/stimpmeter` |
-| Sliding friction (putt) | $\mu_k$ | 0.40 | — | Default | `putting_dynamics/friction` |
-| Static hold (putt) | $\mu_s$ | 0.08 | — | Default | `putting_dynamics/friction` |
-| Roll stop threshold | — | 0.005 | m/s | Numerical | `putting_dynamics/friction` |
-
 ## Usage
 
 - **Consistency**: Numerical examples must match these symbols, units, and sourced values unless a chapter explicitly declares a rounded teaching default listed in `data/canonical_parameters.json`.
