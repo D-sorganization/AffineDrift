@@ -467,6 +467,8 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/validation-roadmap.html",
             "/pages/Golf_Control_Theory.html",
             "/pages/scope-and-limits.html",
+            "/pages/upstreamdrift-engine-protocol.html",
+            "/pages/upstreamdrift-conventions.html",
             "/articles/slack-management-linked-systems.html",
         }
         and (
@@ -559,6 +561,12 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     assert drift_past["review"]["source_path"] == (
         "articles/drift-is-the-past-control-is-the-present.qmd"
     )
+    engine_protocol = _find_route(inventory, "/pages/upstreamdrift-engine-protocol.html")
+    assert engine_protocol["status"] == "reviewed"
+    assert engine_protocol["review"]["source_path"] == "pages/upstreamdrift-engine-protocol.qmd"
+    conventions_ref = _find_route(inventory, "/pages/upstreamdrift-conventions.html")
+    assert conventions_ref["status"] == "reviewed"
+    assert conventions_ref["review"]["source_path"] == "pages/upstreamdrift-conventions.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )
