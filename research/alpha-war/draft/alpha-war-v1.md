@@ -1281,7 +1281,7 @@ _Critical Dynamic Observations:_
 
 **Plain-language takeaway (Figure 2):** The hands' pure couple turns negative before impact and **tracks the ZTCF branch** on this modeled trajectory (86.04% **signed-component ratio** at minimum couple), even while the total moment about the club's center of mass returns near zero.
 
-![Figure 2: Simulated WSCG time series comparing total hand couple C_alpha,M(t), ZTCF branch couple, and sum of moments about the club center of mass M_alpha,G(t) (N·m vs. time t in s, frame F_FSP, +CCW uncocking sign convention) with ±3.0 N·m inverse-dynamics error-propagation bands and the 86.04% |ZTCF|/|BASE| modeled magnitude ratio at t = 0.2151 s.](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple, ZTCF branch couple, and sum of moments about the club center of mass in frame F_FSP (+CCW uncocking) with inverse-dynamics error-propagation bands and 86.04% |ZTCF|/|BASE| annotation at t = 0.2151 s"}
+![Figure 2: Simulated WSCG time series comparing total hand couple C_alpha,M(t), ZTCF branch couple, and sum of moments about the club center of mass M_alpha,G(t) (N·m vs. time t in s, frame F_FSP, +CCW uncocking sign convention) with grip-force residual error-propagation bands and the 86.04% |ZTCF|/|BASE| modeled magnitude ratio at t = 0.2151 s.](figures/fig-couple-vs-com.svg){fig-alt="Time series comparing total hand couple, ZTCF branch couple, and sum of moments about the club center of mass in frame F_FSP (+CCW uncocking) with propagated grip-force residual bands and 86.04% |ZTCF|/|BASE| annotation at t = 0.2151 s"}
 
 ---
 
@@ -1369,7 +1369,7 @@ _Summary of Artifacts:_
 
 **Plain-language takeaway (Figure 4):** Low-cutoff smoothing ($<10\text{ Hz}$) erases the late negative couple and can flip its sign, while filtering across ball impact bleeds collision forces backward in time—so kinematics must be truncated at least $20\text{ ms}$ before contact.
 
-![Figure 4: Two-panel Butterworth cutoff sweep (4 to 100 Hz, 2nd-order per pass / effective 4th-order zero-lag filtfilt, frame F_FSP, +CCW uncocking): Panel (a) pre-impact truncation (>=20 ms before contact) versus Panel (b) filtering across impact (collision bleed).](figures/fig-filter-cutoff-sweep.svg){fig-alt="Two-panel plot of filtered alpha couple in newton-meters versus Butterworth cutoff frequency from 4 to 100 Hz comparing Panel (a) pre-impact truncation at least 20 ms before contact against Panel (b) across-impact collision bleed"}
+![Figure 4: Two-panel Butterworth cutoff sweep (4 to 100 Hz, 2nd-order per pass / effective 4th-order zero-lag filtfilt, frame F_FSP, +CCW uncocking): Panel (a) pre-impact truncation (>=20 ms retention boundary) versus Panel (b) filtering across impact (collision bleed).](figures/fig-filter-cutoff-sweep.svg){fig-alt="Two-panel plot of filtered alpha couple in newton-meters versus Butterworth cutoff frequency from 4 to 100 Hz comparing Panel (a) couple at the t equals minus 20 ms retention boundary after pre-impact truncation against Panel (b) across-impact collision bleed at impact"}
 
 ### Table 7.7: Unmodeled Aerodynamic Drag Sensitivity (Moment Arm $r_{\text{head}} = 1.02\text{ m}$)
 

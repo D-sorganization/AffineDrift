@@ -108,6 +108,13 @@ SUITE_VERSION = "2026-11-10-repro-slices-2-5"
 OUT_OF_PLANE_AXIS = np.array([0.0, -1.0, 1.0]) / np.sqrt(2.0)
 WSCG_RAW_DIR = UPSTREAM_DRIFT_ROOT / WSCG_REL
 CALCS_DIR = Path(__file__).resolve().parent
+# Grip-force residual envelope for first-order couple uncertainty (2.5% per axis, 8 N floor).
+ID_FORCE_SIGMA_SCALE = 0.025
+ID_FORCE_SIGMA_FLOOR_N = 8.0
+ID_FREE_TORQUE_SIGMA_NM = 1.5
+FIG2_TIME_MIN_S = 0.04
+FIG2_TIME_MAX_S = 0.25
+FIG2_DECIMATE_STEP = 3
 
 
 def _load_wscg_case(case_name: str) -> np.ndarray:
@@ -285,6 +292,63 @@ def run_study_1_grip_point_transport() -> dict[str, Any]:
     }
 
 
+def _midhand_alpha_couple_nm(
+    lead_pos: np.ndarray,
+    trail_pos: np.ndarray,
+    lead_f: np.ndarray,
+    trail_f: np.ndarray,
+    lead_tau: np.ndarray,
+    trail_tau: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Return force couple, free torque, total couple, and beta resultant force along e_y."""
+    r_m = 0.5 * (lead_pos + trail_pos)
+    m_force_mid = (
+        np.cross(lead_pos - r_m, lead_f) + np.cross(trail_pos - r_m, trail_f)
+    ) @ OUT_OF_PLANE_AXIS
+    m_free = (lead_tau + trail_tau) @ OUT_OF_PLANE_AXIS
+    c_mid = m_force_mid + m_free
+    grip_vec = trail_pos - lead_pos
+    sep = np.linalg.norm(grip_vec, axis=1, keepdims=True)
+    e_y = np.cross(OUT_OF_PLANE_AXIS, grip_vec / sep)
+    resultant = lead_f + trail_f
+    r_y = np.sum(resultant * e_y, axis=1)
+    return m_force_mid, m_free, c_mid, r_y
+
+
+def _force_sigma_per_axis(forces: np.ndarray) -> float:
+    """Per-axis grip force perturbation from a fixed ID residual scale."""
+    peak = float(np.max(np.abs(forces)))
+    return max(ID_FORCE_SIGMA_FLOOR_N, ID_FORCE_SIGMA_SCALE * max(peak, 1.0))
+
+
+def _couple_sigma_nm(
+    lead_pos: np.ndarray,
+    trail_pos: np.ndarray,
+    lead_f: np.ndarray,
+    trail_f: np.ndarray,
+    lead_tau: np.ndarray,
+    trail_tau: np.ndarray,
+) -> np.ndarray:
+    """First-order envelope: max |ΔC_alpha| under independent per-axis force perturbations."""
+    _, _, base, _ = _midhand_alpha_couple_nm(
+        lead_pos, trail_pos, lead_f, trail_f, lead_tau, trail_tau
+    )
+    sigma = np.full_like(base, ID_FREE_TORQUE_SIGMA_NM)
+    sigma_f = max(_force_sigma_per_axis(lead_f), _force_sigma_per_axis(trail_f))
+    for sign in (-1.0, 1.0):
+        for hand_idx, _hand_f in enumerate((lead_f, trail_f)):
+            for axis in range(3):
+                pert_lead = lead_f.copy()
+                pert_trail = trail_f.copy()
+                target = pert_lead if hand_idx == 0 else pert_trail
+                target[:, axis] += sign * sigma_f
+                _, _, pert, _ = _midhand_alpha_couple_nm(
+                    lead_pos, trail_pos, pert_lead, pert_trail, lead_tau, trail_tau
+                )
+                sigma = np.maximum(sigma, np.abs(pert - base))
+    return sigma
+
+
 def run_study_2_couple_vs_sum_of_moments() -> dict[str, Any]:
     """Study 2: Time-series decomposition of Hand Couple vs. Sum of Moments about COM."""
     base = _load_wscg_case("base")
@@ -297,27 +361,37 @@ def run_study_2_couple_vs_sum_of_moments() -> dict[str, Any]:
     lead_tau = _vec3(base, "lead_free_torque_global", "nm")
     trail_tau = _vec3(base, "trail_free_torque_global", "nm")
 
+    m_force_mid, m_free, c_mid, r_y = _midhand_alpha_couple_nm(
+        lead_pos, trail_pos, lead_f, trail_f, lead_tau, trail_tau
+    )
+    resultant = lead_f + trail_f
     grip_vec = trail_pos - lead_pos
     sep = np.linalg.norm(grip_vec, axis=1)
     e_x = grip_vec / sep[:, None]
-    e_y = np.cross(OUT_OF_PLANE_AXIS, e_x)
-
-    r_m = 0.5 * (lead_pos + trail_pos)
-    m_force_mid = (
-        np.cross(lead_pos - r_m, lead_f) + np.cross(trail_pos - r_m, trail_f)
-    ) @ OUT_OF_PLANE_AXIS
-    m_free = (lead_tau + trail_tau) @ OUT_OF_PLANE_AXIS
-    c_mid = m_force_mid + m_free
-
-    resultant = lead_f + trail_f
     r_x = np.sum(resultant * e_x, axis=1)
-    r_y = np.sum(resultant * e_y, axis=1)
 
     d_g_m = 0.72
     moment_of_resultant_about_com = -d_g_m * r_y
     sum_of_moments_about_com = c_mid + moment_of_resultant_about_com
 
     ztcf_c_mid = _vec3(ztcf, "equivalent_midpoint_couple_local_source", "nm")[:, 2]
+    couple_sigma = _couple_sigma_nm(lead_pos, trail_pos, lead_f, trail_f, lead_tau, trail_tau)
+    force_sigma_n = float(max(_force_sigma_per_axis(lead_f), _force_sigma_per_axis(trail_f)))
+    ry_sigma = force_sigma_n * np.sqrt(2.0)
+    com_sigma = np.sqrt(couple_sigma**2 + (d_g_m * ry_sigma) ** 2)
+    ztcf_sigma = 0.85 * couple_sigma
+
+    mask = (time_s >= FIG2_TIME_MIN_S) & (time_s <= FIG2_TIME_MAX_S)
+    idx = np.flatnonzero(mask)[::FIG2_DECIMATE_STEP]
+    wscg_fig2_timeseries = {
+        "time_s": [float(time_s[i]) for i in idx],
+        "total_hand_couple_mid_nm": [float(c_mid[i]) for i in idx],
+        "ztcf_passive_couple_mid_nm": [float(ztcf_c_mid[i]) for i in idx],
+        "sum_of_moments_about_com_nm": [float(sum_of_moments_about_com[i]) for i in idx],
+        "total_hand_couple_sigma_nm": [float(couple_sigma[i]) for i in idx],
+        "ztcf_passive_couple_sigma_nm": [float(ztcf_sigma[i]) for i in idx],
+        "sum_of_moments_about_com_sigma_nm": [float(com_sigma[i]) for i in idx],
+    }
 
     crossings_couple = find_zero_crossings(time_s, c_mid)
     crossings_total_com = find_zero_crossings(time_s, sum_of_moments_about_com)
@@ -343,6 +417,15 @@ def run_study_2_couple_vs_sum_of_moments() -> dict[str, Any]:
 
     return {
         "club_com_offset_from_mid_hands_m": d_g_m,
+        "error_propagation_model": {
+            "method": "first_order_independent_per_axis_grip_force_perturbation",
+            "force_sigma_scale": ID_FORCE_SIGMA_SCALE,
+            "force_sigma_floor_n": ID_FORCE_SIGMA_FLOOR_N,
+            "free_torque_sigma_nm": ID_FREE_TORQUE_SIGMA_NM,
+            "representative_force_sigma_n": force_sigma_n,
+            "com_transport_lever_m": d_g_m,
+        },
+        "wscg_fig2_timeseries": wscg_fig2_timeseries,
         "couple_zero_crossings": [
             {"time_s": float(t), "direction": d} for t, d in crossings_couple
         ],
@@ -444,41 +527,52 @@ def run_study_4_filtering_and_drag_sensitivity() -> dict[str, Any]:
 
     cutoff_list_hz = [4.0, 6.0, 8.0, 10.0, 15.0, 20.0, 30.0, 50.0, 100.0]
     idx_trunc_20ms = idx_impact - 20
-    max_trunc_bleed_nm = 0.0
+    max_trunc_boundary_bleed_nm = 0.0
+    max_pre_impact_collision_bleed_nm = 0.0
     filter_results = []
     for fc in cutoff_list_hz:
         b, a = butter(2, fc / (0.5 * fs), btype="low")
-        # Verify strict pre-impact truncation (>=20 ms before contact) eliminates collision bleed
+        # Panel (a): retain only t <= -20 ms, then bidirectional zero-lag filter (no impact data).
         theta_trunc_clean = filtfilt(b, a, theta_pre[:idx_trunc_20ms])
         theta_trunc_imp = filtfilt(b, a, theta_with_impact[:idx_trunc_20ms])
         alpha_trunc_clean = np.gradient(np.gradient(theta_trunc_clean, dt), dt)
         alpha_trunc_imp = np.gradient(np.gradient(theta_trunc_imp, dt), dt)
-        trunc_bleed = float(np.max(np.abs(i_g * (alpha_trunc_imp - alpha_trunc_clean))))
-        max_trunc_bleed_nm = max(max_trunc_bleed_nm, trunc_bleed)
+        tau_trunc_boundary = float(i_g * alpha_trunc_clean[-1])
+        tau_trunc_5ms_before = float(i_g * alpha_trunc_clean[-6])
+        trunc_boundary_bleed = float(np.abs(i_g * (alpha_trunc_imp[-1] - alpha_trunc_clean[-1])))
+        max_trunc_boundary_bleed_nm = max(max_trunc_boundary_bleed_nm, trunc_boundary_bleed)
 
-        # Case A: Clean swing (no ball collision impulse) filtered with zero-lag Butterworth
+        # Case A: full-record clean swing (Table 7.6 "Clean" columns; sign-flip reference).
         theta_filt_clean = filtfilt(b, a, theta_pre)
         alpha_filt_clean = np.gradient(np.gradient(theta_filt_clean, dt), dt)
         tau_clean_at_impact = float(i_g * alpha_filt_clean[idx_impact])
         tau_clean_5ms_pre = float(i_g * alpha_filt_clean[idx_impact - 5])
 
-        # Case B: Uncorrected filtering across ball-impact collision
+        # Case B: uncorrected filtering across ball-impact collision (Panel b bleed).
         theta_filt_imp = filtfilt(b, a, theta_with_impact)
         alpha_filt_imp = np.gradient(np.gradient(theta_filt_imp, dt), dt)
         tau_imp_at_impact = float(i_g * alpha_filt_imp[idx_impact])
         tau_imp_5ms_pre = float(i_g * alpha_filt_imp[idx_impact - 5])
         tau_imp_10ms_pre = float(i_g * alpha_filt_imp[idx_impact - 10])
+        pre_impact_bleed_5ms = float(tau_imp_5ms_pre - tau_clean_5ms_pre)
+        max_pre_impact_collision_bleed_nm = max(
+            max_pre_impact_collision_bleed_nm, abs(pre_impact_bleed_5ms)
+        )
 
         filter_results.append(
             {
                 "cutoff_hz": fc,
                 "true_couple_at_impact_nm": float(tau_true[idx_impact]),
                 "true_couple_5ms_pre_nm": float(tau_true[idx_impact - 5]),
+                "truncated_pre_contact_at_boundary_nm": tau_trunc_boundary,
+                "truncated_pre_contact_5ms_before_boundary_nm": tau_trunc_5ms_before,
+                "truncated_boundary_collision_bleed_nm": trunc_boundary_bleed,
                 "clean_filtered_at_impact_nm": tau_clean_at_impact,
                 "clean_filtered_sign_at_impact": (
                     "positive" if tau_clean_at_impact > 0 else "negative"
                 ),
                 "clean_filtered_5ms_pre_nm": tau_clean_5ms_pre,
+                "pre_impact_collision_bleed_5ms_nm": pre_impact_bleed_5ms,
                 "across_impact_filtered_at_impact_nm": tau_imp_at_impact,
                 "across_impact_filtered_5ms_pre_nm": tau_imp_5ms_pre,
                 "across_impact_filtered_10ms_pre_nm": tau_imp_10ms_pre,
@@ -512,7 +606,8 @@ def run_study_4_filtering_and_drag_sensitivity() -> dict[str, Any]:
             "zero-lag bidirectional filtfilt (2nd-order Butterworth per pass, 4th-order effective)"
         ),
         "recommended_pre_impact_truncation_ms": 20.0,
-        "truncated_20ms_pre_impact_bleed_max_nm": max_trunc_bleed_nm,
+        "truncated_20ms_pre_impact_bleed_max_nm": max_trunc_boundary_bleed_nm,
+        "pre_impact_collision_bleed_max_nm": max_pre_impact_collision_bleed_nm,
         "true_couple_at_impact_nm": float(tau_true[idx_impact]),
         "true_zero_crossing_time_s": float(
             find_zero_crossings(t[:idx_impact], tau_true[:idx_impact])[0][0]
