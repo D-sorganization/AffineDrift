@@ -1,3 +1,5 @@
+> **Superseded (2026-11-11, Refs #5606):** Historical sandbox audit only. Do not follow.
+
 # Scientific Rigor Audit - Documentation Index
 
 ## The Geometry of Motion Textbook Series
