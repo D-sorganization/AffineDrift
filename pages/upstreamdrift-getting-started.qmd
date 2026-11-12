@@ -1,0 +1,82 @@
+---
+title: "UpstreamDrift: Getting Started"
+description: "Install UpstreamDrift from the public README — submodule, Python bounds, verification, and launch commands checked against upstream main."
+toc: true
+page-layout: article
+categories:
+- site-information
+---
+
+This page publishes the **current public install sequence** for
+[UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift). Commands and
+prerequisites are copied from the upstream
+[README](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/README.md)
+at commit `625a16e6897b` (2026-11-11). UpstreamDrift remains the live authority;
+AffineDrift CI re-checks this page against
+`data/upstreamdrift/install_readme_contract.json`.
+
+For scriptable runs without the GUI, see [Headless Simulation and Agent Use](upstreamdrift-headless-and-agents.html).
+
+## Prerequisites
+
+- **Python 3.11 or 3.12.** UpstreamDrift declares `requires-python = ">=3.11,<3.13"` in
+  `pyproject.toml` at the cited commit.
+- **Git.** The shared Tools layer at `vendor/ud-tools` is a **mandatory** submodule;
+  the platform will not import without it. The repository **does not use Git LFS**.
+- **MATLAB R2023a or later** with Simulink and Simscape Multibody — only if you use the
+  historical MATLAB models, not for the Python platform alone.
+
+## Standard Install
+
+```bash
+git clone https://github.com/D-sorganization/UpstreamDrift.git
+cd UpstreamDrift
+git submodule update --init --recursive vendor/ud-tools
+
+pip install -e ".[dev]"
+
+python scripts/ci/verify_installation.py
+```
+
+Only `vendor/ud-tools` is required. Model submodules (`opensim-models`, `myo_sim`,
+`human-gazebo`) are optional and needed only for experimental OpenSim or MyoSuite work.
+
+## Launch the Platform
+
+```bash
+python launch_upstream_drift.py
+```
+
+This starts the local API server on port 8000 and opens the web interface. Common
+variants from the README:
+
+| Command | Opens |
+| --- | --- |
+| `python launch_upstream_drift.py` | Web interface (default) |
+| `python launch_upstream_drift.py --classic` | PyQt6 desktop application |
+| `python launch_upstream_drift.py --api-only` | API server without a UI |
+| `upstream-drift` | Same as `launch_upstream_drift.py` (console script) |
+
+## Mock Engine (Interface Development Only)
+
+To work on UI or API plumbing without loading a physics engine:
+
+```bash
+pip install -e .
+export GOLF_USE_MOCK_ENGINE=1
+```
+
+Output is synthetic. Do not treat it as a physics result.
+
+## Troubleshooting
+
+If installation fails, follow the upstream
+[installation troubleshooting](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/docs/troubleshooting/installation.md)
+guide.
+
+## Related Articles
+
+- [Overview](overview.html#upstreamdrift-the-software) — Pinned support tiers and API shape
+- [Headless Simulation and Agent Use](upstreamdrift-headless-and-agents.html) — `ud-sim`, MCP, REST
+- [Programming Companion](../models/programming/index.html) — Version-pinned program catalog
+- [3D Golf Model Repository](../repositories/repositories-3d-model.html) — Repository scope
