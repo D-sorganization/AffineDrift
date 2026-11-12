@@ -1,3 +1,5 @@
+> **Superseded (2026-11-11, Refs #5606):** Historical sandbox audit only. Do not follow.
+
 # Bibliography & PR Quick Reference
 
 ## The Geometry of Motion - Scientific Rigor Audit

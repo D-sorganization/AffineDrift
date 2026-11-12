@@ -418,7 +418,7 @@ $$
 r(t_1)=x_{11}(t_1)-x_{10}(t_1)-x_{01}(t_1)+x_{00}(t_1).
 $$ {#eq-thesis-residual-def}
 
-The fourth term is the **evolved nominal trajectory**, not the initial state. With zero nominal input it is the evolved zero-input trajectory. For the scalar linear system $\dot x=ax+u$, constant $u$, and duration $T$, the endpoint is $e^{aT}x_0+u(e^{aT}-1)/a$ for $a\ne0$. The four-trajectory residual is zero. Replacing its last term by $x_0$ gives $x_0(1-e^{aT})$, a false interaction even in this linear system.
+The fourth term is the **evolved nominal trajectory**, not the initial state. With zero nominal input it is the evolved zero-input trajectory. For the scalar linear system $\dot x=ax+u$, constant $u$, and duration $T$, the endpoint is $e^{aT}x_0+u(e^{aT}-1)/a$ for $a\ne0$. The four-trajectory residual is zero. With $\bar u=0$, replacing its last term by $x_0$ gives $x_0(1-e^{aT})$, a false interaction even in this linear system.
 
 For $\dot x=u^2$ on the Euclidean line and constant perturbations, the same residual is $2\epsilon^2v_1v_2T$. The state space is flat; the input-to-flow map is nonlinear. Ordinary Hessians depend on coordinates and are not intrinsic Riemann curvature tensors. On a manifold, state subtraction requires a declared chart or retraction and a consistent comparison point.
 
@@ -1763,7 +1763,7 @@ $$
 Writing
 
 $$
-M(q)\ddot q+C(q,\dot q)\dot q+G(q)=\tau,
+M(q)\ddot q+C(q,\dot q)\dot q+g(q)=\tau,
 $$ {#eq-thesis-robot-dynamics}
 
 the chosen masses and lengths give
@@ -1786,10 +1786,10 @@ a\dot q_2&a(\dot q_1+\dot q_2)\\
 \end{pmatrix}.
 $$ {#eq-coriolis-matrix}
 
-The potential is $U=g[2\sin q_1+\sin(q_1+q_2)]$ in joules with these SI parameter values, so
+The potential is $U=g_0[2\sin q_1+\sin(q_1+q_2)]$ in joules with these SI parameter values, so
 
 $$
-G(q)=g
+g(q)=g_0
 \begin{pmatrix}
 2\cos q_1+\cos(q_1+q_2)\\
 \cos(q_1+q_2)
@@ -1954,13 +1954,13 @@ A snapshot can tell us how an extra torque changes acceleration at the current p
 
 6. Lee, J. M. (2012). *Introduction to Smooth Manifolds* (2nd ed.). Springer.
 
-7. Liberzon, D. (2003). *Switching in Systems and Control*. Birkhäuser.
+7. Liberzon, D. (2012). *Calculus of Variations and Optimal Control Theory: A Concise Introduction*. Princeton University Press. (In-text sections 1.3.2 and 3.4 refer to the author’s course notes for this book.)
 
 8. Mayne, D. Q., et al. (2000). Constrained model predictive control: Stability and optimality. *Automatica*, 36(6), 789-814.
 
 9. Sastry, S. (1999). *Nonlinear Systems: Analysis, Stability, and Control*. Springer.
 
-10. Tassa, Y., et al. (2012). Synthesis and stabilization of complex behaviors through online trajectory optimization. In *Proc. IEEE/RSJ IROS* (pp. 4906-4913).
+10. Tassa, Y., Mansard, N., and Todorov, E. (2014). Control-limited differential dynamic programming. In *Proc. IEEE ICRA* (pp. 1168–1175). (Cited in the main text for full DDP versus iLQR Hessians.)
 
 \newpage
 
