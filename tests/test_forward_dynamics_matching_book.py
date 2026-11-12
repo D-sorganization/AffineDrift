@@ -47,6 +47,7 @@ EXPECTED_CHAPTER_STEMS = (
     "24_references",
     "25_maintenance",
     "26_neural_proposals",
+    "27_runtime_reference",
 )
 
 
@@ -117,8 +118,8 @@ def test_structural_integrity_development_recovery_documentation() -> None:
         assert p.stat().st_size > 0, f"Empty recovery doc: {doc_name}"
 
 
-def test_structural_integrity_all_26_chapters_and_manifest_hashes() -> None:
-    """Structural integrity: 26 chapters with H1 titles match source_manifest.json body hashes."""
+def test_structural_integrity_all_27_chapters_and_manifest_hashes() -> None:
+    """Structural integrity: 27 chapters with H1 titles match source_manifest.json body hashes."""
     manifest_file = BOOK_DIR / "source_manifest.json"
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     manifest_map = {entry["path"]: entry["sha256"] for entry in manifest["files"]}

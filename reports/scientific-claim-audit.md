@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 291
+- Reviewed: 292
 - Deferred: 0
 - Exempt: 3
 
@@ -53,6 +53,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/forward_dynamics_matching/24_references.html` | `articles/forward_dynamics_matching/24_references.qmd` | 1 |
 | `/articles/forward_dynamics_matching/25_maintenance.html` | `articles/forward_dynamics_matching/25_maintenance.qmd` | 1 |
 | `/articles/forward_dynamics_matching/26_neural_proposals.html` | `articles/forward_dynamics_matching/26_neural_proposals.qmd` | 1 |
+| `/articles/forward_dynamics_matching/27_runtime_reference.html` | `articles/forward_dynamics_matching/27_runtime_reference.qmd` | 1 |
 | `/articles/forward_dynamics_matching/index.html` | `articles/forward_dynamics_matching/index.qmd` | 1 |
 | `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
 | `/articles/ideomotor-theory-and-predictive-brain.html` | `articles/ideomotor-theory-and-predictive-brain.qmd` | 5 |
@@ -350,6 +351,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-ee3b20014eef` | `/articles/forward_dynamics_matching/24_references.html` | Reviewed | — | None | None | 0 |
 | `ad-route-ba22d181565f` | `/articles/forward_dynamics_matching/25_maintenance.html` | Reviewed | — | None | None | 0 |
 | `ad-route-9bcc4dcc73ff` | `/articles/forward_dynamics_matching/26_neural_proposals.html` | Reviewed | — | None | None | 0 |
+| `ad-route-ef89438ec18d` | `/articles/forward_dynamics_matching/27_runtime_reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-578f41d14736` | `/articles/forward_dynamics_matching/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 9 |
 | `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Reviewed | — | None | None | 6 |
