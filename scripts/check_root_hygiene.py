@@ -64,6 +64,8 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         "index.qmd",
         "jest.config.js",
         "listings.json",
+        "llms-full.txt",
+        "llms.txt",
         "manifest.json",
         "offline.html",
         "package-lock.json",

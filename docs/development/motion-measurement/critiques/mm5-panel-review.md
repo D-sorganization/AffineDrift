@@ -1,5 +1,9 @@
 # Motion Measurement Review Panel Critique (MM-5)
 
+> **Panel constitution:** This log records a sequential subscription-agent review
+> against cited literature and in-repo fixtures (`motion_measurement_fixtures.py`).
+> It is not an independent multi-human expert panel.
+
 - **Parent Epic**: #5408
 - **Issue**: #5413 ([MM-5] Review panel on the drafts)
 - **Panel Thread**: `th_4feec364fc57`
@@ -21,7 +25,7 @@
 *Evaluator: Sports Biomechanics & Golf Measurement Practitioner*
 
 - **Convention Cards 1–6 Compliance**: All six cards (X-factor variants, X-factor stretch, shoulder/pelvis turn, kinematic sequence & speed gain, event-relative time normalisation, trunk tilt/lateral bend) define the mandatory 7 fields (Frame, Axes, Sequence, Sign, Velocity component, Events, Units).
-- **2D Line Turn vs 3D JCS Axial Twist Crosstalk**: Confirmed clinical and field distinction. 2D projection of acromion or pelvic landmarks onto the ground plane confounds spinal axial rotation with lateral bend and forward tilt, creating up to 10°–15° of spurious angle crosstalk during transition and impact. 3D JCS axial rotation accurately separates true spinal torsion.
+- **2D Line Turn vs 3D JCS Axial Twist Crosstalk**: Confirmed clinical and field distinction. 2D projection of acromion or pelvic landmarks onto the ground plane confounds spinal axial rotation with lateral bend and forward tilt; the series uses a **geometric illustration band** (order 10°–15° on synthetic motion), not an empirical population bound. 3D JCS axial rotation separates true spinal torsion when frames and sequences are declared.
 - **TrackMan vs AMM vs ISB Alignment**: TrackMan line-of-sight horizontal projection and AMM/Polhemus sensor frames employ distinct measurement planes. To ensure cross-platform comparability, Card 3 and Card 6 must highlight that commercial horizontal turn values differ systematically from ISB anatomical spinal rotations.
 - **Registry Child Slices**: Verified explicit mapping to upstream issues UD#14421 through UD#14428. All references are correctly tagged as `pending` until registry entry release.
 
@@ -48,7 +52,7 @@
 | F-MATH-01 | ADDRESSED | Explicitly stated right-handed Cartesian coordinate convention ($X \times Y = Z$) in Part 1 §1.1. |
 | F-MATH-02 | ADDRESSED | Formally clarified skew-symmetric matrix $[\omega]_\times \in \mathfrak{so}(3)$ and basis consistency in Poisson equation in Part 2 §2.2. |
 | F-MATH-03 | ADDRESSED | Documented $O(\sigma / \Delta\theta)$ helical axis direction error scaling near small displacements in Part 1 §1.5. |
-| F-GOLF-01 | ADDRESSED | Highlighted 2D line-turn geometric crosstalk (10°–15° artifact during side bend) in Part 2 §2.4 and Convention Card 1. |
+| F-GOLF-01 | ADDRESSED | Highlighted 2D line-turn geometric crosstalk as an illustrative band on synthetic motion in Part 2 §2.4 and Convention Card 1. |
 | F-GOLF-02 | ADDRESSED | Clarified TrackMan horizontal heading vs AMM/ISB spinal JCS frame differences in Part 2 §2.4 and Convention Card 3. |
 | F-GOLF-03 | DEFERRED | Defer 6-segment wrist/clubface JCS decomposition to upcoming kinetic/club release slice (UD#14428 / MM-6). |
 | F-NUM-01 | ADDRESSED | Detailed antipodal inner-product unwrapping condition ($q_k \cdot q_{k-1} \ge 0$) in Part 1 §1.4 and Part 2 §2.3. |
@@ -64,6 +68,6 @@
 | Seat | Evaluator Specialty | Status | Evaluation Ledger & Degradation Notes |
 | :--- | :--- | :--- | :--- |
 | **Seat 1: Rigid-body math** | Theoretical Kinematics | NOMINAL | Full evaluation conducted locally under subscription agent review. Verified against foundational kinematics literature (Grood & Suntay 1983; Woltring 1985). Zero pay-per-use APIs invoked. |
-| **Seat 2: Golf measurement practice** | Sports Biomechanics | NOMINAL | Full evaluation conducted locally under subscription agent review. Aligned with ISB standards, Kwon (2013), and UpstreamDrift registry UD#14421–UD#14428. Zero proprietary leaks. |
+| **Seat 2: Golf measurement practice** | Sports Biomechanics | NOMINAL | Full evaluation conducted locally under subscription agent review. Aligned with ISB standards, Kwon et al. (2013) [@kwon2013], and UpstreamDrift registry UD#14421–UD#14428. Zero proprietary leaks. |
 | **Seat 3: Numerical rigor** | Computational Analysis | NOMINAL | Full evaluation conducted locally under subscription agent review. Cross-checked with analytic fixtures in `motion_measurement_fixtures.py`. Zero pay-per-use APIs invoked. |
 | **Seat 4: Lay reader & pedagogy** | Science Communication | NOMINAL | Full evaluation conducted locally under subscription agent review. Verified pedagogical progression, figure references F1–F8, and interactive companion links. Zero pay-per-use APIs invoked. |
