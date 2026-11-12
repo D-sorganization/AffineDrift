@@ -1,0 +1,264 @@
+---
+title: "UpstreamDrift Physics Models: Ball Flight, Impact, Putting and Injury"
+description: "Pinned UpstreamDrift physics defaults for flight, impact, putting and injury, with site–code mismatch flags."
+author: "Dieter Olson"
+date: "2026-11-11"
+date-source: "editorial-board-review"
+date-modified: "2026-11-11"
+last-reviewed: "2026-11-11"
+canonical: "/articles/upstreamdrift-physics-models.html"
+status: "available"
+audience-level: "research"
+evidence-rung: "qualified-simulation"
+summary-plain: "Pinned UpstreamDrift defaults for putting, ball flight, impact, bunker, grip, metrics, and injury heuristics at a fixed commit, compared with AffineDrift derivations. Site–code disagreements are flagged with tracker links rather than silently rewriting textbook equations."
+abstract: "Implementation inventory for shared UpstreamDrift physics modules at commit 625a16e68: putting roll and capture rules, registered flight models and Rust kernel parameters, gear-effect and impact defaults, injury load bands, and ancillary bunker and metrics paths. Each row cites module locations and records mismatches against AffineDrift site models with links to AffineDrift #5624 and UpstreamDrift #15010/#15011."
+key-takeaways:
+  - "UpstreamDrift putting roll applies the full slope gravity vector in roll, unlike the site's five-sevenths scaled roll law."
+  - "Hole capture in code follows a chord bound near 1.64 m/s centre speed, not the finite-ball or Penner forms on the site."
+  - "Default ball-flight APIs differ from the Naruo quartic treatment on the impact reference page; carry can spread tens of yards across registered models."
+  - "Injury heuristics in code use discrete spinal load bands that do not match ch. 21 spine derivations verbatim."
+  - "MISMATCH callouts link code-side remediation to UpstreamDrift #15010 and #15011 without changing site derivations here."
+categories:
+- impact-ball-flight
+- tools
+- reference
+css: ../css/upstreamdrift-physics-models.css
+---
+
+::: {.callout-important}
+## Authority and Limit
+
+**State: Implementation inventory.** Every equation below is quoted from UpstreamDrift source at commit [`625a16e68`](https://github.com/D-sorganization/UpstreamDrift/tree/625a16e6897b88ab29fb5a64c65ecee820dd58f5) (protected `main` on 2026-11-11). AffineDrift theory pages ([Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html), [The Physics of the Rolling Putt](putting-roll-models.html), [Simulating the Green](green-simulation.html), [The Physics of Golf ch. 21](The_Physics_of_Golf/quarto/ch21_spine_modeling.html)) remain the site's derivations. Where they disagree with this inventory, the disagreement is **flagged** with a tracking link. Code-side corrections are tracked in [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010) (ball flight, putting, impact) and [UpstreamDrift #15011](https://github.com/D-sorganization/UpstreamDrift/issues/15011) (injury heuristics). This page addresses [AffineDrift #5624](https://github.com/D-sorganization/AffineDrift/issues/5624).
+:::
+
+## Pin and How to Read the Tables
+
+| Shorthand | Path under UpstreamDrift |
+|---|---|
+| SP | `src/shared/python` |
+| Rust kernel | `rust_core/upstream-physics/src` |
+
+**MISMATCH** rows name both sides and link a tracker. **CODE ONLY** rows document behaviour with no conflicting site derivation yet.
+
+## Putting and Green Simulation
+
+### Roll Acceleration on a Slope
+
+In SP `putting_dynamics/solver.py`, the ground-mode ODE applies the height-field gradient unchanged in both slide and roll:
+
+$$
+g_{x,y} = -g\,\nabla h .
+$$
+
+The site rolling law in [putting-roll-models](putting-roll-models.html) uses $\dot{\mathbf v} = \mathbf g_\parallel/(1+\alpha) - a_0\cos\beta\,\hat{\mathbf v}$ and treats adding full $\mathbf g_\parallel$ as a modelling error.
+
+::: {.callout-warning}
+## MISMATCH (G1): Full $g$ Gradient in Roll
+
+- **UpstreamDrift:** `$g_{x,y} = -g\nabla h$` in slide and roll (`solver.py`, `_derivative`).
+- **AffineDrift site:** Gravitational term scaled by $1/(1+\alpha)$ in roll.
+- **Tracker:** [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
+
+Example at 3 % downhill, Stimp 10, pure roll at 1.5 m/s: the code path is ~33 % longer than the site's $(5/7)g$ roll model for the same inputs (review finding on #5624).
+:::
+
+### Hole-Capture Speed
+
+Centre capture bound in code (`capture_speed_mps`):
+
+$$
+v_{\mathrm{capture}} = 2\sqrt{R_h^2 - b^2}\,\sqrt{\frac{g}{2r}},
+$$
+
+with `HOLE_RADIUS_M = 0.054` m and ball radius from `GOLF_BALL_RADIUS_M` (~0.021335 m). At $b=0$ this is ~1.64 m/s.
+
+| Rule | Centre speed | Off-centre law | Where documented |
+|---|---|---|---|
+| UpstreamDrift `putting_dynamics` | ~1.64 m/s | chord $\propto\sqrt{R_h^2-b^2}$ | this page; `solver.py` |
+| AffineDrift finite-ball construction | ~1.31 m/s | clearance $D_h - R$ | [putting-roll-models](putting-roll-models.html) |
+| Penner historical fit | ~1.63 m/s | $\approx 1.63[1-(b/R_h)^2]$ | same companion |
+| Tools / explorer proxy | ~0.82 m/s effective radius | speed-threshold proxy | [green-simulation](green-simulation.html) §4 |
+
+::: {.callout-warning}
+## MISMATCH (G2): Capture Rule
+
+The putting tile runs the chord bound above, not the finite-ball or Penner forms on the site. Tracker: [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
+:::
+
+### Other `putting_dynamics` Defaults
+
+Documented at the pin (tile `putting_green` in `src/config/models.yaml`):
+
+| Quantity | Default | Source module |
+|---|---|---|
+| Static hold | `mu_static = 0.08` | `friction.py` |
+| Sliding friction | `mu_slide = 0.40` | `friction.py` |
+| Roll onset speed | $v_{\mathrm{roll}}=(v+0.4s)/1.4$ | `solver.py` (`_apply_roll_onset`) |
+| Grain law | $\mu \leftarrow \mu[1 - g_{\mathrm{str}}\cos(\theta_v-\theta_{\mathrm{grain}})]$ | `friction.py` |
+| Speed-dependent roll | $\mu_r(v)=\mu_{r0}(1+k_v v)$, default $k_v=0$ | `friction.py` |
+| Stop speed | `v_stop_mps = 0.005` | `friction.py` |
+| Airborne bounce COR | `GREEN_RESTITUTION = 0.78` | `physics_constants.py` |
+| Integrator | RK4, `DT_S = 0.002` s | `solver.py` |
+| Stimp → $\mu_r$ | $v_{\mathrm{release}}=1.83$ m/s, $\mu_r=v_{\mathrm{release}}^2/(2gS)$ | `friction.py` |
+
+Turf-condition multipliers (dry 0.9 … frosted 1.4) live in SP `putting_dynamics/turf.py` and `surfaces.py`. See [Simulating the Green](green-simulation.html) §4.1 for a provider comparison column.
+
+### Stimpmeter Ramp Release
+
+Closed form at zero groove half-width (`stimpmeter.py`):
+
+$$
+v = \sqrt{\frac{2 g h}{1 + \frac{2}{5}(R/r_{\mathrm{eff}})^2}}}, \qquad
+r_{\mathrm{eff}}=\sqrt{R^2-b^2}.
+$$
+
+Default $b=0$ gives ~1.911 m/s; the friction law still calibrates against the **measured** 1.83 m/s release. The `friction.py` docstring quotes V-groove contact radius ~$0.87\,r$; [putting-roll-models](putting-roll-models.html) derives $r_c/R\approx 0.9537$ from a 145° groove.
+
+::: {.callout-warning}
+## MISMATCH (G10): Stimpmeter Chain
+
+Document the 1.83 / 1.885 / 1.911 m/s chain explicitly when comparing Stimp to roll distance. Tracker: [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
+:::
+
+## Ball Flight and Atmosphere
+
+### Registered Python Flight Models
+
+SP `physics/flight_models.py` exposes a registry (`FlightModelRegistry`). Coefficient sets:
+
+**Waterloo–Penner (constant spin, no decay):**
+
+$$
+C_D = 0.21 + 0.05 S + 0.02 S^2, \qquad
+C_L = \min\left(0.155,\; 0.70\, S^{0.645}\right),
+$$
+
+with $S=\omega r/|{\mathbf v}_{\mathrm{rel}}|$ (spin ratio). Provenance string in code cites Penner (2003) and TrackMan calibration PRs (#5845, #7530).
+
+**MacDonald–Hanzely:** constant `cd=0.225`, `cl=0.20`, exponential spin decay `d\omega/dt = -0.05\,\omega$.
+
+**Constant-coefficient catalogue** (each optional spin decay in $/s$):
+
+| Name | $C_D$ | $C_L$ | Spin decay |
+|---|---|---|---|
+| Nathan | 0.22 | 0.24 | 0.03 |
+| Ballantyne | 0.20 | 0.18 | 0.02 |
+| J. Cole | 0.23 | 0.22 | 0.04 |
+| Rospie DL | 0.21 | 0.19 | 0.03 |
+| Charry L3 | 0.24 | 0.21 | 0.05 |
+
+### Rust Trajectory Kernel
+
+`rust_core/upstream-physics/src/aerodynamics.rs`: drag-crisis `$C_D$` via tanh on Reynolds number; lift cap `MAX_LIFT_COEFFICIENT = 0.26`; Penner lift $0.70\,S^{0.645}$. `ball_flight.rs` integrates $d\omega/dt = -k\omega$ with $k$ from `SPIN_DECAY_RATE_S` (0.05 /s, source string "Trackman Data" in `physics_constants.py`).
+
+::: {.callout-warning}
+## MISMATCH (G4, G6): Site Naruo Quartic vs Code Entry Points
+
+[Impact mechanics](impact-mechanics-and-ball-flight.html) develops Naruo–Mizota–Shimozono quartic $C_D$, $C_L$ and a torque-based spin decay; none of the registry models or the Rust kernel implements that tuple as the default API path. At 167 mph, 10.9°, 2686 rpm the review recorded ~22 yd carry spread across Rust, Waterloo–Penner and constant-coefficient models (#5624). Tracker: [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
+:::
+
+### Atmosphere Density
+
+`SP/physics/atmosphere.py`:
+
+$$
+T(z) = T_0 - L z,\quad p(z) = p_0\left(\frac{T(z)}{T_0}\right)^{g/(R_{\mathrm{specific}} L)},\quad \rho = \frac{p}{R_{\mathrm{specific}} T}.
+$$
+
+**Argument semantics:** `temperature_c` is the **sea-level reference** temperature; it is lapsed to altitude. It is not the local air temperature at the tee unless altitude is zero.
+
+::: {.callout-note}
+## Partial (G13): Temperature Semantics
+
+Calling `air_density(1600, 30)` returns the density for ~19.6 °C at 1600 m, not 30 °C at altitude (#5624 verification). Document this when wiring environmental UI fields.
+:::
+
+## Impact and Gear Effect
+
+SP `physics/impact_model/` default `ImpactParameters`:
+
+| Parameter | Code default | Typical site example |
+|---|---|---|
+| `cor` | 0.83 (`DRIVER_COR`) | 0.8–0.9 in examples; 0.83 in ch. 28 |
+| `friction_coefficient` | 0.4 | 0.18 in impact reference |
+| `contact_duration` | 0.0005 s | 0.45 ms in `ball_impact.py`; 0.45–0.5 ms on site |
+| `clubhead_moi` | $4.5\times 10^{-4}$ kg·m² | $4\times 10^{-4}$ in site examples |
+| Rigid-body solve | scalar effective mass $1/(1/M + r^2/I)$; club $\boldsymbol\omega$ unchanged | full inertia-tensor impulse in site derivation |
+
+Gear-effect add-on (`impact_model/utils.py`, heuristic):
+
+$$
+\omega_h = \mathrm{gear\_factor}\, h_{\mathrm{offset}}\, |{\mathbf v}|\, 350\ \mathrm{rad\,s^{-1}}, \quad
+\omega_v = \mathrm{gear\_factor}\, v_{\mathrm{offset}}\, |{\mathbf v}|\, 150\ \mathrm{rad\,s^{-1}},
+$$
+
+default `gear_effect_factor = 0.5`. The site impact reference states that a fixed universal gear ratio is not justified without geometry and calibration.
+
+::: {.callout-warning}
+## MISMATCH (G7, G8): Impact Structure and Gear Heuristic
+
+Off-centre centred-impact agreement does not extend to gear spin or friction defaults. Tracker: [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
+:::
+
+## Injury Screening Module
+
+SP `injury/spinal_load_analysis.py` applies banded labels to heuristic loads:
+
+| Metric | Safe | Caution | High risk |
+|---|---|---|---|
+| Compression | $<4\times BW$ | $4$–$6\times BW$ | $>6$–$8\times BW$ |
+| Shear | $<0.5\times BW$ | $0.5$–$1.0\times BW$ | $>1.0$–$1.5\times BW$ |
+| X-factor stretch | $<45^\circ$ | $45$–$55^\circ$ | $>55$–$65^\circ$ |
+| Transition time | $>0.30$ s | $0.20$–$0.30$ s | $<0.15$–$0.20$ s |
+
+Module docstrings call these "evidence-based"; [The Physics of Golf ch. 21](The_Physics_of_Golf/quarto/ch21_spine_modeling.html) argues that body-weight multiples are not universal tissue-failure thresholds.
+
+::: {.callout-warning}
+## MISMATCH (G11): Clinical-Style Labels vs Site Caveats
+
+Treat tool outputs as a **heuristic screen**, not a clinical decision. Tracker: [UpstreamDrift #15011](https://github.com/D-sorganization/UpstreamDrift/issues/15011).
+:::
+
+## Bunker, Grip and Metric Definitions (Shorter Inventory)
+
+### BunkerShot3D (G12)
+
+`src/bunkershot3d/`: resistive-force / Drucker–Prager / MPM tiers. Solver envelope marks many clubhead-speed cases `BEYOND_VALIDATION` when Froude number exceeds literature limits (~0.4 in 3D-RFT addendum; code runs ~25–113 in cited review). See `docs/bunkershot3d/README.md` in UpstreamDrift; no AffineDrift article yet.
+
+### Grip Contact (G14)
+
+SP `grip_contact/`: bushing surrogate stiffness, `R_EFF_M = 0.04` m lever for rotational stiffness, `design_damping` targets $\zeta = 0.7$ (`damping.py`), friction bands in `friction_band.py`. Defaults are engineering placeholders, not fitted (module docstring). Tile `grip_wrench_plots`. Site wrench theory: [two-hand wrench companion](proximal_distal_companion/chapters/ch12_two_hands_one_wrench.html).
+
+### Analysis Metrics (G15)
+
+| Name in UI | Code definition | Caveat |
+|---|---|---|
+| X-factor stretch | max $\lvert d/dt\rvert$ of proxy in `kinematic_sequence.py` vs max Euler-yaw difference in `spinal_load_analysis.py` | same label, different definitions |
+| "Efficiency" | peak club KE / max total energy (`energy_metrics.py`) | not a standard mechanical efficiency |
+
+## Site–Code Numeric Crosswalk
+
+Values below are **defaults at the pin**; see [PARAMETERS.md](../PARAMETERS.md) for the site symbol table extended with UpstreamDrift columns.
+
+| Quantity | AffineDrift site (typical) | UpstreamDrift `physics_constants` / runtime |
+|---|---|---|
+| $g$ | 9.81 m/s² | 9.80665 m/s² |
+| Ball mass | 0.0456–0.04593 kg | 0.04593 kg |
+| Ball radius | 0.02135–0.021335 m | 0.021335 m (Python); 0.02135 m some Rust paths |
+| $\rho_{\mathrm{air}}$ | 1.2–1.225 kg/m³ | 1.225 kg/m³ at sea level |
+| Drag / lift laws | Naruo quartic | Penner power law + caps; Reynolds drag crisis in Rust |
+| Spin decay | $C_M$ or $\beta V/R$ forms | $k=0.05$/s exponential in Rust / MacDonald–Hanzely |
+| Head MOI | $4\times 10^{-4}$ kg·m² | $4.5\times 10^{-4}$ kg·m² |
+| Face friction | 0.18 (example) | 0.4 default |
+| Hole radius | 53.975 mm | 54 mm |
+| Capture (centre) | 1.31 / 1.63 m/s (site rules) | ~1.64 m/s (code chord) |
+| Roll slope gravity | $(5/7)\mathbf g_\parallel$ | full $\mathbf g_\parallel$ |
+| Critical grade @ Stimp 10 | ~7.84 % (site) | ~5.6 % ($=\mu_r$) |
+
+## Related Articles
+
+- [Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html) — site reference treatment (theory)
+- [The Physics of the Rolling Putt](putting-roll-models.html) — roll and capture derivations
+- [Simulating the Green](green-simulation.html) — implementation audit including UpstreamDrift column
+- [PARAMETERS.md](../PARAMETERS.md) — symbol and default crosswalk
+- [Programming Companion](../models/models.html) — pinned program catalog
