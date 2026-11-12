@@ -87,7 +87,7 @@ a_drift = engine.compute_drift_acceleration()
 a_ctrl = engine.compute_control_acceleration(tau=engine.compute_mass_matrix() @ (0.1 * v))
 ```
 
-### Pendulum engine (lowest dependency)
+### Pendulum Engine (Lowest Dependency)
 
 The analytical double-pendulum engine lives under
 [`pendulum_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py).
@@ -96,7 +96,7 @@ The analytical double-pendulum engine lives under
 Default `step()` size when `dt is None`: **0.01 s**
 ([`step`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L134-L136)).
 
-### `ode` simulation backend (club double pendulum)
+### `ode` Simulation Backend (Club Double Pendulum)
 
 For rollouts without loading a full `PhysicsEngine`, the **`ode`** backend in
 [`simulation_backends`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md)
@@ -113,7 +113,7 @@ trace = backend.rollout(controls=None, horizon=200, dt=0.005)  # always pass dt 
 Module map and backend choice table:
 [`simulation_backends/README.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L13-L39).
 
-### CLI rollout harness
+### CLI Rollout Harness
 
 [`src/sim_run/engine_run.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/sim_run/engine_run.py#L96-L127)
 loads a named engine, **`load_from_string`**, **`reset`**, then **`step(timestep)`** with an
