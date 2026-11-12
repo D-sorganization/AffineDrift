@@ -381,7 +381,7 @@ h_G=\begin{bmatrix}k_c\\p\end{bmatrix}=A_G(q)\nu,\qquad
 $$
 
 
-The sums contain nongravitational external forces and couples. Uniform gravity has zero resultant moment about the total COM. Internal joint forces and torques cancel in the whole-system balance, but joint motion redistributes momentum among segments and changes $A_G$, the COM and contact moment arms. “Internal torques cancel” does not mean configuration is irrelevant.
+The centroidal momentum matrix $A_G$ and its whole-body consequences are developed for humanoid multibody models by Orin, Goswami and Lee [@OrinGoswamiLee2013]. The sums contain nongravitational external forces and couples. Uniform gravity has zero resultant moment about the total COM. Internal joint forces and torques cancel in the whole-system balance, but joint motion redistributes momentum among segments and changes $A_G$, the COM and contact moment arms. “Internal torques cancel” does not mean configuration is irrelevant.
 
 For a golfer–club system, hand–club wrenches are internal only if both hands and the club are included in the system boundary. Ground reactions remain external. After ball contact, the ball must either be included or represented through an external interaction. This bookkeeping is necessary before attributing a rise in club momentum to any particular segment or source of work.
 
@@ -411,7 +411,7 @@ Use this pivot in the remainder, transmitted bias and acceleration recovery. The
 ## ABA and Composite Rigid-Body Methods
 []{#sec-aba_vs_crba}
 
-The composite rigid-body algorithm (CRBA) constructs $M(q)$ from locked-subtree inertias. Its worst-case assembly cost is $O(N^2)$ for a scalar-joint tree. In a serial chain, distant joint velocities can contribute to the same body's kinetic energy, so the mass matrix is generally dense. A branched tree has an ancestor-dependent sparsity pattern, not a universally bounded bandwidth.
+The composite rigid-body algorithm (CRBA) constructs $M(q)$ from locked-subtree inertias [@WalkerOrin1982]. Its worst-case assembly cost is $O(N^2)$ for a scalar-joint tree. In a serial chain, distant joint velocities can contribute to the same body's kinetic energy, so the mass matrix is generally dense. A branched tree has an ancestor-dependent sparsity pattern, not a universally bounded bandwidth.
 
 For one unconstrained right-hand side, ABA can avoid forming $M$. If an application already needs $M$ for constraints, identification or optimization, factorization may be useful. At fixed configuration, a dense factorization is reused at $O(N^2)$ per additional right-hand side; a suitably organized articulated factorization can apply the inverse in $O(N)$ per right-hand side. Constructing $R$ complete solutions still requires their output and load processing. No numeric runtime comparison follows from stating these asymptotic orders alone.
 
