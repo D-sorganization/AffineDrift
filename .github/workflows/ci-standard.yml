@@ -250,6 +250,12 @@ jobs:
         run: |
           python3 scripts/check_terminology.py \
             --baseline config/terminology-baseline.json
+      - name: Verify Canonical Parameters Registry
+        # PARAMETERS.md is generated from data/canonical_parameters.json and must
+        # stay aligned with sourced UpstreamDrift constants (#5595).
+        run: |
+          python3 -m scripts.check_parameters \
+            --baseline config/parameters-baseline.json
       - name: Verify Governance Vocabulary Stays Out of Reader Prose
         # Reader-facing pages borrowed internal governance jargon -- governed,
         # qualified, provenance, protected, fail-closed -- from the site's own
@@ -433,7 +439,6 @@ jobs:
         # aborts before any test runs.
         run: |
           if sudo -n true 2>/dev/null; then
-            sudo rm -f /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock /var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin
             sudo rm -f /etc/apt/sources.list.d/*chrome* /etc/apt/sources.list.d/*google*
             sudo sed -i '/dl\.google\.com/d' /etc/apt/sources.list 2>/dev/null || true
             APT_READY=false
