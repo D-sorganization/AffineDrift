@@ -468,6 +468,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/Golf_Control_Theory.html",
             "/pages/scope-and-limits.html",
             "/articles/slack-management-linked-systems.html",
+            "/articles/upstreamdrift-physics-models.html",
         }
         and (
             record["route"] == "/"
@@ -559,6 +560,10 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     assert drift_past["review"]["source_path"] == (
         "articles/drift-is-the-past-control-is-the-present.qmd"
     )
+    # UpstreamDrift physics inventory (#5624) is newly published, outside the original census.
+    ud_physics = _find_route(inventory, "/articles/upstreamdrift-physics-models.html")
+    assert ud_physics["status"] == "reviewed"
+    assert ud_physics["review"]["source_path"] == "articles/upstreamdrift-physics-models.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )
