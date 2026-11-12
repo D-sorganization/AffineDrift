@@ -2,8 +2,6 @@
 
 | Workflow | Top-Level `permissions` | `${{ github.event.* }}` in `run:` | Unpinned `uses:` |
 | --- | --- | --- | --- |
-| `Jules-Redundant-Issue-Closer.yml` | `contents: read, issues: write` | none | none |
-| `Jules-Redundant-PR-Closer.yml` | `contents: read, pull-requests: write, issues: write` | none | none |
 | `anti-phantom-merge.yml` | `contents: read, pull-requests: write, issues: read` | none | none |
 | `architecture-map-contract.yml` | `contents: read` | none | none |
 | `block-self-merge.yml` | `contents: read` | none | none |
@@ -26,8 +24,8 @@
 
 ## Summary of Findings
 
-- **Top-level `permissions`**: All 20 workflows under `.github/workflows` explicitly declare top-level `permissions:` (`0` missing).
-- **Action SHA pinning (`uses:`)**: All 20 workflows have `0` unpinned action references (`conflict-disarm.yml` references the allowed fleet reusable workflow `D-sorganization/Repository_Management/.github/workflows/reusable-conflict-disarm.yml@main`; all other actions use 40-character commit SHAs).
+- **Top-level `permissions`**: All 18 workflows under `.github/workflows` explicitly declare top-level `permissions:` (`0` missing).
+- **Action SHA pinning (`uses:`)**: All 18 workflows have `0` unpinned action references (`conflict-disarm.yml` references the allowed fleet reusable workflow `D-sorganization/Repository_Management/.github/workflows/reusable-conflict-disarm.yml@main`; all other actions use 40-character commit SHAs).
 - **Untrusted `run:` interpolations (`${{ github.event.* }}`)**:
   - `lint-workflow-files.yml` (`L81`): interpolates `github.event.pull_request.number` (integer PR number).
   - `spec-check.yml` (`L54`): interpolates `github.event.pull_request.base.sha` (40-hex commit SHA).
