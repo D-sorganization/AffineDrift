@@ -43,3 +43,17 @@ def test_hamilton_quaternion_pins_algebra_and_active_rotation() -> None:
     text = NOTATION.read_text(encoding="utf-8")
     assert "$ijk=-1$" in text
     assert "$q_{WB}$" in text
+
+
+def test_dgcr_is_restitution_based_not_aerodynamic() -> None:
+    text = NOTATION.read_text(encoding="utf-8")
+    assert "restitution-derived" in text or "restitution)" in text
+    assert "Drag–curve ratio (aerodynamic)" not in text
+    assert "aerodynamic **Drag-Curve Ratio (DgCR)**" not in text
+    assert "aerodynamic drag–curve ratio" not in text
+
+
+def test_cor_range_qualified_for_passive_impacts() -> None:
+    text = NOTATION.read_text(encoding="utf-8")
+    assert "passive, non-superelastic" in text
+    assert "no net external energy supplied to the collision" in text

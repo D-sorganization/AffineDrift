@@ -135,8 +135,9 @@ regularizer. A full-state norm that mixes position and velocity units is not a
 DCR. A ratio using the realized input rather than bounded authority must be
 called a **realized drift-to-input ratio**, not DCR.
 
-The aerodynamic **Drag-Curve Ratio (DgCR)** remains
-$(1-\mathrm{COR})/(1+\mathrm{COR})$ and must never use the bare DCR acronym.
+The **Drag-Curve Ratio (DgCR)** is the restitution-derived ratio
+$(1-\mathrm{COR})/(1+\mathrm{COR})$; it is not an aerodynamic quantity and
+must never use the bare **DCR** acronym.
 
 ### Equation Symbol Definitions
 
@@ -295,15 +296,15 @@ power. Name the reference point and frame (body vs spatial).
 | Symbol   | Quantity                       | Definition                                                                                                                    | Units                     |
 | -------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
 | **CoG**  | Center of gravity              | Center of mass                                                                                                                | m (relative to reference) |
-| **COR**  | Coefficient of restitution     | $e=-(\mathbf{v}_b^+-\mathbf{v}_c^+)\cdot\mathbf{n}\;/\;(\mathbf{v}_b^--\mathbf{v}_c^-)\cdot\mathbf{n}$ with unit normal $\mathbf{n}$; signed approach normal speed is negative, so $e\in[0,1]$ for rebound | Dimensionless, 0-1        |
+| **COR**  | Coefficient of restitution     | $e=-(\mathbf{v}_b^+-\mathbf{v}_c^+)\cdot\mathbf{n}\;/\;(\mathbf{v}_b^--\mathbf{v}_c^-)\cdot\mathbf{n}$ with unit normal $\mathbf{n}$; signed approach normal speed is negative, so $e\in[0,1]$ for passive, non-superelastic rebounds (no net external energy supplied to the collision) | Dimensionless, 0-1        |
 | **DCR**  | Drift-Control Ratio            | $\lVert W a_d(x)\rVert_2 /(\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon)$; see the canonical definition above | Dimensionless             |
-| **DgCR** | Drag–curve ratio (aerodynamic) | (1 - COR) / (1 + COR)                                                                                                         | Dimensionless, 0-1        |
+| **DgCR** | Drag–Curve Ratio (restitution) | $(1-\mathrm{COR})/(1+\mathrm{COR})$; impact diagnostic from COR, not aerodynamic drag                                          | Dimensionless, 0-1        |
 | **e**    | Coefficient of restitution     | Same as COR                                                                                                                   | Dimensionless             |
 | **v_0**  | Ball launch speed              | Ball center-of-mass speed immediately after separation (not the pre-impact approach speed)                                  | m/s                       |
 | **α**    | Launch angle                   | Angle above horizontal                                                                                                        | degrees (°) or radians    |
 | **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                         | RPM or rad/s              |
 
-**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
+**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The restitution-based drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
 **DgCR (Drag–curve ratio) Sign Convention:** Always positive
 
