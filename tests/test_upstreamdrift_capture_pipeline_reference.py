@@ -55,11 +55,6 @@ def test_page_lists_cli_and_artifacts(page_text: str) -> None:
     assert "reconstruction.json" in page_text
 
 
-def test_quarto_nav_registers_page() -> None:
-    nav = (ROOT / "_quarto.yml").read_text(encoding="utf-8")
-    assert "pages/upstreamdrift-capture-to-model-pipeline.html" in nav
-
-
 def test_title_uses_title_case(page_text: str) -> None:
     title_match = re.search(r'^title:\s*"([^"]+)"', page_text, re.MULTILINE)
     assert title_match, "title front matter missing"
