@@ -232,6 +232,12 @@ $$
 
 The factor $1/(1+\alpha)$ is $5/7$ for the ideal sphere. Even without rolling resistance, static traction is needed to accelerate rotation. Simply adding $\mathbf g_\parallel$ to an already calibrated level deceleration would treat the slope contribution as though the ball had no rotational inertia.
 
+::: {.callout-note}
+## UpstreamDrift Implementation Differs
+
+The protected `putting_dynamics` integrator applies the full small-slope gradient $-g\nabla h$ in roll as well as slide, and uses a chord-based capture bound (~1.64 m/s centre). See [UpstreamDrift Physics Models](upstreamdrift-physics-models.html) and [Simulating the Green](green-simulation.html) §4.1. Tracker: [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
+:::
+
 This contact solution must also satisfy a static-friction capacity condition. For example, straight motion requires $F=m\dot v-mg\sin\beta$ and $|F|\le\mu_smg\cos\beta$. If it fails, a sliding model is needed. No-slip kinematics alone cannot supply unlimited traction.
 
 ### 5.2 Uphill, Downhill and the Moving Threshold
