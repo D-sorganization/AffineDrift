@@ -80,7 +80,7 @@ one without accounting for the sampling interval and evolution.
     \item[$G(\mathbf{x})$] Input (control) matrix field mapping control inputs to state derivatives.
     \item[$\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\mathbf{u}$] Control-affine system equations of motion.
     \item[$\mathbf{x}^{\mathrm{ZTCF}}(t)$] Forward Zero-Torque Counterfactual trajectory under $\mathbf{u}(t) \equiv \mathbf{0}$.
-    \item[$\mathbf{a}_{\mathrm{ZVCF}}(\mathbf{q}, \mathbf{z})$] Instantaneous Zero-Velocity Counterfactual acceleration with velocity and declared control set to zero.
+    \item[$\mathbf{a}_{\mathrm{ZVCF}}(\mathbf{q}, \mathbf{z}; \boldsymbol{\tau})$] Pointwise ZVCF control acceleration $M(\mathbf{q})^{-1}\boldsymbol{\tau}$ at $\dot{\mathbf{q}}=\mathbf{0}$ (see \texttt{NOTATION.md}).
     \item[$\mathrm{DCR}_{W,\mathcal{U}}(\mathbf{x})$] Drift-Control Ratio in a declared acceleration or task-projected space:
     \[
       \mathrm{DCR}_{W,\mathcal{U}}(\mathbf{x})
