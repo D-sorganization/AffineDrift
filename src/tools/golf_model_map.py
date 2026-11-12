@@ -251,7 +251,7 @@ def _render_model_section(model_map: ModelMap) -> list[str]:
             )
             + " |"
         )
-    eq_lines = ["", "#### Grip and hip closure", ""]
+    eq_lines = ["", "#### Grip and Hip Closure", ""]
     if not model_map.equalities:
         eq_lines.append("No `<equality>` constraints are declared in this MJCF.")
     else:
@@ -274,7 +274,7 @@ def _render_model_section(model_map: ModelMap) -> list[str]:
         "",
         summary,
         "",
-        "#### Generalized-coordinate map",
+        "#### Generalized-Coordinate Map",
         "",
         *rows,
         "",
@@ -293,7 +293,7 @@ def _render_myosuite_section(manifest: dict[str, Any]) -> list[str]:
     upstream = assets.get("upstream_path", "")
     lines = [
         "",
-        "### MyoSuite asset paths (declared sizes only)",
+        "### MyoSuite Asset Paths (Declared Sizes Only)",
         "",
         f"Motor-driven MuJoCo humanoids above are distinct from MyoSuite musculoskeletal "
         f"assets referenced in `{upstream}`. AffineDrift does not vendor those MJCF files "

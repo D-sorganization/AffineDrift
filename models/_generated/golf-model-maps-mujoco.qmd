@@ -5,7 +5,7 @@ Pinned UpstreamDrift commit [`625a16e6897b88ab29fb5a64c65ecee820dd58f5`](https:/
 MuJoCo reports configuration size `nq`, tangent velocity size `nv`, and motor count `nu`. Internal revolute/universal joints use radians. A `free` joint occupies seven `qpos` entries (translation plus unit quaternion) and six velocity components.
 
 
-### Canonical floating-hip humanoid (`canonical`) {#canonical-mujoco-map}
+### Canonical Floating-Hip Humanoid (`canonical`) {#canonical-mujoco-map}
 
 Source: `src/engines/physics_engines/mujoco/_golf_swing_canonical_xml.py` (`CANONICAL_GOLF_HUMANOID_XML`); vendored snapshot `data/upstreamdrift_golf_models/mujoco/canonical.xml`.
 
@@ -13,7 +13,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_canonical_xml.py` (`CANO
 |---:|---:|---:|---:|
 | 26 | 25 | 19 | 1 |
 
-#### Generalized-coordinate map
+#### Generalized-Coordinate Map
 
 | `qpos` idx | `v` idx | Joint | Type | Axis | Range | Actuator | `ctrl` range |
 |---:|---:|---|---|---|---|---|---|
@@ -39,7 +39,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_canonical_xml.py` (`CANO
 | 25 | 24 | `left_wrist_universal_2` | hinge | (0, 1, 0) | [-1, 1] rad | `left_wrist_universal_2_motor` | [-200, 200] |
 
 
-#### Grip and hip closure
+#### Grip and Hip Closure
 
 | Kind | Attributes |
 |---|---|
@@ -48,7 +48,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_canonical_xml.py` (`CANO
 MuJoCo `weld` and `connect` constraints are soft equalities whose violation and constraint forces depend on solver settings; they are not independent joint coordinates.
 
 
-### Advanced biomechanical golf swing (`advanced`) {#advanced-mujoco-map}
+### Advanced Biomechanical Golf Swing (`advanced`) {#advanced-mujoco-map}
 
 Source: `src/engines/physics_engines/mujoco/_golf_swing_advanced_xml.py` (`ADVANCED_BIOMECHANICAL_GOLF_SWING_XML`); vendored snapshot `data/upstreamdrift_golf_models/mujoco/advanced.xml`.
 
@@ -56,7 +56,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_advanced_xml.py` (`ADVAN
 |---:|---:|---:|---:|
 | 42 | 40 | 28 | 3 |
 
-#### Generalized-coordinate map
+#### Generalized-Coordinate Map
 
 | `qpos` idx | `v` idx | Joint | Type | Axis | Range | Actuator | `ctrl` range |
 |---:|---:|---|---|---|---|---|---|
@@ -92,7 +92,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_advanced_xml.py` (`ADVAN
 | 35 | 34 | `joint_29` | free | — | — | — | — |
 
 
-#### Grip and hip closure
+#### Grip and Hip Closure
 
 | Kind | Attributes |
 |---|---|
@@ -103,7 +103,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_advanced_xml.py` (`ADVAN
 MuJoCo `weld` and `connect` constraints are soft equalities whose violation and constraint forces depend on solver settings; they are not independent joint coordinates.
 
 
-### Full-body golf swing (`full_body`) {#full_body-mujoco-map}
+### Full-Body Golf Swing (`full_body`) {#full_body-mujoco-map}
 
 Source: `src/engines/physics_engines/mujoco/_golf_swing_full_body_xml.py` (`FULL_BODY_GOLF_SWING_XML`); vendored snapshot `data/upstreamdrift_golf_models/mujoco/full_body.xml`.
 
@@ -111,7 +111,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_full_body_xml.py` (`FULL
 |---:|---:|---:|---:|
 | 29 | 27 | 15 | 3 |
 
-#### Generalized-coordinate map
+#### Generalized-Coordinate Map
 
 | `qpos` idx | `v` idx | Joint | Type | Axis | Range | Actuator | `ctrl` range |
 |---:|---:|---|---|---|---|---|---|
@@ -134,7 +134,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_full_body_xml.py` (`FULL
 | 22 | 21 | `joint_16` | free | — | — | — | — |
 
 
-#### Grip and hip closure
+#### Grip and Hip Closure
 
 | Kind | Attributes |
 |---|---|
@@ -145,7 +145,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_full_body_xml.py` (`FULL
 MuJoCo `weld` and `connect` constraints are soft equalities whose violation and constraint forces depend on solver settings; they are not independent joint coordinates.
 
 
-### Upper-body golf swing (`upper_body`) {#upper_body-mujoco-map}
+### Upper-Body Golf Swing (`upper_body`) {#upper_body-mujoco-map}
 
 Source: `src/engines/physics_engines/mujoco/_golf_swing_upper_body_xml.py` (`UPPER_BODY_GOLF_SWING_XML`); vendored snapshot `data/upstreamdrift_golf_models/mujoco/upper_body.xml`.
 
@@ -153,7 +153,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_upper_body_xml.py` (`UPP
 |---:|---:|---:|---:|
 | 17 | 16 | 10 | 1 |
 
-#### Generalized-coordinate map
+#### Generalized-Coordinate Map
 
 | `qpos` idx | `v` idx | Joint | Type | Axis | Range | Actuator | `ctrl` range |
 |---:|---:|---|---|---|---|---|---|
@@ -170,7 +170,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_upper_body_xml.py` (`UPP
 | 10 | 10 | `joint_10` | free | — | — | — | — |
 
 
-#### Grip and hip closure
+#### Grip and Hip Closure
 
 | Kind | Attributes |
 |---|---|
@@ -179,7 +179,7 @@ Source: `src/engines/physics_engines/mujoco/_golf_swing_upper_body_xml.py` (`UPP
 MuJoCo `weld` and `connect` constraints are soft equalities whose violation and constraint forces depend on solver settings; they are not independent joint coordinates.
 
 
-### MyoSuite asset paths (declared sizes only)
+### MyoSuite Asset Paths (Declared Sizes Only)
 
 Motor-driven MuJoCo humanoids above are distinct from MyoSuite musculoskeletal assets referenced in `src/engines/physics_engines/mujoco/golf_swing_models_xml.py`. AffineDrift does not vendor those MJCF files in this slice; counts below are taken from upstream comments only.
 
