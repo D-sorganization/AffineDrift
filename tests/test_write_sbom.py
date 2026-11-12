@@ -8,7 +8,14 @@ from pathlib import Path
 
 import pytest
 
-from scripts.write_sbom import SbomInputError, build_sbom, main, parse_npm_lock, parse_pip_lock
+from scripts.write_sbom import (
+    SbomInputError,
+    _normalize_git_commit_timestamp,
+    build_sbom,
+    main,
+    parse_npm_lock,
+    parse_pip_lock,
+)
 
 GIT = ["git"]
 PIP_LOCK = """\
@@ -65,6 +72,18 @@ def _head(repo: Path) -> str:
         text=True,
         check=True,
     ).stdout.strip()
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("2026-01-02T03:04:05Z", "2026-01-02T03:04:05Z"),
+        ("2026-01-02T03:04:05+00:00", "2026-01-02T03:04:05Z"),
+        ("2026-01-02T03:04:05-08:00", "2026-01-02T11:04:05Z"),
+    ],
+)
+def test_normalize_git_commit_timestamp(raw: str, expected: str) -> None:
+    assert _normalize_git_commit_timestamp(raw) == expected
 
 
 def test_sbom_envelope_and_root_component(repo: Path) -> None:
