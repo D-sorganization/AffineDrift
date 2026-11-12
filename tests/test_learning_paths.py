@@ -123,6 +123,22 @@ def test_golf_science_module_1_correct_chapter_links() -> None:
     assert "ch31" in text, "Golf Science Module 1 should link to ch31 (launch/trajectory)"
 
 
+def test_resources_pinocchio_link_not_parked_domain() -> None:
+    websites = REPO_ROOT / "resources" / "resources-websites.qmd"
+    text = websites.read_text(encoding="utf-8")
+    assert "pinocchio.org" not in text
+    assert "stack-of-tasks.github.io/pinocchio" in text
+
+
+def test_golf_science_no_misleading_chapter_titles() -> None:
+    path_page = REPO_ROOT / "resources" / "learning-path-golf-science.qmd"
+    text = path_page.read_text(encoding="utf-8")
+    assert "Multibody Impact Dynamics & Oblique Collision" not in text
+    assert "Personalized coaching using AffineDrift principles" not in text
+    assert "ch11_flexible_shaft" in text
+    assert "ch30_kinetic_chain" in text
+
+
 def test_biomechanics_schedule_no_overlap() -> None:
     path_page = REPO_ROOT / "resources" / "learning-path-biomechanics.qmd"
     text = path_page.read_text(encoding="utf-8")
