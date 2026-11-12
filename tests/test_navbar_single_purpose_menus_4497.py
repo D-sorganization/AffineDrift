@@ -67,7 +67,7 @@ EXPECTED_MENU_ITEMS: dict[str, list[tuple[str, str]]] = {
     ],
     "Tools": [
         ("Programs & Tools", "pages/tools.html"),
-        ("UpstreamDrift Conventions", "pages/upstreamdrift-conventions.html"),
+        ("UpstreamDrift Conventions Reference", "pages/upstreamdrift-conventions.html"),
         ("Programming Companion", "models/models.html"),
         ("Fixture and Dataset Explorer", "models/dataset-explorer.html"),
         ("Datasets", "resources/resources-datasets.html"),
