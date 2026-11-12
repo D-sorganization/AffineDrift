@@ -11,7 +11,7 @@ A model can contain unknown numerical parameters without uncertainty about its s
 For generalized coordinates $q$, a constrained mechanical system may be written
 
 $$
-M(q;\theta)\ddot q+C(q,\dot q;\theta)+g(q;\theta)=B(q;\theta)u+J(q)^T\lambda+\tau_{ext}.
+M(q;\theta)\ddot q+C(q,\dot q;\theta)\dot q+g(q;\theta)=B(q;\theta)u+J_c(q)^T\lambda+\tau_{ext}.
 $$
 
 Here $M$ is the mass matrix, $C$ collects velocity-dependent terms, $g$ gravity, $B u$ actuation, and $J^T\lambda$ constraint forces. The coordinate dimension belongs to a candidate topology. The vector $\theta$ contains numerical quantities within that topology. Contact forces $\lambda$ may be governed by complementarity or a compliant law rather than being arbitrary free parameters.
@@ -75,7 +75,7 @@ The solution is not a universal dimension estimator. It is a protocol that state
 
 ## Constraints, Coordinates, and Effective Degrees of Freedom
 
-A coordinate count should be stated with its constraint convention. If generalized coordinates satisfy holonomic constraints c(q)=0, then local independent configuration dimension is n-rank(∂c/∂q), provided the constraint Jacobian has constant rank near the motion. The corresponding velocity constraints are obtained by differentiating c(q)=0. Redundant coordinates can be computationally convenient, but they are not independent degrees of freedom. In addition, a model may include compliant deformation coordinates that are not rigid-joint degrees of freedom. This is why a textbook or software model's coordinate count cannot be compared casually to a learned latent size.
+A coordinate count should be stated with its constraint convention. If generalized coordinates satisfy holonomic constraints $c(q)=0$, then local independent configuration dimension is $n-\mathrm{rank}(\partial c/\partial q)$, provided the constraint Jacobian has constant rank near the motion. The corresponding velocity constraints are obtained by differentiating $c(q)=0$. Redundant coordinates can be computationally convenient, but they are not independent degrees of freedom. In addition, a model may include compliant deformation coordinates that are not rigid-joint degrees of freedom. This is why a textbook or software model's coordinate count cannot be compared casually to a learned latent size.
 
 For an adaptive system, each proposed dimension change should have a semantic type. “Unlock coordinate q3” changes configuration topology. “Add one actuator group” changes the input map. “Add one latent memory state” changes realization dimension. “Add one SINDy term” changes equation support. These operations require different tests, and an automated selector should log exactly which one it performed. The selection objective should penalize each according to scientific and computational consequences rather than treating every scalar parameter equally.
 

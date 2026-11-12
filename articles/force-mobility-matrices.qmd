@@ -84,11 +84,17 @@ The golf swing is the same. Your hands are one point, the clubhead is another. T
 
 These instantaneous capabilities are captured compactly by two geometric objects:
 
-- the **mobility ellipsoid**, the task velocities produced by a specified
-  joint-rate budget; and
+- the **velocity (manipulability) ellipsoid**, the task velocities produced by a
+  specified joint-rate budget; and
 - the **force ellipsoid**, or more generally force preimage, the task loads
   compatible with a specified generalized-load budget in an idealized
   balance calculation.
+
+The ellipsoid here is purely **kinematic**: it maps a joint-rate budget through
+$J$ only. In impedance control and task-space dynamics the symbol *mobility* often
+denotes the dynamic tensor $H=JM^{-1}J^{\mathsf T}$ (inverse operational-space
+inertia), with $\Lambda=H^{-1}$; see @sec-dynamics-compliance below and the
+[multibody drift-control comparison](calculation-framework-comparison/multibody-drift-control-v3.html).
 
 Reciprocal radii require compatible dual budgets, not merely the same
 Jacobian. Inertia, actuator capacity, contact and compliance must be added
@@ -134,7 +140,7 @@ from a unit velocity in a single joint.
 Thus, the geometry of $J$ encodes the instantaneous mechanical leverage of the 
 entire body at that moment.
 
-## The Mobility Ellipsoid
+## The Velocity (Manipulability) Ellipsoid {#sec-velocity-manipulability-ellipsoid}
 
 Write a joint-rate budget as $\dot q^T H\dot q\leq1$, where $H$ is positive
 definite and includes the scales needed to make the expression dimensionless.
@@ -409,7 +415,7 @@ $JRJ^T$ is unchanged. A stiffness change does not literally inflate that
 force ellipsoid. A capacity change instead requires an updated admissible
 load set, whose values need evidence.
 
-## Dynamics, Compliance and Impact Need Additional Models
+## Dynamics, Compliance and Impact Need Additional Models {#sec-dynamics-compliance}
 
 ### Acceleration Authority and Apparent Inertia
 

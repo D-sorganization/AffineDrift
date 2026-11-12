@@ -250,6 +250,12 @@ jobs:
         run: |
           python3 scripts/check_terminology.py \
             --baseline config/terminology-baseline.json
+      - name: Verify Canonical Parameters Registry
+        # PARAMETERS.md is generated from data/canonical_parameters.json and must
+        # stay aligned with sourced UpstreamDrift constants (#5595).
+        run: |
+          python3 -m scripts.check_parameters \
+            --baseline config/parameters-baseline.json
       - name: Verify Governance Vocabulary Stays Out of Reader Prose
         # Reader-facing pages borrowed internal governance jargon -- governed,
         # qualified, provenance, protected, fail-closed -- from the site's own

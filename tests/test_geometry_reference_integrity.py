@@ -135,3 +135,40 @@ def test_duplicate_titles_require_legacy_note() -> None:
     for group in duplicates:
         notes = [entry.fields.get("note", "") for entry in group]
         assert any("Legacy duplicate key retained" in note for note in notes)
+
+
+def test_archival_entries_avoid_scholar_search_urls() -> None:
+    """Issue #5605: primary algorithm papers need DOI links, not Scholar search URLs."""
+    entries = {
+        entry.key: entry for entry in _parse_bib_entries(BIB_PATH.read_text(encoding="utf-8"))
+    }
+    for key in ("Featherstone1983", "brockett1984"):
+        url = entries[key].fields.get("url", "")
+        assert "scholar.google.com" not in url, f"{key} still uses a Scholar search URL"
+        assert "doi" in entries[key].fields, f"{key} should carry a DOI"
+
+
+def test_issue_5605_primary_attribution_keys_exist() -> None:
+    """Bibliography must include the primary sources named in issue #5605."""
+    entries = {
+        entry.key: entry for entry in _parse_bib_entries(BIB_PATH.read_text(encoding="utf-8"))
+    }
+    required = {
+        "WalkerOrin1982",
+        "OrinGoswamiLee2013",
+        "AndersonPandy2003",
+        "LiuAndersonPandyDelp2006",
+        "HamnerSethDelp2010",
+        "LinKimPandy2011",
+        "DornLinPandy2012",
+        "KalmanContributions1960",
+        "MurrayYakowitz1984",
+        "Mnih2015",
+        "Lillicrap2015",
+        "Fujimoto2018",
+        "Haarnoja2018",
+        "LaValle2006",
+        "Cheon2014GolfJerk",
+    }
+    missing = sorted(required - set(entries))
+    assert not missing, f"Missing bibliography keys for #5605: {missing}"
