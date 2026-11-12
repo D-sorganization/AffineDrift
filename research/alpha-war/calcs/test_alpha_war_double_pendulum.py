@@ -165,6 +165,19 @@ class TestAlphaWarDoublePendulum(unittest.TestCase):
         self.assertIn("figures/fig-double-pendulum-b1.svg", b1)
         self.assertIn("unconditional mathematical necessity", b1.lower())
 
+    def test_draft_b2_free_hinge_sign_matches_passive_helper(self) -> None:
+        """App. B.2 closed form must negate M21 ddot1 and sin(phi) centrifugal term."""
+        text = (DRAFT / "alpha-war-v1.md").read_text(encoding="utf-8")
+        b2 = text.split("### B.2")[1].split("### B.3")[0]
+        self.assertIn(
+            r"\bigl(-\ddot{\theta}_1 \cos\phi - \dot{\theta}_1^2 \sin\phi\bigr)",
+            b2,
+        )
+        self.assertNotIn(
+            r"(\dot{\theta}_1^2 \sin\phi - \ddot{\theta}_1 \cos\phi)",
+            b2,
+        )
+
     def test_section_33_includes_moving_grip_acceleration(self) -> None:
         """§3.3 angular-rate ODE must retain the moving-grip acceleration term."""
         text = (DRAFT / "alpha-war-v1.md").read_text(encoding="utf-8")

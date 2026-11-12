@@ -63,6 +63,15 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
     def test_wscg_ztcf_provenance_language_present_5462(self) -> None:
         """Draft must label WSCG bundle as modeled and ZTCF ratio as diagnostic (#5462)."""
         draft_text = _find_draft_path().read_text(encoding="utf-8")
+        sec_55 = draft_text.split("## 5.5")[1].split("---", 1)[0]
+        self.assertNotIn("must turn negative", sec_55.lower())
+        self.assertIn("scenario-dependent", sec_55.lower())
+        b2 = draft_text.split("### B.2")[1].split("### B.3")[0]
+        self.assertIn(
+            r"\bigl(-\ddot{\theta}_1 \cos\phi - \dot{\theta}_1^2 \sin\phi\bigr)",
+            b2,
+        )
+        self.assertIn("-G_2", b2)
         self.assertNotIn("unavoidable mathematical consequence", draft_text.lower())
         self.assertIn("project-originated planar WSCG bundle", draft_text)
         self.assertIn(

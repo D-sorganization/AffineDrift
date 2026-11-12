@@ -817,13 +817,9 @@ $$
 \tau(t) = I_c \ddot{\theta}_c + m_c d_{G/M} a_{\text{grip}} \sin(\theta_c - \phi)
 $$
 
-Because the centripetal acceleration of the grip ($a_{\text{grip}}$) surges to over $300\text{ m/s}^2$ as the hands round the bottom of the hub path, the second term creates a massive forward angular acceleration that exceeds the physical angular acceleration of the club ($\ddot{\theta}_c$). Consequently, to satisfy Newton's second law, the applied wrist torque $\tau(t)$ **must turn negative**:
+When the centripetal acceleration of the grip ($a_{\text{grip}}$) surges to over $300\text{ m/s}^2$ as the hands round the bottom of the hub path, Grober's second term can create a large passive contribution that **often** exceeds the club's inertial term $\ddot{\theta}_c$ in late-downswing parameter ranges. Under those **prescribed** hub accelerations, velocities, and hinge angles, satisfying Newton's second law with the observed $\ddot{\theta}_c$ can require $\tau(t) < 0$—a **scenario-dependent** sign, not a theorem that every skilled swing must exhibit negative wrist torque regardless of loading (Appendix B.1 states the conditional logic explicitly).
 
-$$
-\tau(t) < 0
-$$
-
-Grober's negative $\tau$ is a consequence of the modeled hub-dominated loading state in his derivation, not a universal physiological mandate independent of grip forces and boundary torques (see Appendix B.1 conditional logic).
+Grober's result is therefore best read as a **mechanistic explanation** for negative alpha torque in hub-dominated late release, aligned with Camp B kinematics, rather than as a universal necessity claim independent of grip forces and boundary torques.
 
 ---
 
@@ -1913,11 +1909,12 @@ In the late downswing release:
 
 Both passive interaction terms drive the unhinging of the club!
 
-If the club reaches its natural kinematic uncocking acceleration ($\ddot{\theta}_2 > 0$):
-$$\ddot{\theta}_2 = \frac{\tau_2 - M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi}{M_{22}}$$
+If the club reaches its natural kinematic uncocking acceleration ($\ddot{\theta}_2 > 0$), row 2 gives
+$$\ddot{\theta}_2 = \frac{\tau_2 - M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi - G_2(\theta_2)}{M_{22}}.$$
 Setting active muscular torque to zero ($\tau_2 = 0$, a "free hinge"):
-$$\ddot{\theta}_{2,\text{free}} = \frac{m_2 L_1 r_{G2} (\dot{\theta}_1^2 \sin\phi - \ddot{\theta}_1 \cos\phi)}{M_{22}} \gg 0$$
-Passive interaction forces alone accelerate the clubhead to over $100\text{ mph}$. If the golfer attempts to slow down the release or maintain forward shaft lean, they must actively apply a **negative hinge torque** ($\tau_2 < 0$) to retard this passive uncocking.
+$$\ddot{\theta}_{2,\text{free}} = \frac{-M_{21} \ddot{\theta}_1 - m_2 L_1 r_{G2} \dot{\theta}_1^2 \sin\phi - G_2(\theta_2)}{M_{22}} = \frac{m_2 L_1 r_{G2} \bigl(-\ddot{\theta}_1 \cos\phi - \dot{\theta}_1^2 \sin\phi\bigr) - G_2(\theta_2)}{M_{22}}.$$
+The $-G_2$ term is retained here; the interaction-only pass-through in `alpha_war_double_pendulum.py` omits gravity and is not this full free-hinge identity.
+Passive interaction forces alone can accelerate the clubhead to over $100\text{ mph}$ in the late-downswing parameter range stated above. **If** the golfer attempts to slow that passive uncocking or maintain forward shaft lean **while** those interaction terms dominate, the **same** equations yield $\tau_2 < 0$ for the hinge torque that balances the prescribed motion—a **scenario-dependent** sign, not a theorem requiring negative hand torque in every swing.
 
 ### B.3 Constrained Two-Arm Closed-Loop KKT Dynamics
 
