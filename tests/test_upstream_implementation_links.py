@@ -7,7 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from scripts import check_upstream_implementation_links as bridge
+from scripts import check_upstream_implementation_links as bridge_cli
+from src.tools import upstream_implementation_bridge as bridge
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LEDGER = REPO_ROOT / "data/companion/upstream_implementation_links.json"
@@ -29,7 +30,7 @@ def test_repository_bridges_pass_verification() -> None:
 
 @pytest.mark.unit
 def test_checker_cli_reports_success() -> None:
-    assert bridge.main(["--root", str(REPO_ROOT), "--ledger", str(LEDGER)]) == 0
+    assert bridge_cli.main(["--root", str(REPO_ROOT), "--ledger", str(LEDGER)]) == 0
 
 
 @pytest.mark.unit
