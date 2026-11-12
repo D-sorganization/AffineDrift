@@ -25,7 +25,7 @@ Use separate estimands rather than a single inferred "heaviness":
 
 | Question | Observable | Necessary Qualification |
 |---|---|---|
-| How much momentum reaches the ball? | Contact impulse vector $\mathbf J=\int\mathbf F_c\,dt$ | Subtract other ball impulses if material |
+| How much momentum reaches the ball? | Contact impulse vector $\boldsymbol{\lambda}=\int\mathbf F_c\,dt$ | Subtract other ball impulses if material |
 | How much energy reaches the ball? | Change in translational and rotational kinetic energy | Include initial ball motion and spin |
 | How does the face move during contact? | Head recoil, rotation, local deformation, contact duration | Full inertia and contact geometry |
 | What reaches the hands? | Three-axis acceleration, force/torque spectra and ringdown | Sensor location, bandwidth and grip state |
@@ -129,7 +129,7 @@ Over a sufficiently short interval, with smooth finite non-contact loading and f
 
 $$
 \mathbf M_0\Delta\dot{\mathbf q}
-=\mathbf J_{c,0}^T\mathbf J+\int_0^{T_c}\boldsymbol\tau_{\rm ext}\,dt+O(T_c).
+=\mathbf J_{c,0}^T\boldsymbol{\lambda}+\int_0^{T_c}\boldsymbol\tau_{\rm ext}\,dt+O(T_c).
 $$
 
 The remainder includes appropriately bounded drift and configuration variation; it is not a universal numerical error certificate. A bounded torque produces an $O(T_c)$ angular impulse. Converting it to ball impulse requires the system Jacobian and constraints, not an arbitrary division by a club length.
@@ -149,7 +149,7 @@ $$
 
 not 7.5 g. This is the arm contribution for that artificial common-pivot geometry; a real articulated assembly needs its actual mass matrix. A shaft segment not spanning the whole pivot-to-tip radius also needs its actual parallel-axis contribution. Neither calculation supplies a universal rigid-shaft upper bound. Prestored elastic energy, contact dynamics, resonance and different boundary conditions can invalidate an assumed monotone ordering with stiffness.
 
-Force, impulse and duration must also agree. A half-sine pulse satisfies $J=2F_{\max}T_c/\pi$. Choosing $J=3$ N s and $T_c=450$ microseconds gives $F_{\max}=10.47$ kN. These are illustrative consistent inputs, not measured peak-force limits.
+Force, impulse and duration must also agree. A half-sine pulse satisfies $\lambda=2F_{\max}T_c/\pi$. Choosing $\lambda=3$ N s and $T_c=450$ microseconds gives $F_{\max}=10.47$ kN. These are illustrative consistent inputs, not measured peak-force limits.
 
 ## Dynamic Stiffening and Applied Wrenches {#sec-impact-prestress}
 
