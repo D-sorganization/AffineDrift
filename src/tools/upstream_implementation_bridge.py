@@ -27,6 +27,7 @@ def load_ledger(path: Path) -> dict[str, Any]:
 
 
 def _normalize_include_token(raw: str) -> str:
+    """Strip whitespace and optional quotes from a Quarto include token."""
     return raw.strip().strip("'\"")
 
 
@@ -42,6 +43,7 @@ def _chapter_includes(chapter_text: str, include_rel: str) -> bool:
 
 
 def _blob_links(text: str) -> list[tuple[str, str]]:
+    """Extract pinned UpstreamDrift blob URLs as (commit, path) pairs."""
     return BLOB_PATTERN.findall(text)
 
 
