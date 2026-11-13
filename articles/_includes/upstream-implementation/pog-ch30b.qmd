@@ -1,0 +1,11 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-pog-ch30b}
+
+::: {.callout-note appearance="simple"}
+AffineDrift's `tests/test_kinetic_chain_rigor.py` checks the printed Python on this page. UpstreamDrift's induced-acceleration and counterfactual tooling for the MuJoCo golf stack is at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
+
+- **Engine IAA partition:** [`induced_acceleration.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/rigid_body_dynamics/induced_acceleration.py) — MuJoCo golf model acceleration attribution.
+- **Closure-checked decomposition:** [`indexed_acceleration.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/spatial_algebra/indexed_acceleration.py) — labeled components that must sum to total acceleration within tolerance.
+- **Counterfactual branches:** [`counterfactuals.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/counterfactuals.py) — zero-torque and related intervention runners on the golf humanoid stack.
+
+**Convention note:** the included attribution contract applies to any engine run; when comparing engines, report unavailable partitions as unsupported rather than silently zeroing them.
+:::
