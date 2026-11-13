@@ -44,6 +44,7 @@ def load_simscape_spec(path: Path = DEFAULT_SIMSCAPE_SPEC) -> dict[str, Any]:
 
 
 def _fmt_sign(sign: float | None) -> str:
+    """Format an axis sign multiplier (+1, -1, 0, or em-dash when unmapped)."""
     if sign is None:
         return "—"
     if sign > 0:
