@@ -229,7 +229,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 18 |
 | `/models/dataset-explorer.html` | `models/dataset-explorer.qmd` | 16 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
-| `/models/golf-model-maps.html` | `models/golf-model-maps.qmd` | 6 |
+| `/models/golf-model-maps.html` | `models/golf-model-maps.qmd` | 9 |
 | `/models/hybrid-impact-contact.html` | `models/hybrid-impact-contact.qmd` | 6 |
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
 | `/models/models-drake.html` | `models/models-drake.qmd` | 1 |
