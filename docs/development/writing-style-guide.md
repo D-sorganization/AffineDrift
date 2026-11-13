@@ -205,7 +205,7 @@ The swing generates 185 J of work.
 | **DgCR** | **Drag-Curve Ratio** | *ratio* |
 
 - **ZTCF first-use requirement**: Every document mentioning ZTCF must identify its construction qualifier (*pointwise sample*, *stitched trace*, *forward trajectory*, *branched trajectory*, or *family*) in its first visible occurrence.
-- **DCR vs DgCR**: The bare acronym **DCR** is strictly reserved for the Drift-Control Ratio ($\lVert W a_d(x)\rVert_2 / \sup \lVert W B_a(x)u\rVert_2$). The aerodynamic drag-curve ratio $((1-\text{COR})/(1+\text{COR}))$ must always be written **DgCR**.
+- **DCR vs DgCR**: The bare acronym **DCR** is strictly reserved for the Drift-Control Ratio ($\lVert W a_d(x)\rVert_2 / \sup \lVert W B_a(x)u\rVert_2$). The restitution-derived drag-curve ratio $((1-\text{COR})/(1+\text{COR}))$ must always be written **DgCR** (not an aerodynamic quantity).
 
 ### Mathematical Symbol Standards
 
