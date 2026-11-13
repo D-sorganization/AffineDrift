@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-13 | #5704 | FDM runtime glossary: motion-matching terms of art and run-102 config keys |
+| 2026-11-13 | #5702 | Re-pin proximal-distal workbench and Chapter 28 synthesis to UpstreamDrift 3462749d8 and align disclosure contracts |
 | 2026-11-13 | #5691 | Fix broken ch12 companion link in upstreamdrift-physics-models article |
 | 2026-11-13 | #5683 | Normalize SBOM git commit timestamps to UTC Z for CycloneDX determinism across Git %cI formats. |
 | 2026-11-13 | #5647 | Programming Companion onboarding entrypoints; datasets ledger CC BY 4.0 alignment. |
@@ -258,10 +260,10 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | 2026-11-13 | #5658 | Unify lay companion UpstreamDrift pin and fix review defects |
 | 2026-11-13 | #5657 | FDM book: Hermite-Simpson, notation table, core equations, UD link fixes |
 | 2026-11-13 | #5636 | FDM worked examples corrected; reproduction script and chapter consistency fixes. |
-| 2026-11-13 | #5653 | Sync GoM book landing pages with rendered chapters and archive stale audit runbooks. |
+| 2026-11-13 | #5653 | Sync GoM book landing pages with rendered chapters and archive stale audit runbooks.; Confirm GoM book landing pages and archived audit runbooks (no further landing edits this PR). |
 | 2026-11-13 | #5674 | Geometry of Motion citation defects: primary sources, contact ledger, and bibliography hygiene. |
 | 2026-11-13 | #5676 | Geometry of Motion pedagogy: prerequisites map, cross-refs, KKT display, contraction pedagogy, Vol 0 numbering pilot |
-| 2026-11-13 | #5649 | Geometry of Motion: cascade vs partial contraction, LQR rho, floating-base gravity, Van der Pol |
+| 2026-11-13 | #5649 | Geometry of Motion: cascade vs partial contraction, LQR rho, floating-base gravity, Van der Pol; GoM ch04: cascade vs partial contraction pedagogy, LaTeX parity, proof paragraph order. |
 | 2026-11-13 | #5672 | Pinned UpstreamDrift implementation bridge includes for GOM vol0 and PoG algorithm chapters; added ledger and CI gate. |
 | 2026-11-13 | #5675 | Physics of Golf citation metadata, impact sourcing, and motor-control literature |
 | 2026-11-13 | #5660 | Physics of Golf: worked examples for impact, JCS, URDF, putting, calibration tables |

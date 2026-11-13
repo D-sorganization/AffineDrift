@@ -350,11 +350,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5622
-- **Branch:** cursor/motion-matching-runtime-5622-01ab
-- **PR:** #5667
+- **Branch:** cursor/motion-matching-glossary-5622-8405
+- **PR:** #5667, #5704
 - **Paths:** see #5667
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`9b94a674`; collated from changes/5622-fdm-runtime-reference-acceptance-gates-t.md)
+- **Last verified:** 2026-11-13 (`7395a15e`; collated from changes/5622-fdm-glossary-terms-8405.md)
 - **Summary:** FDM runtime reference: acceptance gates, two-window fit, ground-support pipeline, contact law, glossary
 - **Next step:** CI on lane PR
 
@@ -455,10 +455,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5609
 - **Branch:** cursor/pdc-upstream-pin-5609-9e7e
-- **PR:** #5658
+- **PR:** #5658, #5702
 - **Paths:** see #5658
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`4087761e`; collated from changes/5609-unify-lay-companion-upstreamdrift-pin-an.md)
+- **Last verified:** 2026-11-13 (`8cd85b27`; collated from changes/5609-workbench-post-5554-pin-and-equations.md)
 - **Summary:** Unify lay companion UpstreamDrift pin and fix review defects
 - **Next step:** Merge after CI green.
 
@@ -493,13 +493,13 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5606
-- **Branch:** cursor/gom-5606-landing-pages-66db
-- **PR:** #5653
+- **Branch:** cursor/gom-5603-5606-9baf
+- **PR:** #5653, #5701
 - **Paths:** see #5653
 - **Started:** 2026-11-13
 - **Last verified:** 2026-11-13 (`fee52513`; collated from changes/5606-sync-gom-book-landing-pages-with-rendere.md)
 - **Summary:** Sync GoM book landing pages with rendered chapters and archive stale audit runbooks.
-- **Next step:** Merge after CI green.
+- **Next step:** CI green
 
 ### DL-#5605 · Geometry of Motion Citation Defects: Primary Sources, Contact Ledger, and Bibliography Hygiene.
 
@@ -532,13 +532,13 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5603
-- **Branch:** cursor/gom-5603-geometry-corrections-efc7
-- **PR:** #5649
+- **Branch:** cursor/gom-5603-5606-9baf
+- **PR:** #5649, #5701
 - **Paths:** see #5649
 - **Started:** 2026-11-13
 - **Last verified:** 2026-11-13 (`e9b1c0ea`; collated from changes/5603-geometry-of-motion-cascade-vs-partial-co.md)
 - **Summary:** Geometry of Motion: cascade vs partial contraction, LQR rho, floating-base gravity, Van der Pol
-- **Next step:** CI green; Barb review
+- **Next step:** CI green
 
 ### DL-#5601 · Pinned UpstreamDrift Implementation Bridge Includes for GOM Vol0 and PoG Algorithm Chapters; Added Ledger and CI Gate.
 
