@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import inspect
 import json
+import math
 import sys
 import unittest
 from pathlib import Path
@@ -10,14 +12,16 @@ from pathlib import Path
 CALCS_DIR = Path(__file__).resolve().parent
 ALPHA_WAR_DIR = CALCS_DIR.parent
 JSON_PATH = CALCS_DIR / "alpha_war_calculations.json"
+MANIFEST_PATH = CALCS_DIR / "alpha_war_regeneration_manifest.json"
 
 if str(CALCS_DIR) not in sys.path:
     sys.path.insert(0, str(CALCS_DIR))
 
-from alpha_war_flexible_shaft_params import (  # noqa: E402
+from alpha_war_flexible_shaft_params import (  # noqa: E402 -- path resolved dynamically
     REFERENCE_GRAVITY_PLANAR_M_S2,
     REFERENCE_SHAFT_STIFFNESS_NM_RAD,
     lumped_shaft_cpm,
+    lumped_shaft_natural_frequency_hz,
     planar_gravity_m_s2,
     reference_stiffness_metadata,
 )
@@ -67,6 +71,44 @@ class TestAlphaWarFlexibleShaftParams(unittest.TestCase):
         for phrase in ("80", "347", "cpm", "8.033", "cos", "35", "model_parameters"):
             self.assertIn(phrase, section, msg=f"missing {phrase!r}")
         self.assertLess(abs(planar_gravity_m_s2(35.0) - REFERENCE_GRAVITY_PLANAR_M_S2), 0.01)
+
+    def test_reference_stiffness_metadata_parameter_limit(self) -> None:
+        """reference_stiffness_metadata respects the repository <= 4 parameter limit."""
+        self.assertLessEqual(len(inspect.signature(reference_stiffness_metadata).parameters), 4)
+
+    def test_lumped_shaft_natural_frequency_rejects_invalid_inputs(self) -> None:
+        """DbC preconditions reject booleans, non-finite, and non-positive arguments."""
+        bad_bools = [
+            (True, 0.2, 0.55),
+            (80.0, False, 0.55),
+            (80.0, 0.2, True),
+        ]
+        for args in bad_bools:
+            with self.subTest(args=args), self.assertRaises((TypeError, ValueError)):
+                lumped_shaft_natural_frequency_hz(*args)
+        bad_values = [
+            (0.0, 0.2, 0.55),
+            (-80.0, 0.2, 0.55),
+            (math.nan, 0.2, 0.55),
+            (math.inf, 0.2, 0.55),
+            (80.0, 0.0, 0.55),
+            (80.0, -0.2, 0.55),
+            (80.0, math.nan, 0.55),
+            (80.0, 0.2, 0.0),
+            (80.0, 0.2, -0.55),
+            (80.0, 0.2, math.inf),
+        ]
+        for args in bad_values:
+            with self.subTest(args=args), self.assertRaises(ValueError):
+                lumped_shaft_natural_frequency_hz(*args)
+
+    def test_manifest_preserves_regeneration_compare_evidence(self) -> None:
+        """Regeneration manifest retains regeneration_compare summary block."""
+        manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        compare = manifest.get("regeneration_compare")
+        self.assertIsInstance(compare, dict)
+        for key in ("max_abs_deviation", "max_rel_deviation", "mismatch_count", "rtol", "atol"):
+            self.assertIn(key, compare)
 
 
 if __name__ == "__main__":
