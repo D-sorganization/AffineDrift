@@ -25,7 +25,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 7 |
 | `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 16 |
 | `/articles/drift-is-the-past-control-is-the-present.html` | `articles/drift-is-the-past-control-is-the-present.qmd` | 2 |
-| `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
+| `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 7 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
 | `/articles/forward_dynamics_matching/01_problem.html` | `articles/forward_dynamics_matching/01_problem.qmd` | 1 |
 | `/articles/forward_dynamics_matching/02_upstream_inventory.html` | `articles/forward_dynamics_matching/02_upstream_inventory.qmd` | 1 |
@@ -324,7 +324,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 4 |
 | `ad-route-4a8ccbe60039` | `/articles/drift-control-ratio.html` | Reviewed | — | `ad-dcr-001` | `crit-dimensional-inconsistency-dcr`, `crit-lie-bracket-formalism-overreach`, `crit-normative-ambiguity-drift`, `crit-planar-dcr-blindness`, `crit-precision-gross-control` | 3 |
 | `ad-route-bd84003504db` | `/articles/drift-is-the-past-control-is-the-present.html` | Reviewed | — | None | None | 0 |
-| `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Reviewed | — | None | None | 0 |
+| `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Reviewed | — | None | `crit-geometric-stiffness-omission` | 0 |
 | `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Reviewed | — | None | None | 6 |
 | `ad-route-6a107a9826c5` | `/articles/forward_dynamics_matching/01_problem.html` | Reviewed | — | None | None | 0 |
 | `ad-route-08fa2a4f6759` | `/articles/forward_dynamics_matching/02_upstream_inventory.html` | Reviewed | — | None | None | 0 |
@@ -468,10 +468,10 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-256c9a08f2b1` | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b276ab63f84a` | `/articles/The_Physics_of_Golf/quarto/glossary.html` | Reviewed | — | None | None | 0 |
 | `ad-route-49de2185f401` | `/articles/The_Physics_of_Golf/quarto/index.html` | Reviewed | — | None | None | 3 |
-| `ad-route-2ab75008e28e` | `/articles/theory-part1.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-normative-ambiguity-drift`, `crit-stretch-shortening-blindspot`, `crit-tip-mass-omission` | 0 |
+| `ad-route-2ab75008e28e` | `/articles/theory-part1.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-geometric-stiffness-omission`, `crit-normative-ambiguity-drift`, `crit-stretch-shortening-blindspot`, `crit-tip-mass-omission` | 0 |
 | `ad-route-9fb316bfc4b7` | `/articles/theory-part2.html` | Reviewed | — | None | `crit-passive-overshoot-artifact`, `crit-static-fallacy-zvcf`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-850c4cf3057b` | `/articles/theory-part3.html` | Reviewed | — | None | `crit-coulomb-friction-violation`, `crit-effective-plant-fallacy`, `crit-stiffness-pulse-paradox` | 0 |
-| `ad-route-b1cfbbbc95cb` | `/articles/theory-part4.html` | Reviewed | — | None | `crit-input-dependent-boundary-conditions` | 0 |
+| `ad-route-b1cfbbbc95cb` | `/articles/theory-part4.html` | Reviewed | — | None | `crit-geometric-stiffness-omission`, `crit-input-dependent-boundary-conditions` | 0 |
 | `ad-route-125d93f57874` | `/articles/theory-part5.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-simulation-tautology`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Reviewed | — | None | None | 0 |
 | `ad-route-94620488aa0c` | `/articles/upstreamdrift-physics-models.html` | Reviewed | — | None | None | 0 |
