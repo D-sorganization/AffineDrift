@@ -219,20 +219,19 @@ For a moving holonomic constraint $\varphi(q,t)=0$, admissible velocities satisf
 
 ### A Drift-Control Ratio With Declared Units
 []{#def-ch7:DCR}
-Choose a positive-definite acceleration weight $W$, with units or normalization appropriate to the coordinates, and a compact feasible input set $\mathcal U(x)$ containing zero. Define
+Choose a weight $W$ applied on the left to acceleration vectors ($\lVert W z\rVert_2$; see [NOTATION.md](../../../NOTATION.md)) and a compact feasible input set $\mathcal U(x)$ containing zero. Define
 []{#eq-ch7:DCR}
 
 $$
 \begin{aligned}
-c_W(x)&=\max_{u\in\mathcal U(x)}\|B_a(x)u\|_W,\\
-\rho_W(x)&=\frac{\|a_0(x)\|_W}{c_W(x)},\qquad
-\|z\|_W=(z^TWz)^{1/2}.
+c_W(x)&=\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|_2,\\
+\mathrm{DCR}_{W,\mathcal U}(x)&=\frac{\|W a_0(x)\|_2}{c_W(x)+\varepsilon}.
 \end{aligned}
 $$
 
-Use the constrained fields when needed. If capacity is zero and drift is nonzero, record infinite ratio with zero available capacity. If both vanish, the ratio is undefined. A numerical regularizer can help plotting but changes the statistic and must carry a declared scale. Do not hide zero authority behind an arbitrary dimensionless epsilon.
+If some sources write $\lVert z\rVert_M=\sqrt{z^{\mathsf T}M z}$, declare $M$ and the $W$ with $\lVert W z\rVert_2=\lVert z\rVert_M$. Use the constrained fields when needed. If capacity is zero and drift is nonzero, record infinite ratio with zero available capacity. If both vanish, the ratio is undefined. Report any plotting regularizer $\varepsilon$ with the denominator's units; do not hide zero authority behind an arbitrary dimensionless offset.
 
-A realized-input ratio uses $\|B_a u_{\mathrm{actual}}\|_W$ instead. It answers whether the current command contributes much acceleration, not whether the actuator has unused capacity. A component ratio uses one specified component and ignores orthogonal components. Mixing those definitions within one argument invalidates the comparison. Likewise, a norm of the full mechanical state drift mixes velocity and acceleration unless suitable scales are supplied; it is not interchangeable with an acceleration ratio.
+A **realized drift-to-input ratio (DIR)** uses $\|W B_a u_{\mathrm{actual}}\|_2$ in the denominator instead of $c_W$. It answers whether the current command contributes much acceleration, not whether the actuator has unused capacity. A component ratio uses one specified component and ignores orthogonal components. Mixing those definitions within one argument invalidates the comparison. Likewise, a norm of the full mechanical state drift mixes velocity and acceleration unless suitable scales are supplied; it is not interchangeable with an acceleration ratio.
 
 ### Why Speed Alone Does Not Decide the Ratio
 For natural mechanics, the Christoffel bias is homogeneous quadratic in $v$. At fixed configuration and velocity direction $w$,

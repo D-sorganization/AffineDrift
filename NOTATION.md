@@ -129,14 +129,27 @@ $$
 $$
 
 $a_d$ and $B_a u$ are the drift and control blocks in one acceleration or
-task-projected space; $W$ supplies the declared scaling or metric;
-$\mathcal U(x)$ is the admissible control set; and $\varepsilon$ is a reported
-regularizer. A full-state norm that mixes position and velocity units is not a
-DCR. A ratio using the realized input rather than bounded authority must be
-called a **realized drift-to-input ratio**, not DCR.
+task-projected space. The **weighting** $W$ is applied on the left:
+$\lVert W z\rVert_2$ is the site-wide convention (row selector, diagonal
+scales, or task Jacobian). When a page instead writes
+$\lVert z\rVert_M=\sqrt{z^{\mathsf T}M z}$ with positive-definite $M$, declare
+$M$ and the equivalence to some $W$ with $\lVert W z\rVert_2=\lVert z\rVert_M$
+(for example $W=L^{\mathsf T}$ from a Cholesky factor $M=LL^{\mathsf T}$).
+$\mathcal U(x)$ is the admissible control set; $\varepsilon$ has the
+denominator's units and is a **reported** regularizer (use $\varepsilon=0$
+when capacity is strictly positive). A full-state norm that mixes position and
+velocity units is not a DCR. The **realized drift-to-input ratio (DIR)** uses the
+achieved input:
+$\lVert W a_d\rVert_2/(\lVert W B_a u\rVert_2+\varepsilon)$; never call that
+quantity DCR. Under a nonlinear coordinate change $q\mapsto\phi(\tilde q)$,
+the control capacity $\sup_{u\in\mathcal U}\lVert W B_a u\rVert_2$ built from
+covariant input effects is chart-consistent, but the drift acceleration
+$a_d=-M^{-1}h$ is chart-dependent unless a covariant (material) acceleration is
+used; a kinetic-energy norm does not make the drift term coordinate-invariant.
 
-The aerodynamic **Drag-Curve Ratio (DgCR)** remains
-$(1-\mathrm{COR})/(1+\mathrm{COR})$ and must never use the bare DCR acronym.
+The **Drag-Curve Ratio (DgCR)** is the restitution-derived ratio
+$(1-\mathrm{COR})/(1+\mathrm{COR})$; it is not an aerodynamic quantity and
+must never use the bare **DCR** acronym.
 
 ### Equation Symbol Definitions
 
@@ -184,9 +197,15 @@ site registry `data/symbol_references.json` is generated from this table.
 
 **Hamilton vs JPL Conventions:**
 
-- **Hamilton (default):** q = (w, x, y, z), quaternion multiplication q₁q₂
-- **JPL (aerospace):** q = (x, y, z, w), quaternion multiplication q₁ ⊗ q₂
-- **Current project:** Hamilton convention throughout unless otherwise noted
+- **Hamilton (default, site-wide):** $ijk=-1$ (right-handed algebra). Storage is
+  scalar-first $(w,x,y,z)$. Active rotation $\mathbf{v}'=q\mathbf{v}q^*$ on column
+  vectors; $q_{WB}$ maps body coordinates to world, with composition
+  $q_{WC}=q_{WB}\,q_{BC}$. Some libraries (for example SciPy, ROS) store the same
+  Hamilton algebra scalar-last; translate storage, not the algebra.
+- **JPL (aerospace literature):** $ijk=+1$ (left-handed algebra) with its usual passive
+  interpretation. Not used in AffineDrift unless a source is quoted and translated.
+- **Current project:** Hamilton algebra, scalar-first storage, active rotations,
+  consistent with [Rotation Representation Converter](../articles/rotation-converter.html).
 
 ### Euler Angles
 
@@ -201,9 +220,12 @@ site registry `data/symbol_references.json` is generated from this table.
 
 **Order Convention:** Z-Y-X (Yaw-Pitch-Roll)
 
-- Applied in extrinsic (fixed-frame) order
-- Equivalent to intrinsic X-Y-Z on moving frame
-- $R(\psi, \theta, \phi) = R_Z(\psi) R_Y(\theta) R_X(\phi)$
+- **Intrinsic** $Z$–$Y'$–$X''$ on moving body axes: yaw $\psi$ about $Z$, then pitch
+  $\theta$ about $Y'$, then roll $\phi$ about $X''$
+- **Equivalently extrinsic** $X$–$Y$–$Z$ on fixed axes (same active rotation matrix)
+- Active rotation of column vectors; $R(\psi,\theta,\phi)=R_Z(\psi)R_Y(\theta)R_X(\phi)$
+  maps body coordinates to world coordinates
+- Gimbal lock at pitch $\theta=\pm\pi/2$
 
 ---
 
@@ -219,12 +241,16 @@ site registry `data/symbol_references.json` is generated from this table.
 
 ### Screw/Twist Notation
 
-| Notation   | Meaning             | Type       | Components                                                                  |
-| ---------- | ------------------- | ---------- | --------------------------------------------------------------------------- |
-| **ξ**      | Screw/twist element | 6-D vector | $\xi = (\omega_x, \omega_y, \omega_z, v_x, v_y, v_z)^T$                     |
-| **[ξ]\_×** | Screw matrix form   | 4×4 matrix | $[\xi]_\times = \begin{pmatrix} [\omega]_\times & v \\ 0 & 0 \end{pmatrix}$ |
-| **V**      | Spatial velocity    | 6-D twist  | Linear + angular velocity                                                   |
-| **F**      | Spatial force       | 6-D wrench | Torque + linear force                                                       |
+| Notation      | Meaning             | Type       | Components                                                                                            |
+| ------------- | ------------------- | ---------- | ----------------------------------------------------------------------------------------------------- |
+| **ξ**         | Screw/twist element | 6-D vector | $\xi=(\omega_x,\omega_y,\omega_z,v_x,v_y,v_z)^T$ — angular block first                                |
+| **V**         | Spatial velocity    | 6-D twist  | $V=(\omega,v)$ — angular velocity, then linear velocity of the reference point                        |
+| **W**         | Spatial wrench      | 6-D wrench | $W=(\boldsymbol{\mathsf{n}},\mathbf{f})$ — moment about the reference point, then force               |
+| $\widehat\xi$ | se(3) hat matrix    | 4×4 matrix | $\widehat\xi=\begin{pmatrix}[\omega]_\times&\mathbf{v}\\0&0\end{pmatrix}$ (see screw-theory chapters) |
+
+**Block order and power pairing:** twists use $(\omega,v)$, wrenches use
+$(\boldsymbol{\mathsf{n}},\mathbf{f})$; $P=\mathsf{W}^T\mathsf{V}$ is instantaneous
+power. Name the reference point and frame (body vs spatial).
 
 ---
 
@@ -279,18 +305,18 @@ site registry `data/symbol_references.json` is generated from this table.
 
 ### Golf-Specific Quantities
 
-| Symbol   | Quantity                       | Definition                                                                                                                    | Units                     |
-| -------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| **CoG**  | Center of gravity              | Center of mass                                                                                                                | m (relative to reference) |
-| **COR**  | Coefficient of restitution     | (v_out - v_contact) / (v_in - v_contact)                                                                                      | Dimensionless, 0-1        |
-| **DCR**  | Drift-Control Ratio            | $\lVert W a_d(x)\rVert_2 /(\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon)$; see the canonical definition above | Dimensionless             |
-| **DgCR** | Drag–curve ratio (aerodynamic) | (1 - COR) / (1 + COR)                                                                                                         | Dimensionless, 0-1        |
-| **e**    | Coefficient of restitution     | Same as COR                                                                                                                   | Dimensionless             |
-| **v_0**  | Ball velocity (impact)         | Velocity immediately after impact                                                                                             | m/s                       |
-| **α**    | Launch angle                   | Angle above horizontal                                                                                                        | degrees (°) or radians    |
-| **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                         | RPM or rad/s              |
+| Symbol   | Quantity                       | Definition                                                                                                                                                                                                                                                                               | Units                     |
+| -------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| **CoG**  | Center of gravity              | Center of mass                                                                                                                                                                                                                                                                           | m (relative to reference) |
+| **COR**  | Coefficient of restitution     | $e=-(\mathbf{v}_b^+-\mathbf{v}_c^+)\cdot\mathbf{n}\;/\;(\mathbf{v}_b^--\mathbf{v}_c^-)\cdot\mathbf{n}$ with unit normal $\mathbf{n}$; signed approach normal speed is negative, so $e\in[0,1]$ for passive, non-superelastic rebounds (no net external energy supplied to the collision) | Dimensionless, 0-1        |
+| **DCR**  | Drift-Control Ratio            | $\lVert W a_d(x)\rVert_2 /(\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon)$; see the canonical definition above                                                                                                                                                            | Dimensionless             |
+| **DgCR** | Drag–Curve Ratio (restitution) | $(1-\mathrm{COR})/(1+\mathrm{COR})$; impact diagnostic from COR, not aerodynamic drag                                                                                                                                                                                                    | Dimensionless, 0-1        |
+| **e**    | Coefficient of restitution     | Same as COR                                                                                                                                                                                                                                                                              | Dimensionless             |
+| **v_0**  | Ball launch speed              | Ball center-of-mass speed immediately after separation (not the pre-impact approach speed)                                                                                                                                                                                               | m/s                       |
+| **α**    | Launch angle                   | Angle above horizontal                                                                                                                                                                                                                                                                   | degrees (°) or radians    |
+| **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                                                                                                                                                                                    | RPM or rad/s              |
 
-**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
+**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The restitution-based drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
 **DgCR (Drag–curve ratio) Sign Convention:** Always positive
 
@@ -306,9 +332,9 @@ site registry `data/symbol_references.json` is generated from this table.
 
 **Convention:** Right-hand rule for all cross products
 
-- Curl fingers of right hand in direction of first vector
-- Extend thumb in direction of second vector
-- Result points in direction of thumb
+- Point fingers along the first vector and curl them toward the second through the
+  smaller angle between them (palm faces the turn)
+- The extended thumb gives the direction of $\mathbf{u}\times\mathbf{v}$
 
 **Example:** Torque = **r** × **F**
 
@@ -333,19 +359,20 @@ site registry `data/symbol_references.json` is generated from this table.
 
 **Hamilton Convention (default):**
 
-- q = (w, x, y, z) = scalar-first
-- Unit quaternion: w² + x² + y² + z² = 1
-- Rotation: **v'** = q **v** q⁻¹ (sandwich product)
+- $q=(w,x,y,z)$ scalar-first; $w^2+x^2+y^2+z^2=1$
+- Active rotation: $\mathbf{v}'=q\mathbf{v}q^*$ (column vectors)
+- $q_{WB}$ maps body to world; same algebra as the Euler $R$ above when both are declared
 
 ### Euler Angle Rotation
 
-**Convention:** Extrinsic Z-Y-X (Yaw-Pitch-Roll)
+**Convention:** Intrinsic $Z$–$Y'$–$X''$ (yaw–pitch–roll), equivalently extrinsic $X$–$Y$–$Z$
 
-- First: Rotate ψ about fixed Z-axis (yaw/heading)
-- Second: Rotate θ about fixed Y-axis (pitch)
-- Third: Rotate φ about fixed X-axis (roll)
+- **Intrinsic (moving axes):** $\psi$ about body $Z$, then $\theta$ about $Y'$, then $\phi$
+  about $X''$
+- **Extrinsic (fixed axes, same $R$):** $\phi$ about fixed $X$, then $\theta$ about fixed $Y$,
+  then $\psi$ about fixed $Z$
 
-**Matrix multiplication (right-to-left):**
+**Matrix multiplication (active rotation, body to world):**
 $$R = R_Z(\psi) R_Y(\theta) R_X(\phi)$$
 
 ### Coordinate Frame Conventions
@@ -696,12 +723,12 @@ From NOTATION.md:
 - ψ (psi) = yaw [Euler Angles section]
 - θ (theta) = pitch [Euler Angles section]
 - φ (phi) = roll [Euler Angles section]
-- Z-Y-X = extrinsic rotation order [Euler Angle Rotation section]
-- R = R_Z(ψ) R_Y(θ) R_X(φ) [Matrix form]
+- Z-Y-X = intrinsic $Z$–$Y'$–$X''$ / extrinsic $X$–$Y$–$Z$ [Euler Angle Rotation section]
+- R = R_Z(ψ) R_Y(θ) R_X(φ) maps body to world [Matrix form]
 
 ---
 
-**Last Updated:** April 2026  
+**Last Updated:** 2026-11-13  
 **Version:** 1.0  
 **Maintained By:** AffineDrift Documentation Team  
 **Status:** Authoritative Reference ✓
