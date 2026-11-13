@@ -234,6 +234,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | ---------- | ----- | ---------- |
 | 2026-11-12 | #5652 | Harden CI apt bootstrap for static-checks and E2E Playwright system deps. |
 | 2026-11-11 | #5629 | WEB-06.3 sandbox club defaults with COM/inertia; drift-plus-control caption units. |
+| 2026-11-10 | #5585 | Switch Jules workflow credentials to the fleet app and remove Jules closer workflows |
 | 2026-11-10 | #5583 | Add result contract, solver truth tables, and vocabulary gates |
 | 2026-11-10 | #5564 | Option A A-4 comparison module, golden metrics JSON, claim ad-dcr-003, results note |
 | 2026-11-10 | #5582 | Add stdlib lifecycle transition kernel and ADR-0004 per owner decision |
