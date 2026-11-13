@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.tools.golf_model_map import (  # noqa: E402
+from src.tools.golf_model_map import (  # noqa: E402 -- sys.path bootstrap before repo import
     DEFAULT_JSON_OUT,
     DEFAULT_MANIFEST,
     DEFAULT_QMD_OUT,
