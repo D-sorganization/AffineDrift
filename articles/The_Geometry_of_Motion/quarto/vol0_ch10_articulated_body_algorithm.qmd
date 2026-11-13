@@ -280,7 +280,7 @@ This update is part of ABA, not an optional refinement. Inertia alone cannot des
 #### Fixed-Base Acceleration and Gravity
 []{#subsubsec-base_acceleration}
 
-For a stationary base in a uniform gravitational field $g$, set the algorithmic base acceleration to $a_0=(0,-g)$. Alternatively, use the physical zero base acceleration and supply gravity as external body forces consistently. Do not use both conventions simultaneously. The fixed base has a reaction wrench, generally nonzero, that can be recovered by inverse dynamics once the accelerations are known.
+For a stationary base in a uniform gravitational field, let $g>0$ be the gravity magnitude (NOTATION.md reserves lowercase $g$ for gravity) and define the spatial fictitious gravity vector $\mathbf{g}=(0,-g)$ with zero angular part and world-frame linear components matching the repository ABA reference default `DynamicsLoads.gravity`. Set the algorithmic root acceleration to $a_0=\mathbf{g}$ (Featherstone fictitious-base bookkeeping). The kinematically fixed base has **physical** spatial acceleration $a_0^{\mathrm{phys}}=0$; do not add $\mathbf{g}$ again when interpreting base motion. Alternatively, use physical zero $a_0$ and supply gravity as external body forces consistently. Do not use both conventions simultaneously. The fixed base has a reaction wrench, generally nonzero, that can be recovered by inverse dynamics once the accelerations are known.
 
 Spatial acceleration is also not simply a stack of ordinary angular and origin linear accelerations. In body coordinates its linear part is the ordinary origin acceleration minus $\omega_i\times v_{O_i}$, before accounting for the fictitious gravity convention. Comparing these arrays with accelerometer data therefore requires restoring the physical gravity/reference convention and the sensor's offset.
 
@@ -325,6 +325,8 @@ I_0^A a_0+p_0^A=0,\qquad a_0=-(I_0^A)^{-1}p_0^A.
 $$
 
 
+Here $a_0$ is the root acceleration returned by the articulated solve with the same gravity-offset convention as the fixed-base section: $p_i^A$ omits gravity as a body load, and $\mathbf{g}=(0,-g)$ is the fictitious gravity vector defined above. For a **floating** base, recover physical motion before accelerometers or whole-body kinematics via $a_0^{\mathrm{phys}}=a_0+\mathbf{g}$. A single free body at rest with no external wrench has $p_0^A=0$, so the displayed solve returns $a_0=0$ and $a_0^{\mathrm{phys}}=\mathbf{g}$, i.e. free fall with magnitude $g$. The fixed-base section instead **prescribes** $a_0=\mathbf{g}$ while the base remains at rest; that prescription is not passed through this recovery formula.
+
 Implement this expression as a $6\times6$ solve. The matrix is the entire articulated subtree's inertia at the current configuration, not the isolated base's constant rigid inertia. Its factorization can be reused only while the quantities on which it depends remain unchanged. The remaining outward acceleration recovery is the same as before.
 
 ### Contact Does Not Automatically Fix the Base
@@ -355,6 +357,8 @@ $$
 I_0^A a_0=w_0-p_0^A.
 $$
 
+
+As above, $a_0$ is the solved algorithmic root acceleration; recover $a_0^{\mathrm{phys}}=a_0+\mathbf{g}$ before interpreting pelvis acceleration or comparing with accelerometers. The fixed-base prescription $a_0=\mathbf{g}$ does not use this recovery.
 
 Count a wrench exactly once. An unknown ground reaction belongs to the constraint calculation, while a measured ground wrench can be supplied as known data within its measurement uncertainty. These choices answer different forward or inverse questions.
 

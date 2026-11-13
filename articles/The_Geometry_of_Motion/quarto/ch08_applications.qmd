@@ -160,11 +160,11 @@ The tip speed decreases from $35.37$ to $21.66$ m/s in this particular calculati
 
 At a fixed state of a torque-driven rigid model, acceleration separates exactly as $\ddot q=a_0(q,\dot q)+M_r^{-1}u$. This is additivity in the input at one state. It does not imply that the trajectories produced by two different input histories add, because their evolving states change both terms.
 
-A dimensionless drift-control ratio can be defined for a chosen acceleration output:
+At this state the **realized drift-to-input ratio (DIR)** for a chosen acceleration output is
 $$
-\rho_a=\frac{\|W_a a_0\|_2}{\|W_a M_r^{-1}u\|_2}.
+\mathrm{DIR}_{W_a}(x,u)=\frac{\|W_a a_0\|_2}{\|W_a M_r^{-1}u\|_2}.
 $$
-Here $W_a$ specifies component scales or a declared projection and normalization. If the denominator is zero and the numerator is nonzero, the ratio is infinite; if both vanish, it is undefined. A numerical epsilon changes the definition and must be reported. The unforced trajectory above therefore cannot be assigned a finite drift-control ratio from its acceleration norm alone.
+It is not the site-wide **DCR**, which uses $\sup_{u\in\mathcal U}\|W_a M_r^{-1}u\|_2$ (see Chapter 7 definition and [NOTATION.md](../../../NOTATION.md)). Here $W_a$ specifies component scales or a declared projection. If the denominator is zero and the numerator is nonzero, the ratio is infinite; if both vanish, it is undefined. The unforced trajectory above therefore has no finite DIR from its acceleration norm alone when $u=0$ and $a_0\neq 0$.
 
 The full first-order drift $f=(\dot q,a_0)$ combines rates and accelerations. Its Euclidean norm is not $\|a_0\|$, and its comparison with $(0,M_r^{-1}u)$ depends on arbitrary units unless a state metric is specified. A metric-based ratio of full vector fields is a different quantity. Even acceleration itself changes nontrivially under nonlinear coordinates: for $z=\psi(q)$,
 $$
