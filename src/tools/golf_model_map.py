@@ -5,10 +5,11 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-import xml.etree.ElementTree as ET
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+
+from defusedxml import ElementTree as defused_et
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +81,7 @@ def _sha256_file(path: Path) -> str:
 
 def _parse_equalities(xml_text: str) -> tuple[EqualityRow, ...]:
     """Parse MJCF ``<equality>`` children from vendored snapshot text."""
-    root = ET.fromstring(xml_text)  # noqa: S314 — trusted vendored MJCF from manifest
+    root = defused_et.fromstring(xml_text)
     rows: list[EqualityRow] = []
     equality = root.find("equality")
     if equality is None:
