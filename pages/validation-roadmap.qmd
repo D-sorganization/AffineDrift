@@ -30,9 +30,9 @@ Scientific claims in AffineDrift progress upward through four distinct evidence 
 
 At the foundational rung, claims are evaluated purely through mathematical analysis, differential geometry, and analytical counterexamples:
 
-- **Formal Formulations**: Control-affine system representations $\dot{x} = f(x) + G(x)u$, Lie algebra brackets $[f, g]$, and coordinate chart transformations.
+- **Formal Formulations**: Control-affine system representations $\dot{x} = f(x) + G(x)u$, Lie brackets $[f, G_i]$ with control columns $G_i$, and coordinate chart transformations.
 - **Analytical Counterexamples**: Closed-form proofs demonstrating that scalar ratios (such as DCR) do not uniquely determine finite-horizon reachability, or that net handle wrench does not uniquely identify dual-hand force allocation.
-- **Invariance Bounds**: Geometric requirements ensuring that physical attributions are coordinate-free and respect Riemannian kinetic energy metrics $M(q)$.
+- **Metric and Chart Bounds**: Kinetic-energy norms $\|v\|_{M(q)}$ and $\|a\|_{M(q)}$ remove dependence on linear coordinate rescalings for tangent quantities; nonlinear chart changes still alter drift acceleration unless a covariant acceleration is used.
 
 ### Rung 2: Multi-Tier Simulation and Numerical Physics
 
@@ -86,7 +86,7 @@ The forward Zero-Torque Counterfactual (ZTCF) Atlas (`data/trust/ztcf_falsificat
 
 The Drift-Control Ratio (DCR) Atlas (`data/trust/dcr_falsification_atlas.json`) evaluates the formal limits of instantaneous acceleration-space Drift-Control Ratios:
 
-1. **Coordinate Chart Invariance** (`dcr-atlas-coordinate-chart-invariance`): Unweighted Euclidean acceleration norms $\|f(x)\|_2 / (\|f(x)\|_2 + \|G(x)u\|_2)$ alter under nonlinear coordinate transformations $q \mapsto \phi(q)$, necessitating kinetic-energy-metric Riemannian norms $\|a\|_{M(q)}$.
+1. **Coordinate Chart Dependence** (`dcr-atlas-coordinate-chart-invariance`): Unweighted norms of full-state derivatives, realized-input shares $\|f\|_2/(\|f\|_2+\|Gu\|_2)$, and raw drift components $-M^{-1}h$ alter under nonlinear maps $q \mapsto \phi(\tilde q)$ because acceleration picks up $\dot J\dot q$-type terms. The site-wide **DCR** uses bounded control capacity in one acceleration space: $\mathrm{DCR}_{W,\mathcal U}=\|W a_d\|_2/(\sup_{u\in\mathcal U}\|W B_a u\|_2+\varepsilon)$ ([NOTATION.md](../NOTATION.md)). Kinetic-energy weighting $\|a\|_{M(q)}=\sqrt{a^{\mathsf T}M(q)a}$ gives a coordinate-free magnitude for **input** acceleration $B_a u$; the drift block $a_d$ remains chart-dependent unless stated in covariant form.
 2. **Reflex Feedback Confounding** (`dcr-atlas-reflex-feedback-confounding`): Rapid spinal stretch reflexes ($30\text{--}60\,\text{ms}$) create state-dependent muscular torques $u_{\text{reflex}}(q,\dot{q})$ that blur the boundary between autonomous drift and intentional control.
 3. **Impact Interval Truncation** (`dcr-atlas-impact-interval-truncation`): Instantaneous pre-impact DCR at $t_{\text{impact}}^-$ neglects the $\approx 450\,\mu\text{s}$ finite-duration contact deformation window where ball launch dynamics are determined.
 
@@ -98,10 +98,10 @@ The following matrix summarizes the three falsification atlases, detailing the s
 | :--- | :--- | :--- | :--- | :--- |
 | **Proximal–Distal** | Prescribed Base Artifacts | Compare fixed-base, prescribed-kinematic, and floating-base forward rollouts from matched states. | Tier 1/3 forward dynamics; ground reaction force plates. | Divergence in distal joint kinetic energy rate $> 10\%$ attributable to base boundary conditions. |
 | **Proximal–Distal** | Bilateral Hand Ambiguity | Decompose bilateral sensor data into net resultant wrench and closed-chain internal nullspace. | Dual 6-axis load-cell split handle; optical mocap ($1000\,\text{Hz}$). | Internal hand force $> 15\%$ of resultant force with zero net wrench variation. |
-| **ZTCF / ZVCF** | Passive Torque Leakage | Compare strict zero-torque rollouts ($\tau_{\text{total}} = 0$) with active-zeroed rollouts ($\tau_{\text{act}} = 0, \tau_{\text{pass}} \ne 0$). | Tier 1 vs Tier 3 musculoskeletal models; passive joint elasticity data. | Relative trajectory deviation $\|q_{\text{act}} - q_{\text{total}}\|_{M} / \|q_{\text{total}}\|_{M} > 0.05$ over $100\,\text{ms}$. |
+| **ZTCF / ZVCF** | Passive Torque Leakage | Compare strict zero-torque rollouts ($\tau_{\text{total}} = 0$) with active-zeroed rollouts ($\tau_{\text{act}} = 0, \tau_{\text{pass}} \ne 0$). | Tier 1 vs Tier 3 musculoskeletal models; passive joint elasticity data. | RMS generalized-velocity difference $\|\dot q_{\text{act}}-\dot q_{\text{total}}\|_2$ or energy deviation $> 5\%$ over $100\,\text{ms}$ (avoid $\|q\|_M$, which shifts with angle zero). |
 | **ZTCF / ZVCF** | Grip Wrench Nullspace | Instrument split handle to isolate internal squeeze/shear forces from net clubhead acceleration. | Instrumented split-grip handle; synchronized kinematic tracking. | Internal grip force pair $> 15\%$ of resultant wrench magnitude. |
 | **ZTCF / ZVCF** | Horizon Sensitivity | Sweep rollout window $\Delta t \in [5\,\text{ms}, 50\,\text{ms}]$ under initial state uncertainty perturbations. | Finite-time Lyapunov exponent analysis; multi-body integrator. | Terminal clubhead position divergence $> \pm 15\,\text{mm}$ for rollout $\Delta t > 25\,\text{ms}$. |
-| **DCR** | Coordinate Invariance | Evaluate kinetic-energy metric norm $\|a\|_{M(q)}$ vs Euclidean norms across minimal and maximal charts. | Riemannian metric tensor evaluator; minimal/maximal coordinate models. | Discrepancy between metric DCR and unweighted coordinate DCR $> 0.10$. |
+| **DCR** | Chart and Weighting Sensitivity | Evaluate the canonical $\mathrm{DCR}_{W,\mathcal U}$ on acceleration blocks across declared charts and compare with realized-input (DIR) diagnostics. | Declared $W$, $\mathcal U$; minimal vs maximal coordinate models. | Same-state DCR differs by $> 0.10$ only when $W$, $\mathcal U$, or acceleration convention change; drift $\|a_d\|_{M}$ alone is not required to match across charts. |
 | **DCR** | Reflex Confounding | Compare open-loop torque models with reflex-enabled musculoskeletal models under perturbation. | High-density sEMG array; transient perturbation robotic handle. | Perturbation-induced reflexive torque modulation $> 20\%$ within $50\,\text{ms}$. |
 | **DCR** | Impact Truncation | Run fail-closed impact interval audit comparing restitution approximations to continuous contact. | Ultra-high-speed video ($\ge 20{,}000\,\text{fps}$); dynamic contact sensors. | Post-impact launch velocity discrepancy $> 5\%$ between impulse and continuous contact models. |
 
