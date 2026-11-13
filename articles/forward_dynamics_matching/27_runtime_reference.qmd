@@ -1,5 +1,5 @@
 ---
-description: "Motion-Matching Runtime Reference: forward dynamics matching operational chapter (local draft; UpstreamDrift gates, pipeline, and contact law)."
+description: "Motion-Matching Runtime Reference: acceptance gates, two-window fit, ground-support pipeline, contact law, and programme vocabulary as implemented in UpstreamDrift."
 css: ../../css/forward-dynamics-matching.css
 ---
 
@@ -98,9 +98,24 @@ $$
 
 Defaults in run-102 config: $w_{\mathrm{term}} = 25$, pelvis-yaw weight $\alpha = 40$, effort penalty weight $0.01$ (reference force 100 N, torque 20 N·m).
 
-**Constraints:** Projected continuity equalities at the window join with scaled defect tolerance $10^{-4}$ and equality tolerance $10^{-7}$.
+**Pelvis-yaw term:** [`compute_marker_metrics`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/two_window_fit.py) defaults `pelvis_yaw_weight = 40.0` on the **last frame** waist-marker residual (not the same construction as the G1 receipt gate).
+
+**Constraints:** Projected continuity equalities at the window join with scaled defect tolerance $10^{-4}$ (`defect_tolerance_scaled` in config) and equality tolerance $10^{-7}$ (`equality_tolerance`).
 
 **Solver:** SLSQP with analytic ODE sensitivities (`solver: slsqp`); primal integrator rtol $10^{-11}$, atol $10^{-13}$; sensitivity rtol $10^{-10}$.
+
+### 3.1 Run-102 Config Keys (Pinned Evidence)
+
+| Key | Value (run 102) | Role |
+| --- | ----------------- | ---- |
+| `windows` | `[0, 0.6]`, `[0.6, 0.85]` s | Shooting segments |
+| `chart.dimension` | 27 | Native control coordinates |
+| `first_control` | 4 | Free Bernstein indices B4–B6 (81 increments) |
+| `control_box` / `theta_lower`/`theta_upper` | $\pm 3.0$ | Increment bounds relative to parent |
+| `shared_boundary_policy` | `once` | Single 27-D node at $t=0.6$ s |
+| `terminal_weight` | 25.0 | Objective weight on last-frame marker error |
+| `effort_penalty.weight` | 0.01 | Effort term scale |
+| `primal.rtol` | $10^{-11}$ | Forward integration relative tolerance |
 
 **Recorded result** (handoff, not acceptance): whole 20.267 mm, early 9.995 mm, terminal 40.303 mm (fails G1 35 mm gate), club cluster 8.389 mm, pelvis-yaw error 0.610 % — see [03_historical_lessons](03_historical_lessons.html).
 
@@ -176,6 +191,15 @@ $$
 
 Bernstein controls for shooting fits use [`piecewise_polynomial.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/piecewise_polynomial.py) and [`prefix_fit.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/prefix_fit.py); [`validate_theta`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/validate_theta.py) enforces layout at API boundaries. Passing coefficients in the wrong order produces a silently wrong swing.
 
+### 6.1 Typical Increment and Node Bounds (Run 102)
+
+| Quantity | Config key | Run-102 value |
+| -------- | ---------- | ------------- |
+| Control increment box | `control_box`, `theta_lower`/`theta_upper` | $\pm 3.0$ N or N·m |
+| Node chart radius | `chart.radius` | 0.5 (native units) |
+| Node chart bound | `node_bound_chart` | 0.075 |
+| Box scaling factor | `box_factor` | 6.5 |
+
 ## 7. Gradient and Sensitivity Backends by Lane
 
 | Lane / task | Primary gradient source | Upstream anchor |
@@ -206,19 +230,18 @@ Lanes include `native`, `drake_native_fit`, `crocoddyl_native_fit`, `ground_supp
 
 ## 9. Programme Vocabulary
 
-| Term | Meaning |
-| ---- | ------- |
-| **Receipt** | JSON artifact for one run (IK, dynamics, gates, hashes); evaluated by `evaluate`. |
-| **Ledger** | Committed index `reports/matched_swing_ledger.json` of receipt paths and metadata. |
-| **Lane** | Named programme path (`native`, `ground_support`, …) determining which gates apply. |
-| **Candidate** | `MatchedSwingCandidate` control/state package hashed for replay ([`candidate.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/candidate.py)). |
-| **Gate** | One thresholded check with `GateResult` (name, status, threshold, measured). |
-| **Verdict** | `AcceptanceVerdict`: horizon, `is_physically_accepted`, aggregated `gates`. |
-| **Factor** | One documented change between parent and child run (continuation discipline). |
-| **Open-loop replay** | Integrate from initial state without feedback tracking of measured poses. |
-| **Stabilized replay** | Low-gain tracking replay; compared via `max_stabilized_marker_rmse_m`. |
+The [site glossary](../../pages/glossary.html) defines motion-matching terms of art. Anchors cited from UpstreamDrift modules:
 
-Extended definitions appear in the [site glossary](../../pages/glossary.html#def-acceptance-gate).
+| Topic | Site glossary anchors | Upstream module / field |
+| ----- | --------------------- | ------------------------ |
+| Horizons & gates | G1–G3 horizon, acceptance gate, acceptance verdict, gate status | `acceptance.Horizon`, `acceptance.evaluate` |
+| Kinematic metrics | Whole / early / terminal / club-cluster RMSE, early cutoff, terminal weight | `tour_metrics.py`, `two_window_fit.compute_marker_metrics` |
+| Programme objects | Receipt, lane, ledger, candidate, factor | `receipt.json`, `ledger.py`, `candidate.py` |
+| Replay modes | Open-loop replay, stabilized replay, computed-torque tracking | `pipeline/dynamics.py`, `AcceptanceGates.max_stabilized_marker_rmse_m` |
+| Optimisation | Two-window fit, node chart, Bernstein increment, shooting node | `multi_shooting_fit.py`, `config.json` run 102 |
+| Contact / support | Weight fraction, support-polygon fraction, collocation defect | `acceptance.py`, `contact_audit` receipt section |
+
+Null-space convention vocabulary (`INVARIANT`, `FAMILY_DEPENDENT`, closure scales) is covered in [After One Solution: Null-Space Exploration](../../articles/after-one-solution-null-space-exploration.html); issue #5622 defers that slice to a follow-up conventions pass.
 
 ## Further Reading
 
