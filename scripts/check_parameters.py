@@ -67,14 +67,19 @@ def _scan_file_literals(
     pattern: re.Pattern[str],
     expected: float,
     tolerance: float,
-) -> list[dict[str, object]]:
-    """Scan one file for registry-bound literals."""
+) -> tuple[list[dict[str, object]], int]:
+    """Scan one file for registry-bound literals.
+
+    Returns (findings, match_count) where match_count is lines the pattern matched.
+    """
     findings: list[dict[str, object]] = []
+    match_count = 0
     text = path.read_text(encoding="utf-8")
     for line_no, line in enumerate(text.splitlines(), start=1):
         match = pattern.search(line)
         if not match:
             continue
+        match_count += 1
         value_text = match.group(1)
         if not match_literal(value_text, expected, tolerance):
             findings.append(
@@ -85,7 +90,7 @@ def _scan_file_literals(
                     "fix": f"expected {expected} ± {tolerance}, found {value_text}",
                 }
             )
-    return findings
+    return findings, match_count
 
 
 def scan_literal_checks(root: Path, payload: dict[str, object]) -> list[dict[str, object]]:
@@ -106,9 +111,24 @@ def scan_literal_checks(root: Path, payload: dict[str, object]) -> list[dict[str
             continue
         expected = float(check["expected"])
         tolerance = float(check.get("tolerance", 0.0))
+        match_count = 0
         for path in paths:
-            findings.extend(
-                _scan_file_literals(root, path, entry.entry_id, pattern, expected, tolerance)
+            file_findings, file_matches = _scan_file_literals(
+                root, path, entry.entry_id, pattern, expected, tolerance
+            )
+            findings.extend(file_findings)
+            match_count += file_matches
+        if match_count == 0:
+            findings.append(
+                {
+                    "file": str(check["path_glob"]),
+                    "line": 0,
+                    "rule": f"{entry.entry_id} literal missing",
+                    "fix": (
+                        f"restore a bound literal matching pattern {check['pattern']!r} "
+                        f"(expected {expected} ± {tolerance})"
+                    ),
+                }
             )
     return findings
 
