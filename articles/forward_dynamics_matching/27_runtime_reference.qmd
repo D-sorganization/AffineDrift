@@ -147,7 +147,7 @@ From [`pipeline/constants.py`](https://github.com/D-sorganization/UpstreamDrift/
 
 | Flag | Effect |
 | ---- | ------ |
-| `--static-seeds` | Qualified upper/lower attachment calibration before IK |
+| `--static-seeds` | Validated upper/lower attachment calibration before IK |
 | `--shooting-fit` | Optional shooting refinement on the tracked lane |
 | `--zmp-filter` | ZMP / support-polygon feasibility filter on the finish |
 | `--centroidal-filter` | Centroidal feasibility v2 after ZMP filter |
@@ -224,7 +224,7 @@ Summarised from the programme README [§3 status matrix](https://github.com/D-so
 | **MuJoCo** | 74.6 mm tracking variant | REJECTED; replay path exists for cross-engine checks |
 | **Drake** | IK ~176 mm (FB-4) | No accepted G1; needs shared fitter on plant |
 | **OpenSim** | Moco rungs at calibration floor | No accepted G1 |
-| **MyoSuite** | Kinematic replay only | Experimental; fail-closed provider |
+| **MyoSuite** | Kinematic replay only | Experimental; provider rejects runs when prerequisites are missing |
 
 Lanes include `native`, `drake_native_fit`, `crocoddyl_native_fit`, `ground_support`, `matched`, and engine-specific tags recorded on each receipt’s `lane` field ([`ledger.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/ledger.py)).
 

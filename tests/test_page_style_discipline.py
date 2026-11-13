@@ -52,6 +52,7 @@ CLEAN_PAGES: tuple[str, ...] = (
     "models/models-drake.qmd",
     "models/models-mujoco.qmd",
     "models/models-myosim.qmd",
+    "models/models-myosuite.qmd",
     "models/models-opensim.qmd",
     "models/models-pendulum.qmd",
     "models/models-pinocchio.qmd",
