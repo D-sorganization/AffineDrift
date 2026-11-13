@@ -1,1 +1,6 @@
-Unify the proximal-distal monograph's differential hand-force symbol and sign ($\mathbf F_d=(\mathbf F_L-\mathbf F_T)/2$, $\mathbf d=\mathbf r_T-\mathbf r_L$, $\mathbf M_{F,M}=-\mathbf d\times\mathbf F_d$) across Chapters 3b, 5, and 5b, and correct Chapter 5's differential normal-mode sign wording (`+258.0 N` yielding negative midpoint couple) while verifying `lee2026` Crossref DOI metadata (Refs #5611, #5609).
+---
+issue: 5611
+summary: "Unify proximal-distal monograph differential hand-force symbol and normal-mode sign wording across Chapters 3b, 5, and 5b"
+---
+
+- Unified differential hand-force symbol and sign across `_ch03b_hand_path_attribution.qmd`, `_ch05_two_hand_wrench.qmd`, and `_ch05b_forward_two_hand.qmd`, and corrected Chapter 5 differential normal-mode sign wording (`Refs #5611, #5609`).
