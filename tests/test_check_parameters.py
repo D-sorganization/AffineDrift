@@ -37,6 +37,12 @@ class TestLiteralChecks:
         findings = scan_literal_checks(REPO_ROOT, payload)
         assert not any("golf_ball_mass_max" in str(f["rule"]) for f in findings)
 
+    def test_impact_article_literals_match_registry(self) -> None:
+        payload = load_registry()
+        findings = scan_literal_checks(REPO_ROOT, payload)
+        impact_findings = [f for f in findings if "impact-mechanics" in str(f["file"])]
+        assert impact_findings == []
+
     def test_wrong_literal_is_detected(self, tmp_path: Path) -> None:
         module = tmp_path / "src/affine_control/impact_contact_fixtures.py"
         module.parent.mkdir(parents=True)
