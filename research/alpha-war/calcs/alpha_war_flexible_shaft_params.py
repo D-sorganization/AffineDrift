@@ -43,6 +43,7 @@ class ShaftReferenceConfig:
     swing_plane_tilt_deg: float = SWING_PLANE_TILT_FROM_HORIZONTAL_DEG
 
     def __post_init__(self) -> None:
+        """Validate all parameters are positive finite scalars (and tilt is finite)."""
         _validate_positive_finite("shaft_stiffness_nm_rad", self.shaft_stiffness_nm_rad)
         _validate_positive_finite("distal_head_mass_kg", self.distal_head_mass_kg)
         _validate_positive_finite("distal_shaft_length_m", self.distal_shaft_length_m)
