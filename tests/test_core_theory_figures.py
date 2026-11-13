@@ -22,6 +22,7 @@ ISSUE_5590_PINNED_FIGURES: dict[str, str] = {
     "fig_superposition_modal_response.svg": "data/core_theory/ztcf_figure_run_v1.json",
 }
 
+
 def _figure_embed_pattern(fig_name: str) -> re.Pattern[str]:
     escaped = re.escape(fig_name)
     return re.compile(
