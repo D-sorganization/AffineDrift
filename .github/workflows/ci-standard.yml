@@ -150,6 +150,11 @@ jobs:
         # must be in data/companion/pins.json and the active lock must be the
         # one active pin (#4027 via #4123, RM #1507).
         run: python3 scripts/check_companion_pins.py
+      - name: Verify Proximal-Distal Companion Uses One Upstream Pin
+        run: python3 scripts/check_proximal_distal_companion_upstream_pins.py
+      - name: Verify UpstreamDrift Install Docs Match README Contract
+        # #5626: install prose must include vendor/ud-tools and must not claim Git LFS.
+        run: python3 -m scripts.check_upstreamdrift_install_docs
       - name: Verify Software Freshness Dashboard Is Current
         run: python3 -m scripts.generate_companion_freshness --check
       - name: Generate Content Inventory
@@ -250,6 +255,12 @@ jobs:
         run: |
           python3 scripts/check_terminology.py \
             --baseline config/terminology-baseline.json
+      - name: Verify Canonical Parameters Registry
+        # PARAMETERS.md is generated from data/canonical_parameters.json and must
+        # stay aligned with sourced UpstreamDrift constants (#5595).
+        run: |
+          python3 -m scripts.check_parameters \
+            --baseline config/parameters-baseline.json
       - name: Verify Governance Vocabulary Stays Out of Reader Prose
         # Reader-facing pages borrowed internal governance jargon -- governed,
         # qualified, provenance, protected, fail-closed -- from the site's own

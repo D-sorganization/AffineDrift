@@ -25,6 +25,21 @@ Peak segment speed and peak acceleration are distinct events. For a smooth signe
 
 Vena and colleagues' five-subject study, using instantaneous screw-axis angular velocities, reported support for a proximal-to-distal kinematic sequence in two subjects, rather than a universal order [@vena2011kinematic]. That result does not say sequencing is useless. It says a proposed invariant sequence must survive explicit measurement choices and between-player variation. We therefore do not assign universal pelvic, thoracic, arm, or wrist peak percentages here. Ball contact also changes the dynamics: pre-impact club speed should not be inferred from a peak several milliseconds into a collision or follow-through.
 
+## Reported Ranges for Sanity-Checking Models {#tbl-kinetic-chain-ranges}
+
+::: {.callout-note}
+The table lists **published** magnitudes so implementations can be checked for the right order of size. Each row states what was measured, not a fitting target.
+
+| **Quantity** | **Reported range** | **Study** | **Sample / club / instrument** | **Definition** |
+| --- | --- | --- | --- | --- |
+| Peak driver clubhead speed | $110.4\pm4.8\ \mathrm{mph}$ $(49.4\pm2.1\ \mathrm{m/s})$ | [@han2019] | $n=63$ skilled males, handicap $\le3$; driver; optical mocap + force plates | Maximum achieved clubhead speed in test session |
+| Pelvis rotation about longitudinal axis | Model-dependent peaks; see study waveforms | [@Takagi2021pelvis] | $n=10$ male golfers; driver; mocap + inverse dynamics | Pelvis axial rotation relative to laboratory frame |
+| Torso–pelvis separation (X-factor) | Event-specific; not a universal peak-% law | [@Cheetham2001] | Recreational cohort in original report; 3D kinematics | Declared shoulder vs hip line separation |
+| Proximal-to-distal peak order | $2/5$ subjects in cohort showed clear sequence | [@vena2011kinematic] | $n=5$ male golfers; driver; screw-axis angular velocity | Instantaneous screw-axis $\omega$ peaks along chain |
+
+These ranges **do not** specify equal peak-time percentages across segments. They bound what a full-chain model should reproduce only after matching frames, events and processing to each cited study.
+:::
+
 ## Force and Power Balances for a Connected Body
 ### Start at Each Segment's Center of Mass
 For a rigid segment of mass $m$, central inertia tensor $I_G$, and center $G$, Newton–Euler equations are
@@ -119,7 +134,7 @@ In a planar approximation, define an absolute arm angle $\theta_a$ and absolute 
 
 Neither hand speed nor clubhead speed determines muscle shortening speed. A muscle-tendon length $\ell(q)$ has rate $\dot\ell=(\partial\ell/\partial q)\dot q$; fiber speed additionally depends on tendon compliance and pennation. Classical force–velocity behavior concerns the contractile element under declared activation and length conditions. It cannot be applied by converting an absolute club speed directly into a universal wrist torque limit. Active lengthening and isometric force are also different operating conditions from concentric shortening.
 
-Sprigings and Neal's planar three-segment simulation found that suitably timed active wrist torque could increase clubhead speed by about 9 percent in its modeled conditions [@Sprigings2005]. That is a simulation result with particular torque generators and constraints, not an experimentally established instruction to add a late wrist action. It is nevertheless enough to reject the universal claim that wrist torque cannot contribute at high club speed. Conversely, a measured small net wrist moment does not prove that all wrist muscles are inactive.
+Sprigings and Neal's planar three-segment simulation found that suitably timed active wrist torque could increase clubhead speed by about 9 percent in its modeled conditions [@SprigingsNeal2000]. That is a simulation result with particular torque generators and constraints, not an experimentally established instruction to add a late wrist action. It is nevertheless enough to reject the universal claim that wrist torque cannot contribute at high club speed. Conversely, a measured small net wrist moment does not prove that all wrist muscles are inactive.
 
 ### The Club Receives a Wrench, Not Only a Torque
 For a rigid club, with grip point $H$, external grip force $\mathbf F_H$, and grip couple $\boldsymbol\tau_H$, its pre-impact power balance is

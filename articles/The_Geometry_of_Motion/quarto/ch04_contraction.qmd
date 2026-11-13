@@ -127,6 +127,21 @@ holds throughout them. The order is the positive-semidefinite matrix order: $H\p
 
 The rate has units of inverse time. The factor two applies to squared length; length decays at rate $\lambda$. The inequality is linear in an unknown metric for a fixed field and fixed rate, but jointly choosing the rate and metric introduces the product $\lambda M$.
 
+When $M$ is uniformly bounded above and below on the certified set, a rate-$\lambda$ certificate bounds every Lyapunov exponent of the linearized flow by $-\lambda$ over that set. On a periodic orbit, the Floquet multiplier on the tangent direction $\dot x=f(x)$ equals unity because $\frac{d}{dt}f(x(t))=Df(x(t))f(x(t))$.
+
+## Transformed Tangent Coordinates and the Jacobian $F$
+[]{#sec-ch4:theta-factor}
+
+Following Lohmiller and Slotine, factor a metric as $M=\Theta^\top\Theta$ with invertible $\Theta(x,t)$ (defined only up to a left orthogonal factor; $\Theta$ need not integrate to a global coordinate change). Define transformed incremental coordinates $\delta z=\Theta\delta x$. Differentiation along the variational equation $\dot{\delta x}=A\delta x$ gives
+$$
+\dot{\delta z}=(\dot\Theta+\Theta A)\Theta^{-1}\delta z=:F\delta z.
+$$ {#eq-ch4:lohmiller-F}
+Here $F$ is the transformed variational Jacobian; it is not the drift field $f(x,t)$ used in controlled equations. Expanding the symmetric part yields the equivalence used in the cascade hypothesis:
+$$
+\Theta^\top(F+F^\top)\Theta=\dot M+MA+A^\top M.
+$$ {#eq-ch4:F-metric-equivalence}
+Thus $\operatorname{sym}(F)\preceq-\lambda I$ in transformed coordinates matches @eq-ch4:contraction-LMI when $M=\Theta^\top\Theta$.
+
 ## Complete Proof of Exponential Convergence
 
 ::: {.callout-note}
@@ -307,14 +322,14 @@ The metric $M_*=[[1,1],[1,2]]$ instead gives $A^TM_*+M_*A+4M_*=[[0,0],[0,-2]]$, 
 
 Multiplying a metric by a positive scalar does not change its certified rate. For an unknown metric, fix $\lambda$, impose positive metric bounds or a normalization, and solve a feasibility problem. Searching rates by bisection is distinct from calling a joint optimization in $(M,\lambda)$ one LMI. Nonlinear domain certification and controller constraints require further work.
 
-## Partial Contraction: Hierarchical Structure
-[]{#sec-ch4:partial}
+## Hierarchical (Cascade) Combination
+[]{#sec-ch4:cascade}
 
 ### When Not All Directions Contract
 
-Partial contraction methods establish convergence toward a specified property or subspace, often through an auxiliary contracting system. A contracting subsystem is not automatically a fully contracting system. For example, $\dot q=v$, $\dot v=-\gamma(v-u(t))$ damps velocity differences, but solutions with equal velocities and different initial positions retain their position offset forever.
+Hierarchical combination certifies contraction when a triangular structure couples contracting blocks. A contracting subsystem is not automatically a fully contracting system. For example, $\dot q=v$, $\dot v=-\gamma(v-u(t))$ damps velocity differences, but solutions with equal velocities and different initial positions retain their position offset forever.
 
-### The Hierarchical Contraction Theorem
+### Hierarchical Combination Theorem
 
 For a triangular variational system, write
 []{#eq-ch4:block-jacobian}
@@ -326,7 +341,7 @@ A=\begin{bmatrix}A_{11}&A_{12}\\0&A_{22}\end{bmatrix}.
 $$
 
 
-Choose block factors $M_i=\Theta_i^T\Theta_i$ whose total derivatives follow the full field. In transformed tangent coordinates,
+Choose block factors $M_i=\Theta_i^T\Theta_i$ whose total derivatives follow the full field. The weighted block metric below strengthens Lohmiller and Slotine's hierarchical combination [@LohmillerSlotine1998, Sec.~3.8.3] by an explicit coupling bound $\|C\|\leq k$ and a block weight $\theta$. In transformed tangent coordinates,
 []{#eq-ch4:cascade-jacobian}
 
 
@@ -343,7 +358,7 @@ The coupling $C$ has already been transformed; it should not receive a second me
 ::: {.callout-note}
 ### A Weighted Cascade Certificate
 
-[]{#thm-ch4:partial}
+[]{#thm-ch4:cascade}
 Suppose uniformly $\operatorname{sym}(F_{ii})\preceq-\lambda_iI$, with $\lambda_i>0$, and $\|C\|\leq k$. For a target $0<\lambda<\min(\lambda_1,\lambda_2)$, choose
 []{#eq-ch4:block-metric}
 
@@ -359,6 +374,11 @@ This metric certifies differential contraction at least at rate $\lambda$. Finit
 
 :::
 
+
+### Partial Contraction (Virtual Auxiliary Systems)
+[]{#sec-ch4:partial-contraction}
+
+Partial contraction is a different tool: Wang and Slotine [@WangSlotine2005Partial] analyze an auxiliary system $\dot y=\varphi(y,x,t)$ that equals the original field on the diagonal, $\varphi(x,x,t)=f(x,t)$. If $\varphi$ is contracting in $y$ uniformly in $x$, and one particular $y$-solution has a stated property, then every $x$-trajectory converges exponentially to that property. Synchronization of coupled identical oscillators is the standard illustration. It does not refer to block-triangular Jacobians; the preceding cascade theorem addresses that structure instead.
 
 Indeed, the off-diagonal transformed block becomes $C/\sqrt\theta$. The excess over the desired decay is bounded by the scalar two-block quadratic form with diagonal entries $-(\lambda_1-\lambda)$, $-(\lambda_2-\lambda)$ and off-diagonal entry $k/(2\sqrt\theta)$. The displayed inequality makes it negative definite. Increasing $\theta$ weights the second block more heavily and reduces its normalized coupling into the first.
 
@@ -500,6 +520,14 @@ The associated gain $K(x,t)=\tfrac12\rho(x,t)G(x,t)^TM(x,t)$ is independent of $
 $u(s)=u_*-\int_0^sK(c(r),t)c_r(r)\,dr$.
 Transporting that curve with its controls, or recomputing suitable geodesics in a sampled/continuous construction under the theorem's conditions, converts differential contraction into finite tracking. Path existence, solution existence and controller regularity are part of the result. A domain restriction or an actuator limit must be incorporated explicitly; the unconstrained theorem does not certify saturation, muscle activation limits or unilateral ground contact.
 
+::: {.callout-note}
+### Worked CCM on a Cubic Restoring Term
+
+For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$ with $G=[0,1]^\top$, the feedback $u=x_1^3-k_px_1-k_dx_2$ with $k_p,k_d>0$ yields the linear closed loop $\dot x_1=x_2$, $\dot x_2=-k_px_1-k_dx_2$ and the constant Jacobian $A_{\mathrm{cl}}=[[0,1],[-k_p,-k_d]]$. The identity metric is not a strict contraction metric for $A_{\mathrm{cl}}$: for $M=I$, $A_{\mathrm{cl}}^TM+MA_{\mathrm{cl}}=\operatorname{diag}(0,-2k_d)$ is only negative semidefinite. Solving $A_{\mathrm{cl}}^TM+MA_{\mathrm{cl}}=-I$ gives a constant metric; with $k_p=k_d=1$, one choice is $M=[[3/2,1/2],[1/2,1]]$, which certifies a positive contraction rate on that field (@sec-ch4:example).
+
+For control contraction metrics, the drift Jacobian is $A(x)=[[0,1],[-3x_1^2,0]]$ while $\partial u/\partial x=[3x_1^2-k_p,\,-k_d]$, so the differential gain $K(x)=[k_p-3x_1^2,\,k_d]$ in $\delta u=-K\delta x$ is state-dependent and is not the constant row $-[k_p,k_d]$. Nevertheless $A(x)-GK(x)=A_{\mathrm{cl}}$ everywhere, so with this constant $M$ and $\dot M=0$ the CCM residual reduces to the same linear contraction inequality on $A_{\mathrm{cl}}$.
+:::
+
 ### Computational Approaches
 
 []{#sum-of-squares-sos-method}
@@ -617,7 +645,7 @@ $$
 
 No feedback input appears in this equation. It has an unstable equilibrium at the origin and an attracting nonconstant periodic orbit. Two solutions at different phases on that orbit cannot converge to each other at the same clock time. Full contraction on a domain containing the complete orbit is therefore impossible in a uniformly nondegenerate metric.
 
-### Metric Synthesis via Parameterization
+### Why a Diagonal State-Dependent Metric Cannot Work
 
 For a diagonal candidate
 []{#eq-ch4:vdp-metric-ansatz}
@@ -645,11 +673,11 @@ H_{12}&=H_{21}=m_1+(-1-2\epsilon x_1x_2)m_2.
 $$
 
 
-The condition is $H\preceq0$, not componentwise inequalities on its off-diagonal entries. In two dimensions this requires $H_{11}\leq0$, $H_{22}\leq0$ and $\det H\geq0$. If $m_1$ is a positive constant, $H_{11}=2\lambda m_1>0$ for every positive requested rate. That alone disproves this entire candidate class for full contraction, at every point.
+The condition is $H\preceq0$, not componentwise inequalities on its off-diagonal entries. In two dimensions this requires $H_{11}\leq0$, $H_{22}\leq0$ and $\det H\geq0$. On the line $x_2=0$, $H_{11}=2\lambda m_1(x_1)>0$ for every positive rate, so no member of this diagonal class certifies full contraction on any domain meeting that line; when $m_1$ is constant the violation holds at every point.
 
-### Solution Strategy
+### Transverse Contraction Is the Right Question
 
-The formerly proposed example
+A diagonal state-dependent metric candidate illustrates the obstruction:
 []{#eq-ch4:vdp-metric-solution}
 
 
@@ -660,7 +688,7 @@ M(x_1)=\operatorname{diag}\bigl(1,1.2(1+1.5x_1^2)\bigr),\quad
 $$
 
 
-is retained only as a falsification exercise. At the origin its residual is
+At the origin its residual is
 []{#eq-ch4:vdp-check}
 
 
@@ -671,6 +699,8 @@ $$
 
 
 Its velocity weight increases with $|x_1|$, not toward the origin. No successful optimizer or experimentally measured rate is claimed. The diagonal obstruction is stronger than a finite grid of violations.
+
+For an autonomous field on a nontrivial periodic orbit, $\delta x(t)=f(x(t))$ satisfies $\dot{\delta x}=A(x(t))f(x(t))$ and therefore remains bounded away from zero along the orbit. With a uniformly bounded metric, that direction alone obstructs full-state contraction at fixed clock time.
 
 The appropriate orbital question allows phase alignment. Transverse contraction tests decay only for nonzero tangent directions satisfying $\delta x^TMf=0$, with the associated field/metric derivatives and domain conditions. Manchester and Slotine's transverse framework [@ManchesterSlotineTransverse2013] requires a compact, smoothly path-connected, strictly forward-invariant set and appropriate regularity; an absence of equilibria distinguishes a nontrivial cycle from an equilibrium limit. It establishes convergence after a time reparameterization, not same-time tracking of a prescribed phase. We do not assert that the rejected diagonal candidate satisfies a transverse certificate.
 
@@ -819,9 +849,9 @@ Nor does greater stiffness necessarily increase the asymptotic decay rate. In th
 
 Reflex delays require delayed-state or augmented-state analysis; they are not generally a static subtraction $GK$ that automatically improves a rate. Nonlinear muscle force--length--velocity relations, tendon compliance and state-dependent moment arms also change the Jacobian. The preceding two-state model is a transparent teaching example, not a complete neuromusculoskeletal certificate or a clinical prescription.
 
-### Partial Contraction in Sequential Motion
+### Hierarchical Combination in Sequential Motion
 
-The torso--arm--club chain defines kinematic relationships. Its dynamics generally couple the links in both directions through the mass matrix, interaction forces and contact constraints. Applying a cascade theorem requires an actual triangular representation or a justified approximation with quantified residual coupling. Segment size, muscular strength and the order of speed peaks do not supply those hypotheses or their contraction rates.
+The torso--arm--club chain defines kinematic relationships. Its dynamics generally couple the links in both directions through the mass matrix, interaction forces and contact constraints. Applying the cascade combination theorem requires an actual triangular representation or a justified approximation with quantified residual coupling. Segment size, muscular strength and the order of speed peaks do not supply those hypotheses or their contraction rates.
 
 Repeatable club delivery may coexist with substantial variation in redundant joint states. That motivates task-space or transverse questions rather than automatically demanding global contraction of every coordinate. However, a projected error that happens to shrink on measured trials is not yet a certificate for all perturbations: the hidden states can feed back into the output later.
 
@@ -968,7 +998,7 @@ Lohmiller and Slotine [@LohmillerSlotine1998] provide the foundational different
 
 1. **Contraction of a Linear System.** For $A=[[-1,2],[0,-3]]$, compute the identity-metric rate. For $M=\operatorname{diag}(1,\theta)$, derive $\lambda(\theta)=2-\sqrt{1+1/\theta}$. Find the weights giving a prescribed rate below one, and explain why the supremum one is not attained by any finite positive diagonal weight. Compare with a nondiagonal metric constructed from eigenvectors.
 1. **LMI Feasibility on a Domain.** For $\dot x_1=-x_1+x_2^2$, $\dot x_2=-2x_2+u$, apply $u=-x_2$. Show that no constant positive metric certifies a fixed positive rate on all $\mathbb R^2$: the unbounded off-diagonal coupling must be addressed. On the invariant strip $|x_2|\leq R$, use $M=\operatorname{diag}(1,\theta)$ and derive a sufficient weight for any $0<\lambda<1$.
-1. **Partial and Cascade Contraction.** For the same cascade with $|u(t)|\leq U$, show that $|x_2|\leq R$ is invariant when $2R\geq U$. Bound the coupling there and find a weighted full-state certificate for a target rate below one. Explain why a statement based only on the two diagonal subsystem rates is insufficient, and contrast it with the position integrator $\dot q=v$.
+1. **Cascade Combination.** For the same cascade with $|u(t)|\leq U$, show that $|x_2|\leq R$ is invariant when $2R\geq U$. Bound the coupling there and find a weighted full-state certificate for a target rate below one. Explain why a statement based only on the two diagonal subsystem rates is insufficient, and contrast it with the position integrator $\dot q=v$.
 1. **From Differential to Finite Feedback.** For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$, use $u=x_1^3-k_px_1-k_dx_2$ with $k_p,k_d>0$ to obtain a linear stable closed loop. Solve its Lyapunov equation and compute $K=-D_xu$ for our differential sign convention. Verify the primal and dual identities. Explain why an arbitrary polynomial differential gain would still require a finite controller construction and an actuator-feasibility check.
 1. **Discrete-Time Contraction.** For $x_{k+1}=Ax_k$, show that a constant positive metric with induced norm $\|A\|_M<1$ exists precisely when $A$ is Schur stable. Give the length factor and its equivalent continuous-time rate for sample period $\Delta t$. Compare an exact scalar stable flow with explicit Euler and find the latter's allowable step interval.
 1. **Stochastic Comparisons.** Derive the finite-time and stationary variances for $dx=-ax\,dt+\sigma\,dW$. Compute the mean-square difference for common-noise and independent-noise pairs, retaining the initial difference. Then derive the common-noise multiplicative condition $b^2<2a$ for mean-square decay in $dx=-ax\,dt+bx\,dW$.

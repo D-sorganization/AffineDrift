@@ -103,7 +103,8 @@ authority, not an unlabeled realized input.
 unweighted cross-space torque/acceleration ratios; and “Drift-to-Control Ratio”
 as a competing expansion.
 
-**Aerodynamic collision:** DgCR remains **Drag-Curve Ratio**.
+**Acronym collision:** DgCR remains **Drag-Curve Ratio** for the restitution-derived
+$(1-\mathrm{COR})/(1+\mathrm{COR})$ ratio (distinct from aerodynamic drag).
 
 ## Decision 6: Symbol Convention
 

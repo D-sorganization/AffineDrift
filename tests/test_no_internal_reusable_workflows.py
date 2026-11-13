@@ -61,9 +61,24 @@ def test_conflict_disarm_calls_the_sha_pinned_public_provider() -> None:
     assert "steps" not in job, "the inlined sweep must be gone"
 
 
+def test_collate_changes_uses_fleet_app_secrets() -> None:
+    workflow = yaml.safe_load((WORKFLOWS / "collate-changes.yml").read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["collate"]["steps"]
+    token_step = next(step for step in steps if step.get("id") == "app-token")
+    validation_step = next(step for step in steps if step["name"] == "Validate fleet app secrets")
+
+    assert token_step["with"]["client-id"] == "${{ secrets.FLEET_APP_ID }}"
+    assert token_step["with"]["private-key"] == "${{ secrets.FLEET_APP_PRIVATE_KEY }}"
+    assert "FLEET_APP_ID" in validation_step["run"]
+    assert "FLEET_APP_PRIVATE_KEY" in validation_step["run"]
+
+
 def test_conflict_disarm_keeps_the_dry_run_default() -> None:
     job = _conflict_disarm_job()
 
     assert job["with"]["dry_run"] == "${{ inputs.dry_run || 'true' }}"
     assert job["with"]["exclude_prs"] == "${{ inputs.exclude_prs || '' }}"
-    assert set(job["secrets"]) == {"JULES_APP_ID", "JULES_APP_PRIVATE_KEY"}
+    assert job["secrets"] == {
+        "JULES_APP_ID": "${{ secrets.FLEET_APP_ID }}",
+        "JULES_APP_PRIVATE_KEY": "${{ secrets.FLEET_APP_PRIVATE_KEY }}",
+    }
