@@ -57,3 +57,16 @@ def test_advanced_model_reports_hip_connect_constraints() -> None:
     assert "connect" in kinds
     assert "weld" in kinds
     assert advanced["neq"] == 3
+
+
+def test_parse_equalities_uses_defusedxml() -> None:
+    from defusedxml.common import DefusedXmlException
+
+    import src.tools.golf_model_map as golf_model_map
+
+    assert golf_model_map.ET.__name__.startswith("defusedxml")
+    payload = (
+        '<?xml version="1.0"?><!DOCTYPE foo [<!ENTITY xxe "bar">]><mujoco><equality/></mujoco>'
+    )
+    with pytest.raises(DefusedXmlException):
+        golf_model_map._parse_equalities(payload)
