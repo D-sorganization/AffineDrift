@@ -289,14 +289,14 @@ Diagonal-only multiplication would give approximately $(-1.482810,0.763522)^T$ N
 []{#constraint:dcr_meaning}
 []{#inplain:dcr_blowup_reason}
 
-For a stated angular-acceleration projection $W$, norm and admissible input set $\mathcal U$, define
+For a stated angular-acceleration projection $W$, admissible input set $\mathcal U$, and reported regularizer $\varepsilon$, define (matching [NOTATION.md](../../../NOTATION.md))
 
 $$
 \mathrm{DCR}_{W,\mathcal U}(x)=
-\frac{\|Wa_0(x)\|}{\sup_{u\in\mathcal U(x)}\|WH(x)u\|+\varepsilon}.
+\frac{\|W a_d(x)\|_2}{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|_2+\varepsilon}.
 $$ {#eq-dcr_definition}
 
-The regularizer $\varepsilon$ has the denominator's units and must be reported. A zero control-effect denominator means there is no authority in that projection; regularization does not create it. For physical point acceleration, use the complete baseline $Ja_0+\dot Jv$ and operator $JH$. Coordinate rescaling changes an unqualified component norm, so specify what the projection measures.
+In this chapter $a_d=a_0$ is the modeled drift acceleration and $B_a=H=M^{-1}B$ for generalized torques $u$. The regularizer $\varepsilon$ has the denominator's units and must be reported. A zero control-effect denominator means there is no authority in that projection; regularization does not create it. For physical point acceleration, use the complete baseline $Ja_0+\dot Jv$ and operator $JH$. Coordinate rescaling changes an unqualified component norm, so specify what the projection measures.
 
 For the two-rod snapshot, choose $W=(0,1)$, absolute value, $B=I$, $\varepsilon=0$, and the illustrative torque box $|u_1|\le2$ N·m, $|u_2|\le0.2$ N·m. These are chosen limits, not muscular capacity estimates. The exact scalar projection bound is
 
