@@ -57,7 +57,7 @@ def test_ad_dcr_002_states_analytical_counterexample_and_inertia_weighting() -> 
 
 
 def test_software_provenance_hashes_are_distinct_and_match_repo_files() -> None:
-    """Distinct source paths must carry distinct actual SHA-256 digests (#5591 F7)."""
+    """Every registry path must digest-match on-disk bytes; distinct paths stay distinct (#5591 F7)."""
     claims = _load_claims_by_id()
     path_hashes: dict[str, set[str]] = {}
     seen_hashes: dict[str, str] = {}
@@ -66,7 +66,10 @@ def test_software_provenance_hashes_are_distinct_and_match_repo_files() -> None:
         for entry in claim["software_provenance"]:  # type: ignore[attr-defined]
             path = str(entry["path"])
             digest = str(entry["sha256"])
-            assert (ROOT / path).is_file(), f"Missing provenance target: {path}"
+            target = ROOT / path
+            assert target.is_file(), f"Missing provenance target: {path}"
+            actual = hashlib.sha256(target.read_bytes()).hexdigest()
+            assert actual == digest, f"SHA-256 drift for {path}: registry={digest}, file={actual}"
             path_hashes.setdefault(path, set()).add(digest)
             if digest in seen_hashes and seen_hashes[digest] != path:
                 pytest.fail(
@@ -75,9 +78,16 @@ def test_software_provenance_hashes_are_distinct_and_match_repo_files() -> None:
             seen_hashes[digest] = path
 
     assert len(seen_hashes) == len(path_hashes)
-    assert hashlib.sha256(
-        (ROOT / "src/affine_control/reachability.py").read_bytes()
-    ).hexdigest() in (path_hashes["src/affine_control/reachability.py"])
+    validate_registry(json.loads(DEFAULT_REGISTRY.read_text(encoding="utf-8")), DEFAULT_SCHEMA)
+
+
+def test_validate_registry_rejects_stale_provenance_hash() -> None:
+    """CI trust validation must fail when a file changes but the registry digest does not."""
+    data = json.loads(DEFAULT_REGISTRY.read_text(encoding="utf-8"))
+    entry = data["pages"][0]["claims"][0]["software_provenance"][0]
+    entry["sha256"] = "0" * 64
+    with pytest.raises(TrustContractError, match="software_provenance sha256"):
+        validate_registry(data, DEFAULT_SCHEMA)
 
 
 def test_validate_registry_rejects_duplicate_hash_across_distinct_paths() -> None:
