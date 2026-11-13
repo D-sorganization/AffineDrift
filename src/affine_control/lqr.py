@@ -84,14 +84,30 @@ class LQRSolution:
         return q + self.gain.T @ r @ self.gain
 
     def contraction_rate(self, q: Array, r: Array) -> float:
-        """``1 - lambda_min(Q + K'RK) / lambda_max(S)``.
+        """``1 - lambda_min(S^{-1/2} D S^{-1/2})`` with ``D = Q + K' R K``.
 
-        The standard Riccati bound on the decay of ``V_k = x' S x`` per step. It
-        is a *bound*: an actual trajectory usually decays faster, which is why a
-        table of ``V_k`` must be simulated rather than filled in with ``rho^k``.
+        Matches the chapter definition ``delta = lambda_min(S^{-1/2} D S^{-1/2})`` and
+        ``rho = 1 - delta``. Trajectories usually decay faster than ``rho^k``; tabulate
+        ``V_k`` by simulation rather than powers of ``rho`` alone.
         """
-        alpha = float(np.min(np.linalg.eigvalsh(self.stage_cost(q, r))))
+        return 1.0 - self._stage_cost_min_generalized_eigenvalue(q, r)
+
+    def contraction_rate_loose(self, q: Array, r: Array) -> float:
+        """``1 - lambda_min(D) / lambda_max(S)``.
+
+        Valid but generally looser than :meth:`contraction_rate`.
+        """
+        stage = self.stage_cost(q, r)
+        alpha = float(np.min(np.linalg.eigvalsh(stage)))
         return 1.0 - alpha / float(self.eigenvalues_riccati().max())
+
+    def _stage_cost_min_generalized_eigenvalue(self, q: Array, r: Array) -> float:
+        """Smallest generalized eigenvalue of ``(D, S)`` for ``D = Q + K' R K``."""
+        stage = self.stage_cost(q, r)
+        eig_s, vec_s = np.linalg.eigh(self.riccati)
+        inv_sqrt = vec_s @ np.diag(1.0 / np.sqrt(eig_s)) @ vec_s.T
+        transformed = inv_sqrt @ stage @ inv_sqrt
+        return float(np.min(np.linalg.eigvalsh(transformed)))
 
     def value_trajectory(self, x0: Array, steps: int) -> list[tuple[int, float, float]]:
         """Simulate ``(k, V_k, ||x_k||)`` under the closed loop.
