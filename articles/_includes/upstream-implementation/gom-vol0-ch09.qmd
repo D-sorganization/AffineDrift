@@ -1,0 +1,10 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-gom-vol0-ch09}
+
+::: {.callout-note appearance="simple"}
+The PoE worked example in this chapter is self-contained NumPy code. UpstreamDrift's pose and adjoint utilities for serial mechanisms live at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
+
+- **Rigid transforms and adjoints:** [`transforms.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/spatial_algebra/transforms.py) — frame composition aligned with the book's right-multiplied home-axis exponentials.
+- **Six-DoF pose utilities:** [`pose.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/spatial_algebra/pose6dof/pose.py) — shared pose containers used across engine front ends.
+
+**Convention note:** Pinocchio uses a linear-first twist in its native layout; MuJoCo `cvel` and the modules above use angular-first ordering. Map components explicitly when comparing Jacobians across tools.
+:::
