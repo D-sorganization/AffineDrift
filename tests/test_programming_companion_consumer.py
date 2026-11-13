@@ -28,7 +28,7 @@ SCHEMA_ID = "https://upstreamdrift.dev/schemas/upstreamdrift-companion-v1.schema
 MANIFEST_PATH = "dist/companion/manifest.json"
 SCHEMA_PATH = "docs/api/contracts/upstreamdrift-companion-v1.schema.json"
 PINNED_SCHEMA = Path("schemas/upstreamdrift-companion-v1.schema.json")
-PINNED_SCHEMA_SHA256 = "39b8e54719f75aa428f2375d804ee29c458aa23b876a094aff802c48928b6702"
+PINNED_SCHEMA_SHA256 = "ab354dbe65e31ddf7dc280c2fceff914a161013e9f1efc51f93b9a2c491eb0c4"
 SCHEMA_PROVENANCE = Path("schemas/upstreamdrift-companion-v1.provenance.json")
 
 
@@ -63,6 +63,7 @@ def _manifest(commit: str = COMMIT) -> dict[str, object]:
         "documentation": [],
         "workflows": [],
         "screenshots": [],
+        "known_gaps": [],
         "summary": {
             "raw_launcher_records": 0,
             "local_model_records": 0,
@@ -71,6 +72,16 @@ def _manifest(commit: str = COMMIT) -> dict[str, object]:
             "feature_surface_paths": 0,
             "workflow_records": 0,
             "executable_workflow_records": 0,
+            "single_source_program_records": 0,
+            "documentation_records": 0,
+            "current_documentation_records": 0,
+            "engine_capability_records": 0,
+            "qualified_engine_capability_records": 0,
+            "undocumented_visible_program_records": 0,
+            "known_gap_records": 0,
+            "screenshot_records": 0,
+            "captured_screenshot_records": 0,
+            "pending_screenshot_records": 0,
         },
     }
 
@@ -143,7 +154,7 @@ def test_provider_schema_is_exactly_pinned() -> None:
     assert hashlib.sha256(PINNED_SCHEMA.read_bytes()).hexdigest() == PINNED_SCHEMA_SHA256
     provenance = json.loads(SCHEMA_PROVENANCE.read_text(encoding="utf-8"))
     assert provenance["schema_sha256"] == PINNED_SCHEMA_SHA256
-    assert provenance["source_commit"] == "6ff956a4df928d3ef7be241e3d06289b5ea7bb89"
+    assert provenance["source_commit"] == "d56e3709e65a01f70dbd1a8db86856a160a8559d"
     assert provenance["source_repository"] == REPOSITORY
 
 
@@ -197,6 +208,18 @@ def test_redirect_escape_is_rejected(tmp_path: Path) -> None:
 
     with pytest.raises(AcquisitionError, match="allowlisted host"):
         consumer.install(request)
+
+
+@pytest.mark.unit
+def test_manifest_tools_scheme_entry_point_is_accepted(tmp_path: Path) -> None:
+    manifest = _manifest()
+    source = manifest["source"]
+    assert isinstance(source, dict)
+    generator = source["generator"]
+    assert isinstance(generator, dict)
+    generator["path"] = "tools://src/example/launch.py"
+    consumer, request, _ = _setup(tmp_path, manifest=manifest)
+    consumer.install(request)
 
 
 @pytest.mark.unit
