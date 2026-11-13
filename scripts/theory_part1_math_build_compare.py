@@ -16,7 +16,9 @@ logger = logging.getLogger(__name__)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 THEORY_PART1 = REPO_ROOT / "articles" / "theory-part1.qmd"
-KATEX_METADATA = "format.html.html-math-method:method:katex"
+# Pandoc-level override: colon KEY:VALUE (not ``=``). Nested ``format.html…`` keys
+# do not replace ``_quarto.yml``'s ``html-math-method`` object on Quarto 1.8.x.
+KATEX_METADATA = "html-math-method:katex"
 DEFAULT_LABEL = "mathjax_gate"
 PROTOTYPE_LABEL = "katex_prototype"
 

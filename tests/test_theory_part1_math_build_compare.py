@@ -26,9 +26,25 @@ class TestTheoryPart1MathBuildCompare(unittest.TestCase):
         self.assertIn("not server-side", str(payload["note"]))
 
     def test_katex_override_uses_quarto_colon_metadata(self) -> None:
-        """Quarto -M nested keys use colons, not equals signs."""
-        self.assertIn(":method:katex", KATEX_METADATA)
+        """Quarto -M overrides use KEY:VALUE (colons), not equals signs."""
+        self.assertEqual(KATEX_METADATA, "html-math-method:katex")
         self.assertNotIn("=", KATEX_METADATA)
+
+    @patch("scripts.theory_part1_math_build_compare.subprocess.run")
+    def test_render_once_passes_katex_metadata_to_quarto(self, run_mock: object) -> None:
+        from scripts.theory_part1_math_build_compare import _render_once
+
+        run_mock.return_value = subprocess.CompletedProcess(
+            args=[],
+            returncode=0,
+            stdout="",
+            stderr="",
+        )
+        _render_once(KATEX_METADATA, Path("/tmp/out-katex-5253"))
+        command = run_mock.call_args[0][0]
+        self.assertIn("-M", command)
+        katex_index = command.index("-M") + 1
+        self.assertEqual(command[katex_index], KATEX_METADATA)
 
     @patch("scripts.theory_part1_math_build_compare._render_once", side_effect=[10.0, 9.5])
     @patch("scripts.theory_part1_math_build_compare._quarto_available", return_value=True)
