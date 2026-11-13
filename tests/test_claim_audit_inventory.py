@@ -568,9 +568,18 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     assert ud_physics["review"]["source_path"] == "articles/upstreamdrift-physics-models.qmd"
     # Humanoid / WBC / learning analytics docs (#5625).
     for route, source in (
-        ("/articles/upstreamdrift-humanoid-balance.html", "articles/upstreamdrift-humanoid-balance.qmd"),
-        ("/articles/upstreamdrift-learning-analytics.html", "articles/upstreamdrift-learning-analytics.qmd"),
-        ("/articles/upstreamdrift-whole-body-control.html", "articles/upstreamdrift-whole-body-control.qmd"),
+        (
+            "/articles/upstreamdrift-humanoid-balance.html",
+            "articles/upstreamdrift-humanoid-balance.qmd",
+        ),
+        (
+            "/articles/upstreamdrift-learning-analytics.html",
+            "articles/upstreamdrift-learning-analytics.qmd",
+        ),
+        (
+            "/articles/upstreamdrift-whole-body-control.html",
+            "articles/upstreamdrift-whole-body-control.qmd",
+        ),
     ):
         row = _find_route(inventory, route)
         assert row["status"] == "reviewed"
