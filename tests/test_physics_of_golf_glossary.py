@@ -37,7 +37,7 @@ def test_committed_glossary_matches_canonical_usage() -> None:
     assert "admissible control set" in glossary_text
     assert "drift / (drift + control)" in glossary_text
     assert "admissible input set" in chapter_text
-    assert r"\sup_{u\in\mathcal U(x)}\|WH(x)u\|" in chapter_text
+    assert r"\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|_2" in chapter_text
     assert "ratio of passive to active torques" not in chapter_text
 
 
