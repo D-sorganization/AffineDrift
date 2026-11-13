@@ -87,6 +87,7 @@ def validate_registry(registry: object, schema_path: Path = DEFAULT_SCHEMA) -> N
 
     page_ids: set[str] = set()
     claim_ids: set[str] = set()
+    seen_provenance_hashes: dict[str, str] = {}
     for page in pages:
         if not isinstance(page, dict):
             raise TrustContractError("Each page must be an object")
@@ -105,6 +106,17 @@ def validate_registry(registry: object, schema_path: Path = DEFAULT_SCHEMA) -> N
                 raise TrustContractError(f"Duplicate claim_id: {claim_id}")
             claim_ids.add(claim_id)
             validate_non_amplification(claim)
+            for item in claim.get("software_provenance", []):
+                if isinstance(item, dict):
+                    path = str(item.get("path", ""))
+                    digest = str(item.get("sha256", ""))
+                    prev_path = seen_provenance_hashes.get(digest)
+                    if prev_path is not None and prev_path != path:
+                        raise TrustContractError(
+                            f"Duplicate software_provenance sha256 {digest} across distinct paths: "
+                            f"{prev_path} and {path}"
+                        )
+                    seen_provenance_hashes[digest] = path
 
 
 def load_registry(
