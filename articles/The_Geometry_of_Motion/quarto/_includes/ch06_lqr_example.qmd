@@ -18,8 +18,9 @@ $$
 The full-precision DARE residual is below $10^{-10}$; the displayed matrices are rounded.
 The closed-loop spectral radius is $0.7298<1$.
 The metric condition number is $\kappa_2(S)=36.6808$,
-and the conservative value factor is $\rho=0.9831$.
-The corresponding norm factor is the square root of this value.
+and the chapter's value factor is $\rho=0.5998$ (from $\delta=\lambda_{\min}(S^{-1/2}DS^{-1/2})$).
+A looser bound uses $\rho_{\mathrm{loose}}=0.9831$ ($1-\lambda_{\min}(D)/\lambda_{\max}(S)$).
+The corresponding norm factor per step is the square root of $\rho$.
 
 ### Actual Trajectory Versus Its Bound
 
@@ -29,17 +30,18 @@ model, not a validated finite one-radian nonlinear pendulum intervention.
 | Step $k$ | $V_k$ | $\|x_k\|_2$ | $V_k/V_{k-1}$ | $\rho^k$ |
 | --- | --- | --- | --- | --- |
 | 0 | 94.9386 | 1.0000 | --- | 1.0000 |
-| 1 | 55.5992 | 1.1712 | 0.5856 | 0.9831 |
-| 2 | 33.2717 | 1.2654 | 0.5984 | 0.9665 |
-| 3 | 19.9314 | 1.2015 | 0.5990 | 0.9501 |
-| 4 | 11.8393 | 1.0561 | 0.5940 | 0.9341 |
-| 5 | 6.9497 | 0.8847 | 0.5870 | 0.9183 |
-| 6 | 4.0294 | 0.7177 | 0.5798 | 0.9027 |
-| 7 | 2.3094 | 0.5693 | 0.5731 | 0.8875 |
-| 8 | 1.3099 | 0.4441 | 0.5672 | 0.8725 |
-| 9 | 0.7363 | 0.3421 | 0.5621 | 0.8577 |
-| 10 | 0.4107 | 0.2610 | 0.5578 | 0.8432 |
+| 1 | 55.5992 | 1.1712 | 0.5856 | 0.5998 |
+| 2 | 33.2717 | 1.2654 | 0.5984 | 0.3597 |
+| 3 | 19.9314 | 1.2015 | 0.5990 | 0.2158 |
+| 4 | 11.8393 | 1.0561 | 0.5940 | 0.1294 |
+| 5 | 6.9497 | 0.8847 | 0.5870 | 0.0776 |
+| 6 | 4.0294 | 0.7177 | 0.5798 | 0.0466 |
+| 7 | 2.3094 | 0.5693 | 0.5731 | 0.0279 |
+| 8 | 1.3099 | 0.4441 | 0.5672 | 0.0167 |
+| 9 | 0.7363 | 0.3421 | 0.5621 | 0.0100 |
+| 10 | 0.4107 | 0.2610 | 0.5578 | 0.0060 |
 
-The last column bounds $V_k/V_0$, not the preceding-step ratio. The actual
-ratios vary. The Euclidean norm initially grows even though the Riccati value
-decreases; the scalar bound is conservative and need not track a trajectory.
+The last column is $\rho^k$ from the chapter definition above, bounding
+$V_k/V_0$ rather than the preceding-step ratio. The one-step ratio column
+can track $\rho$ closely (within a few percent here), so the generalized-
+eigenvalue bound is not necessarily loose even when the Euclidean norm grows.

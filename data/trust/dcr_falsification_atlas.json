@@ -15,11 +15,11 @@
       "atlas_id": "dcr-atlas-coordinate-chart-invariance",
       "title": "Coordinate Chart Sensitivity of the Drift-Control Ratio",
       "critique_id": "crit-dcr-coordinate-invariance",
-      "critique_question": "Do componentwise Euclidean norms ||f(x)||_2 / (||f(x)||_2 + ||G(x)u||_2) change under nonlinear generalized coordinate transformations q |-> phi(q)?",
-      "alternative_mechanism": "Unweighted Euclidean acceleration norms vary arbitrarily under smooth coordinate transformations, creating chart-dependent artifacts where changing joint angle parameterizations artificially alters the apparent drift-to-control balance.",
-      "discriminating_measurement": "Evaluate the kinetic-energy-metric-weighted tensor norm ||a||_M(q) = sqrt(a^T M(q) a) against unweighted coordinate norms across minimal joint angles and maximal Lie group / Cartesian coordinates.",
-      "required_instrumentation": "Coordinate transformation engine; Riemannian metric acceleration evaluator; minimal vs maximal coordinate simulators.",
-      "falsification_threshold": "Discrepancy between kinetic-energy-metric-weighted DCR and unweighted coordinate DCR exceeding 0.10 across physically equivalent swing trajectories.",
+      "critique_question": "Do undifferentiated full-state norms, realized-input shares ||f||/(||f||+||Gu||), or raw drift components -M^-1 h change under nonlinear coordinate maps q |-> phi(q)?",
+      "alternative_mechanism": "Drift acceleration is chart-dependent under q |-> phi(q) because acceleration picks up Jacobian derivative terms; only control effect magnitudes built from covariant input maps are chart-consistent. Unweighted norms and realized-input ratios therefore vary with parameterization.",
+      "discriminating_measurement": "Evaluate canonical DCR_W,U on acceleration blocks with declared W and admissible U across minimal and maximal charts; compare with DIR using realized u; record whether drift ||a_d||_M matches across charts.",
+      "required_instrumentation": "Coordinate transformation engine; declared W and U; minimal vs maximal coordinate simulators.",
+      "falsification_threshold": "Same-state canonical DCR differs by more than 0.10 across charts only when W, U, or acceleration convention changes; drift ||a_d||_M alone need not match across charts.",
       "readiness_protocol_id": "ad-protocol-model-ladder-001"
     },
     {
