@@ -1,0 +1,1 @@
+- docs(models): add Simscape `golfer-scapula/2.0` DOF/sign table generator, ISB Cardan conventions and golf aliases, pose-estimator included-angle warning, and 6x12 two-hand grasp map to `models/golf-model-maps.qmd` (`Refs #5621`)
