@@ -229,11 +229,20 @@ def test_shipped_redirect_ledger_is_valid() -> None:
         redirects["/articles/slack-management-linked-systems.html"]
         == "/articles/sources-of-nonlinearity.html"
     )
+    assert "/articles/slack-takeup-identifiability.html" in redirects
+    assert (
+        redirects["/articles/slack-takeup-identifiability.html"]
+        == "/articles/after-one-solution-null-space-exploration.html"
+    )
 
 
 def test_shipped_redirect_ledger_covers_removed_slack_article_route() -> None:
     """The unpublished Slack article route is safely handled by the shipped redirect ledger."""
-    previous = _manifest("/", "/articles/slack-management-linked-systems.html")
+    previous = _manifest(
+        "/",
+        "/articles/slack-management-linked-systems.html",
+        "/articles/slack-takeup-identifiability.html",
+    )
     current = _manifest("/")
     ledger_path = ROOT_DIR / "config" / "redirects.yml"
     redirects = load_redirect_ledger(ledger_path)

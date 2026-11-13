@@ -201,17 +201,17 @@ def christoffel_coriolis(
     return coriolis
 
 
-def double_pendulum_coriolis(q: Array, qd: Array, m2: float, l1: float, l2: float) -> Array:
-    """Christoffel Coriolis matrix for :func:`double_pendulum_mass_matrix`.
+def double_pendulum_coriolis(
+    q: Array, qd: Array, m2: float, l1: float, l2: float, l_c2: float | None = None
+) -> Array:
+    """Christoffel Coriolis matrix for the midpoint or generalized link-2 COM model.
 
-    The Christoffel construction is what makes ``Mdot - 2C`` skew-symmetric. Any
-    other factorisation with the same ``C qd`` gives identical equations of
-    motion but generally loses that property, so control designs that rely on
-    skew-symmetry require this specific form.
+    When ``l_c2`` is omitted, link 2 mass sits at ``l2 / 2`` (legacy midpoint model).
     """
     q1, q2 = float(q[0]), float(q[1])
     d1, d2 = float(qd[0]), float(qd[1])
-    k = 0.5 * m2 * l1 * l2 * np.sin(q1 - q2)
+    com = l2 / 2.0 if l_c2 is None else float(l_c2)
+    k = m2 * l1 * com * np.sin(q1 - q2)
     return np.array([[0.0, k * d2], [-k * d1, 0.0]])
 
 

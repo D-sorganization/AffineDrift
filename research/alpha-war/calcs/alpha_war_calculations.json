@@ -11,11 +11,11 @@
     "suite_module": "alpha_war_sensitivity_suite.py",
     "suite_version": "2026-11-10-repro-slices-2-5",
     "output_json": "alpha_war_calculations.json",
-    "studies_sha256": "2a6727dd59b89338a3dcc2557fa8660d476e90ba3be141d696ebdc9bdae222f1",
+    "studies_sha256": "6cb54b9ea107077b349713cafeddfa4647c062cee744d2cf70759bee7be54501",
     "studies_payload_note": "SHA-256 of json.dumps(study_* blocks, indent=2); not the committed JSON file bytes",
     "calcs_requirements_lock_sha256": "4feee47ebdac08e6487b14d424e4c0f54fa583de6fa163fe6ce3dcb11750c45c",
     "python_version": "3.12.3",
-    "numpy_version": "2.5.4",
+    "numpy_version": "2.5.3",
     "scipy_version": "1.18.1",
     "calcs_requirements_lock": {
       "python": "3.12",
@@ -5713,7 +5713,20 @@
         "total": 25.01264632747349
       },
       "rigid_wrist_angle_at_same_time_rad": 0.3561863964205145,
-      "flexible_wrist_angle_at_same_time_rad": 0.3768046621468738
+      "flexible_wrist_angle_at_same_time_rad": 0.3768046621468738,
+      "model_parameters": {
+        "shaft_stiffness_nm_rad": 80.0,
+        "distal_head_mass_kg": 0.2,
+        "distal_shaft_length_m": 0.55,
+        "gravity_planar_m_s2": 8.033,
+        "swing_plane_tilt_from_horizontal_deg": 35.0,
+        "standard_gravity_m_s2": 9.81,
+        "planar_gravity_from_tilt_m_s2": 8.03588155447501,
+        "lumped_shaft_natural_frequency_hz": 5.787452476068921,
+        "lumped_shaft_equivalent_cpm": 347.2471485641353,
+        "cpm_formula": "sqrt(k/(m_head*b^2))/(2*pi)*60; oracle 3 clamped-proximal small deflection",
+        "gravity_projection_note": "g_planar = 8.033 m/s^2 in UpstreamDrift reference; interpreted as g\u00b7cos(35.0\u00b0) \u2248 8.036 m/s^2"
+      }
     },
     "two_hand_beam_rebound_wrench_model": {
       "scenario": "standalone hypothetical scaling \u2014 not derived from the matched 3-link rollout above; no stated EI, lever length, or boundary conditions; do not infer population shaft behavior",

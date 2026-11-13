@@ -2,16 +2,20 @@ const {
   assertManifest,
   buildEvidencePlan,
   canonicalPathMatches,
+  collectEvidenceWithSubresourceRetries,
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
   failuresAreOnlyRetriableSubresourceNoise,
+  hasTransientSubresourceFailure,
   isActionableConsoleError,
   isActionablePageError,
+  isRemoteBaseUrl,
   isTransientSubresourceLoadConsoleError,
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   parseArgs,
   RETRYABLE_STATUS_CODES,
+  shouldRetryEvidenceAttempt,
   summarizeNavigationAttempts,
   screenshotOptions,
   screenshotName,
@@ -209,6 +213,191 @@ describe('public-site verifier contracts (WEB-D)', () => {
       "Failed to read the 'localStorage' property from 'Window': Access is denied for this document.",
     )).toBe(false);
     expect(isActionablePageError('ReferenceError: broken is not defined')).toBe(true);
+  });
+
+  describe('transient subresource 5xx and live evidence retry policy (#5544)', () => {
+    test('hasTransientSubresourceFailure recognizes transient 5xx even when layout failures are present (#5544)', () => {
+      const failures = [
+        'primary heading does not begin within the first viewport',
+        'console: Failed to load resource: the server responded with a status of 503 ()',
+      ];
+      expect(hasTransientSubresourceFailure(failures)).toBe(true);
+
+      const with502 = [
+        'main content is missing or empty',
+        'console: Failed to load resource: the server responded with a status of 502 (Bad Gateway)',
+      ];
+      expect(hasTransientSubresourceFailure(with502)).toBe(true);
+
+      const withSubresourceResponse = [
+        'primary heading does not begin within the first viewport',
+      ];
+      const listeners = {
+        transientResponses: [{ status: 503, url: 'https://affinedrift.com/quarto.css' }],
+      };
+      expect(hasTransientSubresourceFailure(withSubresourceResponse, listeners)).toBe(true);
+
+      expect(hasTransientSubresourceFailure(['visible H1 count is 0'])).toBe(false);
+      expect(hasTransientSubresourceFailure(['console: Failed to load resource: the server responded with a status of 404 ()'])).toBe(false);
+      expect(hasTransientSubresourceFailure([])).toBe(false);
+    });
+
+    test('isRemoteBaseUrl distinguishes remote CDNs from local test servers', () => {
+      expect(isRemoteBaseUrl('https://affinedrift.com')).toBe(true);
+      expect(isRemoteBaseUrl('https://d-sorganization.github.io/AffineDrift')).toBe(true);
+      expect(isRemoteBaseUrl('http://cdn.affinedrift.com:8080')).toBe(true);
+      expect(isRemoteBaseUrl('http://localhost:8000')).toBe(false);
+      expect(isRemoteBaseUrl('http://127.0.0.1:8000')).toBe(false);
+      expect(isRemoteBaseUrl('http://0.0.0.0:8000')).toBe(false);
+      expect(isRemoteBaseUrl('')).toBe(false);
+      expect(isRemoteBaseUrl(null)).toBe(false);
+    });
+
+    test('shouldRetryEvidenceAttempt decides whether to reload evidence based on 5xx or remote URL', () => {
+      const subresource503WithLayout = [
+        'primary heading does not begin within the first viewport',
+        'console: Failed to load resource: the server responded with a status of 503 ()',
+      ];
+      // Transient 5xx subresource should ALWAYS trigger retry, even on localhost
+      expect(shouldRetryEvidenceAttempt(subresource503WithLayout, {}, { baseUrl: 'http://localhost:8000' })).toBe(true);
+
+      // Plain layout failure on localhost should NOT retry
+      expect(shouldRetryEvidenceAttempt(['primary heading does not begin within the first viewport'], {}, { baseUrl: 'http://localhost:8000' })).toBe(false);
+
+      // On a remote base URL, failed cell check should trigger retry
+      expect(shouldRetryEvidenceAttempt(['primary heading does not begin within the first viewport'], {}, { baseUrl: 'https://affinedrift.com' })).toBe(true);
+
+      // Zero failures should never trigger retry
+      expect(shouldRetryEvidenceAttempt([], {}, { baseUrl: 'https://affinedrift.com' })).toBe(false);
+    });
+
+    test('collectEvidenceWithSubresourceRetries reloads evidence when subresource 503 causes heading viewport failure (#5544)', async () => {
+      const page = {
+        goto: jest.fn().mockResolvedValue({ status: () => 200, ok: () => true }),
+      };
+      const item = {
+        route: '/404.html',
+        pageKind: 'home',
+        viewport: { id: 'mobile', width: 390, height: 844 },
+        theme: 'light',
+      };
+      const sleeps = [];
+      const sleepFn = (ms) => { sleeps.push(ms); return Promise.resolve(); };
+      const options = {
+        baseUrl: 'https://affinedrift.com',
+        documentRetries: 2,
+        documentRetryDelayMs: 250,
+        sleepFn,
+      };
+
+      const consoleErrors = [];
+      const listeners = {
+        consoleErrors,
+        pageErrors: [],
+        failedRequests: [],
+        transientResponses: [],
+        resetAttemptEvidence: jest.fn(() => {
+          consoleErrors.length = 0;
+          listeners.transientResponses.length = 0;
+        }),
+      };
+
+      let attemptCount = 0;
+      const pageVerification = {
+        waitForSettledPage: jest.fn().mockResolvedValue(undefined),
+        inspectRenderedPage: jest.fn().mockImplementation(() => {
+          attemptCount += 1;
+          if (attemptCount === 1) {
+            // Attempt 1: Subresource 503 pushed heading below viewport
+            consoleErrors.push('Failed to load resource: the server responded with a status of 503 ()');
+            return Promise.resolve({
+              failures: ['primary heading does not begin within the first viewport'],
+              canonical: 'https://affinedrift.com/404.html',
+            });
+          }
+          // Attempt 2: CDN served stylesheet, rendering succeeded
+          return Promise.resolve({
+            failures: [],
+            canonical: 'https://affinedrift.com/404.html',
+          });
+        }),
+        canonicalPathMatches: () => true,
+      };
+
+      const result = await collectEvidenceWithSubresourceRetries(
+        page,
+        item,
+        options,
+        listeners,
+        pageVerification,
+      );
+
+      expect(pageVerification.inspectRenderedPage).toHaveBeenCalledTimes(2);
+      expect(result.failures).toEqual([]);
+      expect(result.subresourceRetried).toBe(true);
+      expect(result.evidenceAttemptCount).toBe(2);
+      expect(sleeps).toEqual([250]); // 250 * 2^0
+      expect(listeners.resetAttemptEvidence).toHaveBeenCalled();
+    });
+
+    test('collectEvidenceWithSubresourceRetries exhausts retries on persistent subresource 503 (#5544)', async () => {
+      const page = {
+        goto: jest.fn().mockResolvedValue({ status: () => 200, ok: () => true }),
+      };
+      const item = {
+        route: '/404.html',
+        pageKind: 'home',
+        viewport: { id: 'mobile', width: 390, height: 844 },
+        theme: 'light',
+      };
+      const sleeps = [];
+      const sleepFn = (ms) => { sleeps.push(ms); return Promise.resolve(); };
+      const options = {
+        baseUrl: 'https://affinedrift.com',
+        documentRetries: 2,
+        documentRetryDelayMs: 100,
+        sleepFn,
+      };
+
+      const consoleErrors = [];
+      const listeners = {
+        consoleErrors,
+        pageErrors: [],
+        failedRequests: [],
+        transientResponses: [],
+        resetAttemptEvidence: jest.fn(() => {
+          consoleErrors.length = 0;
+        }),
+      };
+
+      const pageVerification = {
+        waitForSettledPage: jest.fn().mockResolvedValue(undefined),
+        inspectRenderedPage: jest.fn().mockImplementation(() => {
+          consoleErrors.push('Failed to load resource: the server responded with a status of 503 ()');
+          return Promise.resolve({
+            failures: ['primary heading does not begin within the first viewport'],
+            canonical: 'https://affinedrift.com/404.html',
+          });
+        }),
+        canonicalPathMatches: () => true,
+      };
+
+      const result = await collectEvidenceWithSubresourceRetries(
+        page,
+        item,
+        options,
+        listeners,
+        pageVerification,
+      );
+
+      // Max attempts = documentRetries + 1 = 3
+      expect(pageVerification.inspectRenderedPage).toHaveBeenCalledTimes(3);
+      expect(result.failures).toContain('primary heading does not begin within the first viewport');
+      expect(result.failures).toContain('console: Failed to load resource: the server responded with a status of 503 ()');
+      expect(result.subresourceRetried).toBe(true);
+      expect(result.evidenceAttemptCount).toBe(3);
+      expect(sleeps).toEqual([100, 200]);
+    });
   });
 
   describe('navigateWithRetry bounded transient 5xx policy (ISSUE-4104)', () => {

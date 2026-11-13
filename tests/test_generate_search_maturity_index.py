@@ -53,6 +53,24 @@ class TestBuildIndex:
             "pages/has-maturity.html": {"label": "Canonical", "variant": "canonical"},
         }
 
+    def test_draft_pages_are_left_out(self, monkeypatch):
+        # A draft is not published, so search must not badge it (#5426).
+        pages = [Path("articles/live.qmd"), Path("articles/wip.qmd")]
+
+        def fake_frontmatter(path):
+            # read_qmd_with_frontmatter returns scalar values as strings.
+            draft = "True" if path == Path("articles/wip.qmd") else "False"
+            return "body", {"status": "experimental", "draft": draft}
+
+        monkeypatch.setattr(
+            generate_search_maturity_index, "collect_qmd_files", lambda _dirs: pages
+        )
+        monkeypatch.setattr(
+            generate_search_maturity_index, "read_qmd_with_frontmatter", fake_frontmatter
+        )
+
+        assert list(build_index(["articles"])) == ["articles/live.html"]
+
     def test_status_takes_precedence_over_maturity(self, monkeypatch):
         pages = [Path("articles/both.qmd")]
 

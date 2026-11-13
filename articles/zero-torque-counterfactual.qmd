@@ -22,7 +22,6 @@ caveats:
   evidence-level: "Simulation (Qualified Multi-Body)"
   establishes:
     - "Mathematical formulation and numerical integration algorithm for the Zero-Torque Counterfactual (ZTCF) family."
-    - "State-conditioned causal attribution separating autonomous drift from active torque intervention."
   does-not-establish:
     - "Physical capacity of human golfers to relax all muscles instantaneously mid-downswing."
     - "Convergence of an unassisted forward drift trajectory to an achieved tournament swing without steering."
@@ -207,11 +206,11 @@ Within the fixed declared plant, setting $u=0$ removes the term $G(x)u$. The two
 
 ## Geometric Interpretation
 
-![Planar Clubhead Paths Under Active Torque Baseline Versus Zero-Torque Counterfactuals Branched at Top of Downswing ($t_0=0$ ms), Mid-Downswing ($t_0=140$ ms), and Pre-Impact ($t_0=240$ ms).](figures/core_theory/fig_ztcf_trajectory_divergence.svg){#fig-ztcf-trajectory-divergence width=95% fig-alt="Diagram of clubhead spatial trajectories contrasting the active swing path against passive trajectories released at top of swing, mid-downswing, and late downswing."}
+![Pinned Three-Link Teaching Model: Club Tip Paths for a Constant-Torque Reference Run and Forward ZTCF Branches at Four Model Times (Not a Calibrated Golfer Swing).](figures/core_theory/fig_ztcf_trajectory_divergence.svg){#fig-ztcf-trajectory-divergence width=95% fig-alt="Reproducible model output from data/core_theory/ztcf_figure_run_v1.json: club tip paths for the pinned constant-torque reference and zero-torque branches launched at 0, 50, 100, and 150 ms model time."}
 
 <details>
 <summary>Long description</summary>
-The trajectory plot compares the spatial paths traced by the clubhead in the swing plane. The nominal trajectory with continuous muscular torque curves smoothly into impact. Counterfactual paths branched at earlier milestones diverge markedly: zero torque from the top of the downswing yields a wide, flailing arc that fails to square the club, while branching at mid-downswing preserves initial momentum but suffers significant path deviation. Branching in the final 30 ms before impact follows the nominal path closely, showing that passive kinetic momentum dominates the terminal geometry.
+The trajectory plot is generated from `GolfModel.ztcf_trajectory` and the constant-torque integrator in `ztcf_explorer.py` using the pin in `data/core_theory/ztcf_figure_run_v1.json`. It shows how far the club tip moves under a declared reference torque vector versus forward ZTCF branches launched at four model times. Earlier branches separate more from the reference path within the same 200 ms horizon; the figure does not report golfer impact timing, club squaring, or passive dominance.
 </details>
 
 When the initial-value problem is well posed, a forward ZTCF is an *integral curve* of the declared drift vector field $f$ through $x_0$ at time $t_0$.
@@ -230,11 +229,11 @@ What is absent from the forward ZTCF is the declared applied generalized-control
 
 ## Relationship to the Drift–Input Decomposition
 
-![Decomposition of Distal Club Acceleration Into Active Muscular Torque $M^{-1}\tau$, Passive Interaction/Coriolis Coupling $-M^{-1}C\dot{q}$, and Gravitational Acceleration $-M^{-1}g$ Across the Downswing.](figures/core_theory/fig_ztcf_passive_dynamics_attribution.svg){#fig-ztcf-passive-dynamics-attribution width=95% fig-alt="Stacked area chart displaying joint acceleration contributions over downswing time, showing active muscular dominance early shifting to passive centrifugal and interaction dominance late in the swing."}
+![Pinned Three-Link Model: Distal Joint Acceleration Split Into Declared Input $M^{-1}\tau$ and Drift $-M^{-1}(C\dot q + g)$ Along the Constant-Torque Reference Run.](figures/core_theory/fig_ztcf_passive_dynamics_attribution.svg){#fig-ztcf-passive-dynamics-attribution width=95% fig-alt="Model-generated time series from the pinned ZTCF figure run: third-joint total acceleration, drift term, and input term for the teaching GolfModel, not a calibrated downswing measurement."}
 
 <details>
 <summary>Long description</summary>
-The acceleration decomposition graph displays the relative contributions of torque and passive dynamics to distal angular acceleration over the downswing duration. In the early transition phase, active muscular torque $M^{-1}\tau$ provides virtually all acceleration. Passing the halfway point, velocity-dependent Coriolis and centrifugal terms $-M^{-1}C\dot{q}$ surge, rapidly eclipsing muscular input. Near impact, interaction forces drive the majority of clubhead acceleration, illustrating the whip-like energy transfer characteristic of double-pendulum dynamics.
+The acceleration panel plots the same-state drift/input split along the pinned constant-torque reference trajectory. The drift term bundles velocity coupling and gravity as implemented in `GolfModel.drift_acceleration`; the input term is $M^{-1}\tau$ for the declared torque vector in the pin file. It illustrates the algebraic decomposition at driven states reached under torque, not a unique muscle-effort audit or a whip-transfer percentage.
 </details>
 
 The drift--input decomposition used throughout this series is the algebraic identity:
@@ -283,11 +282,11 @@ remains one model-conditioned intervention at every DCR value.
 
 ## Numerical Algorithm
 
-![Clubhead Velocity Profiles Comparing Active Execution With Zero-Torque Branches Initiated at Successive Downswing Milestones, Illustrating Terminal Speed Loss as a Function of Branch Timing.](figures/core_theory/fig_ztcf_clubhead_speed_loss.svg){#fig-ztcf-clubhead-speed-loss width=95% fig-alt="Line plot of clubhead speed versus time showing active trajectory reaching 48 m/s, contrasted with steep speed deficits when torque is removed early and minor deficit when removed 30 ms before impact."}
+![Pinned Three-Link Model: Clubhead Speed for the Constant-Torque Reference and ZTCF Branches Initiated at Four Model Times.](figures/core_theory/fig_ztcf_clubhead_speed_loss.svg){#fig-ztcf-clubhead-speed-loss width=95% fig-alt="Reproducible clubhead speed traces from data/core_theory/ztcf_figure_run_v1.json comparing the pinned torque reference with zero-torque branches; speeds are model meters per second, not tournament radar values."}
 
 <details>
 <summary>Long description</summary>
-The velocity profile comparison illustrates clubhead speed development from takeaway to impact. The active swing achieves a peak velocity of approximately 48 m/s at contact. If torque is removed at transition, the clubhead reaches less than 20 m/s. Branching at mid-downswing caps speed at 35 m/s. However, releasing torque within 30 ms of impact results in negligible speed reduction, quantitatively proving that late muscular forcing contributes minimally to terminal kinetic energy compared to the passive flail mechanism.
+The speed panel uses the same pinned integrator settings as @fig-ztcf-trajectory-divergence (`data/core_theory/ztcf_figure_run_v1.json`). Terminal speed differences between branches are reported only for this teaching model, horizon, and torque record; they must not be read as calibrated golfer percentages or as proof that late torque is negligible in real swings.
 </details>
 
 This section describes the generic integration pattern. The only governed executable result published here is the Python golden fixture linked in @sec-ztcf-contract. No current MATLAB or Simulink model/version/input record or cross-engine parity artifact is registered, so results attributed to those engines are unavailable under this contract.
@@ -344,19 +343,27 @@ $$a(x^r,u,t)-a(x^0,0,t)=a_0(x^r,t)-a_0(x^0,t)+H(x^r,t)u.$$
 
 An identity checked once does not establish correct integration. Also check forward/inverse closure, constraint residuals, appropriate energy or power balance, and step refinement of the stated output. A constant acceleration can be very large while its state Jacobian has only zero eigenvalues; that fact alone introduces no fast damped mode.
 
-### Zero-Velocity Evaluation Is a Different Intervention
+### Instantaneous Decomposition and the Zero-Velocity Counterfactual
 
-For an unconstrained model, the instantaneous ZVCF slice is
+For an unconstrained second-order mechanical model with generalized coordinates $q$, generalized velocities $\dot q$, and declared control torques $\tau$, the instantaneous control component is the **Zero-Velocity Counterfactual (ZVCF)**:
 
-$$a_{\mathrm{ZVCF}}(q,z,t)=-M(q)^{-1}h(q,0,z,t).$$
+$$a_{\mathrm{ZVCF}}(q,\tau)=M(q)^{-1}\tau.$$
 
-With identical remaining state, parameters and load protocol, define
+This evaluates the acceleration produced when velocities and gravity are turned off, matching the original MATLAB `SCRIPT_ZVCF_GENERATOR.m` definition. Concurrently, the **Zero-Torque Counterfactual (ZTCF)** isolates autonomous drift:
 
-$$a_{\mathrm{velocity}}=a_0(q,v,z,t)-a_{\mathrm{ZVCF}}(q,z,t).$$
+$$a_{\mathrm{ZTCF}}(q,\dot q)=M(q)^{-1}\left(-C(q,\dot q)\dot q - g(q) - \tau_{\mathrm{passive}}\right).$$
 
-The second subtraction isolates the effects changed by the specified velocity reset. It does not equal the difference between applied input and configuration-only drift. Gravity is the only surviving bias only in a model whose other retained loads vanish at zero velocity. Elastic strain, internal-state forces and prescribed loads can remain.
+At any fixed state $(q, \dot q)$ and applied torque $\tau$, total acceleration is their exact sum:
 
-State which velocities are reset, including any stored in internal states, and check constraint feasibility before evaluating. A moving constraint $q=t$ requires $\dot q=1$ and does not permit zero velocity. A feasible reset changes kinetic energy and is distinct from removing an applied torque. Integrating after a reset creates a separate initial-state intervention; it is not the instantaneous ZVCF evaluation itself.
+$$a(q,\dot q,\tau)=a_{\mathrm{ZTCF}}(q,\dot q)+a_{\mathrm{ZVCF}}(q,\tau).$$
+
+::: {.callout-note}
+## Exactness at Fixed State vs. Forward Trajectories
+1. **Pointwise Exactness**: The decomposition $a = a_{\mathrm{ZTCF}} + a_{\mathrm{ZVCF}}$ is an exact linear identity at any instantaneous state $(q, \dot q)$ because inverse inertia linearly distributes generalized forces: $M(q)^{-1}(\tau_{\mathrm{drift}} + \tau) = M(q)^{-1}\tau_{\mathrm{drift}} + M(q)^{-1}\tau$.
+2. **Trajectories Do Not Add**: Forward-integrated counterfactual trajectories do **not** generally sum: $x(t) \neq x_{\mathrm{ZTCF}}(t) + x_{\mathrm{ZVCF}}(t)$. Because nonlinear dynamics couple position, velocity, and torque over time ($\dot x = f(x) + G(x)u$), counterfactual states diverge onto different trajectories where Coriolis, centrifugal, and gravitational forces are evaluated at different configurations.
+3. **Control-Affine Mapping and IAA**: In first-order state-space form $\dot x = f(x) + G(x)u$, $a_{\mathrm{ZTCF}}$ maps to the autonomous drift vector field $f(x)$ while $a_{\mathrm{ZVCF}}$ maps to the control vector field $G(x)u$. In biomechanical Induced Acceleration Analysis (IAA), this corresponds to partitioning total instantaneous acceleration into autonomous contributions (inertial velocity coupling and gravity) and actuator-induced accelerations without double-counting static biases.
+4. **Historical Naming Note**: Earlier AffineDrift revisions (notably AD Decision 4 / UD #11553) and some literature applied the label "ZVCF" to the static gravity-and-configuration-only slice ($u=0, \dot q=0$). Under the restored canonical convention matching MATLAB `SCRIPT_ZVCF_GENERATOR.m`, ZVCF designates the control component ($M(q)^{-1}\tau$), while the gravity-only evaluation is termed the static or zero-velocity zero-torque acceleration.
+:::
 
 ### Practical Considerations
 

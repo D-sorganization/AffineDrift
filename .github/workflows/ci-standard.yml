@@ -84,7 +84,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
 
@@ -104,27 +104,7 @@ jobs:
           fi
 
       - name: Install System Dependencies
-        run: |
-          if sudo -n true 2>/dev/null; then
-            APT_READY=false
-            for attempt in 1 2 3; do
-              echo "apt-get update attempt $attempt of 3"
-              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
-                APT_READY=true
-                break
-              fi
-              sleep 20
-            done
-            if [ "$APT_READY" = "true" ]; then
-              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
-              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
-            else
-              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
-            fi
-          else
-            echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
-          fi
+        run: bash scripts/ci/install_headless_system_deps.sh
 
       - run: pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
 
@@ -207,6 +187,15 @@ jobs:
         # silently wrong output, exit 0 -- so reading the source is the only way
         # to catch it before the site does.
         run: python3 scripts/check_quarto_xrefs.py
+      - name: Verify Published Figures Have Projection Records
+        # VIS-EVIDENCE-3 (#5421): a non-draft page may embed a figure only when a
+        # verified projection record in evidence/projections/ traces it or an
+        # explicit, reasoned exemption covers it. Draft pages only warn.
+        run: python3 scripts/check_figure_projection_records.py
+      - name: Verify UD Figure-Map Records Against the Pinned UD Map
+        # VIS-EVIDENCE-5 (#5454): each record's source, run_id and model_id must
+        # equal the UpstreamDrift figure_run_map.json at the record's pinned commit.
+        run: python3 scripts/ud_figure_map_records.py
       - name: Verify Each Page Renders One Title
         # Two failures that look like nothing in the source. A YAML 'title:'
         # beside a body H1 renders the title twice, separately numbered, which
@@ -232,6 +221,11 @@ jobs:
         # cannot carry an {#eq-} label, so the cross-reference gate sees nothing
         # unresolved either.
         run: python3 scripts/check_display_math.py
+      - name: Verify Article Sources Have No Control Characters
+        # PR #5152 corrupted LaTeX when a shell write interpreted \t and \v in
+        # \top, \times, and \varnothing as TAB and vertical tab. Only LF is
+        # allowed below U+0020 in articles/*.qmd.
+        run: python3 scripts/check_article_control_characters.py
       - name: Verify No LaTeX Quotation Marks In Prose
         # LaTeX quotes as ``opening'' and TeX curls it; markdown does not, so
         # the .tex -> .qmd conversions shipped the raw marks: the Geometry of
@@ -256,6 +250,12 @@ jobs:
         run: |
           python3 scripts/check_terminology.py \
             --baseline config/terminology-baseline.json
+      - name: Verify Canonical Parameters Registry
+        # PARAMETERS.md is generated from data/canonical_parameters.json and must
+        # stay aligned with sourced UpstreamDrift constants (#5595).
+        run: |
+          python3 -m scripts.check_parameters \
+            --baseline config/parameters-baseline.json
       - name: Verify Governance Vocabulary Stays Out of Reader Prose
         # Reader-facing pages borrowed internal governance jargon -- governed,
         # qualified, provenance, protected, fail-closed -- from the site's own
@@ -428,7 +428,7 @@ jobs:
         python: ["3.12"]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python }}
       - name: Install Qt system libraries
@@ -439,7 +439,6 @@ jobs:
         # aborts before any test runs.
         run: |
           if sudo -n true 2>/dev/null; then
-            sudo rm -f /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock /var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin
             sudo rm -f /etc/apt/sources.list.d/*chrome* /etc/apt/sources.list.d/*google*
             sudo sed -i '/dl\.google\.com/d' /etc/apt/sources.list 2>/dev/null || true
             APT_READY=false
@@ -521,7 +520,7 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: ".nvmrc"
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
       - name: Install Dependencies
@@ -605,7 +604,7 @@ jobs:
         if: steps.e2e_changes.outputs.run == 'true'
         with:
           node-version-file: ".nvmrc"
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         if: steps.e2e_changes.outputs.run == 'true'
         with:
           python-version: "3.12"
@@ -631,27 +630,7 @@ jobs:
 
       - name: Install System Dependencies
         if: steps.e2e_changes.outputs.run == 'true'
-        run: |
-          if sudo -n true 2>/dev/null; then
-            APT_READY=false
-            for attempt in 1 2 3; do
-              echo "apt-get update attempt $attempt of 3"
-              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
-                APT_READY=true
-                break
-              fi
-              sleep 20
-            done
-            if [ "$APT_READY" = "true" ]; then
-              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
-              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
-            else
-              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
-            fi
-          else
-            echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
-          fi
+        run: bash scripts/ci/install_headless_system_deps.sh
 
       - name: Install Dependencies
         if: steps.e2e_changes.outputs.run == 'true'
@@ -877,16 +856,3 @@ jobs:
   # gate also never actually ran: its change-detection checked for a Cargo.toml
   # at the repo root, which never existed. Both the crate and the gate were
   # deleted rather than wired in, since there is no performance consumer.
-
-  local-only-workflows:
-    timeout-minutes: 30
-    name: Reject hosted runner routing
-    runs-on: >-
-      ${{ github.event.pull_request &&
-      github.event.pull_request.head.repo.full_name != github.repository &&
-      'ubuntu-latest' || vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
-    steps:
-      - name: Run local-only workflow guard
-        shell: bash
-        run: |
-          echo "Bypass"

@@ -9,7 +9,12 @@ const {
   RETRYABLE_STATUS_CODES,
   summarizeNavigationAttempts,
 } = require('./public-site-navigation.js');
-const { collectEvidenceWithSubresourceRetries } = require('./public-site-evidence-retry.js');
+const {
+  collectEvidenceWithSubresourceRetries,
+  createPageListeners,
+  isRemoteBaseUrl,
+  shouldRetryEvidenceAttempt,
+} = require('./public-site-evidence-retry.js');
 const {
   AXE_FAILING_IMPACTS,
   AXE_MODES,
@@ -21,6 +26,7 @@ const {
 } = require('./public-site-axe.js');
 const {
   failuresAreOnlyRetriableSubresourceNoise,
+  hasTransientSubresourceFailure,
   isActionableConsoleError,
   isActionablePageError,
   isTransientSubresourceLoadConsoleError,
@@ -449,40 +455,7 @@ async function verifyItem(page, item, options) {
   if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1') {
     console.log(`Verifying ${item.route} (${item.viewport.id}, ${item.theme})`);
   }
-  const consoleErrors = [];
-  const pageErrors = [];
-  const failedRequests = [];
-  const onConsole = (message) => {
-    if (message.type() === 'error' && isActionableConsoleError(message.text())) {
-      consoleErrors.push(message.text());
-    }
-  };
-  const onPageError = (error) => pageErrors.push(error.message);
-  const onRequestFailed = (request) => {
-    const target = new URL(request.url());
-    const isRequiredMathRuntime = target.href.startsWith(
-      'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/',
-    );
-    if (target.origin === new URL(options.baseUrl).origin || isRequiredMathRuntime) {
-      failedRequests.push(`${target.pathname}: ${request.failure()?.errorText ?? 'failed'}`);
-    }
-  };
-  page.on('console', onConsole);
-  page.on('pageerror', onPageError);
-  page.on('requestfailed', onRequestFailed);
-  const listeners = {
-    consoleErrors,
-    pageErrors,
-    failedRequests,
-    onConsole,
-    onPageError,
-    onRequestFailed,
-    resetAttemptEvidence: () => {
-      consoleErrors.length = 0;
-      pageErrors.length = 0;
-      failedRequests.length = 0;
-    },
-  };
+  const listeners = createPageListeners(page, options);
 
   const evidence = await collectEvidenceWithSubresourceRetries(page, item, options, listeners, {
     waitForSettledPage,
@@ -518,9 +491,7 @@ async function verifyItem(page, item, options) {
     await page.screenshot({ path: screenshot, ...screenshotOptions() });
   }
 
-  page.off('console', onConsole);
-  page.off('pageerror', onPageError);
-  page.off('requestfailed', onRequestFailed);
+  listeners.detach();
 
   // axe runs after the page's own console evidence is closed (its stylesheet
   // fetches trip the site's connect-src CSP and are not the page's errors).
@@ -663,16 +634,21 @@ module.exports = {
   summarizeAxeViolations,
   buildEvidencePlan,
   canonicalPathMatches,
+  collectEvidenceWithSubresourceRetries,
+  createPageListeners,
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
   failuresAreOnlyRetriableSubresourceNoise,
+  hasTransientSubresourceFailure,
   isActionableConsoleError,
   isActionablePageError,
+  isRemoteBaseUrl,
   isTransientSubresourceLoadConsoleError,
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   parseArgs,
   RETRYABLE_STATUS_CODES,
+  shouldRetryEvidenceAttempt,
   summarizeNavigationAttempts,
   screenshotOptions,
   screenshotName,
