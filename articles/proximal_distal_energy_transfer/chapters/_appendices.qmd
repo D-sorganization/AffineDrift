@@ -22,8 +22,10 @@ The current evidence boundary includes these known limitations:
 - The primary model has two planar links and a fixed hub; torso, hub-path,
   long-axis rotation, and closed-loop arm effects are absent.
 - The shaft extension is a three-coordinate point-mass surrogate with one
-  linear torsional mode. It is not a calibrated distributed-beam or equipment
-  model, and extreme low-stiffness deflections exceed its linear premise.
+  linear torsional mode. Forward coupling of finite-element modes into the
+  constrained solve was executed (@sec-forward-modal-shaft) but failed the
+  registered small-deflection screen; it is not a calibrated distributed-beam or
+  equipment model, and extreme low-stiffness deflections exceed its linear premise.
 - The coupled actuator adds delay, first-order activation, rate and
   torque--velocity limits, and impedance, but it remains a nonphysiological
   command surrogate.
