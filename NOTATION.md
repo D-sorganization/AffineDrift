@@ -282,17 +282,17 @@ site registry `data/symbol_references.json` is generated from this table.
 | Symbol   | Quantity                       | Definition                                                                                                                    | Units                     |
 | -------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
 | **CoG**  | Center of gravity              | Center of mass                                                                                                                | m (relative to reference) |
-| **COR**  | Coefficient of restitution     | (v_out - v_contact) / (v_in - v_contact)                                                                                      | Dimensionless, 0-1        |
+| **COR**  | Coefficient of restitution     | $e=-(\mathbf{v}_b^+-\mathbf{v}_c^+)\cdot\mathbf{n}\;/\;(\mathbf{v}_b^--\mathbf{v}_c^-)\cdot\mathbf{n}$ with unit normal $\mathbf{n}$; signed approach normal speed is negative, so $e\in[0,1]$ for passive, non-superelastic rebounds (no net external energy supplied to the collision) | Dimensionless, 0-1        |
 | **DCR**  | Drift-Control Ratio            | $\lVert W a_d(x)\rVert_2 /(\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon)$; see the canonical definition above | Dimensionless             |
-| **DgCR** | Drag–curve ratio (aerodynamic) | (1 - COR) / (1 + COR)                                                                                                         | Dimensionless, 0-1        |
+| **DgCR** | Drag–Curve Ratio (restitution) | $(1-\mathrm{COR})/(1+\mathrm{COR})$; impact diagnostic from COR, not aerodynamic drag                                                                                                                                                                                                    | Dimensionless, 0-1        |
 | **e**    | Coefficient of restitution     | Same as COR                                                                                                                   | Dimensionless             |
-| **v_0**  | Ball velocity (impact)         | Velocity immediately after impact                                                                                             | m/s                       |
+| **v_0**  | Ball launch speed              | Ball center-of-mass speed immediately after separation (not the pre-impact approach speed)                                                                                                                                                                                               | m/s                       |
 | **θ**    | Launch elevation               | Angle above horizontal at ball release (Ch. 31)                                                                                 | degrees (°) or radians    |
 | **α**    | Attack (dynamic loft) angle    | Club-face attitude in the swing plane (Ch. 31); not launch elevation                                                            | degrees (°) or radians    |
 | **β**    | Swing-plane inclination        | Plane tilt relative to horizontal (Ch. 31)                                                                                    | degrees (°) or radians    |
 | **φ**    | Slope (putting green)          | Green tilt in Ch. 32; distinct from roll angle φ elsewhere                                                                   | degrees (°) or radians    |
 
-**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
+**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The restitution-based drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
 **DgCR (Drag–curve ratio) Sign Convention:** Always positive
 
@@ -619,7 +619,7 @@ From NOTATION.md:
 
 ---
 
-**Last Updated:** April 2026  
+**Last Updated:** 2026-11-13  
 **Version:** 1.0  
 **Maintained By:** AffineDrift Documentation Team  
 **Status:** Authoritative Reference ✓
