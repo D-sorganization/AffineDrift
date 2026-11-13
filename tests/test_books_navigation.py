@@ -140,7 +140,7 @@ def test_models_hub_links_all_companion_guides() -> None:
         "models-drake.html",
         "models-pinocchio.html",
         "models-opensim.html",
-        "models-myosim.html",
+        "models-myosuite.html",
         "models-simulink.html",
         "models-pendulum.html",
     ):

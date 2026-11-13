@@ -49,9 +49,9 @@ categories:
           <strong>Supported:</strong> MuJoCo (required on every pull request)<br>
           <strong>Extended:</strong> Drake, Pinocchio (nightly cross-engine validation)<br>
           <strong>Experimental:</strong> OpenSim, MyoSuite (best-effort local validation)<br>
-          <strong>Experimental, differentiable:</strong> JaxSim, a JAX-based backend kept in
-          <code>src/engines/physics_engines/jaxsim</code> with its own upgrade guard; it has no launcher tile
-          and is not part of the published support-tier contract.<br>
+          <strong>Experimental:</strong> JaxSim, a JAX-based differentiable backend in
+          <code>src/engines/physics_engines/jaxsim</code>; experimental tier with launcher tile
+          <code>jaxsim_dashboard</code> (best-effort local validation).<br>
           The tier contract is
           <a href="https://github.com/D-sorganization/UpstreamDrift/blob/98165272f404e6752ec573e05e30a0def7562e0d/docs/engines/support_tiers.md" target="_blank" rel="noopener">docs/engines/support_tiers.md<span class="sr-only">(opens in a new tab)</span></a>.
         </p>
@@ -85,8 +85,8 @@ categories:
           (<a href="https://github.com/D-sorganization/UpstreamDrift/blob/98165272f404e6752ec573e05e30a0def7562e0d/docs/adr/0046-launch-monitor-analytics-single-model-layer.md" target="_blank" rel="noopener">ADR-0046<span class="sr-only">(opens in a new tab)</span></a>).<br>
           <strong>BunkerShot3D:</strong> a designer workbench for sand shots and sole geometry
           (<a href="https://github.com/D-sorganization/UpstreamDrift/blob/98165272f404e6752ec573e05e30a0def7562e0d/docs/adr/0032-bunkershot3d-club-design-architecture.md" target="_blank" rel="noopener">ADR-0032<span class="sr-only">(opens in a new tab)</span></a>).<br>
-          <strong>Visualization and export:</strong> real-time 3D rendering with force-torque overlays, more than
-          ten plot types, and CSV/JSON export.
+          <strong>Visualization and export:</strong> real-time 3D rendering with force-torque overlays,
+          20+ static analysis plot types (per the pinned companion feature catalog), and CSV/JSON export.
         </p>
       </div>
 
@@ -105,11 +105,10 @@ categories:
         <h2>Requirements and Access</h2>
         <p class="resource-description">
           Windows, macOS, and Linux. Python 3.11 and 3.12 are the tested interpreter minors
-          (<code>requires-python = "&gt;=3.11,&lt;3.13"</code>). The upstream repository does not use Git LFS;
+          (<code>requires-python = "&gt;=3.11,&lt;3.13"</code>). The UpstreamDrift repository does not use Git LFS;
           the mandatory submodule is <code>vendor/ud-tools</code> (see
           <code>git submodule update --init --recursive vendor/ud-tools</code> in the getting-started guide).
-          MATLAB R2023a or later is needed only for the
-          historical MATLAB models. See
+          MATLAB R2023a or later is needed only for the historical MATLAB models. See
           <a href="../pages/upstreamdrift-getting-started.html">UpstreamDrift: Getting Started</a> for the install sequence.
           <br><br>
           <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener" class="resource-link">View on GitHub →<span class="sr-only">(opens in a new tab)</span></a><span class="u-text-muted"> (navigation only; not pinned to a specific commit)</span>

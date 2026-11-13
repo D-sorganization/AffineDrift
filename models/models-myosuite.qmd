@@ -1,0 +1,143 @@
+---
+title: "MyoSuite Models"
+description: "MuJoCo-based musculoskeletal environments in UpstreamDrift via MyoSuite (experimental engine tier)."
+page-layout: full
+categories:
+- models
+---
+
+```{=html}
+<section class="article-section">
+  <div class="ad-page-container">
+    <div class="standard-page-layout">
+      <!-- Left Sidebar: Table of Contents -->
+      <aside class="left-sidebar">
+        <div class="sidebar-sticky-content">
+        <nav class="toc-nav">
+          <h3 class="sidebar-heading">Models</h3>
+          <ul class="sidebar-links">
+            <li><a href="models.html">Models Home</a></li>
+            <li><a href="models-simulink.html">Matlab Simulink</a></li>
+            <li><a href="models-mujoco.html">MuJoCo</a></li>
+            <li><a href="models-drake.html">Drake</a></li>
+            <li><a href="models-pinocchio.html">Pinocchio</a></li>
+            <li><a href="models-pendulum.html">Pendulum</a></li>
+            <li><a href="models-opensim.html">OpenSim</a></li>
+            <li><a href="models-myosuite.html" class="active">MyoSuite</a></li>
+          </ul>
+        </nav>
+      </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content-area">
+        <div class="page-section">
+          <h1 class="section-heading">MyoSuite Models</h1>
+        </div>
+        <div class="articles-list">
+          <div class="article-category">
+        <div class="u-mb-4">
+          <p class="page-lede">
+            MyoSuite is an open-source collection of MuJoCo-based musculoskeletal environments for
+            hand and limb movement simulation, developed by MyoHub. UpstreamDrift integrates MyoSuite as
+            an <strong>experimental</strong> physics engine (the legacy internal alias <code>myosim</code>
+            resolves to <code>myosuite</code> in
+            <a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/src/engines/tiers.py" target="_blank" rel="noopener">engine tier policy<span class="sr-only">(opens in a new tab)</span></a>).
+            This is not Campbell's standalone MyoSim half-sarcomere simulator.
+          </p>
+          <div class="site-card site-card--callout u-mb-4">
+            <h2 class="u-mb-1">Authority Boundary</h2>
+            <p>
+              <strong>This establishes</strong> educational orientation to MyoSuite musculoskeletal
+              environments and the UpstreamDrift experimental engine tier recorded in the
+              <a href="programming/engines.html">Programming Companion engines catalog</a>.
+            </p>
+            <p>
+              <strong>This does not establish</strong> verified in-vivo muscle-force reproduction,
+              cross-subject activation optimality, or clinical validity for rehabilitation or sports
+              performance.
+            </p>
+          </div>
+        </div>
+      </div>
+
+          <div id="available-models" class="category-section">
+            <h2 class="category-title">UpstreamDrift Context</h2>
+        <div class="article-list-item">
+          <h3>MuJoCo Musculoskeletal Environments</h3>
+          <p>Task libraries for dexterous manipulation and locomotion with tendon-driven actuation,
+          used for integration spikes rather than default release-gate validation.</p>
+        </div>
+        <div class="article-list-item">
+          <h3>Experimental Tier</h3>
+          <p>Install via <code>pip install -e &quot;.[dev,biomechanics]&quot;</code> and expect
+          best-effort local validation only, as documented in UpstreamDrift
+          <a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/engines/support_tiers.md" target="_blank" rel="noopener">engine support tiers<span class="sr-only">(opens in a new tab)</span></a>.</p>
+        </div>
+      </div>
+
+          <div id="resources" class="category-section">
+            <h2 class="category-title">Resources</h2>
+        <div class="article-list-item">
+          <h3><a href="https://github.com/MyoHub/myosuite" target="_blank" rel="noopener">MyoSuite on GitHub<span class="sr-only">(opens in a new tab)</span></a></h3>
+          <p>Canonical open-source repository for MyoSuite environments, documentation, and examples.</p>
+        </div>
+        <div class="article-list-item">
+          <h3><a href="programming/programs.html">Programming Companion Programs</a></h3>
+          <p>Launcher and program records for MyoSuite-backed tools at the site’s active UpstreamDrift pin.</p>
+        </div>
+      </div>
+        </div>
+      </main>
+
+      <!-- Right Sidebar: Recent Models History -->
+      <aside class="right-sidebar">
+        <div class="sidebar-sticky-content">
+        <nav class="history-nav">
+          <h3 class="sidebar-heading">Recent Models</h3>
+          <ul class="sidebar-links" id="models-history-list">
+            <li class="history-empty">No recent models yet</li>
+          </ul>
+        </nav>
+      </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+
+<script type="module">
+import { initCategoryHistory } from '/js/history.js';
+
+document.addEventListener('DOMContentLoaded', function() {
+  initCategoryHistory({
+    listElementId: 'models-history-list',
+    storageKey: 'affinedrift_models_history',
+    emptyMessage: 'No recent models yet',
+    pages: [
+      'models.html',
+      'models-simulink.html',
+      'models-mujoco.html',
+      'models-drake.html',
+      'models-pinocchio.html',
+      'models-pendulum.html',
+      'models-opensim.html',
+      'models-myosuite.html'
+    ],
+    fallbackUrl: 'models-myosuite.html'
+  });
+});
+</script>
+```
+
+## Related Articles
+
+- [Modeling Suite](models.html)
+- [Simulink Models](models-simulink.html)
+- [MuJoCo Models](models-mujoco.html)
+- [Drake Models](models-drake.html)
+- [Pinocchio Models](models-pinocchio.html)
+- [Pendulum Models](models-pendulum.html)
+- [OpenSim Models](models-opensim.html)
+- [Model Repositories](../repositories/repositories-models.html)
+- [Programming Companion Catalog](programming/index.html)
