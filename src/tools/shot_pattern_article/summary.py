@@ -27,10 +27,14 @@ HEADLINE_CSV = "headline_paired_sg.csv"
 
 
 def _row_to_cell(row: dict[str, str]) -> dict[str, Any]:
+    """Convert one headline CSV row into the article cell JSON shape."""
+
     def f(key: str) -> float:
+        """Parse a CSV column as float."""
         return float(row[key])
 
     def i(key: str) -> int:
+        """Parse a CSV column as int (via float for scientific notation)."""
         return int(float(row[key]))
 
     return {
@@ -59,6 +63,7 @@ def _row_to_cell(row: dict[str, str]) -> dict[str, Any]:
 
 
 def load_headline_dataset(data_dir: Path) -> dict[str, Any]:
+    """Load headline cells from ``headline_paired_sg.csv`` and optional metadata JSON."""
     csv_path = data_dir / HEADLINE_CSV
     with csv_path.open(encoding="utf-8", newline="") as handle:
         cells = [_row_to_cell(row) for row in csv.DictReader(handle)]
@@ -104,6 +109,7 @@ def bootstrap_se_from_interval(lower_95: float, upper_95: float) -> float:
 
 
 def _pattern_interval(cell: dict[str, Any], pattern: str) -> Interval:
+    """Return Draw/Fade paired-benefit interval and bootstrap SE for one cell."""
     paired = cell["paired_benefit_vs_straight"][pattern]
     lower = float(paired["lower_95"])
     upper = float(paired["upper_95"])
@@ -116,6 +122,7 @@ def _pattern_interval(cell: dict[str, Any], pattern: str) -> Interval:
 
 
 def _lean0_cells(dataset: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return the 24 zero-lean headline cells in canonical generation order."""
     by_name = {cell["cell"]: cell for cell in dataset["cells"]}
     missing = [name for name in HEADLINE_CELL_NAMES if name not in by_name]
     if missing:
@@ -196,6 +203,7 @@ def format_se(value: float) -> str:
 
 
 def build_exclusion_markdown(rows: list[dict[str, Any]]) -> str:
+    """Render the exclusion-summary markdown table for the shot-pattern article."""
     header = (
         "| Club | Conditions | Excluded Before Paired Scoring | Within-Pair Unsupported |\n"
         "|:--|--:|--:|--:|\n"
