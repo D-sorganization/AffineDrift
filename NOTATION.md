@@ -129,11 +129,23 @@ $$
 $$
 
 $a_d$ and $B_a u$ are the drift and control blocks in one acceleration or
-task-projected space; $W$ supplies the declared scaling or metric;
-$\mathcal U(x)$ is the admissible control set; and $\varepsilon$ is a reported
-regularizer. A full-state norm that mixes position and velocity units is not a
-DCR. A ratio using the realized input rather than bounded authority must be
-called a **realized drift-to-input ratio**, not DCR.
+task-projected space. The **weighting** $W$ is applied on the left:
+$\lVert W z\rVert_2$ is the site-wide convention (row selector, diagonal
+scales, or task Jacobian). When a page instead writes
+$\lVert z\rVert_M=\sqrt{z^{\mathsf T}M z}$ with positive-definite $M$, declare
+$M$ and the equivalence to some $W$ with $\lVert W z\rVert_2=\lVert z\rVert_M$
+(for example $W=L^{\mathsf T}$ from a Cholesky factor $M=LL^{\mathsf T}$).
+$\mathcal U(x)$ is the admissible control set; $\varepsilon$ has the
+denominator's units and is a **reported** regularizer (use $\varepsilon=0$
+when capacity is strictly positive). A full-state norm that mixes position and
+velocity units is not a DCR. The **realized drift-to-input ratio (DIR)** uses the
+achieved input:
+$\lVert W a_d\rVert_2/(\lVert W B_a u\rVert_2+\varepsilon)$; never call that
+quantity DCR. Under a nonlinear coordinate change $q\mapsto\phi(\tilde q)$,
+the control capacity $\sup_{u\in\mathcal U}\lVert W B_a u\rVert_2$ built from
+covariant input effects is chart-consistent, but the drift acceleration
+$a_d=-M^{-1}h$ is chart-dependent unless a covariant (material) acceleration is
+used; a kinetic-energy norm does not make the drift term coordinate-invariant.
 
 The **Drag-Curve Ratio (DgCR)** is the restitution-derived ratio
 $(1-\mathrm{COR})/(1+\mathrm{COR})$; it is not an aerodynamic quantity and
