@@ -20,7 +20,7 @@ page-layout: full
         <h1>AffineDrift</h1>
         <p class="home-hero__subtitle welcome-subtitle">Scientific Notes on Golf Mechanics, Modeling, and Control</p>
         <p class="home-hero__lede welcome-lede">
-          Understand the golf swing through the physics of passive momentum and active muscular control.
+          Understand the golf swing through the physics of passive drift dynamics and declared applied control.
         </p>
         <div class="home-hero__actions">
           <a class="site-button" href="pages/start-here.html">Start Here (5 minutes)</a>
@@ -80,7 +80,7 @@ page-layout: full
         <figure class="big-idea-figure">
           <img src="pics/drift-plus-control-vector-field.svg" width="800" height="420" aria-describedby="big-idea-caption" alt="Drift plus control vector field decomposition showing passive drift and active control push" class="big-idea-graphic" />
           <figcaption id="big-idea-caption">
-            At every instant of the golf swing, total motion splits into two physical parts. Passive mechanics, gravity, and body momentum create the drift. Muscular torque and golfer effort supply active control. Combining passive swing geometry with timed muscular input directs the clubhead into the ball, showing that the swing is not muscular force fighting against nature, but steering within it.
+            At every instant of the golf swing, total motion splits into two parts. Gravity, momentum, passive tissue loads, and constraint reactions create the drift. Declared model inputs (for example, net joint torques) supply the active control push. Combining unforced dynamics with timed control inputs directs the clubhead into the ball, showing that the swing is steering within natural mechanics rather than fighting against them.
           </figcaption>
         </figure>
 
@@ -90,7 +90,7 @@ page-layout: full
             $$\dot{x} = f(x) + G(x)u$$
           </div>
           <p>
-            Here <em>f(x)</em> is the passive drift, representing what unforced mechanics, inertia, and intersegmental couplings do on their own. <em>G(x)u</em> is the control input, representing torques exerted by the golfer.
+            Here <em>f(x)</em> is the passive drift, representing what gravity, inertia, passive loads, and constraints do with zero declared input. <em>G(x)u</em> is the declared applied-control channel (for example, net joint torques in the model).
           </p>
 ```
 
@@ -111,22 +111,22 @@ page-layout: full
         <div class="featured-works-grid">
           <div class="site-card work-card">
             <h3><a href="books/biomechanics-biology-to-systems.html">The Articulated Body</a></h3>
-            <span class="maturity-badge-wrapper"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--experimental">Working Draft</a></span>
+            <span class="maturity-badge-wrapper"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--experimental">Experimental</a></span>
             <p>Multibody kinematic chains, intersegmental dynamics, and recursive algorithms for skeletal motion.</p>
           </div>
           <div class="site-card work-card">
             <h3><a href="books/human-motor-control.html">The Computational Brain</a></h3>
-            <span class="maturity-badge-wrapper"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--planned">Outline Only</a></span>
+            <span class="maturity-badge-wrapper"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--planned">Planned</a></span>
             <p>Neural delay, internal models, predictive estimation, and motor control in high-speed athletic movement.</p>
           </div>
           <div class="site-card work-card">
             <h3><a href="books/control-is-motion.html">The Geometry of Touch</a></h3>
-            <span class="maturity-badge-wrapper"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--planned">Outline Only</a></span>
+            <span class="maturity-badge-wrapper"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--planned">Planned</a></span>
             <p>Contact mechanics, sensory feedback, grip impedance, and constraint interactions during impact delivery.</p>
           </div>
           <div class="site-card work-card">
             <h3><a href="books/tangent-space-methods.html">Forward Dynamics &amp; Motion Matching</a></h3>
-            <span class="maturity-badge-wrapper"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--experimental">Working Draft</a></span>
+            <span class="maturity-badge-wrapper"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--experimental">Experimental</a></span>
             <p>Forward integration, counterfactual simulation, and trajectory matching across nonlinear dynamical models.</p>
           </div>
         </div>
@@ -139,11 +139,11 @@ page-layout: full
         <ul class="entry-list">
           <li class="entry-list__item">
             <a class="entry-list__title" href="articles/The_Physics_of_Golf/quarto/index.html">The Physics of Golf</a>
-            <p class="entry-list__dek"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--available">Working Draft</a> A textbook on how golf motion, forces, and control work. Each chapter keeps its own evidence and review status.</p>
+            <p class="entry-list__dek"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--available">Available</a> A textbook on how golf motion, forces, and control work. Each chapter keeps its own evidence and review status.</p>
           </li>
           <li class="entry-list__item">
             <a class="entry-list__title" href="articles/The_Geometry_of_Motion/quarto/index.html">The Geometry of Motion</a>
-            <p class="entry-list__dek"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--available">Working Draft</a> The geometry of rigid-body motion, including Lie groups. Each chapter states its own scope and review state.</p>
+            <p class="entry-list__dek"><a href="pages/scope-and-limits.html#maturity-key" class="status-badge status-badge--available">Available</a> The geometry of rigid-body motion, including Lie groups. Each chapter states its own scope and review state.</p>
           </li>
           <li class="entry-list__item">
             <a class="entry-list__title" href="articles/proximal_distal_energy_transfer/index.html">Proximal-to-Distal Energy Transfer in the Golf Swing</a>
@@ -191,7 +191,7 @@ page-layout: full
           <li class="entry-list__item"><a class="entry-list__title" href="pages/collaborate.html">Collaborate</a></li>
         </ul>
       
-      <p class="trust-strip-note">Each work carries an explicit maturity state (<span class="status-badge status-badge--available">Available</span>, <span class="status-badge status-badge--experimental">Experimental</span>, or <span class="status-badge status-badge--planned">Planned</span>); public availability <a href="pages/how-to-read.html#publication-states">does not imply peer review or validation</a>. <a href="evidence/claims.html">Read the Evidence</a>.</p>
+      <p class="trust-strip-note">Each work carries an explicit maturity state (<span class="status-badge status-badge--available">Available</span>, <span class="status-badge status-badge--validated">Validated</span>, <span class="status-badge status-badge--experimental">Experimental</span>, <span class="status-badge status-badge--planned">Planned</span>, <span class="status-badge status-badge--deprecated">Deprecated</span>, or <span class="status-badge status-badge--opinion">Opinion</span>); public availability <a href="pages/how-to-read.html#publication-states">does not imply peer review or validation</a>. <a href="evidence/claims.html">Read the Evidence</a>.</p>
 </section>
     </div>
   </div>
