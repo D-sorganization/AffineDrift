@@ -24,23 +24,29 @@ and model robustness from human stability.](figures/fig_transmission_pathway_fra
 ## A Pathway Ledger Rather Than a Single Transfer Number
 
 Let $S$ be the distal subsystem and let every wrench be expressed at a declared
-point in a declared frame. Its mechanical-energy balance is
+point in a declared frame. Take $E_S \equiv T_S$, the kinetic energy of $S$ in
+that frame. The registered pathway audit stores shaft elastic transfer as
+`shaft_energy_release_j`, with $W_{\mathrm{release}} \equiv -\Delta U_{\mathrm{shaft}}$
+so that energy released from shaft strain appears as positive work on the
+subsystem ledger. The kinetic balance is therefore
 
 $$
-\Delta E_S =
+\Delta T_S =
 \underbrace{\int \mathbf{F}_{J}\!\cdot\!\mathbf{v}_{J}\,dt}_{W_{\mathrm{constraint}}}
 +\underbrace{\int \boldsymbol{\tau}_{J}\!\cdot\!\boldsymbol{\omega}_{S}\,dt}_{W_{\mathrm{direct}}}
-+\underbrace{\Delta U_{\mathrm{shaft}}}_{W_{\mathrm{elastic}}}
++\underbrace{W_{\mathrm{release}}}_{\text{shaft release}}
 +\underbrace{W_g}_{\mathrm{gravity}}
 -\underbrace{D}_{\mathrm{dissipation}}
 +\varepsilon_E .
 $$
 
-For the whole constrained model, external control work, gravity (already in
-potential energy), damping, and projection correction replace internal contact
-work, which cancels by ideal-constraint power. The present 4 ms projected
-integrator has a worst normalized work--energy residual of 3.77%; that is a
-declared numerical limitation, not a machine-precision closure claim. The
+For the whole constrained mechanical energy
+$E = T + U_{\mathrm{shaft}} + U_g$, ideal constraints make internal contact work
+cancel pairwise, so
+$\Delta E = W_{\mathrm{ext}} - D + \varepsilon_E$ with gravity already in
+$U_g$. The present 4 ms projected integrator has a worst normalized work--energy
+residual of 3.77% on the pathway audit (0.226 J on the registered scale); that
+is a declared numerical limitation, not a machine-precision closure claim. The
 two-point contact-power identity itself closes to
 $6.40\times10^{-14}$ W. Future strategy comparisons should report both.
 
@@ -77,8 +83,9 @@ face/path error trades against peak hand force. Marker size in the left panel
 increases with peak-force exposure.](figures/fig_robust_speed_variability_pareto.pdf){#fig-robust-speed-variability width=100%}
 
 All four programs remain Pareto-nondominated. Relative to the clock trigger,
-the state trigger increases held-out 10th-percentile delivery speed from 4.94
-to 5.28 m/s, reduces mean face/path proxy error from 9.44 to 2.29 degrees, and
+the state trigger increases the held-out tenth-percentile delivery speed
+($n=15$ perturbation cases; linear interpolation between order statistics) from
+4.94 to 5.28 m/s, reduces mean face/path proxy error from 9.44 to 2.29 degrees, and
 slightly reduces delivery-speed amplification. It also raises the
 90th-percentile peak hand force from 166.9 to 208.1 N. Higher impedance raises
 nominal speed to 5.78 m/s and reduces mean face/path proxy error to 1.26
@@ -107,7 +114,9 @@ the task error it attenuates and the costs it is allowed to increase.
 Movement variability is not synonymous with outcome error. Golf data show that
 marker-trajectory variability need not correlate with ball-speed variability
 [@tucker2013], and uncontrolled-manifold analysis has found greater
-task-compatible variance in more skilled golfers [@morrison2016]. This agrees
+task-compatible variance in more skilled golfers, including under mechanical
+disturbance [@borzelli2018], but excessive co-contraction can also be energetically
+costly in targeted motor tasks [@morrison2016]. This agrees
 with the broader principle of motor abundance: variability parallel to a task
 solution manifold can preserve a salient outcome, whereas variability
 orthogonal to it changes the outcome [@latash2014practice].
@@ -121,11 +130,18 @@ $$
 
 The eight-input, three-outcome local map has rank three and nullity five. Under
 the held-out perturbation covariance, projected task-null variance is 0.1322
-and task-relevant variance is 0.00466, giving the declared local index
+(five null directions, 0.0264 per degree of freedom) and task-relevant variance
+is 0.00466 (three task-sensitive directions, 0.00155 per degree of freedom).
+The declared local index on those totals is
 
 $$
-\Delta V = \frac{V_{\mathcal{N}}-V_{\perp}}{V_{\mathcal{N}}+V_{\perp}}=0.932.
+\Delta V = \frac{V_{\mathcal{N}}-V_{\perp}}{V_{\mathcal{N}}+V_{\perp}}=0.932,
 $$
+
+which is not directly comparable to published uncontrolled-manifold indices that
+normalize by subspace dimension. The eight inputs also carry different physical
+units; the projection depends on the registered input scaling stated in the study
+JSON.
 
 ![The local outcome Jacobian identifies task-sensitive input directions and a
 five-dimensional null space. This is a model input--outcome partition, not
