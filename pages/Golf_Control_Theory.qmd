@@ -14,7 +14,7 @@ Modern golf instruction often describes the swing in terms of muscular positions
 
 Control theory provides a rigorous mathematical framework for studying how active control inputs interact with passive physical dynamics. Rather than viewing the swing as a sequence of static positions held together by constant muscular strain, control theory models the swing as a trajectory through state space driven by two interacting forces:
 
-1. **Passive Drift Dynamics**: What gravity, centrifugal force, Coriolis acceleration, and intersegmental inertial couplings produce on their own.
+1. **Passive Drift Dynamics**: What gravity, Coriolis and centripetal terms in the chosen coordinates, and intersegmental inertial couplings contribute when generalized torques are zero in the model.
 2. **Active Control Inputs**: The joint torques applied by the golfer's musculature through the feet, pelvis, torso, arms, and hands.
 
 ---
@@ -29,10 +29,10 @@ Where:
 
 - $x(t) \in \mathbb{R}^n$ is the state vector describing segment orientations and angular velocities.
 - $f(x)$ is the passive drift vector field, encapsulating unforced mechanics.
-- $G(x) \in \mathbb{R}^{n \times m}$ is the control input matrix mapping joint actuation channels to state accelerations.
+- $G(x) \in \mathbb{R}^{n \times m}$ is the control input matrix mapping joint torques to the state derivative $\dot{x}$.
 - $u(t) \in \mathbb{R}^m$ is the control input vector representing muscular torques.
 
-In this view, the golfer's job is not to generate every millimeter of clubhead velocity through raw brute muscular force. Instead, the golfer provides timed control bursts that steer the passive drift vector field into an optimal impact delivery corridor.
+In this view, the golfer's job is not to generate every millimeter of clubhead velocity through raw brute muscular force. Instead, the golfer provides timed control bursts that steer the passive drift vector field. Whether a particular timing pattern is optimal for impact is model- and task-dependent and is not fixed on this page.
 
 ---
 
@@ -40,20 +40,19 @@ In this view, the golfer's job is not to generate every millimeter of clubhead v
 
 ### 1. Working With the Drift, Not Against It
 
-In the early downswing, passive drift forces and active torques often align to accelerate the club. As the club nears impact, centrifugal tension on the lead arm and shaft increases dramatically. Golfers who attempt to continuously "push" or muscle the club through the ball often fight against the natural geometric acceleration of the double pendulum, leading to early release, casting, and decelerating impact delivery.
+In the early downswing, passive drift forces and active torques often align to accelerate the club. As the club nears impact, inertial coupling and centripetal effects in the chosen coordinates can grow. A common coaching hypothesis is that continuously "pushing" the club through the ball can fight geometric acceleration of a linked model and correlate with early release or deceleration; that chain is not established as universal biomechanics here.
 
-Understanding the balance between drift and control helps coaches diagnose whether a swing fault is caused by inappropriate timing of muscular effort or inefficient kinematic sequencing.
+Understanding the balance between drift and control helps frame whether a swing pattern might involve timing of muscular effort versus reliance on inertial coupling; individual diagnosis still needs measured data and an explicit model.
 
 ### 2. The Drift-Control Ratio (DCR)
 
-The Drift-Control Ratio measures the instantaneous proportion of clubhead acceleration attributable to passive mechanical drift relative to active muscular control:
+The **Drift-Control Ratio (DCR)** compares modeled drift acceleration with **bounded control capacity** in one declared acceleration space (not the share of motion caused by drift, and not muscle effort):
 
-$$\text{DCR}(t) = \frac{\|f_{\text{clubhead}}(x(t))\|}{\|G_{\text{clubhead}}(x(t))u(t)\|}$$
+$$\mathrm{DCR}_{W,\mathcal U}(x)=\frac{\|W a_d(x)\|_2}{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|_2+\varepsilon}$$
 
-- **High DCR**: Motion is predominantly driven by momentum, gravity, and inertial whip.
-- **Low DCR**: Motion is actively driven by direct muscular exertion.
+A separate **realized drift-to-input ratio (DIR)** divides by the achieved input effect $\|W B_a u\|_2$. Vector drift and control add; a norm ratio is not an attribution fraction.
 
-Explore the detailed derivation and experimental findings in the [Drift-Control Ratio (DCR)](../articles/drift-control-ratio.html) monograph.
+Explore derivation, norm choice, and scope limits in the [Drift-Control Ratio (DCR)](../articles/drift-control-ratio.html) monograph ([NOTATION.md](../NOTATION.md)).
 
 ### 3. Wrist Mechanics and Torque Transmission
 

@@ -129,11 +129,23 @@ $$
 $$
 
 $a_d$ and $B_a u$ are the drift and control blocks in one acceleration or
-task-projected space; $W$ supplies the declared scaling or metric;
-$\mathcal U(x)$ is the admissible control set; and $\varepsilon$ is a reported
-regularizer. A full-state norm that mixes position and velocity units is not a
-DCR. A ratio using the realized input rather than bounded authority must be
-called a **realized drift-to-input ratio**, not DCR.
+task-projected space. The **weighting** $W$ is applied on the left:
+$\lVert W z\rVert_2$ is the site-wide convention (row selector, diagonal
+scales, or task Jacobian). When a page instead writes
+$\lVert z\rVert_M=\sqrt{z^{\mathsf T}M z}$ with positive-definite $M$, declare
+$M$ and the equivalence to some $W$ with $\lVert W z\rVert_2=\lVert z\rVert_M$
+(for example $W=L^{\mathsf T}$ from a Cholesky factor $M=LL^{\mathsf T}$).
+$\mathcal U(x)$ is the admissible control set; $\varepsilon$ has the
+denominator's units and is a **reported** regularizer (use $\varepsilon=0$
+when capacity is strictly positive). A full-state norm that mixes position and
+velocity units is not a DCR. The **realized drift-to-input ratio (DIR)** uses the
+achieved input:
+$\lVert W a_d\rVert_2/(\lVert W B_a u\rVert_2+\varepsilon)$; never call that
+quantity DCR. Under a nonlinear coordinate change $q\mapsto\phi(\tilde q)$,
+the control capacity $\sup_{u\in\mathcal U}\lVert W B_a u\rVert_2$ built from
+covariant input effects is chart-consistent, but the drift acceleration
+$a_d=-M^{-1}h$ is chart-dependent unless a covariant (material) acceleration is
+used; a kinetic-energy norm does not make the drift term coordinate-invariant.
 
 The **Drag-Curve Ratio (DgCR)** is the restitution-derived ratio
 $(1-\mathrm{COR})/(1+\mathrm{COR})$; it is not an aerodynamic quantity and
@@ -229,12 +241,12 @@ site registry `data/symbol_references.json` is generated from this table.
 
 ### Screw/Twist Notation
 
-| Notation   | Meaning             | Type       | Components                                                                  |
-| ---------- | ------------------- | ---------- | --------------------------------------------------------------------------- |
-| **ξ**      | Screw/twist element | 6-D vector | $\xi=(\omega_x,\omega_y,\omega_z,v_x,v_y,v_z)^T$ — angular block first      |
-| **V**      | Spatial velocity    | 6-D twist  | $V=(\omega,v)$ — angular velocity, then linear velocity of the reference point |
-| **W**      | Spatial wrench      | 6-D wrench | $W=(\boldsymbol{\mathsf{n}},\mathbf{f})$ — moment about the reference point, then force |
-| $\widehat\xi$ | se(3) hat matrix | 4×4 matrix | $\widehat\xi=\begin{pmatrix}[\omega]_\times&\mathbf{v}\\0&0\end{pmatrix}$ (see screw-theory chapters) |
+| Notation      | Meaning             | Type       | Components                                                                                            |
+| ------------- | ------------------- | ---------- | ----------------------------------------------------------------------------------------------------- |
+| **ξ**         | Screw/twist element | 6-D vector | $\xi=(\omega_x,\omega_y,\omega_z,v_x,v_y,v_z)^T$ — angular block first                                |
+| **V**         | Spatial velocity    | 6-D twist  | $V=(\omega,v)$ — angular velocity, then linear velocity of the reference point                        |
+| **W**         | Spatial wrench      | 6-D wrench | $W=(\boldsymbol{\mathsf{n}},\mathbf{f})$ — moment about the reference point, then force               |
+| $\widehat\xi$ | se(3) hat matrix    | 4×4 matrix | $\widehat\xi=\begin{pmatrix}[\omega]_\times&\mathbf{v}\\0&0\end{pmatrix}$ (see screw-theory chapters) |
 
 **Block order and power pairing:** twists use $(\omega,v)$, wrenches use
 $(\boldsymbol{\mathsf{n}},\mathbf{f})$; $P=\mathsf{W}^T\mathsf{V}$ is instantaneous
@@ -293,16 +305,16 @@ power. Name the reference point and frame (body vs spatial).
 
 ### Golf-Specific Quantities
 
-| Symbol   | Quantity                       | Definition                                                                                                                    | Units                     |
-| -------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| **CoG**  | Center of gravity              | Center of mass                                                                                                                | m (relative to reference) |
+| Symbol   | Quantity                       | Definition                                                                                                                                                                                                                                                                               | Units                     |
+| -------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| **CoG**  | Center of gravity              | Center of mass                                                                                                                                                                                                                                                                           | m (relative to reference) |
 | **COR**  | Coefficient of restitution     | $e=-(\mathbf{v}_b^+-\mathbf{v}_c^+)\cdot\mathbf{n}\;/\;(\mathbf{v}_b^--\mathbf{v}_c^-)\cdot\mathbf{n}$ with unit normal $\mathbf{n}$; signed approach normal speed is negative, so $e\in[0,1]$ for passive, non-superelastic rebounds (no net external energy supplied to the collision) | Dimensionless, 0-1        |
-| **DCR**  | Drift-Control Ratio            | $\lVert W a_d(x)\rVert_2 /(\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon)$; see the canonical definition above | Dimensionless             |
-| **DgCR** | Drag–Curve Ratio (restitution) | $(1-\mathrm{COR})/(1+\mathrm{COR})$; impact diagnostic from COR, not aerodynamic drag                                          | Dimensionless, 0-1        |
-| **e**    | Coefficient of restitution     | Same as COR                                                                                                                   | Dimensionless             |
-| **v_0**  | Ball launch speed              | Ball center-of-mass speed immediately after separation (not the pre-impact approach speed)                                  | m/s                       |
-| **α**    | Launch angle                   | Angle above horizontal                                                                                                        | degrees (°) or radians    |
-| **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                         | RPM or rad/s              |
+| **DCR**  | Drift-Control Ratio            | $\lVert W a_d(x)\rVert_2 /(\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon)$; see the canonical definition above                                                                                                                                                            | Dimensionless             |
+| **DgCR** | Drag–Curve Ratio (restitution) | $(1-\mathrm{COR})/(1+\mathrm{COR})$; impact diagnostic from COR, not aerodynamic drag                                                                                                                                                                                                    | Dimensionless, 0-1        |
+| **e**    | Coefficient of restitution     | Same as COR                                                                                                                                                                                                                                                                              | Dimensionless             |
+| **v_0**  | Ball launch speed              | Ball center-of-mass speed immediately after separation (not the pre-impact approach speed)                                                                                                                                                                                               | m/s                       |
+| **α**    | Launch angle                   | Angle above horizontal                                                                                                                                                                                                                                                                   | degrees (°) or radians    |
+| **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                                                                                                                                                                                    | RPM or rad/s              |
 
 **Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The restitution-based drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
@@ -608,7 +620,7 @@ From NOTATION.md:
 
 ---
 
-**Last Updated:** April 2026  
+**Last Updated:** 2026-11-13  
 **Version:** 1.0  
 **Maintained By:** AffineDrift Documentation Team  
 **Status:** Authoritative Reference ✓

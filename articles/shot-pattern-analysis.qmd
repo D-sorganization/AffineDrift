@@ -34,6 +34,7 @@ format:
     code-tools: false
 categories:
   - impact-ball-flight
+bibliography: ../references/strokes-gained-rigor.bib
 ---
 
 This study compares straight, draw, and fade patterns for modeled driver, seven-iron, and pitching-wedge geometries. For each feasible comparison, nominal face, path, and clubhead speed are solved so the zero-error shot reaches a shared target. Paired delivery variation is then propagated through club–ball impact, ball flight, endpoint dispersion, and a stated scoring scenario.
@@ -70,15 +71,17 @@ The matched nominal point does not make every noisy shot travel the same distanc
 
 ## Selected Conditional Scoring Results
 
-The table reports the range across eight selected zero-lean conditions per club for Draw or Fade minus Straight strokes gained (SG), in strokes per modeled opportunity. These are descriptive ranges, not pooled effects or per-round gains.
+The table reports the range across eight selected zero-lean conditions per club for Draw or Fade minus Straight strokes gained (SG), in strokes per modeled opportunity. Monte Carlo standard errors (MC SE) are derived from the stored 2,000-resample bootstrap intervals as $(\mathrm{upper}_{95} - \mathrm{lower}_{95}) / (2 \times 1.96)$; they describe sampling variation in the simulated populations only. Regenerate with `python3 -m scripts.build_shot_pattern_article_artifacts` from [headline_paired_sg.csv](shot_pattern_analysis/data/headline_paired_sg.csv).
 
-| Club | Draw Minus Straight SG | Fade Minus Straight SG |
-|:--|--:|--:|
-| Driver | +0.000027 to +0.00780 | −0.00146 to +0.000234 |
-| Seven Iron | −0.00136 to −0.000288 | +0.000893 to +0.00258 |
-| Pitching Wedge | +0.000095 to +0.0111 | −0.01097 to +0.000292 |
+{{< include shot_pattern_analysis/data/scoring_table.md >}}
 
 For the eight selected seven-iron conditions, the paired intervals are positive for Fade and negative for Draw. Driver and wedge comparisons have mixed directions, including intervals that span zero. The pattern that scores better therefore depends on the modeled club, delivery variation, and scoring context. Pointwise interval directions are descriptive and are not multiplicity-adjusted discoveries.
+
+## Exclusion and Non-Airborne Rates
+
+The headline comparison cells retain per-pattern accounting. The table summarizes maximum exclusion rates across the eight zero-lean conditions per club; per-cell rows are in [headline_paired_sg.csv](shot_pattern_analysis/data/headline_paired_sg.csv).
+
+{{< include shot_pattern_analysis/data/exclusion_rates.md >}}
 
 ## Dispersion Figures
 
@@ -96,9 +99,9 @@ The accompanying flight plates show 100 verified replays per pattern, selected b
 
 ## Scoring and Model Limits
 
-Driver scoring assumes a flat 400 m tee opportunity with fairway and rough regions. Seven-iron and wedge scoring use hypothetical approach opportunities with a centered green. First ground contact is treated as the final lie; bounce, roll, hazards, wind variation, and elevation are not modeled. The scoring reference is a historical population benchmark with an approximate putting fit, not a current player-specific model.
+Driver scoring assumes a flat 400 m tee opportunity with fairway and rough regions. Seven-iron and wedge scoring use hypothetical approach opportunities with a centered green. First ground contact is treated as the final lie; bounce, roll, hazards, wind variation, and elevation are not modeled. Strokes-to-hole-out uses the historical PGA Tour benchmark in [@SGBroadie2012], transcribed as `broadie-2011-historical-tour-approx` with piecewise-linear interpolation between tabulated distance anchors; putting coefficients use the anchor-reconciled approximation declared in [strokes_gained_baseline.json](shot_pattern_analysis/data/strokes_gained_baseline.json).
 
-Paired bootstrap intervals quantify Monte Carlo sampling variation for the simulated populations. They do not include uncertainty in clubhead properties, impact law, flight physics, course geometry, scoring assumptions, or human delivery distributions. The primitive Gaussian errors and their correlations are sensitivity inputs, not measured player variability. Empirical qualification remains open.
+Paired bootstrap intervals quantify Monte Carlo sampling variation for the simulated populations. They do not include uncertainty in clubhead properties, impact law, flight physics, course geometry, scoring assumptions, or human delivery distributions. Primitive Gaussian delivery errors, standard deviations, and correlation structure are committed in [delivery_noise_profiles.json](shot_pattern_analysis/data/delivery_noise_profiles.json); club and ball geometry assumptions are in [club_parameters.json](shot_pattern_analysis/data/club_parameters.json). These are sensitivity inputs, not measured player variability. Empirical qualification remains open.
 
 Face closure is coupled to delivered loft under the modeled shaft-rotation convention, but that geometric relation alone does not determine carry. The effect depends on club geometry and the complete impact and flight model. A small score difference or narrow sampling interval does not establish a stable advantage in human play.
 
@@ -106,7 +109,7 @@ Face closure is coupled to delivered loft under the modeled shaft-rotation conve
 
 [Read the Full Illustrated Report](shot_pattern_analysis/report.pdf) · [View the Graphical Summary](shot_pattern_analysis/summary.png)
 
-The report records the study methods, saved-data audits, source identities, and figure provenance. It distinguishes supported endpoint populations, common-pattern scoring populations, and paired comparisons; their denominators differ. Unavailable nominal searches are reported as unavailable rather than interpreted as proof of physical impossibility.
+The report records the study methods, saved-data audits, source identities, and figure provenance. [source_manifest.json](shot_pattern_analysis/source_manifest.json) pins the public UpstreamDrift simulation and figure pipeline (release [shot-pattern-phase2-research-2026-10-10](https://github.com/D-sorganization/UpstreamDrift/releases/tag/shot-pattern-phase2-research-2026-10-10)); presentation plates rebuild from archived shot rows per `docs/research/shot_pattern_analysis/phase2/REPRODUCING.md` on that repository. Copied PNG and PDF bytes remain listed in [asset_manifest.json](shot_pattern_analysis/asset_manifest.json). The report distinguishes supported endpoint populations, common-pattern scoring populations, and paired comparisons; their denominators differ. Unavailable nominal searches are reported as unavailable rather than interpreted as proof of physical impossibility.
 
 ## Related Articles
 
