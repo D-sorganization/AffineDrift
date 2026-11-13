@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5627 · WEB-06.3 Sandbox Club Defaults With COM/Inertia; Drift-Plus-Control Caption Units.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5627
+- **Branch:** cursor/5627-sandbox-club-defaults-f3c8
+- **PR:** #5629
+- **Paths:** see #5629
+- **Started:** 2026-11-11
+- **Last verified:** 2026-11-11 (`3673c2e9`; collated from changes/5627-web-06-3-sandbox-club-defaults-with-com.md)
+- **Summary:** WEB-06.3 sandbox club defaults with COM/inertia; drift-plus-control caption units.
+- **Next step:** Independent exact-head review after CI green.
+
 ### DL-#5551 · Freeze the Dated Option A Input Definitions, rad-Space Bound Scope, and Single-Fixture Claim Boundary for Slice 1 Of #5550.
 
 - **State:** in_review
@@ -754,6 +767,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5565 · Add Stdlib Lifecycle Transition Kernel and ADR-0004 per Owner Decision
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5565
+- **Branch:** agy/5565-lifecycle-kernel
+- **PR:** #5582, #5583
+- **Paths:** see #5582
+- **Started:** 2026-11-10
+- **Last verified:** 2026-11-10 (`57adbd68`; collated from changes/5565-result-and-vocabulary-oracles.md)
+- **Summary:** Add stdlib lifecycle transition kernel and ADR-0004 per owner decision
+- **Next step:** Shipped in PR #5582.
 
 ### DL-#2845 · Reject Hosted Runner Routing Guard Runs on All PRs Without Bypass Job
 
@@ -1567,10 +1593,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5209
 - **Branch:** merged via #5236
-- **PR:** #5236, #5237
+- **PR:** #5236, #5237, #5564
 - **Paths:** see #5236
 - **Started:** 2026-10-29
-- **Last verified:** 2026-10-29 (`13988747`; collated from changes/5209-option-a-4b-vendor-reference-trace.md)
+- **Last verified:** 2026-11-10 (`2c82387e`; collated from changes/5209-option-a-a-4-comparison-module-golden-me.md)
 - **Summary:** Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test
 - **Next step:** Shipped in PR #5236.
 

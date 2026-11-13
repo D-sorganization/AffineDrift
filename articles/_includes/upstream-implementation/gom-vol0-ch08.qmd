@@ -1,0 +1,10 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-gom-vol0-ch08}
+
+::: {.callout-note appearance="simple"}
+AffineDrift's checked spatial-inertia and joint-mass-matrix helpers mirror UpstreamDrift's shared spatial layer at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
+
+- **Motion/force cross products and skew:** [`spatial_vectors.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/spatial_algebra/spatial_vectors.py) — same angular-first six-vector layout as this chapter's $[\mathcal{V}\times]$ notation.
+- **Rigid-body inertia transport:** [`spatial.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/model_generation/inertia/spatial.py) — spatial inertia assembly used when building humanoid and club models.
+
+**Convention note:** verify transform direction (child-to-parent versus parent-to-child) when comparing a printed value with an engine trace; UpstreamDrift documents the direction in each wrapper's adjoint call, not only in the six-vector ordering.
+:::
