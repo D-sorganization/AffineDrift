@@ -402,7 +402,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5615
-- **Branch:** cursor/motion-control-stale-companions-5615-cbd0
+- **Branch:** cursor/motion-control-companion-reconcile-35e5
 - **PR:** #5665
 - **Paths:** see #5665
 - **Started:** 2026-11-13
