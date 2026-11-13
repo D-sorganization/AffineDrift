@@ -20,7 +20,7 @@ The product of exponentials (PoE) makes this construction systematic. A joint is
 []{#sec-poe_history}
 []{#laymans-context_box}
 
-Denavit–Hartenberg (D-H) parameters and PoE are alternative descriptions of serial-chain geometry, not competing laws of motion. The original D-H construction provides a systematic relationship between neighboring link frames [@dh1955]. Murray, Li and Sastry and Lynch and Park develop Lie-group and screw-based kinematics [@Murray1994; @Lynch2017]. Both approaches remain useful; neither removes the need to calibrate axes, choose coordinate signs or define the tool.
+Denavit–Hartenberg (D-H) parameters and PoE are alternative descriptions of serial-chain geometry, not competing laws of motion. The original D-H construction provides a systematic relationship between neighboring link frames [@dh1955]. Brockett's product-of-exponentials formula made joint displacements explicit exponentials along fixed screws [@brockett1984]. Murray, Li and Sastry and Lynch and Park develop Lie-group and screw-based kinematics [@Murray1994; @Lynch2017]. Both approaches remain useful; neither removes the need to calibrate axes, choose coordinate signs or define the tool.
 
 D-H frame assignment can be nonunique, especially for parallel or coincident axes. This is a parameterization issue, not proof that the physical robot is singular. PoE can simplify those assignments by storing joint axes in one reference frame. Its numerical matrices still depend on that frame. “Coordinate-free” should not be used to imply that recorded screw coordinates are absolute physical quantities.
 
@@ -664,6 +664,8 @@ For small configuration uncertainty, a local covariance estimate is $\Sigma_y\ap
 For golf, identify the face point, orientation and collision event whose delivery matters. A posture that produces favorable clubhead speed can change face-angle sensitivity, balance, hand reaction forces or the remaining correction horizon. A flexible shaft or compliant grip adds internal coordinates and dynamics, so a rigid PoE chain is one level of the model, not a replacement for those effects. For humanoid manipulation, the corresponding tasks include tool pose, load support and contact feasibility.
 
 A defensible investigation therefore compares models in stages: verify rigid forward kinematics against independent geometry; validate coordinate/frame calibration; check measured point and angular velocities; add closure and base motion; then introduce inertia, actuation and compliance for force or acceleration claims. Change one declared assumption at a time and test held-out movements or perturbations. The strength of PoE is the consistency it brings to these maps, not a claim that an elegant pose formula explains the entire swing.
+
+{{< include ../../_includes/upstream-implementation/gom-vol0-ch09.qmd >}}
 
 ## Chapter Summary and Further Reading
 []{#sec-ch9_summary}[]{#sec-ch9_further_reading}

@@ -1,0 +1,227 @@
+---
+description: "Motion-Matching Runtime Reference: forward dynamics matching operational chapter (local draft; UpstreamDrift gates, pipeline, and contact law)."
+css: ../../css/forward-dynamics-matching.css
+---
+
+# Motion-Matching Runtime Reference
+
+**Evidence snapshot:** UpstreamDrift commit [`d7c7d07add0d7407a5a3376d5fe4a97aee9112a0`](https://github.com/D-sorganization/UpstreamDrift/tree/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0). Numerical thresholds below are transcribed from [`acceptance.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/acceptance.py) (`AcceptanceGates`, lines 79–132). Where a prose handoff disagrees with that module, the code wins until MS-100 versions the contract.
+
+Earlier chapters develop forward matching theory and historical receipts. This reference states the programme a user actually runs: horizons, gates, the two-window native fit, the ground-support pipeline, the shared contact law, control layouts, gradient backends by lane, and the vocabulary of receipts and lanes.
+
+## 1. Horizons G1, G2, and G3
+
+The evaluator defines three horizons in [`Horizon`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/acceptance.py):
+
+| Horizon | Time span (driver) | Role |
+| ------- | ------------------ | ---- |
+| **G1** | 0–0.85 s | Top of backswing / early transition dynamic milestone |
+| **G2** | Through ~1.20 s (impact band) | Ground-support dynamic replay with floating root |
+| **G3** | Full capture (driver 1.814 s / iron 1.827 s) | Professional release and dual-club coverage |
+
+Minimum durations enforced on receipts: G1 $\ge 0.85$ s, G2 $\ge 1.20$ s, G3 $\ge 1.80$ s (`g1_min_duration_s`, `g2_min_duration_s`, `g3_min_duration_s`).
+
+**Entry point:** [`evaluate`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/acceptance.py) (line 1349) returns an `AcceptanceVerdict` for a receipt dict at the chosen horizon.
+
+## 2. Acceptance Gates and Thresholds
+
+[`AcceptanceGates`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/acceptance.py) holds frozen SI thresholds. Kinematic RMSE gates use metres unless noted.
+
+### 2.1 Kinematic RMSE by Horizon
+
+| Gate field | G1 | G2 | G3 (driver) | G3 (iron) |
+| ---------- | -- | -- | ----------- | --------- |
+| `whole_marker_rmse_m` | 0.025 | 0.040 | 0.060 | 0.095 |
+| `early_marker_rmse_m` | 0.012 | 0.015 | 0.020 | 0.020 |
+| `terminal_marker_rmse_m` | 0.035 | 0.050 | 0.080 | 0.080 |
+| `club_marker_rmse_m` | 0.060 | 0.075 | 0.100 | 0.100 |
+| `pelvis_yaw_rmse_rad` | 0.05236 (~3°) | 0.08727 (~5°) | 0.10472 (~6°) | 0.10472 (~6°) |
+
+When a receipt reports `pelvis_yaw_error_pct` instead of radians, G1 compares against **5.0 %** (`g1_pelvis_yaw_error_pct`).
+
+### 2.2 Shared Physical Limits
+
+| Quantity | Threshold | Default / note |
+| -------- | --------- | -------------- |
+| Max normal force | $3.0 \times m g$ | `max_normal_force_bw_multiplier` $\times$ body mass (default 80 kg) $\times$ $g$ |
+| Max penetration | 0.010 m | 10 mm |
+| Max closure residual (translation) | 0.005 m | 5 mm |
+| Max closure residual (rotation) | 0.05 rad | |
+| Weight fraction | 0.20–3.00 | on vertical GRF / weight |
+| Inside support polygon | $\ge 0.85$ of frames | `min_inside_support_polygon_fraction` |
+| Max collocation defect | 0.005 m | 5 mm |
+| Max stabilized marker RMSE | 0.040 m | low-gain tracking error |
+| Max friction coefficient | 0.80 | |
+| Max actuator torque | 200 N·m | |
+| Max root residual | $10^{-3}$ N·m | |
+| Min club marker coverage | 0.80 | fraction of club markers present |
+| Max integrator rtol | $10^{-5}$ | declared relative tolerance |
+
+Native kinematic-fit lanes (`native`, `drake_native_fit`, `crocoddyl_native_fit`) mark contact-audit gates **not applicable** (`NATIVE_FIT_LANES`).
+
+### 2.3 Metric Definitions
+
+Standard receipt metrics are computed in [`tour_metrics.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/tour_metrics.py):
+
+- **Whole:** RMS over all valid tracked markers and times.
+- **Early:** RMS for $t \le 0.60$ s (`early_cutoff_s` default).
+- **Terminal:** RMS over the last **10 %** of capture frames (`terminal_ratio` default 0.10), full-marker set (head cluster disclosed separately under MS-61).
+- **Club cluster:** RMS over markers in the club segment (Marker_2 / Marker_3 family) across the trial.
+- **Pelvis yaw:** RMS of waist-marker heading error in the transverse plane.
+
+The two-window optimiser’s internal scoring uses a **last-frame** terminal residual with weight $25^2$ in the objective (see §3); gates still compare the receipt’s stored `terminal_marker_rmse_m`, which may come from `compute_shared_metrics` or replay qualification.
+
+### 2.4 Gate Statuses and Verdict Rule
+
+Each gate has status: `passed`, `failed`, `missing`, `not_applicable`, or `disclosed` ([`GateStatus`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/acceptance.py)).
+
+[`is_verdict_accepted`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/acceptance.py) returns true only when:
+
+1. At least one gate **passed**, and
+2. Every gate is in `{passed, disclosed, not_applicable}` — no `failed` or `missing`.
+
+As of the [matched swing programme status](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/docs/development/matched_swing_program/README.md) on the pinned commit, **no committed `evidence/matched/*` receipt on main passes G1**; headline candidates (Simscape run-102, Pinocchio Crocoddyl, MuJoCo tracking) are explicitly **REJECTED** with documented reasons.
+
+## 3. Two-Window Native Optimisation (Run 102)
+
+The canonical bounded trial is documented under [`two_window_fit_9967_102`](https://github.com/D-sorganization/UpstreamDrift/tree/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/docs/development/simscape_tour_matching/native_evidence/two_window_fit_9967_102). Implementation: [`multi_shooting_fit.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/multi_shooting_fit.py), [`two_window_fit.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/two_window_fit.py).
+
+**Decision variables:** 81 increments in a 27-dimensional native control chart (`config.json` `chart.dimension`: 27). Bernstein degree 6 with only controls from index `first_control: 4` onward free (B4–B6 increments per coordinate), boxed at $\pm 3.0$ N or N·m relative to the parent candidate.
+
+**Windows:** $[0, 0.6]$ s and $[0.6, 0.85]$ s with one 27-D shooting node at the boundary (`shared_boundary_policy: once`).
+
+**Objective** (marker terms, from [`compute_marker_metrics`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/two_window_fit.py)):
+
+$$
+J = \sum \|e\|^2 + w_{\mathrm{term}}^2 \sum \|e_{\mathrm{last}}\|^2 + (\alpha \,\Delta u_{\mathrm{yaw}})^2 + J_{\mathrm{effort}}
+$$
+
+Defaults in run-102 config: $w_{\mathrm{term}} = 25$, pelvis-yaw weight $\alpha = 40$, effort penalty weight $0.01$ (reference force 100 N, torque 20 N·m).
+
+**Constraints:** Projected continuity equalities at the window join with scaled defect tolerance $10^{-4}$ and equality tolerance $10^{-7}$.
+
+**Solver:** SLSQP with analytic ODE sensitivities (`solver: slsqp`); primal integrator rtol $10^{-11}$, atol $10^{-13}$; sensitivity rtol $10^{-10}$.
+
+**Recorded result** (handoff, not acceptance): whole 20.267 mm, early 9.995 mm, terminal 40.303 mm (fails G1 35 mm gate), club cluster 8.389 mm, pelvis-yaw error 0.610 % — see [03_historical_lessons](03_historical_lessons.html).
+
+## 4. Ground-Support Pipeline
+
+**CLI entry:** [`pipeline/cli.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/pipeline/cli.py) (`build_parser`, line 168). Constants: [`pipeline/constants.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/pipeline/constants.py).
+
+### 4.1 Stages
+
+Typical `--out` run:
+
+1. **Address / calibration** — static seeds, hip calibration, leg bounds, calibrated address (`solve_address_stage`, `record_calibrated_address`).
+2. **IK** — full-body inverse kinematics on the capture (`pipeline` IK modules); produces `ik.marker_rms_m` in the receipt.
+3. **Reference smoothing** — zero-phase low-pass on the IK track at **`REFERENCE_CUTOFF_HZ = 12.0` Hz** before dynamics.
+4. **Dynamics replay** — computed-torque tracking of the smoothed reference with **unactuated floating root** ([`pipeline/dynamics.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/pipeline/dynamics.py), line 227). Reported `dynamics.marker_rms_m` is **feedback-tracked**, not open-loop torque replay.
+5. **Optional filters** — `--shooting-fit`, `--zmp-filter`, `--centroidal-filter` refine or qualify the tracked trajectory.
+6. **Receipt** — `receipt.json` aggregates address, IK, dynamics, controller metadata, and gate evaluation.
+
+### 4.2 Computed-Torque Controller
+
+From [`pipeline/constants.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/pipeline/constants.py) and [`tracking_controller.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/tracking_controller.py):
+
+- Natural frequency **`OMEGA_RAD_S = 30` rad/s** (critical-style PD gains from $\omega$ and damping).
+- Balance gains **`BALANCE = (60, 15)`** on horizontal CoM regulation.
+- Tracking backend **`--tracking {kkt, mj-inverse, wrench-qp}`** (default KKT computed torque).
+- Trajectory optimiser option **`--trajectory-optimiser mjx-knots`** for the JAX knot path.
+
+### 4.3 Selected CLI Flags
+
+| Flag | Effect |
+| ---- | ------ |
+| `--static-seeds` | Qualified upper/lower attachment calibration before IK |
+| `--shooting-fit` | Optional shooting refinement on the tracked lane |
+| `--zmp-filter` | ZMP / support-polygon feasibility filter on the finish |
+| `--centroidal-filter` | Centroidal feasibility v2 after ZMP filter |
+| `--preload-feet` | Preload contact before dynamics (documented per lane) |
+
+Read `receipt.json` fields under `address`, `ik`, `dynamics`, `contact_audit`, and top-level `gates` after [`evaluate`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/acceptance.py).
+
+## 5. Shared Contact Law
+
+Engines apply one explicit law in [`contact_law.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/contact_law.py) / [`contact_kernel.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/contact_kernel.py), bypassing stock engine contacts for parity harnesses.
+
+**Sign convention:** penetration $\delta > 0$ when penetrating; normal velocity $v_n = \hat{n}\cdot v_{\mathrm{rel}} = -\dot{\delta}$ (negative when deepening).
+
+**Normal force** (Hunt–Crossley form, active only if $\delta > 0$):
+
+$$
+f_n = k\,\delta\,(1 + c\,\dot{\delta}) \quad\text{(clipped to } f_n \ge 0\text{)}
+$$
+
+**Tangential friction** (regularised Coulomb + Stribeck + viscous):
+
+$$
+|f_t| = \mu(v_t)\, f_n \,\tanh\!\left(\frac{|v_t|}{v_{\mathrm{tr}}}\right), \quad
+\mu(v_t) = \mu_d + (\mu_s - \mu_d)\exp\!\left(-\left(\frac{|v_t|}{v_{\mathrm{tr}}}\right)^2\right) + \mu_v |v_t|
+$$
+
+Pipeline default stiffness: **`CONTACT_STIFFNESS_N_M = 2.0\times 10^5` N/m** ([`pipeline/constants.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/pipeline/constants.py)). Full parameter names and units live in [`ContactParameters`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/contact_law.py).
+
+## 6. Control Layout: A..G and Bernstein
+
+**Canonical Python layout** ([`polynomial_torque.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/polynomial_torque.py)): seven columns per joint, **lowest power first** $[A,B,C,D,E,F,G]$ for $\tau(t) = A + Bt + \cdots + Gt^6$.
+
+**Simscape native layout** ([`constrained_sextic.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/constrained_sextic.py)): descending powers $[A,B,C,D,E,F,G]$ for $\tau(t) = At^6 + Bt^5 + \cdots + G$.
+
+Conversion on normalized time $s = t/T_{\mathrm{full}}$:
+
+$$
+p_j = \mathrm{simscape}_{6-j}\, T_{\mathrm{full}}^{\,j}, \qquad
+A = p_6 / T_{\mathrm{full}}^6,\ \ldots,\ G = p_0
+$$
+
+Bernstein controls for shooting fits use [`piecewise_polynomial.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/piecewise_polynomial.py) and [`prefix_fit.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/prefix_fit.py); [`validate_theta`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/validate_theta.py) enforces layout at API boundaries. Passing coefficients in the wrong order produces a silently wrong swing.
+
+## 7. Gradient and Sensitivity Backends by Lane
+
+| Lane / task | Primary gradient source | Upstream anchor |
+| ----------- | ------------------------ | --------------- |
+| Simscape / Pinocchio native two-window | Analytic ODE sensitivities + SLSQP | `multi_shooting_fit.py`, run-102 config |
+| Ground-support shooting fit | Discrete RK4 sensitivities | `full_body_step.py` |
+| MJX knot optimiser | JAX / MJX autodiff | `mjx_knot_optimiser.py` |
+| Pipeline IK / Bernstein least squares | SciPy TRF / LM finite differences | pipeline IK modules |
+| Crocoddyl native fit | Pinocchio analytic RNEA / ABA | `optimization/crocoddyl_backend.py` |
+| Drake AutoDiff fit | Drake AutoDiff integration | `fit_swing_autodiff.py` |
+
+This table supplements the generic discussion in [10_gradients](10_gradients.html); it does not certify every path on every engine.
+
+## 8. Engine and Lane Status (Pinned Commit)
+
+Summarised from the programme README [§3 status matrix](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/docs/development/matched_swing_program/README.md) (2026-09-18 hand-written reset). All listed G1 candidates are **REJECTED** under `acceptance.py`.
+
+| Engine | Best G1-horizon whole RMS (quoted) | Verdict / blocker |
+| ------ | ---------------------------------- | ----------------- |
+| **Simscape** | 20.3 mm (run-102, 0–0.85 s) | REJECTED: terminal 40.3 mm $>$ 35 mm gate |
+| **Pinocchio** | 46.8 mm (Crocoddyl RK45 candidate) | REJECTED: early / terminal / yaw / penetration |
+| **MuJoCo** | 74.6 mm tracking variant | REJECTED; replay path exists for cross-engine checks |
+| **Drake** | IK ~176 mm (FB-4) | No accepted G1; needs shared fitter on plant |
+| **OpenSim** | Moco rungs at calibration floor | No accepted G1 |
+| **MyoSuite** | Kinematic replay only | Experimental; fail-closed provider |
+
+Lanes include `native`, `drake_native_fit`, `crocoddyl_native_fit`, `ground_support`, `matched`, and engine-specific tags recorded on each receipt’s `lane` field ([`ledger.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/ledger.py)).
+
+## 9. Programme Vocabulary
+
+| Term | Meaning |
+| ---- | ------- |
+| **Receipt** | JSON artifact for one run (IK, dynamics, gates, hashes); evaluated by `evaluate`. |
+| **Ledger** | Committed index `reports/matched_swing_ledger.json` of receipt paths and metadata. |
+| **Lane** | Named programme path (`native`, `ground_support`, …) determining which gates apply. |
+| **Candidate** | `MatchedSwingCandidate` control/state package hashed for replay ([`candidate.py`](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/shared/python/motion_matching/candidate.py)). |
+| **Gate** | One thresholded check with `GateResult` (name, status, threshold, measured). |
+| **Verdict** | `AcceptanceVerdict`: horizon, `is_physically_accepted`, aggregated `gates`. |
+| **Factor** | One documented change between parent and child run (continuation discipline). |
+| **Open-loop replay** | Integrate from initial state without feedback tracking of measured poses. |
+| **Stabilized replay** | Low-gain tracking replay; compared via `max_stabilized_marker_rmse_m`. |
+
+Extended definitions appear in the [site glossary](../../pages/glossary.html#def-acceptance-gate).
+
+## Further Reading
+
+- [Lessons From Historical Fits](03_historical_lessons.html) — Run-102 numbers and failure interpretation.
+- [Constraints, Contact, and Hybrid Events](09_contact.html) — Event-time sensitivity and hybrid formulations.
+- [Software Architecture and Test Contracts](23_software_contracts.html) — Test hooks named in upstream receipts.

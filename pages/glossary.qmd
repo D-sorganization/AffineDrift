@@ -56,6 +56,18 @@ A rigorous, accessible glossary bridging intuitive plain-language concepts, math
 
 :::
 
+### Acceptance Gate {#acceptance-gate}
+
+::: {.glossary-entry id="def-acceptance-gate"}
+
+**Plain Language:** A numbered check that compares one measured quantity from a motion-matching run against a fixed limit.
+
+**Technical Definition:** In UpstreamDrift, each gate is a GateResult with name, threshold, measured value, and status (passed, failed, missing, not_applicable, or disclosed). Horizons G1, G2, and G3 select which kinematic RMSE and physical limits apply.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ### Aerodynamic Drag {#aerodynamic-drag}
 
 ::: {.glossary-entry id="def-aerodynamic-drag"}
@@ -152,7 +164,7 @@ Use velocities in a declared inertial frame. For rigid-body spin about its cente
 
 **Plain Language:** How quickly an object rotates around an axis and the direction of that axis.
 
-**Technical Definition:** The axial vector omega describing the instantaneous rate and axis of rotation of a rigid body.
+**Technical Definition:** The axial vector $\omega$ describing the instantaneous rate and axis of rotation of a rigid body; direction follows the right-hand rule (thumb along $\omega$, fingers curl in the direction of rotation). Cross products $\mathbf{u}\times\mathbf{v}$ use the same rule (curl fingers from $\mathbf{u}$ toward $\mathbf{v}$; thumb gives the result).
 
 **Symbols / Notation:** $\omega$
 
@@ -187,6 +199,18 @@ Use velocities in a declared inertial frame. For rigid-body spin about its cente
 :::
 
 ## C {#c}
+
+### Candidate (Matched Swing) {#matched-swing-candidate}
+
+::: {.glossary-entry id="def-matched-swing-candidate"}
+
+**Plain Language:** A saved control package that defines one attempted matched swing, ready for replay and gate evaluation.
+
+**Technical Definition:** A MatchedSwingCandidate records actuation coefficients, provenance hashes, and lane metadata. Receipts reference candidates by hash; acceptance calls evaluate on the receipt.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
 
 ### Center of Mass {#center-of-mass}
 
@@ -236,7 +260,7 @@ Use velocities in a declared inertial frame. For rigid-body spin about its cente
 
 **Plain Language:** The ratio of how fast contacting bodies separate to how fast they approached, measured along the same contact normal.
 
-**Technical Definition:** $e=-v_{\rm rel,n}^+/v_{\rm rel,n}^-$, where signed relative contact-point normal velocities use one declared normal before and after collision, with $v_{\rm rel,n}^-<0$. This differs from ball speed divided by incoming clubhead speed.
+**Technical Definition:** $e=-v_{\rm rel,n}^+/v_{\rm rel,n}^-$, where signed relative contact-point normal velocities use one declared normal before and after collision, with $v_{\rm rel,n}^-<0$. Equivalently $e=-((\mathbf{v}_b^+-\mathbf{v}_c^+)\cdot\mathbf{n})/((\mathbf{v}_b^--\mathbf{v}_c^-)\cdot\mathbf{n})$ (NOTATION.md). This differs from ball speed divided by incoming clubhead speed.
 
 **Symbols / Notation:** $e$, $COR$
 
@@ -492,13 +516,49 @@ Use $\dot q=N(q)v$, any internal-state equations, and compatible constraints. De
 
 ## G {#g}
 
+### G1 Horizon {#g1-horizon}
+
+::: {.glossary-entry id="def-g1-horizon"}
+
+**Plain Language:** The first dynamic acceptance window, from address through early transition (about 0.85 s on the driver).
+
+**Technical Definition:** Horizon.G1 in acceptance.py. Default whole-marker RMSE limit 25 mm, early 12 mm, terminal 35 mm, club cluster 60 mm.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
+### G2 Horizon {#g2-horizon}
+
+::: {.glossary-entry id="def-g2-horizon"}
+
+**Plain Language:** The ground-support dynamic window through the impact band (about 1.20 s).
+
+**Technical Definition:** Horizon.G2 with stricter whole and terminal RMSE limits than G1; includes floating-root computed-torque replay metrics.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
+### G3 Horizon {#g3-horizon}
+
+::: {.glossary-entry id="def-g3-horizon"}
+
+**Plain Language:** Full capture acceptance for professional release (driver about 1.814 s, iron about 1.827 s).
+
+**Technical Definition:** Horizon.G3. Whole-marker limit 60 mm (driver) or 95 mm (iron). Requires dual-club and cross-engine evidence in the programme specification.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ### Generalized Coordinates {#generalized-coordinates}
 
 ::: {.glossary-entry id="def-generalized-coordinates"}
 
 **Plain Language:** Variables used to describe a system's configuration, such as joint angles or shaft-deformation amplitudes.
 
-**Technical Definition:** A minimal set $q$ provides local coordinates on the configuration manifold. Redundant representations, such as unit quaternions, require their constraints; a single nonsingular minimal chart need not cover every configuration.
+**Technical Definition:** A minimal set $q$ provides local coordinates on the configuration manifold. Redundant representations, such as unit quaternions (Hamilton algebra, scalar-first storage, active rotations — see NOTATION.md), require their constraints; a single nonsingular minimal chart need not cover every configuration.
 
 **Symbols / Notation:** $q$, $q_i$
 
@@ -670,6 +730,18 @@ Here $Q^{\rm nc}$ contains loads not already represented by $V$; constraints and
 
 :::
 
+### Lane (Motion Matching) {#motion-matching-lane}
+
+::: {.glossary-entry id="def-motion-matching-lane"}
+
+**Plain Language:** A named programme path that decides which optimiser, plant, and gates apply to a run.
+
+**Technical Definition:** Receipt field lane (for example native, ground_support, drake_native_fit). Native-fit lanes skip contact-audit gates as not applicable.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ### Launch Angle {#launch-angle}
 
 ::: {.glossary-entry id="def-launch-angle"}
@@ -681,6 +753,18 @@ Here $Q^{\rm nc}$ contains loads not already represented by $V$; constraints and
 **Symbols / Notation:** $\theta_{launch}$
 
 [Read in Context &rarr;](../articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Ledger (Matched Swing) {#matched-swing-ledger}
+
+::: {.glossary-entry id="def-matched-swing-ledger"}
+
+**Plain Language:** The committed catalogue of motion-matching receipt paths and headline status.
+
+**Technical Definition:** reports/matched_swing_ledger.json, maintained via ledger.py. Status tables are generated from this file.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
 
 :::
 
@@ -908,6 +992,18 @@ Here $r$ is position relative to that point and $\mathbf 1$ is the identity matr
 
 :::
 
+### Receipt (Motion Matching) {#motion-matching-receipt}
+
+::: {.glossary-entry id="def-motion-matching-receipt"}
+
+**Plain Language:** A JSON record of one pipeline run, including IK, dynamics, hashes, and gate outcomes.
+
+**Technical Definition:** Ground-support and native runs write receipt.json. acceptance.evaluate(receipt) is the sole authority for pass or fail.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ## S {#s}
 
 ### Smash Factor {#smash-factor}
@@ -1021,6 +1117,18 @@ Here $r$ is position relative to that point and $\mathbf 1$ is the identity matr
 **Symbols / Notation:** $f(x)$
 
 [Read in Context &rarr;](../articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Verdict (Acceptance) {#acceptance-verdict}
+
+::: {.glossary-entry id="def-acceptance-verdict"}
+
+**Plain Language:** The overall pass-or-reject decision for a receipt at one horizon.
+
+**Technical Definition:** AcceptanceVerdict bundles horizon, is_physically_accepted, status string, and GateResult rows. Accepted requires is_verdict_accepted true on that list.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
 
 :::
 

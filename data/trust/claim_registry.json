@@ -107,7 +107,7 @@
         {
           "accessible_summary": {
             "modal_strength": "bounded",
-            "text": "The pointwise ZTCF family asks what would happen if the muscles stopped pushing right now, inside the model. It shows how much of the motion is carried by momentum, gravity, and linkage geometry alone, within the declared model. It does not show what a golfer's muscles were actually doing or prove that one release mechanism exists."
+            "text": "The pointwise ZTCF family asks what happens right now if the model's declared applied control is set to zero at a fixed state. It shows how much of the instantaneous acceleration comes from momentum, gravity, passive loads, and constraint geometry within the declared model. It does not measure human muscle activity or prove that one release mechanism exists."
           },
           "claim_id": "ad-ztcf-001",
           "critique_status": "not_reviewed",
@@ -158,23 +158,23 @@
         {
           "accessible_summary": {
             "modal_strength": "bounded",
-            "text": "ZVCF asks what torque would be needed just to hold a position still, with no motion at all. It isolates gravity and posture from momentum and swing-specific forces, within the declared model. It does not measure the torque present during the real, moving swing."
+            "text": "ZVCF names the pointwise control acceleration $M^{-1}\\tau$ (equivalently $M^{-1}Bu$) evaluated at zero generalized velocity with gravity excluded from the control operand, per NOTATION.md. It is not the separate zero-velocity bias acceleration $-M^{-1}h(q,0,\\cdot)$ and it is not an inverse-dynamics holding torque."
           },
           "claim_id": "ad-zvcf-001",
           "critique_status": "not_reviewed",
-          "data_provenance": "No participant dataset is used; the governing evidence is the declared static equilibrium model and its executable regression tests.",
+          "data_provenance": "No participant dataset is used; the governing evidence is the declared affine plant, NOTATION.md, and executable notation regression tests.",
           "evidence_class": "computational",
           "falsifiers": [
-            "A declared static configuration and parameter set for which the required holding torque cannot be reproduced from the stated inertial and gravitational model.",
-            "The ZVCF baseline for a fixed configuration changes under re-evaluation of the same declared model and parameters."
+            "A declared achieved state at which the documented ZVCF control operand $M^{-1}\\tau$ disagrees with the plant affine map at $\\dot q=0$ under the stated conventions.",
+            "Site prose or generated trust panels describe ZVCF as a zero-input configuration bias or as a static holding torque rather than the control operand."
           ],
           "limitations": [
-            "ZVCF is a property of a declared static configuration, not a measurement of in-motion torque, which also includes inertial and Coriolis contributions.",
-            "ZVCF values are frame- and convention-dependent and must be interpreted with the declared gravitational and coordinate convention.",
-            "A static baseline does not, by itself, explain how a golfer or model trajectory arrives at the evaluated configuration."
+            "ZVCF is a pointwise diagnostic at a fixed achieved state; forward-integrated ZTCF and ZVCF trajectories do not generally sum.",
+            "Gravity exclusion from the control operand is a protocol convention; the drift operand still carries the full bias load $h(q,\\dot q,z;p)$.",
+            "Reaction-level ground models may define a distinct zero-velocity reaction evaluation that must not be abbreviated as the site-wide ZVCF control operand."
           ],
-          "next_validation_gate": "Run preregistered static-posture studies that compare declared ZVCF holding-torque predictions against independently measured postural force-plate or load-cell baselines.",
-          "population": "Declared multibody models evaluated at fixed configurations; no golfer population is inferred.",
+          "next_validation_gate": "Re-run notation guard tests and regenerate trust panels after any edit to NOTATION.md ZVCF wording or claim ad-zvcf-001.",
+          "population": "Declared multibody and reduced-order plants; no golfer population is inferred.",
           "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
           "reviewed_on": "2026-10-13",
           "software_provenance": [
@@ -188,9 +188,9 @@
           "technical_anchor": "claim-ad-zvcf-001",
           "technical_claim": {
             "modal_strength": "bounded",
-            "text": "For a declared multibody model at a fixed configuration, the Zero-Velocity Counterfactual (ZVCF) evaluates the generalized forces or joint torques required to hold that configuration with all generalized velocities set to zero, isolating the gravitational and postural contribution at that configuration from inertial and Coriolis effects. ZVCF values are a property of the declared static configuration and model parameters; they do not establish the torque present during actual motion, nor a causal account of how a golfer reaches that configuration."
+            "text": "For second-order affine plants $M(q)\\ddot q + h(q,\\dot q,z;p)=B(q)u$, the Zero-Velocity Counterfactual (ZVCF) names the pointwise control acceleration $a_{\\mathrm{ZVCF}}(q,z;p;\\tau)=M(q)^{-1}\\tau$ evaluated at $\\dot q=0$ with gravity omitted from the control operand so gravity is counted once in the pointwise ZTCF (drift) term. The distinct diagnostic $-M(q)^{-1}h(q,0,z;p)$ is the zero-velocity baseline acceleration and must not be abbreviated as ZVCF."
           },
-          "title": "The Zero-Velocity Counterfactual Isolates a Static Gravitational and Postural Baseline Within a Declared Model",
+          "title": "Pointwise ZVCF Names the Control Operand $M^{-1}\\tau$ at Zero Velocity",
           "uncertainty": {
             "statement": "Model-form, mass-distribution, and measurement uncertainty in the declared static configuration are not quantified by the ZVCF construction itself.",
             "status": "unquantified"
@@ -610,6 +610,63 @@
         }
       ],
       "page_id": "ad-impact-interval-conservation",
+      "source_path": "articles/core-theses-registry.qmd"
+    },
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "On one fixed MuJoCo swing-and-recovery simulation fixture, an offline correction-authority check sometimes flags earlier than a tracking-error threshold on unrecoverable trials, but it also flags every recovered trial in this bundle. That pattern does not show a ready-to-use detector for real swings or humanoids."
+          },
+          "claim_id": "ad-dcr-003",
+          "critique_status": "not_reviewed",
+          "data_provenance": "No participant dataset is used; the governing evidence is the vendored deterministic trace, the recomputed comparison metrics, and executable regression tests.",
+          "evidence_class": "computational",
+          "falsifiers": [
+            "The vendored eight-trial fixture reproduces materially different detection rates or lead-time summaries under the committed comparison JSON.",
+            "The rad-space affine correction-authority bound automatically certifies the separate metre-space task readout on this fixture without an explicit, validated mapping."
+          ],
+          "limitations": [
+            "Results apply only to the vendored rad-space fixture, horizon, torque cap, and perturbation grid.",
+            "Metre-space distal-tip pass/fail is a separate readout; nonlinear forward kinematics does not transfer the rad-space bound.",
+            "A null or negative preregistered prediction is not a coaching prescription or population claim."
+          ],
+          "next_validation_gate": "Assessment Board review before any public correction-authority claim; additional fixtures require a new preregistration amendment.",
+          "population": "Declared MuJoCo swing-and-recovery simulation trials only; no humanoid or golfer population is inferred.",
+          "review_commit": "bcd29492bda66c436137c7e9e3f956a7b41b7ae4",
+          "reviewed_on": "2026-11-10",
+          "software_provenance": [
+            {
+              "commit": "bcd29492bda66c436137c7e9e3f956a7b41b7ae4",
+              "path": "src/affine_control/option_a_comparison.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "db0c8c524d66204292aa01b8ffec4aabadad3136f8f2930d31881a3068b14d34"
+            },
+            {
+              "commit": "bcd29492bda66c436137c7e9e3f956a7b41b7ae4",
+              "path": "tests/test_option_a_comparison.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "90328e57340458e052c4964c3e75268122cf85473a118c8e2715d7e1c2257b38"
+            }
+          ],
+          "technical_anchor": "claim-ad-dcr-003",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "On the vendored humanoid Option A trace, correction-authority margins from the offline LTV Gramian evaluator flag all eight trials, yielding unit false-positive rate on recovered trials despite positive median lead-time advantage on the two unrecoverable trials. The comparison is simulation-only and does not establish finite-horizon reachability in metre space."
+          },
+          "title": "Option A Fixture Comparison Records an Early-Flag Advantage With Spurious Recovered-Trial Flags",
+          "uncertainty": {
+            "statement": "Model-form, linearization, and task-coordinate uncertainty are not fully propagated beyond the declared singularity gate counts.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "The vendored trace bytes, source-record digest, and committed comparison JSON match the recorded fixtures.",
+            "Detectors use the preregistered rad-space task direction, recovery threshold, and torque bound declared in the analysis contract."
+          ]
+        }
+      ],
+      "page_id": "ad-humanoid-option-a-comparison",
       "source_path": "articles/core-theses-registry.qmd"
     }
   ],
