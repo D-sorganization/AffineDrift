@@ -329,6 +329,8 @@ power. Name the reference point and frame (body vs spatial).
 | **v_0**  | Ball launch speed              | Ball center-of-mass speed immediately after separation (not the pre-impact approach speed)                                                                                                                                                                                               | m/s                       |
 | **α**    | Launch angle                   | Angle above horizontal                                                                                                                                                                                                                                                                   | degrees (°) or radians    |
 | **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                                                                                                                                                                                    | RPM or rad/s              |
+| **θ**    | Launch elevation (Ch. 31)      | Angle above horizontal at ball release in the Physics of Golf launch chapter; distinct from site-wide launch angle **α** when both appear                                                                                                         | degrees (°) or radians    |
+| **φ**    | Slope (putting green, Ch. 32)  | Green tilt in the putting chapter; distinct from roll-angle **φ** elsewhere when context differs                                                                                                                         | degrees (°) or radians    |
 
 **Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The restitution-based drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
@@ -405,6 +407,45 @@ $$R = R_Z(\psi) R_Y(\theta) R_X(\phi)$$
 - **Local frame**: Centered at local point of interest
 
 ---
+
+### Physics of Golf Part I Multibody Symbols (Ch. 3–9)
+
+These symbols are shared across the planar multibody chapters that build the
+affine club-arm model. Local redefinitions must be bridged at first use.
+
+| Symbol | Meaning | Rule |
+| ------ | ------- | ---- |
+| **$r_i$** | COM distance from the proximal hinge of link $i$ | Lowercase $r_i$, not $c_i$ |
+| **$c$** or **$c_i$** | Velocity-bias (Christoffel) vector or component | Not a COM distance |
+| **$g_0$** | Gravitational acceleration magnitude | Scalar; $g$ in $V=mgy$ is the same magnitude in planar models |
+| **$\bm g$** or **$g$** | Gravity generalized-force vector | Lowercase; not the input map $G(x)$ |
+| **$J_c$** | Constraint Jacobian | Not $A$ unless the meaning is stated in a chapter-local note |
+| **$\bm S$** | Constraint-space inverse inertia ($J_c M^{-1} J_c^{\mathsf T}$) | Schur complement; not the delivery map |
+| **$h$** | Full bias load in $M\ddot q + h = B u + \cdots$ | Includes velocity terms and gravity unless a chapter lists exclusions |
+
+Second-order equations of motion in this block use $M(q)\ddot q + h(q,\dot q;\,p) = B(q)u + J_c^{\mathsf T}\lambda$ (plus any declared external loads). Gravity belongs in $h$ or in an explicitly named lowercase $\bm g$ vector, never uppercase $G$.
+
+### Motor Control Delay and Activation (Ch. 24–27)
+
+| Symbol | Meaning |
+| ------ | ------- |
+| **$d$** | Sensorimotor delay (seconds) in delayed feedback models |
+| **$T_a$** | First-order muscle or activation time constant (not joint torque $\tau$) |
+
+### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
+
+| Symbol    | Meaning                                                                    | Metric                                                        | Rule                                                                                           |
+| --------- | -------------------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **$J$**   | Constraint (or task) Jacobian, rows are constraints                        | None: a linear map between coordinate spaces                  | In the allocation problem $A x = b$ the balance matrix $A$ plays the role of $J$               |
+| **$J^+$** | Moore-Penrose pseudo-inverse of $J$                                        | Euclidean in both spaces                                      | Weighted version $W^{-1}J^\top(JW^{-1}J^\top)^{+}$ must name its weight $W$                    |
+| **$P_W$** | Projector onto $\ker J$ along the $W$-orthogonal complement                | The $W$ inner product; self-adjoint there ($WP_W=P_W^\top W$) | Not symmetric unless $W$ is a multiple of $I$; $P_I=I-J^+J$ is the Euclidean case              |
+| **$N$**   | Matrix whose columns are a basis of $\ker J$                               | None: any basis of $\ker J$ serves                            | A basis is not unique; $N$ is not $P_W$, and a result must not depend on which basis is chosen |
+| **$Z$**   | The same null-space basis, written $Z$ in the AffineDrift Python companion | None                                                          | The companion writes $u$ and $Z$ where the UpstreamDrift package writes $x$ and $N$            |
+
+**Disambiguation rule:** A projector $P$ is a square matrix that depends on a metric; a basis $N$ or
+$Z$ is a tall matrix that does not. Name the metric whenever a projector or pseudo-inverse is used,
+and note that $u$ here is an allocation variable, not the control input of the control-affine
+dynamics.
 
 ## Symbol Overloading Reference
 
