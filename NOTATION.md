@@ -20,7 +20,7 @@ intent by itself.
 
 <!-- TERMINOLOGY-CONTRACT:END -->
 
-### Drift and Control
+### Drift and Control {#drift-and-control}
 
 For a declared control-affine effective plant,
 
@@ -44,7 +44,7 @@ silently move between drift and control. Exogenous disturbances that are not
 zeroed belong in a separately declared disturbance channel rather than being
 called control.
 
-### ZTCF Construction Family
+### ZTCF Construction Family {#term-ztcf}
 
 The **Zero-Torque Counterfactual (ZTCF) family** sets the declared applied
 generalized-control channel to zero while preserving the declared effective
@@ -62,7 +62,7 @@ The construction must be qualified on first use. ZTCF does not mean “no
 muscle,” “no EMG,” or “flaccid body.” It means zero value in the declared
 applied-control channel under the stated frozen-plant assumptions.
 
-### Pointwise ZTCF Drift and ZVCF Control
+### Pointwise ZTCF Drift and ZVCF Control {#term-zvcf}
 
 For second-order dynamics
 
@@ -117,7 +117,7 @@ A separate **zero-velocity baseline acceleration**
 $-M(q)^{-1}h(q,0,z;p)$ isolates configuration-dependent bias at zero velocity;
 do not abbreviate that diagnostic as ZVCF.
 
-### DCR and DgCR
+### DCR and DgCR {#term-dcr}
 
 The **Drift-Control Ratio (DCR)** compares drift acceleration with the maximum
 available control acceleration in the same declared space:
@@ -160,16 +160,30 @@ site registry `data/symbol_references.json` is generated from this table.
 
 <!-- SYMBOL-REFERENCES:START -->
 
-| Key | Symbol        | Name                        | Definition                                                                                                                                                 |
-| --- | ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `x` | $x$           | State x                     | Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities.                                   |
-| `f` | $f(x)$        | Drift f(x)                  | Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load. |
-| `G` | $G(x)$        | Input map G(x)              | Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations.                       |
-| `u` | $u$           | Control input u             | Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set.                                            |
-| `M` | $M(q)$        | Mass matrix M(q)            | Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates.                                               |
-| `C` | $C(q,\dot q)$ | Coriolis matrix C(q, q-dot) | Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads.                                   |
-| `g` | $g(q)$        | Gravity vector g(q)         | Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity.                                        |
-| `B` | $B(q)$        | Actuation matrix B(q)       | Maps the declared control input to generalized forces, so the applied load is B(q) times u.                                                                |
+| Key | Symbol | Name | Definition | Unit | Shape | Frame | Sign | Source anchor |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `x` | $x$ | State x | Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities. | — | vector | model coordinates | — | /pages/notation.html#equation-symbol-definitions |
+| `f` | $f(x)$ | Drift f(x) | Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load. | — | vector field | state | — | /pages/notation.html#drift-and-control |
+| `G` | $G(x)$ | Input map G(x) | Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations. | — | matrix | state | — | /pages/notation.html#drift-and-control |
+| `u` | $u$ | Control input u | Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set. | model-specific | vector | control | — | /pages/notation.html#drift-and-control |
+| `M` | $M(q)$ | Mass matrix M(q) | Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates. | — | matrix | generalized | SPD | /pages/notation.html#term-zvcf |
+| `q` | $q$ | Generalized coordinates q | Joint or body coordinates in the mechanical state. | rad or m | vector | joint/body | — | /pages/notation.html#term-zvcf |
+| `qdot` | $\dot q$ | Generalized velocity q-dot | Time derivative of the generalized coordinates. | rad/s or m/s | vector | joint/body | — | /pages/notation.html#term-zvcf |
+| `h` | $h(q,\dot q,z;p)$ | Bias load h | Velocity-dependent, gravity, passive, and constraint loads in the equation $M(q)\ddot q+h=B(q)u$. | N or N·m | vector | generalized | — | /pages/notation.html#term-zvcf |
+| `z` | $z$ | Auxiliary state z | Declared auxiliary coordinates or frozen strategy variables in the effective plant. | model-specific | vector | model-defined | — | /pages/notation.html#term-zvcf |
+| `p` | $p$ | Model parameters p | Contact mode, frozen impedance, and other declared frozen parameters collected in $p$. | — | — | — | — | /pages/notation.html#drift-and-control |
+| `tau` | $\tau$ | Generalized control tau | Applied generalized force or torque in the ZVCF evaluation protocol. | N or N·m | vector | generalized | — | /pages/notation.html#term-zvcf |
+| `C` | $C(q,\dot q)$ | Coriolis matrix C(q, q-dot) | Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads. | — | matrix | generalized | — | /pages/notation.html#equation-symbol-definitions |
+| `g` | $g(q)$ | Gravity vector g(q) | Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity. | N or N·m | vector | generalized | — | /pages/notation.html#equation-symbol-definitions |
+| `B` | $B(q)$ | Actuation matrix B(q) | Maps the declared control input to generalized forces, so the applied load is B(q) times u. | — | matrix | generalized | — | /pages/notation.html#equation-symbol-definitions |
+| `ad` | $a_d$ | Drift acceleration block | Drift contribution in the task or acceleration space used in the DCR. | m/s² or rad/s² | vector | task or state | — | /pages/notation.html#term-dcr |
+| `Ba` | $B_a$ | Actuation acceleration map | Control block mapping admissible inputs to acceleration in the DCR. | per input | matrix | task or state | — | /pages/notation.html#term-dcr |
+| `W` | $W$ | DCR weighting W | Declared scaling or metric for DCR norms. | — | matrix | task | PSD | /pages/notation.html#term-dcr |
+| `Uset` | $\mathcal U(x)$ | Admissible control set | Set of admissible control vectors at state $x$ for the DCR supremum. | — | set | control | — | /pages/notation.html#term-dcr |
+| `eps` | $\varepsilon$ | DCR regularizer epsilon | Regularizer preventing division by zero in the DCR denominator. | same as denominator | scalar | — | >0 | /pages/notation.html#term-dcr |
+| `J` | $J$ | Constraint Jacobian J | Constraint or task Jacobian; rows are individual constraints. | — | matrix | model-defined | — | /pages/notation.html#j-j-p-n-and-z |
+| `v` | $v$ | Velocity vector v | Linear velocity vector (bold or bar notation in prose tables). | m/s | vector | stated frame | — | /pages/notation.html#vectors--tensors |
+| `lam` | $\lambda$ | Lambda | Eigenvalue or Lagrange multiplier depending on context. | context | scalar or vector | — | — | /pages/notation.html#vectors--tensors |
 
 <!-- SYMBOL-REFERENCES:END -->
 
