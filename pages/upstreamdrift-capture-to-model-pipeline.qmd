@@ -1,0 +1,267 @@
+---
+title: "UpstreamDrift Capture-to-Model Pipeline"
+description: "Pinned UpstreamDrift map from cameras to fitted models: bundle adjustment, scaling, ingest, and export defaults."
+toc: true
+page-layout: article
+categories:
+  - reference
+  - tools
+caveats:
+  evidence-level: "Interface inventory tied to a pinned UpstreamDrift commit"
+  establishes:
+    - "Stage order, CLI entry points, on-disk artifacts, and default least-squares weights for reconstruction at commit 3afe09c1ed0247a459d16bf75cf0b28bb64f584a."
+    - "How anthropometric mass and inertia are derived in the humanoid builder versus ratio estimators in anthropometrics."
+  does-not-establish:
+    - "Population-level accuracy for golfers or transfer from synthetic harness thresholds to field capture."
+    - "That every stage named in design documents is implemented; only modules present in the pin are claimed."
+---
+
+AffineDrift explains motion-capture *theory* in articles such as
+[Motion Capture Technology](../articles/technology-motion-capture.html) and
+[Markerless Motion Capture and Camera Selection](../articles/markerless-mocap-camera-selection.html).
+This page records **what UpstreamDrift runs at one commit**, with links into the
+implementing modules. Evidence URLs use
+[`3afe09c1ed0247a459d16bf75cf0b28bb64f584a`](https://github.com/D-sorganization/UpstreamDrift/tree/3afe09c1ed0247a459d16bf75cf0b28bb64f584a)
+(re-checked 2026-11-11 for issue #5623). The operator-facing step list mirrors
+[`docs/motion_capture/user_guide.md`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/docs/motion_capture/user_guide.md);
+the Capture Rig tile runs the same commands as
+[`python3 -m motion_capture.rig`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/rig/__main__.py).
+
+## Pipeline Overview {#pipeline-overview}
+
+```mermaid
+flowchart LR
+  A[Record / import video] --> B[Calibrate intrinsics]
+  B --> C[Ingest 2-D poses]
+  C --> D[Strobe sync offsets]
+  D --> E[Bundle fit 3-D + cameras]
+  E --> F[Temporal clean per joint]
+  F --> G[Articulated model fit]
+  G --> H[Export TRC / Simscape CSV]
+```
+
+Multi-camera sessions move through capture, lens calibration, per-view detection,
+optional strobe-based time alignment, joint bundle adjustment, penalised temporal
+smoothing, inverse-kinematics-style model fitting, and export. Single-camera
+sessions stop after 2-D analysis (no `reconstruct/` tree).
+
+### Stage Table (Commands and Artifacts)
+
+| Stage | Primary module / CLI | Typical outputs under the session folder |
+| --- | --- | --- |
+| Record | [`rig record`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/rig/__main__.py) | `plan.json`, `recordings.json`, `session_manifest.json`, per-view video |
+| Intrinsics | [`rig calibrate-intrinsics`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/rig/__main__.py) | `intrinsics.json` (`K`, distortion, RMS) |
+| Ingest | [`rig ingest`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/rig/__main__.py) | `observations/<view>.json` (or `observations_<estimator>/`) |
+| Reconstruct | [`rig reconstruct --anchor SEG=M`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/rig/__main__.py) | `reconstruct/reconstruction.json`, `reconstruct/joints_3d_m.npy` |
+| Model fit | Capture Rig / model stage | `model/joint_angles.json`, `model/fit_report.json`, `joint_angles_simscape.csv` |
+| Export | [`reconstruct/export`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/export.py) | `reconstruct/reconstruction.trc`, `reconstruction_export.json` |
+
+Synthetic regression bundles use
+[`python3 -m motion_capture.reconstruct synth`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/__main__.py)
+then
+[`fit --anchor neck=…`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/__main__.py)
+without the full rig UI.
+
+## Bundle Adjustment Problem {#bundle-adjustment}
+
+The joint fitter is implemented in
+[`bundle.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/bundle.py).
+It solves one robust least-squares problem over all frames with residuals (in
+physical units after division by $\sigma$):
+
+$$
+\begin{aligned}
+r_{\text{repr}} &= \frac{w\,(\pi(\mathrm{cam}, X) - z)}{\sigma_{\mathrm{px}}} \\
+r_{\text{bone}} &= \frac{|X_p - X_k| - L_k}{\sigma_{\mathrm{bone}}} \\
+r_{\text{prior}} &= \frac{L_k - L_k^{\mathrm{prior}}}{\sigma_{\mathrm{prior}}} \\
+r_{\text{sym}} &= \frac{L_{\mathrm{left}} - L_{\mathrm{right}}}{\sigma_{\mathrm{sym}}} \\
+r_{\text{anchor}} &= \frac{L_{\mathrm{gauge}} - L_{\mathrm{measured}}}{\sigma_{\mathrm{anchor}}}
+\end{aligned}
+$$
+
+Defaults are frozen in
+[`BundleOptions`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/bundle.py#L59-L83):
+
+| Parameter | Default | Meaning |
+| --- | --- | --- |
+| `sigma_px` | 1.0 px | Reprojection weight scale |
+| `sigma_bone_m` | 0.005 m (5 mm) | Segment rigidity |
+| `sigma_prior_m` | 0.05 m (5 cm) | Anthropometric length prior |
+| `sigma_symmetry_m` | 0.01 m (1 cm) | Left–right length pairing |
+| `sigma_anchor_m` | 0.0002 m (0.2 mm) | Hard scale gauge from one tape measure |
+| `sigma_measured_m` | 0.003 m (3 mm) | Additional tape-measured segments |
+| `huber_delta` | 3.0 (in $\sigma_{\mathrm{px}}$ units) | Robust loss knee |
+| `gate_px` | 6.0 px | Post-fit rejection and leave-one-out gate |
+
+**Gauge freedom:** with one camera pose fixed, a global similarity about that
+camera leaves every reprojection unchanged. The implementation therefore requires
+a tape-measured anchor segment (`scale_anchor`) or accepts weak scale drift from
+priors alone (documented in the `BundleOptions` docstring).
+
+After convergence, observations whose reprojection exceeds `gate_px` are rejected;
+a leave-one-out test can blame additional points
+([`_leave_one_out_rejections`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/bundle.py#L473-L484)).
+
+### Weighted DLT Initialization
+
+Per-frame triangulation before bundle iteration uses weighted DLT rows
+$\sqrt{w}\,(u p_3 - p_1)$ and $\sqrt{w}\,(v p_3 - p_2)$ in
+[`geometry.dlt`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/geometry.py#L60-L72).
+First-order point covariance is
+$\Sigma_X = \sigma_{\mathrm{px}}^2 (J^\top J)^+$ with $J = \partial(u,v)/\partial X$
+per view
+([`_covariance`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/geometry.py#L92-L107)).
+That matches the multiview formula on the camera-selection article when
+$\Sigma_u = \sigma^2 I$, but **does not** fold calibration or timing uncertainty
+into $\Sigma_X$.
+
+### Strobe Timing (Not Exposure Midpoint)
+
+Cross-camera alignment uses arrival timestamps plus strobe-derived offsets in
+[`rig/sync.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/rig/sync.py).
+Uncertainty is on the order of one frame interval per camera (combined in
+quadrature between pairs), which differs from exposure-midpoint timing models
+discussed generically in the camera-selection article.
+
+### Synthetic Harness Acceptance
+
+UpstreamDrift’s unit test
+[`test_synth_then_fit_writes_reconstruction_with_metrics`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/tests/motion_capture/reconstruct/test_fit_cli.py)
+runs `synth` (24 frames) then `fit` with a neck anchor from `truth.json` and
+asserts, among other checks: `rms_px < 2.0`, per-camera `rotation_deg < 0.5`,
+and max relative bone-length error `< 5 %`. These are **CI thresholds on a
+synthetic lab rig**, not field guarantees.
+
+Example commands (from repository root, `PYTHONPATH` set as in UpstreamDrift):
+
+```bash
+python3 -m motion_capture.reconstruct synth --out /tmp/mocap_synth --frames 120
+python3 -m motion_capture.reconstruct fit --bundle /tmp/mocap_synth --anchor neck=0.53
+```
+
+## Temporal Smoothing {#temporal-smoothing}
+
+Reconstruction applies
+[`temporal.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/temporal.py)
+per scalar channel. The objective penalises measurement error (Huber-weighted) plus
+a discrete acceleration prior:
+
+$$
+\min \sum_t \frac{c_t}{\sigma_z^2}\,\rho(x_t - z_t)
+  + \sum_t \left(\frac{x_{t-1} - 2 x_t + x_{t+1}}{\Delta t^2}\right)^2 \frac{1}{\sigma_a^2}
+$$
+
+`acceleration_sigma` is in **physical units per second squared** (pixels/s² before
+3-D, metres/s² or radians/s² after model fit). `SmootherOptions` defaults include
+`huber_delta = 2.5`, `gate_sigma = 5.0`, and `detection_tightening = 10.0` for
+outlier detection
+([`SmootherOptions`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/temporal.py#L47-L63)).
+
+The legacy motion-pipeline path still exposes a **Butterworth low-pass** with
+`cutoff = 6.0` Hz and `order = 2` by default in
+[`motion_pipeline/preprocessing/filter.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/motion_pipeline/preprocessing/filter.py#L48-L53).
+That default is appropriate to gait-scale motion; golf downswing peaks require
+the reconstruction smoother or an explicit cutoff choice, not the silent 6 Hz
+default.
+
+## Anthropometric Scaling in Code {#anthropometric-scaling}
+
+[Chapter 23 of *The Physics of Golf*](../articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html#anthropometric-data-de-leva-1996)
+states de Leva segment definitions correctly. UpstreamDrift applies those tables
+in two different places:
+
+### Ratio Estimators (`anthropometrics`)
+
+[`_segment_properties_from_ratios`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/anthropometrics/estimators/_base.py#L83-L131)
+builds each segment with
+
+- $m = (\text{mass ratio})\,M$,
+- $L = (\text{length ratio})\,H$,
+- COM at $(0, 0, c L)$ along segment **$z$** from the proximal landmark,
+- $I = \mathrm{diag}\bigl(m(k_{\mathrm{sag}} L)^2, m(k_{\mathrm{trans}} L)^2, m(k_{\mathrm{long}} L)^2\bigr)$.
+
+[`DeLevaEstimator`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/anthropometrics/estimators/from_de_leva.py)
+is the de Leva Table 4 implementation. **`DempsterEstimator` and
+`ZatsiorskyEstimator` use different ratio tables** and must not be swapped in
+without checking segment definitions.
+
+### Humanoid Character Builder
+
+The 22-segment golfer template in
+[`humanoid_character_builder/core/anthropometry.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/humanoid_character_builder/core/anthropometry.py)
+applies **de Leva mass, COM, and gyration radii to builder length ratios**
+(`_GEOMETRY`), not necessarily de Leva’s published segment lengths. Example:
+male `upper_arm` length ratio `0.186` of stature versus de Leva’s
+$0.2817/1.741 \approx 0.162$ when stature is normalised to de Leva’s reference.
+Inertia therefore scales roughly as $(L_{\mathrm{model}}/L_{\mathrm{de\,Leva}})^2$
+relative to a literal de Leva length assignment. Virtual neck, shoulder, and hip
+links carve mass from parents with placeholder radii (`VIRTUAL_SEGMENTS`).
+
+Use **`DeLevaEstimator`** when you need ratio-table semantics that match
+`build_subject_from_ratio_table`. Use the **character builder** when generating
+the articulated golfer URDF/MJCF templates consumed by model fitting.
+
+## Bring Your Own Data {#bring-your-own-data}
+
+Reference fitting and C3D import are documented in
+[`docs/motion_capture/reference_model_fitting.md`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/docs/motion_capture/reference_model_fitting.md)
+and implemented in
+[`reference/fitting.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reference/fitting.py).
+
+| Input | Mechanism | Notes |
+| --- | --- | --- |
+| Multi-view video | `rig import` / `record` | Same bundle layout as live capture |
+| C3D / marker labs | Profile JSON (`name`, `units`, `axes`, `joints`) | Centroid of listed markers; NaN rows are **not** interpolated |
+| Tour-average proxies | Bundled profile | Waist ≈ hips, `BackTop` ≈ neck—approximations, not joint centres |
+| FreeMoCap / OpenCap | Ingest sidecars | Marker sets mapped toward reconstruction names |
+| CSV / JSON motion | Capture export conventions | See `capture_export.to_capture_frame` |
+| BVH / TRC / MOT / native SMPL | — | **No reader in this slice** at the pin; HMR2/SMPL may appear only as sidecars |
+
+`axes` example for Tour Average: `["+X", "-Z", "+Y"]` converts source Y-up data to
+right-handed Z-up metres before fitting.
+
+## Generated Models and Conversion {#generated-models}
+
+Model templates and URDF/MJCF writers live under
+[`src/shared/python/model_generation`](https://github.com/D-sorganization/UpstreamDrift/tree/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/model_generation)
+and
+[`src/tools/model_converter`](https://github.com/D-sorganization/UpstreamDrift/tree/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/tools/model_converter).
+Composite joints (gimbal, universal) expand into intermediate links named
+`<joint>_intermediate_k` / `<joint>_dofk` with mass
+[`INTERMEDIATE_LINK_MASS = 0.001` kg](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/model_generation/core/constants.py#L45)
+so expanded URDF trees are not kinematically singular. Segment axes, limits, and
+the 22-segment layout are enumerated in
+[`segment_definitions.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/humanoid_character_builder/core/segment_definitions.py).
+`golfer_canonical.yaml` drives converter output; default MJCF integrator settings
+include `timestep 0.002` with RK4 where the template specifies it.
+
+Articulated fit after reconstruction uses
+[`reconstruct/model/fit.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/model/fit.py)
+and [`fit2d.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/model/fit2d.py)
+for image-space matching on single-view paths.
+
+## MyoFullBody Static Optimisation (As Implemented) {#myofullbody}
+
+Hybrid static optimisation for muscle-driven residuals is in
+[`myofullbody/redundancy.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/myofullbody/redundancy.py).
+Each frame solves
+
+$$
+\min \sum a^2 + w \sum \mathrm{reserve}^2
+\quad\text{s.t.}\quad
+\tau = R^\top (F_{\mathrm{passive}} + a \odot F_{\mathrm{active}}) + \mathrm{reserve},
+$$
+
+with $R = (-\mathrm{actuator\_moment})\,\Phi$ and $\Phi$ the rate map from
+[`mapping.py`](https://github.com/D-sorganization/UpstreamDrift/tree/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/myofullbody).
+Reserve actuators cover every spec coordinate; their RMS measures what muscles
+cannot reproduce.
+
+## Related Articles {#related-articles}
+
+- Theory: [Motion Capture Technology](../articles/technology-motion-capture.html),
+  [Markerless Mocap Camera Selection](../articles/markerless-mocap-camera-selection.html)
+- de Leva semantics: [URDF and DOF Models](../articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html#anthropometric-data-de-leva-1996)
+- Repository context: [3D Modeling Repositories](../repositories/repositories-3d-model.html)
+- Motion pipeline after TRC export: UpstreamDrift
+  [`docs/motion_pipeline/README.md`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/docs/motion_pipeline/README.md)

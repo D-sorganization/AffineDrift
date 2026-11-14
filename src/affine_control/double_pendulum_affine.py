@@ -87,16 +87,18 @@ class DoublePendulumParams:
     @property
     def club_com_from_grip_m(self) -> float:
         """Distance along link 2 from the wrist (grip) to the club mass center."""
+        if self.l_c2 is None:
+            return self.l2 / 2.0
         return float(self.l_c2)
 
     def mass_matrix(self, q: Array) -> Array:
         """Planar inertia with link 1 midpoint mass and link 2 mass at ``l_c2`` plus ``I_c2``."""
         q1, q2 = float(q[0]), float(q[1])
-        off = self.m2 * self.l1 * float(self.l_c2) * math.cos(q1 - q2)
+        off = self.m2 * self.l1 * self.club_com_from_grip_m * math.cos(q1 - q2)
         return np.array(
             [
                 [(self.m1 / 4.0 + self.m2) * self.l1**2, off],
-                [off, self.m2 * float(self.l_c2) ** 2 + self.I_c2],
+                [off, self.m2 * self.club_com_from_grip_m**2 + self.I_c2],
             ]
         )
 
@@ -127,7 +129,7 @@ def potential(q: Array, params: DoublePendulumParams) -> float:
     """Gravitational potential with link 2 mass at ``l_c2`` along the club."""
     p = params
     upper = (0.5 * p.m1 + p.m2) * p.l1 * math.cos(q[0])
-    return -p.gravity * (upper + p.m2 * float(p.l_c2) * math.cos(q[1]))
+    return -p.gravity * (upper + p.m2 * p.club_com_from_grip_m * math.cos(q[1]))
 
 
 def grad_potential(q: Array, params: DoublePendulumParams) -> Array:
@@ -136,7 +138,7 @@ def grad_potential(q: Array, params: DoublePendulumParams) -> Array:
     return np.array(
         [
             p.gravity * (0.5 * p.m1 + p.m2) * p.l1 * math.sin(q[0]),
-            p.gravity * p.m2 * float(p.l_c2) * math.sin(q[1]),
+            p.gravity * p.m2 * p.club_com_from_grip_m * math.sin(q[1]),
         ]
     )
 
