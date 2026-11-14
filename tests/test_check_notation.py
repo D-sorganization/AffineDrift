@@ -36,6 +36,12 @@ class TestScan:
         assert len(findings) == 1
         assert findings[0]["rule"] == "control-affine input map uses lowercase g(x)"
 
+    def test_gravity_uppercase_g_in_eom_is_detected(self, tmp_path: Path) -> None:
+        write(tmp_path, "articles/ch.qmd", "$M\\ddot q+h+G=\\tau$\n")
+        findings = scan(tmp_path)
+        assert len(findings) == 1
+        assert "uppercase G for the gravity load" in findings[0]["rule"]
+
     def test_detects_in_tex_and_md_as_well_as_qmd(self, tmp_path: Path) -> None:
         write(tmp_path, "articles/ch.tex", "g(x)u\n")
         write(tmp_path, "critiques/c.md", "g(x)u\n")
