@@ -524,7 +524,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4055"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"]
     assert len(deferred) == 0
-    assert len(reviewed_completed_batches) == 230
+    assert len(reviewed_completed_batches) == 233
     assert observed == expected_deferred
     # This companion is newly published, outside the original deferred-route census.
     companion = _find_route(inventory, "/articles/null-space-constraint-jacobian-bibliography.html")
@@ -576,6 +576,24 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     ud_physics = _find_route(inventory, "/articles/upstreamdrift-physics-models.html")
     assert ud_physics["status"] == "reviewed"
     assert ud_physics["review"]["source_path"] == "articles/upstreamdrift-physics-models.qmd"
+    # Humanoid / WBC / learning analytics docs (#5625).
+    for route, source in (
+        (
+            "/articles/upstreamdrift-humanoid-balance.html",
+            "articles/upstreamdrift-humanoid-balance.qmd",
+        ),
+        (
+            "/articles/upstreamdrift-learning-analytics.html",
+            "articles/upstreamdrift-learning-analytics.qmd",
+        ),
+        (
+            "/articles/upstreamdrift-whole-body-control.html",
+            "articles/upstreamdrift-whole-body-control.qmd",
+        ),
+    ):
+        row = _find_route(inventory, route)
+        assert row["status"] == "reviewed"
+        assert row["review"]["source_path"] == source
     getting_started = _find_route(inventory, "/pages/upstreamdrift-getting-started.html")
     assert getting_started["status"] == "reviewed"
     assert getting_started["review"]["source_path"] == "pages/upstreamdrift-getting-started.qmd"
