@@ -57,6 +57,7 @@ CORE_ARTICLE_ROUTES = frozenset(
 APPLIED_ARTICLE_ROUTES = frozenset(
     {
         "/articles/drifter-manifesto.html",
+        "/articles/firm-lead-wrist-preload.html",
         "/articles/ideomotor-theory-and-predictive-brain.html",
         "/articles/impact-mechanics-and-ball-flight.html",
         "/articles/impact-optimality-and-model-limits.html",

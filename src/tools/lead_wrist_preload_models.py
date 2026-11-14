@@ -63,7 +63,7 @@ class DeadZoneChannel:
     time_constant_s: float
 
     def __post_init__(self) -> None:
-        """Validate channel parameters at construction."""
+        """Validate stiffness, dead-zone width, and time constant."""
         if not self.stiffness_nm_rad > 0.0:
             raise ValueError("stiffness_nm_rad must be positive")
         if not self.dead_zone_rad >= 0.0:
@@ -91,19 +91,19 @@ REVERSAL_LARGE = Program("complete_role_reversal_net_14", -4.0, 10.0, 20.0, -6.0
 
 
 def _command_deflection(torque: FloatArray, channel: DeadZoneChannel) -> FloatArray:
-    """Map commanded torque to shaft deflection including the dead zone."""
+    """Map commanded torque to shaft deflection including the dead-zone half-width."""
     magnitude = channel.dead_zone_rad + np.abs(torque) / channel.stiffness_nm_rad
     return np.where(torque == 0.0, 0.0, np.sign(torque) * magnitude)
 
 
 def _engaged_torque(deflection: FloatArray, channel: DeadZoneChannel) -> FloatArray:
-    """Return transmitted torque after slack is taken up in the dead zone."""
+    """Return torque transmitted once deflection exceeds the dead-zone slack."""
     slack = np.maximum(np.abs(deflection) - channel.dead_zone_rad, 0.0)
     return channel.stiffness_nm_rad * np.sign(deflection) * slack
 
 
 def _tracking_error(desired: object, transmitted: object, time: object) -> float:
-    """Integrate absolute net-torque tracking error over time (N m s)."""
+    """Integrated absolute torque shortfall over the delivery window."""
     shortfall = np.asarray(desired, dtype=float) - np.asarray(transmitted, dtype=float)
     return float(np.trapezoid(np.abs(shortfall), np.asarray(time, dtype=float)))
 
@@ -157,6 +157,25 @@ def activation_time_constants(activation: npt.ArrayLike) -> tuple[FloatArray, Fl
     """Rise and decay time constants (s); both scale with the current activation."""
     scale = 0.5 + 1.5 * np.asarray(activation, dtype=float)
     return TAU_ACTIVATION_S * scale, TAU_DEACTIVATION_S / scale
+
+
+def switch_time_constants_ms(program: Program = REVERSAL) -> dict[str, float]:
+    """Activation time constant (ms) of each muscle at t = 0, rising or decaying as commanded.
+
+    Assumes the preparation window has settled each activation at its pre-switch target, which
+    holds for the published programs. Muscle order is (arm+, arm-, wrist+, wrist-).
+    """
+    pre = _activation_targets(program.arm_pre_nm, program.wrist_pre_nm)
+    post = _activation_targets(program.arm_post_nm, program.wrist_post_nm)
+    rise, decay = activation_time_constants(pre)
+    tau_ms = 1e3 * np.where(post > pre, rise, decay)
+    names = ("arm_positive", "arm_negative", "wrist_positive", "wrist_negative")
+    rows = zip(names, post > pre, tau_ms, np.isclose(post, pre), strict=True)
+    return {
+        f"{name}_{'rise' if rising else 'decay'}": float(tau)
+        for name, rising, tau, unchanged in rows
+        if not unchanged
+    }
 
 
 def _activation_step(excitation: FloatArray, activation: FloatArray, step_s: float) -> FloatArray:
@@ -219,7 +238,7 @@ def muscle_step_audit(
     """
 
     def errors(step: float) -> list[float]:
-        """Return persistent and reversal tracking errors at the given step size."""
+        """Return tracking-error impulses for both programs at ``step``."""
         return [simulate_muscle(program, step_s=step)["error_impulse_nms"] for program in programs]
 
     grid = np.array([errors(step) for step in AUDIT_STEPS_S])
@@ -262,7 +281,7 @@ def shaft_round_trip_s() -> float:
 
 
 def _scalar_summary(trace: dict[str, Any]) -> dict[str, float]:
-    """Keep only float-valued entries from a simulation trace."""
+    """Keep only the floating-point scalars from a simulation trace."""
     return {key: value for key, value in trace.items() if isinstance(value, float)}
 
 
@@ -288,6 +307,7 @@ def build_results() -> dict[str, Any]:
         "muscle_step_audit": muscle_step_audit(),
         "muscle_step_audit_net_14": muscle_step_audit((PERSISTENT_LARGE, REVERSAL_LARGE)),
         "shaft_round_trip_s": shaft_round_trip_s(),
+        "switch_time_constants_ms": switch_time_constants_ms(),
         "decay_to_rise_ratio": {
             f"activation_{level:g}": float(ratio)
             for level, ratio in zip(
