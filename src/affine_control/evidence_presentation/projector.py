@@ -25,7 +25,7 @@ def _clean_str(val: Any) -> str:
 
 def _derive_claim_tier(evidence_class: str) -> EvidenceTier:
     """Map evidence class string to an EvidenceTier enum."""
-    if evidence_class == "analytical_counterexample":
+    if evidence_class in ("analytical_counterexample", "mathematical_identity"):
         return EvidenceTier.MATHEMATICAL_IDENTITY
     if evidence_class == "computational":
         return EvidenceTier.QUALIFIED_SIMULATION
@@ -215,29 +215,37 @@ def project_companion_entity(
     description: str,
     commit_sha: str,
     provenance_hash: str,
+    *,
+    support_tier: str | None = None,
 ) -> EvidencePresentationViewModel:
     """Project a Programming Companion catalog entity into an EvidencePresentationViewModel."""
-    tier = EvidenceTier.QUALIFIED_SIMULATION
-    state_label = "Pinned Companion Artifact (CI-Verified)"
+    tier = EvidenceTier.SOFTWARE_ARTIFACT
+    normalized_support = (support_tier or "").strip()
+    if normalized_support and normalized_support != "not_applicable":
+        state_label = f"Pinned Software Artifact (UD: {normalized_support})"
+        evidence_origin = f"software-catalog ({normalized_support})"
+    else:
+        state_label = "Pinned Software Artifact (CI-Verified)"
+        evidence_origin = "software-catalog"
     badge_class = TIER_BADGE_CLASSES[tier]
 
     establishes_list = (
-        f"Verified executable computation in UpstreamDrift pinned release {commit_sha[:10]}",
-        f"Deterministic provenance with SHA-256 {provenance_hash[:16]}...",
+        f"Cataloged software artifact in UpstreamDrift pinned release {commit_sha[:10]}",
+        f"Deterministic manifest provenance with SHA-256 {provenance_hash[:16]}...",
     )
 
     does_not_establish_list = (
-        "Does not establish universal human golf biomechanics authority",
+        "Does not establish simulation qualification or human biomechanics authority",
         "Does not infer empirical performance without governed field trials",
     )
 
     limitations_list = (
-        f"Bounded by numerical integrator tolerances and pinned UpstreamDrift commit {commit_sha}",
+        f"Catalog inclusion only at pinned UpstreamDrift commit {commit_sha}",
         "Execution requires compliant Python 3.12 environment with pinned dependencies",
     )
 
     next_gate = "Upstream golden regression workflow verification"
-    accessible_label = f"Companion {kind} {title}: Pinned at commit {commit_sha[:10]}."
+    accessible_label = f"Companion {kind} {title}: {state_label} at commit {commit_sha[:10]}."
 
     return EvidencePresentationViewModel(
         entity_id=entity_id,
@@ -251,7 +259,7 @@ def project_companion_entity(
         limitations=limitations_list,
         next_gate=next_gate,
         source_revision=commit_sha,
-        evidence_origin="computational-ci",
+        evidence_origin=evidence_origin,
         authority_boundary=AUTHORITY_BOUNDARY_STATEMENT,
         accessible_label=accessible_label,
         source_url=f"/models/programming/{kind}s.html#{entity_id}",
