@@ -1,6 +1,15 @@
 {
   "schema_version": "affinedrift/upstreamdrift-install-readme-contract/v1",
   "upstream_readme_commit": "625a16e6897b88ab29fb5a64c65ecee820dd58f5",
+  "upstream_readme_requirements": {
+    "required_substrings": [
+      "git submodule update --init --recursive vendor/ud-tools",
+      "pip install -e \".[dev]\"",
+      "python scripts/ci/verify_installation.py",
+      "does not use Git LFS"
+    ],
+    "forbidden_substrings": ["Git LFS is required"]
+  },
   "file_requirements": {
     "pages/upstreamdrift-getting-started.qmd": {
       "required_substrings": [

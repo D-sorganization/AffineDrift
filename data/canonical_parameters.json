@@ -74,6 +74,54 @@
           "expected": 0.02135,
           "tolerance": 1e-05,
           "note": "AffineDrift fixtures round 21.335 mm to 0.02135 m for display parity with worked examples"
+        },
+        {
+          "path_glob": "articles/impact-mechanics-and-ball-flight.qmd",
+          "pattern": "mass, radius, inertia = ([0-9.]+),",
+          "expected": 0.0456,
+          "tolerance": 0.0005,
+          "note": "Illustrative worked-example mass (permitted alias of regulation maximum)"
+        },
+        {
+          "path_glob": "articles/impact-mechanics-and-ball-flight.qmd",
+          "pattern": "mass, radius, inertia = [0-9.]+, ([0-9.]+),",
+          "expected": 0.02135,
+          "tolerance": 1e-05,
+          "note": "Teaching radius rounded from 21.335 mm"
+        }
+      ]
+    },
+    {
+      "id": "golf_ball_moment_of_inertia_illustrative",
+      "category": "Golf ball",
+      "name": "Golf ball moment of inertia (illustrative solid-sphere teaching value)",
+      "symbol": "I_b",
+      "unit": "kg·m²",
+      "definition": "Illustrative principal moment used in planar flight-integration examples; not a measured ball-specific inertia tensor entry.",
+      "value": "8.10×10⁻⁶",
+      "value_kind": "scalar",
+      "source": "AffineDrift articles/impact-mechanics-and-ball-flight.qmd worked example; tests/test_impact_aerodynamics_rigor.py",
+      "rule_or_standard": "Teaching default",
+      "chapters": [
+        "articles/impact-mechanics-and-ball-flight"
+      ],
+      "upstream": [],
+      "affine_refs": [
+        "tests/test_impact_aerodynamics_rigor.py:INERTIA_KG_M2"
+      ],
+      "literal_checks": [
+        {
+          "path_glob": "articles/impact-mechanics-and-ball-flight.qmd",
+          "pattern": "mass, radius, inertia = [0-9.]+, [0-9.]+, ([0-9.eE+-]+)",
+          "expected": 8.1e-06,
+          "tolerance": 1e-08,
+          "note": "Worked-example inertia must stay aligned with flight rigor tests"
+        },
+        {
+          "path_glob": "tests/test_impact_aerodynamics_rigor.py",
+          "pattern": "INERTIA_KG_M2 = ([0-9.eE+-]+)",
+          "expected": 8.1e-06,
+          "tolerance": 1e-08
         }
       ]
     },
@@ -143,7 +191,21 @@
       ],
       "upstream": [],
       "affine_refs": [],
-      "literal_checks": []
+      "literal_checks": [
+        {
+          "path_glob": "articles/impact-mechanics-and-ball-flight.qmd",
+          "pattern": "\\$\\\\rho=([0-9.]+)\\$",
+          "expected": 1.2,
+          "tolerance": 0.001,
+          "note": "Still-air illustrative density in the impact/aerodynamics worked example"
+        },
+        {
+          "path_glob": "articles/impact-mechanics-and-ball-flight.qmd",
+          "pattern": "density, nu = ([0-9.]+),",
+          "expected": 1.2,
+          "tolerance": 0.001
+        }
+      ]
     },
     {
       "id": "driver_cor_limit",
