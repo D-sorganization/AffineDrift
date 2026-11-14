@@ -598,10 +598,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5595
 - **Branch:** cursor/parameters-ssot-5595-6ff0
-- **PR:** #5671
+- **PR:** #5671, #5699
 - **Paths:** see #5671
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`f91bc9cd`; collated from changes/5595-rebuild-parameters-md-from-sourced-canon.md)
+- **Last verified:** 2026-11-14 (`14edb6ed`; collated from changes/5595-extend-canonical-parameters-with-ball-mo.md)
 - **Summary:** Rebuild PARAMETERS.md from sourced canonical registry with CI check
 - **Next step:** Merge after CI green.
 
