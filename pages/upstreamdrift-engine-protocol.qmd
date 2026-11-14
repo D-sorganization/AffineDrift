@@ -1,0 +1,290 @@
+---
+title: "UpstreamDrift Engine Protocol Reference"
+description: "Pinned PhysicsEngine interface map: drift vs control per solver, integrator defaults, simulation backends, and cross-engine validation in UpstreamDrift."
+toc: true
+page-layout: article
+css: ../css/upstreamdrift-reference.css
+categories:
+- reference
+- tools
+caveats:
+  evidence-level: "Interface inventory tied to a pinned UpstreamDrift commit"
+  establishes:
+    - "Which methods every UpstreamDrift physics engine exposes, state shapes, and how drift and control accelerations are defined in code at commit 625a16e6897b88ab29fb5a64c65ecee820dd58f5."
+    - "Where exact acceleration superposition fails and which paths qualify cross-engine claims."
+  does-not-establish:
+    - "That AffineDrift articles use identical drift definitions without conversion."
+    - "Biomechanical validation, population-level parity, or install reproducibility on a reader machine."
+---
+
+UpstreamDrift is the implementation authority for the control-affine decompositions
+AffineDrift motivates. This page records **what the code does at one commit**, not
+every narrative shortcut on this site. All UpstreamDrift evidence links below use
+[`625a16e6897b88ab29fb5a64c65ecee820dd58f5`](https://github.com/D-sorganization/UpstreamDrift/tree/625a16e6897b88ab29fb5a64c65ecee820dd58f5)
+(re-checked 2026-11-11 for issue #5620).
+
+For array layouts, frames, and quaternion order when moving state between engines, see
+the merged [UpstreamDrift Conventions Reference](upstreamdrift-conventions.html)
+(`pages/upstreamdrift-conventions.qmd`). AffineDrift's programming
+catalog remains [Engines and Runtime Support](../models/programming/engines.html).
+
+## The `PhysicsEngine` Contract {#physics-engine-contract}
+
+The suite-wide entry point is the
+[`PhysicsEngine`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/interfaces.py#L72-L95)
+protocol. It composes
+[`SimulationInterface`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/_simulation_interface.py)
+(load, step, state I/O) and
+[`DynamicsInterface`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/_dynamics_interface.py)
+(mass matrix, bias, Jacobians, drift/control).
+
+State machine (from the interface docstring): **UNINITIALIZED → load → INITIALIZED → reset/step/forward**.
+
+### Core Method Table
+
+| Responsibility | Method | Typical signature / return | Units / shapes |
+| --- | --- | --- | --- |
+| Load | `load_from_path(path: str)` | `None` | Path must exist; formats include `.xml`, `.urdf`, `.sdf`, `.osim` per docstring |
+| Load | `load_from_string(content, extension=None)` | `None` | Model definition string |
+| Time | `reset()` | `None` | `t → 0`, initial `(q₀, v₀)` |
+| Time | `step(dt: float \| None = None)` | `None` | **`dt` in seconds**; `None` uses the model or engine default (see §Defaults) |
+| Kinematics | `forward()` | `None` | Updates derived quantities without advancing `t` |
+| State | `get_state()` | `(q, v)` | `q: (n_q,)`, `v: (n_v,)` SI generalized coordinates / speeds |
+| State | `set_state(q, v)` | `None` | Matching lengths; triggers forward in implementations |
+| Control | `set_control(u)` | `None` | `u: (n_u,)` torques or actuator commands |
+| Time query | `get_time()` | `float` | Seconds, `≥ 0` |
+| Inertia | `compute_mass_matrix()` | `M` | `(n_v, n_v)`, SPD |
+| Bias | `compute_bias_forces()` | `h` | `(n_v,)` Coriolis, centrifugal, gravity |
+| Gravity | `compute_gravity_forces()` | `g` | `(n_v,)` |
+| Inverse dynamics | `compute_inverse_dynamics(qacc)` | `τ` | `τ = M(qacc) + h` |
+| Jacobian | `compute_jacobian(body_name)` | `dict` or `None` | Keys `linear`, `angular`, `spatial`; spatial rows **`[angular; linear]`** per [`SPATIAL_JACOBIAN_ORDER`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/capabilities.py#L28-L36) |
+| Drift | `compute_drift_acceleration()` | `a_drift` | `(n_v,)`, rad/s² or m/s² |
+| Control | `compute_control_acceleration(tau)` | `a_control` | `(n_v,)` |
+| Counterfactual | `compute_ztcf(q, v)`, `compute_zvcf(q)` | accelerations | Fixed-state counterfactuals; see UpstreamDrift `SPEC.md` §4 |
+| Checkpoint | `save_checkpoint` / `restore_checkpoint` | varies | Via `Checkpointable` on `SimulationInterface` |
+| Features | `get_capabilities()` | `EngineCapabilities` | Optional UI/API feature gating |
+
+**Bias meaning:** inverse dynamics implements **`τ = M(q̈) + h(q, v)`** where `h` is the bias from `compute_bias_forces()`. Drift and control split **acceleration** `q̈`, not torque directly.
+
+**Capability levels:** `get_capabilities()` reports per-feature support (`FULL`, `PARTIAL`, `NONE`, …) in
+[`capabilities.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/capabilities.py).
+The interface docstring states a design goal **`a_full ≈ a_drift + a_control`**, but implementations differ when constraints or contacts are active (§Drift vs control).
+
+## Minimal Usage Pattern {#minimal-usage}
+
+Every engine follows the same call pattern after install in an UpstreamDrift checkout:
+
+```python
+# Pattern (UpstreamDrift repo root on PYTHONPATH); paths are repository-relative.
+from pathlib import Path
+
+engine = MyEngineClass()  # MuJoCo, Drake, Pinocchio, Pendulum, OpenSim, MyoSuite, …
+engine.load_from_path(str(Path("src/engines/physics_engines/mujoco/models/simple_pendulum.xml")))
+engine.reset()
+q, v = engine.get_state()
+engine.set_state(q, v)
+engine.forward()
+a_drift = engine.compute_drift_acceleration()
+a_ctrl = engine.compute_control_acceleration(tau=engine.compute_mass_matrix() @ (0.1 * v))
+```
+
+### Pendulum Engine (Lowest Dependency)
+
+The analytical double-pendulum engine lives under
+[`pendulum_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py).
+`get_state()` returns **`q = [θ₁, θ₂]`**, **`v = [ω₁, ω₂]`** in radians and rad/s
+([`get_state`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L148-L152)).
+Default `step()` size when `dt is None`: **0.01 s**
+([`step`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L134-L136)).
+
+### `ode` Simulation Backend (Club Double Pendulum)
+
+For rollouts without loading a full `PhysicsEngine`, the **`ode`** backend in
+[`simulation_backends`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md)
+wraps the same golf parameters as MuJoCo/MJX:
+
+```python
+from src.shared.python.simulation_backends import GolfModelParams, make_backend
+
+params = GolfModelParams.default()
+backend = make_backend("ode", params)
+trace = backend.rollout(controls=None, horizon=200, dt=0.005)  # always pass dt explicitly
+```
+
+Module map and backend choice table:
+[`simulation_backends/README.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L13-L39).
+
+### CLI Rollout Harness
+
+[`src/sim_run/engine_run.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/sim_run/engine_run.py#L96-L127)
+loads a named engine, **`load_from_string`**, **`reset`**, then **`step(timestep)`** with an
+**explicit `timestep` argument** — mirroring the advice to never rely on implicit defaults for
+cross-engine studies.
+
+## What Is Inside Drift and Control? {#drift-control-semantics}
+
+The suite documents a **Section F** split: drift is “passive” acceleration with actuation cleared;
+control isolates the increment attributable to applied `τ`. **The passive term is not the same
+physical sum in every engine.**
+
+| Engine | Drift implementation (code) | Control implementation | Active contact / equality in drift? | Superposition `a_drift + a_control = a_full` |
+| --- | --- | --- | --- | --- |
+| **MuJoCo** | `mj_forward` with `ctrl=0`, external wrenches cleared; reads `qacc` ([`compute_affine_drift`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L652-L688)) | `a_full(τ) - a_drift` via constrained forward ([`compute_control_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L623-L650)) | **Yes** when constraints/contacts active | **No** under active contacts/equalities (docstring at `compute_control_acceleration`) |
+| **Drake** | `-M⁻¹ bias` from `CalcInverseDynamics` at `qacc=0` ([`_passive_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/drake/python/drake_physics_engine.py#L635-L647)) | `M⁻¹ τ` ([`compute_control_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/drake/python/drake_physics_engine.py#L649-L658)) | No contact solver in this path | Holds for unconstrained plant context |
+| **Pinocchio** | `pin.aba(model, data, q, v, τ=0)` ([`compute_drift_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L568-L582)) | `M⁻¹ τ` | **No** built-in contact in ABA path | Unconstrained models |
+| **OpenSim** | `-M⁻¹ * compute_bias_forces()` with muscles cleared ([`compute_drift_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L771-L788)) | `M⁻¹ τ` | Muscle / passive forces in bias | Pointwise; ZTCF uses `realizeAcceleration` ([`_zero_control_udot`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L1000-L1015)) |
+| **MyoSuite** | MuJoCo `forward` with `ctrl=0` ([`_drift_control.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/myosuite/python/_drift_control.py#L31-L45)) | `M⁻¹ τ` | Same family as MuJoCo | Same caveats as MuJoCo |
+| **Pendulum** | Analytical passive dynamics ([`compute_drift_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L245-L268)) | `M⁻¹ τ` | N/A | Teaching models |
+| **Putting green** | Rolling + slope drift ([`shared_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/putting_green/python/shared_engine.py#L216-L220)) | `τ / m` | Rolling resistance in drift | Specialized 2-D ball model |
+| **Simscape adapter** | **Deferred stub** | **Deferred stub** | N/A | Not available ([`adapter.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/simscape/adapter.py#L702-L722)) |
+| **JaxSim** | *Not verified in this pass* | *Not verified in this pass* | — | See UpstreamDrift `docs/engines/jaxsim.md` |
+
+**Constrained superposition:** when welds, loops, or contacts participate in forward dynamics, use the
+constraint-aware helpers in
+[`constrained_ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/constrained_ztcf_zvcf.py)
+(covered by unit tests under `tests/unit/simulation_backends/`). The unconstrained
+`M⁻¹ τ` control term is **not** additive with MuJoCo drift under active constraints.
+
+**ZTCF / ZVCF:** at a fixed state, UpstreamDrift defines ZTCF as the drift component and ZVCF as
+`M⁻¹ τ` with velocity and gravity terms zeroed; the split is exact pointwise but
+**not additive over trajectories** ([`simulation_backends/README.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L76-L82)).
+
+## Integrator and Timestep Defaults {#integrator-defaults}
+
+Always pass **`dt` explicitly** when comparing engines or publishing trajectories. Defaults differ:
+
+| Source | Default step | Integrator notes | Evidence |
+| --- | --- | --- | --- |
+| Suite constant | **0.001 s** | `DEFAULT_TIME_STEP` | [`core/constants.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/core/constants.py#L99-L101) |
+| MuJoCo golf / myo models | **0.002 s**, RK4 | Per-model `<option timestep="…" integrator="RK4"/>` | e.g. [`golfer.xml`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/models/generated/golfer.xml#L4) |
+| MuJoCo simple pendulum | **0.01 s** | Default MuJoCo integrator | [`simple_pendulum.xml`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/models/simple_pendulum.xml#L3) |
+| Pinocchio engine | Uses suite `DEFAULT_TIME_STEP` for stepping; **`integrator="rk4"`** default, **`semi_implicit` optional** | [`PinocchioPhysicsEngine.__init__`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L68-L104) |
+| OpenSim engine | **`_time_step = 0.01` s** | Simbody manager step | [`opensim_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L83-L83) |
+| Pendulum engine | **0.01 s** if `step(dt=None)` | Analytical RK inside dynamics | [`pendulum_physics_engine.step`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L134-L136) |
+| Drake | Discrete plant per model | Set at URDF/SDF load | Model-dependent |
+| `ode` / `mujoco` backends | **Caller-supplied `dt`** only | No implicit default in `rollout` | [`README.md` usage](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L57-L66) |
+
+## Contact Parameters and Models {#contact-parameters}
+
+Qualitative differences and test tolerances are documented in
+[`docs/conventions/contact_models.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/docs/conventions/contact_models.md)
+(MuJoCo soft contact penetration tol **5e-3 m**, Drake rigid/compliant **1e-3 m**, Pinocchio constraint-based).
+
+Representative MuJoCo MJCF defaults in golf model generators:
+
+- **`condim="3"`** and **`friction="0.9 0.005 0.0001"`** on default geoms
+  ([`models_advanced.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/models_advanced.py#L52),
+  [`urdf_parser.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/urdf_parser.py#L49)).
+
+Ground contact for soft-feet biomechanics models often uses **`condim="3"`** with
+`friction="0.9 0.8 0"` on foot contact spheres in bundled MyoSuite golf MJCF
+([`golfer_myobody_driver.xml`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/shared/models/myosuite/golf/body/golfer_myobody_driver.xml#L23)).
+
+Pinocchio has **no** turnkey contact drift path in the ABA wrapper above; contact-heavy studies
+should prefer **MuJoCo** (or Drake hydroelastic / point contact, per `contact_models.md`).
+
+## Choosing an Engine {#engine-selection}
+
+UpstreamDrift maintains a capability matrix and selection guide in-repo:
+
+- Feature × engine table:
+  [`docs/engines/engine_capabilities.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/docs/engines/engine_capabilities.md)
+- Decision prose:
+  [`docs/engines/engine_selection_guide.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/docs/engines/engine_selection_guide.md)
+- Model ledger (which models exist per engine):
+  [`src/engines/model_inventory.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/model_inventory.py)
+
+Condensed decision hints **from those documents and this commit's code**:
+
+| Need | Practical direction at this commit | Why |
+| --- | --- | --- |
+| Soft contact, muscles, grip welds | **MuJoCo** (+ **MyoSuite** for bundled muscle MJCF) | Contact in drift path; Hill muscles MuJoCo-only per selection guide |
+| Trajectory optimization, hydroelastic contact planning | **Drake** | Selection guide prioritizes Drake trajopt / contact planning |
+| Lightweight rigid-body ID / Jacobians, no contact | **Pinocchio** | Fast ABA drift; contact not in default drift path |
+| Hill-type musculoskeletal forward sim | **OpenSim** (experimental tier) | Muscle bias in `compute_bias_forces`; ZTCF uses Simbody acceleration stage |
+| Teaching / double-pendulum parity | **Pendulum** engine or **`ode`** backend | Symbolic or analytical reference |
+| Differentiable batched rollouts | **`mjx`** backend | See backend table in `simulation_backends/README.md` |
+| GPU throughput sweeps | **`mjwarp`** backend | Batched rollouts; not faster for a single 2-DoF rollout |
+| Drift/control on Simscape Multibody | **Not available** | Adapter returns deferred stubs |
+| Counterfactuals on JaxSim | *Verify against current manifest* | Capability taxonomy lists partial contact / counterfactual gaps |
+
+AffineDrift's companion [Engines and Runtime Support](../models/programming/engines.html)
+lists provider support **tiers** only; this page is the code-grounded supplement.
+
+## Cross-Engine Validation {#cross-engine-validation}
+
+The validator class
+[`CrossEngineValidator`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/cross_engine_validator.py)
+implements Guideline **P3** metric tolerances and severity ramps:
+
+| Metric key | Tolerance | Lines |
+| --- | --- | --- |
+| `position` | 1e-6 m | [`TOLERANCES`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/cross_engine_validator.py#L231-L242) |
+| `velocity` | 1e-5 m/s | same |
+| `acceleration` | 1e-4 m/s² | same |
+| `torque` | 1e-3 N·m | same |
+| `jacobian` | 1e-8 | same |
+| `state_round_trip` | 1e-9 | same |
+| `end_effector` | 5e-3 m | same |
+
+Severity: warning at **80%** of tolerance, error at **10×**, blocker at **100×**
+([`WARNING_THRESHOLD` et al.](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/cross_engine_validator.py#L244-L248)).
+
+Representative conformance checks include **state round-trip**, **forward kinematics**,
+**inverse/forward dynamics consistency**, **mass properties**, and **differential cross-engine reference**
+(methods near lines 284–403 in the same module).
+
+**User-facing compare command** for golf double-pendulum backends:
+
+```bash
+python -m src.shared.python.simulation_backends.compare_cli \
+  --engines ode,mujoco \
+  --horizon 200 \
+  --dt 0.005 \
+  --output reports/ode_vs_mujoco.md
+```
+
+Documented in
+[`simulation_backends/README.md` § Cross-engine reports](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L112-L123).
+Registered divergences can be attached via the comparison service (`comparison.py` in the same package).
+
+## Simulation Backends (`ode`, `mujoco`, `mjwarp`, `mjx`) {#simulation-backends}
+
+These backends implement
+[`SimulationBackend`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L15-L18)
+for the shared `GolfModelParams` club model — orthogonal to full humanoid `PhysicsEngine` loads but
+the lowest-friction path to reproduce double-pendulum ZTCF/ZVCF analysis:
+
+| Backend | Device | Batched | Differentiable | Exposes `M`, bias |
+| --- | --- | --- | --- | --- |
+| `ode` | CPU | no | no | yes |
+| `mujoco` | CPU | no | no | yes |
+| `mjwarp` | CUDA | yes | no | no |
+| `mjx` | JAX | yes | yes | no |
+
+Factory entry point:
+[`make_backend(name, params, **kwargs)`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/factory.py).
+Pointwise ZTCF/ZVCF on canonical-v2 trajectories:
+[`ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/ztcf_zvcf.py)
+(see README § Pointwise ZTCF/ZVCF).
+
+Lower-body and putting-green specialized engines are documented under UpstreamDrift
+`docs/engines/` and the putting-green
+[`shared_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/putting_green/python/shared_engine.py)
+implementation; **unverified in this pass:** full lower-body `SPEC.md` walk-through.
+
+## Related Articles
+
+- [Engines and Runtime Support](../models/programming/engines.html) — provider support tiers and runtime matrix.
+- [UpstreamDrift Educational Integration](../articles/upstreamdrift-educational-integration.html) — teaching-oriented integration overview.
+- [UpstreamDrift Conventions Reference](upstreamdrift-conventions.html) — canonical state, frames, and vector ordering.
+- [Programs & Tools](tools.html) — where AffineDrift routes readers into companion artifacts.
+
+## Related AffineDrift Pages {#related}
+
+- [Programming Companion](../models/models.html) — artifact-pinned catalog boundary
+- [Models: Pendulum](../models/models-pendulum.html) — AffineDrift entry pointing at UpstreamDrift pendulum assets
+
+Refs #5620
+
+
