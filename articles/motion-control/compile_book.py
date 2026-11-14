@@ -277,6 +277,6 @@ if __name__ == "__main__":
     else:
         logger.info("PDF compilation failed - LaTeX source ready for external compilation")
 
-    logger.info("\nThe complete textbook 'Control Is Motion' has been generated.")
-    logger.info("This comprehensive work presents a new framework for nonlinear control")
-    logger.info("theory focused on systems that move through the world.")
+    logger.info(
+        "Control Is Motion concatenation finished; editorial source of truth is chapter*.tex."
+    )

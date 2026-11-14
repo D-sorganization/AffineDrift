@@ -5,7 +5,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MONOGRAPH = ROOT / "articles/proximal_distal_energy_transfer"
 BIB = MONOGRAPH / "references.bib"
+CH03B = MONOGRAPH / "chapters/_ch03b_hand_path_attribution.qmd"
 CH05 = MONOGRAPH / "chapters/_ch05_two_hand_wrench.qmd"
+CH05B = MONOGRAPH / "chapters/_ch05b_forward_two_hand.qmd"
 CH06_METHODS = MONOGRAPH / "chapters/_ch06_methods.qmd"
 CH06CD = MONOGRAPH / "chapters/_ch06cd_articulated_attribution.qmd"
 CH06BC = MONOGRAPH / "chapters/_ch06bc_torque_allocation_preload.qmd"
@@ -81,3 +83,41 @@ def test_site_wrapper_cites_kao_for_scapular_emg() -> None:
     text = WRAPPER.read_text(encoding="utf-8")
     assert "Kao et al., 1995" in text
     assert "Jobe et al., 1995" not in text
+
+
+def test_monograph_unifies_differential_force_convention() -> None:
+    """Chapters 3b, 5, and 5b share one differential-force symbol and sign (#5611 F9)."""
+    ch03b = CH03B.read_text(encoding="utf-8")
+    assert r"\mathbf F_d=\frac{\mathbf F_L-\mathbf F_T}{2}" in ch03b
+    assert r"\mathbf F_d=\frac{\mathbf F_R-\mathbf F_L}{2}" not in ch03b
+    assert "lead-hand (left) contact" in ch03b
+    assert "trail-hand (right) contact" in ch03b
+    assert "right-minus-left convention" not in ch03b
+
+    ch05 = CH05.read_text(encoding="utf-8")
+    assert r"\mathbf F_d=\frac{\mathbf F_L-\mathbf F_T}{2}" in ch05
+    assert r"\Delta\mathbf F=(\mathbf F_T-\mathbf F_L)/2" not in ch05
+    assert r"-\mathbf F_d\cdot\Delta\mathbf v" in ch05
+    assert r"+\Delta\mathbf F\cdot\Delta\mathbf v" not in ch05
+
+    ch05b = CH05B.read_text(encoding="utf-8")
+    assert r"F_d=\tfrac12(F_L-F_R)" in ch05b
+    assert r"D=\tfrac12(F_R-F_L)" not in ch05b
+    assert "differential mode $F_d$" in ch05b
+    assert "differential mode $D$" not in ch05b
+
+
+def test_ch05_differential_normal_mode_sign_wording() -> None:
+    """Ch05 states the +258.0 N positive differential normal mode that yields negative couple (F17)."""
+    ch05 = CH05.read_text(encoding="utf-8")
+    assert "differential normal mode" in ch05
+    assert "+258.0 N" in ch05
+    assert "large and negative under @eq-normal-force-couple" not in ch05
+
+
+def test_lee2026_bibliography_record_matches_crossref_doi() -> None:
+    """Verify @article{lee2026} (CVE-A8) matches Crossref DOI 10.1177/17479541261429479."""
+    text = BIB.read_text(encoding="utf-8")
+    assert "@article{lee2026," in text
+    assert "10.1177/17479541261429479" in text
+    assert "Ehrlich, Justin and Cain, Christopher" in text
