@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5596 · Add Llms.Txt Agent Entry Point, Extend Symbol Registry V2 From NOTATION.md, and CI Freshness Gates.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5596
+- **Branch:** cursor/agent-readiness-5596-3da0
+- **PR:** #5662
+- **Paths:** see #5662
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`fba8421b`; collated from changes/5596-add-llms-txt-agent-entry-point-extend-sy.md)
+- **Summary:** Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates.
+- **Next step:** Merge after CI green.
+
 ### DL-#5623 · UpstreamDrift Capture-to-Model Pipeline Reference (Calibration Through Export).
 
 - **State:** in_review
@@ -598,10 +611,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5595
 - **Branch:** cursor/parameters-ssot-5595-6ff0
-- **PR:** #5671
+- **PR:** #5671, #5699
 - **Paths:** see #5671
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`f91bc9cd`; collated from changes/5595-rebuild-parameters-md-from-sourced-canon.md)
+- **Last verified:** 2026-11-14 (`14edb6ed`; collated from changes/5595-extend-canonical-parameters-with-ball-mo.md)
 - **Summary:** Rebuild PARAMETERS.md from sourced canonical registry with CI check
 - **Next step:** Merge after CI green.
 
