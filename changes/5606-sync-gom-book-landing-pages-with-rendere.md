@@ -1,7 +1,7 @@
 ---
 issue: 5606
-summary: "Sync GoM book landing pages with rendered chapters and archive stale audit runbooks."
+summary: "Confirm GoM book landing pages and archived audit runbooks (no further landing edits this PR)."
 dl_state: "in_review"
-next_step: "Merge after CI green."
-branch: "cursor/gom-5606-landing-pages-66db"
+next_step: "CI green"
+branch: "cursor/gom-5603-5606-9baf"
 ---
