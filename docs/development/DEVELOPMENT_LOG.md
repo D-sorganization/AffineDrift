@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5602 · Harmonise Geometry of Motion Notation With NOTATION.md: Constrained Symbols, Transverse Coordinates, Chapter Notation Notes.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5602
+- **Branch:** cursor/gom-notation-harmonise-dd74
+- **PR:** #5681
+- **Paths:** see #5681
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`cd83dafe`; collated from changes/5602-harmonise-geometry-of-motion-notation-wi.md)
+- **Summary:** Harmonise Geometry of Motion notation with NOTATION.md: constrained symbols, transverse coordinates, chapter notation notes.
+- **Next step:** Merge after CI green; ch03b operational-inertia prose uses K_c.
+
 ### DL-#5598 · Physics of Golf Content Corrections (Piezo Form, Shaft Cn, Cross-Refs, Pedagogy)
 
 - **State:** in_review
