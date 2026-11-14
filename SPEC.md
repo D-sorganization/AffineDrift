@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-14 | #5686 | Companion pin bump, launcher-tile CI gate, README parity fetch, FDM dead links |
+| 2026-11-14 | #5697 | Reconcile claim_registry.json, per-file provenance SHA-256 hashes, ZTCF/DCR wording, and companion software-artifact tiering. |
 | 2026-11-14 | #5692 | Restore clean pre-push checks across PARAMETERS.md Prettier ignore, double-pendulum mypy, and model-map noqa. |
 | 2026-11-14 | #5669 | UpstreamDrift capture-to-model pipeline reference (calibration through export). |
 | 2026-11-14 | #5703 | Unify proximal-distal monograph differential hand-force symbol and normal-mode sign wording across Chapters 3b, 5, and 5b |
