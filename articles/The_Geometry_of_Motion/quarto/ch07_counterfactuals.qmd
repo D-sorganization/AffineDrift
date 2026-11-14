@@ -190,21 +190,19 @@ $$
 Thus the difference includes damping whenever it is present. More general velocity-dependent forces, actuator characteristics and internal states add their own terms. A reset may also change kinetic energy discontinuously; it is a diagnostic intervention, not a free physical operation.
 
 ### Contact Reactions Also Respond to Input
-Suppose a fixed smooth contact mode imposes $A\dot v=-b$ and the force equation is $M\dot v=Bu-h+A^T\lambda$, with $h=Cv+g_q+d$. For independent constraint rows, define
+Suppose a fixed smooth contact mode imposes $J_c\dot v=-\gamma$ with $\gamma=\dot J_c v$ and the force equation is $M\dot v=Bu-h+J_c^T\lambda$, with $h=Cv+g_q+d$. For independent constraint rows, define $K_c=J_cM^{-1}J_c^T$ and the velocity projector $P_v=I-M^{-1}J_c^T K_c^{-1} J_c$ (same symbols as @sec-ch9-control-affine and [NOTATION.md](../../../NOTATION.md)):
 []{#eq-ch7:constrained-fields}
 
 $$
 \begin{aligned}
-\Lambda&=(AM^{-1}A^T)^{-1},\\
-P&=I-M^{-1}A^T\Lambda A,\\
-a_0^c&=-PM^{-1}h-M^{-1}A^T\Lambda b,\\
-B_a^c&=PM^{-1}B.
+a_0^c&=-P_vM^{-1}h-M^{-1}J_c^T K_c^{-1}\gamma,\\
+B_a^c&=P_vM^{-1}B.
 \end{aligned}
 $$
 
-These expressions follow by solving for $\lambda=-\Lambda\{b+AM^{-1}(Bu-h)\}$. A contact reaction therefore generally changes with $u$; freezing the actual reaction while deleting torque defines a different, usually inconsistent experiment.
+These expressions follow by solving for $\lambda=-K_c^{-1}\{\gamma+J_cM^{-1}(Bu-h)\}$. A contact reaction therefore generally changes with $u$; freezing the actual reaction while deleting torque defines a different, usually inconsistent experiment.
 
-For a moving holonomic constraint $\varphi(q,t)=0$, admissible velocities satisfy $Av+\varphi_t=0$. Setting $v=0$ can violate this relation. Specify an admissible reset or limit the ZVCF to a formal off-manifold diagnostic. Unilateral contact additionally requires valid force signs and friction conditions; if a branch lifts off or slips, switch models and check the new mode. A fixed-base reduced model can have no explicit multipliers while still representing physical constraints. A golfer's ground and grip conditions cannot be inferred from the appearance of the reduced equations.
+For a moving holonomic constraint $\varphi(q,t)=0$, admissible velocities satisfy $J_c v+\varphi_t=0$. Setting $v=0$ can violate this relation. Specify an admissible reset or limit the ZVCF to a formal off-manifold diagnostic. Unilateral contact additionally requires valid force signs and friction conditions; if a branch lifts off or slips, switch models and check the new mode. A fixed-base reduced model can have no explicit multipliers while still representing physical constraints. A golfer's ground and grip conditions cannot be inferred from the appearance of the reduced equations.
 
 ## Measuring Control Authority
 

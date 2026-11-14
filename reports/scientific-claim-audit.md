@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 298
+- Reviewed: 297
 - Deferred: 0
 - Exempt: 3
 
@@ -121,10 +121,10 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.qmd` | 3 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.qmd` | 2 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.qmd` | 2 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.qmd` | 2 |
@@ -279,7 +279,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
 | `/pages/upstreamdrift-capture-to-model-pipeline.html` | `pages/upstreamdrift-capture-to-model-pipeline.qmd` | 3 |
 | `/pages/upstreamdrift-conventions.html` | `pages/upstreamdrift-conventions.qmd` | 3 |
-| `/pages/upstreamdrift-engine-protocol.html` | `pages/upstreamdrift-engine-protocol.qmd` | 3 |
 | `/pages/upstreamdrift-getting-started.html` | `pages/upstreamdrift-getting-started.qmd` | 4 |
 | `/pages/upstreamdrift-headless-and-agents.html` | `pages/upstreamdrift-headless-and-agents.qmd` | 4 |
 | `/pages/validation-roadmap.html` | `pages/validation-roadmap.qmd` | 3 |
@@ -584,7 +583,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
 | `ad-route-4b6f24957b8f` | `/pages/upstreamdrift-capture-to-model-pipeline.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b17914b25e54` | `/pages/upstreamdrift-conventions.html` | Reviewed | — | None | None | 0 |
-| `ad-route-8c492a8af56b` | `/pages/upstreamdrift-engine-protocol.html` | Reviewed | — | None | None | 0 |
 | `ad-route-9c6939ff17a2` | `/pages/upstreamdrift-getting-started.html` | Reviewed | — | None | None | 0 |
 | `ad-route-32c9c92fc181` | `/pages/upstreamdrift-headless-and-agents.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f75062776350` | `/pages/validation-roadmap.html` | Reviewed | — | None | None | 0 |
