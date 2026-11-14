@@ -191,21 +191,21 @@ The metric $M_*=[[1,1],[1,2]]$ instead gives $A^TM_*+M_*A+4M_*=[[0,0],[0,-2]]$, 
 
 Multiplying a metric by a positive scalar does not change its certified rate. For an unknown metric, fix $\lambda$, impose positive metric bounds or a normalization, and solve a feasibility problem. Searching rates by bisection is distinct from calling a joint optimization in $(M,\lambda)$ one LMI. Nonlinear domain certification and controller constraints require further work.
 
-\section{Partial Contraction: Hierarchical Structure}
-\label{sec:ch4:partial}
+\section{Hierarchical (Cascade) Combination}
+\label{sec:ch4:cascade}
 
 \subsection{When Not All Directions Contract}
 
-Partial contraction methods establish convergence toward a specified property or subspace, often through an auxiliary contracting system. A contracting subsystem is not automatically a fully contracting system. For example, $\dot q=v$, $\dot v=-\gamma(v-u(t))$ damps velocity differences, but solutions with equal velocities and different initial positions retain their position offset forever.
+Hierarchical combination certifies contraction when a triangular structure couples contracting blocks. A contracting subsystem is not automatically a fully contracting system. For example, $\dot q=v$, $\dot v=-\gamma(v-u(t))$ damps velocity differences, but solutions with equal velocities and different initial positions retain their position offset forever.
 
-\subsection{The Hierarchical Contraction Theorem}
+\subsection{Hierarchical Combination Theorem}
 
 For a triangular variational system, write
 \begin{equation}
 A=\begin{bmatrix}A_{11}&A_{12}\\0&A_{22}\end{bmatrix}.
 \label{eq:ch4:block-jacobian}
 \end{equation}
-Choose block factors $M_i=\Theta_i^T\Theta_i$ whose total derivatives follow the full field. In transformed tangent coordinates,
+Choose block factors $M_i=\Theta_i^T\Theta_i$ whose total derivatives follow the full field. The weighted block metric below strengthens Lohmiller and Slotine's hierarchical combination \cite[Sec.~3.8.3]{LohmillerSlotine1998} by an explicit coupling bound $\|C\|\leq k$ and a block weight $\theta$. In transformed tangent coordinates,
 \begin{equation}
 F=(\dot\Theta+\Theta A)\Theta^{-1}
 =\begin{bmatrix}F_{11}&C\\0&F_{22}\end{bmatrix},\qquad
@@ -215,7 +215,7 @@ C=\Theta_1A_{12}\Theta_2^{-1}.
 The coupling $C$ has already been transformed; it should not receive a second metric transformation.
 
 \begin{theorem}[A Weighted Cascade Certificate]
-\label{thm:ch4:partial}
+\label{thm:ch4:cascade}
 Suppose uniformly $\operatorname{sym}(F_{ii})\preceq-\lambda_iI$, with $\lambda_i>0$, and $\|C\|\leq k$. For a target $0<\lambda<\min(\lambda_1,\lambda_2)$, choose
 \begin{equation}
 M_\theta=\begin{bmatrix}M_1&0\\0&\theta M_2\end{bmatrix},\qquad
@@ -226,6 +226,11 @@ This metric certifies differential contraction at least at rate $\lambda$. Finit
 \end{theorem}
 
 Indeed, the off-diagonal transformed block becomes $C/\sqrt\theta$. The excess over the desired decay is bounded by the scalar two-block quadratic form with diagonal entries $-(\lambda_1-\lambda)$, $-(\lambda_2-\lambda)$ and off-diagonal entry $k/(2\sqrt\theta)$. The displayed inequality makes it negative definite. Increasing $\theta$ weights the second block more heavily and reduces its normalized coupling into the first.
+
+\subsection{Partial Contraction (Virtual Auxiliary Systems)}
+\label{sec:ch4:partial-contraction}
+
+Partial contraction is a different tool: Wang and Slotine \cite{WangSlotine2005Partial} analyze an auxiliary system $\dot y=\varphi(y,x,t)$ that equals the original field on the diagonal, $\varphi(x,x,t)=f(x,t)$. If $\varphi$ is contracting in $y$ uniformly in $x$, and one particular $y$-solution has a stated property, then every $x$-trajectory converges exponentially to that property. Synchronization of coupled identical oscillators is the standard illustration. It does not refer to block-triangular Jacobians; the preceding cascade theorem addresses that structure instead.
 
 For
 \begin{equation}
@@ -398,7 +403,7 @@ H_{11}&=m_1'(x_1)x_2+2\lambda m_1,\label{eq:ch4:vdp-cc-11}\\
 H_{22}&=2\epsilon(1-x_1^2)m_2+m_2'(x_1)x_2+2\lambda m_2,\label{eq:ch4:vdp-cc-22}\\
 H_{12}&=H_{21}=m_1+(-1-2\epsilon x_1x_2)m_2.\label{eq:ch4:vdp-cc-12}
 \end{align}
-The condition is $H\preceq0$, not componentwise inequalities on its off-diagonal entries. In two dimensions this requires $H_{11}\leq0$, $H_{22}\leq0$ and $\det H\geq0$. If $m_1$ is a positive constant, $H_{11}=2\lambda m_1>0$ for every positive requested rate. That alone disproves this entire candidate class for full contraction, at every point.
+The condition is $H\preceq0$, not componentwise inequalities on its off-diagonal entries. In two dimensions this requires $H_{11}\leq0$, $H_{22}\leq0$ and $\det H\geq0$. On the line $x_2=0$, $H_{11}=2\lambda m_1(x_1)>0$ for every positive rate, so no member of this diagonal class certifies full contraction on any domain meeting that line; when $m_1$ is constant the violation holds at every point.
 
 \subsection{Solution Strategy}
 
@@ -527,9 +532,9 @@ Nor does greater stiffness necessarily increase the asymptotic decay rate. In th
 
 Reflex delays require delayed-state or augmented-state analysis; they are not generally a static subtraction $GK$ that automatically improves a rate. Nonlinear muscle force--length--velocity relations, tendon compliance and state-dependent moment arms also change the Jacobian. The preceding two-state model is a transparent teaching example, not a complete neuromusculoskeletal certificate or a clinical prescription.
 
-\subsection{Partial Contraction in Sequential Motion}
+\subsection{Hierarchical Combination in Sequential Motion}
 
-The torso--arm--club chain defines kinematic relationships. Its dynamics generally couple the links in both directions through the mass matrix, interaction forces and contact constraints. Applying a cascade theorem requires an actual triangular representation or a justified approximation with quantified residual coupling. Segment size, muscular strength and the order of speed peaks do not supply those hypotheses or their contraction rates.
+The torso--arm--club chain defines kinematic relationships. Its dynamics generally couple the links in both directions through the mass matrix, interaction forces and contact constraints. Applying the cascade combination theorem requires an actual triangular representation or a justified approximation with quantified residual coupling. Segment size, muscular strength and the order of speed peaks do not supply those hypotheses or their contraction rates.
 
 Repeatable club delivery may coexist with substantial variation in redundant joint states. That motivates task-space or transverse questions rather than automatically demanding global contraction of every coordinate. However, a projected error that happens to shrink on measured trials is not yet a certificate for all perturbations: the hidden states can feed back into the output later.
 
@@ -649,7 +654,7 @@ Lohmiller and Slotine \cite{LohmillerSlotine1998} provide the foundational diffe
 \begin{enumerate}
 \item \textbf{Contraction of a Linear System.} For $A=[[-1,2],[0,-3]]$, compute the identity-metric rate. For $M=\operatorname{diag}(1,\theta)$, derive $\lambda(\theta)=2-\sqrt{1+1/\theta}$. Find the weights giving a prescribed rate below one, and explain why the supremum one is not attained by any finite positive diagonal weight. Compare with a nondiagonal metric constructed from eigenvectors.
 \item \textbf{LMI Feasibility on a Domain.} For $\dot x_1=-x_1+x_2^2$, $\dot x_2=-2x_2+u$, apply $u=-x_2$. Show that no constant positive metric certifies a fixed positive rate on all $\mathbb R^2$: the unbounded off-diagonal coupling must be addressed. On the invariant strip $|x_2|\leq R$, use $M=\operatorname{diag}(1,\theta)$ and derive a sufficient weight for any $0<\lambda<1$.
-\item \textbf{Partial and Cascade Contraction.} For the same cascade with $|u(t)|\leq U$, show that $|x_2|\leq R$ is invariant when $2R\geq U$. Bound the coupling there and find a weighted full-state certificate for a target rate below one. Explain why a statement based only on the two diagonal subsystem rates is insufficient, and contrast it with the position integrator $\dot q=v$.
+\item \textbf{Cascade Combination.} For the same cascade with $|u(t)|\leq U$, show that $|x_2|\leq R$ is invariant when $2R\geq U$. Bound the coupling there and find a weighted full-state certificate for a target rate below one. Explain why a statement based only on the two diagonal subsystem rates is insufficient, and contrast it with the position integrator $\dot q=v$.
 \item \textbf{From Differential to Finite Feedback.} For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$, use $u=x_1^3-k_px_1-k_dx_2$ with $k_p,k_d>0$ to obtain a linear stable closed loop. Solve its Lyapunov equation and compute $K=-D_xu$ for our differential sign convention. Verify the primal and dual identities. Explain why an arbitrary polynomial differential gain would still require a finite controller construction and an actuator-feasibility check.
 \item \textbf{Discrete-Time Contraction.} For $x_{k+1}=Ax_k$, show that a constant positive metric with induced norm $\|A\|_M<1$ exists precisely when $A$ is Schur stable. Give the length factor and its equivalent continuous-time rate for sample period $\Delta t$. Compare an exact scalar stable flow with explicit Euler and find the latter's allowable step interval.
 \item \textbf{Stochastic Comparisons.} Derive the finite-time and stationary variances for $dx=-ax\,dt+\sigma\,dW$. Compute the mean-square difference for common-noise and independent-noise pairs, retaining the initial difference. Then derive the common-noise multiplicative condition $b^2<2a$ for mean-square decay in $dx=-ax\,dt+bx\,dW$.
