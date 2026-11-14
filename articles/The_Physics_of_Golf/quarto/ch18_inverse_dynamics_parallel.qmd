@@ -360,13 +360,14 @@ compensation, lead resistance, and self-heating affect the actual installation.
 The bridge conventions and calibration choices should be reported, as emphasized
 in the [NI strain-measurement documentation](https://www.ni.com/getting-started/set-up-hardware/data-acquisition/i/strain-gages).
 
-For a piezoelectric material, a constitutive relation in stress-charge form is
+For a piezoelectric material, a constitutive relation in strain-charge form is
 $$
 D=d\,\sigma+\epsilon^T E.
 $$ {#eq-piezoelectric_relation}
 $D$ is electric displacement (charge per area), $\sigma$ is stress, $E$ is
 electric field, and $d$ is the piezoelectric coupling tensor under the stated
-material convention. This is not an equation for voltage. In a calibrated
+material convention. The superscript on $\epsilon^{T}$ denotes permittivity at
+constant stress (often written $\epsilon^{\sigma}$), not a matrix transpose. This is not an equation for voltage. In a calibrated
 one-dimensional approximation, generated charge is $Q_{\rm ch}=d_FF$. An ideal
 open-circuit voltage magnitude is $Q_{\rm ch}/C$ for the relevant capacitance; an
 ideal inverting charge amplifier gives $V_{\rm out}=-Q_{\rm ch}/C_f$ over its operating
