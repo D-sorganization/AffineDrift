@@ -516,11 +516,11 @@ state and event must all be specified before assigning a causal benefit.
 []{#sec-double_pendulum_energy}
 
 To derive the coupling explicitly, take a fixed planar base, inner-link length
-$L_1$, masses $m_1,m_2$, center distances $c_1,c_2$ from each proximal hinge and
+$L_1$, masses $m_1,m_2$, center distances $r_1,r_2$ from each proximal hinge and
 central planar inertias $I_1,I_2$. Define relative coordinates
 $q_1=\theta_1$ and [$q_2=\theta_2-\theta_1$]{.long-inline-math role="group" aria-label="Inline calculation 9; scroll horizontally" tabindex="0"}, where the absolute angles $\theta_i$
 are measured from downward. Let $u=\dot q_1$, $w=\dot q_2$ and
-[$a=I_1+m_1c_1^2+m_2L_1^2$]{.long-inline-math role="group" aria-label="Inline calculation 10; scroll horizontally" tabindex="0"}, $b=I_2+m_2c_2^2$, $d=m_2L_1c_2$.
+[$a=I_1+m_1r_1^2+m_2L_1^2$]{.long-inline-math role="group" aria-label="Inline calculation 10; scroll horizontally" tabindex="0"}, $b=I_2+m_2r_2^2$, $d=m_2L_1r_2$.
 Directly differentiating the center positions gives
 []{#eq-double_pend_kinetic_energy}
 
@@ -529,13 +529,13 @@ K=\tfrac12a u^2+\tfrac12b(u+w)^2+d\cos q_2\,u(u+w).
 $$
 
 The club rotates at $u+w$, not $w$. The inner contribution is
-[$(I_1+m_1c_1^2)u^2/2$]{.long-inline-math role="group" aria-label="Inline calculation 11; scroll horizontally" tabindex="0"}; the rest belongs to the translating and rotating outer
+[$(I_1+m_1r_1^2)u^2/2$]{.long-inline-math role="group" aria-label="Inline calculation 11; scroll horizontally" tabindex="0"}; the rest belongs to the translating and rotating outer
 body. Hence the physical outer-body energy includes the cross term and an
 $m_2L_1^2u^2/2$ contribution. Assigning only $bw^2/2$ to the club would omit
 its motion induced by the inner link.
 
 Euler--Lagrange equations with base and relative-hinge motor efforts
-[$\tau=(\tau_1,\tau_2)^T$]{.long-inline-math role="group" aria-label="Inline calculation 12; scroll horizontally" tabindex="0"} give $M\ddot q+h+G=\tau$, where
+[$\tau=(\tau_1,\tau_2)^T$]{.long-inline-math role="group" aria-label="Inline calculation 12; scroll horizontally" tabindex="0"} give $M\ddot q+h+g=\tau$, where
 []{#eq-energy_two_link_dynamics}
 
 $$
@@ -550,9 +550,9 @@ Both velocity-bias components matter. For upward gravitational potential,
 []{#eq-energy_two_link_gravity}
 
 $$
-G=\begin{bmatrix}
-(m_1c_1+m_2L_1)g\sin q_1+m_2c_2g\sin(q_1+q_2)\\
-m_2c_2g\sin(q_1+q_2)
+g=\begin{bmatrix}
+(m_1r_1+m_2L_1)g\sin q_1+m_2r_2g\sin(q_1+q_2)\\
+m_2r_2g\sin(q_1+q_2)
 \end{bmatrix}.
 $$
 
@@ -710,7 +710,7 @@ questions possible without prescribing a universal hip-braking or lag strategy.
    and loss from momentum and restitution. Explain why residual head energy and
    swing losses cannot be relabeled as collision dissipation.
 
-1. Derive $M$, $h$ and $G$ for the two-link relative chart. For the aligned
+1. Derive $M$, $h$ and $g$ for the two-link relative chart. For the aligned
    unit-rod braking case, compute both absolute angular accelerations and both
    body-energy rates. Explain how the outer rod can gain angular speed while
    losing energy.
@@ -754,7 +754,7 @@ questions possible without prescribing a universal hip-braking or lag strategy.
 
 1. Differentiate the kinetic-energy quadratic twice with respect to rates
    to obtain $M$; Euler--Lagrange differentiation gives both components of $h$.
-   Differentiate gravitational potential to obtain both entries of $G$. In the
+   Differentiate gravitational potential to obtain both entries of $g$. In the
    aligned unit-rod case the absolute-coordinate mass matrix is
    [$\left[\begin{smallmatrix}4/3&1/2\\1/2&1/3\end{smallmatrix}\right]$]{.long-inline-math role="group" aria-label="Inline calculation 17; scroll horizontally" tabindex="0"},
    with zero instantaneous velocity bias and gravity. Solving against $(-1,0)^T$

@@ -136,7 +136,7 @@ Restricting joint motion, coupling motions and exploiting mechanical interaction
 Suppose two small joint deviations contribute to a scalar delivery error as $y=q_1+q_2$. All pairs satisfying $q_2=-q_1$ cancel in this local task model. That null-direction logic is the uncontrolled-manifold (UCM) idea [@Scholz1999]; the cited study analyzed sit-to-stand, not golf. A golfer can vary both joints while preserving delivery. If a different club or operating point changes the sensitivity to $y=q_1+2q_2$, the same cancellation no longer works. A coordination pattern is task- and context-dependent.
 :::
 
-More generally, let delivery be $\bm{y}=G(\bm{x},c)$, where $c$ specifies club, lie and other conditions. Near a nominal state, $\delta\bm{y}\approx J\delta\bm{x}$, with $J=\partial G/\partial\bm{x}$. For zero-mean deviations with covariance $\Sigma_x$,
+More generally, let delivery be $\bm{y}=\mathcal{D}(\bm{x},c)$, where $c$ specifies club, lie and other conditions. Near a nominal state, $\delta\bm{y}\approx J\delta\bm{x}$, with $J=\partial\mathcal{D}/\partial\bm{x}$. For zero-mean deviations with covariance $\Sigma_x$,
 
 $$
 \Sigma_y\approx J\Sigma_xJ^{\mathsf T}.
@@ -212,7 +212,7 @@ An elementary Gaussian example clarifies the role of reliability. Suppose an unb
 A desired trajectory, a predicted trajectory and an estimated trajectory answer different questions: what should happen, what is expected to happen, and what appears to be happening. A successful controller need not make all three identical. A reference trajectory is one possible representation; a policy can choose actions from estimated state, task and context without replaying one fixed path.
 :::
 
-Write a policy as $\bm{u}_t=\pi_\theta(\hat{\bm{x}}_t,c,g,t)$, with goal $g$ and adjustable parameters $\theta$. Learning may change the estimator, the policy, the valuation of outcomes or the preparation of the initial state. A familiar feeling can cue a policy without uniquely specifying its mechanical trajectory. The same verbal description of feel can accompany different motions; similar motions can feel different when fatigue or sensory conditions change.
+Write a policy as $\bm{u}_t=\pi_\theta(\hat{\bm{x}}_t,c,g^\star,t)$, with goal $g^\star$ and adjustable parameters $\theta$. Learning may change the estimator, the policy, the valuation of outcomes or the preparation of the initial state. A familiar feeling can cue a policy without uniquely specifying its mechanical trajectory. The same verbal description of feel can accompany different motions; similar motions can feel different when fatigue or sensory conditions change.
 
 ::: {.callout-tip}
 ## The Feel of a Good Swing
@@ -506,7 +506,7 @@ Prior experience, physical capabilities, sensory information, task understanding
 
 Transfer from another sport may involve perception, timing, physical capacity or useful strategies, but can also involve interference. Similarity of an action's appearance is insufficient: the relevant dynamics, equipment and success criterion may differ. Test what carries over under a defined change rather than assuming that "athleticism" explains every difference.
 
-The affine-control viewpoint contributes a precise question: what must the golfer learn about how state, passive mechanics and commands jointly affect delivery? In a model $\dot{\bm{x}}=\bm{f}(\bm{x})+B(\bm{x})\bm{u}$, passive evolution is state-dependent, and the selected definition of zero input matters. A prepared activation or elastic state can remain after subsequent commands are set to zero. Learning may improve preparation or the timing of intervention; that does not make mechanics irrelevant or prove a unique energy-optimal strategy.
+The affine-control viewpoint contributes a precise question: what must the golfer learn about how state, passive mechanics and commands jointly affect delivery? In a model $\dot{\bm{x}}=\bm{f}(\bm{x})+\bm{G}(\bm{x})\bm{u}$, passive evolution is state-dependent, and the selected definition of zero input matters. A prepared activation or elastic state can remain after subsequent commands are set to zero. Learning may improve preparation or the timing of intervention; that does not make mechanics irrelevant or prove a unique energy-optimal strategy.
 
 To test this connection, compare specified policies or counterfactual interventions from matched initial states and report feasible actuation, contact and uncertainty. Distinguish model prediction from human validation. A reduction in simulated commanded torque is not automatically lower muscular effort, lower joint loading or better transfer to play.
 
