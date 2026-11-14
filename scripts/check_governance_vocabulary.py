@@ -4,7 +4,7 @@
 Reader-facing pages borrowed five words from the repository's own governance
 apparatus -- "governed", "qualified", "provenance", "protected", and
 "fail-closed" -- to describe claim-review status, evidence status, and pinned
-commits. Readers who have never seen `.gaai/` or the falsification ledgers
+commits. Readers who have never seen the falsification ledgers
 have no way to know these carry a repository-specific meaning.
 
 This gate warns (see the CI step's `continue-on-error`) when one of the five

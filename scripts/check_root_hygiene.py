@@ -75,7 +75,6 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         "requirements.txt",
         "robots.txt",
         "service-worker.js",
-        "start-gaai-daemon.sh",
         "stylelint.config.mjs",
         "styles.css",
     }
@@ -88,7 +87,6 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         ".claude",
         ".cursor",
         ".devcontainer",
-        ".gaai",
         ".github",
         ".jules",
         # Fleet security-scanner contract (Runner_Dashboard#2566).
