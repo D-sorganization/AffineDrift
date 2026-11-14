@@ -12,6 +12,8 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+_SCRIPT_DIR = Path(__file__).resolve().parent
+
 
 def extract_chapter_content(filepath: str) -> str:
     """Extract the content between \\begin{document} and \\end{document}"""
@@ -160,8 +162,7 @@ _PREAMBLE = r"""\documentclass[12pt, openany]{book}
 % ──────────────────────────────────────────────
 \title{%
   {\Huge\bfseries\color{chapblue} Control Is Motion}\\[0.4cm]
-  {\Large A New Framework for Nonlinear Systems\\
-  That Move Through the World}\\[0.6cm]
+  {\Large Geometry, Feasible Dynamics, and Robust Outcomes}\\[0.6cm]
   {\color{chapblue}\rule{\textwidth}{2pt}}
 }
 \author{{\Large D.\ Kraft}}
@@ -182,19 +183,7 @@ _PREAMBLE = r"""\documentclass[12pt, openany]{book}
 """
 
 
-_CHAPTER_FILES = [
-    "/mnt/project/chapter1.tex",
-    "/mnt/project/chapter2.tex",
-    "/mnt/project/chapter3.tex",
-    "/mnt/project/chapter4.tex",
-    "/mnt/project/chapter5.tex",
-    "/mnt/project/chapter6.tex",
-    "/mnt/project/chapter7.tex",
-    "/mnt/project/chapter8.tex",
-    "/mnt/project/chapter9.tex",
-    "/mnt/project/chapter10.tex",
-    "/mnt/project/chapter11.tex",
-]
+_CHAPTER_FILES = [str(_SCRIPT_DIR / f"chapter{i}.tex") for i in range(1, 12)]
 
 
 def create_complete_book() -> str:
@@ -216,7 +205,7 @@ def create_complete_book() -> str:
 """
 
     # Write the complete book
-    output_file = "/home/claude/Control_Is_Motion_Complete.tex"
+    output_file = str(_SCRIPT_DIR / "Control_Is_Motion_Complete.tex")
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(book_content)
 
@@ -259,120 +248,13 @@ def compile_pdf(tex_file: str) -> str | None:
         return None
 
 
-_SUMMARY = """
-# Control Is Motion - Complete Textbook
-
-## Book Overview
-This textbook presents a revolutionary framework for nonlinear control theory,
-shifting from the classical "setpoint control" paradigm to a "trajectory control"
-approach specifically designed for systems that move through the world.
-
-## Key Themes
-- **Control is Motion, not Destination**: The fundamental insight that control
-  systems should be designed around trajectories, not fixed points
-- **Moving Target Systems**: Systems whose objectives are defined by kinematics
-  at specific intersections, independent of timing
-- **Geometric Approach**: Treating trajectories as geometric objects with
-  intrinsic curvature and structure
-- **Underactuation as Advantage**: Exploiting passive dynamics rather than
-  fighting them
-
-## Chapter Summary
-
-### Chapter 1: Throwing Away the Target
-- Introduces the central thesis: "Control is motion"
-- Contrasts classical setpoint control with trajectory control
-- Defines moving target systems using the golf swing as primary example
-- Establishes the philosophical and mathematical foundation
-
-### Chapter 2: Curves in State Space
-- Mathematical treatment of trajectories as geometric curves
-- Arc length parameterization and path-timing separation
-- Curvature, torsion, and their relationship to control difficulty
-- Frenet-Serret frames and coordinate-independent descriptions
-
-### Chapter 3: Configuration Manifolds
-- Beyond Euclidean state spaces: Lie groups and curved manifolds
-- Special treatment of rotational motion and SO(3)
-- Riemannian metrics derived from kinetic energy
-- Constraints and submanifolds in mechanical systems
-
-### Chapter 4: Orbital Stability and Transverse Linearization
-- Rethinking stability for moving systems
-- Orbital stability vs. classical Lyapunov stability
-- Transverse linearization and moving Poincaré sections
-- Floquet theory for periodic motions
-
-### Chapter 5: Underactuation and Passive Dynamics
-- Embracing underactuation as a design principle
-- Zero dynamics and the structure of underactuated systems
-- The whip effect and sequential energy transfer
-- Applications to the golf swing kinetic chain
-
-### Chapter 6: Trajectory Optimization
-- Moving target optimal control problems
-- Direct collocation methods for complex systems
-- Multi-phase optimization and cost function design
-- From optimization to implementable trajectories
-
-### Chapter 7: Funnel Synthesis
-- Beyond point tracking: finite-time guarantees
-- Forward invariant funnels and barrier functions
-- Sum-of-squares programming for funnel computation
-- Robust funnels under model uncertainty
-
-### Chapter 8: Phase-Variable Control
-- Decoupling path shape from timing
-- Virtual constraints and hybrid zero dynamics
-- Central pattern generators as phase oscillators
-- Applications to locomotion and rhythmic motions
-
-### Chapter 9: Stochastic Trajectories and Motor Variability
-- Signal-dependent noise in biological actuators
-- Minimum-variance theory of human movement
-- Why optimal trajectories are naturally smooth
-- Covariance steering for robust trajectory design
-
-### Chapter 10: Learning to Move
-- Iterative learning control for trajectory improvement
-- Policy search and trajectory libraries
-- Maintaining stability while adapting performance
-- Applications to athletic skill development
-
-### Chapter 11: Case Study - The Complete Golf Swing
-- Full application of the entire framework
-- 15-DOF musculoskeletal model optimization
-- Funnel synthesis for the complete swing
-- Integration of all theoretical concepts
-
-## Technical Features
-- Rigorous mathematical treatment with geometric insight
-- Extensive use of examples from athletics and robotics
-- Practical algorithms and computational methods
-- End-of-chapter exercises ranging from conceptual to computational
-- Beautiful visual presentations using TikZ graphics
-
-## Target Audience
-- Graduate students in robotics, control theory, and biomechanics
-- Researchers working on underactuated systems and trajectory control
-- Engineers designing systems for complex motions
-- Anyone interested in the intersection of control theory and human movement
-
-## Unique Contributions
-This textbook is the first comprehensive treatment of trajectory-based control
-theory for moving target systems. It bridges classical control theory with
-modern geometric methods, providing both theoretical foundations and practical
-tools for designing controllers for systems that must move through the world
-with purpose and precision.
-"""
-
-
 def create_summary() -> None:
-    """Create a summary of what was accomplished"""
-    with open("/home/claude/BOOK_SUMMARY.md", "w") as f:
-        f.write(_SUMMARY)
-
-    logger.info("Book summary created: BOOK_SUMMARY.md")
+    """Confirm the tracked book summary is present (maintained with the chapters)."""
+    summary_path = _SCRIPT_DIR / "BOOK_SUMMARY.md"
+    if summary_path.is_file():
+        logger.info("Using tracked summary: %s", summary_path)
+    else:
+        logger.warning("BOOK_SUMMARY.md missing beside compile_book.py")
 
 
 if __name__ == "__main__":
@@ -395,6 +277,6 @@ if __name__ == "__main__":
     else:
         logger.info("PDF compilation failed - LaTeX source ready for external compilation")
 
-    logger.info("\nThe complete textbook 'Control Is Motion' has been generated.")
-    logger.info("This comprehensive work presents a new framework for nonlinear control")
-    logger.info("theory focused on systems that move through the world.")
+    logger.info(
+        "Control Is Motion concatenation finished; editorial source of truth is chapter*.tex."
+    )

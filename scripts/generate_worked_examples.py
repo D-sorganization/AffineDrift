@@ -96,6 +96,7 @@ def render_ch06_web(solution: LQRSolution) -> str:
     render_ch06(solution)
     stage = solution.stage_cost(CH06_Q, CH06_R)
     rho = solution.contraction_rate(CH06_Q, CH06_R)
+    rho_loose = solution.contraction_rate_loose(CH06_Q, CH06_R)
     matrices = [
         ("S", solution.riccati),
         ("K", solution.gain),
@@ -117,8 +118,11 @@ def render_ch06_web(solution: LQRSolution) -> str:
             r"$10^{-10}$; the displayed matrices are rounded.",
             f"The closed-loop spectral radius is ${solution.spectral_radius():.4f}<1$.",
             rf"The metric condition number is $\kappa_2(S)={solution.condition_number():.4f}$,",
-            rf"and the conservative value factor is $\rho={rho:.4f}$.",
-            "The corresponding norm factor is the square root of this value.",
+            rf"and the chapter's value factor is $\rho={rho:.4f}$ "
+            rf"(from $\delta=\lambda_{{\min}}(S^{{-1/2}}DS^{{-1/2}})$).",
+            rf"A looser bound uses $\rho_{{\mathrm{{loose}}}}={rho_loose:.4f}$ "
+            r"($1-\lambda_{\min}(D)/\lambda_{\max}(S)$).",
+            "The corresponding norm factor per step is the square root of $\\rho$.",
         ]
     )
     return "\n".join(lines) + "\n" + _ch06_web_trajectory(solution, rho)
@@ -144,9 +148,10 @@ def _ch06_web_trajectory(solution: LQRSolution, rho: float) -> str:
     lines.extend(
         [
             "",
-            "The last column bounds $V_k/V_0$, not the preceding-step ratio. The actual",
-            "ratios vary. The Euclidean norm initially grows even though the Riccati value",
-            "decreases; the scalar bound is conservative and need not track a trajectory.",
+            "The last column is $\\rho^k$ from the chapter definition above, bounding",
+            "$V_k/V_0$ rather than the preceding-step ratio. The one-step ratio column",
+            "can track $\\rho$ closely (within a few percent here), so the generalized-",
+            "eigenvalue bound is not necessarily loose even when the Euclidean norm grows.",
             "",
         ]
     )
@@ -160,6 +165,7 @@ def render_ch06(solution: LQRSolution) -> str:
     stage = solution.stage_cost(CH06_Q, CH06_R)
     stage_eig = np.linalg.eigvalsh(stage)
     rho = solution.contraction_rate(CH06_Q, CH06_R)
+    rho_loose = solution.contraction_rate_loose(CH06_Q, CH06_R)
     residual = solution.residual(CH06_A, CH06_B, CH06_Q, CH06_R)
     rows = solution.value_trajectory(CH06_X0, CH06_STEPS)
 
@@ -189,6 +195,7 @@ def render_ch06(solution: LQRSolution) -> str:
     macro("chsixStageEigMax", f"{stage_eig.max():.4f}")
     macro("chsixStageEigMin", f"{stage_eig.min():.4f}")
     macro("chsixRho", f"{rho:.4f}")
+    macro("chsixRhoLoose", f"{rho_loose:.4f}")
     macro("chsixSqrtCondition", f"{np.sqrt(solution.condition_number()):.4f}")
     # A bound, not the measured residual. The residual is at machine precision
     # (order 1e-14) and its exact value depends on the BLAS, so pinning it makes

@@ -1,0 +1,10 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-gom-vol0-ch10}
+
+::: {.callout-note appearance="simple"}
+AffineDrift's `forward_dynamics` teaching implementation follows the articulated-body elimination in this chapter. UpstreamDrift's MuJoCo golf stack exposes the production forward-dynamics path at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
+
+- **Articulated Body Algorithm:** [`aba.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/rigid_body_dynamics/aba.py) — joint acceleration solve given applied torques and bias forces.
+- **Spatial operators:** [`spatial_vectors.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/spatial_algebra/spatial_vectors.py) — fast motion/force cross products used inside the recursion.
+
+**Convention note:** bias-force accumulation uses `NEG_DEFAULT_GRAVITY` in this package so passive gravity enters with the same sign convention as the RNEA chapter's prepared-tree examples.
+:::

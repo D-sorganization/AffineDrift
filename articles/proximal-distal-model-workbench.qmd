@@ -1,7 +1,7 @@
 ---
 title: "Explore the Proximal–Distal Models"
 author: "Dieter Olson"
-subtitle: "An Interactive Workbench for Forces, Moments, Transfer, and Counterfactuals"
+subtitle: "A Local Simulator Guide for Forces, Moments, Transfer, and Counterfactuals"
 description: "Explore pendulum and bilateral golf models, distinguish guide content from diagnostics, and test the assumptions behind force and energy claims."
 date: "Date unverified"
 date-source: "unverified"
@@ -17,20 +17,18 @@ categories:
 
 ## Explore the Models
 
-The interactive workbench turns the article's diagrams into systems you can
-change and challenge. It includes double-pendulum, triple-pendulum, and
-bilateral golfer models, with force vectors, moment arrows, energy and power
-histories, torque counterfactuals, and parameter perturbations.
+This page embeds no interactive browser widget; it is an installation, model-specification, and diagnostic guide for the external Tools simulator, turning the article's diagrams into systems you can change and challenge locally. It includes double-pendulum, triple-pendulum, and bilateral golfer models, with force vectors, moment arrows, energy and power histories, torque counterfactuals, and parameter perturbations.
 
 The workbench is maintained as an open-source resource in the
-[Tools pendulum simulator](https://github.com/D-sorganization/Tools/tree/cefcc1878de11804c44cd7d1d19c0ffcf58fa89e/src/pendulum_simulator).
+[Tools pendulum simulator](https://github.com/D-sorganization/Tools/tree/3462749d814a0b0082544054f8d74f8fdbd8b497/src/pendulum_simulator).
 Its PyQt6 desktop interface and React/Tauri interface read the same
-[experiment and glossary catalog](https://github.com/D-sorganization/Tools/blob/cefcc1878de11804c44cd7d1d19c0ffcf58fa89e/src/pendulum_simulator/src/double_pendulum_golf/resources/companion_catalog.json).
+[experiment and glossary catalog](https://github.com/D-sorganization/Tools/blob/3462749d814a0b0082544054f8d74f8fdbd8b497/src/pendulum_simulator/src/double_pendulum_golf/resources/companion_catalog.json).
 The catalog provides shared experiment descriptions and terminology. It does
 not establish feature parity or numerical agreement between the interfaces:
 the React application also has its own TypeScript simulation code. The
-instructions below describe source inspected at Tools commit `cefcc1878`;
-they are not a new qualification of every backend or a fresh GUI acceptance run.
+instructions and equations below describe source inspected at Tools commit
+`3462749d8`; they are not a new qualification of every backend or a fresh GUI
+acceptance run.
 
 ::: {.callout-important title="Before You Interpret a Plot"}
 Treat interactive results as `exploratory_model_output`, the catalog's declared
@@ -48,16 +46,13 @@ alone validates them.
 distributed club convention canonical: a uniform shaft of mass $m_2$ with its
 centre of mass at $L_2/2$ and $I_{\mathrm{cm}}=m_2L_2^2/12$, plus a head point
 mass at the tip. Dynamics, joint forces, energy and the golf presets were
-reconciled to it. This page, and the numbers it quotes, describe Tools commit
-`cefcc1878`, which **predates that fix**. Those figures are historical and
-labelled as such; they have **not been recomputed**.
+reconciled to it. This guide and its simulator checkout are pinned to
+post-`#5554` Tools commit `3462749d8`, where `mass_matrix`, joint forces, and
+`_club_kinetic_energy` share `club_inertia.distal_inertia`, yielding `4 J on every path` for the worked state below rather than the historical `8 J versus 4 J` mismatch from pre-fix revisions.
 
-What changes: the 8 J versus 4 J mismatch in the diagnostic-limit example below
-no longer occurs upstream (the same state now carries 4 J on every path), and the
-re-derived golf presets give a lower wrist inertia and weaker arm and club
-coupling than the pinned revision. Treat any transfer-energy, closure or
-preset output read from this page as pre-fix. Re-running the Swing Objective
-Lab results is tracked in
+By contrast, the historical 0.50 kg Swing Objective Lab summary linked from
+[When a Double Pendulum's Energy Optimum Stops Its Hands](impact-optimality-and-model-limits.html)
+is not recomputed here; re-running those Swing Objective Lab cases is tracked in
 [Tools #5523](https://github.com/D-sorganization/Tools/issues/5523).
 :::
 
@@ -72,8 +67,8 @@ preset; in the React guide, **Open Model** selects the model type.
 | Guided Experiment | What to Vary | What to Inspect |
 | --- | --- | --- |
 | Passive Transfer in a Two-Link Chain | Proximal drive and distal torque | Distal acceleration, interaction torque, power, and energy closure |
-| Distal-Torque Onset Comparison | Wrist-command onset | Late club speed, actuator work, and sensitivity to the timing grid |
-| Three-Link Cascade | Segment geometry and timing | Whether the transfer pattern survives an intermediate segment |
+| Distal-Torque Onset Sensitivity | Wrist-command onset | Late club speed, actuator work, and sensitivity to the timing grid |
+| Three-Link Transfer Cascade | Segment geometry and timing | Whether the transfer pattern survives an intermediate segment |
 | Two-Hand Force and Equivalent-Couple Mechanism | Hand separation and reaction directions | Net club moment, individual forces, and zero-moment-arm control |
 | Pointwise and Forward Zero-Torque Counterfactuals | Intervention definition and cut time | Immediate decomposition versus the altered future trajectory |
 | Parameter Robustness and Falsifiability Envelope | Geometry, inertia, damping, and timing | Whether a small plausible perturbation reverses the conclusion |
@@ -157,12 +152,60 @@ For the source version described here, create a fresh checkout of
 ```bash
 git clone https://github.com/D-sorganization/Tools.git
 cd Tools
-git checkout cefcc1878de11804c44cd7d1d19c0ffcf58fa89e
+git checkout 3462749d814a0b0082544054f8d74f8fdbd8b497
 ```
 
 Use an activated virtual environment with Python 3.11 or later for the desktop
 installation. Record resolved dependency versions as well as the source commit;
 an editable install does not freeze dependencies.
+
+### Planar Equations of Motion and Numerical Integrator
+
+All planar double-pendulum variables use SI units: angles in `rad` (downward
+vertical $\theta_1=0,\phi=0$; positive counterclockwise), angular rates in
+`rad/s`, lengths in `m`, masses in `kg`, torques in `N·m`, forces in `N`, and
+work or energy in `J`. The proximal segment (length $L_1$, wrist point mass
+$m_1$) has absolute angle $\theta_1$, while the club has relative angle $\phi$
+(absolute club angle $\theta_1+\phi$). Every module reads the canonical
+distributed club inertia from
+[`club_inertia.py`](https://github.com/D-sorganization/Tools/blob/3462749d814a0b0082544054f8d74f8fdbd8b497/src/pendulum_simulator/src/double_pendulum_golf/club_inertia.py):
+
+$$
+M_c = m_2 + m_c,\qquad s = \left(\tfrac{1}{2}m_2 + m_c\right)L_2,\qquad J_w = \left(\tfrac{1}{3}m_2 + m_c\right)L_2^2.
+$$
+
+With generalized coordinates $q = (\theta_1,\phi)^\top$,
+[`physics.py`](https://github.com/D-sorganization/Tools/blob/3462749d814a0b0082544054f8d74f8fdbd8b497/src/pendulum_simulator/src/double_pendulum_golf/physics.py)
+evolves
+
+$$
+M(\phi)\ddot{q} + C(\phi,\dot{q}) + G(\theta_1,\phi)
+= \tau_{\mathrm{drive}}(t) + \tau_{\mathrm{friction}}(\dot{q}) + \tau_{\mathrm{limits}}(q,\dot{q}),
+$$
+
+where the symmetric positive-definite mass matrix, Coriolis/centrifugal vector,
+and gravity vector are ($h = -sL_1\sin\phi$, $g = 9.80665\,\mathrm{m/s^2}$):
+
+$$
+\begin{aligned}
+M_{11} &= (m_1 + M_c)L_1^2 + J_w + 2sL_1\cos\phi, &
+M_{12} &= M_{21} = J_w + sL_1\cos\phi, &
+M_{22} &= J_w, \\
+C_1 &= h\left(2\dot{\theta}_1\dot{\phi} + \dot{\phi}^2\right), &
+C_2 &= -h\dot{\theta}_1^2, \\
+G_2 &= s g\sin(\theta_1+\phi), &
+G_1 &= (m_1 + M_c)gL_1\sin\theta_1 + G_2.
+\end{aligned}
+$$
+
+Dissipation adds viscous damping plus $\tanh(\dot{q}/\varepsilon_v)$-smoothed
+Coulomb friction ($\varepsilon_v = 10^{-4}\,\mathrm{rad/s}$), and optional
+penalty limits constrain range of motion. The shared ODE core in
+[`simulation_core.py`](https://github.com/D-sorganization/Tools/blob/3462749d814a0b0082544054f8d74f8fdbd8b497/src/pendulum_simulator/src/double_pendulum_golf/simulation_core.py)
+calls `scipy.integrate.solve_ivp` with explicit Dormand–Prince `method="RK45"`,
+`rtol = 1e-8`, `atol = 1e-10`, adaptive internal stepping (`max_step = None` by
+default), and uniform output sampling `dt = 0.005` s (`200 Hz`, appending
+`t_end` when not hit exactly).
 
 ### PyQt6 Desktop Interface
 
@@ -214,34 +257,32 @@ kinetic-energy change, include gravity work and every other external force and
 moment. If gravitational potential is included in the energy, do not count
 gravity work again. Damping, impacts and compliance require their own terms.
 
-::: {.callout-important title="A Known Diagnostic Consistency Limit"}
-At the pinned revision, the Python fallback
-[`mass_matrix`](https://github.com/D-sorganization/Tools/blob/cefcc1878de11804c44cd7d1d19c0ffcf58fa89e/src/pendulum_simulator/src/double_pendulum_golf/physics.py)
-places shaft mass $m_2$ together with clubhead mass $m_c$ at the distal tip.
-The transfer diagnostic's
-[`_club_kinetic_energy`](https://github.com/D-sorganization/Tools/blob/cefcc1878de11804c44cd7d1d19c0ffcf58fa89e/src/pendulum_simulator/src/double_pendulum_golf/transfer_strategy.py)
-instead treats the shaft as a uniform rod. With the proximal link instantaneously
-stationary and club angular rate $\omega$, they give, respectively,
+::: {.callout-note title="Post-#5554 Diagnostic Consistency and Residual Contract"}
+At the pinned revision (`3462749d8`), both
+[`mass_matrix`](https://github.com/D-sorganization/Tools/blob/3462749d814a0b0082544054f8d74f8fdbd8b497/src/pendulum_simulator/src/double_pendulum_golf/physics.py)
+and the transfer diagnostic's
+[`_club_kinetic_energy`](https://github.com/D-sorganization/Tools/blob/3462749d814a0b0082544054f8d74f8fdbd8b497/src/pendulum_simulator/src/double_pendulum_golf/transfer_strategy.py)
+consume the same canonical `distal_inertia(m2, mClub, L2)`:
 
 $$
-\begin{aligned}
-T_{\mathrm{tip}}&=\tfrac12(m_2+m_c)L_2^2\omega^2,\\
-T_{\mathrm{rod}}&=\tfrac12(m_2/3+m_c)L_2^2\omega^2.
-\end{aligned}
+T_{\mathrm{club}}
+= \tfrac12 M_c \|\mathbf v_w\|^2 + s(\mathbf v_w\cdot\mathbf t)\omega + \tfrac12 J_w\omega^2.
 $$
 
-For $m_2=3\,\mathrm{kg}$, $m_c=1\,\mathrm{kg}$, $L_2=1\,\mathrm m$ and
-$\omega=2\,\mathrm{rad/s}$, the same state yields 8 J versus 4 J. These are
-illustrative test parameters, not a golf-club specification. A transfer-energy
-comparison must reconcile this mass-distribution mismatch first. This source
-check does not qualify native or TypeScript backends.
+With $\mathbf v_w = \mathbf 0$, $\omega = 2\,\mathrm{rad/s}$, $m_2 = 3\,\mathrm{kg}$,
+$m_c = 1\,\mathrm{kg}$, and $L_2 = 1\,\mathrm{m}$ (illustrative test values,
+not a golf-club specification), both dynamics and diagnostics give
+$T_{\mathrm{club}} = \tfrac12 (m_2/3 + m_c)L_2^2\omega^2 = 4\,\mathrm{J}$, resolving
+the historical `8 J versus 4 J` mismatch present in pre-`#5554` fallback runs. This Python contract check does not by itself qualify native or TypeScript backends.
 
-Moreover, the reported work-closure residual is
-$W_{\mathrm{total}}-W_{\mathrm{drift}}-W_{\mathrm{control}}$ on the same
-trajectory. Because control force is constructed as total minus drift, a small
-residual checks the additive split and integration; it does **not** check
-$\Delta T$ against external work. Do not use it as evidence that the full
-energy budget closes.
+Always distinguish the two residuals exported by `transfer_strategy.py`:
+
+- `work_closure_residual_j` ($W_{\mathrm{total}}-W_{\mathrm{drift}}-W_{\mathrm{control}}$):
+  verifies the additive drift/control split and trapezoidal integration on the
+  same trajectory; it is **not** a check of $\Delta T$ against external work.
+- `club_energy_balance_residual_j` ($\Delta T_{\mathrm{club}} - (W_{\mathrm{grip}} + W_{\mathrm{wrist}} + W_{\mathrm{gravity}})$):
+  checks whether the change in club kinetic energy equals the external work of
+  the grip force, active and passive wrist couples, and gravity over the window.
 :::
 
 ### React/Tauri Interface
@@ -274,8 +315,8 @@ does not maintain a second physics implementation.
    that support it.
 7. Promote a result to the scientific resource only through a deterministic
    script, frozen inputs, convergence and closure tests, and machine-readable
-   output. Resolve the diagnostic consistency limit above before interpreting
-   transfer-energy closure.
+   output. Verify `club_energy_balance_residual_j` alongside step-size
+   convergence before interpreting transfer-energy closure.
 
 ## Interpretation Boundary
 

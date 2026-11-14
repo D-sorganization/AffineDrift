@@ -19,8 +19,8 @@ $$\dot{x} = f(x) + G(x)u$$
 Where:
 
 - $x$ represents the state vector of generalized coordinates and velocities.
-- $f(x)$ represents the passive drift vector field, encapsulating gravity, inertial couplings, and unforced mechanical motion.
-- $G(x)u$ represents the active control channel, encapsulating muscular joint torques and applied control inputs.
+- $f(x)$ represents the passive drift vector field, encapsulating gravity, inertial couplings, passive loads, and compatible constraint reactions under zero declared input.
+- $G(x)u$ represents the declared applied-control channel, such as net joint torques in a multibody model.
 
 ### Boundary Conditions and Modeling Assumptions
 
@@ -35,9 +35,9 @@ Where:
 
 ### What the Framework Establishes
 
-- **Mathematical Consistency**: Formulations are verified for dimensional consistency, coordinate invariance, and numerical conservation principles.
-- **Decomposition Transparency**: The split between passive mechanical drift and active control input provides an exact accounting of what unforced mechanics would produce versus what muscular torque adds at a fixed state.
-- **Counterfactual Diagnostics**: The pointwise Zero-Torque Counterfactual (pointwise ZTCF, isolating drift) and Zero-Velocity Counterfactual (ZVCF, isolating control torque) offer deterministic baselines against which to measure the instantaneous contribution of golfer effort. Forward-integrated counterfactual trajectories do not generally sum due to nonlinear dynamics coupling.
+- **Mathematical Consistency**: Formulations are verified for dimensional consistency, declared-chart invariance conditions (raw acceleration blocks remain chart-dependent unless weighted or written covariantly), and numerical conservation principles.
+- **Decomposition Transparency**: The split between passive mechanical drift and the declared control channel provides an accounting of what unforced dynamics produce versus what the declared applied input adds at a fixed state.
+- **Counterfactual Diagnostics**: The pointwise Zero-Torque Counterfactual (pointwise ZTCF, isolating drift) and Zero-Velocity Counterfactual (ZVCF, isolating control input) offer deterministic baselines against which to evaluate the instantaneous contribution of the declared applied control. Forward-integrated counterfactual trajectories do not generally sum due to nonlinear dynamics coupling.
 
 ### What the Framework Does Not Establish
 

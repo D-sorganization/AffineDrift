@@ -232,6 +232,60 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-14 | #5686 | Companion pin bump, launcher-tile CI gate, README parity fetch, FDM dead links |
+| 2026-11-14 | #5697 | Reconcile claim_registry.json, per-file provenance SHA-256 hashes, ZTCF/DCR wording, and companion software-artifact tiering. |
+| 2026-11-14 | #5692 | Restore clean pre-push checks across PARAMETERS.md Prettier ignore, double-pendulum mypy, and model-map noqa. |
+| 2026-11-14 | #5669 | UpstreamDrift capture-to-model pipeline reference (calibration through export). |
+| 2026-11-14 | #5703 | Unify proximal-distal monograph differential hand-force symbol and normal-mode sign wording across Chapters 3b, 5, and 5b |
+| 2026-11-14 | #5680 | Harmonise PoG ch08/ch10/ch25 notation with NOTATION.md; extend notation gate |
+| 2026-11-14 | #5563 | Branch-local KaTeX metadata override and Theory Part 1 build-time compare script. |
+| 2026-11-13 | #5704 | FDM runtime glossary: motion-matching terms of art and run-102 config keys |
+| 2026-11-13 | #5702 | Re-pin proximal-distal workbench and Chapter 28 synthesis to UpstreamDrift 3462749d8 and align disclosure contracts |
+| 2026-11-13 | #5691 | Fix broken ch12 companion link in upstreamdrift-physics-models article |
+| 2026-11-13 | #5683 | Normalize SBOM git commit timestamps to UTC Z for CycloneDX determinism across Git %cI formats. |
+| 2026-11-13 | #5647 | Programming Companion onboarding entrypoints; datasets ledger CC BY 4.0 alignment. |
+| 2026-11-13 | #5648 | Gemini panel CVE-A3–A6: technology article citation fixes, launch-monitor figure generator, Cheetham significance. |
+| 2026-11-13 | #5644 | Wrist article: evidence-aligned constraint takeaway, illustrative Iγ label, UpstreamDrift Simscape links. |
+| 2026-11-13 | #5645 | Align theory-part1 front matter with the model-conditioned drift contract. |
+| 2026-11-13 | #5646 | Shot-pattern article artifacts, generators, and trust ledger evidence paths. |
+| 2026-11-13 | #5663 | Publish UpstreamDrift getting-started and headless/agent guides; README install CI gate; llms.txt |
+| 2026-11-13 | #5664 | Document UpstreamDrift ball flight, impact, putting and injury models with site–code mismatch flags (Refs #5624). |
+| 2026-11-13 | #5667 | FDM runtime reference: acceptance gates, two-window fit, ground-support pipeline, contact law, glossary |
+| 2026-11-13 | #5689 | Use defusedxml in golf_model_map to satisfy pre-push bandit B314 |
+| 2026-11-13 | #5698 | Add Simscape golfer-scapula/2.0 DOF/sign table generator, ISB Cardan conventions, and two-hand grasp map |
+| 2026-11-13 | #5659 | MuJoCo golf model-map reference with vendored MJCF snapshots and generator (slice 1). |
+| 2026-11-13 | #5650 | Add UpstreamDrift conventions reference page (pinned c8814a1b9d) with nav entry |
+| 2026-11-13 | #5695 | Reconcile learning-path weekly schedules and module hour totals with 16-week path budgets. |
+| 2026-11-13 | #5668 | Fix learning-path and resources citations, chapter pointers, and workflow install commands |
+| 2026-11-13 | #5694 | Fix manifesto gravity/drift notation, Bosch .bib defects, and technology hub blurb |
+| 2026-11-13 | #5665 | Remove stale motion-control JSX/transcript; align companions with rewritten chapters. |
+| 2026-11-13 | #5678 | Align ball, putting, slack notation and toy-model prose with NOTATION.md |
+| 2026-11-13 | #5656 | Mechanics reference notation: mobility disambiguation, fibre symbols, reciprocity, ICC front matter |
+| 2026-11-13 | #5655 | Tangent-hyperplane notation, rate-set definition, citations |
+| 2026-11-13 | #5677 | Disclose WSCG trace timing and planar wrist limits; fix Kao, Borzelli, and Tucker bibliography records; align articulated-engine versions with pinned JSON. |
+| 2026-11-13 | #5637 | Proximal-distal energy ledger, closure claims, and H4 verdict strength. |
+| 2026-11-13 | #5658 | Unify lay companion UpstreamDrift pin and fix review defects |
+| 2026-11-13 | #5657 | FDM book: Hermite-Simpson, notation table, core equations, UD link fixes |
+| 2026-11-13 | #5636 | FDM worked examples corrected; reproduction script and chapter consistency fixes. |
+| 2026-11-13 | #5653 | Sync GoM book landing pages with rendered chapters and archive stale audit runbooks.; Confirm GoM book landing pages and archived audit runbooks (no further landing edits this PR). |
+| 2026-11-13 | #5674 | Geometry of Motion citation defects: primary sources, contact ledger, and bibliography hygiene. |
+| 2026-11-13 | #5676 | Geometry of Motion pedagogy: prerequisites map, cross-refs, KKT display, contraction pedagogy, Vol 0 numbering pilot |
+| 2026-11-13 | #5649 | Geometry of Motion: cascade vs partial contraction, LQR rho, floating-base gravity, Van der Pol; GoM ch04: cascade vs partial contraction pedagogy, LaTeX parity, proof paragraph order. |
+| 2026-11-13 | #5672 | Pinned UpstreamDrift implementation bridge includes for GOM vol0 and PoG algorithm chapters; added ledger and CI gate. |
+| 2026-11-13 | #5675 | Physics of Golf citation metadata, impact sourcing, and motor-control literature |
+| 2026-11-13 | #5660 | Physics of Golf: worked examples for impact, JCS, URDF, putting, calibration tables |
+| 2026-11-13 | #5671 | Rebuild PARAMETERS.md from sourced canonical registry with CI check |
+| 2026-11-13 | #5693 | Align onboarding control copy, single evidence ladder, canonical badges, and inventory counts (#5594). |
+| 2026-11-13 | #5661 | Harmonize canonical DCR, DIR, and chart-dependence claims across site (#5592). |
+| 2026-11-13 | #5666 | Replace hand-drawn core-theory ZTCF and superposition figures with pinned model simulations. |
+| 2026-11-13 | #5633 | DgCR restitution (not aerodynamic); COR passive-impact qualifier; NOTATION lower half + glossaries: Euler, twist/wrench, COR, quaternion, RHR |
+| 2026-11-13 | #5635 | Align ZVCF with NOTATION control operand; claim ad-zvcf-001; notation guard |
+| 2026-11-13 | #5628 | Foreshortened flexible pendulum: geometric stiffening, quadrature tests, critique resolution |
+| 2026-11-13 | #5690 | Restore existing JULES_APP secret fallback in collate-changes.yml |
+| 2026-11-13 | #5568 | Peak-per-channel correction-authority support replaces Cauchy-Schwarz outer bound. |
+| 2026-11-12 | #5652 | Harden CI apt bootstrap for static-checks and E2E Playwright system deps. |
+| 2026-11-11 | #5629 | WEB-06.3 sandbox club defaults with COM/inertia; drift-plus-control caption units. |
+| 2026-11-10 | #5585 | Switch Jules workflow credentials to the fleet app and remove Jules closer workflows |
 | 2026-11-10 | #5583 | Add result contract, solver truth tables, and vocabulary gates |
 | 2026-11-10 | #5564 | Option A A-4 comparison module, golden metrics JSON, claim ad-dcr-003, results note |
 | 2026-11-10 | #5582 | Add stdlib lifecycle transition kernel and ADR-0004 per owner decision |

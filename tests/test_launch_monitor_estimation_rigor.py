@@ -8,7 +8,9 @@ from numpy.typing import NDArray
 from scipy.linalg import expm
 from scipy.spatial.transform import Rotation
 
-SOURCE = Path(__file__).resolve().parents[1] / "articles/technology-launch-monitors.qmd"
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE = ROOT / "articles/technology-launch-monitors.qmd"
+FIGURE_SCRIPT = ROOT / "scripts/build_launch_monitor_figures.py"
 LIGHT_SPEED = 299792458.0
 MPH_TO_MPS = 0.44704
 
@@ -196,3 +198,12 @@ def test_timing_error_rotates_a_face_normal() -> None:
 )
 def test_article_does_not_repeat_disproved_inference(unsupported: str) -> None:
     assert unsupported not in SOURCE.read_text(encoding="utf-8")
+
+
+def test_launch_monitor_svgs_have_repo_generator() -> None:
+    """Static rank and groove figures are reproducible schematics, not orphan assets."""
+    assert FIGURE_SCRIPT.is_file()
+    text = SOURCE.read_text(encoding="utf-8")
+    assert "scripts/build_launch_monitor_figures.py" in text
+    for name in ("launch-monitor-doppler-rank.svg", "launch-monitor-groove-ambiguity.svg"):
+        assert (ROOT / "static/images" / name).is_file()
