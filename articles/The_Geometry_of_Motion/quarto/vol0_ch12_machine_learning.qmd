@@ -360,7 +360,7 @@ For the known forced pendulum, an appropriate trajectory residual is $I\ddot q_\
 
 A Neural ODE parameterizes a continuous vector field $\dot h=f_\theta(h,t)$ and computes states with an ODE solver. The state can be physical or latent; a latent dimension does not automatically correspond to measured joint coordinates. A policy evaluated at discrete observations is not a Neural ODE merely because it controls a continuous mechanical system.
 
-For a terminal loss $\ell=\Psi(h(T),\theta)$ with fixed endpoints, define a column adjoint $a(t)$ by
+For a terminal loss $\ell=\Psi(h(T),\theta)$ with fixed integration times $0$ and $T$, define a column adjoint $a(t)$ by
 $$
 \dot a=-(D_hf_\theta)^Ta,\qquad
 a(T)=\nabla_h\Psi(h(T),\theta).

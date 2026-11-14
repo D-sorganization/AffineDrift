@@ -121,10 +121,10 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.qmd` | 3 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.qmd` | 2 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.qmd` | 2 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.qmd` | 2 |
