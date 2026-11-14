@@ -20,7 +20,7 @@ pytestmark = pytest.mark.content_lint
 def test_registry_loads() -> None:
     payload = load_registry(DATA_PATH)
     assert payload["schema_version"] == "1.0.0"
-    assert len(payload["entries"]) >= 10
+    assert len(payload["entries"]) >= 11
 
 
 def test_render_includes_sourced_ball_mass() -> None:

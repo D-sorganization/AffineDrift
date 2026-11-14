@@ -17,6 +17,7 @@ class EvidenceTier(StrEnum):
     """Deterministic hierarchy of evidence presentation tiers."""
 
     MATHEMATICAL_IDENTITY = "mathematical_identity"
+    SOFTWARE_ARTIFACT = "software_artifact"
     MANUFACTURED_SYNTHETIC = "manufactured_synthetic"
     QUALIFIED_SIMULATION = "qualified_simulation"
     PILOT_BOUNDED = "pilot_bounded"
@@ -29,6 +30,7 @@ class EvidenceTier(StrEnum):
 
 TIER_DISPLAY_NAMES: dict[EvidenceTier, str] = {
     EvidenceTier.MATHEMATICAL_IDENTITY: "Mathematical Identity",
+    EvidenceTier.SOFTWARE_ARTIFACT: "Software Artifact (Pinned)",
     EvidenceTier.MANUFACTURED_SYNTHETIC: "Manufactured Synthetic",
     EvidenceTier.QUALIFIED_SIMULATION: "Qualified Simulation",
     EvidenceTier.PILOT_BOUNDED: "Pilot-Bounded Readiness",
@@ -41,6 +43,7 @@ TIER_DISPLAY_NAMES: dict[EvidenceTier, str] = {
 
 TIER_BADGE_CLASSES: dict[EvidenceTier, str] = {
     EvidenceTier.MATHEMATICAL_IDENTITY: "badge-math-identity",
+    EvidenceTier.SOFTWARE_ARTIFACT: "badge-software-artifact",
     EvidenceTier.MANUFACTURED_SYNTHETIC: "badge-manufactured-synthetic",
     EvidenceTier.QUALIFIED_SIMULATION: "badge-qualified-simulation",
     EvidenceTier.PILOT_BOUNDED: "badge-pilot-bounded",
