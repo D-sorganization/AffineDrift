@@ -338,12 +338,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5626
 - **Branch:** cursor/upstreamdrift-getting-started-5626-8182
-- **PR:** #5663
+- **PR:** #5663, #5686
 - **Paths:** see #5663
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`5bd4b3c3`; collated from changes/5626-publish-upstreamdrift-getting-started-an.md)
+- **Last verified:** 2026-11-14 (`f2738c98`; collated from changes/5626-companion-freshness-readme-parity.md)
 - **Summary:** Publish UpstreamDrift getting-started and headless/agent guides; README install CI gate; llms.txt
-- **Next step:** CI on lane PR
+- **Next step:** Barb arms after CI green
 
 ### DL-#5624 · Document UpstreamDrift Ball Flight, Impact, Putting and Injury Models With Site–Code Mismatch Flags (Refs #5624).
 
@@ -1209,6 +1209,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5591 · Reconcile Claim_Registry.Json, Per-File Provenance SHA-256 Hashes, ZTCF/DCR Wording, and Companion Software-Artifact Tiering.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5591
+- **Branch:** gemini-ct/5591-claim-registry
+- **PR:** #5697
+- **Paths:** see #5697
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`ff304e8a`; collated from changes/5591-claim-registry-provenance-tiers.md)
+- **Summary:** Reconcile claim_registry.json, per-file provenance SHA-256 hashes, ZTCF/DCR wording, and companion software-artifact tiering.
+- **Next step:** Shipped in PR #5697.
 
 ### DL-#5692 · Restore Clean Pre-Push Checks Across PARAMETERS.md Prettier Ignore, Double-Pendulum Mypy, and Model-Map Noqa.
 
