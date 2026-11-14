@@ -104,14 +104,16 @@ The task comes from the published arm-wrist preload study ([arm–wrist torque a
 
 Each channel works like a spring that is told how far to stretch. It turns a desired torque $\tau^*$ into a target deflection $x^*$ (how far its spring must stretch). The deflection $x$ relaxes toward the target with time constant $T$, $\dot x=(x^*-x)/T$. In words: the further the spring is from where it should be, the faster it moves, so it closes most of the distance within a few multiples of $T$. The channel then transmits a torque $\tau(x)$ set by its representation. The representation is the rule that turns stretch into torque, and it is where the slack lives. The published law uses a dead zone $\delta=0.012$ rad, stiffness $k=600$ N m rad$^{-1}$ and $T=18$ ms, all "synthetic sensitivity parameters, not identified tissue or grip properties." Starting from the loaded state before the switch, we report four outputs:
 
-1. **Integrated tracking error** $J$ (net): the area between desired and transmitted net torque, $J=\int|\tau^*_\Sigma-\tau_\Sigma|\,dt$, in N m s. Smaller is better. Shortfall and overshoot both add to it, so it is not an angular impulse, although the published study and the data file call it an "error impulse".
-2. **Per-channel tracking error** $J_\text{ch}$: the same area summed over each channel's own target.
+1. **Integrated tracking error** $\mathcal{E}$ (net): the area between desired and transmitted net torque, $\mathcal{E}=\int|\tau^*_\Sigma-\tau_\Sigma|\,dt$, in N m s. Smaller is better. Shortfall and overshoot both add to it, so it is not an angular impulse, although the published study and the data file call it an "error impulse".
+2. **Per-channel tracking error** $\mathcal{E}_\text{ch}$: the same area summed over each channel's own target.
 3. **Zero-transmission time**: how long a channel transmits exactly zero torque.
 4. **Peak overshoot**: the largest excess of transmitted over desired net torque.
 
-For scale, $J$ is roughly the size of the step times the time constant: the 4 N m net step gives 4 N m × 0.018 s ≈ 0.072 N m s, and the channels' 8 N m of total movement gives 0.144 N m s; reversal's 36 N m of total movement gives about 36 × 0.018 ≈ 0.648, close to the 0.646 in @tbl-results. With no slack the exact value is 4 N m × 18 ms = 0.0720 N m s; the 0.1 ms time step accounts for the last 0.0002.
+The companion [Slack Take-Up](slack-takeup-identifiability.html) uses $J$ for an event-time Jacobian; $\mathcal{E}$ here is integrated torque tracking error only.
 
-The *advantage $A$, relative to persistent*, is $A=(J_\text{reversal}-J_\text{persistent})/J_\text{persistent}$. A positive $A$ favours persistent direction. An advantage of 100% would mean reversal makes twice the error.
+For scale, $\mathcal{E}$ is roughly the size of the step times the time constant: the 4 N m net step gives 4 N m × 0.018 s ≈ 0.072 N m s, and the channels' 8 N m of total movement gives 0.144 N m s; reversal's 36 N m of total movement gives about 36 × 0.018 ≈ 0.648, close to the 0.646 in @tbl-results. With no slack the exact value is 4 N m × 18 ms = 0.0720 N m s; the 0.1 ms time step accounts for the last 0.0002.
+
+The *advantage $A$, relative to persistent*, is $A=(\mathcal{E}_\text{reversal}-\mathcal{E}_\text{persistent})/\mathcal{E}_\text{persistent}$. A positive $A$ favours persistent direction. An advantage of 100% would mean reversal makes twice the error.
 
 Before trusting any new result, the code committed with this page reruns the published case on its 0.12 s window. It reproduces the published errors of 0.0717 N m s (persistent) and 0.1954 N m s (reversal), to within $10^{-16}$ N m s, and the 11.5 ms and 22.0 ms zero-transmission intervals exactly on the 0.1 ms step (the $10^{-16}$ tolerance applies to the errors, not the intervals). It also recovers the published grid verdict: of 12 dead-zone and time-constant cells, 9 favour persistent direction and 3 (all with zero dead zone) are equivalent. The new runs below use a 0.5 s window so that slower channels are not cut off. That longer window is why the dead-zone row below reads 0.0718 and 0.1955 rather than 0.0717 and 0.1954. 
 
@@ -119,7 +121,7 @@ Before trusting any new result, the code committed with this page reruns the pub
 
 @tbl-results and @fig-traces run both programs through five representations; in the figure the black line is the desired 10 N m. The no-slack row is not rigid: it keeps the 600 N m rad$^{-1}$ spring and the 18 ms lag and removes only the gap. The unequal-lag row gives the arm an 18 ms lag and the wrist a 36 ms lag, with no slack at all. Where to look first: the **Advantage $A$** column, which says how much more error role reversal makes than persistent direction. The two columns before it are the scores behind $A$. The three after it are other outputs a modeller might have declared instead, and the four lessons below say where they disagree with $A$.
 
-| Representation | Net $J$, persistent (N m s) | Net $J$, reversal (N m s) | Advantage $A$ | Longest zero transmission | Per-channel $J_\text{ch}$, persistent / reversal (N m s) | Reversal overshoot (N m) |
+| Representation | Net $\mathcal{E}$, persistent (N m s) | Net $\mathcal{E}$, reversal (N m s) | Advantage $A$ | Longest zero transmission | Per-channel $\mathcal{E}_\text{ch}$, persistent / reversal (N m s) | Reversal overshoot (N m) |
 |---|---|---|---|---|---|---|
 | No slack (stiff spring) | 0.0718 | 0.0718 | 0% | 0 ms | 0.144 / 0.646 | 0 |
 | Dead zone | 0.0718 | 0.1955 | 172% | 22.0 ms | 0.144 / 0.827 | 0 |
@@ -139,7 +141,7 @@ Four lessons come out of this table.
 
 **A gap detector can miss slack that matters.** The smooth stiffening spring never transmits exactly zero, so a zero-transmission count reports "no slack problem". Yet at a 12 mrad softening length its persistent advantage is 129%, against 172% for a 12 mrad dead zone, and below about 6 mrad the smooth spring's advantage is the larger of the two (@fig-flip). A softening length and a gap width are different quantities, so equal milliradian values are not equal amounts of slack; the comparison shows only that both change the answer by far more than any declared margin. Whether slack is negligible depends on the output that was declared, not on whether a gap is visible.
 
-**The no-slack model is not neutral on per-channel outputs.** Even with no slack, role reversal has a larger per-channel error $J_\text{ch}$ (0.646 against 0.144 N m s), simply because each channel has further to travel: going from $-4$ to $+16$ N m is a longer trip than going from $+10$ to $+16$. Idealizing slack away is safe for one output and not automatically for another.
+**The no-slack model is not neutral on per-channel outputs.** Even with no slack, role reversal has a larger per-channel error $\mathcal{E}_\text{ch}$ (0.646 against 0.144 N m s), simply because each channel has further to travel: going from $-4$ to $+16$ N m is a longer trip than going from $+10$ to $+16$. Idealizing slack away is safe for one output and not automatically for another.
 
 ## How Big Must a Gap Be to Matter? {#sec-flip}
 
@@ -162,23 +164,23 @@ The two-channel task lets us try preload and its relatives on a single dial. Eve
 
 In plain terms, $c$ is how hard you squeeze the club between your hands before the switch, counted from the role-reversal start; the box doesn't move however hard you squeeze. The one-line result: lowest net error comes from unloading the wrist that must flip; lowest per-hand error comes from pre-loading both in their delivery direction; neither is shown to help a golfer.
 
-![Tracking Error, Per-Channel Error, Overshoot and Preparation Norm Against the Preparation Shift](figures/slack_management/fig_preparation_split.svg){#fig-split fig-alt="Three stacked panels against preparation shift c, showing four quantities: tracking error, per-channel error, and, sharing the bottom panel, overshoot and the preparation norm. Tracking error J is lowest near c equals 9 to 10 and flat beyond about 12. Per-channel error falls to a floor between c equals 16 and 20 and then rises. Overshoot is nonzero for the dead zone between about c equals 4 and 10. The preparation norm is V-shaped with its minimum at c equals 7."}
+![Tracking Error, Per-Channel Error, Overshoot and Preparation Norm Against the Preparation Shift](figures/slack_management/fig_preparation_split.svg){#fig-split fig-alt="Three stacked panels against preparation shift c, showing four quantities: tracking error, per-channel error, and, sharing the bottom panel, overshoot and the preparation norm. Tracking error E is lowest near c equals 9 to 10 and flat beyond about 12. Per-channel error falls to a floor between c equals 16 and 20 and then rises. Overshoot is nonzero for the dead zone between about c equals 4 and 10. The preparation norm is V-shaped with its minimum at c equals 7."}
 
 Which setting of the dial is best? It depends on what you are minimising:
 
-- **$J$ rewards unloading the channel that must reverse.** On the 1 N m grid, the dead zone's lowest $J$ comes from the preparation that leaves the wrist torque at zero, the centre of its gap: $c=10$ (0.0467 N m s). The smooth spring has no gap; it does best one step earlier, at $c=9$ (0.0353 N m s), with 1 N m still on the wrist in its pre-switch direction. Both beat persistent direction (0.0718 and 0.0730 N m s). The dead-zone value is a single grid point that its neighbours do not support: $c=9$ gives 0.0957 N m s and $c=11$ gives 0.0718 N m s. It is a knife-edge, not a robust optimum. Under the dead zone that preparation also overshoots the target by 1.45 N m, because the wrist's opposing torque arrives late.
-- **$J_\text{ch}$ rewards preloading each channel in its delivery direction.** For the dead zone $J_\text{ch}$ is lowest, at 0.0718 N m s, for every $c$ from 16 to 20 N m. For the smooth spring it is lowest at $c=20$ (0.0698 N m s). Beyond that, more internal load only adds error.
-- **Internal load is not free.** The preparation torque norm $\sqrt{\tau_\text{arm}^2+\tau_\text{wrist}^2}$, a rough measure of how much torque the preparation asks of both channels together, is 10.77 N m for both extremes ($c=0$ and $c=14$). It falls to 4.24 N m at $c=7$ and rises to 18.87 N m at $c=20$. Under the dead zone, $J$ is 0.0718 N m s for every $c$ from 11 to 24 N m: once both channels are loaded in their delivery direction, more internal load buys nothing. A Euclidean torque norm is not metabolic effort.
+- **$\mathcal{E}$ rewards unloading the channel that must reverse.** On the 1 N m grid, the dead zone's lowest $\mathcal{E}$ comes from the preparation that leaves the wrist torque at zero, the centre of its gap: $c=10$ (0.0467 N m s). The smooth spring has no gap; it does best one step earlier, at $c=9$ (0.0353 N m s), with 1 N m still on the wrist in its pre-switch direction. Both beat persistent direction (0.0718 and 0.0730 N m s). The dead-zone value is a single grid point that its neighbours do not support: $c=9$ gives 0.0957 N m s and $c=11$ gives 0.0718 N m s. It is a knife-edge, not a robust optimum. Under the dead zone that preparation also overshoots the target by 1.45 N m, because the wrist's opposing torque arrives late.
+- **$\mathcal{E}_\text{ch}$ rewards preloading each channel in its delivery direction.** For the dead zone $\mathcal{E}_\text{ch}$ is lowest, at 0.0718 N m s, for every $c$ from 16 to 20 N m. For the smooth spring it is lowest at $c=20$ (0.0698 N m s). Beyond that, more internal load only adds error.
+- **Internal load is not free.** The preparation torque norm $\sqrt{\tau_\text{arm}^2+\tau_\text{wrist}^2}$, a rough measure of how much torque the preparation asks of both channels together, is 10.77 N m for both extremes ($c=0$ and $c=14$). It falls to 4.24 N m at $c=7$ and rises to 18.87 N m at $c=20$. Under the dead zone, $\mathcal{E}$ is 0.0718 N m s for every $c$ from 11 to 24 N m: once both channels are loaded in their delivery direction, more internal load buys nothing. A Euclidean torque norm is not metabolic effort.
 
 @tbl-strategies collects the strategies. "Not established" means the repository record contains no evidence either way.
 
 | Strategy | What it does in the model | Modeled benefit | Modeled cost | Speed, face control, injury |
 |---|---|---|---|---|
-| Preload (persistent direction) | Keeps each channel loaded the way it will deliver | No zero-transmission gap; lowest $J_\text{ch}$ | Larger preparation torque than the minimum-norm split | Not established |
+| Preload (persistent direction) | Keeps each channel loaded the way it will deliver | No zero-transmission gap; lowest $\mathcal{E}_\text{ch}$ | Larger preparation torque than the minimum-norm split | Not established |
 | Extra opposing torque | Adds internal load beyond sign consistency, with stiffness and gap held fixed (so not the stiffening of real co-contraction) | Smooth spring: slightly lower error | Torque norm grows; dead zone: no further gain | Not established |
 | Exploit compliance | Accepts a spring in series | Shock tolerance and energy storage (engineering analogy) | Slower force rise | Not established |
 | Early take-up by timing | Starts the reversal before the switch | Hides the recovery time (under the dead zone the reversing wrist takes 31.1 ms to reach 10% of its target with the right sign) | Requires an earlier, accurately timed command | Not established |
-| Deliberate role reversal | Separates preparation and delivery roles | Lowest $J$ on the grid, at a single knife-edge split ($c=10$ under the dead zone), not a robust optimum | Gap, overshoot or both, depending on representation | Not established |
+| Deliberate role reversal | Separates preparation and delivery roles | Lowest $\mathcal{E}$ on the grid, at a single knife-edge split ($c=10$ under the dead zone), not a robust optimum | Gap, overshoot or both, depending on representation | Not established |
 
 : Slack-management strategies, with the benefit and cost each shows in the synthetic task. {#tbl-strategies}
 
@@ -192,7 +194,7 @@ The distributed-grip evidence needs a counting caveat. In plain words: one count
 
 Put together, the working rule becomes a procedure:
 
-1. Declare the outputs (for example $J$, $J_\text{ch}$, event timing, overshoot) and an equivalence margin for each.
+1. Declare the outputs (for example $\mathcal{E}$, $\mathcal{E}_\text{ch}$, event timing, overshoot) and an equivalence margin for each.
 2. Run each output across at least a no-slack model, a gap model, a smooth model and a model with unequal channel lags, over a plausible range of gap sizes.
 3. If every output stays within its margin, the no-slack model is adequate *for those outputs*. If any output leaves its margin, represent the slack and report which representation was assumed.
 

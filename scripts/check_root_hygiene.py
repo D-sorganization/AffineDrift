@@ -45,6 +45,8 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         "Dockerfile",
         "LICENSE",
         "LICENSE-CONTENT",
+        "llms-full.txt",
+        "llms.txt",
         "Makefile",
         "NOTATION.md",
         "PARAMETERS.md",

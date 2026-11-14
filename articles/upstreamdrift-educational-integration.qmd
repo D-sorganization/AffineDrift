@@ -145,23 +145,22 @@ A model can animate smoothly while using the wrong sign, reference point or actu
 
 ## Three Interpretation Checks
 
-### Drift-Control Ratio
+### Drift-Control Ratio and Realized Drift-to-Input Ratio
 
-For a chosen control-affine model and a positive-definite metric $M$, one possible instantaneous convention is
+The site-wide **DCR** compares drift and **admissible control capacity** on acceleration blocks at one state ([NOTATION.md](../../NOTATION.md)):
 
-$$\rho(x,u)=\frac{\|f(x)\|_M}{\|G(x)u\|_M}.$$
+$$\mathrm{DCR}_{W,\mathcal U}(x)=\frac{\|W a_d(x)\|_2}{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|_2+\varepsilon}.$$
 
-The norm is $\|z\|_M=\sqrt{z^T Mz}$ for state-derivative vectors expressed in the chosen coordinates.
+A **realized drift-to-input ratio (DIR)** uses the achieved input:
 
-This requires a nonzero denominator; report zero-control cases explicitly rather than hiding them in an arbitrary offset.
-If both contributions vanish, the ratio is indeterminate.
-Declare state scaling, metric, input baseline and which part of the state derivative is being compared.
-A ratio of acceleration contributions is a different definition from a ratio of full state derivatives.
-For nonlinear muscle activation dynamics, first establish whether the selected inputs produce a control-affine model at all.
+$$\mathrm{DIR}_W(x,u)=\frac{\|W a_d(x)\|_2}{\|W B_a(x)u\|_2+\varepsilon}.$$
 
-A large ratio is not an energy fraction or proof that control is unimportant.
-A small control contribution can be decisive for trajectory direction or terminal accuracy.
-This guide establishes no measured expert-swing threshold for $\rho$.
+Do not apply these to undifferentiated full state derivatives without declared units.
+Report zero capacity, indeterminate $0/0$, and any regularizer $\varepsilon$ explicitly.
+For nonlinear muscle activation dynamics, first establish whether the selected inputs produce a control-affine plant at all.
+
+A large DCR is not an energy fraction or proof that control is unimportant.
+This guide establishes no measured expert-swing threshold.
 
 ### Perturbation Decay and Contraction
 
@@ -201,3 +200,4 @@ Moving from a successful calculation to an explanation of a golfer requires evid
 - [3D Golf Model Repository](../repositories/repositories-3d-model.html)
 - [Explore the Proximal-Distal Models](proximal-distal-model-workbench.html)
 - [Programs & Tools](../pages/tools.html)
+- [UpstreamDrift Conventions Reference](../pages/upstreamdrift-conventions.html) — State vectors, frames, quaternion order, and analytics signs at a pinned commit

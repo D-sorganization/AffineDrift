@@ -284,21 +284,20 @@ These are incremental control responses at the same state. The total acceleratio
 
 []{#ch05_dcr}
 
-Specify the input origin, admissible set $\mathcal U$, state and an output/scaling map $W$. Define a capacity and a ratio by
+In the acceleration block, write $a_d$ for drift acceleration and $B_a$ for the input map in the same space (for example $B_a=M^{-1}B$ when $u$ are generalized torques). With admissible set $\mathcal U$, scaling $W$ on accelerations, and reported regularizer $\varepsilon$, the site-wide definition is
 
 $$
-C_W(x)=\max_{u\in\mathcal U}\|WG(x)u\|_2,\qquad
- D_W(x)=\frac{\|Wf(x)\|_2}{C_W(x)},\quad C_W>0.
+\mathrm{DCR}_{W,\mathcal U}(x)=\frac{\|W a_d(x)\|_2}{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|_2+\varepsilon}.
 $$
 []{#eq-ch05_dcr_def}
 
-Here $W$ may select the acceleration block or normalize all derivative components using declared reference scales. Position rates and angular accelerations cannot simply be combined as unscaled numbers. A ratio using the realized input $\|WG u(t)\|$ answers a different question from a capacity ratio. Report which one is intended.
+Canonical examples below take $W$ on the acceleration components only, with $\varepsilon=0$ when capacity is strictly positive. A ratio using the realized input is a **realized drift-to-input ratio (DIR)**, not DCR.
 
-This ratio is not a work fraction, a measure of skill, or a complete reachability test. If capacity is zero, report that condition explicitly; an arbitrary epsilon changes the diagnostic and must have compatible units. Both numerator and capacity zero is indeterminate. A positive numerator with zero capacity indicates no authority through the selected map, not a finite numerical ratio.
+DCR is not a work fraction, a measure of skill, or a complete reachability test. If capacity is zero, report that condition explicitly. Both numerator and capacity zero is indeterminate.
 
 :::
 
-For a centered Euclidean torque ball $\|u\|_2\le u_{\max}$, $C_W=u_{\max}\sigma_{\max}(WG)$. A componentwise torque box or muscle-force polytope gives a different optimization. In particular, a 30 N m two-joint Euclidean bound does not mean both joints may independently apply 30 N m.
+For a centered Euclidean torque ball $\|u\|_2\le u_{\max}$ and acceleration map $B_a$, $c_W=u_{\max}\sigma_{\max}(W B_a)$. A componentwise torque box or muscle-force polytope gives a different optimization. In particular, a 30 N m two-joint Euclidean bound does not mean both joints may independently apply 30 N m.
 
 ::: {.callout-note}
 

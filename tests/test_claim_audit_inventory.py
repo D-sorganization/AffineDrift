@@ -467,7 +467,12 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/validation-roadmap.html",
             "/pages/Golf_Control_Theory.html",
             "/pages/scope-and-limits.html",
+            "/pages/upstreamdrift-capture-to-model-pipeline.html",
+            "/pages/upstreamdrift-conventions.html",
+            "/pages/upstreamdrift-getting-started.html",
+            "/pages/upstreamdrift-headless-and-agents.html",
             "/articles/slack-management-linked-systems.html",
+            "/articles/upstreamdrift-physics-models.html",
         }
         and (
             record["route"] == "/"
@@ -542,6 +547,11 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     scope_limits = _find_route(inventory, "/pages/scope-and-limits.html")
     assert scope_limits["status"] == "reviewed"
     assert scope_limits["review"]["source_path"] == "pages/scope-and-limits.qmd"
+    capture_pipeline = _find_route(inventory, "/pages/upstreamdrift-capture-to-model-pipeline.html")
+    assert capture_pipeline["status"] == "reviewed"
+    assert capture_pipeline["review"]["source_path"] == (
+        "pages/upstreamdrift-capture-to-model-pipeline.qmd"
+    )
     # Forward Dynamics Matching book (#4948) is newly published, outside the original census.
     fdm_index = _find_route(inventory, "/articles/forward_dynamics_matching/index.html")
     assert fdm_index["status"] == "reviewed"
@@ -559,6 +569,19 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     assert drift_past["review"]["source_path"] == (
         "articles/drift-is-the-past-control-is-the-present.qmd"
     )
+    conventions_ref = _find_route(inventory, "/pages/upstreamdrift-conventions.html")
+    assert conventions_ref["status"] == "reviewed"
+    assert conventions_ref["review"]["source_path"] == "pages/upstreamdrift-conventions.qmd"
+    # UpstreamDrift physics inventory (#5624) is newly published, outside the original census.
+    ud_physics = _find_route(inventory, "/articles/upstreamdrift-physics-models.html")
+    assert ud_physics["status"] == "reviewed"
+    assert ud_physics["review"]["source_path"] == "articles/upstreamdrift-physics-models.qmd"
+    getting_started = _find_route(inventory, "/pages/upstreamdrift-getting-started.html")
+    assert getting_started["status"] == "reviewed"
+    assert getting_started["review"]["source_path"] == "pages/upstreamdrift-getting-started.qmd"
+    headless_agents = _find_route(inventory, "/pages/upstreamdrift-headless-and-agents.html")
+    assert headless_agents["status"] == "reviewed"
+    assert headless_agents["review"]["source_path"] == "pages/upstreamdrift-headless-and-agents.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )
