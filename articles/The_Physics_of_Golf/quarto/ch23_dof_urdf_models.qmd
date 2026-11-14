@@ -535,7 +535,7 @@ If $R$ expresses the inertia frame in another frame, rotate the tensor as $R I_C
 
 ### Compound Joints and Closed Loops
 
-Standard revolute, continuous, prismatic and fixed joints represent their specified relative motions. Floating and planar joint support varies by importer. A three-axis shoulder represented by serial ZYX revolutes needs two intermediate virtual links between the physical parent and child. The axes are successive local axes, and the Euler-angle rate map becomes singular at its chart's gimbal-lock orientations. An ideal spherical joint has three physical rotational freedoms without that particular chart singularity.
+Standard revolute, continuous, prismatic and fixed joints represent their specified relative motions. Floating and planar joint support varies by importer. A three-axis shoulder represented by serial ZYX revolutes needs two intermediate virtual links between the physical parent and child. The axes are successive local axes. In this serial model the loss of rank at middle-angle gimbal-lock orientations is a mechanism singularity of the modelled joint (see the joint-types section of the previous chapter); only a native spherical or ball joint, or a quaternion-parameterized joint, avoids it. An ideal spherical joint has three physical rotational freedoms without that Euler-chart singularity.
 
 Virtual links represent coordinate frames, not new pieces of anatomical tissue. A dynamics engine may reject massless moving links or treat them specially. Adding small masses to make a parser accept them changes inertia; it requires an explicit regularization study. Where supported, native multi-DOF joints or multiple joint primitives on one physical body can avoid this artificial mass assignment.
 
