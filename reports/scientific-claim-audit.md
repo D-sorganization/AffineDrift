@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 298
+- Reviewed: 295
 - Deferred: 0
 - Exempt: 3
 
@@ -175,10 +175,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/theory-part4.html` | `articles/theory-part4.qmd` | 2 |
 | `/articles/theory-part5.html` | `articles/theory-part5.qmd` | 3 |
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
-| `/articles/upstreamdrift-humanoid-balance.html` | `articles/upstreamdrift-humanoid-balance.qmd` | 1 |
-| `/articles/upstreamdrift-learning-analytics.html` | `articles/upstreamdrift-learning-analytics.qmd` | 1 |
 | `/articles/upstreamdrift-physics-models.html` | `articles/upstreamdrift-physics-models.qmd` | 1 |
-| `/articles/upstreamdrift-whole-body-control.html` | `articles/upstreamdrift-whole-body-control.qmd` | 1 |
 | `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
 | `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 13 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 31 |
@@ -479,10 +476,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-b1cfbbbc95cb` | `/articles/theory-part4.html` | Reviewed | — | None | `crit-geometric-stiffness-omission`, `crit-input-dependent-boundary-conditions` | 0 |
 | `ad-route-125d93f57874` | `/articles/theory-part5.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-simulation-tautology`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Reviewed | — | None | None | 0 |
-| `ad-route-08bc8da705e1` | `/articles/upstreamdrift-humanoid-balance.html` | Reviewed | — | None | None | 0 |
-| `ad-route-eda4bf8f152c` | `/articles/upstreamdrift-learning-analytics.html` | Reviewed | — | None | None | 0 |
 | `ad-route-94620488aa0c` | `/articles/upstreamdrift-physics-models.html` | Reviewed | — | None | None | 0 |
-| `ad-route-231d9f6bb464` | `/articles/upstreamdrift-whole-body-control.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Reviewed | — | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Reviewed | — | None | `crit-passive-overshoot-artifact`, `crit-static-fallacy-zvcf`, `crit-ztcf-identifiability` | 6 |
 | `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Reviewed | — | None | None | 18 |
