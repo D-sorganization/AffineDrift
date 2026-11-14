@@ -427,6 +427,10 @@ A known analytical model or a learned forward model can support model-based plan
 
 Domain randomization trains over a specified distribution of plausible parameters, delays, sensor errors and disturbances. The distribution is part of the model. Mass and inertia should vary consistently, and correlated subject parameters should not be replaced automatically by independent uniform noise. Terrestrial gravity is usually much better known than muscle strength or sensor bias; arbitrary gravity variation is not a default model of differences among golfers.
 
+::: {.callout-note title="What UpstreamDrift ships by default"}
+UpstreamDrift's `DomainRandomizationConfig` (`src/learning/sim2real/domain_randomization.py`, audited on main) applies **independent** uniform multipliers to mass, friction, damping, and motor gains, and draws **gravity magnitude** uniformly in **9.5–10.1 m/s²** when `randomize_gravity=True` (default). That contradicts the correlated-parameter guidance above unless you disable gravity randomisation or replace the config. See [UpstreamDrift Learning, RL, and Analytics](../../upstreamdrift-learning-analytics.html).
+:::
+
 Evaluate on withheld parameter combinations and, when claiming transfer, on appropriately governed physical observations. Training on diverse simulations does not substitute for real validation. Report failures and uncertainty rather than only mean reward. A policy may be robust to the sampled uncertainties and fragile to an omitted contact or actuator mechanism.
 
 ### What Can the Data Identify?
