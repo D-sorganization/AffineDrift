@@ -35,18 +35,22 @@ def test_page_discloses_the_tools_5431_convention_change(page: Path) -> None:
     assert "uniform shaft" in note or "uniform" in note
 
 
-def test_workbench_labels_pinned_numbers_as_pre_fix_and_not_recomputed() -> None:
+def test_workbench_pins_post_5554_tools_and_flags_historical_swing_lab() -> None:
     note = " ".join(_disclosure(WORKBENCH).split())
-    assert "`cefcc1878`" in note
-    assert "predates that fix" in note
-    assert "have **not been recomputed**" in note
-    assert "8 J versus 4 J" in note
+    assert "`3462749d8`" in note
+    assert "post-`#5554`" in note or "post-#5554" in note
+    assert "4 J on every path" in note
+    assert "historical" in note
+    assert "5523" in note
 
 
-def test_workbench_historical_diagnostic_example_is_kept() -> None:
+def test_workbench_documents_post_5554_residual_and_energy_balance() -> None:
     source = _text(WORKBENCH)
-    assert "the same state yields 8 J versus 4 J" in source
-    assert "A Known Diagnostic Consistency Limit" in source
+    assert "4 J" in source
+    assert "work_closure_residual_j" in source
+    assert "club_energy_balance_residual_j" in source
+    assert "A Known Diagnostic Consistency Limit" not in source
+    assert "Post-#5554 Diagnostic Consistency and Residual Contract" in source
 
 
 def test_impact_page_keeps_historical_numbers_and_states_the_sign_change() -> None:

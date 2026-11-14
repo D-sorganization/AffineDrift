@@ -467,6 +467,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/validation-roadmap.html",
             "/pages/Golf_Control_Theory.html",
             "/pages/scope-and-limits.html",
+            "/pages/upstreamdrift-capture-to-model-pipeline.html",
             "/pages/upstreamdrift-engine-protocol.html",
             "/pages/upstreamdrift-conventions.html",
             "/pages/upstreamdrift-getting-started.html",
@@ -547,6 +548,11 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     scope_limits = _find_route(inventory, "/pages/scope-and-limits.html")
     assert scope_limits["status"] == "reviewed"
     assert scope_limits["review"]["source_path"] == "pages/scope-and-limits.qmd"
+    capture_pipeline = _find_route(inventory, "/pages/upstreamdrift-capture-to-model-pipeline.html")
+    assert capture_pipeline["status"] == "reviewed"
+    assert capture_pipeline["review"]["source_path"] == (
+        "pages/upstreamdrift-capture-to-model-pipeline.qmd"
+    )
     # Forward Dynamics Matching book (#4948) is newly published, outside the original census.
     fdm_index = _find_route(inventory, "/articles/forward_dynamics_matching/index.html")
     assert fdm_index["status"] == "reviewed"
