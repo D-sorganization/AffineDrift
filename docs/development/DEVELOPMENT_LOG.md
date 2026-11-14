@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5623 · UpstreamDrift Capture-to-Model Pipeline Reference (Calibration Through Export).
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5623
+- **Branch:** cursor/capture-to-model-pipeline-5623-43e3
+- **PR:** #5669
+- **Paths:** see #5669
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`f2a4491c`; collated from changes/5623-capture-to-model-pipeline.md)
+- **Summary:** UpstreamDrift capture-to-model pipeline reference (calibration through export).
+- **Next step:** Merge after CI green.
+
 ### DL-#5684 · Normalize SBOM Git Commit Timestamps to UTC Z for CycloneDX Determinism Across Git %cI Formats.
 
 - **State:** in_review
@@ -1197,6 +1210,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5692 · Restore Clean Pre-Push Checks Across PARAMETERS.md Prettier Ignore, Double-Pendulum Mypy, and Model-Map Noqa.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5692
+- **Branch:** merged via #5692
+- **PR:** #5692
+- **Paths:** see #5692
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`e7eab0a7`; collated from changes/5692-restore-clean-prepush-hooks.md)
+- **Summary:** Restore clean pre-push checks across PARAMETERS.md Prettier ignore, double-pendulum mypy, and model-map noqa.
+- **Next step:** Shipped in PR #5692.
+
+### DL-#5597 · Harmonise PoG Ch08/Ch10/Ch25 Notation With NOTATION.md; Extend Notation Gate
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5597
+- **Branch:** merged via #5680
+- **PR:** #5680
+- **Paths:** see #5680
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`be38b53b`; collated from changes/5597-harmonise-pog-ch08-ch10-ch25-notation-wi.md)
+- **Summary:** Harmonise PoG ch08/ch10/ch25 notation with NOTATION.md; extend notation gate
+- **Next step:** Shipped in PR #5680.
+
 ### DL-#5688 · Fix Broken Ch12 Companion Link in Upstreamdrift-Physics-Models Article
 
 - **State:** shipped
@@ -1242,10 +1281,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5611
 - **Branch:** merged via #5677
-- **PR:** #5677
+- **PR:** #5677, #5703
 - **Paths:** see #5677
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`b631369e`; collated from changes/5611-disclose-wscg-trace-timing-and-planar-wr.md)
+- **Last verified:** 2026-11-14 (`1967c40c`; collated from changes/5611-unify-monograph-differential-force-notation.md)
 - **Summary:** Disclose WSCG trace timing and planar wrist limits; fix Kao, Borzelli, and Tucker bibliography records; align articulated-engine versions with pinned JSON.
 - **Next step:** Shipped in PR #5677.
 
@@ -1528,10 +1567,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5253
 - **Branch:** merged via #5486
-- **PR:** #5486, #5520
+- **PR:** #5486, #5520, #5563
 - **Paths:** see #5486
 - **Started:** 2026-11-06
-- **Last verified:** 2026-11-07 (`9b9f988a`; collated from changes/5253-repeatable-math-baseline.md)
+- **Last verified:** 2026-11-14 (`3ad95c44`; collated from changes/5253-branch-local-katex-quarto-profile-and-th.md)
 - **Summary:** Measure math-rendering cost on Theory Part 1 from the nightly Lighthouse report (script, test, evidence doc; no SSR prototype yet)
 - **Next step:** Review the baseline slice; retain SSR and pinned local-build comparison as open acceptance
 

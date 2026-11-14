@@ -232,6 +232,11 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-14 | #5692 | Restore clean pre-push checks across PARAMETERS.md Prettier ignore, double-pendulum mypy, and model-map noqa. |
+| 2026-11-14 | #5669 | UpstreamDrift capture-to-model pipeline reference (calibration through export). |
+| 2026-11-14 | #5703 | Unify proximal-distal monograph differential hand-force symbol and normal-mode sign wording across Chapters 3b, 5, and 5b |
+| 2026-11-14 | #5680 | Harmonise PoG ch08/ch10/ch25 notation with NOTATION.md; extend notation gate |
+| 2026-11-14 | #5563 | Branch-local KaTeX metadata override and Theory Part 1 build-time compare script. |
 | 2026-11-13 | #5704 | FDM runtime glossary: motion-matching terms of art and run-102 config keys |
 | 2026-11-13 | #5702 | Re-pin proximal-distal workbench and Chapter 28 synthesis to UpstreamDrift 3462749d8 and align disclosure contracts |
 | 2026-11-13 | #5691 | Fix broken ch12 companion link in upstreamdrift-physics-models article |
