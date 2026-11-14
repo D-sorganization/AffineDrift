@@ -50,8 +50,12 @@ DATA_DIR = ROOT / "data/content"
 JSON_OUTPUT = DATA_DIR / "inventory.json"
 CSV_OUTPUT = DATA_DIR / "inventory.csv"
 DASHBOARD_OUTPUT = ROOT / "pages/content-inventory.qmd"
+ACCESSIBILITY_OUTPUT = ROOT / "pages/accessibility.qmd"
 SCHEMA_VERSION = "affinedrift/content-inventory/v1"
 SHORT_PAGE_WORD_THRESHOLD = 300
+ACCESSIBILITY_COUNT_PATTERN = re.compile(
+    r"(<!-- content-inventory:page-count-start -->)\d+(<!-- content-inventory:page-count-end -->)"
+)
 
 STATUS_BANNER_PATTERN = re.compile(
     r'class="status-banner__title">\s*Status:\s*([^<]+?)\s*</p>', re.IGNORECASE
@@ -244,12 +248,22 @@ def render_dashboard(records: list[dict[str, Any]]) -> str:
     )
 
 
+def render_accessibility_with_page_count(text: str, page_count: int) -> str:
+    """Inject the generated published page count into pages/accessibility.qmd markers."""
+    updated, count = ACCESSIBILITY_COUNT_PATTERN.subn(rf"\g<1>{page_count}\g<2>", text)
+    if count != 1:
+        raise ValueError("Expected exactly one content-inventory page-count marker block")
+    return updated
+
+
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n\n", maxsplit=1)[0])
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--json-output", type=Path, default=JSON_OUTPUT)
     parser.add_argument("--csv-output", type=Path, default=CSV_OUTPUT)
     parser.add_argument("--dashboard-output", type=Path, default=DASHBOARD_OUTPUT)
+    parser.add_argument("--accessibility-output", type=Path, default=ACCESSIBILITY_OUTPUT)
+    parser.add_argument("--sync-accessibility-from-json", action="store_true")
     parser.add_argument("--check", action="store_true")
     return parser.parse_args(argv)
 
@@ -257,6 +271,20 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     """CLI entrypoint."""
     args = _parse_args(argv)
+    if args.sync_accessibility_from_json:
+        inventory_data = json.loads(args.json_output.read_text(encoding="utf-8"))
+        page_count = int(inventory_data["page_count"])
+        updated = render_accessibility_with_page_count(
+            args.accessibility_output.read_text(encoding="utf-8"), page_count
+        )
+        try:
+            write_or_check(args.accessibility_output, updated, args.check)
+        except ValueError as exc:
+            write_stderr(str(exc))
+            return 1
+        action = "verified" if args.check else "synced"
+        write_stdout(f"{action} accessibility page count ({page_count})")
+        return 0
     records = build_inventory(args.root)
     outputs = {
         args.json_output: render_json(records),

@@ -138,27 +138,27 @@ Apply the reset at the perturbed event. Its state variation is $R_x\delta x^-+(R
 $$
 \delta x^+
 =R_x\delta x^-+(R_xf^-+R_t-f^+)\delta t
-=S\delta x^-,
+=\Xi\delta x^-,
 $$
 
 $$
-\boxed{S=R_x+\frac{(f^+-R_xf^--R_t)h_x}{h_t+h_xf^-}.}
+\boxed{\Xi=R_x+\frac{(f^+-R_xf^--R_t)h_x}{h_t+h_xf^-}.}
 $$ {#eq-saltation-matrix}
 
 The comparison uses smooth mode extensions when one trajectory has crossed and the other has not. The derivative applies to an observation after both nearby events, with a consistent limiting convention. It is not a claim of uniform approximation during their short interval of mode mismatch.
 
-This timing correction is already inside $S$. Adding a second $\delta t$ correction afterward double counts it. Conversely, $R_x$ alone describes a prescribed-time reset or an appropriate event-aligned derivative; it generally misses a state-triggered common-time sensitivity. The standard formulation and its scope are developed in @Kong2023saltation.
+This timing correction is already inside $\Xi$. Adding a second $\delta t$ correction afterward double counts it. Conversely, $R_x$ alone describes a prescribed-time reset or an appropriate event-aligned derivative; it generally misses a state-triggered common-time sensitivity. The standard formulation and its scope are developed in @Kong2023saltation.
 
 ### Reset Extensions and Parameter Effects
 
-If a reset is defined only on the guard, choose a smooth local extension. Replacing that extension by $R+a h$ changes $R_x$ by $a h_x$ and $R_t$ by $a h_t$, but leaves $S$ unchanged: the added $a h_x$ cancels the correction $a d h_x/d$. The physical derivative is not determined by an arbitrary off-guard extension.
+If a reset is defined only on the guard, choose a smooth local extension. Replacing that extension by $R+a h$ changes $R_x$ by $a h_x$ and $R_t$ by $a h_t$, but leaves $\Xi$ unchanged: the added $a h_x$ cancels the correction $a d h_x/d$. The physical derivative is not determined by an arbitrary off-guard extension.
 
 For fixed parameter perturbation $\delta p$,
 
 $$
 \delta t=-\frac{h_x\delta x^-+h_p\delta p}{d},
 \qquad
-\delta x^+=S\delta x^-+E\delta p,
+\delta x^+=\Xi\delta x^-+E\delta p,
 $$
 
 $$
@@ -182,7 +182,7 @@ $$
 Thus $f^+-R_xf^-=(-(1+e)v^-,-(1+e)g)^{\mathsf T}$ and
 
 $$
-\boxed{S=\begin{bmatrix}
+\boxed{\Xi=\begin{bmatrix}
 -e&0\\
 -g(1+e)/v^-&-e
 \end{bmatrix}.}
@@ -333,7 +333,7 @@ Composition holds when the operator includes all intervening events and its endp
 At $e=0.8$, $v^-=-5$ m/s and $g=9.81$ m/s², the ball matrix is
 
 $$
-S=\begin{bmatrix}-0.8&0\\3.5316&-0.8\end{bmatrix}.
+\Xi=\begin{bmatrix}-0.8&0\\3.5316&-0.8\end{bmatrix}.
 $$
 
 Its eigenvalues both have magnitude $0.8$, but its largest singular value is approximately $3.7044$ when height and speed are scaled by $1$ m and $1$ m/s. A height perturbation can become a larger velocity perturbation through timing, while each nominal impact loses kinetic energy.
@@ -381,10 +381,10 @@ $$ {#eq-event-cost}
 Thus an outgoing endpoint costate pulls back as
 
 $$
-\lambda^-=S^{\mathsf T}\lambda^++a^{\mathsf T}.
+\lambda^-=\Xi^{\mathsf T}\lambda^++a^{\mathsf T}.
 $$ {#eq-value-gradient-jump}
 
-With no event cost and matching running-cost values, $a=0$. Otherwise simply using $S^{\mathsf T}\lambda^+$ can omit the cost of spending longer in one mode.
+With no event cost and matching running-cost values, $a=0$. Otherwise simply using $\Xi^{\mathsf T}\lambda^+$ can omit the cost of spending longer in one mode.
 
 For a complete differentiable event-resolved discrete map $F$ and corresponding interval cost $\ell$,
 
@@ -536,7 +536,7 @@ For numerically integrated flows, bracket an admissible sign change and refine t
 
 Check direction, competing events and post-reset mode before resuming. Finite steps can miss multiple roots, and a fixed single-bounce demonstration cannot be continued through later impacts by allowing negative height.
 
-Automatic differentiation differentiates the executed program. A branchy event detector may need implicit event differentiation or a custom derivative. The primal applies $R$ to the state; it never applies $S$ as a substitute for the physical reset. A reverse-mode derivative pulls a covector through the transpose of the complete event-resolved Jacobian.
+Automatic differentiation differentiates the executed program. A branchy event detector may need implicit event differentiation or a custom derivative. The primal applies $R$ to the state; it never applies $\Xi$ as a substitute for the physical reset. A reverse-mode derivative pulls a covector through the transpose of the complete event-resolved Jacobian.
 
 For a [JAX custom VJP](https://docs.jax.dev/en/latest/_autosummary/jax.custom_vjp.html), the forward rule returns the output and residuals, while the backward rule returns cotangents for the differentiable inputs. Returning zero/`None` for an input that actually affects the requested derivative changes the result. A forward rule with a fixed event time and a backward rule that assumes a state-triggered event do not describe the same function. Continuous adjoint integration and differentiation of a numerical timestep scheme also need to be distinguished.
 

@@ -1,14 +1,14 @@
 ---
 title: "Theory Series, Part 1: Control-Affine Foundations"
-description: "Derivation showing the golf swing as a control-affine mechanical system, introducing the drift/input decomposition framework for biomechanical analysis."
+description: "Derives a control-affine golf swing model under stated assumptions, separating autonomous drift from the declared generalized-torque input."
 subtitle: "Drift, Input, and Model-Conditioned Attribution"
 series: "Theory Series"
 series-part: 1
 author: "Dieter Olson"
-date: "Date unverified"
-date-source: "unverified"
-date-modified: "2026-09-10"
-last-reviewed: "2026-09-10"
+date: "2026-09-10"
+date-source: "editorial-board-review"
+date-modified: "2026-11-11"
+last-reviewed: "2026-11-11"
 canonical: "/articles/theory-part1.html"
 status: "available"
 audience-level: "advanced"
@@ -16,17 +16,17 @@ evidence-rung: "mathematical-identity"
 symbol-hover: true
 prerequisites:
   - "pages/how-to-read.html"
-summary-plain: "This article builds the basic equations for the golf swing. It splits the motion into two clear parts: natural drift and active muscle force."
-abstract: "This article introduces the mathematical foundations of AffineDrift, formulating golf swing biomechanics within a control-affine framework. By decomposing system dynamics into an autonomous drift field and linear control inputs, it establishes a formal basis for motor control attribution and sensitivity analysis."
+summary-plain: "This article builds the golf swing equations under rigid-body, holonomic-contact, and no-drag assumptions. At a fixed model state it separates instantaneous motion into autonomous drift and a declared generalized torque input, not biological muscle force."
+abstract: "This article introduces the mathematical foundations of AffineDrift, formulating golf swing biomechanics within a control-affine framework under explicit modeling assumptions. It writes system dynamics as an autonomous drift term plus linear generalized-torque inputs, providing bookkeeping for model-conditioned attribution and sensitivity analysis at fixed state."
 key-takeaways:
-  - "The golf swing equations of motion admit a strict control-affine decomposition into drift and input."
-  - "Generalized muscular forces enter linearly through a state-dependent control input matrix."
-  - "The autonomous drift field encapsulates all passive gravitational, Coriolis, and velocity-dependent forces."
+  - "Under the stated rigid multibody assumptions, the golf swing equations are written in control-affine form with drift and declared input channels."
+  - "Declared generalized torques enter linearly through a state-dependent input map; this is not individual muscle activation."
+  - "The autonomous drift term carries gravity, Coriolis, and velocity-dependent effects assigned to the passive load law; aerodynamic drag and impact are omitted."
 caveats:
   evidence-level: "Theory (Mathematical Identity)"
   establishes:
     - "Mathematical formulation of the coupled golfer-club system as a control-affine dynamical system."
-    - "Instantaneous decomposition of the phase space vector field into autonomous drift and input components."
+    - "Instantaneous bookkeeping of the phase-space vector field into autonomous drift and declared-input components at fixed state."
   does-not-establish:
     - "Individual muscle recruitment, motor unit activation, or neural intent."
     - "Aerodynamic clubhead drag, compliant foot-ground shear traction, or impact collision mechanics."
@@ -35,6 +35,8 @@ caveats:
     - "[Critique: Affine Nature of the Golf Swing](affine-nature-golf-swing.html)"
   next-gate: "Simscape torque matching (GATE-SIM-01) and laboratory force plate qualification."
 changes:
+  - date: "2026-11-11"
+    description: "Aligned YAML summaries and takeaways with model-conditioned drift/input contract (#5640)."
   - date: "2026-09-10"
     description: "Wired reference cluster cross-article links (#4364)."
   - date: "2026-09-05"
@@ -290,7 +292,7 @@ p(s,q,\eta)=a_h(q)+R_h(q)\bigl[r_0(s)+\Phi_B(s)\eta\bigr],
 \qquad 0\leq s\leq L.
 $$
 
-In component notation, the local deformation is $w(s, t) = \sum_{i=1}^m \phi_i(s) \eta_i(t)$. The functions must satisfy the essential clamped conditions. Head mass, head rotary inertia, and the chosen tip connection also enter the dynamic boundary problem. Empty-cantilever natural modes are not automatically the exact modes of a shaft carrying a clubhead. Admissible assumed functions can still define an approximation, whose accuracy needs convergence and frequency/response checks.
+When the centerline is inextensible and the body rotates, admissible placements must include an axial foreshortening term of order $\eta^2$; omitting it makes a purely transverse bend artificially lengthen the arc and reverses the sign of centrifugal geometric stiffness (@eq-pendulum_flex_block in [Part 4](theory-part4.html)). In component notation, the local deformation is $w(s, t) = \sum_{i=1}^m \phi_i(s) \eta_i(t)$. The functions must satisfy the essential clamped conditions. Head mass, head rotary inertia, and the chosen tip connection also enter the dynamic boundary problem. Empty-cantilever natural modes are not automatically the exact modes of a shaft carrying a clubhead. Admissible assumed functions can still define an approximation, whose accuracy needs convergence and frequency/response checks.
 
 Differentiating the actual placement gives
 
