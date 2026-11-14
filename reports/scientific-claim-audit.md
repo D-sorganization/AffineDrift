@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 298
+- Reviewed: 297
 - Deferred: 0
 - Exempt: 3
 
@@ -121,10 +121,10 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.qmd` | 3 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.qmd` | 2 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.qmd` | 2 |
 | `/articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.qmd` | 2 |
@@ -238,7 +238,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/models-drake.html` | `models/models-drake.qmd` | 1 |
 | `/models/models-mujoco.html` | `models/models-mujoco.qmd` | 1 |
 | `/models/models-myosim.html` | `models/models-myosim.qmd` | 1 |
-| `/models/models-myosuite.html` | `models/models-myosuite.qmd` | 1 |
 | `/models/models-opensim.html` | `models/models-opensim.qmd` | 1 |
 | `/models/models-pendulum.html` | `models/models-pendulum.qmd` | 1 |
 | `/models/models-pinocchio.html` | `models/models-pinocchio.qmd` | 1 |
@@ -542,7 +541,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-d6078f8dcbbd` | `/models/models-drake.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e9ad98fb020a` | `/models/models-mujoco.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7900d4c5494f` | `/models/models-myosim.html` | Reviewed | — | None | None | 0 |
-| `ad-route-b97806b7d360` | `/models/models-myosuite.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0daf8c7255f6` | `/models/models-opensim.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0c35be23a4e6` | `/models/models-pendulum.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d93c2572c4de` | `/models/models-pinocchio.html` | Reviewed | — | None | None | 0 |

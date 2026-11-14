@@ -532,6 +532,114 @@ dynamics.
 
 ---
 
+## Geometry of Motion Notation (Volumes 0–II)
+
+This section harmonises symbols across *Geometry of Motion* chapters with the
+canonical rules above. Chapters may keep historical local glyphs when a **notation
+note** in the chapter points here; new material follows the canonical row.
+
+### Volume 0: Rotations and Exponential Coordinates (Chapters 4–6)
+
+Canonical finite-rotation symbols (Volume 0 Chapter 6 is the reference chapter):
+
+| Object | Canonical symbol | Meaning |
+| ------ | ---------------- | ------- |
+| Unit rotation axis | $\hat{n}$ or $s$ | Unit vector in the rotation frame |
+| Rotation angle | $\theta$ | Signed angle about $\hat{n}$ |
+| Rotation vector | $\boldsymbol{\phi}=\hat{n}\,\theta$ | $\|\boldsymbol{\phi}\|=\theta$ |
+| Skew generator | $[\boldsymbol{\phi}]_\times$ or $\hat{\boldsymbol{\phi}}$ | Element of $\mathfrak{so}(3)$ |
+| Body/space frames | $\{s\}$, $\{b\}$ | $R_{sb}$ maps $b$-components to $s$-components |
+| Relative rotation | $R_{sb}$ | Not $R_{bs}$ without an explicit inversion statement |
+
+Chapter 4 historically uses axis $a$, angle $\alpha$ and rotation vector $u$ for
+the same objects; Chapter 5 uses screw direction $s$ and angle $\theta$. Treat
+those as chapter-local aliases linked by this table. Do not reuse $u$ for a unit
+axis in the same section where $u$ is a control input. Reserve $\varphi$ for
+Euler roll; do not also denote the rotation vector by $\varphi$.
+
+**SLERP:** interpolation fraction $s\in[0,1]$ (not $u$). Angular velocity along
+the geodesic may be written $\Omega$ in Chapter 4 and $\omega$ elsewhere; both
+are frame-labelled angular velocities.
+
+**Integrated exponential coordinates vs twist:** $(\boldsymbol{\phi},\boldsymbol{\rho})$
+denotes exponential coordinates on $SE(3)$ when stated; the 6-vector screw twist
+$\xi$ follows [Screw/Twist Notation](#screwtwist-notation). They are related by
+the exponential map but are not interchangeable symbols.
+
+### Volume 0: Spatial Algebra and Recursion (Chapters 7–12)
+
+| Object | Canonical symbol | Rule |
+| ------ | ---------------- | ---- |
+| Spatial twist | $\mathcal{V}=(\boldsymbol{\omega},\mathbf{v})^T$ | Angular component first |
+| Spatial wrench | $\mathcal{F}=(\mathbf{n},\mathbf{f})^T$ | Moment first; lowercase $\mathbf{f}$ is only the 3-force block |
+| se(3) hat | $[\xi]_\times$ or $\widehat{\xi}$ | Same $4\times4$ matrix as NOTATION screw row |
+| Joint motion subspace | $S_i$ | Columns span allowed joint motion in link frame |
+| PoE space screw axis | $\xi_i$ or $\mathcal{A}_i$ | Not $S_i$ (reserved for joint subspace) |
+| Parent link index | $\lambda(i)$ | Not $p(i)$ unless $p$ is explicitly position |
+| Spatial inertia | $\mathcal{I}_i$ | Distinct from configuration mass matrix $M(q)$ |
+| Joint-space bias | $h(q,\dot q)$ | Matches manipulator equation in [Canonical Control-Affine Terminology](#canonical-control-affine-terminology) |
+| Constraint Jacobian | $J_c$ | Rows are independent constraints; not $A$ when $A$ is a state Jacobian |
+
+Symbols $c$, $b$, $h$ and $S$ have chapter-local meanings (Coriolis offset, joint
+bias in Chapter 8, step size in optimization). A chapter notation note must flag
+any reuse.
+
+### Constrained Acceleration and Projectors (Chapters 3, 3b, 7, 9)
+
+For independent equality constraints $J_c\dot v=-\gamma$ with
+$\gamma=\dot J_c v$ in a fixed contact mode:
+
+| Symbol | Definition | Type |
+| ------ | ---------- | ---- |
+| $K_c$ | $J_c M^{-1} J_c^\top$ | Operational-space inertia |
+| $\Pi_M$ | $I-M^{-1}J_c^\top K_c^{-1}J_c$ | $M$-orthogonal projector ($\Pi_M^2=\Pi_M$) |
+| $P_v$ | Same matrix as $\Pi_M$ | Velocity-space projector (Chapter 9 name) |
+| $\mathcal{H}_M$ | $\Pi_M M^{-1}$ | Constrained acceleration operator (not a projector) |
+| $a_0^c$ | $-P_v M^{-1} h - M^{-1} J_c^\top K_c^{-1}\gamma$ | Constrained drift acceleration |
+| $B_a^c$ | $P_v M^{-1} B$ | Constrained input acceleration map |
+
+Chapter 3 Superposition writes $\Pi_M$ as $P$ in $P=I-M^{-1}J^T W^{-1}J$ with
+$W=JM^{-1}J^T$. Chapter 3b and induced-acceleration ledgers use $\mathcal{H}_M$,
+not $P$, for the map that premultiplies $Q_0$ or $B$. Using $P$ for both the
+projector and $\mathcal{H}_M$ is a notational collision.
+
+### Contraction Metrics (Volume I Chapter 4)
+
+| Symbol | Meaning in CCM chapters |
+| ------ | ----------------------- |
+| $M(x)$ | Riemannian metric or contraction metric (not $M(q)$ mass matrix in the same section without a note) |
+| $\rho(x)$ | CCM multiplier (positive function, not necessarily in $(0,1)$) |
+| $\varrho$ | Discrete contraction factor in $(0,1)$ when both appear |
+| $\Phi(t,s)$ | State-transition matrix of the first variation |
+| $\psi_k$ | Nonlinear discrete map when distinct from $\Phi$ |
+
+Chapters that overload $\rho$, $\Phi$, $D$, $d$, or $\lambda$ carry a local
+**notation note** listing the chapter-specific sense.
+
+### Optimal Control Hamiltonian vs Hessian (Volume I Chapters 5–6)
+
+| Symbol | Chapter 5 discrete DDP | Chapter 5 / 6 continuous or Riccati |
+| ------ | --------------------- | ------------------------------------- |
+| $\mathcal{H}_k$ | Hamiltonian (costate pairing) | — |
+| $H_{uu}$ or $Q_{uu}$ | Control Hessian block | — |
+| $N$ | Horizon length | Cross-weight matrix $N_k$ only with a chapter note |
+
+**Feedback sign convention:** Chapter 5 writes $A_{\mathrm{cl}}=A+BK$ with $K$ absorbing
+the sign; Chapters 6 and 8 use $u=-Kx$ so $A_{\mathrm{cl}}=A-BK$. Converting gains
+between chapters requires an explicit sign flip on $K$.
+
+### Volume II: Transverse Coordinates Along a Nominal Curve
+
+Let $\gamma(\tau)$ be a nominal trajectory, $T=\gamma'/v$ the unit tangent, and
+$E(\tau)\in\mathbb{R}^{n\times(n-1)}$ a smooth orthonormal normal frame
+($E^TE=I$, $E^TT=0$). **Reduced transverse coordinates** are
+$z=E(\tau)^T\delta x\in\mathbb{R}^{n-1}$. The orthogonal projector
+$P=EE^T=I-TT^T$ is an $n\times n$ matrix; $P\delta x\in\mathbb{R}^n$ is not
+the reduced coordinate vector. Phase is indexed by $\tau$ (or an equivalent
+scalar phase), not automatically by clock time $t$ alone.
+
+---
+
 ## Component Notation
 
 ### Index Notation (Einstein Convention)

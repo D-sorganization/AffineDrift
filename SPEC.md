@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-14 | #5670 | Document UpstreamDrift humanoid balance, WBC, and learning/analytics gaps grounded in code. |
+| 2026-11-14 | #5687 | Gate #5590 ZTCF and superposition figure embeds on pin provenance or explicit schematic labels. |
 | 2026-11-14 | #5662 | Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates. |
 | 2026-11-14 | #5699 | Extend canonical parameters with ball MOI, chapter literal checks, and glob scanning |
 | 2026-11-14 | #5686 | Companion pin bump, launcher-tile CI gate, README parity fetch, FDM dead links |
