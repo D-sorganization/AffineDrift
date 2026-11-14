@@ -26,10 +26,10 @@
           "reviewed_on": "2026-08-28",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/reachability.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "6ce735d1584df594f49167a2d87eb00d631ab5a503233c09a1b2b361046afaa5"
             }
           ],
           "technical_anchor": "claim-ad-dcr-001",
@@ -61,7 +61,7 @@
           "claim_id": "ad-decomp-001",
           "critique_status": "not_reviewed",
           "data_provenance": "No participant dataset is used; the governing evidence is the declared symbolic equations of motion and their executable regression tests.",
-          "evidence_class": "computational",
+          "evidence_class": "mathematical_identity",
           "falsifiers": [
             "A declared rigid-body equation of motion that cannot be rearranged into x_dot = f(x) + G(x) u for any admissible choice of f and G.",
             "The control-affine split alone determines the physiological source of torque, a coaching cue, or a causal ordering between swing segments."
@@ -73,14 +73,14 @@
           ],
           "next_validation_gate": "Run preregistered multibody simulation studies that compare the declared f(x), G(x) split against an independently derived equation-of-motion model for the same mechanical system.",
           "population": "Declared rigid-body and multibody dynamical models expressed in generalized coordinates; no golfer population is inferred.",
-          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
-          "reviewed_on": "2026-10-13",
+          "review_commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
+          "reviewed_on": "2026-11-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/dynamics.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "fa233a9794a530c90d8ce8b16795b0b6a8f2013a35a3cd5dfa639cc877627074"
             }
           ],
           "technical_anchor": "claim-ad-decomp-001",
@@ -107,39 +107,40 @@
         {
           "accessible_summary": {
             "modal_strength": "bounded",
-            "text": "The pointwise ZTCF family asks what happens right now if the model's declared applied control is set to zero at a fixed state. It shows how much of the instantaneous acceleration comes from momentum, gravity, passive loads, and constraint geometry within the declared model. It does not measure human muscle activity or prove that one release mechanism exists."
+            "text": "The ZTCF family asks what the declared model does with the declared input set to zero: as an instantaneous pointwise rate, a stitched sequence along achieved states, or a forward/branched rollout from a state. It shows what the declared model does with the declared input set to zero, not what a golfer's muscles were actually doing or proof of one release mechanism."
           },
           "claim_id": "ad-ztcf-001",
           "critique_status": "not_reviewed",
           "data_provenance": "No participant dataset is used; the governing evidence is the declared forward-dynamics model and its executable regression tests.",
           "evidence_class": "computational",
           "falsifiers": [
-            "A declared forward-dynamics model and parameter set for which the zero-torque forward simulation cannot be reproduced from the stated initial conditions.",
-            "The stitched ZTCF trajectory for a fixed model and parameter set is not reproducible across independent re-integrations of the same equations."
+            "A declared forward-dynamics model and parameter set for which the pointwise or forward/branched zero-input evaluation fails to reproduce from stated initial conditions.",
+            "Prose or downstream plots that conflate a stitched pointwise trace with a dynamically integrated forward or branched ZTCF trajectory."
           ],
           "limitations": [
-            "ZTCF is a property of the declared model and parameters, not a direct measurement of a golfer's muscle activity or intent.",
-            "Pointwise and stitched ZTCF answer different questions, an instantaneous rate versus a re-integrated trajectory, and are not interchangeable without saying which is meant.",
+            "ZTCF is a property of the declared model, generalized-force convention, and constraint set, not a direct measurement of a golfer's muscle activity or intent.",
+            "Pointwise, stitched, forward, and branched ZTCF constructions answer distinct questions and are not interchangeable without stating which is meant.",
+            "Zero-input drift includes all unforced terms retained in the declared model (including passive and constraint loads), not only inertial and gravity terms.",
             "ZTCF does not by itself identify a unique neuromuscular release event; see the governed critique ledger for open identifiability concerns."
           ],
-          "next_validation_gate": "Run preregistered sensitivity studies comparing pointwise and stitched ZTCF trajectories against independently measured passive-release benchmarks under declared controls.",
+          "next_validation_gate": "Run preregistered sensitivity studies separating pointwise, stitched, forward, and branched ZTCF evaluations against independently derived passive-release benchmarks.",
           "population": "Declared multibody swing models with specified mass, inertia, and joint-torque parameters; no golfer population is inferred.",
-          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
-          "reviewed_on": "2026-10-13",
+          "review_commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
+          "reviewed_on": "2026-11-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/ztcf_contract.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "f2c259e8f33946d81090d4d7fd8e123b0ee1dbe5febc4d4256a85b715326dfac"
             }
           ],
           "technical_anchor": "claim-ad-ztcf-001",
           "technical_claim": {
             "modal_strength": "bounded",
-            "text": "For a declared multibody swing model, the pointwise Zero-Torque Counterfactual (ZTCF) evaluates the forward dynamics at a given state with all joint torque inputs set to zero, and the stitched ZTCF trajectory re-integrates this zero-torque condition forward from a sequence of such states. Both quantify the passive (inertial, Coriolis, centrifugal, and gravitational) contribution to acceleration or trajectory evolution within the declared model and parameters. ZTCF values do not establish what a human golfer's neuromuscular system actually contributed at that instant, nor do they identify a unique physiological release mechanism."
+            "text": "For a declared multibody swing model, NOTATION.md distinguishes four Zero-Torque Counterfactual (ZTCF) constructions: (1) pointwise ZTCF evaluates forward acceleration with the declared input set to zero at a single state; (2) stitched pointwise ZTCF collects those pointwise evaluations along achieved states and is not a dynamically integrated trajectory; (3) forward ZTCF and (4) branched ZTCF dynamically integrate the zero-input dynamics from declared initial or branched states. Together they evaluate zero-input drift (combining inertial, Coriolis, centrifugal, gravitational, passive, and constraint loads under the declared model), not what a human golfer's neuromuscular system actually contributed or a unique physiological release mechanism."
           },
-          "title": "The Zero-Torque Counterfactual Isolates Passive-Release Dynamics Within a Declared Model",
+          "title": "The ZTCF Family Evaluates Declared Zero-Input Drift Within a Declared Model",
           "uncertainty": {
             "statement": "Model-form, parameter, and measurement uncertainty in the mass, inertia, and torque inputs are not quantified by the ZTCF construction itself.",
             "status": "unquantified"
@@ -179,10 +180,10 @@
           "reviewed_on": "2026-10-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/dynamics.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "fa233a9794a530c90d8ce8b16795b0b6a8f2013a35a3cd5dfa639cc877627074"
             }
           ],
           "technical_anchor": "claim-ad-zvcf-001",
@@ -209,46 +210,47 @@
         {
           "accessible_summary": {
             "modal_strength": "bounded",
-            "text": "In the declared swing model, the ratio of drift to control often grows late in the downswing, but how much it grows, and whether it crosses a given threshold, depends on which weighting or energy measure is used to compute it. This trend does not show that a real golfer or club loses the ability to correct the swing at that moment."
+            "text": "DCR depends on the declared metric and coordinate weighting; an analytical counterexample shows the ratio and ordering across states can change completely when the weighting or inertia-weighted metric changes. A large or rising DCR under one metric does not show that a real golfer or club loses the ability to correct the swing."
           },
           "claim_id": "ad-dcr-002",
           "critique_status": "not_reviewed",
-          "data_provenance": "No participant dataset is used; the governing evidence is a declared simulated downswing trajectory and its executable regression tests.",
+          "data_provenance": "No participant dataset is used; the governing evidence is an exact analytical counterexample in articles/drift-control-ratio.qmd and executable reachability tests.",
           "evidence_class": "analytical_counterexample",
           "falsifiers": [
-            "A declared downswing trajectory and admissible input set for which DCR does not vary with the choice of weighting or kinetic-energy metric.",
-            "A single scalar DCR threshold that reproduces the same drift-dominance timing across every declared metric choice for the same trajectory."
+            "An admissible state family and input set for which every positive-definite weighting matrix induces the identical scalar DCR ordering.",
+            "A single scalar DCR threshold that yields invariant crossing orderings across all coordinate scalings and inertia-weighted metrics."
           ],
           "limitations": [
-            "DCR trends are metric-dependent; a reported late-downswing drift dominance is a property of the declared metric, not a metric-free fact about the swing.",
-            "The ratio does not quantify finite-horizon reachability or the input authority remaining to correct the trajectory; see claim ad-dcr-001.",
-            "The analytical trend is not a participant-level golf validation or a coaching prescription."
+            "DCR ordering and threshold crossings depend on the declared metric and weighting, not metric-free physical necessity.",
+            "An inertia-weighted acceleration metric a^T M a incorporates inertia but is not kinetic energy.",
+            "The ratio does not quantify finite-horizon reachability or remaining correction authority; see claim ad-dcr-001.",
+            "The analytical counterexample is a manufactured family of states, not a golfer trajectory or downswing measurement."
           ],
-          "next_validation_gate": "Run preregistered multi-metric sensitivity sweeps across declared downswing trajectories, reporting DCR trends under at least three independent weighting choices.",
-          "population": "Declared downswing trajectory simulations with a specified weighting or kinetic-energy metric; no golfer population is inferred.",
-          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
-          "reviewed_on": "2026-10-13",
+          "next_validation_gate": "Run preregistered multi-metric sensitivity sweeps on declared multibody trajectories reporting DCR under at least three explicitly declared weightings.",
+          "population": "Declared analytical counterexamples evaluated across weighting matrices and metrics; no golfer trajectory or population is inferred.",
+          "review_commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
+          "reviewed_on": "2026-11-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/reachability.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "6ce735d1584df594f49167a2d87eb00d631ab5a503233c09a1b2b361046afaa5"
             }
           ],
           "technical_anchor": "claim-ad-dcr-002",
           "technical_claim": {
             "modal_strength": "bounded",
-            "text": "Within a declared model, the Drift-Control Ratio (DCR) evaluated across a simulated downswing trajectory can trend toward drift-dominant values (DCR greater than 1) during the late downswing interval under the declared coordinates, input set, and norm. This trend, and its magnitude, are sensitive to the choice of weighting or kinetic-energy metric used to compare drift and input accelerations; changing the metric can change whether and when drift dominance appears. The trend does not establish that path-correction authority is actually lost at that instant for any physical golfer or golf-club system."
+            "text": "Within a declared model, DCR depends explicitly on the chosen coordinate scaling, norm, and weighting matrix, such as an inertia-weighted metric a^T M a (which is not kinetic energy). An analytical example shows that changing the declared weighting or norm reverses or alters the ordering of DCR magnitudes across the same states and admissible input set (for instance, non-monotone values 1, 0, 3, 8 across parameter speeds in the manufactured Lagrangian example). This sensitivity establishes that metric-dependent DCR values do not prove loss of path-correction authority or physical inevitability for any golfer or club."
           },
-          "title": "Drift-Control Ratio Trends and Their Dependence on the Chosen Kinetic-Energy Metric",
+          "title": "Drift-Control Ratio Orderings Depend on the Choice of Inertia-Weighted or Scaling Metric",
           "uncertainty": {
             "statement": "Sensitivity of the DCR trend to model-form, metric, and parameter choices is not quantified by a single reported trajectory.",
             "status": "unquantified"
           },
           "valid_conditions": [
-            "The downswing trajectory, the admissible input set, and the weighting or kinetic-energy metric used to compute DCR are all declared.",
-            "DCR values compared across the trajectory use the same metric, coordinates, and normalization throughout."
+            "The state family, admissible input set, coordinate chart, and inertia-weighted or scaling metric used to compute DCR are all declared.",
+            "Values compared across states use the same metric, coordinates, and normalization throughout."
           ]
         }
       ],
@@ -281,10 +283,10 @@
           "reviewed_on": "2026-10-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/double_pendulum_affine.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "c21a3137ef799c9fb7207e4729af5e7b107475c4a61a1188fffc9a66977a3e35"
             }
           ],
           "technical_anchor": "claim-ad-superpos-001",
@@ -332,10 +334,10 @@
           "reviewed_on": "2026-10-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/rnea.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "69aee06737f2cf3d7ddf677251483a9a994cba50f746dc2658302fc5defd71dd"
             }
           ],
           "technical_anchor": "claim-ad-pds-001",
@@ -383,10 +385,10 @@
           "reviewed_on": "2026-10-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/golf_model.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "efb541b73b36765aadf9bcf57dc8c4d1266d69ae04a9a6530239e31a53edb0e0"
             }
           ],
           "technical_anchor": "claim-ad-icc-001",
@@ -434,10 +436,10 @@
           "reviewed_on": "2026-10-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/golf_model_3d.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "86cd479c5c142dc24a47252c7c09af4be8065b2d12c94a1376f6b3832d969760"
             }
           ],
           "technical_anchor": "claim-ad-sas-001",
@@ -485,10 +487,10 @@
           "reviewed_on": "2026-10-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/tools/wrist_universal_joint/torque_calculator.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "53dadb437a117e6fd3bcbe7f83e731b3b0ac5689a2575a00a93490210e0db926"
             }
           ],
           "technical_anchor": "claim-ad-wuj-001",
@@ -536,10 +538,10 @@
           "reviewed_on": "2026-10-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/lqr.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "b5d39a3df32522a44d4eefb3aef3fdefff515bf84f6cb7d6c106bba6e5d2913b"
             }
           ],
           "technical_anchor": "claim-ad-tsc-001",
@@ -587,10 +589,10 @@
           "reviewed_on": "2026-10-13",
           "software_provenance": [
             {
-              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/impact_contact_models.py",
               "repository": "D-sorganization/AffineDrift",
-              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+              "sha256": "25e7fac9e33f9e6d95880daeb259c07f960bebe579a3552e606ec531391f666e"
             }
           ],
           "technical_anchor": "claim-ad-impact-001",
@@ -638,13 +640,13 @@
           "reviewed_on": "2026-11-10",
           "software_provenance": [
             {
-              "commit": "bcd29492bda66c436137c7e9e3f956a7b41b7ae4",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "src/affine_control/option_a_comparison.py",
               "repository": "D-sorganization/AffineDrift",
               "sha256": "db0c8c524d66204292aa01b8ffec4aabadad3136f8f2930d31881a3068b14d34"
             },
             {
-              "commit": "bcd29492bda66c436137c7e9e3f956a7b41b7ae4",
+              "commit": "1b75012c2d5d4c7d63be8b6e649cf32c499629ec",
               "path": "tests/test_option_a_comparison.py",
               "repository": "D-sorganization/AffineDrift",
               "sha256": "90328e57340458e052c4964c3e75268122cf85473a118c8e2715d7e1c2257b38"

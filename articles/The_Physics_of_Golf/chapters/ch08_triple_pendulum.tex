@@ -67,10 +67,10 @@ where $g_0=9.81\ \mathrm{m/s^2}$ and upward height is positive. Define $g(q)=\na
 M(q)\ddot q+c(q,v)+g(q)=\tau.
 \label{eq:triple_pendulum_eom}
 \end{equation}
-The vector $c$ contains the velocity-dependent inertial terms; it is not itself a Coriolis matrix. The input $\tau_i$ is the net applied joint couple conjugate to relative rate $v_i$, so its mechanical power is $\tau_i v_i$. It is not an individual muscle force or neural excitation.
+The vector $c$ contains the velocity-dependent inertial terms; it is not itself a Coriolis matrix. COM distances are $r_i$ throughout this chapter; $c_i$ always means a bias component. The input $\tau_i$ is the net applied joint couple conjugate to relative rate $v_i$, so its mechanical power is $\tau_i v_i$. It is not an individual muscle force or neural excitation.
 \end{definition}
 
-To verify the gravity convention, set $h_1=m_1c_1+(m_2+m_3)L_1$, $h_2=m_2c_2+m_3L_2$ and $h_3=m_3c_3$. Then $V=-g_0\sum_i h_i\cos\theta_i$ and
+To verify the gravity convention, set $h_1=m_1r_1+(m_2+m_3)L_1$, $h_2=m_2r_2+m_3L_2$ and $h_3=m_3r_3$, with $r_i$ the COM distance from the proximal hinge of link $i$. Then $V=-g_0\sum_i h_i\cos\theta_i$ and
 \[
 g=g_0\begin{bmatrix}
 h_1\sin\theta_1+h_2\sin\theta_2+h_3\sin\theta_3\\
@@ -91,10 +91,10 @@ M=\sum_i\left(m_i J_i^T J_i+I_i s_i s_i^T\right)
 For compact complete entries, define
 \[
 \begin{aligned}
-a&=I_1+m_1c_1^2+(m_2+m_3)L_1^2,\\
-b&=I_2+m_2c_2^2+m_3L_2^2,\qquad d=I_3+m_3c_3^2,\\
-\alpha&=m_2L_1c_2+m_3L_1L_2,\quad
-\beta=m_3L_1c_3,\quad \gamma=m_3L_2c_3.
+a&=I_1+m_1r_1^2+(m_2+m_3)L_1^2,\\
+b&=I_2+m_2r_2^2+m_3L_2^2,\qquad d=I_3+m_3r_3^2,\\
+\alpha&=m_2L_1r_2+m_3L_1L_2,\quad
+\beta=m_3L_1r_3,\quad \gamma=m_3L_2r_3.
 \end{aligned}
 \]
 Every constant has units $\mathrm{kg\,m^2}$. The entries are
@@ -107,7 +107,7 @@ M_{13}&=d+\beta\cos(q_2+q_3)+\gamma\cos q_3,\\
 M_{23}&=d+\gamma\cos q_3.
 \end{aligned}
 \]
-In particular, $M_{11}$ includes all three COM inertias, and both $M_{22}$ and $M_{12}$ include $I_2+I_3$. Their presence follows from the absolute angular rates. Omitting them requires an explicitly justified point-mass approximation, not merely the observation that a club is light. A club generally does not have $c_3=L_3/2$; that is only an assumption in the manufactured examples below.
+In particular, $M_{11}$ includes all three COM inertias, and both $M_{22}$ and $M_{12}$ include $I_2+I_3$. Their presence follows from the absolute angular rates. Omitting them requires an explicitly justified point-mass approximation, not merely the observation that a club is light. A club generally does not have $r_3=L_3/2$; that is only an assumption in the manufactured examples below.
 \end{definition}
 
 For any nonzero $v$, the angular contribution $\sum_i I_i(s_i^T v)^2$ is positive because the three $s_i$ span the velocity space. Thus the declared model has a symmetric positive-definite $M$ at every configuration. This property survives a task-Jacobian singularity: the tip may lose an instantaneous motion direction even while the joint-space inertia remains invertible.
@@ -280,7 +280,7 @@ G=\begin{bmatrix}0\\M^{-1}\end{bmatrix}.
 \]
 Adding a coordinate does not automatically increase a drift-control ratio. The ratio requires a stated output or state metric, input units, admissible torque set and regularization scale. Comparing $f$ with an unspecified control vector conflates available control capacity with the particular torque a golfer happened to apply. A large instantaneous drift contribution cannot establish negligible future control authority or explain neuromuscular effort by itself.
 
-For the rigid tip position $y=r_{\mathrm{tip}}(q)$, where $c_3$ is replaced by $L_3$ in the COM-position construction,
+For the rigid tip position $y=r_{\mathrm{tip}}(q)$, where $r_3$ is replaced by $L_3$ in the COM-position construction,
 \[
 \dot y=J_{\mathrm{tip}}v,\qquad
 \ddot y=-J_{\mathrm{tip}}M^{-1}(c+g)+\dot J_{\mathrm{tip}}v
