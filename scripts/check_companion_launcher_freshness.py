@@ -6,21 +6,21 @@ import argparse
 import json
 import sys
 import urllib.error
-import urllib.request
 from pathlib import Path
+
+from scripts.pinned_https import GITHUB_RAW_HOST, read_pinned_https, require_commit_sha
 
 ROOT = Path(__file__).resolve().parent.parent
 STORE = ROOT / "data" / "companion"
 RAW_LAUNCHER = (
-    "https://raw.githubusercontent.com/D-sorganization/UpstreamDrift/{commit}/"
+    f"https://{GITHUB_RAW_HOST}/D-sorganization/UpstreamDrift/{{commit}}/"
     "src/config/launcher_manifest.json"
 )
 
 
 def _load_json_url(url: str) -> dict[str, object]:
     try:
-        with urllib.request.urlopen(url, timeout=60) as response:
-            return json.loads(response.read().decode("utf-8"))
+        return json.loads(read_pinned_https(url, host=GITHUB_RAW_HOST).decode("utf-8"))
     except (urllib.error.URLError, json.JSONDecodeError) as exc:
         raise RuntimeError(f"failed to load {url}: {exc}") from exc
 
@@ -47,7 +47,7 @@ def companion_program_ids(commit: str) -> set[str]:
 
 
 def launcher_tile_ids(commit: str) -> set[str]:
-    payload = _load_json_url(RAW_LAUNCHER.format(commit=commit))
+    payload = _load_json_url(RAW_LAUNCHER.format(commit=require_commit_sha(commit)))
     tiles = payload.get("tiles")
     if not isinstance(tiles, list):
         raise ValueError("launcher_manifest.json missing tiles[]")
