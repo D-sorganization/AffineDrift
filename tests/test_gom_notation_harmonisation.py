@@ -28,6 +28,14 @@ def test_ch03b_uses_hm_not_p_for_constrained_acceleration_operator() -> None:
     assert r"\mathcal{H}_M Q_0" in text
 
 
+def test_ch03b_singular_operational_inertia_uses_kc_not_w() -> None:
+    text = _read(
+        "articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd"
+    )
+    assert "inverting singular $K_c$" in text
+    assert "inverting singular $W$" not in text
+
+
 def test_ch03b_gamma_sign_matches_notation_registry() -> None:
     text = _read(
         "articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd"
