@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 297
+- Reviewed: 298
 - Deferred: 0
 - Exempt: 3
 
@@ -238,6 +238,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/models-drake.html` | `models/models-drake.qmd` | 1 |
 | `/models/models-mujoco.html` | `models/models-mujoco.qmd` | 1 |
 | `/models/models-myosim.html` | `models/models-myosim.qmd` | 1 |
+| `/models/models-myosuite.html` | `models/models-myosuite.qmd` | 1 |
 | `/models/models-opensim.html` | `models/models-opensim.qmd` | 1 |
 | `/models/models-pendulum.html` | `models/models-pendulum.qmd` | 1 |
 | `/models/models-pinocchio.html` | `models/models-pinocchio.qmd` | 1 |
@@ -541,6 +542,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-d6078f8dcbbd` | `/models/models-drake.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e9ad98fb020a` | `/models/models-mujoco.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7900d4c5494f` | `/models/models-myosim.html` | Reviewed | — | None | None | 0 |
+| `ad-route-b97806b7d360` | `/models/models-myosuite.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0daf8c7255f6` | `/models/models-opensim.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0c35be23a4e6` | `/models/models-pendulum.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d93c2572c4de` | `/models/models-pinocchio.html` | Reviewed | — | None | None | 0 |

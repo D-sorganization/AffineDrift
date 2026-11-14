@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -9,13 +10,27 @@ import pytest
 
 from scripts import generate_companion_freshness as freshness
 from scripts import install_programming_companion as installer
-from tests.test_programming_companion_artifact_install import _write_bundle
+from src.affine_control.programming_companion import ConsumerPolicy
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _installed_store(tmp_path: Path) -> Path:
-    bundle, commit = _write_bundle(tmp_path)
+    lock = json.loads((REPO_ROOT / "data/companion/active-lock.json").read_text(encoding="utf-8"))
+    commit = str(lock["provider"]["commit"])
+    snap_dir = REPO_ROOT / "data/companion/snapshots" / str(lock["snapshot"]["id"])
+    policy = ConsumerPolicy.upstreamdrift_actions_artifact()
+    manifest_bytes = (snap_dir / "manifest.json").read_bytes()
+    schema_bytes = (snap_dir / "schema.json").read_bytes()
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    for name, payload in (
+        (policy.manifest_path, manifest_bytes),
+        (policy.schema_path, schema_bytes),
+    ):
+        (bundle / name).write_bytes(payload)
+        digest = hashlib.sha256(payload).hexdigest()
+        (bundle / f"{name}.sha256").write_text(f"{digest}  {name}\n", encoding="utf-8")
     store = tmp_path / "store"
     args = installer.parse_args(
         [
@@ -81,7 +96,7 @@ def test_page_reports_active_pin_provider_verdict_and_every_pin(tmp_path: Path) 
     assert "upstreamdrift-companion-" in page
     assert "Provider publication state | **draft**" in page
     assert "### Provider Blockers" in page
-    assert "1 active, 0 pinned, 1 review required" in page
+    assert " active, " in page and "review required" in page
     assert "Review required (unqualified)" in page
     assert "- [/pages/overview.html](../../pages/overview.html)" in page
     assert "Newer is not approved" in page

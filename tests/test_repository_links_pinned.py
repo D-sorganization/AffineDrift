@@ -43,4 +43,4 @@ def test_repositories_directory_has_at_least_the_known_bare_links() -> None:
     for qmd in REPOSITORIES_DIR.glob("*.qmd"):
         total += len(BARE_LINK.findall(qmd.read_text(encoding="utf-8")))
 
-    assert total == 16
+    assert total == 17
