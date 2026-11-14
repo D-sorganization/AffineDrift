@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5596 · Add Llms.Txt Agent Entry Point, Extend Symbol Registry V2 From NOTATION.md, and CI Freshness Gates.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5596
+- **Branch:** cursor/agent-readiness-5596-3da0
+- **PR:** #5662
+- **Paths:** see #5662
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`fba8421b`; collated from changes/5596-add-llms-txt-agent-entry-point-extend-sy.md)
+- **Summary:** Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates.
+- **Next step:** Merge after CI green.
+
 ### DL-#5623 · UpstreamDrift Capture-to-Model Pipeline Reference (Calibration Through Export).
 
 - **State:** in_review
