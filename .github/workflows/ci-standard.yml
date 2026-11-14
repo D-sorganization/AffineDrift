@@ -157,6 +157,14 @@ jobs:
       - name: Verify UpstreamDrift Install Docs Match README Contract
         # #5626: install prose must include vendor/ud-tools and must not claim Git LFS.
         run: python3 -m scripts.check_upstreamdrift_install_docs
+      - name: Verify UpstreamDrift README Matches Install Parity Contract
+        # #5626: fetch README at the pinned commit; AffineDrift install pages must not
+        # teach steps the upstream README omits or contradict.
+        run: python3 -m scripts.check_upstreamdrift_readme_parity
+      - name: Verify Companion Catalog Covers Launcher Tiles at Active Pin
+        # #5626: every launcher_manifest.json tile at the provider commit must appear
+        # in the installed companion manifest (staleness guard after pin bumps).
+        run: python3 -m scripts.check_companion_launcher_freshness
       - name: Verify Software Freshness Dashboard Is Current
         run: python3 -m scripts.generate_companion_freshness --check
       - name: Generate Content Inventory
