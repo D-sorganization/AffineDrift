@@ -150,8 +150,27 @@ jobs:
         # must be in data/companion/pins.json and the active lock must be the
         # one active pin (#4027 via #4123, RM #1507).
         run: python3 scripts/check_companion_pins.py
+      - name: Upstream implementation bridge links
+        run: python3 scripts/check_upstream_implementation_links.py
+      - name: Verify Proximal-Distal Companion Uses One Upstream Pin
+        run: python3 scripts/check_proximal_distal_companion_upstream_pins.py
+      - name: Verify UpstreamDrift Install Docs Match README Contract
+        # #5626: install prose must include vendor/ud-tools and must not claim Git LFS.
+        run: python3 -m scripts.check_upstreamdrift_install_docs
+      - name: Verify UpstreamDrift README Matches Install Parity Contract
+        # #5626: fetch README at the pinned commit; AffineDrift install pages must not
+        # teach steps the upstream README omits or contradict.
+        run: python3 -m scripts.check_upstreamdrift_readme_parity
+      - name: Verify Companion Catalog Covers Launcher Tiles at Active Pin
+        # #5626: every launcher_manifest.json tile at the provider commit must appear
+        # in the installed companion manifest (staleness guard after pin bumps).
+        run: python3 -m scripts.check_companion_launcher_freshness
       - name: Verify Software Freshness Dashboard Is Current
         run: python3 -m scripts.generate_companion_freshness --check
+      - name: Verify Symbol Registry Is Current
+        run: python3 -m scripts.generate_symbol_references --check
+      - name: Verify Agent Entry Point Files Are Current
+        run: python3 -m scripts.generate_agent_entry_point --check
       - name: Generate Content Inventory
         # #4602: a fresh page inventory (word count, status, last-reviewed,
         # link health) for every build. It is an artifact, not a staleness

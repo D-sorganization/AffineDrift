@@ -147,3 +147,72 @@ def test_biomechanics_schedule_no_overlap() -> None:
     m8_match = re.search(r"## Module 8[^\n]*\n\*\*Weeks\s*([0-9–]+)", text)
     assert m7_match and m8_match
     assert m7_match.group(1) != m8_match.group(1), "Module 7 and Module 8 weeks must be distinct"
+
+
+def _parse_range(spec: str) -> tuple[int, int]:
+    parts = [int(p) for p in re.split(r"[–-]", spec)]
+    return (parts[0], parts[-1]) if parts else (0, 0)
+
+
+@pytest.mark.parametrize(
+    ("filename", "expected_range"),
+    [
+        ("learning-path-control-theory.qmd", (120, 160)),
+        ("learning-path-biomechanics.qmd", (100, 140)),
+    ],
+)
+def test_16_week_learning_paths_weekly_schedules_match_totals(
+    filename: str, expected_range: tuple[int, int]
+) -> None:
+    text = (REPO_ROOT / "resources" / filename).read_text(encoding="utf-8")
+    assert "A 16-week " in text
+    assert "over 16 weeks" in text
+    assert "## Recommended Daily Schedule" not in text
+    sched = text.split("## Recommended Weekly Schedule")[1].split("\n## ")[0]
+    assert "/day" not in sched
+    blocks = re.split(r"\n### Weeks ", sched)[1:]
+    assert len(blocks) == 8, f"{filename} expected 8 two-week blocks, got {len(blocks)}"
+    total_lo, total_hi = 0, 0
+    for blk in blocks:
+        items = re.findall(r"-\s+\*\*(?!Total:)[^:]+:\*\*\s+(\d+(?:[–-]\d+)?)\s+hours?/week", blk)
+        assert items, blk[:60]
+        comp_lo = sum(_parse_range(x)[0] for x in items)
+        comp_hi = sum(_parse_range(x)[1] for x in items)
+        tot_m = re.search(r"-\s+\*\*Total:\*\*\s+(\d+(?:[–-]\d+)?)\s+hours/week", blk)
+        assert tot_m, blk[:60]
+        b_lo, b_hi = _parse_range(tot_m.group(1))
+        assert (comp_lo, comp_hi) == (
+            b_lo,
+            b_hi,
+        ), f"{filename}: {(comp_lo, comp_hi)} != {(b_lo, b_hi)}"
+        total_lo += 2 * b_lo
+        total_hi += 2 * b_hi
+    assert (total_lo, total_hi) == expected_range
+    mod_hours = [
+        _parse_range(m)
+        for m in re.findall(r"\*\*Weeks\s+\d+[–-]\d+\s+\|\s+(\d+(?:[–-]\d+)?)\s+hours\*\*", text)
+    ]
+    assert len(mod_hours) == 8
+    assert (sum(x[0] for x in mod_hours), sum(x[1] for x in mod_hours)) == expected_range
+
+
+def test_5618_prior_citation_and_pedagogy_locks() -> None:
+    assert "by Ville Hirvonen" in (REPO_ROOT / "resources" / "resources-books.qmd").read_text(
+        encoding="utf-8"
+    )
+    assert "On Contraction Analysis for Non-linear Systems" in (
+        REPO_ROOT / "resources" / "resources-books.qmd"
+    ).read_text(encoding="utf-8")
+    assert "10.1016/0021-9290(93)90084-R" in (
+        REPO_ROOT / "resources" / "resources-papers.qmd"
+    ).read_text(encoding="utf-8")
+    assert "Comparing against a real recorded dataset checks whether" not in (
+        REPO_ROOT / "resources" / "on-ramp-paths.qmd"
+    ).read_text(encoding="utf-8")
+    assert "Chapters 3 and 8" in (
+        REPO_ROOT / "resources" / "learning-path-foundations.qmd"
+    ).read_text(encoding="utf-8")
+    ct = (REPO_ROOT / "resources" / "learning-path-control-theory.qmd").read_text(encoding="utf-8")
+    assert "Chapters 13–14" in ct and "Contraction analysis (Lohmiller–Slotine)" in ct
+    bio = (REPO_ROOT / "resources" / "learning-path-biomechanics.qmd").read_text(encoding="utf-8")
+    assert "Wolpert & Ghahramani (2000)" in bio and "Soh & Bhatnagar" not in bio

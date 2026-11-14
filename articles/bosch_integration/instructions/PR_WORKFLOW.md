@@ -2,12 +2,8 @@
 
 ## Current Situation
 
-The AffineDrift repo has another agent actively working on the `textb` branch (large
-staged changeset with index lock). The `textbook/scientific-rigor-audit` branch contains
-the prior audit work. The Bosch integration files live safely in
-`articles/bosch_integration/` and don't touch any existing files.
-
-**Do NOT attempt git operations while the other agent is active.**
+The Bosch integration files live in `articles/bosch_integration/` as a self-contained
+bundle. Merge them in a dedicated branch without modifying unrelated textbook sources.
 
 ---
 
@@ -66,9 +62,9 @@ New chapters:
 - ch09b: Passive Stabilization in Parallel Loops (Golf book)
 - ch07b: Biology and Dynamics of Nonlinear Systems (GoM Vol IV)
 
-Integrates Frans Bosch's work on self-organization, attractor-fluctuation
-landscapes, preflex control, co-contractions, and the assembly line
-hierarchy into both textbooks with full mathematical rigor.
+Integrates Frans Bosch's work on passive stabilization, impedance, and
+biology–dynamics coupling into both textbooks with explicit scope limits on
+practitioner vocabulary.
 
 Includes bibliography entries for Bosch (2020, 2015) and 15 supporting
 references (Bernstein, Kelso, Todorov, Scholz, Latash, etc.)"
@@ -102,14 +98,13 @@ Integrates Frans Bosch's work (*Anatomy of Agility*, 2020; *Strength Training
 and Coordination*, 2015) into both AffineDrift textbooks.
 
 ### New chapters
-- **Golf book — ch09b: Passive Stabilization in Parallel Loops** (856 lines)
+- **Golf book — ch09b: Passive Stabilization in Parallel Loops** (~388 lines)
   Extends the parallel mechanisms chapter with impedance control, pre-tensioning,
-  attractor-fluctuation landscapes, drift-control analysis, and phase-specific
-  golf swing strategies.
+  and drift-control analysis of passive stability.
 
-- **GoM Vol IV — ch07b: Biology and Dynamics of Nonlinear Systems** (1,130 lines)
+- **GoM Vol IV — ch07b: Biology and Dynamics of Nonlinear Systems** (~835 lines)
   Bridges biomechanics and motor control via visco-elastic dynamics, UCM/synergies,
-  self-organization, biotensegrity, and the assembly line hierarchy.
+  and mechanism–evidence framing.
 
 ### Bibliography
 - 17 new BibTeX entries for both books (Bosch 2020/2015, Bernstein, Kelso,
@@ -120,8 +115,8 @@ and Coordination*, 2015) into both AffineDrift textbooks.
   `articles/bosch_integration/cross_references/` for future PRs.
 
 ## Key design decisions
-- All content is backed by peer-reviewed research or established theory.
-  No speculative claims — consistent with the scientific rigor audit.
+- Claims cite peer-reviewed or established sources; practitioner hypotheses are
+  labeled as such in the chapter text.
 - Mathematical formulations use proper control-affine notation throughout.
 - Bosch's practitioner framework is translated into formal dynamics language,
   not just restated.
@@ -129,7 +124,7 @@ and Coordination*, 2015) into both AffineDrift textbooks.
 ## Test plan
 - [ ] LaTeX compilation of Golf book with new chapter
 - [ ] LaTeX compilation of GoM Vol IV with new chapter
-- [ ] Verify all \citep{} keys resolve against updated .bib files
+- [ ] Verify all `\cite{}` keys resolve against updated .bib files
 - [ ] Review TikZ diagrams render correctly
 - [ ] Check no duplicate BibTeX keys after merge
 - [ ] Verify cross-references to ch09 labels resolve

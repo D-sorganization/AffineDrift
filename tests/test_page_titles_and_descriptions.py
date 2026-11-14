@@ -189,6 +189,10 @@ ALLOWLISTED_NAV_SHORT_FORMS: frozenset[tuple[str, str]] = frozenset(
         ),
         ("articles/reference-point-problem.qmd", "The Reference-Point Problem"),
         (
+            "pages/upstreamdrift-conventions.qmd",
+            "UpstreamDrift Conventions",
+        ),
+        (
             "articles/The_Geometry_of_Motion/quarto/volume1.qmd",
             "Volume I: Tangent-Space Methods for Nonlinear Control",
         ),

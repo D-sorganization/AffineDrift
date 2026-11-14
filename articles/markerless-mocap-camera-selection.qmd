@@ -327,7 +327,9 @@ $$ {#eq-multiview-covariance}
 
 This conditional estimate requires full column rank and a valid local noise model. Include
 calibration uncertainty and timing parameters in a joint model or propagate them separately;
-the formula alone omits them. Near-parallel rays make depth poorly conditioned. Wider baselines
+the formula alone omits them. **As implemented** in UpstreamDrift reconstruction,
+[`geometry._covariance`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/reconstruct/geometry.py#L92-L107)
+uses $\Sigma_X \approx \sigma_{\mathrm{px}}^2 (J^\top J)^+$ with isotropic $\sigma_{\mathrm{px}}$ and does not add calibration or strobe-timing terms; cross-camera sync uses strobe offsets with roughly one-frame-interval uncertainty per camera ([`rig/sync.py`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/motion_capture/rig/sync.py)). See [UpstreamDrift Capture-to-Model Pipeline](../pages/upstreamdrift-capture-to-model-pipeline.html). Near-parallel rays make depth poorly conditioned. Wider baselines
 can improve geometry while increasing occlusion and appearance differences. More cameras help
 only when their observations add usable information; repeated biased detections are not
 independent evidence. Detector confidence is not automatically a calibrated variance.

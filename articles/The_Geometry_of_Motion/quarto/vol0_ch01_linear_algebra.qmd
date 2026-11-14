@@ -2,6 +2,7 @@
 title: "Chapter 1: A Primer on Linear Algebra"
 description: "Vectors, spectra, singular values and mechanical duality: distinguish instantaneous motion, energy, numerical sensitivity and control over time."
 css: vol0_ch01_linear_algebra.css
+bibliography: ../geometry_of_motion.bib
 ---
 
 ## A Primer on Linear Algebra {#sec-linear-algebra}
@@ -147,7 +148,7 @@ A=\begin{bmatrix}0&1\\0&0\end{bmatrix},\quad
 B=\begin{bmatrix}0\\1\end{bmatrix}.
 $$
 
-Although $B$ has rank one, $[B,AB]$ has rank two. Its finite-time controllability Gramian is
+Although $B$ has rank one, $[B,AB]$ has rank two. The matrix exponential $e^{As}$ and finite-time controllability Gramian used here are derived in [State-Space Chapter 2](vol0_ch02_state_space.html#sec-controllability). The Gramian for this double integrator is
 
 $$
 W(T)=\int_0^T e^{As}BB^Te^{A^Ts}\,ds
@@ -175,7 +176,7 @@ For a constant continuous-time system $\dot{\mathbf x}=A\mathbf x$:
 
 - All eigenvalues with negative real parts give exponential asymptotic stability.
 - Any eigenvalue with positive real part gives instability.
-- If all real parts are nonpositive, stability on the imaginary-axis boundary requires every imaginary-axis eigenvalue to be semisimple: no Jordan block larger than one. Such a system is not asymptotically stable if an imaginary-axis eigenvalue is present.
+- If all real parts are nonpositive, stability on the imaginary-axis boundary requires every imaginary-axis eigenvalue to be semisimple: no Jordan block larger than one (see [Jordan classification in Chapter 2](vol0_ch02_state_space.html#sec-phase_portraits)). Such a system is not asymptotically stable if an imaginary-axis eigenvalue is present.
 
 For example, $A=0$ has constant bounded solutions. The double-integrator $A$ above has the same two zero eigenvalues, but $\mathbf x(0)=(0,1)^T$ gives $\mathbf x(t)=(t,1)^T$, which is unbounded.
 
@@ -199,7 +200,7 @@ $$
 \dot V=\mathbf x^T(A^TP+PA)\mathbf x.
 $$
 
-Negative definiteness of $A^TP+PA$ proves decay in that metric. Nonpositive $\dot V$ alone does not prove convergence: an undamped oscillator keeps its positive energy constant. A mathematical Lyapunov metric need not equal physical kinetic energy.
+This Lyapunov stability construction is developed systematically in [Chapter 2](vol0_ch02_state_space.html#sec-phase_portraits). Negative definiteness of $A^TP+PA$ proves decay in that metric. Nonpositive $\dot V$ alone does not prove convergence: an undamped oscillator keeps its positive energy constant. A mathematical Lyapunov metric need not equal physical kinetic energy.
 
 ## Singular Value Decomposition {#sec-svd}
 
@@ -418,6 +419,10 @@ $$
 Construct $A=\begin{bmatrix}0&I\\-M_0^{-1}K_0&0\end{bmatrix}$. For equal masses and lengths $L=0.5$ m, show that the two natural angular frequencies are $\sqrt{(2\pm\sqrt2)g/L}$. These are undamped normal modes, not a prescribed sequence for a golf swing.
 
 **1.6** Verify the shear SVD, transient-growth, task-null path and double-integrator Gramian examples independently. Which statements are coordinate dependent, and which retain a physical interpretation after the corresponding metric is transformed?
+
+## Further Reading
+
+For linear-algebra foundations see [@strang2019]. For manipulability ellipsoids see [@ModernRoboticsManipulabilityReview]. Standard treatments of damped least-squares kinematic inverses and nonnormal transient growth are not duplicated here; add bibliography entries before citing them in this chapter.
 
 ## Summary {#sec-summary-ch1}
 

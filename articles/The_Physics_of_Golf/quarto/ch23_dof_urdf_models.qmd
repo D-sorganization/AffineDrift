@@ -541,6 +541,28 @@ Virtual links represent coordinate frames, not new pieces of anatomical tissue. 
 
 The URDF tree cannot give a child link two parents. Choose a spanning tree and add the omitted rigid closure through the engine's constraint mechanism, or define a compliant attachment with stated force and energy laws. Do not duplicate the club as two independent bodies, silently weld away intended motion, or expect a second parent tag to create a valid two-hand model.
 
+The URDF specification defines **exactly six** joint types: `revolute`, `continuous`, `prismatic`, `fixed`, `floating`, and `planar`. There is **no** native `ball` or `universal` joint—hence the virtual-link workaround for shoulders and wrists. SDF (used heavily in Gazebo) adds `ball`, `universal`, and `screw` joints and can represent **graph** topology with multiple parents; MJCF expresses rich constraints and closed chains in native XML.
+
+| **Format** | **Rotational / translational primitives** | **Topology** | **Typical loop closure** | **Inertial frame on link** | **Massless intermediate links** |
+| --- | --- | --- | --- | --- | --- |
+| URDF | Six types above; spherical motion via serial revolutes or `floating` | Spanning tree only | Not in file: add in the simulator (`<equality>` in MuJoCo; weld/ball constraints in Drake; `RigidConstraintModel` in Pinocchio) | `<inertial origin>` on each link | Importer-dependent; often needs small masses |
+| MJCF | `hinge`, `slide`, `ball`, `free`, plus `<equality connect/weld>` | Tree + equality constraints | `<equality weld>` or `connect` between named bodies | `pos`/`quat` on `<body>` | Explicit zero-mass bodies with compiler flags |
+| SDF | Includes `ball`, `universal`, `revolute`, `prismatic`, `screw`, `fixed` | Graph (multiple parents allowed) | Native closed chains; optional `<joint>` + `<link>` loops | `<inertial><pose>` per link | Similar to URDF importers |
+
+For the teaching **two-hand grip** on a spanning tree, attach the club to the lead hand in URDF and close the trail hand with MuJoCo equality constraints that URDF cannot express:
+
+```xml
+<!-- MJCF fragment: second-hand weld (body names must match your MJCF/URDF import) -->
+<mujoco>
+  <equality>
+    <weld name="trail_grip" body1="trail_hand" body2="club"
+          relpose="0 0 0  1 0 0 0" active="true"/>
+  </equality>
+</mujoco>
+```
+
+**Drake** adds `MultibodyPlant` constraints (`BallConstraint`, `WeldConstraint`, `DistanceConstraint`) after parsing the tree. **Pinocchio** closes loops with `RigidConstraintModel` and the proximal/constrained dynamics solver. None of these closures are portable URDF tags; they are engine declarations paired with the same spanning tree.
+
 []{#building-a-full-body-golf-urdf}
 
 ## Building a Full-Body Golf Model
@@ -570,6 +592,8 @@ Calling this a musculoskeletal model requires more than a file of rigid links. M
 For orientation, selected male segment mass fractions from Table 4 are: upper arm $2.71%$, forearm $1.62%$, hand $0.61%$, thigh $14.16%$, shank $4.33%$ and foot $1.37%$ of body mass, each for one segment. The whole-trunk value is $43.46%$. A table containing whole trunk plus its subparts would double-count mass. Nor can a generic "thorax" fraction and an undefined "lumbar" body be assigned independently and presumed to preserve the original partition.
 
 The same table gives the male forearm longitudinal radius of gyration as $12.1%$ of the specified segment length. That yields $I_{\mathrm{long}}=m(0.121L)^2=0.014641mL^2$, not $0.121mL^2$. Alternative endpoint definitions change the normalized coefficient. The published URDF example uses derived cylinder inertias instead, so its geometry and mass properties can be checked without presenting population means as subject anatomy.
+
+How UpstreamDrift applies de Leva rows to its builder length ratios (and when to use `DeLevaEstimator` versus the humanoid character builder) is documented on the site [Capture-to-Model Pipeline](../../../pages/upstreamdrift-capture-to-model-pipeline.html#anthropometric-scaling) reference, with links into `anthropometrics` and `humanoid_character_builder` at a pinned commit.
 
 []{#pinocchio-inria}
 
@@ -743,6 +767,8 @@ A strong study therefore states the forward model and which quantities are measu
 We can count regular mobility for a declared model, compute task-null directions on its admissible velocity space, distinguish them from torque-null inputs, and verify a rigid-body file against mechanics. These tools make competing explanations concrete. They do not yet establish a unique control strategy, a complete musculoskeletal representation or a universal best swing.
 
 The next step is to ask how control works with limited information, delay and noisy measurements. Those constraints belong alongside anatomy, mechanics and task geometry in an explanation of the golf swing. Preserving their distinctions makes their interaction more understandable, not less.
+
+{{< include ../../_includes/upstream-implementation/pog-ch23.qmd >}}
 
 ## Primary Sources and Reading Guidance
 

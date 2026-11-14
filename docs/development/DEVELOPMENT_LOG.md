@@ -241,6 +241,448 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5623 · UpstreamDrift Capture-to-Model Pipeline Reference (Calibration Through Export).
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5623
+- **Branch:** cursor/capture-to-model-pipeline-5623-43e3
+- **PR:** #5669
+- **Paths:** see #5669
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`f2a4491c`; collated from changes/5623-capture-to-model-pipeline.md)
+- **Summary:** UpstreamDrift capture-to-model pipeline reference (calibration through export).
+- **Next step:** Merge after CI green.
+
+### DL-#5684 · Normalize SBOM Git Commit Timestamps to UTC Z for CycloneDX Determinism Across Git %cI Formats.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5684
+- **Branch:** cursor/shared-sbom-timestamp-1914
+- **PR:** #5683
+- **Paths:** see #5683
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`9349bc65`; collated from changes/5684-normalize-sbom-git-commit-timestamps-to.md)
+- **Summary:** Normalize SBOM git commit timestamps to UTC Z for CycloneDX determinism across Git %cI formats.
+- **Next step:** Merge after CI green.
+
+### DL-#5643 · Programming Companion Onboarding Entrypoints; Datasets Ledger CC BY 4.0 Alignment.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5643
+- **Branch:** cursor/fix-onb-04-onb-07-5643-0eb3
+- **PR:** #5647
+- **Paths:** see #5647
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`a70fd1c2`; collated from changes/5643-onboarding-datasets-licence.md)
+- **Summary:** Programming Companion onboarding entrypoints; datasets ledger CC BY 4.0 alignment.
+- **Next step:** Merge after CI green; do not auto-merge.
+
+### DL-#5642 · Gemini Panel CVE-A3–A6: Technology Article Citation Fixes, Launch-Monitor Figure Generator, Cheetham Significance.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5642
+- **Branch:** cursor/issue-5642-gemini-panel-8ee7
+- **PR:** #5648
+- **Paths:** see #5648
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`9405239d`; collated from changes/5642-gemini-panel-technology-articles.md)
+- **Summary:** Gemini panel CVE-A3–A6: technology article citation fixes, launch-monitor figure generator, Cheetham significance.
+- **Next step:** Merge after CI green; no auto-merge armed.
+
+### DL-#5641 · Wrist Article: Evidence-Aligned Constraint Takeaway, Illustrative Iγ Label, UpstreamDrift Simscape Links.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5641
+- **Branch:** cursor/wrist-article-evidence-5641-9e6e
+- **PR:** #5644
+- **Paths:** see #5644
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`17393141`; collated from changes/5641-wrist-evidence-takeaway-simscape.md)
+- **Summary:** Wrist article: evidence-aligned constraint takeaway, illustrative Iγ label, UpstreamDrift Simscape links.
+- **Next step:** Merge after review; epic #5638.
+
+### DL-#5640 · Align Theory-Part1 Front Matter With the Model-Conditioned Drift Contract.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5640
+- **Branch:** cursor/theory-part1-front-matter-5640-5385
+- **PR:** #5645
+- **Paths:** see #5645
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`914929ec`; collated from changes/5640-theory-part1-front-matter.md)
+- **Summary:** Align theory-part1 front matter with the model-conditioned drift contract.
+- **Next step:** Merge after quality-gate.
+
+### DL-#5639 · Shot-Pattern Article Artifacts, Generators, and Trust Ledger Evidence Paths.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5639
+- **Branch:** cursor/shot-pattern-repro-5639-362c
+- **PR:** #5646
+- **Paths:** see #5646
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`288d399c`; collated from changes/5639-shot-pattern-repro-trust-ledger.md)
+- **Summary:** Shot-pattern article artifacts, generators, and trust ledger evidence paths.
+- **Next step:** CI green after lane CI fix #5652.
+
+### DL-#5626 · Publish UpstreamDrift Getting-Started and Headless/Agent Guides; README Install CI Gate; Llms.Txt
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5626
+- **Branch:** cursor/upstreamdrift-getting-started-5626-8182
+- **PR:** #5663, #5686
+- **Paths:** see #5663
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-14 (`f2738c98`; collated from changes/5626-companion-freshness-readme-parity.md)
+- **Summary:** Publish UpstreamDrift getting-started and headless/agent guides; README install CI gate; llms.txt
+- **Next step:** Barb arms after CI green
+
+### DL-#5624 · Document UpstreamDrift Ball Flight, Impact, Putting and Injury Models With Site–Code Mismatch Flags (Refs #5624).
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5624
+- **Branch:** cursor/ud-physics-models-5624-6ace
+- **PR:** #5664
+- **Paths:** see #5664
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`37b4ea66`; collated from changes/5624-document-upstreamdrift-ball-flight-impac.md)
+- **Summary:** Document UpstreamDrift ball flight, impact, putting and injury models with site–code mismatch flags (Refs #5624).
+- **Next step:** Merge after CI green.
+
+### DL-#5622 · FDM Runtime Reference: Acceptance Gates, Two-Window Fit, Ground-Support Pipeline, Contact Law, Glossary
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5622
+- **Branch:** cursor/motion-matching-glossary-5622-8405
+- **PR:** #5667, #5704
+- **Paths:** see #5667
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`7395a15e`; collated from changes/5622-fdm-glossary-terms-8405.md)
+- **Summary:** FDM runtime reference: acceptance gates, two-window fit, ground-support pipeline, contact law, glossary
+- **Next step:** CI on lane PR
+
+### DL-#5621 · MuJoCo Golf Model-Map Reference With Vendored MJCF Snapshots and Generator (Slice 1).
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5621
+- **Branch:** cursor/golf-model-maps-5621-d77a
+- **PR:** #5659, #5698, #5689
+- **Paths:** see #5659
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`1b75012c`; collated from changes/5621-use-defusedxml-in-golf-model-map-to-sati.md)
+- **Summary:** MuJoCo golf model-map reference with vendored MJCF snapshots and generator (slice 1).
+- **Next step:** Follow-up slices for Simscape golfer-scapula, joint-angle conventions, and grasp split.
+
+### DL-#5619 · Add UpstreamDrift Conventions Reference Page (Pinned C8814a1b9d) With Nav Entry
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5619
+- **Branch:** cursor/upstreamdrift-conventions-ref-0c2c
+- **PR:** #5650
+- **Paths:** see #5650
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`58e1151b`; collated from changes/5619-add-upstreamdrift-conventions-reference.md)
+- **Summary:** Add UpstreamDrift conventions reference page (pinned c8814a1b9d) with nav entry
+- **Next step:** Merge after CI green; branch reconciled with main.
+
+### DL-#5618 · Fix Learning-Path and Resources Citations, Chapter Pointers, and Workflow Install Commands
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5618
+- **Branch:** cursor/fix-learning-paths-resources-5618-288d
+- **PR:** #5668, #5695
+- **Paths:** see #5668
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`eb176f0a`; collated from changes/5618-learning-path-schedule-budgets.md)
+- **Summary:** Fix learning-path and resources citations, chapter pointers, and workflow install commands
+- **Next step:** Merge after CI green.
+
+### DL-#5615 · Remove Stale Motion-Control JSX/Transcript; Align Companions With Rewritten Chapters.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5615
+- **Branch:** cursor/motion-control-companion-reconcile-35e5
+- **PR:** #5665
+- **Paths:** see #5665
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`2d280405`; collated from changes/5615-remove-stale-motion-control-jsx-transcri.md)
+- **Summary:** Remove stale motion-control JSX/transcript; align companions with rewritten chapters.
+- **Next step:** Merge after CI green.
+
+### DL-#5613 · Mechanics Reference Notation: Mobility Disambiguation, Fibre Symbols, Reciprocity, ICC Front Matter
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5613
+- **Branch:** cursor/mech-ref-5613-6fb2
+- **PR:** #5656
+- **Paths:** see #5656
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`cb17457a`; collated from changes/5613-mechanics-reference-notation-mobility-di.md)
+- **Summary:** Mechanics reference notation: mobility disambiguation, fibre symbols, reciprocity, ICC front matter
+- **Next step:** Merge after CI green.
+
+### DL-#5612 · Tangent-Hyperplane Notation, Rate-Set Definition, Citations
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5612
+- **Branch:** cursor/tangent-notation-5612-8b6c
+- **PR:** #5655
+- **Paths:** see #5655
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`a1cf68db`; collated from changes/5612-tangent-hyperplane-notation-rate-set-def.md)
+- **Summary:** Tangent-hyperplane notation, rate-set definition, citations
+- **Next step:** Merge after CI green.
+
+### DL-#5610 · Proximal-Distal Energy Ledger, Closure Claims, and H4 Verdict Strength.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5610
+- **Branch:** cursor/pde-energy-ledger-closure-7b2c
+- **PR:** #5637
+- **Paths:** see #5637
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`f0bccb52`; collated from changes/5610-proximal-distal-energy-ledger-closure-cl.md)
+- **Summary:** Proximal-distal energy ledger, closure claims, and H4 verdict strength.
+- **Next step:** Merge after CI green.
+
+### DL-#5609 · Unify Lay Companion UpstreamDrift Pin and Fix Review Defects
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5609
+- **Branch:** cursor/pdc-upstream-pin-5609-9e7e
+- **PR:** #5658, #5702
+- **Paths:** see #5658
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`8cd85b27`; collated from changes/5609-workbench-post-5554-pin-and-equations.md)
+- **Summary:** Unify lay companion UpstreamDrift pin and fix review defects
+- **Next step:** Merge after CI green.
+
+### DL-#5608 · FDM Book: Hermite-Simpson, Notation Table, Core Equations, UD Link Fixes
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5608
+- **Branch:** cursor/fdm-5608-equations-notation-3efd
+- **PR:** #5657
+- **Paths:** see #5657
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`4556bd40`; collated from changes/5608-fdm-book-hermite-simpson-notation-table.md)
+- **Summary:** FDM book: Hermite-Simpson, notation table, core equations, UD link fixes
+- **Next step:** Merge after CI green
+
+### DL-#5607 · FDM Worked Examples Corrected; Reproduction Script and Chapter Consistency Fixes.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5607
+- **Branch:** cursor/fdm-worked-examples-5607-c54b
+- **PR:** #5636
+- **Paths:** see #5636
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`ac5d2182`; collated from changes/5607-fdm-worked-examples-corrected-reproducti.md)
+- **Summary:** FDM worked examples corrected; reproduction script and chapter consistency fixes.
+- **Next step:** Merge after CI green.
+
+### DL-#5606 · Sync GoM Book Landing Pages With Rendered Chapters and Archive Stale Audit Runbooks.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5606
+- **Branch:** cursor/gom-5603-5606-9baf
+- **PR:** #5653, #5701
+- **Paths:** see #5653
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`fee52513`; collated from changes/5606-sync-gom-book-landing-pages-with-rendere.md)
+- **Summary:** Sync GoM book landing pages with rendered chapters and archive stale audit runbooks.
+- **Next step:** CI green
+
+### DL-#5605 · Geometry of Motion Citation Defects: Primary Sources, Contact Ledger, and Bibliography Hygiene.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5605
+- **Branch:** cursor/gom-citations-5605-8246
+- **PR:** #5674
+- **Paths:** see #5674
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`59b187eb`; collated from changes/5605-geometry-of-motion-citation-defects-prim.md)
+- **Summary:** Geometry of Motion citation defects: primary sources, contact ledger, and bibliography hygiene.
+- **Next step:** Independent exact-head review after CI green.
+
+### DL-#5604 · Geometry of Motion Pedagogy: Prerequisites Map, Cross-Refs, KKT Display, Contraction Pedagogy, Vol 0 Numbering Pilot
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5604
+- **Branch:** cursor/gom-pedagogy-5604-bdf7
+- **PR:** #5676
+- **Paths:** see #5676
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`22eed1fb`; collated from changes/5604-geometry-of-motion-pedagogy-prerequisite.md)
+- **Summary:** Geometry of Motion pedagogy: prerequisites map, cross-refs, KKT display, contraction pedagogy, Vol 0 numbering pilot
+- **Next step:** Merge after CI green.
+
+### DL-#5603 · Geometry of Motion: Cascade vs Partial Contraction, LQR Rho, Floating-Base Gravity, Van der Pol
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5603
+- **Branch:** cursor/gom-5603-5606-9baf
+- **PR:** #5649, #5701
+- **Paths:** see #5649
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`e9b1c0ea`; collated from changes/5603-geometry-of-motion-cascade-vs-partial-co.md)
+- **Summary:** Geometry of Motion: cascade vs partial contraction, LQR rho, floating-base gravity, Van der Pol
+- **Next step:** CI green
+
+### DL-#5601 · Pinned UpstreamDrift Implementation Bridge Includes for GOM Vol0 and PoG Algorithm Chapters; Added Ledger and CI Gate.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5601
+- **Branch:** cursor/ud-implementation-links-5601-402a
+- **PR:** #5672
+- **Paths:** see #5672
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`d46b1faf`; collated from changes/5601-pinned-upstreamdrift-implementation-brid.md)
+- **Summary:** Pinned UpstreamDrift implementation bridge includes for GOM vol0 and PoG algorithm chapters; added ledger and CI gate.
+- **Next step:** Barb arms after CI green.
+
+### DL-#5600 · Physics of Golf Citation Metadata, Impact Sourcing, and Motor-Control Literature
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5600
+- **Branch:** cursor/pog-citations-5600-890b
+- **PR:** #5675
+- **Paths:** see #5675
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`55ba3cb3`; collated from changes/5600-physics-of-golf-citation-metadata-impact.md)
+- **Summary:** Physics of Golf citation metadata, impact sourcing, and motor-control literature
+- **Next step:** Barb exact-head review after CI green
+
+### DL-#5599 · Physics of Golf: Worked Examples for Impact, JCS, URDF, Putting, Calibration Tables
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5599
+- **Branch:** cursor/pog-worked-examples-5599-ddf7
+- **PR:** #5660
+- **Paths:** see #5660
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`4d2f8bb2`; collated from changes/5599-physics-of-golf-worked-examples-for-impa.md)
+- **Summary:** Physics of Golf: worked examples for impact, JCS, URDF, putting, calibration tables
+- **Next step:** Merge after CI green.
+
+### DL-#5595 · Rebuild PARAMETERS.md From Sourced Canonical Registry With CI Check
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5595
+- **Branch:** cursor/parameters-ssot-5595-6ff0
+- **PR:** #5671
+- **Paths:** see #5671
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`f91bc9cd`; collated from changes/5595-rebuild-parameters-md-from-sourced-canon.md)
+- **Summary:** Rebuild PARAMETERS.md from sourced canonical registry with CI check
+- **Next step:** Merge after CI green.
+
+### DL-#5592 · Harmonize Canonical DCR, DIR, and Chart-Dependence Claims Across Site (#5592).
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5592
+- **Branch:** cursor/dcr-5592-harmonize-3076
+- **PR:** #5661
+- **Paths:** see #5661
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`0db0e319`; collated from changes/5592-harmonize-canonical-dcr-dir-and-chart-de.md)
+- **Summary:** Harmonize canonical DCR, DIR, and chart-dependence claims across site (#5592).
+- **Next step:** Merge after CI green.
+
+### DL-#5590 · Replace Hand-Drawn Core-Theory ZTCF and Superposition Figures With Pinned Model Simulations.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5590
+- **Branch:** cursor/core-theory-figures-5590-f840
+- **PR:** #5666
+- **Paths:** see #5666
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`c3ac5304`; collated from changes/5590-replace-hand-drawn-core-theory-ztcf-and.md)
+- **Summary:** Replace hand-drawn core-theory ZTCF and superposition figures with pinned model simulations.
+- **Next step:** Merge after CI green.
+
+### DL-#5589 · DgCR Restitution (Not Aerodynamic); COR Passive-Impact Qualifier
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5589
+- **Branch:** cursor/5589-notation-contract-a0fc
+- **PR:** #5633
+- **Paths:** see #5633
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`75639918`; collated from changes/5589-notation-lower-half-glossaries-euler-twi.md)
+- **Summary:** DgCR restitution (not aerodynamic); COR passive-impact qualifier
+- **Next step:** CI review
+
+### DL-#5588 · Align ZVCF With NOTATION Control Operand; Claim Ad-Zvcf-001; Notation Guard
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5588
+- **Branch:** cursor/zvcf-notation-5588-279e
+- **PR:** #5635
+- **Paths:** see #5635
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`3f032238`; collated from changes/5588-align-zvcf-with-notation-control-operand.md)
+- **Summary:** Align ZVCF with NOTATION control operand; claim ad-zvcf-001; notation guard
+- **Next step:** CI green on PR
+
+### DL-#5587 · Foreshortened Flexible Pendulum: Geometric Stiffening, Quadrature Tests, Critique Resolution
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5587
+- **Branch:** cursor/5587-geometric-stiffness-bd48
+- **PR:** #5628
+- **Paths:** see #5628
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`73ac1a55`; collated from changes/5587-foreshortened-flexible-pendulum-geometri.md)
+- **Summary:** Foreshortened flexible pendulum: geometric stiffening, quadrature tests, critique resolution
+- **Next step:** Independent exact-head review
+
+### DL-#5632 · Harden CI Apt Bootstrap for Static-Checks and E2E Playwright System Deps.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5632
+- **Branch:** cursor/fix-ci-apt-headless-deps-040f
+- **PR:** #5652
+- **Paths:** see #5652
+- **Started:** 2026-11-12
+- **Last verified:** 2026-11-12 (`422445d9`; collated from changes/5632-ci-headless-apt-bootstrap.md)
+- **Summary:** Harden CI apt bootstrap for static-checks and E2E Playwright system deps.
+- **Next step:** Merge; merge-update today's red cursor lane PRs.
+
 ### DL-#5627 · WEB-06.3 Sandbox Club Defaults With COM/Inertia; Drift-Plus-Control Caption Units.
 
 - **State:** in_review
@@ -768,6 +1210,136 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5591 · Reconcile Claim_Registry.Json, Per-File Provenance SHA-256 Hashes, ZTCF/DCR Wording, and Companion Software-Artifact Tiering.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5591
+- **Branch:** gemini-ct/5591-claim-registry
+- **PR:** #5697
+- **Paths:** see #5697
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`ff304e8a`; collated from changes/5591-claim-registry-provenance-tiers.md)
+- **Summary:** Reconcile claim_registry.json, per-file provenance SHA-256 hashes, ZTCF/DCR wording, and companion software-artifact tiering.
+- **Next step:** Shipped in PR #5697.
+
+### DL-#5692 · Restore Clean Pre-Push Checks Across PARAMETERS.md Prettier Ignore, Double-Pendulum Mypy, and Model-Map Noqa.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5692
+- **Branch:** merged via #5692
+- **PR:** #5692
+- **Paths:** see #5692
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`e7eab0a7`; collated from changes/5692-restore-clean-prepush-hooks.md)
+- **Summary:** Restore clean pre-push checks across PARAMETERS.md Prettier ignore, double-pendulum mypy, and model-map noqa.
+- **Next step:** Shipped in PR #5692.
+
+### DL-#5597 · Harmonise PoG Ch08/Ch10/Ch25 Notation With NOTATION.md; Extend Notation Gate
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5597
+- **Branch:** merged via #5680
+- **PR:** #5680
+- **Paths:** see #5680
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`be38b53b`; collated from changes/5597-harmonise-pog-ch08-ch10-ch25-notation-wi.md)
+- **Summary:** Harmonise PoG ch08/ch10/ch25 notation with NOTATION.md; extend notation gate
+- **Next step:** Shipped in PR #5680.
+
+### DL-#5688 · Fix Broken Ch12 Companion Link in Upstreamdrift-Physics-Models Article
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5688
+- **Branch:** merged via #5691
+- **PR:** #5691
+- **Paths:** see #5691
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`18bf15e5`; collated from changes/5688-fix-broken-ch12-companion-link-in-upstre.md)
+- **Summary:** Fix broken ch12 companion link in upstreamdrift-physics-models article
+- **Next step:** Shipped in PR #5691.
+
+### DL-#5616 · Fix Manifesto Gravity/Drift Notation, Bosch .bib Defects, and Technology Hub Blurb
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5616
+- **Branch:** merged via #5694
+- **PR:** #5694
+- **Paths:** see #5694
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`0c3ae805`; collated from changes/5616-tech-manifesto-bosch-bib-blurb.md)
+- **Summary:** Fix manifesto gravity/drift notation, Bosch .bib defects, and technology hub blurb
+- **Next step:** Shipped in PR #5694.
+
+### DL-#5614 · Align Ball, Putting, Slack Notation and Toy-Model Prose With NOTATION.md
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5614
+- **Branch:** merged via #5678
+- **PR:** #5678
+- **Paths:** see #5678
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`afd5b97f`; collated from changes/5614-align-ball-putting-slack-notation-and-to.md)
+- **Summary:** Align ball, putting, slack notation and toy-model prose with NOTATION.md
+- **Next step:** Shipped in PR #5678.
+
+### DL-#5611 · Disclose WSCG Trace Timing and Planar Wrist Limits; Fix Kao, Borzelli, and Tucker Bibliography Records; Align Articulated-Engine Versions With Pinned JSON.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5611
+- **Branch:** merged via #5677
+- **PR:** #5677, #5703
+- **Paths:** see #5677
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-14 (`1967c40c`; collated from changes/5611-unify-monograph-differential-force-notation.md)
+- **Summary:** Disclose WSCG trace timing and planar wrist limits; fix Kao, Borzelli, and Tucker bibliography records; align articulated-engine versions with pinned JSON.
+- **Next step:** Shipped in PR #5677.
+
+### DL-#5594 · Align Onboarding Control Copy, Single Evidence Ladder, Canonical Badges, and Inventory Counts (#5594).
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5594
+- **Branch:** gemini-ct/5594-onboarding-copy
+- **PR:** #5693
+- **Paths:** see #5693
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`a447f3b5`; collated from changes/5594-onboarding-copy-ladders-badges.md)
+- **Summary:** Align onboarding control copy, single evidence ladder, canonical badges, and inventory counts (#5594).
+- **Next step:** Shipped in PR #5693.
+
+### DL-#5585 · Restore Existing JULES_APP Secret Fallback in collate-changes.yml
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5585
+- **Branch:** merged via #5690
+- **PR:** #5690
+- **Paths:** see #5690
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`c0fc4d3b`; collated from changes/5585-restore-existing-jules-app-secret-fallba.md)
+- **Summary:** Restore existing JULES_APP secret fallback in collate-changes.yml
+- **Next step:** Shipped in PR #5690.
+
+### DL-#5567 · Peak-per-Channel Correction-Authority Support Replaces Cauchy-Schwarz Outer Bound.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5567
+- **Branch:** cursor/5567-correction-authority-radius-3977
+- **PR:** #5568
+- **Paths:** see #5568
+- **Started:** 2026-11-13
+- **Last verified:** 2026-11-13 (`55ee9a26`; collated from changes/5567-peak-per-channel-correction-authority-su.md)
+- **Summary:** Peak-per-channel correction-authority support replaces Cauchy-Schwarz outer bound.
+- **Next step:** Shipped in PR #5568.
+
 ### DL-#5565 · Add Stdlib Lifecycle Transition Kernel and ADR-0004 per Owner Decision
 
 - **State:** shipped
@@ -1008,10 +1580,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5253
 - **Branch:** merged via #5486
-- **PR:** #5486, #5520
+- **PR:** #5486, #5520, #5563
 - **Paths:** see #5486
 - **Started:** 2026-11-06
-- **Last verified:** 2026-11-07 (`9b9f988a`; collated from changes/5253-repeatable-math-baseline.md)
+- **Last verified:** 2026-11-14 (`3ad95c44`; collated from changes/5253-branch-local-katex-quarto-profile-and-th.md)
 - **Summary:** Measure math-rendering cost on Theory Part 1 from the nightly Lighthouse report (script, test, evidence doc; no SSR prototype yet)
 - **Next step:** Review the baseline slice; retain SSR and pinned local-build comparison as open acceptance
 
