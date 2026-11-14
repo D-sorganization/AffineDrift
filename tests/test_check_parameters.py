@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from scripts.canonical_parameters_registry import load_registry, render_parameters_markdown
-from scripts.check_parameters import key, scan_literal_checks, verify_markdown
+from scripts.check_parameters import key, resolve_path_glob, scan_literal_checks, verify_markdown
 
 pytestmark = pytest.mark.content_lint
 
@@ -37,6 +37,12 @@ class TestLiteralChecks:
         findings = scan_literal_checks(REPO_ROOT, payload)
         assert not any("golf_ball_mass_max" in str(f["rule"]) for f in findings)
 
+    def test_impact_article_literals_match_registry(self) -> None:
+        payload = load_registry()
+        findings = scan_literal_checks(REPO_ROOT, payload)
+        impact_findings = [f for f in findings if "impact-mechanics" in str(f["file"])]
+        assert impact_findings == []
+
     def test_wrong_literal_is_detected(self, tmp_path: Path) -> None:
         module = tmp_path / "src/affine_control/impact_contact_fixtures.py"
         module.parent.mkdir(parents=True)
@@ -54,3 +60,39 @@ class TestLiteralChecks:
             "fix": "",
         }
         assert key(finding) == "a.py::golf_ball_mass_max literal mismatch"
+
+    def test_missing_chapter_literal_is_reported(self, tmp_path: Path) -> None:
+        article = tmp_path / "articles/impact-mechanics-and-ball-flight.qmd"
+        article.parent.mkdir(parents=True)
+        article.write_text("# No bound literals here\n", encoding="utf-8")
+        payload = json.loads((REPO_ROOT / "data/canonical_parameters.json").read_text())
+        findings = scan_literal_checks(tmp_path, payload)
+        missing = [f for f in findings if f["rule"].endswith(" literal missing")]
+        assert missing
+        assert any("impact-mechanics-and-ball-flight.qmd" in str(f["file"]) for f in missing)
+
+    def test_renamed_chapter_literal_is_reported(self, tmp_path: Path) -> None:
+        module = tmp_path / "src/affine_control/impact_contact_fixtures.py"
+        module.parent.mkdir(parents=True)
+        module.write_text("BALL_MASS = 0.04593\n", encoding="utf-8")
+        payload = json.loads((REPO_ROOT / "data/canonical_parameters.json").read_text())
+        findings = scan_literal_checks(tmp_path, payload)
+        assert any(f["rule"] == "golf_ball_mass_max literal missing" for f in findings)
+
+
+class TestResolvePathGlob:
+    def test_single_existing_file(self, tmp_path: Path) -> None:
+        target = tmp_path / "src/foo.py"
+        target.parent.mkdir(parents=True)
+        target.write_text("x = 1\n", encoding="utf-8")
+        assert resolve_path_glob(tmp_path, "src/foo.py") == [target]
+
+    def test_missing_file_returns_empty(self, tmp_path: Path) -> None:
+        assert resolve_path_glob(tmp_path, "missing.py") == []
+
+    def test_wildcard_expands_files(self, tmp_path: Path) -> None:
+        (tmp_path / "a.py").write_text("", encoding="utf-8")
+        (tmp_path / "b.py").write_text("", encoding="utf-8")
+        (tmp_path / "c.txt").write_text("", encoding="utf-8")
+        paths = resolve_path_glob(tmp_path, "*.py")
+        assert {p.name for p in paths} == {"a.py", "b.py"}
