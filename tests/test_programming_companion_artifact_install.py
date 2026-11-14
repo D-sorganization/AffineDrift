@@ -233,5 +233,17 @@ def test_replacing_a_pin_requires_the_active_lock_digest(tmp_path: Path) -> None
 
 
 @pytest.mark.unit
+def test_committed_acquisition_receipt_requires_verified_provenance() -> None:
+    """The repo pin must cite a verified Actions artifact, not a skipped local install."""
+    receipt_path = REPO_ROOT / "data/companion/acquisition.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt.get("artifact_id") is not None, "committed artifact_id must not be null"
+    assert receipt.get("workflow_run_id") is not None, "committed workflow_run_id must not be null"
+    attestation = str(receipt.get("attestation", ""))
+    assert attestation != "skipped", "committed acquisition must not use skip-attestation"
+    assert attestation.startswith("verified"), attestation
+
+
+@pytest.mark.unit
 def test_artifact_names_are_validated_before_any_download() -> None:
     assert cli.main(["--fetch", "upstreamdrift-companion-notasha"]) == 1
