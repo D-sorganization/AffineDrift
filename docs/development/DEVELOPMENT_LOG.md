@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5625 · Document UpstreamDrift Humanoid Balance, WBC, and Learning/Analytics Gaps Grounded in Code.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5625
+- **Branch:** cursor/ud-learning-humanoid-5625-2b2c
+- **PR:** #5670
+- **Paths:** see #5670
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`3037712f`; collated from changes/5625-humanoid-balance-wbc-learning.md)
+- **Summary:** Document UpstreamDrift humanoid balance, WBC, and learning/analytics gaps grounded in code.
+- **Next step:** Merge after CI green.
+
 ### DL-#5596 · Add Llms.Txt Agent Entry Point, Extend Symbol Registry V2 From NOTATION.md, and CI Freshness Gates.
 
 - **State:** in_review
@@ -637,12 +650,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5590
 - **Branch:** cursor/core-theory-figures-5590-f840
-- **PR:** #5666
+- **PR:** #5666, #5687
 - **Paths:** see #5666
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`c3ac5304`; collated from changes/5590-replace-hand-drawn-core-theory-ztcf-and.md)
+- **Last verified:** 2026-11-14 (`224c1e42`; collated from changes/5590-core-theory-figure-provenance-gate.md)
 - **Summary:** Replace hand-drawn core-theory ZTCF and superposition figures with pinned model simulations.
-- **Next step:** Merge after CI green.
+- **Next step:** Merge after CI green; close #5590 when acceptance checklist is verified on main.
 
 ### DL-#5589 · DgCR Restitution (Not Aerodynamic); COR Passive-Impact Qualifier
 
