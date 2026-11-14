@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-14 | #5654 | UpstreamDrift engine protocol reference page (drift/control, defaults, validation). |
 | 2026-11-14 | #5681 | Harmonise Geometry of Motion notation with NOTATION.md: constrained symbols, transverse coordinates, chapter notation notes. |
 | 2026-11-14 | #5651 | Physics of Golf content corrections (piezo form, shaft Cn, cross-refs, pedagogy) |
 | 2026-11-14 | #5670 | Document UpstreamDrift humanoid balance, WBC, and learning/analytics gaps grounded in code. |

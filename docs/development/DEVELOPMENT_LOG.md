@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5620 · UpstreamDrift Engine Protocol Reference Page (Drift/Control, Defaults, Validation).
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5620
+- **Branch:** cursor/engine-protocol-reference-5620-615e
+- **PR:** #5654
+- **Paths:** see #5654
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`4ed17bf2`; collated from changes/5620-upstreamdrift-engine-protocol-reference.md)
+- **Summary:** UpstreamDrift engine protocol reference page (drift/control, defaults, validation).
+- **Next step:** Merge after CI green; branch reconciled with main.
+
 ### DL-#5602 · Harmonise Geometry of Motion Notation With NOTATION.md: Constrained Symbols, Transverse Coordinates, Chapter Notation Notes.
 
 - **State:** in_review
