@@ -27,6 +27,7 @@ A rigorous, accessible glossary bridging intuitive plain-language concepts, math
     <a href="#l" class="glossary-nav__letter">L</a>
     <a href="#m" class="glossary-nav__letter">M</a>
     <a href="#n" class="glossary-nav__letter">N</a>
+    <a href="#o" class="glossary-nav__letter">O</a>
     <a href="#p" class="glossary-nav__letter">P</a>
     <a href="#q" class="glossary-nav__letter">Q</a>
     <a href="#r" class="glossary-nav__letter">R</a>
@@ -198,6 +199,18 @@ Use velocities in a declared inertial frame. For rigid-body spin about its cente
 
 :::
 
+### Bernstein Increment {#bernstein-increment}
+
+::: {.glossary-entry id="def-bernstein-increment"}
+
+**Plain Language:** A bounded change to one Bernstein control coefficient in a shooting fit, relative to a parent candidate.
+
+**Technical Definition:** Native two-window fits optimise increments to B4–B6 Bernstein controls per coordinate (81 total when chart.dimension=27 and first_control=4). validate_theta enforces layout; wrong coefficient order silently changes the swing.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ## C {#c}
 
 ### Candidate (Matched Swing) {#matched-swing-candidate}
@@ -240,6 +253,18 @@ Use velocities in a declared inertial frame. For rigid-body spin about its cente
 
 :::
 
+### Club Cluster RMSE {#club-cluster-rmse}
+
+::: {.glossary-entry id="def-club-cluster-rmse"}
+
+**Plain Language:** Marker error restricted to the club-head marker family on the evaluation window.
+
+**Technical Definition:** RMS over markers whose labels start with Marker_2 or Marker_3 (case-insensitive) in tour_metrics and two_window_fit. G1 gate threshold g1_club_rmse_m = 0.060 m.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ### Clubhead Speed {#clubhead-speed}
 
 ::: {.glossary-entry id="def-clubhead-speed"}
@@ -265,6 +290,30 @@ Use velocities in a declared inertial frame. For rigid-body spin about its cente
 **Symbols / Notation:** $e$, $COR$
 
 [Read in Context &rarr;](../articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Collocation Defect {#collocation-defect}
+
+::: {.glossary-entry id="def-collocation-defect"}
+
+**Plain Language:** Mismatch between integrated state and shooting-node constraints along a fitted trajectory.
+
+**Technical Definition:** Compared to AcceptanceGates.max_collocation_defect_m (5 mm default). Distinct from IK marker RMS and from open-loop drift gates.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
+### Computed-Torque Tracking {#computed-torque-tracking}
+
+::: {.glossary-entry id="def-computed-torque-tracking"}
+
+**Plain Language:** Feedback replay that drives joint torques to follow a smoothed reference pose.
+
+**Technical Definition:** Ground-support dynamics stage uses tracking_controller with OMEGA_RAD_S=30 rad/s by default. Reported dynamics.marker_rms_m is tracked error, not open-loop torque integration.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
 
 :::
 
@@ -414,6 +463,30 @@ Here $a_d$ and $B_a u$ share one acceleration space, scaling $W$, bounded admiss
 
 ## E {#e}
 
+### Early Cutoff {#early-cutoff-s}
+
+::: {.glossary-entry id="def-early-cutoff-s"}
+
+**Plain Language:** The time boundary that separates early backswing RMS from the rest of the trial.
+
+**Technical Definition:** Default early_cutoff_s = 0.60 s in tour_metrics and compute_marker_metrics. Early RMSE uses frames with t <= cutoff.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
+### Early Marker RMSE {#early-marker-rmse}
+
+::: {.glossary-entry id="def-early-marker-rmse"}
+
+**Plain Language:** Root-mean-square marker error on the prefix of the trial before the early cutoff.
+
+**Technical Definition:** Computed for t <= early_cutoff_s (default 0.60 s). G1 gate field g1_early_rmse_m = 0.012 m.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ### Equations of Motion {#equations-of-motion}
 
 ::: {.glossary-entry id="def-equations-of-motion"}
@@ -447,6 +520,18 @@ Use $\dot q=N(q)v$, any internal-state equations, and compatible constraints. De
 :::
 
 ## F {#f}
+
+### Factor (Motion Matching) {#motion-matching-factor}
+
+::: {.glossary-entry id="def-motion-matching-factor"}
+
+**Plain Language:** One documented change between a parent run and its continuation child.
+
+**Technical Definition:** Continuation discipline records a single factor (bound recentering, window split, controller swap) per run so receipts stay attributable. Hashes chain parent to child in the ledger.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
 
 ### Fail-Closed {#fail-closed}
 
@@ -547,6 +632,18 @@ Use $\dot q=N(q)v$, any internal-state equations, and compatible constraints. De
 **Plain Language:** Full capture acceptance for professional release (driver about 1.814 s, iron about 1.827 s).
 
 **Technical Definition:** Horizon.G3. Whole-marker limit 60 mm (driver) or 95 mm (iron). Requires dual-club and cross-engine evidence in the programme specification.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
+### Gate Status {#gate-status-motion-matching}
+
+::: {.glossary-entry id="def-gate-status-motion-matching"}
+
+**Plain Language:** Whether one acceptance check passed, failed, is missing, not applicable, or disclosed.
+
+**Technical Definition:** GateStatus enum in acceptance.py: passed, failed, missing, not_applicable, disclosed. Verdict acceptance forbids failed and missing when any gate passed.
 
 [Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
 
@@ -736,7 +833,7 @@ Here $Q^{\rm nc}$ contains loads not already represented by $V$; constraints and
 
 **Plain Language:** A named programme path that decides which optimiser, plant, and gates apply to a run.
 
-**Technical Definition:** Receipt field lane (for example native, ground_support, drake_native_fit). Native-fit lanes skip contact-audit gates as not applicable.
+**Technical Definition:** Receipt field lane (for example native, ground_support, drake_native_fit). Native-fit lanes in NATIVE_FIT_LANES skip contact-audit gates as not_applicable.
 
 [Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
 
@@ -753,6 +850,18 @@ Here $Q^{\rm nc}$ contains loads not already represented by $V$; constraints and
 **Symbols / Notation:** $\theta_{launch}$
 
 [Read in Context &rarr;](../articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Leaderboard (Motion Matching) {#motion-matching-leaderboard}
+
+::: {.glossary-entry id="def-motion-matching-leaderboard"}
+
+**Plain Language:** A ranked view of candidates or receipts for a lane, derived from the ledger.
+
+**Technical Definition:** leaderboard.py aggregates receipt metrics for programme dashboards. Not authoritative for acceptance; evaluate() on each receipt is authoritative.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
 
 :::
 
@@ -846,6 +955,18 @@ Here $r$ is position relative to that point and $\mathbf 1$ is the identity matr
 
 ## N {#n}
 
+### Node Chart {#node-chart}
+
+::: {.glossary-entry id="def-node-chart"}
+
+**Plain Language:** Shooting states at a window boundary, expressed in native joint coordinates.
+
+**Technical Definition:** chart.dimension coordinates at shared boundary times; node_bound_chart and chart.radius bound retractions in multi_shooting_fit. shared_boundary_policy once uses one 27-D node at t=0.6 s in run 102.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ### Null Space {#null-space}
 
 ::: {.glossary-entry id="def-null-space"}
@@ -860,7 +981,33 @@ Here $r$ is position relative to that point and $\mathbf 1$ is the identity matr
 
 :::
 
+## O {#o}
+
+### Open-Loop Replay {#open-loop-replay}
+
+::: {.glossary-entry id="def-open-loop-replay"}
+
+**Plain Language:** Forward integration from the initial state without feedback tracking of measured poses.
+
+**Technical Definition:** Compared via max_open_loop_drift_m when present on a receipt. Distinct from computed-torque dynamics.marker_rms_m.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ## P {#p}
+
+### Pelvis Yaw Error (Percent) {#pelvis-yaw-error-pct}
+
+::: {.glossary-entry id="def-pelvis-yaw-error-pct"}
+
+**Plain Language:** Heading error of waist markers relative to capture, expressed as a percent.
+
+**Technical Definition:** From pelvis_yaw.py on WaistLeft/WaistRight markers. G1 gate g1_pelvis_yaw_error_pct = 5.0 when receipt reports percent instead of radians.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
 
 ### Phase Portrait {#phase-portrait}
 
@@ -1006,6 +1153,18 @@ Here $r$ is position relative to that point and $\mathbf 1$ is the identity matr
 
 ## S {#s}
 
+### Shooting Node {#shooting-node}
+
+::: {.glossary-entry id="def-shooting-node"}
+
+**Plain Language:** A state or chart coordinate enforced at a segment boundary in multiple shooting.
+
+**Technical Definition:** Equality constraints at window joins with defect_tolerance_scaled and equality_tolerance in native configs. Distinct from Bernstein control increments theta.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ### Smash Factor {#smash-factor}
 
 ::: {.glossary-entry id="def-smash-factor"}
@@ -1031,6 +1190,18 @@ Here $r$ is position relative to that point and $\mathbf 1$ is the identity matr
 **Symbols / Notation:** $\omega_{ball}$
 
 [Read in Context &rarr;](../articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Stabilized Replay {#stabilized-replay}
+
+::: {.glossary-entry id="def-stabilized-replay"}
+
+**Plain Language:** Low-gain tracking replay used to qualify a candidate without full computed-torque gains.
+
+**Technical Definition:** Gate max_stabilized_marker_rmse_m = 0.040 m on accepted receipts when the field is present.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
 
 :::
 
@@ -1060,7 +1231,43 @@ Here $r$ is position relative to that point and $\mathbf 1$ is the identity matr
 
 :::
 
+### Support Polygon Fraction {#support-polygon-fraction}
+
+::: {.glossary-entry id="def-support-polygon-fraction"}
+
+**Plain Language:** Share of frames whose center of pressure lies inside the declared foot support polygon.
+
+**Technical Definition:** min_inside_support_polygon_fraction = 0.85 in AcceptanceGates. Evaluated on ground-support lanes with contact audit data.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
 ## T {#t}
+
+### Terminal Marker RMSE {#terminal-marker-rmse}
+
+::: {.glossary-entry id="def-terminal-marker-rmse"}
+
+**Plain Language:** Marker error on the closing portion of the capture window.
+
+**Technical Definition:** Receipt metric terminal_marker_rmse_m: last terminal_ratio fraction of frames (default 0.10) in tour_metrics, not the optimiser last-frame objective term unless explicitly labelled.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
+### Terminal Weight {#terminal-weight}
+
+::: {.glossary-entry id="def-terminal-weight"}
+
+**Plain Language:** Objective multiplier on last-frame marker error in native shooting fits.
+
+**Technical Definition:** terminal_weight in run-102 config.json (25.0). compute_marker_metrics squares it on the last valid frame sum of squared errors.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
 
 ### Torque {#torque}
 
@@ -1073,6 +1280,18 @@ Here $r$ is position relative to that point and $\mathbf 1$ is the identity matr
 **Symbols / Notation:** $\tau$, $M$
 
 [Read in Context &rarr;](../articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Two-Window Fit {#two-window-fit}
+
+::: {.glossary-entry id="def-two-window-fit"}
+
+**Plain Language:** A native shooting problem split into two time segments with continuity at one shared boundary.
+
+**Technical Definition:** Implemented in multi_shooting_fit.py; canonical evidence two_window_fit_9967_102 with windows [0,0.6] and [0.6,0.85] s.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
 
 :::
 
@@ -1133,6 +1352,30 @@ Here $r$ is position relative to that point and $\mathbf 1$ is the identity matr
 :::
 
 ## W {#w}
+
+### Weight Fraction (GRF) {#weight-fraction-grf}
+
+::: {.glossary-entry id="def-weight-fraction-grf"}
+
+**Plain Language:** Ratio of vertical ground reaction to body weight on a frame.
+
+**Technical Definition:** AcceptanceGates weight_fraction_min = 0.20 and weight_fraction_max = 3.00 on audited contact receipts.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
+
+### Whole Marker RMSE {#whole-marker-rmse}
+
+::: {.glossary-entry id="def-whole-marker-rmse"}
+
+**Plain Language:** Root-mean-square error over all valid markers and times on the evaluation horizon.
+
+**Technical Definition:** whole_marker_rmse_m on receipts; G1 threshold g1_whole_rmse_m = 0.025 m in acceptance.AcceptanceGates.
+
+[Read in Context &rarr;](../articles/forward_dynamics_matching/27_runtime_reference.html){.glossary-canonical-link}
+
+:::
 
 ### Work {#work}
 

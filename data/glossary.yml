@@ -34,6 +34,55 @@ acceptance-verdict:
   symbols: []
   canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
 
+bernstein-increment:
+  name: "Bernstein Increment"
+  plain: "A bounded change to one Bernstein control coefficient in a shooting fit, relative to a parent candidate."
+  technical: "Native two-window fits optimise increments to B4–B6 Bernstein controls per coordinate (81 total when chart.dimension=27 and first_control=4). validate_theta enforces layout; wrong coefficient order silently changes the swing."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+club-cluster-rmse:
+  name: "Club Cluster RMSE"
+  plain: "Marker error restricted to the club-head marker family on the evaluation window."
+  technical: "RMS over markers whose labels start with Marker_2 or Marker_3 (case-insensitive) in tour_metrics and two_window_fit. G1 gate threshold g1_club_rmse_m = 0.060 m."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+collocation-defect:
+  name: "Collocation Defect"
+  plain: "Mismatch between integrated state and shooting-node constraints along a fitted trajectory."
+  technical: "Compared to AcceptanceGates.max_collocation_defect_m (5 mm default). Distinct from IK marker RMS and from open-loop drift gates."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+computed-torque-tracking:
+  name: "Computed-Torque Tracking"
+  plain: "Feedback replay that drives joint torques to follow a smoothed reference pose."
+  technical: "Ground-support dynamics stage uses tracking_controller with OMEGA_RAD_S=30 rad/s by default. Reported dynamics.marker_rms_m is tracked error, not open-loop torque integration."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+early-cutoff-s:
+  name: "Early Cutoff"
+  plain: "The time boundary that separates early backswing RMS from the rest of the trial."
+  technical: "Default early_cutoff_s = 0.60 s in tour_metrics and compute_marker_metrics. Early RMSE uses frames with t <= cutoff."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+early-marker-rmse:
+  name: "Early Marker RMSE"
+  plain: "Root-mean-square marker error on the prefix of the trial before the early cutoff."
+  technical: "Computed for t <= early_cutoff_s (default 0.60 s). G1 gate field g1_early_rmse_m = 0.012 m."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+gate-status-motion-matching:
+  name: "Gate Status"
+  plain: "Whether one acceptance check passed, failed, is missing, not applicable, or disclosed."
+  technical: "GateStatus enum in acceptance.py: passed, failed, missing, not_applicable, disclosed. Verdict acceptance forbids failed and missing when any gate passed."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
 aerodynamic-lift:
   name: "Aerodynamic Lift"
   plain: "An aerodynamic force perpendicular to the relative airflow. On a spinning ball it can point upward, sideways or downward."
@@ -376,7 +425,98 @@ matched-swing-ledger:
 motion-matching-lane:
   name: "Lane (Motion Matching)"
   plain: "A named programme path that decides which optimiser, plant, and gates apply to a run."
-  technical: "Receipt field lane (for example native, ground_support, drake_native_fit). Native-fit lanes skip contact-audit gates as not applicable."
+  technical: "Receipt field lane (for example native, ground_support, drake_native_fit). Native-fit lanes in NATIVE_FIT_LANES skip contact-audit gates as not_applicable."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+motion-matching-factor:
+  name: "Factor (Motion Matching)"
+  plain: "One documented change between a parent run and its continuation child."
+  technical: "Continuation discipline records a single factor (bound recentering, window split, controller swap) per run so receipts stay attributable. Hashes chain parent to child in the ledger."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+motion-matching-leaderboard:
+  name: "Leaderboard (Motion Matching)"
+  plain: "A ranked view of candidates or receipts for a lane, derived from the ledger."
+  technical: "leaderboard.py aggregates receipt metrics for programme dashboards. Not authoritative for acceptance; evaluate() on each receipt is authoritative."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+node-chart:
+  name: "Node Chart"
+  plain: "Shooting states at a window boundary, expressed in native joint coordinates."
+  technical: "chart.dimension coordinates at shared boundary times; node_bound_chart and chart.radius bound retractions in multi_shooting_fit. shared_boundary_policy once uses one 27-D node at t=0.6 s in run 102."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+open-loop-replay:
+  name: "Open-Loop Replay"
+  plain: "Forward integration from the initial state without feedback tracking of measured poses."
+  technical: "Compared via max_open_loop_drift_m when present on a receipt. Distinct from computed-torque dynamics.marker_rms_m."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+pelvis-yaw-error-pct:
+  name: "Pelvis Yaw Error (Percent)"
+  plain: "Heading error of waist markers relative to capture, expressed as a percent."
+  technical: "From pelvis_yaw.py on WaistLeft/WaistRight markers. G1 gate g1_pelvis_yaw_error_pct = 5.0 when receipt reports percent instead of radians."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+shooting-node:
+  name: "Shooting Node"
+  plain: "A state or chart coordinate enforced at a segment boundary in multiple shooting."
+  technical: "Equality constraints at window joins with defect_tolerance_scaled and equality_tolerance in native configs. Distinct from Bernstein control increments theta."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+stabilized-replay:
+  name: "Stabilized Replay"
+  plain: "Low-gain tracking replay used to qualify a candidate without full computed-torque gains."
+  technical: "Gate max_stabilized_marker_rmse_m = 0.040 m on accepted receipts when the field is present."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+support-polygon-fraction:
+  name: "Support Polygon Fraction"
+  plain: "Share of frames whose center of pressure lies inside the declared foot support polygon."
+  technical: "min_inside_support_polygon_fraction = 0.85 in AcceptanceGates. Evaluated on ground-support lanes with contact audit data."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+terminal-marker-rmse:
+  name: "Terminal Marker RMSE"
+  plain: "Marker error on the closing portion of the capture window."
+  technical: "Receipt metric terminal_marker_rmse_m: last terminal_ratio fraction of frames (default 0.10) in tour_metrics, not the optimiser last-frame objective term unless explicitly labelled."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+terminal-weight:
+  name: "Terminal Weight"
+  plain: "Objective multiplier on last-frame marker error in native shooting fits."
+  technical: "terminal_weight in run-102 config.json (25.0). compute_marker_metrics squares it on the last valid frame sum of squared errors."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+two-window-fit:
+  name: "Two-Window Fit"
+  plain: "A native shooting problem split into two time segments with continuity at one shared boundary."
+  technical: "Implemented in multi_shooting_fit.py; canonical evidence two_window_fit_9967_102 with windows [0,0.6] and [0.6,0.85] s."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+weight-fraction-grf:
+  name: "Weight Fraction (GRF)"
+  plain: "Ratio of vertical ground reaction to body weight on a frame."
+  technical: "AcceptanceGates weight_fraction_min = 0.20 and weight_fraction_max = 3.00 on audited contact receipts."
+  symbols: []
+  canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
+
+whole-marker-rmse:
+  name: "Whole Marker RMSE"
+  plain: "Root-mean-square error over all valid markers and times on the evaluation horizon."
+  technical: "whole_marker_rmse_m on receipts; G1 threshold g1_whole_rmse_m = 0.025 m in acceptance.AcceptanceGates."
   symbols: []
   canonical_page: "articles/forward_dynamics_matching/27_runtime_reference.qmd"
 
