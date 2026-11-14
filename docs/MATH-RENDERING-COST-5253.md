@@ -38,11 +38,27 @@ python3 scripts/lighthouse_math_cost.py REPORT.json
   1.3 s of boot-up on this page. Fixing the render-blocking assets first buys far
   more LCP. SSR is not justified on this evidence alone.
 
+## Branch-local KaTeX profile (build-time delta, not production)
+
+The compare script passes `-M html-math-method:katex` for a branch-local Pandoc
+override (not production). Reproduce wall-clock build delta:
+
+```bash
+python3 scripts/theory_part1_math_build_compare.py
+```
+
+Dry-run schema (no Quarto required):
+
+```bash
+python3 scripts/theory_part1_math_build_compare.py --dry-run
+```
+
+This does **not** switch production math, add dependencies, or claim server-side
+math SSR. Nightly `config/lighthouserc.json` still uses `numberOfRuns: 1` for the
+full URL matrix; three-run Theory Part 1 mobile evidence lives under
+`docs/development/math-rendering-cost-5253/`.
+
 ## Not done (acceptance gaps)
 
-- Only **one** Lighthouse run per URL is recorded by `config/lighthouserc.json`
-  (`numberOfRuns: 1`); the issue asks for three. Variance is unquantified.
-- No branch-local SSR prototype or build-time delta. It needs a build-time math
-  renderer (for example the `katex` package) added through the lockfile, which is
-  a dependency decision for the owner. Quarto's own `html-math-method: katex` is
-  client-side, so it would measure a lighter client renderer, not SSR.
+- True server-side math SSR and Lighthouse comparison on a prototype build are
+  still outstanding (owner dependency decision).
