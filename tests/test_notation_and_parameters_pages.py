@@ -55,3 +55,4 @@ def test_parameters_md_lists_sourced_ball_mass_and_impact_chapter() -> None:
     assert "ch28" in text.lower() or "ch28" in text
     assert "Ch 10-12" not in text
     assert "Ch 1-31" not in text
+    assert "8.10×10⁻⁶" in text or "8.10" in text
