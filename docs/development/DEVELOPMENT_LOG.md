@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5632 · Harden CI Apt Bootstrap for Static-Checks and E2E Playwright System Deps.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5632
+- **Branch:** cursor/fix-ci-apt-headless-deps-040f
+- **PR:** #5652
+- **Paths:** see #5652
+- **Started:** 2026-11-12
+- **Last verified:** 2026-11-12 (`422445d9`; collated from changes/5632-ci-headless-apt-bootstrap.md)
+- **Summary:** Harden CI apt bootstrap for static-checks and E2E Playwright system deps.
+- **Next step:** Merge; merge-update today's red cursor lane PRs.
+
 ### DL-#5627 · WEB-06.3 Sandbox Club Defaults With COM/Inertia; Drift-Plus-Control Caption Units.
 
 - **State:** in_review
