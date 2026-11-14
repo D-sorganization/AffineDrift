@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-14 | #5651 | Physics of Golf content corrections (piezo form, shaft Cn, cross-refs, pedagogy) |
 | 2026-11-14 | #5670 | Document UpstreamDrift humanoid balance, WBC, and learning/analytics gaps grounded in code. |
 | 2026-11-14 | #5687 | Gate #5590 ZTCF and superposition figure embeds on pin provenance or explicit schematic labels. |
 | 2026-11-14 | #5662 | Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates. |

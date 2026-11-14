@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5598 · Physics of Golf Content Corrections (Piezo Form, Shaft Cn, Cross-Refs, Pedagogy)
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5598
+- **Branch:** cursor/pog-content-corrections-5598-1e70
+- **PR:** #5651
+- **Paths:** see #5651
+- **Started:** 2026-11-14
+- **Last verified:** 2026-11-14 (`18469085`; collated from changes/5598-physics-of-golf-content-corrections-piez.md)
+- **Summary:** Physics of Golf content corrections (piezo form, shaft Cn, cross-refs, pedagogy)
+- **Next step:** Barb exact-head review and CI
+
 ### DL-#5625 · Document UpstreamDrift Humanoid Balance, WBC, and Learning/Analytics Gaps Grounded in Code.
 
 - **State:** in_review
