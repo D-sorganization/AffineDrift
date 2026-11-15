@@ -422,7 +422,8 @@ chapter declares another frame.
 | Planar PoG inertial | Chapter-specific (often +x right) | Often up | Out of plane | Physics of Golf Ch. 3–9 multibody examples |
 
 Before combining outputs from two chapters, apply the fixed axis permutation stated in each
-source (or in [UpstreamDrift Conventions](pages/upstreamdrift-conventions.html)) — do not
+source (or in [UpstreamDrift Conventions](upstreamdrift-conventions.html) on the
+publication site — do not
 assume identical world axes because both triads are right-handed.
 
 **Spatial 6-vectors:** twists $\mathsf{V}=(\boldsymbol{\omega},\mathbf{v})$ and wrenches
@@ -430,6 +431,20 @@ $\mathsf{W}=(\boldsymbol{\mathsf{n}},\mathbf{f})$ use **angular blocks first** (
 Lynch & Park; see table above). A chapter that stacks $(\mathbf{v},\boldsymbol{\omega})$ or
 $(\mathbf{f},\boldsymbol{\mathsf{n}})$ must say so at first use and give the permutation to the
 site ordering before building a 6-row Jacobian from multiple chapters.
+
+**Golf delivery angles (site default Z-up target frame).** Declare the frame before
+comparing chapters or vendor exports.
+
+| Quantity | Positive sense in site default frame | Typical symbol |
+| -------- | ------------------------------------ | -------------- |
+| Club path (horizontal) | Toward **+Y** (golfer's left downrange) | Path, $\gamma$ |
+| Launch azimuth / face horizontal | Toward **+Z** (golfer's right) when stated “right positive” | Varies by chapter |
+| Attack / dynamic loft tilt | **+Z** up (above horizontal in $x$–$y$ plane) | Attack, $\alpha$ |
+| Spin axis tilt | Right-hand rule about stated axis | Spin axis |
+
+Y-up article frames permute which axis carries “up” and “lateral”; map to this table before
+signing a quantity from one chapter against another. Vendor and launch-monitor monographs state
+their own target triads in place (see [Launch Monitor Technology](../articles/technology-launch-monitors.html) and the Launch Monitor Technology Review LaTeX monograph).
 
 ---
 
