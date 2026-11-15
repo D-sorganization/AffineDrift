@@ -27,10 +27,16 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from alpha_war_flexible_shaft_params import reference_stiffness_metadata  # noqa: E402
-from alpha_war_json_compare import compare_study_blocks  # noqa: E402
-from alpha_war_manifest import MANIFEST_PATH, write_standalone_manifest  # noqa: E402
-from alpha_war_upstream import (  # noqa: E402
+from alpha_war_flexible_shaft_params import (  # noqa: E402 -- path resolved dynamically
+    ShaftReferenceConfig,
+    reference_stiffness_metadata,
+)
+from alpha_war_json_compare import compare_study_blocks  # noqa: E402 -- path resolved dynamically
+from alpha_war_manifest import (  # noqa: E402 -- path resolved dynamically
+    MANIFEST_PATH,
+    write_standalone_manifest,
+)
+from alpha_war_upstream import (  # noqa: E402 -- path resolved dynamically
     WSCG_REL,
     build_generation_provenance,
     load_export,
@@ -439,7 +445,9 @@ def run_study_2_couple_vs_sum_of_moments() -> dict[str, Any]:
 
 def run_study_3_frame_conventions() -> dict[str, Any]:
     """Study 3: Coordinate frame transformations and sign flips across 4 conventions."""
-    from alpha_war_roll_projection import couple_vector_fsp_to_club  # noqa: PLC0415
+    from alpha_war_roll_projection import (
+        couple_vector_fsp_to_club,  # noqa: PLC0415 -- deferred local import to avoid cycle
+    )
 
     m_fsp = np.array([4.5, 8.0, -15.0])
 
@@ -771,10 +779,12 @@ def run_study_6_shaft_flex_contribution() -> dict[str, Any]:
     c_net_nm = c_shaft_rebound_nm + tau_wrist_active_nm
 
     stiffness_meta = reference_stiffness_metadata(
-        shaft_stiffness_nm_rad=float(params_flex.shaft_stiffness_nm_rad),
-        distal_head_mass_kg=float(params_flex.distal_head_mass_kg),
-        distal_shaft_length_m=float(params_flex.distal_shaft_length_m),
-        gravity_planar_m_s2=float(params_flex.gravity_m_s2),
+        ShaftReferenceConfig(
+            shaft_stiffness_nm_rad=float(params_flex.shaft_stiffness_nm_rad),
+            distal_head_mass_kg=float(params_flex.distal_head_mass_kg),
+            distal_shaft_length_m=float(params_flex.distal_shaft_length_m),
+            gravity_planar_m_s2=float(params_flex.gravity_m_s2),
+        )
     )
     return {
         "upstream_drift_matched_3link_study": {
