@@ -60,7 +60,7 @@ State machine (from the interface docstring): **UNINITIALIZED → load → INITI
 | Jacobian | `compute_jacobian(body_name)` | `dict` or `None` | Keys `linear`, `angular`, `spatial`; spatial rows **`[angular; linear]`** per [`SPATIAL_JACOBIAN_ORDER`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/capabilities.py#L28-L36) |
 | Drift | `compute_drift_acceleration()` | `a_drift` | `(n_v,)`, rad/s² or m/s² |
 | Control | `compute_control_acceleration(tau)` | `a_control` | `(n_v,)` |
-| Counterfactual | `compute_ztcf(q, v)`, `compute_zvcf(q)` | accelerations | Fixed-state counterfactuals; see UpstreamDrift `SPEC.md` §4 |
+| Counterfactual | `compute_ztcf(q, v)`, `compute_zvcf(q)` | accelerations | **Legacy names:** see §PhysicsEngine Counterfactual Names; `compute_zvcf` is **not** site ZVCF |
 | Checkpoint | `save_checkpoint` / `restore_checkpoint` | varies | Via `Checkpointable` on `SimulationInterface` |
 | Features | `get_capabilities()` | `EngineCapabilities` | Optional UI/API feature gating |
 
@@ -148,6 +148,23 @@ constraint-aware helpers in
 **ZTCF / ZVCF:** at a fixed state, UpstreamDrift defines ZTCF as the drift component and ZVCF as
 `M⁻¹ τ` with velocity and gravity terms zeroed; the split is exact pointwise but
 **not additive over trajectories** ([`simulation_backends/README.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L76-L82)).
+
+## PhysicsEngine Counterfactual Names Versus AffineDrift Notation {#physicsengine-counterfactual-names}
+
+AffineDrift's [Notation Reference](notation.html) pins **ZVCF** to the pointwise control
+acceleration $M^{-1}\tau$ (equivalently $M^{-1}Bu$ at $\dot q=0$ with gravity excluded from the
+control operand). UpstreamDrift's `PhysicsEngine` protocol reuses older method names; they do **not**
+all match that contract.
+
+| Reader goal | AffineDrift term | UpstreamDrift API at this commit | Caution |
+| --- | --- | --- | --- |
+| Pointwise drift at fixed state | ZTCF (drift) | `compute_ztcf(q, v)` or `compute_drift_acceleration()` | Must match engine's passive definition (table above) |
+| Pointwise control acceleration | **ZVCF** ($M^{-1}\tau$) | `compute_control_acceleration(tau)` | Preferred when $\tau$ is explicit |
+| Same ZVCF in simulation backends | **ZVCF** ($M^{-1}\tau$) | [`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/ztcf_zvcf.py) | Canonical module for the NOTATION definition |
+| Zero-velocity bias acceleration | **zero-velocity baseline** (not ZVCF) | `compute_zvcf(q)` | Returns $q̈$ with $\dot q=0$ and $u=0$ — **do not call ZVCF on this site** |
+
+Calling `compute_zvcf(q)` and labeling the result "ZVCF" will not reconstruct
+$\ddot q \approx a_{\mathrm{ZTCF}}+a_{\mathrm{ZVCF}}$ under AffineDrift notation.
 
 ## Integrator and Timestep Defaults {#integrator-defaults}
 
