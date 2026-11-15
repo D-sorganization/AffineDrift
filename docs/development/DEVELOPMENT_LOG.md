@@ -676,10 +676,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5592
 - **Branch:** cursor/dcr-5592-harmonize-3076
-- **PR:** #5661
+- **PR:** #5661, #5722
 - **Paths:** see #5661
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`0db0e319`; collated from changes/5592-harmonize-canonical-dcr-dir-and-chart-de.md)
+- **Last verified:** 2026-11-15 (`274b6fbc`; collated from changes/5592-harmonise-gom-ch08-latex-dir-vs-dcr-and.md)
 - **Summary:** Harmonize canonical DCR, DIR, and chart-dependence claims across site (#5592).
 - **Next step:** Merge after CI green.
 
@@ -1411,10 +1411,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5567
 - **Branch:** cursor/5567-correction-authority-radius-3977
-- **PR:** #5568
+- **PR:** #5568, #5719
 - **Paths:** see #5568
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`55ee9a26`; collated from changes/5567-peak-per-channel-correction-authority-su.md)
+- **Last verified:** 2026-11-15 (`a86e9e0f`; collated from changes/5567-document-peak-per-channel-default-and-re.md)
 - **Summary:** Peak-per-channel correction-authority support replaces Cauchy-Schwarz outer bound.
 - **Next step:** Shipped in PR #5568.
 
