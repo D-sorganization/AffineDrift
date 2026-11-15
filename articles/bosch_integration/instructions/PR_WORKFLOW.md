@@ -98,11 +98,11 @@ Integrates Frans Bosch's work (*Anatomy of Agility*, 2020; *Strength Training
 and Coordination*, 2015) into both AffineDrift textbooks.
 
 ### New chapters
-- **Golf book — ch09b: Passive Stabilization in Parallel Loops** (~388 lines)
+- **Golf book — ch09b: Passive Stabilization in Parallel Loops** (~388 lines; current Tex source)
   Extends the parallel mechanisms chapter with impedance control, pre-tensioning,
   and drift-control analysis of passive stability.
 
-- **GoM Vol IV — ch07b: Biology and Dynamics of Nonlinear Systems** (~835 lines)
+- **GoM Vol IV — ch07b: Biology and Dynamics of Nonlinear Systems** (~835 lines; current Tex source)
   Bridges biomechanics and motor control via visco-elastic dynamics, UCM/synergies,
   and mechanism–evidence framing.
 
