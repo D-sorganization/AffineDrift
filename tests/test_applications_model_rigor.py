@@ -101,6 +101,8 @@ def test_both_editions_declare_model_and_evidence_boundaries(extension: str) -> 
     root = Path(__file__).resolve().parents[1] / "articles/The_Geometry_of_Motion"
     folder = "Volume_I/chapters" if extension == "tex" else "quarto"
     source = (root / folder / f"ch08_applications.{extension}").read_text(encoding="utf-8")
+    assert "realized drift-to-input ratio" in source.lower()
+    assert "dimensionless drift-control ratio can be defined" not in source
     assert "A Rigid Counterfactual Is a Different Model" in source
     assert "A Position Pullback Has a Nullspace" in source
     assert "Quadratic Effort Is Not Propellant Consumption" in source
