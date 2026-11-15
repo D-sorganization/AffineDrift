@@ -86,6 +86,29 @@ def test_normalize_git_commit_timestamp(raw: str, expected: str) -> None:
     assert _normalize_git_commit_timestamp(raw) == expected
 
 
+def test_build_sbom_metadata_timestamp_when_git_emits_plus_offset(
+    repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Git 2.4x+ may emit ``%cI`` with ``+00:00`` instead of trailing ``Z`` (#5684)."""
+    from scripts import write_sbom
+
+    real_run = subprocess.run
+
+    def fake_run(cmd, **kwargs):  # type: ignore[no-untyped-def]
+        if list(cmd) == ["git", "show", "-s", "--format=%cI", "HEAD"]:
+            return subprocess.CompletedProcess(
+                args=cmd,
+                returncode=0,
+                stdout="2026-01-02T03:04:05+00:00\n",
+                stderr="",
+            )
+        return real_run(cmd, **kwargs)
+
+    monkeypatch.setattr(write_sbom.subprocess, "run", fake_run)
+    sbom = build_sbom(repo)
+    assert sbom["metadata"]["timestamp"] == "2026-01-02T03:04:05Z"
+
+
 def test_sbom_envelope_and_root_component(repo: Path) -> None:
     sbom = build_sbom(repo)
     assert sbom["bomFormat"] == "CycloneDX"
