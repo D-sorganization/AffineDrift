@@ -16,6 +16,7 @@ from src.affine_control.correction_authority_contract import (
 from src.affine_control.correction_authority_evaluator import (
     CorrectionAuthorityStepResult,
     Indeterminate,
+    InputSetNorm,
     LTVLinearizationStep,
     evaluate_correction_authority_along_trajectory,
     horizon_authority_sweep,
@@ -23,6 +24,7 @@ from src.affine_control.correction_authority_evaluator import (
 from src.affine_control.option_a_trace import OptionATrace, load_verified_trace
 from src.affine_control.reachability_protocol import HypothesisResult
 
+CORRECTION_AUTHORITY_INPUT_SET_NORM = InputSetNorm.PEAK_PER_CHANNEL
 RESULT_SCHEMA_VERSION = "affinedrift.option_a.comparison_result/v1"
 DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "humanoid_robotics" / "option_a"
 RESULT_PATH = DATA_DIR / "comparison_result_v1.json"
@@ -62,6 +64,7 @@ class OptionAComparisonResult:
     horizon_sweep_violations: tuple[str, ...]
     total_indeterminate_steps: int
     rad_metre_outcome_disagreement_rate: float
+    correction_authority_input_set_norm: str
     hypothesis_results: tuple[HypothesisResult, ...]
 
     def to_json_dict(self) -> dict[str, Any]:
@@ -79,6 +82,7 @@ class OptionAComparisonResult:
             "horizon_sweep_violations": list(self.horizon_sweep_violations),
             "total_indeterminate_steps": self.total_indeterminate_steps,
             "rad_metre_outcome_disagreement_rate": self.rad_metre_outcome_disagreement_rate,
+            "correction_authority_input_set_norm": self.correction_authority_input_set_norm,
             "hypothesis_results": [
                 {
                     "hypothesis_id": item.hypothesis_id,
@@ -172,6 +176,7 @@ def _evaluate_trial(trace: OptionATrace, trial: int) -> TrialDetectionRecord:
         1e-6,
         protocol.kappa_max,
         ILL_CONDITIONED_MODE,
+        input_set_norm=CORRECTION_AUTHORITY_INPUT_SET_NORM,
     )
     baseline_flag = trace.baseline_flag_time_s[trial]
     baseline_time = None if np.isnan(baseline_flag) else float(baseline_flag)
@@ -323,6 +328,7 @@ def compute_option_a_comparison(trace: OptionATrace) -> OptionAComparisonResult:
         horizon_sweep_violations=violations,
         total_indeterminate_steps=sum(r.indeterminate_steps for r in records),
         rad_metre_outcome_disagreement_rate=_disagreement_rate(trace),
+        correction_authority_input_set_norm=CORRECTION_AUTHORITY_INPUT_SET_NORM.value,
         hypothesis_results=(hypothesis,),
     )
 

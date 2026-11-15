@@ -194,5 +194,7 @@ def test_public_protocol_doc_records_simulation_only_assumptions() -> None:
         "lead-time",
         "HypothesisResult",
         "no uncalibrated numbers",
+        "peak_per_channel",
+        "input_set_norm",
     ):
         assert statement in source
