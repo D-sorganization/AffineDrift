@@ -138,8 +138,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | `articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | `articles/The_Physics_of_Golf/quarto/ch05_affine_structure.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd` | 11 |
-| `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | `articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd` | 12 |
+| `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | `articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.qmd` | 2 |
 | `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | `articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | `articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | `articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd` | 11 |
