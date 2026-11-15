@@ -40,7 +40,9 @@ RETIRED_PATTERNS: tuple[tuple[str, str], ...] = (
     ),
 )
 
-_COMPILED = tuple((re.compile(pat, re.IGNORECASE | re.DOTALL), label) for pat, label in RETIRED_PATTERNS)
+_COMPILED = tuple(
+    (re.compile(pat, re.IGNORECASE | re.DOTALL), label) for pat, label in RETIRED_PATTERNS
+)
 
 
 def test_guarded_sources_avoid_retired_dcr_wording() -> None:
@@ -58,9 +60,9 @@ def test_validation_roadmap_states_drift_block_is_chart_dependent() -> None:
     """Validation roadmap must not promise chart-invariant drift acceleration (#5592 F3)."""
     text = (ROOT / "pages/validation-roadmap.qmd").read_text(encoding="utf-8")
     assert "drift block $a_d$ remains chart-dependent" in text
-    assert "does not make the drift term coordinate-invariant" in (
-        ROOT / "NOTATION.md"
-    ).read_text(encoding="utf-8")
+    assert "does not make the drift term coordinate-invariant" in (ROOT / "NOTATION.md").read_text(
+        encoding="utf-8"
+    )
 
 
 def test_planar_polar_counterexample_has_nonzero_drift_m_norm() -> None:
@@ -80,6 +82,8 @@ def test_tex_and_quarto_ch08_both_name_dir_not_dcr_for_realized_input() -> None:
         "articles/The_Geometry_of_Motion/Volume_I/chapters/ch08_applications.tex",
     ):
         text = (ROOT / relative).read_text(encoding="utf-8")
-        assert "realized drift-to-input ratio" in text or "realized drift-to-input ratio (DIR)" in text
+        assert (
+            "realized drift-to-input ratio" in text or "realized drift-to-input ratio (DIR)" in text
+        )
         assert "dimensionless drift-control ratio can be defined" not in text
         assert re.search(r"DIR_\{W_a\}|\\mathrm\{DIR\}_\{W_a\}", text)
