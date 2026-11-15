@@ -20,6 +20,7 @@
     "documentation",
     "workflows",
     "screenshots",
+    "known_gaps",
     "summary"
   ],
   "properties": {
@@ -89,6 +90,12 @@
         "$ref": "#/$defs/screenshot"
       }
     },
+    "known_gaps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/knownGap"
+      }
+    },
     "summary": {
       "$ref": "#/$defs/summary"
     }
@@ -114,6 +121,23 @@
       "type": "string",
       "minLength": 1,
       "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "pixels": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": {
+          "$ref": "#/$defs/pixels"
+        },
+        "height": {
+          "$ref": "#/$defs/pixels"
+        }
+      }
     },
     "publication": {
       "type": "object",
@@ -310,12 +334,15 @@
       ],
       "properties": {
         "requires_python": {
-          "const": ">=3.11"
+          "description": "PEP 440 Python specifier copied verbatim from the provider's pyproject.toml [project].requires-python. Deliberately not a const: the exact value is derived from pyproject at export time and asserted against it by tests/companion/test_companion_catalog.py, so this schema never duplicates the version literal.",
+          "type": "string",
+          "pattern": "^>=\\d+\\.\\d+(,<\\d+\\.\\d+)?$"
         },
         "supported_python_minors": {
           "type": "array",
           "items": {
-            "enum": ["3.11", "3.12"]
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+$"
           },
           "uniqueItems": true
         },
@@ -347,7 +374,15 @@
     "engine": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "name", "support_tier", "scientific_qualification"],
+      "required": [
+        "id",
+        "name",
+        "support_tier",
+        "runtime_availability",
+        "documentation_ids",
+        "capabilities",
+        "scientific_qualification"
+      ],
       "properties": {
         "id": {
           "$ref": "#/$defs/identifier"
@@ -357,6 +392,24 @@
         },
         "support_tier": {
           "enum": ["supported", "extended", "experimental"]
+        },
+        "runtime_availability": {
+          "$ref": "#/$defs/availability"
+        },
+        "documentation_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/engineCapability"
+          }
         },
         "scientific_qualification": {
           "$ref": "#/$defs/qualification"
@@ -432,6 +485,7 @@
         "support_tier",
         "scientific_qualification",
         "feature_ids",
+        "documentation_ids",
         "legacy_statuses",
         "source_records"
       ],
@@ -494,6 +548,13 @@
             "$ref": "#/$defs/identifier"
           },
           "uniqueItems": true
+        },
+        "documentation_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
         },
         "legacy_statuses": {
           "type": "array",
@@ -625,7 +686,25 @@
     "documentation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "title", "url", "source_path", "source_commit"],
+      "required": [
+        "id",
+        "title",
+        "status",
+        "source_path",
+        "source_commit",
+        "source_sha256",
+        "url",
+        "audiences",
+        "topics",
+        "program_ids",
+        "engine_ids",
+        "owner",
+        "last_reviewed",
+        "review_due",
+        "reviewed_sha256",
+        "freshness",
+        "reason"
+      ],
       "properties": {
         "id": {
           "$ref": "#/$defs/identifier"
@@ -633,18 +712,248 @@
         "title": {
           "$ref": "#/$defs/nonEmptyString"
         },
-        "url": {
-          "type": "string",
-          "format": "uri",
-          "pattern": "^https://"
+        "status": {
+          "enum": ["active", "deprecated", "missing"]
         },
         "source_path": {
-          "$ref": "#/$defs/repoPath"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/repoPath"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "source_commit": {
-          "$ref": "#/$defs/commit"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/commit"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "url": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/immutableUrl"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "audiences": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["developer", "integrator", "reviewer", "user"]
+          }
+        },
+        "topics": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "program_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "engine_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "owner": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "last_reviewed": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/isoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "review_due": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/isoDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reviewed_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "freshness": {
+          "enum": ["current", "review_required", "stale", "unknown", "missing"]
+        },
+        "reason": {
+          "type": ["string", "null"],
+          "minLength": 1
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "missing"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "source_path": {
+                "type": "null"
+              },
+              "source_commit": {
+                "type": "null"
+              },
+              "source_sha256": {
+                "type": "null"
+              },
+              "url": {
+                "type": "null"
+              },
+              "last_reviewed": {
+                "type": "null"
+              },
+              "review_due": {
+                "type": "null"
+              },
+              "reviewed_sha256": {
+                "type": "null"
+              },
+              "freshness": {
+                "const": "missing"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "source_path": {
+                "type": "string"
+              },
+              "source_commit": {
+                "type": "string"
+              },
+              "source_sha256": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "freshness": {
+                "enum": ["current", "review_required", "stale", "unknown"]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "freshness": {
+                "const": "current"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "last_reviewed": {
+                "type": "string"
+              },
+              "review_due": {
+                "type": "string"
+              },
+              "reviewed_sha256": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "freshness": {
+                "const": "unknown"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "last_reviewed": {
+                "type": "null"
+              },
+              "review_due": {
+                "type": "null"
+              },
+              "reviewed_sha256": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "active"
+              },
+              "freshness": {
+                "const": "current"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
     },
     "workflowEnvironment": {
       "type": "object",
@@ -948,7 +1257,26 @@
     "screenshot": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "program_id", "path", "sha256", "source_commit"],
+      "required": [
+        "id",
+        "program_id",
+        "status",
+        "path",
+        "sha256",
+        "width",
+        "height",
+        "viewport",
+        "theme",
+        "capture_workflow_id",
+        "capture_step_id",
+        "capture_environment",
+        "alt_text",
+        "caption",
+        "visible_limitations",
+        "artifact_class",
+        "source_commit",
+        "reason"
+      ],
       "properties": {
         "id": {
           "$ref": "#/$defs/identifier"
@@ -956,16 +1284,97 @@
         "program_id": {
           "$ref": "#/$defs/identifier"
         },
+        "status": {
+          "enum": ["pending", "captured"]
+        },
         "path": {
-          "$ref": "#/$defs/repoPath"
+          "oneOf": [{ "$ref": "#/$defs/repoPath" }, { "type": "null" }]
         },
         "sha256": {
-          "$ref": "#/$defs/sha256"
+          "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }]
+        },
+        "width": {
+          "oneOf": [{ "$ref": "#/$defs/pixels" }, { "type": "null" }]
+        },
+        "height": {
+          "oneOf": [{ "$ref": "#/$defs/pixels" }, { "type": "null" }]
+        },
+        "viewport": {
+          "oneOf": [{ "$ref": "#/$defs/viewport" }, { "type": "null" }]
+        },
+        "theme": {
+          "enum": ["light", "dark", null]
+        },
+        "capture_workflow_id": {
+          "oneOf": [{ "$ref": "#/$defs/identifier" }, { "type": "null" }]
+        },
+        "capture_step_id": {
+          "oneOf": [{ "$ref": "#/$defs/identifier" }, { "type": "null" }]
+        },
+        "capture_environment": {
+          "oneOf": [{ "$ref": "#/$defs/nonEmptyString" }, { "type": "null" }]
+        },
+        "alt_text": {
+          "oneOf": [{ "$ref": "#/$defs/nonEmptyString" }, { "type": "null" }]
+        },
+        "caption": {
+          "oneOf": [{ "$ref": "#/$defs/nonEmptyString" }, { "type": "null" }]
+        },
+        "visible_limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "artifact_class": {
+          "enum": ["illustrative", "raw_plot", "qualification_evidence"]
         },
         "source_commit": {
           "$ref": "#/$defs/commit"
+        },
+        "reason": {
+          "oneOf": [{ "$ref": "#/$defs/nonEmptyString" }, { "type": "null" }]
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "pending" } }
+          },
+          "then": {
+            "properties": {
+              "path": { "type": "null" },
+              "sha256": { "type": "null" },
+              "width": { "type": "null" },
+              "height": { "type": "null" },
+              "viewport": { "type": "null" },
+              "theme": { "type": "null" },
+              "capture_workflow_id": { "type": "null" },
+              "capture_step_id": { "type": "null" },
+              "capture_environment": { "type": "null" },
+              "alt_text": { "type": "null" },
+              "caption": { "type": "null" },
+              "reason": { "$ref": "#/$defs/nonEmptyString" }
+            }
+          },
+          "else": {
+            "properties": {
+              "path": { "$ref": "#/$defs/repoPath" },
+              "sha256": { "$ref": "#/$defs/sha256" },
+              "width": { "$ref": "#/$defs/pixels" },
+              "height": { "$ref": "#/$defs/pixels" },
+              "viewport": { "$ref": "#/$defs/viewport" },
+              "theme": { "enum": ["light", "dark"] },
+              "capture_workflow_id": { "$ref": "#/$defs/identifier" },
+              "capture_step_id": { "$ref": "#/$defs/identifier" },
+              "capture_environment": { "$ref": "#/$defs/nonEmptyString" },
+              "alt_text": { "$ref": "#/$defs/nonEmptyString" },
+              "caption": { "$ref": "#/$defs/nonEmptyString" },
+              "reason": { "type": "null" }
+            }
+          }
+        }
+      ]
     },
     "summary": {
       "type": "object",
@@ -977,7 +1386,17 @@
         "feature_records",
         "feature_surface_paths",
         "workflow_records",
-        "executable_workflow_records"
+        "executable_workflow_records",
+        "single_source_program_records",
+        "documentation_records",
+        "current_documentation_records",
+        "engine_capability_records",
+        "qualified_engine_capability_records",
+        "undocumented_visible_program_records",
+        "known_gap_records",
+        "screenshot_records",
+        "captured_screenshot_records",
+        "pending_screenshot_records"
       ],
       "properties": {
         "raw_launcher_records": {
@@ -1007,6 +1426,222 @@
         "executable_workflow_records": {
           "type": "integer",
           "minimum": 0
+        },
+        "single_source_program_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "documentation_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "current_documentation_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "engine_capability_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "qualified_engine_capability_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "undocumented_visible_program_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "known_gap_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "screenshot_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "captured_screenshot_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pending_screenshot_records": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "isoDate": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "immutableUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://github\\.com/D-sorganization/UpstreamDrift/blob/[0-9a-f]{40}/.+$"
+    },
+    "capabilityEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "path",
+        "selector",
+        "gate",
+        "sha256",
+        "source_commit"
+      ],
+      "properties": {
+        "kind": {
+          "enum": ["test", "artifact"]
+        },
+        "path": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "selector": {
+          "type": ["string", "null"],
+          "pattern": "^[^:]+::[A-Za-z_][A-Za-z0-9_]*(::[A-Za-z_][A-Za-z0-9_]*)*$"
+        },
+        "gate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/repoPath"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_commit": {
+          "$ref": "#/$defs/commit"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "test"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "selector": {
+                "type": "string"
+              },
+              "gate": {
+                "type": "string",
+                "pattern": "^\\.github/workflows/.+\\.ya?ml$"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "selector": {
+                "type": "null"
+              },
+              "gate": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "engineCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "evidence_state",
+        "evidence",
+        "reason",
+        "limitations"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "title": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_state": {
+          "enum": ["qualified", "unqualified"]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/capabilityEvidence"
+          }
+        },
+        "reason": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "evidence_state": {
+                "const": "qualified"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              },
+              "reason": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "evidence": {
+                "maxItems": 0
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "knownGap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "issue", "scope", "summary", "summary_metric"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "issue": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "scope": {
+          "enum": ["catalog", "documentation", "engine", "launcher", "parity"]
+        },
+        "summary": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "summary_metric": {
+          "type": ["string", "null"],
+          "minLength": 1
         }
       }
     }
