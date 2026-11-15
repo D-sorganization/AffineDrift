@@ -1,4 +1,8 @@
-"""UpstreamDrift implementation bridge ledger verification (#5601)."""
+"""UpstreamDrift implementation bridge ledger verification (#5601).
+
+The ledger in ``data/companion/upstream_implementation_links.json`` backs PoG and GoM
+chapter includes under ``articles/_includes/upstream-implementation/``.
+"""
 
 from __future__ import annotations
 
