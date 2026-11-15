@@ -196,6 +196,29 @@ def test_16_week_learning_paths_weekly_schedules_match_totals(
     assert (sum(x[0] for x in mod_hours), sum(x[1] for x in mod_hours)) == expected_range
 
 
+def test_5618_interaction_forces_review_scopes_putnam_claims() -> None:
+    review = (REPO_ROOT / "resources" / "research-review-interaction-forces.qmd").read_text(
+        encoding="utf-8"
+    )
+    assert "golf-specific transfer remains site inference" in review.casefold()
+    assert "10.1016/0021-9290(93)90084-R" in review
+
+
+def test_5618_on_ramp_paths_link_governed_workflows_with_commands() -> None:
+    on_ramp = (REPO_ROOT / "resources" / "on-ramp-paths.qmd").read_text(encoding="utf-8")
+    workflows = (REPO_ROOT / "models" / "programming" / "workflows.qmd").read_text(encoding="utf-8")
+    assert "../models/programming/workflows.html" in on_ramp
+    assert "installation-verification" in on_ramp
+    assert "python3 -m scripts.companion_workflows execute" in workflows
+    assert "verify_installation.py" in workflows
+
+
+def test_5618_golf_science_coaching_outcomes_stay_interpretive() -> None:
+    text = (REPO_ROOT / "resources" / "learning-path-golf-science.qmd").read_text(encoding="utf-8")
+    assert "Personalized coaching using AffineDrift principles" not in text
+    assert "Assess coaching and fitting claims" in text
+
+
 def test_5618_prior_citation_and_pedagogy_locks() -> None:
     assert "by Ville Hirvonen" in (REPO_ROOT / "resources" / "resources-books.qmd").read_text(
         encoding="utf-8"
