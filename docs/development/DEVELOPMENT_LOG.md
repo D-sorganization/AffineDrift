@@ -1275,6 +1275,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5617 · Correct UpstreamDrift Accuracy on Models, Repositories, and Programming Pages; Re-Pin Companion to D56e3709.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5617
+- **Branch:** merged via #5634
+- **PR:** #5634
+- **Paths:** see #5634
+- **Started:** 2026-11-15
+- **Last verified:** 2026-11-15 (`3d33f7a7`; collated from changes/5617-program-registry-85-record-count.md)
+- **Summary:** Correct UpstreamDrift accuracy on models, repositories, and programming pages; re-pin companion to d56e3709.
+- **Next step:** Shipped in PR #5634.
+
 ### DL-#5591 · Reconcile Claim_Registry.Json, Per-File Provenance SHA-256 Hashes, ZTCF/DCR Wording, and Companion Software-Artifact Tiering.
 
 - **State:** shipped
