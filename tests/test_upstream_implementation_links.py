@@ -18,7 +18,7 @@ LEDGER = REPO_ROOT / "data/companion/upstream_implementation_links.json"
 def test_ledger_loads_with_expected_schema() -> None:
     document = bridge.load_ledger(LEDGER)
     assert document["schema_version"] == bridge.SCHEMA
-    assert len(document["bridges"]) >= 6
+    assert len(document["bridges"]) >= 11
 
 
 @pytest.mark.unit
