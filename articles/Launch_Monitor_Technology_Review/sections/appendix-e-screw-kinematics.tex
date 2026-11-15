@@ -30,7 +30,8 @@ The robotics conventions below are independently supported by the authors' expla
 Assume a rigid clubhead over the interval being modeled, a stationary radar origin, and a right-handed Cartesian sensor frame.
 This is a head model: shaft bending and deformation during contact require separate states or an explicitly bounded approximation.
 Let $O$ be a declared body-fixed reference point, $\vect{p}_O$ its sensor-frame position, $\vect{v}_O=\dot{\vect{p}}_O$ its velocity, and $\vect{\omega}$ the head's angular velocity expressed in the same frame.
-Use linear-first ordering throughout:
+Use linear-first ordering throughout (AffineDrift site notation uses angular-first
+$(\vect\omega,\vect v)$; permute the two three-blocks when importing site Jacobians):
 \begin{equation}
 \label{eq:screw-twist}
 \xi_O=\begin{bmatrix}\vect{v}_O\\\vect{\omega}\end{bmatrix}\in\mathbb R^6.
@@ -261,9 +262,14 @@ Fit pre- and post-contact intervals separately if the purpose is to study collis
 
 \subsection*{Step 7 --- Report Only Supported Delivery Quantities}
 
-Let the target frame be right-handed with $x$ down the target line, $y$ to the golfer's left when looking down that line, and $z$ upward.
-For a calibrated body-fixed point with body offset $\vect r_{gc}^{,b}$, first compute $\vect v_{gc}=\vect v_O+\vect\omega\times R\vect r_{gc}^{,b}$ and express it in that target frame.
-Then speed is $\lVert\vect v_{gc}\rVert$, path positive to the right is $\operatorname{atan2}(-v_y,v_x)$, and attack angle positive upward is $\operatorname{atan2}(v_z,\sqrt{v_x^2+v_y^2})$.
+Use the monograph target frame from the introduction: right-handed with $x$ down the target
+line, $y$ up, and $z$ to the golfer's right when looking downrange (do not mix this with
+alternate article frames that place $+y$ left or $+z$ up without an explicit axis map).
+For a calibrated body-fixed point with body offset $\vect r_{gc}^{,b}$, first compute
+$\vect v_{gc}=\vect v_O+\vect\omega\times R\vect r_{gc}^{,b}$ and express it in that target frame.
+Then speed is $\lVert\vect v_{gc}\rVert$, path positive to the right is
+$\operatorname{atan2}(v_z,v_x)$, and attack angle positive upward is
+$\operatorname{atan2}(v_y,\sqrt{v_x^2+v_z^2})$.
 Path is undefined for zero horizontal velocity, and the velocity direction is undefined at rest.
 A calibrated geometric-center offset, an anatomical grip point, and a changing radar centroid are not interchangeable.
 
