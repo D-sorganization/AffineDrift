@@ -403,10 +403,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5626
 - **Branch:** cursor/upstreamdrift-getting-started-5626-8182
-- **PR:** #5663, #5686
+- **PR:** #5663, #5686, #5717
 - **Paths:** see #5663
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-14 (`f2738c98`; collated from changes/5626-companion-freshness-readme-parity.md)
+- **Last verified:** 2026-11-15 (`1b805fc4`; collated from changes/5626-pinned-https-fetch.md)
 - **Summary:** Publish UpstreamDrift getting-started and headless/agent guides; README install CI gate; llms.txt
 - **Next step:** Barb arms after CI green
 
