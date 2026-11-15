@@ -299,10 +299,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5596
 - **Branch:** cursor/agent-readiness-5596-3da0
-- **PR:** #5662
+- **PR:** #5662, #5726
 - **Paths:** see #5662
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-14 (`fba8421b`; collated from changes/5596-add-llms-txt-agent-entry-point-extend-sy.md)
+- **Last verified:** 2026-11-15 (`5c602e68`; collated from changes/5596-expose-canonical-parameters-json-in-agen.md)
 - **Summary:** Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates.
 - **Next step:** Merge after CI green.
 
@@ -338,10 +338,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5643
 - **Branch:** cursor/fix-onb-04-onb-07-5643-0eb3
-- **PR:** #5647
+- **PR:** #5647, #5731
 - **Paths:** see #5647
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`a70fd1c2`; collated from changes/5643-onboarding-datasets-licence.md)
+- **Last verified:** 2026-11-15 (`3cf63936`; collated from changes/5643-add-5643-onboarding-and-datasets-licence.md)
 - **Summary:** Programming Companion onboarding entrypoints; datasets ledger CC BY 4.0 alignment.
 - **Next step:** Merge after CI green; do not auto-merge.
 
@@ -377,10 +377,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5640
 - **Branch:** cursor/theory-part1-front-matter-5640-5385
-- **PR:** #5645
+- **PR:** #5645, #5733
 - **Paths:** see #5645
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`914929ec`; collated from changes/5640-theory-part1-front-matter.md)
+- **Last verified:** 2026-11-15 (`6aa1be4b`; collated from changes/5640-lock-theory-part-1-front-matter-control.md)
 - **Summary:** Align theory-part1 front matter with the model-conditioned drift contract.
 - **Next step:** Merge after quality-gate.
 
@@ -403,10 +403,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5626
 - **Branch:** cursor/upstreamdrift-getting-started-5626-8182
-- **PR:** #5663, #5686, #5717
+- **PR:** #5663, #5686, #5717, #5732
 - **Paths:** see #5663
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-15 (`1b805fc4`; collated from changes/5626-pinned-https-fetch.md)
+- **Last verified:** 2026-11-15 (`730049b4`; collated from changes/5626-disambiguate-physicsengine-compute-zvcf.md)
 - **Summary:** Publish UpstreamDrift getting-started and headless/agent guides; README install CI gate; llms.txt
 - **Next step:** Barb arms after CI green
 
@@ -468,10 +468,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5618
 - **Branch:** cursor/fix-learning-paths-resources-5618-288d
-- **PR:** #5668, #5695
+- **PR:** #5668, #5695, #5729
 - **Paths:** see #5668
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`eb176f0a`; collated from changes/5618-learning-path-schedule-budgets.md)
+- **Last verified:** 2026-11-15 (`1f8cbbbe`; collated from changes/5618-add-learning-path-regression-tests-locki.md)
 - **Summary:** Fix learning-path and resources citations, chapter pointers, and workflow install commands
 - **Next step:** Merge after CI green.
 
@@ -533,10 +533,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5609
 - **Branch:** cursor/pdc-upstream-pin-5609-9e7e
-- **PR:** #5658, #5702
+- **PR:** #5658, #5702, #5728
 - **Paths:** see #5658
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`8cd85b27`; collated from changes/5609-workbench-post-5554-pin-and-equations.md)
+- **Last verified:** 2026-11-15 (`4cbec560`; collated from changes/5609-unify-lay-companion-lead-trail-different.md)
 - **Summary:** Unify lay companion UpstreamDrift pin and fix review defects
 - **Next step:** Merge after CI green.
 
@@ -546,10 +546,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5608
 - **Branch:** cursor/fdm-5608-equations-notation-3efd
-- **PR:** #5657
+- **PR:** #5657, #5730
 - **Paths:** see #5657
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`4556bd40`; collated from changes/5608-fdm-book-hermite-simpson-notation-table.md)
+- **Last verified:** 2026-11-15 (`ef6405cf`; collated from changes/5608-align-fdm-drake-autodiff-permalinks-with.md)
 - **Summary:** FDM book: Hermite-Simpson, notation table, core equations, UD link fixes
 - **Next step:** Merge after CI green
 
@@ -663,10 +663,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5595
 - **Branch:** cursor/parameters-ssot-5595-6ff0
-- **PR:** #5671, #5699
+- **PR:** #5671, #5699, #5727
 - **Paths:** see #5671
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-14 (`14edb6ed`; collated from changes/5595-extend-canonical-parameters-with-ball-mo.md)
+- **Last verified:** 2026-11-15 (`e93dfae8`; collated from changes/5595-document-parameters-json-ssot-on-the-par.md)
 - **Summary:** Rebuild PARAMETERS.md from sourced canonical registry with CI check
 - **Next step:** Merge after CI green.
 
@@ -1294,10 +1294,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5591
 - **Branch:** gemini-ct/5591-claim-registry
-- **PR:** #5697
+- **PR:** #5697, #5723
 - **Paths:** see #5697
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-14 (`ff304e8a`; collated from changes/5591-claim-registry-provenance-tiers.md)
+- **Last verified:** 2026-11-15 (`ff0e907a`; collated from changes/5591-trust-panel-registry-consistency-and-cla.md)
 - **Summary:** Reconcile claim_registry.json, per-file provenance SHA-256 hashes, ZTCF/DCR wording, and companion software-artifact tiering.
 - **Next step:** Shipped in PR #5697.
 
