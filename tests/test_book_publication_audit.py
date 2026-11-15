@@ -215,6 +215,15 @@ def test_validator_rejects_missing_or_wrong_digest_and_weak_p1() -> None:
         validate_audit(audit, SCHEMA, ROOT)
 
 
+def test_regenerate_claim_audit_evidence_keeps_book_audit_finding_digests_current() -> None:
+    """Book-audit findings must refresh with claim-audit evidence regeneration (#5593)."""
+    from scripts.regenerate_claim_audit_evidence import refresh_inventory
+
+    audit = _json(AUDIT)
+    assert refresh_inventory(audit, ROOT) == 0
+    validate_audit(audit, SCHEMA, ROOT)
+
+
 def test_report_is_deterministic_and_current(tmp_path: Path) -> None:
     audit = _json(AUDIT)
     assert build_report(audit) == build_report(audit)
