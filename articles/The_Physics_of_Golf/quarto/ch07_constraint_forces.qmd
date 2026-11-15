@@ -373,7 +373,7 @@ $$
 V=-g[h_1\cos q_1+h_2\cos(q_1+q_2)],\qquad \bm g=\nabla V.
 $$
 
-The companion calculation reuses that chapter's operator implementation, which is checked against independent recursive Newton–Euler dynamics.
+The companion calculation reuses that chapter's operator implementation, which is checked against independent recursive Newton–Euler dynamics in `tests/test_constraint_forces_rigor.py`.
 
 Add the world-orientation guide $q_1+q_2=115^\circ$. Start at $\bm q=(45^\circ,70^\circ)$ with $\dot{\bm q}=(8,-8)$ rad/s. Both position and velocity are compatible, and
 
@@ -658,3 +658,5 @@ $$
 $$
 
 The absolute angular rates are $\dot q_1$ and $\dot q_1+\dot q_2$. Before capture, $T_1=3.25$ J and $T_2\approx31.39862561$ J. After capture, $T_1\approx6.34756783$ J and $T_2\approx3.06245734$ J. Body 1 gains about 3.09756783 J while body 2 loses about 28.33616826 J. The difference, 25.23860043 J, is dissipated by the assumed capture law. Position and potential are unchanged during the impulse. Subsequent smooth guide motion has zero guide power; that theorem must not be applied across the incompatible capture event.
+
+{{< include ../../_includes/upstream-implementation/pog-ch07.qmd >}}

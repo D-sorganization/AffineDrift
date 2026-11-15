@@ -1,0 +1,10 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-pog-ch07}
+
+::: {.callout-note appearance="simple"}
+The manufactured wrist-guide example on this page is checked in AffineDrift by `tests/test_constraint_forces_rigor.py` against independent recursive Newton–Euler dynamics. UpstreamDrift's spatial RNEA for the golf rigid-body stack is at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
+
+- **Recursive Newton–Euler:** [`rnea.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/rigid_body_dynamics/rnea.py) — production inverse dynamics for the MuJoCo humanoid golf model.
+- **Spatial vector conventions:** [`spatial_vectors.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/spatial_algebra/spatial_vectors.py) — 6-D wrenches and motion vectors used by the RNEA implementation.
+
+**Convention note:** compare angular-first spatial vectors with the textbook's 2-D planar reductions; do not mix Pinocchio and Featherstone component orders without an explicit remap.
+:::
