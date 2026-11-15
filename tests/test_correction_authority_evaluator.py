@@ -190,6 +190,30 @@ def test_peak_bound_unreachable_when_exceeds_exact_double_integrator_reach() -> 
     assert terminal.margin < 0.0
 
 
+def test_energy_norm_is_documented_outer_bound_at_unattainable_target() -> None:
+    """Default peak support is exact; energy Gramian scaling stays an outer bound (#5567)."""
+    steps = _double_integrator_steps(1.0, 32)
+    kwargs = dict(
+        steps=steps,
+        initial_state=np.zeros(2),
+        input_bound=1.0,
+        required_task_error=0.55,
+        task_direction=np.array([1.0, 0.0]),
+        tolerance=0.05,
+        kappa_max=_KAPPA,
+    )
+    peak = evaluate_correction_authority_along_trajectory(
+        **kwargs, input_set_norm=InputSetNorm.PEAK_PER_CHANNEL
+    )[0]
+    energy = evaluate_correction_authority_along_trajectory(
+        **kwargs, input_set_norm=InputSetNorm.ENERGY
+    )[0]
+    assert not isinstance(peak, Indeterminate)
+    assert not isinstance(energy, Indeterminate)
+    assert peak.recoverable is False
+    assert energy.recoverable is True
+
+
 def test_rank_deficient_and_dcr_helpers() -> None:
     oracle = evaluate_planar_rank_deficient_authority(
         (0, -1), PlanarRankDeficientSystem((0, 0), (0, 2), 1, 1), 0.1

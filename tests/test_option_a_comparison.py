@@ -71,6 +71,11 @@ def test_committed_result_binds_fixture_payload_digest() -> None:
     assert payload["payload_sha256"] == trace.payload_sha256
 
 
+def test_committed_result_records_correction_authority_input_set_norm() -> None:
+    payload = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
+    assert payload["correction_authority_input_set_norm"] == "peak_per_channel"
+
+
 def test_compute_option_a_comparison_is_deterministic() -> None:
     trace = load_verified_trace()
     first = compute_option_a_comparison(trace).to_json_dict()
