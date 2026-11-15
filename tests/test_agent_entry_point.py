@@ -15,6 +15,7 @@ from src.tools.agent_entry_point import (
     load_manifest,
     render_both,
 )
+from src.tools.symbol_references import parse_symbol_table
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schemas/symbol-references-v2.schema.json"
@@ -68,3 +69,18 @@ def test_symbol_registry_covers_issue_missing_keys() -> None:
     keys = {entry["key"] for entry in payload["symbols"]}
     expected = {"h", "q", "qdot", "v", "tau", "J", "lam", "ad", "Ba", "W", "Uset"}
     assert expected <= keys
+
+
+def test_symbol_registry_matches_notation_table_keys() -> None:
+    """Every NOTATION.md registry row must appear in data/symbol_references.json (#5596)."""
+    notation_keys = {ref.key for ref in parse_symbol_table((ROOT / "NOTATION.md").read_text())}
+    payload = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    registry_keys = {entry["key"] for entry in payload["symbols"]}
+    assert notation_keys == registry_keys
+    assert len(registry_keys) >= 20
+
+
+def test_llms_full_lists_canonical_parameters_json() -> None:
+    manifest = load_manifest(MANIFEST_PATH.read_text(encoding="utf-8"))
+    _, full = render_both(manifest)
+    assert "`data/canonical_parameters.json`" in full
