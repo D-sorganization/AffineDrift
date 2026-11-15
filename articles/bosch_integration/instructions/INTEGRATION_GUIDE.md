@@ -151,8 +151,9 @@ These are **suggestions** — review each addition for fit with the existing con
 Both Bosch books should also be added to the AffineDrift website's recommended resources:
 
 - **Bosch, F. (2020).** _Anatomy of Agility: Movement Analysis in Sport._ 2010 Publishers.
-  Key topics: attractor-fluctuation landscapes, self-stabilization, constraints-led approach,
-  direct perception, specificity matrix.
+  Key topics (labeled practitioner vocabulary in the integrated chapters, not established golf
+  facts): attractor-fluctuation landscapes, self-stabilization, constraints-led approach, direct
+  perception, specificity matrix.
 
 - **Bosch, F. (2015).** _Strength Training and Coordination: An Integrative Approach._ 2010 Publishers.
   Key topics: preflex control, co-contractions, muscle slack, size principle, central pattern
