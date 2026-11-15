@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-15 | #5634 | Correct UpstreamDrift accuracy on models, repositories, and programming pages; re-pin companion to d56e3709.; Align programming companion copy and generator with the 85-record program registry. |
 | 2026-11-15 | #5717 | Companion launcher and UpstreamDrift README checks fetch only from https://raw.githubusercontent.com (bandit B310), so the pre-push security scan passes again |
 | 2026-11-14 | #5654 | UpstreamDrift engine protocol reference page (drift/control, defaults, validation). |
 | 2026-11-14 | #5681 | Harmonise Geometry of Motion notation with NOTATION.md: constrained symbols, transverse coordinates, chapter notation notes. |
