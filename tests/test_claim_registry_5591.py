@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 from pathlib import Path
 
@@ -126,3 +127,31 @@ def test_start_here_ztcf_figure_says_forward_rollout_and_short_caption() -> None
         in text
     )
     assert "forward ZTCF rollout curve" in text
+
+
+def test_generated_trust_panels_track_registry_technical_claims() -> None:
+    """Each trust panel must embed the authoritative technical_claim text from the registry (#5591)."""
+    data = json.loads(DEFAULT_REGISTRY.read_text(encoding="utf-8"))
+    trust_dir = ROOT / "articles/_generated/trust"
+    for page in data["pages"]:
+        panel = (trust_dir / f"{page['page_id']}.qmd").read_text(encoding="utf-8")
+        for claim in page["claims"]:
+            claim_id = str(claim["claim_id"])
+            tech = str(claim["technical_claim"]["text"])  # type: ignore[index]
+            assert claim_id in panel
+            assert html.escape(tech) in panel
+
+
+def test_regenerate_claim_audit_evidence_check_passes() -> None:
+    """Claim-audit ledgers and digests must be current relative to claim_registry.json (#5591)."""
+    import subprocess
+    import sys
+
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.regenerate_claim_audit_evidence", "--check"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr or result.stdout

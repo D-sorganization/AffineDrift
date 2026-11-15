@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LEDGER = ROOT / "data/companion/upstream_implementation_links.json"
 CH06 = ROOT / "articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd"
 CH07 = ROOT / "articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.qmd"
+CH07_BRIDGE = ROOT / "articles/_includes/upstream-implementation/pog-ch07.qmd"
 
 
 def test_ch06_and_ch07_listed_in_upstream_implementation_ledger() -> None:
@@ -27,5 +28,9 @@ def test_ch06_links_rendered_notation_and_includes_upstream_bridge() -> None:
 
 def test_ch07_includes_upstream_bridge_and_names_rnea_cross_check_test() -> None:
     text = CH07.read_text(encoding="utf-8")
+    bridge = CH07_BRIDGE.read_text(encoding="utf-8")
     assert "upstream-implementation/pog-ch07" in text
-    assert "test_constraint_forces_rigor" in text
+    for chunk in (text, bridge):
+        assert "test_affine_structure_rigor.py" in chunk
+        assert "test_complete_dynamics_against_independent_newton_euler" in chunk
+        assert "test_constraint_forces_rigor" in chunk
