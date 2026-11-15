@@ -26,6 +26,13 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = REPO_ROOT / "scripts" / "ci" / "check_spec_freshness.py"
 VALID = '---\nissue: 1976\nsummary: "Vendor change fragments"\n---\n'
 INVALID = "---\nissue: 1976\n---\n"
+FRAGMENT_5684 = (
+    "---\n"
+    "issue: 5684\n"
+    'summary: "Add integration test locking SBOM metadata timestamp normalization '
+    'for git %cI +00:00 output."\n'
+    "---\n"
+)
 
 
 def _load() -> ModuleType:
@@ -55,6 +62,18 @@ def test_source_change_without_spec_or_fragment_needs_update(repo: Path) -> None
     outputs = freshness.decide(["src/a.py"], repo)
     assert outputs["source_changed"] is True
     assert outputs["needs_update"] is True
+
+
+def test_write_sbom_test_change_needs_spec_or_fragment(repo: Path) -> None:
+    """tests/ edits require SPEC.md or a validated change fragment (#5738 / #5684)."""
+    assert freshness.decide(["tests/test_write_sbom.py"], repo)["needs_update"] is True
+
+
+def test_write_sbom_test_change_with_5684_fragment_passes(repo: Path) -> None:
+    fragment = _write(repo, "changes/5684-sbom-timestamp-integration.md", FRAGMENT_5684)
+    outputs = freshness.decide(["tests/test_write_sbom.py", fragment], repo)
+    assert outputs["fragment_valid"] is True
+    assert outputs["needs_update"] is False
 
 
 def test_source_change_with_spec_edit_passes(repo: Path) -> None:
