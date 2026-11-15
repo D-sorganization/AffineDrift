@@ -6,12 +6,13 @@ import argparse
 import json
 import sys
 import urllib.error
-import urllib.request
 from pathlib import Path
+
+from scripts.pinned_https import GITHUB_RAW_HOST, read_pinned_https, require_commit_sha
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTRACT_PATH = ROOT / "data/upstreamdrift/install_readme_contract.json"
-RAW_README = "https://raw.githubusercontent.com/D-sorganization/UpstreamDrift/{commit}/README.md"
+RAW_README = f"https://{GITHUB_RAW_HOST}/D-sorganization/UpstreamDrift/{{commit}}/README.md"
 
 
 def load_contract() -> dict[str, object]:
@@ -22,10 +23,9 @@ def load_contract() -> dict[str, object]:
 
 
 def fetch_readme(commit: str) -> str:
-    url = RAW_README.format(commit=commit)
+    url = RAW_README.format(commit=require_commit_sha(commit))
     try:
-        with urllib.request.urlopen(url, timeout=60) as response:
-            return response.read().decode("utf-8")
+        return read_pinned_https(url, host=GITHUB_RAW_HOST).decode("utf-8")
     except urllib.error.URLError as exc:
         raise RuntimeError(f"failed to fetch README at {commit}: {exc}") from exc
 
