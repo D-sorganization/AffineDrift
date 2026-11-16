@@ -331,6 +331,7 @@ class BallFlightDynamics(DynamicalSystem):
         m0, m1 = previous[3:6] * dt, current[3:6] * dt
 
         def hermite(s: float) -> np.ndarray[Any, Any]:
+            """Cubic Hermite position at step fraction ``s`` in [0, 1]."""
             s2, s3 = s * s, s * s * s
             return (
                 (2 * s3 - 3 * s2 + 1) * p0
