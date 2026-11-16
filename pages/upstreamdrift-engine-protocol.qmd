@@ -1,12 +1,12 @@
 ---
 title: "UpstreamDrift Engine Protocol Reference"
-description: "Pinned PhysicsEngine interface map: drift vs control per solver, integrator defaults, simulation backends, and cross-engine validation in UpstreamDrift."
+description: "Pinned PhysicsEngine interface map: method signatures and shapes, what drift and control contain per solver, integrator defaults, capability matrix, and cross-engine tolerances in UpstreamDrift."
 schema-type: TechArticle
 schema-url: https://affinedrift.com/pages/upstreamdrift-engine-protocol.html
 schema-citations:
   - https://affinedrift.com/pages/upstreamdrift-engine-protocol.html#drift-control-semantics
-  - https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/interfaces.py
-  - https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/_dynamics_interface.py
+  - https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/interfaces.py
+  - https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_dynamics_interface.py
 toc: true
 page-layout: article
 css: ../css/upstreamdrift-reference.css
@@ -14,269 +14,430 @@ categories:
 - reference
 - tools
 caveats:
-  evidence-level: "Interface inventory tied to a pinned UpstreamDrift commit"
+  evidence-level: "Interface inventory read from a pinned UpstreamDrift commit; three examples were executed, the rest are sketches"
   establishes:
-    - "Which methods every UpstreamDrift physics engine exposes, state shapes, and how drift and control accelerations are defined in code at commit 625a16e6897b88ab29fb5a64c65ecee820dd58f5."
-    - "Where exact acceleration superposition fails and which paths qualify cross-engine claims."
+    - "Which methods the UpstreamDrift PhysicsEngine protocol declares, the array shapes and units its docstrings state, and how each engine computes its drift and control accelerations at commit ca9d8887f2ed46de484b64615dd4a50148e07bd0."
+    - "Where the drift-plus-control sum equals the full acceleration by construction and where it does not."
   does-not-establish:
     - "That AffineDrift articles use identical drift definitions without conversion."
+    - "Behavior of Drake, Pinocchio, OpenSim, MyoSuite or JaxSim at run time: those engines were read, not executed, for this page."
     - "Biomechanical validation, population-level parity, or install reproducibility on a reader machine."
 ---
 
 UpstreamDrift is the implementation authority for the control-affine decompositions
 AffineDrift motivates. This page records **what the code does at one commit**, not
-every narrative shortcut on this site. All UpstreamDrift evidence links below use
-[`625a16e6897b88ab29fb5a64c65ecee820dd58f5`](https://github.com/D-sorganization/UpstreamDrift/tree/625a16e6897b88ab29fb5a64c65ecee820dd58f5)
-(re-checked 2026-11-11 for issue #5620).
+every narrative shortcut on this site. Every UpstreamDrift link below is pinned to
+[`ca9d8887f2ed46de484b64615dd4a50148e07bd0`](https://github.com/D-sorganization/UpstreamDrift/tree/ca9d8887f2ed46de484b64615dd4a50148e07bd0)
+(`main` on 2026-11-16, read for issue #5620). A statement that the code does not define
+something means it was not found at that commit; it is not a claim about later commits.
+
+How each statement was established:
+
+- **Read** means the cited lines were read. Nothing was executed.
+- **Run** means the snippet in [Runnable Examples](#minimal-usage) was executed against that commit
+  with MuJoCo 3.3.4 and NumPy 2.5.1 on 2026-11-16. These scripts are not UpstreamDrift tests.
+- Drake, Pinocchio, OpenSim, MyoSuite and JaxSim were not installed in the environment used
+  for this page, so their rows are **read** only.
 
 For array layouts, frames, and quaternion order when moving state between engines, see
-the merged [UpstreamDrift Conventions Reference](upstreamdrift-conventions.html)
-(`pages/upstreamdrift-conventions.qmd`). AffineDrift's programming
-catalog remains [Engines and Runtime Support](../models/programming/engines.html).
+the [UpstreamDrift Conventions Reference](upstreamdrift-conventions.html). AffineDrift's
+provider catalog is [Engines and Runtime Support](../models/programming/engines.html).
+
+## Optional Dependencies {#dependencies}
+
+Only MuJoCo is a core dependency ([`pyproject.toml` L33][pyproject-core]). Every other engine
+or backend is an optional extra, and a missing extra surfaces as an import or availability error:
+
+| Engine or backend | Extra and pin (read) | Notes |
+| --- | --- | --- |
+| MuJoCo | core: `mujoco>=3.6.0,<4.0.0` | Also the `mujoco` simulation backend |
+| Drake | `drake>=1.57.0,<1.59.0` ([L153][pyproject-extras]) | |
+| Pinocchio | `pin>=2.6.0,<5.0.0` plus `meshcat`, `pin-pink` ([L158][pyproject-extras]) | |
+| OpenSim | `opensim>=4.4.0,<5.0.0` ([L245][pyproject-extras]) | Experimental tier |
+| MyoSuite | `myosuite>=2.0.0`, `gymnasium>=0.29.0` ([L246][pyproject-extras]) | Experimental tier |
+| JaxSim | `jaxsim==0.9.0` ([L163][pyproject-extras]) | Linux-only per its [README][jaxsim-readme] |
+| `mjx` backend | `mujoco-mjx`, `jax`, `jaxlib` ([L171][pyproject-extras]) | |
+| `mjwarp` backend | `mujoco-warp`, `warp-lang`; CUDA GPU ([L258][pyproject-extras]) | |
+| Pendulum, putting green | none beyond core | Analytical engines |
 
 ## The `PhysicsEngine` Contract {#physics-engine-contract}
 
-The suite-wide entry point is the
-[`PhysicsEngine`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/interfaces.py#L72-L95)
-protocol. It composes
-[`SimulationInterface`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/_simulation_interface.py)
-(load, step, state I/O) and
-[`DynamicsInterface`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/_dynamics_interface.py)
-(mass matrix, bias, Jacobians, drift/control).
+[`PhysicsEngine`][iface] is a `runtime_checkable` `Protocol` that composes
+[`SimulationInterface`][sim-if] (load, step, state I/O, capabilities) and
+[`DynamicsInterface`][dyn-if] (mass matrix, bias, Jacobian, drift and control). State machine from the
+interface docstring: **uninitialized, then `load_*`, then initialized**; `reset` returns to `t = 0`.
 
-State machine (from the interface docstring): **UNINITIALIZED → load → INITIALIZED → reset/step/forward**.
+Notation in the table: `n_q` is the length of `q`, `n_v` the length of `v` and of every acceleration,
+`n_u` the length of the control vector `u`. These differ: a free joint has `n_q = n_v + 1`, and a
+model with fewer actuators than DOFs has `n_u < n_v`. Units are those the docstrings state.
 
-### Core Method Table
-
-| Responsibility | Method | Typical signature / return | Units / shapes |
+| Method | Signature (as declared) | Shapes and units | Source |
 | --- | --- | --- | --- |
-| Load | `load_from_path(path: str)` | `None` | Path must exist; formats include `.xml`, `.urdf`, `.sdf`, `.osim` per docstring |
-| Load | `load_from_string(content, extension=None)` | `None` | Model definition string |
-| Time | `reset()` | `None` | `t → 0`, initial `(q₀, v₀)` |
-| Time | `step(dt: float \| None = None)` | `None` | **`dt` in seconds**; `None` uses the model or engine default (see §Defaults) |
-| Kinematics | `forward()` | `None` | Updates derived quantities without advancing `t` |
-| State | `get_state()` | `(q, v)` | `q: (n_q,)`, `v: (n_v,)` SI generalized coordinates / speeds |
-| State | `set_state(q, v)` | `None` | Matching lengths; triggers forward in implementations |
-| Control | `set_control(u)` | `None` | `u: (n_u,)` torques or actuator commands |
-| Time query | `get_time()` | `float` | Seconds, `≥ 0` |
-| Inertia | `compute_mass_matrix()` | `M` | `(n_v, n_v)`, SPD |
-| Bias | `compute_bias_forces()` | `h` | `(n_v,)` Coriolis, centrifugal, gravity |
-| Gravity | `compute_gravity_forces()` | `g` | `(n_v,)` |
-| Inverse dynamics | `compute_inverse_dynamics(qacc)` | `τ` | `τ = M(qacc) + h` |
-| Jacobian | `compute_jacobian(body_name)` | `dict` or `None` | Keys `linear`, `angular`, `spatial`; spatial rows **`[angular; linear]`** per [`SPATIAL_JACOBIAN_ORDER`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/capabilities.py#L28-L36) |
-| Drift | `compute_drift_acceleration()` | `a_drift` | `(n_v,)`, rad/s² or m/s² |
-| Control | `compute_control_acceleration(tau)` | `a_control` | `(n_v,)` |
-| Counterfactual | `compute_ztcf(q, v)`, `compute_zvcf(q)` | accelerations | **Legacy names:** see §PhysicsEngine Counterfactual Names; `compute_zvcf` is **not** site ZVCF |
-| Checkpoint | `save_checkpoint` / `restore_checkpoint` | varies | Via `Checkpointable` on `SimulationInterface` |
-| Features | `get_capabilities()` | `EngineCapabilities` | Optional UI/API feature gating |
+| `model_name` (property) | `-> str` | Empty string when nothing is loaded | [L22-L34][sim-if-name] |
+| `load_from_path` | `(path: str) -> None` | Docstring lists `.xml .urdf .sdf .osim`; raises `FileNotFoundError`, `ValueError`, `StateError` | [L44-L67][sim-if-load] |
+| `load_from_string` | `(content: str, extension: str \| None = None) -> None` | Raises `ValueError` on empty content | [L69-L88][sim-if-load] |
+| `reset` | `() -> None` | Docstring: `t = 0`, `q = q0`, `v = 0` | [L90-L104][sim-if-reset] |
+| `step` | `(dt: float \| None = None) -> None` | `dt` in s, must be `> 0`; `None` means "the model's default timestep" | [L106-L126][sim-if-step] |
+| `forward` | `() -> None` | Updates derived quantities, time and `(q, v)` unchanged | [L128-L146][sim-if-step] |
+| `get_state` | `() -> tuple[ndarray, ndarray]` | `q (n_q,)`, `v (n_v,)`, finite | [L148-L168][sim-if-state] |
+| `set_state` | `(q, v) -> None` | `q (n_q,)`, `v (n_v,)`; `ValueError` on mismatch | [L170-L191][sim-if-state] |
+| `set_control` | `(u: ndarray) -> None` | `u (n_u,)` actuator commands | [L193-L212][sim-if-state] |
+| `get_time` | `() -> float` | Seconds, `>= 0` | [L214-L230][sim-if-state] |
+| `get_capabilities` | `() -> EngineCapabilities` | Default reports `NONE` for every optional feature | [L270-L301][sim-if-caps] |
+| `compute_mass_matrix` | `() -> ndarray` | `(n_v, n_v)`, contract says symmetric positive definite | [L17-L37][dyn-if-mass] |
+| `compute_bias_forces` | `() -> ndarray` | `(n_v,)`, "Coriolis, centrifugal and gravity" | [L39-L56][dyn-if-mass] |
+| `compute_gravity_forces` | `() -> ndarray` | `(n_v,)` | [L58-L75][dyn-if-mass] |
+| `compute_inverse_dynamics` | `(qacc) -> ndarray` | `qacc (n_v,)` in, generalized force `(n_v,)` out | [L77-L101][dyn-if-mass] |
+| `compute_jacobian` | `(body_name: str) -> dict[str, ndarray] \| None` | `linear (3, n_v)`, `angular (3, n_v)`, `spatial` stacked `[angular; linear]` | [L103-L124][dyn-if-mass], [order][spatial-order] |
+| `compute_contact_forces` | `() -> ndarray` | `(3,)` force or `(6,)` wrench; the default returns zeros | [L126-L141][dyn-if-mass] |
+| `compute_drift_acceleration` | `() -> ndarray` | `(n_v,)` in rad/s² or m/s² | [L145-L175][dyn-if-drift] |
+| `compute_control_acceleration` | `(tau) -> ndarray` | `tau (n_v,)` in N·m or N; result `(n_v,)` | [L177-L215][dyn-if-drift] |
+| `compute_control_acceleration_at_state` | `(q, tau) -> ndarray` | Control term at configuration `q`; default delegates to a shared helper | [L217-L231][dyn-if-drift] |
+| `compute_gravity_only_acceleration` | `(q) -> ndarray` | Legacy diagnostic at `v = 0`, `u = 0` | [L233-L243][dyn-if-drift] |
+| `compute_ztcf` | `(q, v) -> ndarray` | Acceleration with applied torque zero at `(q, v)`, `(n_v,)` | [L247-L298][dyn-if-drift] |
+| `compute_zvcf` | `(q) -> ndarray` | **Deprecated shim**, see [below](#physicsengine-counterfactual-names) | [L300-L321][dyn-if-drift] |
+| `set_shaft_properties`, `get_shaft_state` | `(length, EI_profile, mass_profile, damping_ratio=0.02) -> bool`; `() -> dict \| None` | Optional; the default returns `False` / `None` | [L327-L376][dyn-if-drift] |
+| `save_checkpoint`, `restore_checkpoint`, `engine_type` | from `Checkpointable` | Signatures live in `checkpoint.py`, which was not read for this page | [interface docstring][iface] |
 
-**Bias meaning:** inverse dynamics implements **`τ = M(q̈) + h(q, v)`** where `h` is the bias from `compute_bias_forces()`. Drift and control split **acceleration** `q̈`, not torque directly.
+**Bias and torque.** The inverse-dynamics docstring states `tau = M(q) qacc + C(q,v) v + g(q)`,
+so the bias `h` from `compute_bias_forces` satisfies `M a + h = tau`. Drift and control split
+the acceleration `a`, not the torque.
 
-**Capability levels:** `get_capabilities()` reports per-feature support (`FULL`, `PARTIAL`, `NONE`, …) in
-[`capabilities.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/capabilities.py).
-The interface docstring states a design goal **`a_full ≈ a_drift + a_control`**, but implementations differ when constraints or contacts are active (§Drift vs control).
+### Where Implementations Deviate From the Declared Contract
 
-## Minimal Usage Pattern {#minimal-usage}
+These were read in the engine sources; none was run unless the row says so.
 
-Every engine follows the same call pattern after install in an UpstreamDrift checkout:
+| Item | Declared | What the code does | Source |
+| --- | --- | --- | --- |
+| `compute_jacobian` for an unknown body | Returns `None` | MuJoCo and Pinocchio raise `KeyError` | [MuJoCo L721-L726][mj-jac], [Pinocchio L545-L551][pin-jac] |
+| `set_state` refreshes derived quantities | "via `forward()`" | MuJoCo and Pinocchio call `forward`; Drake only sets positions and velocities | [MuJoCo L286-L308][mj-state], [Pinocchio L389-L403][pin-state], [Drake L279-L288][drake-state] |
+| `set_control(u)` length | `n_u` | MuJoCo checks `model.nu`; Pinocchio requires `n_v`; OpenSim checks `getNumControls()`; MyoSuite writes `ctrl` only if the lengths match and otherwise silently ignores it | [MuJoCo L310-L323][mj-state], [Pinocchio L405-L414][pin-state], [OpenSim L350-L385][os-control], [MyoSuite L106-L129][myo-core] |
+| `compute_gravity_forces` | `(n_v,)` | MyoSuite returns an empty array | [L60-L63][myo-dyn] |
+| `load_from_path` takes a file | File path | MyoSuite takes a Gym environment ID; the pendulum ignores the path; Pinocchio warns unless the path ends in `.urdf` | [MyoSuite L71-L87][myo-init], [Pendulum L101-L111][pend-load], [Pinocchio L163-L177][pin-load] |
+| `load_from_string` | Supported | MyoSuite raises `RuntimeError`; the pendulum ignores the content | [MyoSuite L109-L115][myo-init], [Pendulum L113-L119][pend-load] |
+| `step(dt)` honors `dt` | `dt` advances time | MyoSuite logs a warning and ignores a `dt` that differs from the model timestep, then calls `env.step(action)`; the putting-green engine advances time only and samples a precomputed trajectory | [MyoSuite L35-L58][myo-core], [Putting green L125-L131][putt-step] |
+| `compute_bias_forces` content | Coriolis, centrifugal, gravity | The pendulum also adds viscous damping `d(q, v)`; MuJoCo returns `qfrc_bias` | [Pendulum L199-L215][pend-bias], [MuJoCo L531-L538][mj-bias] |
+
+## Runnable Examples {#minimal-usage}
+
+All paths are relative to an UpstreamDrift checkout at the pinned commit, run with the repository
+root on `PYTHONPATH`. The three scripts in this section were executed; the output quoted is what they printed.
+
+### Pendulum Engine (Run)
+
+The analytical double-pendulum engine has no optional dependency, is initialized on construction,
+and ignores `load_from_path` ([L45-L70][pend-init], [L101-L111][pend-load]). A test that exercises the same
+calls is
+[`tests/engines/physics_engines/test_pendulum_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/tests/engines/physics_engines/test_pendulum_engine.py).
 
 ```python
-# Pattern (UpstreamDrift repo root on PYTHONPATH); paths are repository-relative.
-from pathlib import Path
+import numpy as np
+from src.engines.physics_engines.pendulum.python.pendulum_physics_engine import (
+    PendulumPhysicsEngine,
+)
 
-engine = MyEngineClass()  # MuJoCo, Drake, Pinocchio, Pendulum, OpenSim, MyoSuite, …
-engine.load_from_path(str(Path("src/engines/physics_engines/mujoco/models/simple_pendulum.xml")))
+engine = PendulumPhysicsEngine()
 engine.reset()
-q, v = engine.get_state()
-engine.set_state(q, v)
-engine.forward()
-a_drift = engine.compute_drift_acceleration()
-a_ctrl = engine.compute_control_acceleration(tau=engine.compute_mass_matrix() @ (0.1 * v))
+engine.set_state(np.array([0.3, 0.2]), np.zeros(2))   # q = [theta1, theta2] in rad
+q, v = engine.get_state()                              # shapes (2,), (2,)
+a_drift = engine.compute_drift_acceleration()          # [-4.66346321, 4.19728339] rad/s^2
+a_ctrl = engine.compute_control_acceleration(np.array([1.0, 0.5]))  # [0.07656478, 1.94276722]
+engine.step(0.001)    # get_time() -> 0.001
+engine.step()         # no dt: advances 0.01 s, so get_time() -> 0.011
 ```
 
-### Pendulum Engine (Lowest Dependency)
+### MuJoCo Engine, Free Chain and Closed Loop (Run)
 
-The analytical double-pendulum engine lives under
-[`pendulum_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py).
-`get_state()` returns **`q = [θ₁, θ₂]`**, **`v = [ω₁, ω₂]`** in radians and rad/s
-([`get_state`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L148-L152)).
-Default `step()` size when `dt is None`: **0.01 s**
-([`step`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L134-L136)).
+This script builds a two-link hinge chain with joint damping and two motors, loads it with
+`load_from_string`, and compares the engine's control term against `M^-1 tau` with and without an
+active `connect` equality constraint (tip pinned to a world site). It is not an UpstreamDrift test;
+the related UpstreamDrift unit tests are in
+[`tests/unit/engines/mujoco/test_drift_control.py`](https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/tests/unit/engines/mujoco/test_drift_control.py).
 
-### `ode` Simulation Backend (Club Double Pendulum)
+```python
+import numpy as np
+from src.engines.physics_engines.mujoco.python.mujoco_humanoid_golf.physics_engine import (
+    MuJoCoPhysicsEngine,
+)
 
-For rollouts without loading a full `PhysicsEngine`, the **`ode`** backend in
-[`simulation_backends`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md)
-wraps the same golf parameters as MuJoCo/MJX:
+LINKS = """
+<body name="l1" pos="0 0 1">
+  <joint name="j1" type="hinge" axis="0 1 0" damping="0.1"/>
+  <geom type="capsule" fromto="0 0 0 0 0 -0.5" size="0.02" mass="1"/>
+  <body name="l2" pos="0 0 -0.5">
+    <joint name="j2" type="hinge" axis="0 1 0" damping="0.1"/>
+    <geom type="capsule" fromto="0 0 0 0 0 -0.5" size="0.02" mass="1"/>
+    <site name="tip" pos="0 0 -0.5"/>
+  </body>
+</body>"""
+
+def model_xml(extra_site="", equality=""):
+    return ('<mujoco><option timestep="0.002" integrator="RK4"/>'
+            f"<worldbody>{extra_site}{LINKS}</worldbody>"
+            '<actuator><motor joint="j1"/><motor joint="j2"/></actuator>'
+            f"{equality}</mujoco>")
+
+def load(xml, q0):
+    e = MuJoCoPhysicsEngine()
+    e.load_from_string(xml, "xml")
+    e.set_state(np.array(q0), np.zeros(2))
+    return e
+
+q0, tau = [0.4, 0.3], np.array([2.0, -1.0])
+
+# Free chain: no contact, no equality constraint.
+e = load(model_xml(), q0)
+c = e.compute_control_acceleration(tau)
+m = np.linalg.solve(e.compute_mass_matrix(), tau)
+print(np.abs(c - m).max())            # 3.6e-15: control equals M^-1 tau
+
+# Closed loop: pin the tip to a world site placed at the tip position for q0.
+probe = load(model_xml(), q0)
+tip = probe.get_data().site_xpos[probe.get_model().site("tip").id]
+site = f'<site name="pin" pos="{tip[0]} {tip[1]} {tip[2]}"/>'
+eq = '<equality><connect site1="tip" site2="pin"/></equality>'
+e = load(model_xml(site, eq), q0)
+d = e.compute_drift_acceleration()
+c = e.compute_control_acceleration(tau)
+print(np.abs(c - m).max())                                       # 64.77: control differs from M^-1 tau
+print(np.abs(d + c - e._constrained_forward_acceleration(tau)).max())  # 1.1e-14: sum is a_full(tau)
+print(np.abs(e.compute_control_acceleration_at_state(np.array(q0), tau) - m).max())  # 0.0
+```
+
+The same session confirmed that in the free chain `compute_drift_acceleration()` differs from
+`-M^-1 compute_bias_forces()` by exactly `-M^-1 diag(0.1) v`, that is, joint damping is part of
+MuJoCo drift. `_constrained_forward_acceleration` is a private helper, used here only to check the identity.
+
+### `ode` Simulation Backend (Run)
+
+For rollouts without loading a `PhysicsEngine`, the `ode` backend wraps the analytical club
+model ([README L55-L67][sb-readme-usage]). Executed output: `trace.num_steps` is `201` and
+`trace.final_state().v` is `[0. 0.]`, because the default model starts at rest. Tests that call
+`make_backend("ode", ...)` include
+[`tests/research/test_double_pendulum_attribution.py`](https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/tests/research/test_double_pendulum_attribution.py).
 
 ```python
 from src.shared.python.simulation_backends import GolfModelParams, make_backend
 
-params = GolfModelParams.default()
-backend = make_backend("ode", params)
+backend = make_backend("ode", GolfModelParams.default())
 trace = backend.rollout(controls=None, horizon=200, dt=0.005)  # always pass dt explicitly
 ```
 
-Module map and backend choice table:
-[`simulation_backends/README.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L13-L39).
+### Sketches for the Other Engines (Not Run)
 
-### CLI Rollout Harness
+These are patterns, not verified programs. Each engine's behavior is read from the cited source, and
+UpstreamDrift tests that exercise the same methods are linked so a reader can run them.
 
-[`src/sim_run/engine_run.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/sim_run/engine_run.py#L96-L127)
-loads a named engine, **`load_from_string`**, **`reset`**, then **`step(timestep)`** with an
-**explicit `timestep` argument** — mirroring the advice to never rely on implicit defaults for
-cross-engine studies.
+- **Drake:** `DrakePhysicsEngine(time_step=0.001)`, then `load_from_path("model.urdf")` or `load_from_string(urdf, "urdf")`,
+  then `set_state`, `compute_drift_acceleration`, `compute_control_acceleration(tau)`
+  ([constructor][drake-init], [loading][drake-load]). Tests:
+  [`tests/unit/test_drake_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/tests/unit/test_drake_physics_engine.py).
+- **Pinocchio:** `PinocchioPhysicsEngine()`, `load_from_string(urdf, "urdf")` or `load_from_path("model.urdf")`; `q` has length
+  `model.nq`, `v` and `tau` have length `model.nv`; `step(dt, integrator="semi_implicit")` overrides the default `"rk4"`
+  ([load][pin-load], [step][pin-step]). Tests:
+  [`tests/unit/pinocchio/test_pinocchio_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/tests/unit/engines/pinocchio/test_pinocchio_physics_engine.py).
+- **OpenSim:** `OpenSimPhysicsEngine()`, `load_from_path("model.osim")`; `get_state` returns coordinate values and speeds
+  ([load][os-load]). The constructor warns that the engine is experimental. Tests:
+  [`tests/unit/test_opensim_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/tests/unit/test_opensim_physics_engine.py).
+- **MyoSuite:** `MyoSuitePhysicsEngine()`, `load_from_path("<gym-env-id>")` with a registered environment ID such as
+  `myoElbowPose1D6MRandom-v0` (the class docstring's example); `step` takes the last `set_control` action and ignores `dt`
+  ([load][myo-init], [step][myo-core]). Tests:
+  [`tests/unit/engines/myosuite/test_myosuite_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/tests/unit/engines/myosuite/test_myosuite_physics_engine.py).
+- **JaxSim:** `JaxSimBackend` exposes `compute_drift_acceleration` and `compute_control_acceleration(tau)` with `tau` of
+  shape `(6 + dofs,)` (floating base first); it defines no `compute_ztcf` or `compute_zvcf`
+  ([L390-L404][jax-dyn]). Tests:
+  [`tests/unit/engines/test_jaxsim_backend.py`](https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/tests/unit/engines/test_jaxsim_backend.py).
+- **Putting green:** `SharedPuttingEngine()` is a two-DOF point-mass ball model; `q = [x, y]` and `v` are in m and m/s
+  ([drift][putt-dyn]).
 
 ## What Is Inside Drift and Control? {#drift-control-semantics}
 
-The suite documents a **Section F** split: drift is “passive” acceleration with actuation cleared;
-control isolates the increment attributable to applied `τ`. **The passive term is not the same
-physical sum in every engine.**
+The interface declares drift as passive acceleration with actuation zero and control as the part
+due to applied `tau`, with the contract `a_drift + a_control = a_full`
+([L145-L215][dyn-if-drift]). **The code does not compute the same quantity in every engine.**
 
-| Engine | Drift implementation (code) | Control implementation | Active contact / equality in drift? | Superposition `a_drift + a_control = a_full` |
+| Engine | Drift (code path) | Contact and constraint forces in drift | Damping and passive forces in drift | Control (code path) |
 | --- | --- | --- | --- | --- |
-| **MuJoCo** | `mj_forward` with `ctrl=0`, external wrenches cleared; reads `qacc` ([`compute_affine_drift`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L652-L688)) | `a_full(τ) - a_drift` via constrained forward ([`compute_control_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L623-L650)) | **Yes** when constraints/contacts active | **No** under active contacts/equalities (docstring at `compute_control_acceleration`) |
-| **Drake** | `-M⁻¹ bias` from `CalcInverseDynamics` at `qacc=0` ([`_passive_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/drake/python/drake_physics_engine.py#L635-L647)) | `M⁻¹ τ` ([`compute_control_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/drake/python/drake_physics_engine.py#L649-L658)) | No contact solver in this path | Holds for unconstrained plant context |
-| **Pinocchio** | `pin.aba(model, data, q, v, τ=0)` ([`compute_drift_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L568-L582)) | `M⁻¹ τ` | **No** built-in contact in ABA path | Unconstrained models |
-| **OpenSim** | `-M⁻¹ * compute_bias_forces()` with muscles cleared ([`compute_drift_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L771-L788)) | `M⁻¹ τ` | Muscle / passive forces in bias | Pointwise; ZTCF uses `realizeAcceleration` ([`_zero_control_udot`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L1000-L1015)) |
-| **MyoSuite** | MuJoCo `forward` with `ctrl=0` ([`_drift_control.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/myosuite/python/_drift_control.py#L31-L45)) | `M⁻¹ τ` | Same family as MuJoCo | Same caveats as MuJoCo |
-| **Pendulum** | Analytical passive dynamics ([`compute_drift_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L245-L268)) | `M⁻¹ τ` | N/A | Teaching models |
-| **Putting green** | Rolling + slope drift ([`shared_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/putting_green/python/shared_engine.py#L216-L220)) | `τ / m` | Rolling resistance in drift | Specialized 2-D ball model |
-| **Simscape adapter** | **Deferred stub** | **Deferred stub** | N/A | Not available ([`adapter.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/simscape/adapter.py#L702-L722)) |
-| **JaxSim** | *Not verified in this pass* | *Not verified in this pass* | — | See UpstreamDrift `docs/engines/jaxsim.md` |
+| **MuJoCo** | `mj_forward` with `ctrl`, `qfrc_applied`, `xfrc_applied` zeroed; returns `qacc` ([L611-L630][mj-drift], [L663-L685][mj-drift]) | **Yes**: docstring says active constraint and contact forces are included | **Yes** (run): joint damping is included | `a_full(tau) - a_drift`, where `a_full` applies `tau` as `qfrc_applied` with `ctrl` zeroed ([L632-L661][mj-drift]) |
+| **Drake** | `-M^-1 * bias`, bias from `CalcInverseDynamics` at zero acceleration with gravity as the only external force ([L621-L647][drake-drift]) | **No**: none appears in this path; contact acts only inside the simulator advance | **No** damping term is added in this path | `M^-1 tau` ([L649-L671][drake-drift]) |
+| **Pinocchio** | `aba(q, v, 0)` ([L579-L593][pin-drift]) | **No**: no contact model in this path; `compute_contact_forces` returns zeros unless samples are injected | Not read; no damping term appears | `aba(q, v, tau) - aba(q, v, 0)`, which is `M^-1 tau` ([L600-L621][pin-drift]) |
+| **OpenSim** | `-M^-1 * ID(q, u, 0)` with `InverseDynamicsSolver` ([L771-L788][os-drift], [L476-L483][os-bias]) | Not read | The solver "includes the model's own forces"; the capability docstring says drift "keeps the model's forces at the state's muscle activations" ([L97-L115][os-caps], [L503-L525][os-bias]) | `M^-1 tau` ([L790-L811][os-drift]) |
+| **MyoSuite** | `ctrl` zeroed, `sim.forward()`, returns `qacc`; `qfrc_applied` and `xfrc_applied` untouched ([L29-L45][myo-drift]) | **Yes**, same MuJoCo forward pass | Same as MuJoCo (read) | `M^-1 tau` with `tau` a generalized force `(n_v,)`, unrelated to the muscle `ctrl` ([L47-L60][myo-drift]) |
+| **Pendulum** | `-M^-1 (C v + g + d)` ([L243-L263][pend-dyn]) | N/A | **Yes**: viscous damping `d`, defaults 0.4 and 0.25 N·m·s/rad ([constants][pend-damp]) | `M^-1 tau` ([L265-L296][pend-dyn]) |
+| **Putting green** | Slope plus rolling friction acceleration ([L216-L220][putt-dyn]) | Rolling friction yes | Rolling friction | `tau / m` ([L222-L226][putt-dyn]) |
+| **JaxSim** | `M^-1 (-bias)` ([L390-L395][jax-dyn]) | Not read | Not read | `M^-1 tau`, `tau` shape `(6 + dofs,)` ([L397-L404][jax-dyn]) |
+| **Simscape adapter** | Raises `NotImplementedError` ([L702-L722][simscape-drift], [L1169-L1172][simscape-drift]) | N/A | N/A | Raises `NotImplementedError` |
 
-**Constrained superposition:** when welds, loops, or contacts participate in forward dynamics, use the
-constraint-aware helpers in
-[`constrained_ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/constrained_ztcf_zvcf.py)
-(covered by unit tests under `tests/unit/simulation_backends/`). The unconstrained
-`M⁻¹ τ` control term is **not** additive with MuJoCo drift under active constraints.
+### When Does `a_drift + a_control` Equal the Full Acceleration?
 
-**ZTCF / ZVCF:** at a fixed state, UpstreamDrift defines ZTCF as the drift component and ZVCF as
-`M⁻¹ τ` with velocity and gravity terms zeroed; the split is exact pointwise but
-**not additive over trajectories** ([`simulation_backends/README.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L76-L82)).
+"Full acceleration" has to be named, because two different things are called that.
+
+| Engine | Sum versus the engine's own definition of `a_full` | Sum versus `M^-1 (tau - h)` | Basis |
+| --- | --- | --- | --- |
+| **MuJoCo** `compute_control_acceleration` | **Exact by construction**: control is defined as `a_full(tau) - a_drift`. Run: residual 1.1e-14 with an active `connect` constraint | Not equal when constraints or contacts are active; equal in the free chain (3.6e-15) | Run |
+| **MuJoCo** `compute_control_acceleration_at_state` | Not that identity: returns `M^-1 tau` at `q` with `v = 0`, even with constraints (run: 0.0 difference from `M^-1 tau`) | Equal | Run |
+| **Drake, Pinocchio, OpenSim, JaxSim, pendulum** | Algebraically `M^-1 (tau - bias)`, if `bias` is the same one used for drift | Equal | Read |
+| **MyoSuite** | **Not guaranteed**: drift comes from a constrained forward pass while control is the unconstrained `M^-1 tau`; no `a_full` is defined in the mixin | Not applicable | Read, not run |
+
+Two consequences follow. First, a MuJoCo drift on a model with a grip weld, ground contact or
+joint damping is not the drift of Drake or Pinocchio on the same model, so cross-engine drift
+comparisons need a model where those terms are absent or matched. Second, the MuJoCo
+`a_control` is the *constrained increment* attributable to `tau`; it equals `M^-1 tau` only when no
+equality constraint or contact is active, which the run above shows by 64.77 rad/s² on a pinned tip.
+
+**Constrained helpers.**
+[`constrained_ztcf_zvcf.py`][constrained-mod] re-solves the closed-loop reaction through a KKT
+projector for any provider that satisfies
+[`ConstrainedEquationsOfMotionProvider`][constrained-proto] (`closure_jacobian(q)` of shape `(m, n)`
+and `closure_drift(q, v)` of shape `(m,)`). It is a separate API over *equations-of-motion providers*,
+not a method of `PhysicsEngine`: the MuJoCo engine above does not route through it. This page did not
+enumerate which providers implement the protocol.
+
+**Not additive over trajectories.** The split is exact at a fixed state. Integrate three forked
+trajectories and the per-trajectory accelerations no longer sum to the base one
+([`superposition.py`][superposition-mod]).
 
 ## PhysicsEngine Counterfactual Names Versus AffineDrift Notation {#physicsengine-counterfactual-names}
 
 AffineDrift's [Notation Reference](notation.html) pins **ZVCF** to the pointwise control
 acceleration $M^{-1}\tau$ (equivalently $M^{-1}Bu$ at $\dot q=0$ with gravity excluded from the
-control operand). UpstreamDrift's `PhysicsEngine` protocol reuses older method names; they do **not**
-all match that contract.
+control operand). The `PhysicsEngine` protocol still carries an older method name that does **not** match.
 
 | Reader goal | AffineDrift term | UpstreamDrift API at this commit | Caution |
 | --- | --- | --- | --- |
-| Pointwise drift at fixed state | ZTCF (drift) | `compute_ztcf(q, v)` or `compute_drift_acceleration()` | Must match engine's passive definition (table above) |
-| Pointwise control acceleration | **ZVCF** ($M^{-1}\tau$) | `compute_control_acceleration(tau)` | Preferred when $\tau$ is explicit |
-| Same ZVCF in simulation backends | **ZVCF** ($M^{-1}\tau$) | [`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/ztcf_zvcf.py) | Canonical module for the NOTATION definition |
-| Zero-velocity bias acceleration | **zero-velocity baseline** (not ZVCF) | `compute_zvcf(q)` | Returns $q̈$ with $\dot q=0$ and $u=0$ — **do not call ZVCF on this site** |
+| Pointwise drift at fixed state | ZTCF (drift) | `compute_ztcf(q, v)` or `compute_drift_acceleration()` | At the current state the contract says they agree ([L247-L298][dyn-if-drift]); for OpenSim they are separate computations: ZTCF zeroes controls and reads `UDot` after `realizeAcceleration`, drift is `-M^-1 * bias` ([L983-L1018][os-ztcf]) |
+| Pointwise control acceleration | **ZVCF** ($M^{-1}\tau$) | `compute_control_acceleration(tau)`, or `compute_control_acceleration_at_state(q, tau)` | Under MuJoCo constraints the first is the constrained increment, the second is `M^-1 tau` |
+| Same ZVCF in simulation backends | **ZVCF** ($M^{-1}\tau$) | [`simulation_backends/ztcf_zvcf.py`][ztcf-mod] | Canonical module for the NOTATION definition |
+| Zero-velocity gravity acceleration | not ZVCF | `compute_gravity_only_acceleration(q)` | Legacy diagnostic ([L233-L243][dyn-if-drift]) |
+| Old `compute_zvcf(q)` | not ZVCF | Deprecated shim to the row above in MuJoCo, Pinocchio and the putting-green engine ([MuJoCo L921-L927][mj-drift]) | Drake keeps a direct gravity-only implementation ([L713-L756][drake-drift]); OpenSim and MyoSuite compute a zero-control, zero-velocity forward pass, which includes model forces or constraints ([OpenSim L1020-L1035][os-ztcf], [MyoSuite L80-L102][myo-drift]) |
 
 Calling `compute_zvcf(q)` and labeling the result "ZVCF" will not reconstruct
 $\ddot q \approx a_{\mathrm{ZTCF}}+a_{\mathrm{ZVCF}}$ under AffineDrift notation.
 
-## Integrator and Timestep Defaults {#integrator-defaults}
+## Integrator, Timestep, and Contact Defaults {#integrator-defaults}
 
-Always pass **`dt` explicitly** when comparing engines or publishing trajectories. Defaults differ:
+`step()` with no argument advances a different amount in each engine. Always pass `dt` explicitly when
+comparing engines or publishing trajectories.
 
-| Source | Default step | Integrator notes | Evidence |
+| Engine | Default step when `dt` is `None` | Integrator | Source |
 | --- | --- | --- | --- |
-| Suite constant | **0.001 s** | `DEFAULT_TIME_STEP` | [`core/constants.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/core/constants.py#L99-L101) |
-| MuJoCo golf / myo models | **0.002 s**, RK4 | Per-model `<option timestep="…" integrator="RK4"/>` | e.g. [`golfer.xml`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/models/generated/golfer.xml#L4) |
-| MuJoCo simple pendulum | **0.01 s** | Default MuJoCo integrator | [`simple_pendulum.xml`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/models/simple_pendulum.xml#L3) |
-| Pinocchio engine | Uses suite `DEFAULT_TIME_STEP` for stepping; **`integrator="rk4"`** default, **`semi_implicit` optional** | [`PinocchioPhysicsEngine.__init__`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L68-L104) |
-| OpenSim engine | **`_time_step = 0.01` s** | Simbody manager step | [`opensim_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L83-L83) |
-| Pendulum engine | **0.01 s** if `step(dt=None)` | Analytical RK inside dynamics | [`pendulum_physics_engine.step`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L134-L136) |
-| Drake | Discrete plant per model | Set at URDF/SDF load | Model-dependent |
-| `ode` / `mujoco` backends | **Caller-supplied `dt`** only | No implicit default in `rollout` | [`README.md` usage](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L57-L66) |
+| Suite constant | 0.001 s (`DEFAULT_TIME_STEP`) | Not applicable | [constants.py L99-L101][constants] |
+| MuJoCo | `model.opt.timestep` from the loaded MJCF; a given `dt` temporarily overrides it for one step | Whatever the MJCF sets. `generated/golfer.xml`: 0.002 s, `RK4` ([L4][golfer-xml]). `simple_pendulum.xml`: 0.01 s, no `integrator` attribute ([L3][pend-xml]), so the MuJoCo default applies (an external MuJoCo fact, not read in UpstreamDrift) | [step L226-L239][mj-step] |
+| Drake | `plant.time_step()`, which is the constructor argument `time_step`, default 0.001 s; passed to `AddMultibodyPlantSceneGraph`, so the plant is discrete | The code sets none; Drake's `Simulator` default applies via `AdvanceTo` | [L96-L111][drake-init], [L212-L221][drake-step] |
+| Pinocchio | `DEFAULT_TIME_STEP`, 0.001 s, a module constant (not per model) | `integrator` attribute defaults to `"rk4"`; `"semi_implicit"` (symplectic Euler) is the other option; per-call override with `step(dt, integrator=...)` | [L68-L69][pin-init], [L92-L104][pin-init], [L221-L248][pin-step] |
+| OpenSim | `_time_step = 0.01` s | `opensim.Manager.integrate`; integrator not set in this code | [L83][os-init], [L260-L278][os-step] |
+| MyoSuite | Ignored: a differing `dt` triggers a warning; the step is `env.step(action)`. `_dt` is 0.002 until a model loads, then `model.opt.timestep` | Environment-defined | [L27][myo-init], [L35-L58][myo-core], [L87][myo-init] |
+| Pendulum | 0.01 s | RK4 in `DoublePendulumDynamics.step` | [L134-L142][pend-step], [L506-L545][pend-damp] |
+| Putting green | `DT_S`, 0.002 s | No integration: trajectory planned once by `simulate_ball`, then sampled | [L125-L131][putt-step], [solver.py L90][putt-dt] |
+| JaxSim | `model.time_step` when present, else 0.0 | JaxSim `model.step` | [L241-L259][jax-step] |
+| `ode`, `mujoco`, `mjwarp`, `mjx` backends | None: `rollout(controls, horizon, dt)` takes `dt` | `ode`: analytical RK4 | [README L13-L30][sb-readme-map], [L55-L67][sb-readme-usage] |
 
-## Contact Parameters and Models {#contact-parameters}
+### Contact Parameters
 
-Qualitative differences and test tolerances are documented in
-[`docs/conventions/contact_models.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/docs/conventions/contact_models.md)
-(MuJoCo soft contact penetration tol **5e-3 m**, Drake rigid/compliant **1e-3 m**, Pinocchio constraint-based).
-
-Representative MuJoCo MJCF defaults in golf model generators:
-
-- **`condim="3"`** and **`friction="0.9 0.005 0.0001"`** on default geoms
-  ([`models_advanced.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/models_advanced.py#L52),
-  [`urdf_parser.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/urdf_parser.py#L49)).
-
-Ground contact for soft-feet biomechanics models often uses **`condim="3"`** with
-`friction="0.9 0.8 0"` on foot contact spheres in bundled MyoSuite golf MJCF
-([`golfer_myobody_driver.xml`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/shared/models/myosuite/golf/body/golfer_myobody_driver.xml#L23)).
-
-Pinocchio has **no** turnkey contact drift path in the ABA wrapper above; contact-heavy studies
-should prefer **MuJoCo** (or Drake hydroelastic / point contact, per `contact_models.md`).
+- MuJoCo reports its contact model as `soft_constraint_pgs` ([capabilities L140-L144][mj-caps]).
+  Generated golf MJCF uses default geoms with `condim="3"` and `friction="0.9 0.005 0.0001"`, and default joints with
+  `damping="0.5"` and `armature="0.01"` ([models_advanced.py L51-L54][models-adv], [urdf_parser.py L47-L52][urdf-parser]).
+  Bundled MyoSuite golf foot spheres use `solref="2e-05 2"` and `friction="0.9 0.8 0"` ([L23][myo-foot-xml]).
+- Drake reports `hydroelastic_or_point_contact` ([L315-L319][drake-caps]). No contact parameter is set in the engine
+  constructor read here.
+- Pinocchio reports `contact_forces=NONE` ([L149-L161][pin-caps]); its `compute_contact_forces` returns zeros unless
+  `set_contact_samples` was used ([L442-L467][pin-contact]).
+- The cross-engine penetration tolerances are test constants: 5e-3 m for MuJoCo and 1e-3 m for the rigid
+  case ([`test_contact_cross_engine.py` L46-L47][contact-test]), described in
+  [`docs/conventions/contact_models.md`][contact-doc].
+- The model defaults above are not engine defaults. `condim`, `friction`, and damping come from the MJCF a model supplies.
 
 ## Choosing an Engine {#engine-selection}
 
-UpstreamDrift maintains a capability matrix and selection guide in-repo:
+The table below is read from each engine's `get_capabilities()` (F = `FULL`, P = `PARTIAL`, N = `NONE`;
+an unset field defaults to `NONE` ([capabilities.py L223-L230][caps-defaults])). It reflects what the code
+declares, which differs from the prose matrix in `docs/engines/engine_capabilities.md` in places (for example,
+MyoSuite's `get_capabilities` does not set `drift_acceleration`).
 
-- Feature × engine table:
-  [`docs/engines/engine_capabilities.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/docs/engines/engine_capabilities.md)
-- Decision prose:
-  [`docs/engines/engine_selection_guide.md`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/docs/engines/engine_selection_guide.md)
-- Model ledger (which models exist per engine):
-  [`src/engines/model_inventory.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/model_inventory.py)
+| Engine | Mass matrix | Jacobian | Contact forces | Inverse dynamics | Drift | Muscles | Other declared |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| MuJoCo ([L119-L145][mj-caps]) | F | F | F | F | F | N | contact step F |
+| Drake ([L300-L320][drake-caps]) | F | F | F | F | F | N | contact step F, state/control gradients F, parameter gradients P, trajectory optimization F |
+| Pinocchio ([L149-L161][pin-caps]) | F | F | **N** | F | F | N | |
+| OpenSim ([L97-L131][os-caps]) | F | F | P | F | **P** | F | Muscle or torque control |
+| MyoSuite ([L73-L96][myo-caps]) | P | P | P | **N** | **N (unset)** | F | Activation-driven; contact step F |
+| JaxSim ([L450-L467][jax-caps]) | F | F | P | F | P | N | Parameter and state/control gradients F, trajectory optimization P |
+| Pendulum ([L83-L93][pend-caps]) | F | F | N | F | F | N | 2 DOF |
+| Putting green ([L93-L106][putt-caps]) | F | F | P | F | F | N | Contact step F, point-mass ball |
+| Simscape adapter ([L636-L641][simscape-caps]) | N | N | N | N | N | N | Drift and control raise `NotImplementedError` |
 
-Condensed decision hints **from those documents and this commit's code**:
+Decision guide, each line tied to the table or sections above:
 
-| Need | Practical direction at this commit | Why |
+| Need | Engine to start from | Reason from the code |
 | --- | --- | --- |
-| Soft contact, muscles, grip welds | **MuJoCo** (+ **MyoSuite** for bundled muscle MJCF) | Contact in drift path; Hill muscles MuJoCo-only per selection guide |
-| Trajectory optimization, hydroelastic contact planning | **Drake** | Selection guide prioritizes Drake trajopt / contact planning |
-| Lightweight rigid-body ID / Jacobians, no contact | **Pinocchio** | Fast ABA drift; contact not in default drift path |
-| Hill-type musculoskeletal forward sim | **OpenSim** (experimental tier) | Muscle bias in `compute_bias_forces`; ZTCF uses Simbody acceleration stage |
-| Teaching / double-pendulum parity | **Pendulum** engine or **`ode`** backend | Symbolic or analytical reference |
-| Differentiable batched rollouts | **`mjx`** backend | See backend table in `simulation_backends/README.md` |
-| GPU throughput sweeps | **`mjwarp`** backend | Batched rollouts; not faster for a single 2-DoF rollout |
-| Drift/control on Simscape Multibody | **Not available** | Adapter returns deferred stubs |
-| Counterfactuals on JaxSim | *Verify against current manifest* | Capability taxonomy lists partial contact / counterfactual gaps |
+| Drift or control with ground contact, welds or grip constraints | MuJoCo | Only MuJoCo declares full contact forces together with a drift that includes constraints; know that its drift is not the rigid-body bias |
+| Drift as pure `M^-1 (-bias)` for cross-engine comparison | Drake or Pinocchio | Their drift path contains no contact, constraint or damping term |
+| Rigid-body dynamics without contact | Pinocchio | `contact_forces` is `NONE`; its drift is `aba` with zero torque |
+| Gradients, trajectory optimization | Drake (declared F); JaxSim for parameter gradients (declared F) | `get_capabilities` fields |
+| Muscle-driven models | OpenSim or MyoSuite | Only these declare `muscles=FULL`; OpenSim drift is `PARTIAL`, MyoSuite has no inverse dynamics and no declared drift |
+| Teaching, double pendulum | Pendulum engine or `ode` backend | No optional dependency; run in [Runnable Examples](#minimal-usage) |
+| Many parallel rollouts | `mjwarp` (non-differentiable) or `mjx` (differentiable) | Backend table below; a single 2-DOF rollout is slower on GPU per the backend README |
+| Drift or control on a Simscape model | None through this protocol | Adapter raises `NotImplementedError` |
 
-AffineDrift's companion [Engines and Runtime Support](../models/programming/engines.html)
-lists provider support **tiers** only; this page is the code-grounded supplement.
+Support tiers (Supported, Extended, Experimental) are release-gate policy, not capability;
+they are listed in [Engines and Runtime Support](../models/programming/engines.html). UpstreamDrift's own
+[selection guide][sel-guide] and [capability matrix][cap-doc] were not re-verified line by line for this page.
 
 ## Cross-Engine Validation {#cross-engine-validation}
 
-The validator class
-[`CrossEngineValidator`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/cross_engine_validator.py)
-implements Guideline **P3** metric tolerances and severity ramps:
+[`CrossEngineValidator`][validator] compares two arrays by **maximum absolute deviation** against a
+per-metric tolerance (Guideline P3). The deviation is absolute, not relative
+([`compare_states` L500-L568][validator-compare]). A shape mismatch fails with an infinite deviation.
 
-| Metric key | Tolerance | Lines |
+| Metric key | Tolerance | Unit (code comment) |
 | --- | --- | --- |
-| `position` | 1e-6 m | [`TOLERANCES`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/cross_engine_validator.py#L231-L242) |
-| `velocity` | 1e-5 m/s | same |
-| `acceleration` | 1e-4 m/s² | same |
-| `torque` | 1e-3 N·m | same |
-| `jacobian` | 1e-8 | same |
-| `state_round_trip` | 1e-9 | same |
-| `end_effector` | 5e-3 m | same |
+| `position` | 1e-6 | m |
+| `velocity` | 1e-5 | m/s |
+| `acceleration` | 1e-4 | m/s² |
+| `torque` | 1e-3 | N·m |
+| `jacobian` | 1e-8 | dimensionless |
+| `state_round_trip` | 1e-9 | canonical-v2 state remap identity |
+| `end_effector` | 5e-3 | m (v1 parity target) |
+| `mass` | 1e-9 | kg |
+| `center_of_mass` | 1e-9 | m |
+| `inertia` | 1e-9 | kg·m² |
 
-Severity: warning at **80%** of tolerance, error at **10×**, blocker at **100×**
-([`WARNING_THRESHOLD` et al.](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/engine_core/cross_engine_validator.py#L244-L248)).
+Source: [`TOLERANCES` L231-L242][validator-tol]. A separate torque comparison, `compare_torques_with_rms`,
+passes when the RMS difference is below a percentage threshold, default 10% ([L677-L757][validator-rms]).
 
-Representative conformance checks include **state round-trip**, **forward kinematics**,
-**inverse/forward dynamics consistency**, **mass properties**, and **differential cross-engine reference**
-(methods near lines 284–403 in the same module).
+**Severity** (`deviation / tolerance`): at most 0.8 is `PASSED`; above 0.8 up to 1.0 is `WARNING` and still passes; above 1.0 up
+to 10 is `ERROR` and fails; **above 10 is `BLOCKER`** and fails ([`_classify_severity` L570-L608][validator-sev]).
+The constant `BLOCKER_THRESHOLD = 100` ([L244-L248][validator-tol]) appears only in the BLOCKER message text and the
+constructor invariant; it does not set the boundary the classifier applies.
 
-**User-facing compare command** for golf double-pendulum backends:
+**Checks implemented as `validate_*` methods:** state round trip ([L284][validator-checks]), forward kinematics
+against reference poses (L310), inverse-to-forward dynamics consistency (L337), post-export mass properties (L374), and
+differential comparison against a reference engine (L403). Checks that need a capability or method the adapter does
+not advertise are skipped, not failed, unless the capability query itself raises.
+
+**Registered divergences.** A deviation that fails its tolerance fails the check unless a
+[`DivergenceEntry`][validator-registry] (`id`, `check_name`, `metric_name`, an engine pair, its own `tolerance`,
+and a `rationale`) matches it and the deviation stays within that entry's tolerance
+([`enforce_divergence_registry` L438-L498][validator-enforce]). The registry loads from YAML via
+`DivergenceRegistry.from_yaml`; UpstreamDrift keeps one at
+[`docs/conformance/canonical_core_divergences.yaml`][divergence-yaml].
+
+**Compare command** for the golf double-pendulum backends (flags `--engines --horizon --dt --output` are
+documented in the [README][sb-readme-compare]; `--controls`, `--control-dim`, `--initial-q`, `--initial-v`,
+`--format` and `--export-rrd` also exist in [`compare_cli.py`][compare-cli]):
 
 ```bash
 python -m src.shared.python.simulation_backends.compare_cli \
-  --engines ode,mujoco \
-  --horizon 200 \
-  --dt 0.005 \
-  --output reports/ode_vs_mujoco.md
+  --engines ode,mujoco --horizon 200 --dt 0.005 --output reports/ode_vs_mujoco.md
 ```
 
-Documented in
-[`simulation_backends/README.md` § Cross-engine reports](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L112-L123).
-Registered divergences can be attached via the comparison service (`comparison.py` in the same package).
+This command was not executed for this page.
 
 ## Simulation Backends (`ode`, `mujoco`, `mjwarp`, `mjx`) {#simulation-backends}
 
-These backends implement
-[`SimulationBackend`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/README.md#L15-L18)
-for the shared `GolfModelParams` club model — orthogonal to full humanoid `PhysicsEngine` loads but
-the lowest-friction path to reproduce double-pendulum ZTCF/ZVCF analysis:
+These implement `SimulationBackend` for the shared `GolfModelParams` club model, orthogonal to full
+`PhysicsEngine` loads, and are the lowest-friction path to reproduce double-pendulum ZTCF and ZVCF analysis
+([README L13-L39][sb-readme-map]).
 
 | Backend | Device | Batched | Differentiable | Exposes `M`, bias |
 | --- | --- | --- | --- | --- |
@@ -285,16 +446,21 @@ the lowest-friction path to reproduce double-pendulum ZTCF/ZVCF analysis:
 | `mjwarp` | CUDA | yes | no | no |
 | `mjx` | JAX | yes | yes | no |
 
-Factory entry point:
-[`make_backend(name, params, **kwargs)`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/factory.py).
-Pointwise ZTCF/ZVCF on canonical-v2 trajectories:
-[`ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/simulation_backends/ztcf_zvcf.py)
-(see README § Pointwise ZTCF/ZVCF).
+`make_backend(name, params, **kwargs)` is the factory ([`factory.py`][factory]); requesting a backend whose extra
+is missing raises `BackendNotAvailableError` with an install hint. The pointwise ZTCF and ZVCF helpers
+consume canonical-v2 trajectory samples and do not integrate a counterfactual rollout
+([README L76-L110][sb-readme-ztcf]).
 
-Lower-body and putting-green specialized engines are documented under UpstreamDrift
-`docs/engines/` and the putting-green
-[`shared_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/putting_green/python/shared_engine.py)
-implementation; **unverified in this pass:** full lower-body `SPEC.md` walk-through.
+## Not Defined or Not Verified {#not-verified}
+
+- The `Checkpointable` signatures, the lower-body model `SPEC.md`, and the model inventory in
+  `src/engines/model_inventory.py` were not read for this page.
+- Drake and OpenSim spatial-Jacobian row order was not read; the suite convention is `[angular; linear]`
+  ([capabilities.py L28-L36][spatial-order]) and MuJoCo, Pinocchio and JaxSim were read to follow it.
+- Whether OpenSim and JaxSim drift include contact or constraint forces was not determined.
+- No integrator is set in the Drake, OpenSim or MyoSuite engine code; the defaults belong to those libraries.
+- Which providers implement `ConstrainedEquationsOfMotionProvider` was not enumerated.
+- UpstreamDrift tile IDs and CLI flags for launching each engine were not read.
 
 ## Related Articles
 
@@ -310,4 +476,97 @@ implementation; **unverified in this pass:** full lower-body `SPEC.md` walk-thro
 
 Refs #5620
 
-
+[pyproject-core]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/pyproject.toml#L33-L33
+[pyproject-extras]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/pyproject.toml#L149-L258
+[jaxsim-readme]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/jaxsim/README.md#L1-L14
+[iface]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/interfaces.py#L72-L95
+[sim-if]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_simulation_interface.py#L19-L301
+[sim-if-name]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_simulation_interface.py#L22-L34
+[sim-if-load]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_simulation_interface.py#L44-L88
+[sim-if-reset]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_simulation_interface.py#L90-L104
+[sim-if-step]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_simulation_interface.py#L106-L146
+[sim-if-state]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_simulation_interface.py#L148-L230
+[sim-if-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_simulation_interface.py#L270-L301
+[dyn-if]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_dynamics_interface.py#L13-L376
+[dyn-if-mass]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_dynamics_interface.py#L17-L141
+[dyn-if-drift]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/_dynamics_interface.py#L145-L376
+[spatial-order]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/capabilities.py#L28-L36
+[caps-defaults]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/capabilities.py#L191-L230
+[mj-step]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L226-L239
+[mj-state]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L286-L323
+[mj-bias]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L531-L538
+[mj-jac]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L714-L738
+[mj-drift]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L611-L699
+[mj-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L119-L145
+[drake-init]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/drake/python/drake_physics_engine.py#L96-L111
+[drake-load]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/drake/python/drake_physics_engine.py#L138-L164
+[drake-step]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/drake/python/drake_physics_engine.py#L212-L221
+[drake-state]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/drake/python/drake_physics_engine.py#L279-L298
+[drake-drift]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/drake/python/drake_physics_engine.py#L621-L756
+[drake-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/drake/python/drake_physics_engine.py#L300-L320
+[pin-init]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L68-L104
+[pin-load]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L163-L207
+[pin-step]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L221-L248
+[pin-state]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L389-L414
+[pin-contact]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L442-L467
+[pin-jac]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L538-L573
+[pin-drift]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L579-L673
+[pin-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L149-L161
+[os-init]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L73-L90
+[os-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L97-L131
+[os-load]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L145-L157
+[os-step]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L260-L278
+[os-control]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L350-L385
+[os-bias]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L476-L525
+[os-drift]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L771-L811
+[os-ztcf]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L983-L1035
+[myo-drift]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/myosuite/python/_drift_control.py#L29-L102
+[myo-init]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/myosuite/python/_engine_init.py#L20-L115
+[myo-core]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/myosuite/python/_simulation_core.py#L35-L129
+[myo-dyn]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/myosuite/python/_dynamics.py#L60-L63
+[myo-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/myosuite/python/myosuite_physics_engine.py#L73-L96
+[pend-init]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L45-L70
+[pend-load]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L101-L119
+[pend-step]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L134-L142
+[pend-bias]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L199-L215
+[pend-dyn]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L243-L296
+[pend-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L83-L93
+[pend-damp]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/pendulum_models/python/double_pendulum_model/physics/double_pendulum.py#L43-L45
+[putt-step]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/putting_green/python/shared_engine.py#L120-L131
+[putt-dyn]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/putting_green/python/shared_engine.py#L216-L226
+[putt-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/putting_green/python/shared_engine.py#L93-L106
+[putt-dt]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/putting_dynamics/solver.py#L90-L90
+[jax-dyn]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/jaxsim/jaxsim_backend.py#L390-L404
+[jax-step]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/jaxsim/jaxsim_backend.py#L241-L259
+[jax-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/jaxsim/jaxsim_backend.py#L450-L467
+[simscape-drift]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/simscape/adapter.py#L702-L722
+[simscape-caps]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/simscape/adapter.py#L636-L641
+[constants]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/core/constants.py#L99-L101
+[golfer-xml]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/models/generated/golfer.xml#L4-L4
+[pend-xml]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/models/simple_pendulum.xml#L3-L3
+[models-adv]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/models_advanced.py#L51-L54
+[urdf-parser]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/urdf_parser.py#L47-L52
+[myo-foot-xml]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/shared/models/myosuite/golf/body/golfer_myobody_driver.xml#L23-L23
+[contact-test]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/tests/integration/test_contact_cross_engine.py#L46-L47
+[contact-doc]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/docs/conventions/contact_models.md#L1-L55
+[sel-guide]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/docs/engines/engine_selection_guide.md
+[cap-doc]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/docs/engines/engine_capabilities.md
+[validator]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/cross_engine_validator.py#L182-L248
+[validator-tol]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/cross_engine_validator.py#L231-L248
+[validator-compare]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/cross_engine_validator.py#L500-L568
+[validator-sev]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/cross_engine_validator.py#L570-L608
+[validator-rms]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/cross_engine_validator.py#L677-L757
+[validator-checks]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/cross_engine_validator.py#L284-L308
+[validator-registry]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/cross_engine_validator.py#L103-L175
+[validator-enforce]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/engine_core/cross_engine_validator.py#L438-L498
+[divergence-yaml]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/docs/conformance/canonical_core_divergences.yaml
+[compare-cli]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/compare_cli.py#L28-L95
+[sb-readme-map]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/README.md#L13-L39
+[sb-readme-usage]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/README.md#L55-L67
+[sb-readme-ztcf]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/README.md#L76-L110
+[sb-readme-compare]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/README.md#L112-L127
+[factory]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/factory.py
+[ztcf-mod]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/ztcf_zvcf.py
+[constrained-mod]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/constrained_ztcf_zvcf.py#L1-L108
+[constrained-proto]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/protocol.py#L440-L457
+[superposition-mod]: https://github.com/D-sorganization/UpstreamDrift/blob/ca9d8887f2ed46de484b64615dd4a50148e07bd0/src/shared/python/simulation_backends/superposition.py#L1-L14
