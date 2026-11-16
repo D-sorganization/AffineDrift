@@ -1,57 +1,10 @@
-What it conveys:
+# Reachability and Drift: Draft Note
 
-- **Top panel**: visual proof of “drift explodes, control fades” as we approach impact.
-- **Bottom panel**: DCR goes from < 1 (control-dominated) to ≫ 10 (drift-dominated) → nice visual hook for your “collapse of control authority” sections.
+A drift-to-control ratio compares terms in a chosen model and metric at a given
+state. It is not evidence of a shrinking reachable set or a universal loss of
+control authority near impact.
 
----
-
-## 2. Control Cone Visualization (Relativity Analogy)
-
-Now for the fun one: a **control cone** diagram, inspired by light cones.
-
-We’ll plot:
-
-- Horizontal axis: time (normalized swing phase)
-- Vertical axis: “reachable deviation” from the nominal trajectory (abstracted as ±max deviation)
-- The cone narrows as time → impact, representing the reachable set shrinking as DCR explodes.
-
-You can drop this **as-is** into your Quarto paper as another figure:
-
-```{python}
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Time axis: start of backswing (0) to impact (1)
-t = np.linspace(0, 1, 500)
-
-# Define "cone half-width" as a simple decreasing function of time
-# Wide early (large reachable set), narrow near impact
-# Using a gaussian decay to ensure it shrinks towards impact
-max_dev = 0.4 * np.exp(-3 * t**2)  # Wide at t=0, narrow at t=1
-
-upper = max_dev
-lower = -max_dev
-
-plt.figure(figsize=(10, 5))
-
-# Fill the cone region
-plt.fill_between(t, lower, upper, alpha=0.3)
-
-# Nominal trajectory (zero deviation line)
-plt.plot(t, np.zeros_like(t), linestyle="--", linewidth=2)
-
-plt.title("Schematic of shrinking reachable set as the swing approaches impact\n(illustrative, not computed from dynamics)")
-plt.xlabel("Normalized Swing Phase (0 = Start, 1 = Impact)")
-plt.ylabel("Reachable State Deviation (Abstract Units)")
-plt.grid(True)
-
-# Annotate phases
-plt.text(0.05, 0.25, "Backswing:\nWide Control Cone", fontsize=10)
-plt.text(0.45, 0.18, "Transition:\nCone Tilting/Narrowing", fontsize=10)
-plt.text(0.8, 0.05, "Late Downswing:\nCone Collapse", fontsize=10)
-
-plt.tight_layout()
-plt.show()
-```
-
-> **Schematic, not a computed reachability set.** The $\exp(-3 t^{2})$ envelope above is chosen purely for visual clarity --- it is **not** derived from the golf-swing dynamics. A proper reachability computation would integrate the control-affine dynamics $\dot{x} = f(x) + G(x) u$ forward from the current state under the max-torque constraint $\lVert u \rVert_{\infty} \leq \tau_{\max}$ (e.g., via Hamilton--Jacobi reachability or funnel-library methods), and the resulting tube would in general be non-Gaussian, asymmetric, and task-dependent. This figure is a cartoon whose only purpose is to convey the qualitative *direction* of the effect: reachable-set volume collapses monotonically as the swing approaches impact.
+For a fixed state, drift translates the set of instantaneous accelerations; its
+width depends on the input map and admissible inputs. A finite-horizon reachable
+set also depends on the dynamics, initial state, input constraints, and remaining
+time. Its shape and size require a calculation for the stated system.

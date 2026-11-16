@@ -80,7 +80,8 @@ def test_geometry_of_motion_volume_ii_book_page_links_html_monograph() -> None:
     assert "Motion, Targets, and Timing" in landing
     assert "Orbital Stability and Transverse Linearization" in landing
     assert "volume2.html#trajectory-optimization" in landing
-    assert "volume2.html#ch-underactuation" in landing
+    assert "volume2.html#sec-ch-underactuation" in landing
+    assert "volume2.html#sec-throwing-away-the-target" in landing
 
 
 def test_geometry_of_motion_volume0_chapter_blurbs_match_topics() -> None:
