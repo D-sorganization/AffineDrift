@@ -1,4 +1,4 @@
 ---
 issue: 5602
-summary: "Correct GoM chapter 3 Lie brackets and relative-degree notation to use declared input vector fields."
+summary: "Correct GoM input-field notation, align print/web tangent and time-interval definitions, and declare damping units and contraction aliases."
 ---
