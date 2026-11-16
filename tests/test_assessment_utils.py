@@ -66,3 +66,14 @@ def test_classify_by_description(description: str, expected: str):
 
 def test_classify_unknown_returns_general():
     assert classify_assessment_category("Unknown Report") == "General"
+
+
+@pytest.mark.parametrize("category_id, expected", assessment_utils.CATEGORIES.items())
+@pytest.mark.parametrize("prefix", ["assessment_", "aSsEsSmEnT_"])
+def test_classify_source_ids_case_insensitively(category_id: str, expected: str, prefix: str):
+    assert classify_assessment_category(prefix + category_id.lower()) == expected
+
+
+@pytest.mark.parametrize("description", ["description", "catalog", "special topic", "dialogue"])
+def test_classify_does_not_match_partial_words(description: str):
+    assert classify_assessment_category("Report", description) == "General"
