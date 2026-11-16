@@ -71,9 +71,9 @@ def so3_log(rotation: Mat3, tol: float = SO3_ORTHOGONALITY_TOL) -> Vec3:
     cosine = (float(np.trace(rot)) - 1.0) / 2.0
     angle = float(np.arctan2(sine, cosine))
     if angle < _LOG_SMALL_ANGLE:
-        return cast(Vec3, skew_vec * (1.0 + angle * angle / 6.0))
+        return skew_vec * (1.0 + angle * angle / 6.0)
     if angle < _LOG_LARGE_ANGLE:
-        return cast(Vec3, skew_vec * (angle / sine))
+        return skew_vec * (angle / sine)
     # Near pi: S = (R + R^T)/2 = cos I + (1 - cos) n n^T is well conditioned.
     outer = (((rot + rot.T) / 2.0) - cosine * np.eye(3)) / (1.0 - cosine)
     pivot = int(np.argmax(np.diag(outer)))
