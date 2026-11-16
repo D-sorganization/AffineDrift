@@ -50,7 +50,37 @@ RAW_MATH_CLOSE = re.compile(
     r"^\s*\\end\{(equation|align|gather|multline|displaymath|eqnarray)\*?\}"
 )
 
-FENCE = re.compile(r"^\s*(?:```+|~~~+)")
+FENCE_RUN = re.compile(r"^\s*(`{3,}|~{3,})(.*)$")
+
+
+def fenced_lines(lines: list[str]) -> set[int]:
+    """Line numbers inside (or on) a code fence, per CommonMark fence rules.
+
+    A fence closes only on a run of the same character at least as long as the
+    opener, with nothing after it; a shorter or different fence inside is
+    content. Toggling on every fence-looking line misreads nested fences and
+    flips the rest of the file.
+    """
+    covered: set[int] = set()
+    opener: str | None = None
+    for number, line in enumerate(lines, 1):
+        match = FENCE_RUN.match(line)
+        if opener is None:
+            if match and not (match.group(1)[0] == "`" and "`" in match.group(2)):
+                opener = match.group(1)
+                covered.add(number)
+            continue
+        covered.add(number)
+        if (
+            match
+            and match.group(1)[0] == opener[0]
+            and len(match.group(1)) >= len(opener)
+            and not match.group(2).strip()
+        ):
+            opener = None
+    return covered
+
+
 DELIM = re.compile(r"^\s*\$\$\s*(?:\{#[^}]*\})?\s*$")
 ONELINE = re.compile(r"^\s*\$\$.+\$\$\s*(?:\{#[^}]*\})?\s*$")
 STARTS_LATEX = re.compile(
@@ -94,14 +124,11 @@ def math_lines(lines: list[str]) -> tuple[int, set[int]]:
     content-bearing delimiters alike.
     """
     inside: set[int] = set()
-    in_fence = False
+    fenced = fenced_lines(lines)
     depth = 0
     total = 0
     for number, line in enumerate(lines, 1):
-        if FENCE.match(line):
-            in_fence = not in_fence
-            continue
-        if in_fence:
+        if number in fenced:
             continue
         occurrences = line.count("$$")
         if depth:
@@ -122,14 +149,11 @@ def scan(path: Path) -> tuple[int | None, list[tuple[int, str]]]:
     if delims % 2:
         return delims, []
 
-    in_fence = False
+    fenced = fenced_lines(lines)
     in_raw_math = False
     bare: list[tuple[int, str]] = []
     for number, line in enumerate(lines, 1):
-        if FENCE.match(line):
-            in_fence = not in_fence
-            continue
-        if in_fence or number in inside or "$$" in line:
+        if number in fenced or number in inside or "$$" in line:
             continue
         if RAW_MATH_OPEN.match(line):
             in_raw_math = True

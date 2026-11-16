@@ -127,3 +127,30 @@ class TestScan:
         odd, bare = scan(write(tmp_path, text))
         assert odd is None
         assert bare == []
+
+
+class TestFenceLength:
+    """A longer or different fence is not closed by a shorter or other one."""
+
+    BARE = r"\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}) = \bm{u}"
+
+    def test_nested_shorter_fence_does_not_close_outer(self, tmp_path: Path) -> None:
+        """A ``` line inside a ```` block is content, so the bare line after is found."""
+        text = f"````markdown\n```python\nx = 1\n```\n````\n\n{self.BARE}\n"
+        _, bare = scan(write(tmp_path, text))
+        assert [n for n, _ in bare] == [7]
+
+    def test_tilde_fence_holding_backtick_fence(self, tmp_path: Path) -> None:
+        text = f"~~~\n```\n~~~\n\n{self.BARE}\n"
+        _, bare = scan(write(tmp_path, text))
+        assert [n for n, _ in bare] == [5]
+
+    def test_dollars_inside_nested_fence_are_not_counted(self, tmp_path: Path) -> None:
+        text = "````\n```\n$$\n```\n````\n"
+        odd, bare = scan(write(tmp_path, text))
+        assert odd is None and bare == []
+
+    def test_maths_inside_the_outer_fence_stays_ignored(self, tmp_path: Path) -> None:
+        text = f"````\n```\n{self.BARE}\n```\n````\n"
+        odd, bare = scan(write(tmp_path, text))
+        assert odd is None and bare == []
