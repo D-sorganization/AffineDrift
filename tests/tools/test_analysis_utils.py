@@ -211,6 +211,50 @@ class TestCollectErrorHandlingMetrics:
         assert result.bare_except_count == 0
 
 
+class TestErrorHandlingIgnoresNonStatements:
+    """try/except counts must come from syntax, not substrings (#5833)."""
+
+    def test_annotated_names_ending_in_try_are_not_try_blocks(self) -> None:
+        code = 'country: str = "x"\nretry: int = 0\nentry: int = 1\n'
+        assert collect_error_handling_metrics(code).try_count == 0
+
+    def test_comments_and_strings_are_not_counted(self) -> None:
+        code = '# avoid except: here\nx = "try: this"\n'
+        result = collect_error_handling_metrics(code)
+        assert result.try_count == 0
+        assert result.bare_except_count == 0
+
+    def test_nested_try_and_multiple_bare_excepts(self) -> None:
+        code = (
+            "try:\n"
+            "    try:\n"
+            "        pass\n"
+            "    except:\n"
+            "        pass\n"
+            "except ValueError:\n"
+            "    pass\n"
+            "try:\n"
+            "    pass\n"
+            "except:\n"
+            "    pass\n"
+        )
+        result = collect_error_handling_metrics(code)
+        assert result.try_count == 3
+        assert result.bare_except_count == 2
+
+    def test_try_finally_counts_without_bare_except(self) -> None:
+        code = "try:\n    pass\nfinally:\n    pass\n"
+        result = collect_error_handling_metrics(code)
+        assert result.try_count == 1
+        assert result.bare_except_count == 0
+
+    def test_unparseable_source_falls_back_to_word_bounded_match(self) -> None:
+        code = "retry: int = (\ntry:\n    pass\nexcept:\n"
+        result = collect_error_handling_metrics(code)
+        assert result.try_count == 1
+        assert result.bare_except_count == 1
+
+
 class TestAssessLoggingContent:
     """Tests for assess_logging_content()."""
 
