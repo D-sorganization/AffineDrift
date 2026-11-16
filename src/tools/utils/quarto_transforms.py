@@ -6,6 +6,7 @@ conversion pipelines or tested independently.
 
 from __future__ import annotations
 
+import json
 import re
 
 
@@ -96,11 +97,14 @@ def clean_quarto_latex_commands(content: str) -> str:
 
 
 def create_quarto_frontmatter(metadata: dict[str, str]) -> str:
-    """Create Quarto YAML frontmatter from a metadata dictionary."""
+    """Create frontmatter preserving required title/author/date strings literally.
+
+    Required metadata keys raise KeyError when absent. JSON-quoted scalars are
+    valid YAML and preserve quotes, backslashes and line breaks.
+    """
     frontmatter = "---\n"
-    frontmatter += f'title: "{metadata["title"]}"\n'
-    frontmatter += f'author: "{metadata["author"]}"\n'
-    frontmatter += f'date: "{metadata["date"]}"\n'
+    for key in ("title", "author", "date"):
+        frontmatter += f"{key}: {json.dumps(metadata[key])}\n"
     frontmatter += """format:
   html:
     toc: true
