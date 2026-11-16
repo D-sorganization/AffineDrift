@@ -15,13 +15,12 @@ DYNAMIC_IMPORT_RE = re.compile(r"""import\(\s*["']([^"']+)["']\s*\)""")
 
 def _extract_imports(path: Path) -> list[tuple[int, str]]:
     """Extract JS import specifiers and their line numbers from a file."""
-    imports: list[tuple[int, str]] = []
-    for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
-        for match in IMPORT_RE.finditer(line):
-            imports.append((line_no, match.group(1)))
-        for match in DYNAMIC_IMPORT_RE.finditer(line):
-            imports.append((line_no, match.group(1)))
-    return imports
+    text = path.read_text(encoding="utf-8")
+    matches = sorted(
+        (match for pattern in (IMPORT_RE, DYNAMIC_IMPORT_RE) for match in pattern.finditer(text)),
+        key=lambda match: match.start(),
+    )
+    return [(text.count("\n", 0, match.start()) + 1, match.group(1)) for match in matches]
 
 
 def _resolve_import_target(repo_root: Path, source_rel: str, specifier: str) -> str | None:
