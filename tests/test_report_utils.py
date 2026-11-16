@@ -33,7 +33,16 @@ def test_generate_report_from_finding_writes_file(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
-    "category_name", ['A "quoted" name', r"Path\name", "Line\nbreak", "Tab\tname"]
+    "category_name",
+    [
+        'A "quoted" name',
+        r"Path\name",
+        "Line\nbreak",
+        "Tab\tname",
+        "Unicode \u0085\u2028\u2029 separators",
+        "C1 \x7f\x80\x9f controls",
+        "Golf 🏌 and dynamics 𝑀",
+    ],
 )
 def test_issue_title_round_trips_yaml(tmp_path: Path, category_name: str) -> None:
     """Issue metadata preserves literal characters without breaking YAML."""

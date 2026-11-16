@@ -6,10 +6,11 @@ and GitHub-style issue documents from assessment findings.
 
 from __future__ import annotations
 
-import json
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
+
+import yaml
 
 from src.core.contracts import check_range, require
 
@@ -109,7 +110,9 @@ def generate_issue_document(
 
     report_filename = f"Assessment_{category_id}_{safe_name}.md"
 
-    title = json.dumps(f"Assessment Finding: Low Score in {category_name}", ensure_ascii=False)
+    title = yaml.safe_dump(
+        f"Assessment Finding: Low Score in {category_name}", default_style='"', allow_unicode=True
+    ).strip()
     content = f"""---
 title: {title}
 labels: jules:assessment,needs-attention
