@@ -107,3 +107,16 @@ def test_ch11_indexes_bridge_to_lead_trail_convention() -> None:
     """Counterfactual geometry uses contact indices; ch11 must map them to companion lead/trail labels (#5609 F2)."""
     text = _chapter_text("ch11_counterfactual_scissors.qmd")
     assert "sec-lay-ch04" in text or "lead/trail" in text.lower()
+
+
+def test_ch06_opposing_force_increment_matches_trail_minus_lead_separation() -> None:
+    """The lead-positive force pair has moment minus d cross f (#5609 F2)."""
+    text = _chapter_text("ch06_constraints_push_back.qmd")
+    assert r"\Delta\mathbf M=-\mathbf d\times\mathbf f" in text
+    assert r"\Delta\mathbf M=+\mathbf d\times\mathbf f" not in text
+
+
+def test_ch11_contact_mapping_preserves_defined_separation() -> None:
+    """With p1=c+d/2, contact 1 is trail when d points lead to trail."""
+    text = _chapter_text("ch11_counterfactual_scissors.qmd")
+    assert "$1$ as trail ($T$) and $2$ as lead ($L$)" in text
