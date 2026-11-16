@@ -382,6 +382,10 @@ jobs:
         run: python3 scripts/check_learning_path_resources.py
       - name: Verify Quarto Citation Integrity
         run: python3 scripts/check_qmd_citation_keys.py
+      - name: Verify Physics of Golf Citation Integrity
+        # Offline regression gate for PoG review findings F7–F10 (#5600): bib key
+        # renames, Jorgensen edition metadata, and ch25/ch27/ch28 source citations.
+        run: python3 scripts/check_golf_physics_citation_integrity.py
       - name: Verify Claim-Audit Evidence Ledgers
         # PR-time twin of deploy-website.yml "Enforce scientific claim-audit
         # coverage" minus the rendered-manifest join (which needs a full render).
