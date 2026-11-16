@@ -42,9 +42,8 @@ BLOCK = re.compile(
     r"\\end\{(?:equation|align|gather|multline|displaymath|eqnarray)\*?\}",
     re.MULTILINE,
 )
-# A code span's closing backticks are not followed by another backtick or a word
-# character. Without that, "``a'' and ``b''" reads "``a'' and ``" as one code span
-# and hides both the second opener and the first pair's closer.
+# Avoid treating the next LaTeX opener followed by a word as a code closer.
+# masked() also protects adjacent pairs beginning with punctuation or whitespace.
 INLINE = re.compile(r"\$\$.+?\$\$|\$[^$\n]+\$|`{1,3}[^`\n]+`{1,3}(?![`\w])")
 PAIRED = re.compile(r"``(.+?)''", re.DOTALL)
 
@@ -60,7 +59,14 @@ def masked(text: str) -> str:
 
     for match in BLOCK.finditer(text):
         blank(match.start(), match.end())
-    for match in INLINE.finditer("".join(out)):
+    inline_text = "".join(out)
+    for match in INLINE.finditer(inline_text):
+        first = PAIRED.match(inline_text, match.start())
+        following = PAIRED.match(inline_text, match.end() - 2)
+        # Adjacent LaTeX pairs can resemble a code span ending at the next
+        # opening quote. Preserve both pairs, regardless of the next character.
+        if first is not None and following is not None and first.end() <= following.start():
+            continue
         blank(match.start(), match.end())
     return "".join(out)
 

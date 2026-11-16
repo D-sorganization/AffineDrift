@@ -94,6 +94,16 @@ class TestMultiplePairsAndLongFences:
         text = f"He said {quoted('first')} and then {quoted('second')} to us.\n"
         assert [q for _, q in find(text)] == ["first", "second"]
 
+    def test_punctuation_at_second_opener_does_not_hide_either_pair(self) -> None:
+        """A quote after punctuation is still prose, not an inline-code closer."""
+        for second in ("(second)", '"second"', r"\alpha", " second"):
+            text = f"He said {quoted('first')} and {quoted(second)} to us.\n"
+            assert [q for _, q in find(text)] == ["first", second]
+
+    def test_double_backtick_code_with_apostrophes_remains_masked(self) -> None:
+        """A real code closer must not be mistaken for another quotation."""
+        assert find("Use ``literal''`` here.\n") == []
+
     def test_pair_then_inline_code_still_finds_the_pair(self) -> None:
         text = f"The {quoted('tangent')} of `f` is flat.\n"
         assert [q for _, q in find(text)] == ["tangent"]
