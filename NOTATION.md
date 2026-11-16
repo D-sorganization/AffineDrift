@@ -656,6 +656,10 @@ $\gamma=\dot J_c v$ in a fixed contact mode:
 | $a_0^c$ | $-P_v M^{-1} h - M^{-1} J_c^\top K_c^{-1}\gamma$ | Constrained drift acceleration |
 | $B_a^c$ | $P_v M^{-1} B$ | Constrained input acceleration map |
 
+For two translational coordinates with $M=\operatorname{diag}(2,4)$ kg
+and $J_c=[1,1]$, the constraint matrix is $K_c=0.75$ kg$^{-1}$ and
+$\Lambda_c=4/3$ kg. The reciprocal units distinguish the two operators.
+
 Chapter 3 Superposition writes $\Pi_M$ as $P$ in $P=I-M^{-1}J^T W^{-1}J$ with
 $W=JM^{-1}J^T$. Chapter 3b and induced-acceleration ledgers use $\mathcal{H}_M$,
 not $P$, for the map that premultiplies $Q_0$ or $B$. Using $P$ for both the

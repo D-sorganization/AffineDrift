@@ -391,20 +391,17 @@ Saturation composed with a raw command generally makes the raw-command map piece
 
 ### The Order of Motions Can Matter
 
-For smooth vector fields $f$ and $G_j$, where $G_j$ is the j-th column
-of $G(x)\in\mathbb{R}^{n_x\times m}$, use the bracket convention
+For smooth vector fields, use the convention
 $$
-[f,G_j](x)=DG_j(x)f(x)-Df(x)G_j(x).
+[f,g](x)=DG(x)f(x)-Df(x)G(x).
 $$
-Each column $G_j$ is an $n_x$-vector and $DG_j$ is an $n_x\times n_x$
-Jacobian; the full input matrix $G$ is not a single vector field when $m>1$.
 Comparing short flow compositions in opposite orders produces a second-order difference involving this bracket, with a sign determined by the chosen composition order. This describes how the directions change as the state changes. It does not mean that any signed field, especially the uncontrolled drift, is physically reversible on demand.
 
-For second-order mechanics $f=(v,a_0(q,v))$ and a configuration-dependent input field $G_j=(0,h_j(q))$,
+For second-order mechanics $f=(v,a_0(q,v))$ and a configuration-dependent input field $g_j=(0,h_j(q))$,
 $$
-[f,G_j]=\begin{bmatrix}-h_j\\D_qh_j\,v-D_va_0\,h_j\end{bmatrix}.
+[f,g_j]=\begin{bmatrix}-h_j\\D_qh_j\,v-D_va_0\,h_j\end{bmatrix}.
 $$
-The bracket has a configuration component, not merely an acceleration in an unactuated coordinate. Even a fully actuated $n$-coordinate system has at most $n$ immediate input directions in a $2n$-dimensional state space; time integration connects acceleration to velocity and position. For the normalized undamped pendulum, $f=(v,-\sin q)$ and $G_1=(0,1)$ give $[f,G_1]=(-1,0)$, so $G_1$ and $[f,G_1]$ span the two state directions without any intersegment inertia coupling.
+The bracket has a configuration component, not merely an acceleration in an unactuated coordinate. Even a fully actuated $n$-coordinate system has at most $n$ immediate input directions in a $2n$-dimensional state space; time integration connects acceleration to velocity and position. For the normalized undamped pendulum, $f=(v,-\sin q)$ and $g=(0,1)$ give $[f,g]=(-1,0)$, so $g$ and $[f,g]$ span the two state directions without any intersegment inertia coupling.
 
 ### Accessibility Is Not Controllability
 
@@ -416,8 +413,7 @@ For a golf mechanism, a proposed transfer into an unactuated shaft mode must be 
 
 ## Feedback Linearization Has a Local Domain of Validity
 
-For a smooth single-input system $\dot x=f(x)+G(x)u$ with scalar output $y=h(x)$,
-write $G_1(x)=G(x)$ for its only input column. A constant relative degree $r$ on a neighborhood requires $L_{G_1}L_f^kh=0$ there for $k=0,\ldots,r-2$, and $b(x)=L_{G_1}L_f^{r-1}h\ne0$. Then
+For a smooth single-input system $\dot x=f(x)+G(x)u$ with scalar output $y=h(x)$, a constant relative degree $r$ on a neighborhood requires $L_gL_f^kh=0$ there for $k=0,\ldots,r-2$, and $b(x)=L_gL_f^{r-1}h\ne0$. Then
 $$
 y^{(r)}=L_f^rh+b(x)u,\qquad
 u=\frac{\nu-L_f^rh}{b(x)}
