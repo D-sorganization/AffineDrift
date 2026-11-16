@@ -243,7 +243,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5620 · UpstreamDrift Engine Protocol Reference Page (Drift/Control, Defaults, Validation).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5620
 - **Branch:** cursor/engine-protocol-reference-5620-615e
@@ -256,7 +256,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5602 · Harmonise Geometry of Motion Notation With NOTATION.md: Constrained Symbols, Transverse Coordinates, Chapter Notation Notes.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5602
 - **Branch:** cursor/gom-notation-harmonise-dd74
@@ -269,7 +269,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5598 · Physics of Golf Content Corrections (Piezo Form, Shaft Cn, Cross-Refs, Pedagogy)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5598
 - **Branch:** cursor/pog-content-corrections-5598-1e70
@@ -282,7 +282,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5625 · Document UpstreamDrift Humanoid Balance, WBC, and Learning/Analytics Gaps Grounded in Code.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5625
 - **Branch:** cursor/ud-learning-humanoid-5625-2b2c
@@ -295,7 +295,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5596 · Add Llms.Txt Agent Entry Point, Extend Symbol Registry V2 From NOTATION.md, and CI Freshness Gates.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5596
 - **Branch:** cursor/agent-readiness-5596-3da0
@@ -308,7 +308,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5623 · UpstreamDrift Capture-to-Model Pipeline Reference (Calibration Through Export).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5623
 - **Branch:** cursor/capture-to-model-pipeline-5623-43e3
@@ -321,7 +321,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5684 · Normalize SBOM Git Commit Timestamps to UTC Z for CycloneDX Determinism Across Git %cI Formats.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5684
 - **Branch:** cursor/shared-sbom-timestamp-1914
@@ -334,7 +334,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5643 · Programming Companion Onboarding Entrypoints; Datasets Ledger CC BY 4.0 Alignment.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5643
 - **Branch:** cursor/fix-onb-04-onb-07-5643-0eb3
@@ -347,7 +347,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5642 · Gemini Panel CVE-A3–A6: Technology Article Citation Fixes, Launch-Monitor Figure Generator, Cheetham Significance.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5642
 - **Branch:** cursor/issue-5642-gemini-panel-8ee7
@@ -360,7 +360,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5641 · Wrist Article: Evidence-Aligned Constraint Takeaway, Illustrative Iγ Label, UpstreamDrift Simscape Links.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5641
 - **Branch:** cursor/wrist-article-evidence-5641-9e6e
@@ -373,7 +373,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5640 · Align Theory-Part1 Front Matter With the Model-Conditioned Drift Contract.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5640
 - **Branch:** cursor/theory-part1-front-matter-5640-5385
@@ -386,7 +386,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5639 · Shot-Pattern Article Artifacts, Generators, and Trust Ledger Evidence Paths.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5639
 - **Branch:** cursor/shot-pattern-repro-5639-362c
@@ -399,7 +399,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5626 · Publish UpstreamDrift Getting-Started and Headless/Agent Guides; README Install CI Gate; Llms.Txt
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5626
 - **Branch:** cursor/upstreamdrift-getting-started-5626-8182
@@ -412,7 +412,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5624 · Document UpstreamDrift Ball Flight, Impact, Putting and Injury Models With Site–Code Mismatch Flags (Refs #5624).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5624
 - **Branch:** cursor/ud-physics-models-5624-6ace
@@ -425,7 +425,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5622 · FDM Runtime Reference: Acceptance Gates, Two-Window Fit, Ground-Support Pipeline, Contact Law, Glossary
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5622
 - **Branch:** cursor/motion-matching-glossary-5622-8405
@@ -438,7 +438,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5621 · MuJoCo Golf Model-Map Reference With Vendored MJCF Snapshots and Generator (Slice 1).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5621
 - **Branch:** cursor/golf-model-maps-5621-d77a
@@ -451,7 +451,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5619 · Add UpstreamDrift Conventions Reference Page (Pinned C8814a1b9d) With Nav Entry
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5619
 - **Branch:** cursor/upstreamdrift-conventions-ref-0c2c
@@ -464,7 +464,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5618 · Fix Learning-Path and Resources Citations, Chapter Pointers, and Workflow Install Commands
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5618
 - **Branch:** cursor/fix-learning-paths-resources-5618-288d
@@ -477,7 +477,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5615 · Remove Stale Motion-Control JSX/Transcript; Align Companions With Rewritten Chapters.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5615
 - **Branch:** cursor/motion-control-companion-reconcile-35e5
@@ -490,7 +490,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5613 · Mechanics Reference Notation: Mobility Disambiguation, Fibre Symbols, Reciprocity, ICC Front Matter
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5613
 - **Branch:** cursor/mech-ref-5613-6fb2
@@ -503,7 +503,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5612 · Tangent-Hyperplane Notation, Rate-Set Definition, Citations
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5612
 - **Branch:** cursor/tangent-notation-5612-8b6c
@@ -516,7 +516,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5610 · Proximal-Distal Energy Ledger, Closure Claims, and H4 Verdict Strength.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5610
 - **Branch:** cursor/pde-energy-ledger-closure-7b2c
@@ -529,7 +529,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5609 · Unify Lay Companion UpstreamDrift Pin and Fix Review Defects
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5609
 - **Branch:** cursor/pdc-upstream-pin-5609-9e7e
@@ -542,7 +542,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5608 · FDM Book: Hermite-Simpson, Notation Table, Core Equations, UD Link Fixes
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5608
 - **Branch:** cursor/fdm-5608-equations-notation-3efd
