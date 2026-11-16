@@ -58,6 +58,8 @@ def generate_glossary_qmd(glossary: dict[str, dict[str, Any]]) -> str:
         "---",
         'title: "Site Glossary"',
         'description: "Site-wide glossary of biomechanics, control theory, golf physics, and governance terms with plain-language and technical definitions."',
+        "schema-type: DefinedTermSet",
+        "schema-url: https://affinedrift.com/pages/glossary.html",
         "toc: true",
         "toc-depth: 2",
         "categories:",
