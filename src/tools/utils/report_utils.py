@@ -6,6 +6,7 @@ and GitHub-style issue documents from assessment findings.
 
 from __future__ import annotations
 
+import json
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -108,8 +109,9 @@ def generate_issue_document(
 
     report_filename = f"Assessment_{category_id}_{safe_name}.md"
 
+    title = json.dumps(f"Assessment Finding: Low Score in {category_name}", ensure_ascii=False)
     content = f"""---
-title: "Assessment Finding: Low Score in {category_name}"
+title: {title}
 labels: jules:assessment,needs-attention
 ---
 
