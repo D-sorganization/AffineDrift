@@ -308,6 +308,50 @@ class BallFlightDynamics(DynamicalSystem):
         trajectory[-1] = self._state_from_vector(state_vec)
         logger.debug("Ball landed at t=%.3f s, x=%.1f, y=%.1f", t, state_vec[0], state_vec[1])
 
+    @staticmethod
+    def _interpolate_landing(
+        previous: np.ndarray[Any, Any],
+        current: np.ndarray[Any, Any],
+        dt: float,
+    ) -> np.ndarray[Any, Any]:
+        """Return the state at the ground crossing within one integration step.
+
+        Position follows the cubic Hermite interpolant through both end states
+        (using their velocities), which is exact for ballistic flight; velocity
+        and spin are interpolated linearly. The crossing fraction is found by
+        bisection on the interpolated height. When the step did not start above
+        ground, the step-end state is clamped to ``z = 0`` instead.
+        """
+        if previous[2] <= 0.0:
+            clamped: np.ndarray[Any, Any] = current.copy()
+            clamped[2] = 0.0
+            return clamped
+
+        p0, p1 = previous[0:3], current[0:3]
+        m0, m1 = previous[3:6] * dt, current[3:6] * dt
+
+        def hermite(s: float) -> np.ndarray[Any, Any]:
+            s2, s3 = s * s, s * s * s
+            return (
+                (2 * s3 - 3 * s2 + 1) * p0
+                + (s3 - 2 * s2 + s) * m0
+                + (-2 * s3 + 3 * s2) * p1
+                + (s3 - s2) * m1
+            )
+
+        lo, hi = 0.0, 1.0
+        for _ in range(60):
+            mid = 0.5 * (lo + hi)
+            if hermite(mid)[2] > 0.0:
+                lo = mid
+            else:
+                hi = mid
+        frac = hi
+        landed: np.ndarray[Any, Any] = previous + frac * (current - previous)
+        landed[0:3] = hermite(frac)
+        landed[2] = 0.0
+        return landed
+
     def _clamp_to_ground(self, state_vec: np.ndarray[Any, Any], t: float) -> BallFlightState:
         """Backward-compatible helper that clamps a raw state vector to ground level."""
         state_vec = state_vec.copy()
@@ -343,6 +387,7 @@ class BallFlightDynamics(DynamicalSystem):
 
         t = 0.0
         while t < max_time:
+            previous = state_vec
             state_vec = self._rk4_step(state_vec, u, dt)
             t += dt
             if not np.all(np.isfinite(state_vec)):
@@ -354,9 +399,12 @@ class BallFlightDynamics(DynamicalSystem):
                 )
             trajectory.append(self._state_from_vector(state_vec))
 
-            # Stop if ball has hit the ground (z <= 0) after initial launch
-            if state_vec[2] <= 0.0 and t > dt:
-                self._clamp_landing(state_vec, trajectory, t)
+            # Stop at the first ground crossing; the first step counts too.
+            if state_vec[2] <= 0.0 and (previous[2] > 0.0 or t > dt):
+                trajectory.pop()
+                landed = self._interpolate_landing(previous, state_vec, dt)
+                trajectory.append(self._state_from_vector(landed))
+                logger.debug("Ball landed at t=%.3f s, x=%.1f, y=%.1f", t, landed[0], landed[1])
                 break
 
         return trajectory
