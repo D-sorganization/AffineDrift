@@ -1,5 +1,5 @@
 ---
-type: fix
-scope: tooling
+issue: 5839
+summary: Share line-preserving matching fence parsing across citation and raw-theorem lints
 ---
-Share line-preserving code-fence parsing across citation and raw-theorem lints, including tilde fences and matching closing lengths (#5839).
+Handle tilde fences, longer matching closers, mismatched marker characters, and unclosed examples without losing source line numbers.
