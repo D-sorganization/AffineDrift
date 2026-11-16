@@ -232,6 +232,9 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-16 | #5735 | Align Bosch integration assembly instructions with rewritten motion-control chapters. |
+| 2026-11-16 | #5734 | Add PoG ch06/ch07 UpstreamDrift implementation bridge callouts and ledger entries. |
+| 2026-11-16 | #5725 | Site frames table, PoG wrench ordering, delivery-angle table, and launch-monitor appendix alignment (partial #5593). |
 | 2026-11-15 | #5731 | Add #5643 onboarding and datasets licence regression tests |
 | 2026-11-15 | #5733 | Lock Theory Part 1 front-matter control wording with regression tests. |
 | 2026-11-15 | #5732 | Disambiguate PhysicsEngine.compute_zvcf from site ZVCF on engine protocol page. |

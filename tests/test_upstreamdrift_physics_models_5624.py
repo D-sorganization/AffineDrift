@@ -134,3 +134,12 @@ def test_critical_grade_row_uses_roll_partition_threshold() -> None:
     row = next(line for line in inventory.splitlines() if "Critical grade @ Stimp 10" in line)
     assert "~7.84 %" in row
     assert "$(7/5)\\mu_r$" in row or "(7/5)" in row
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("payload", [[], None, "invalid", 42])
+def test_contract_rejects_non_object_payload(tmp_path: Path, payload: object) -> None:
+    path = tmp_path / "contract.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(ValueError, match="must be a JSON object"):
+        load_contract(path)

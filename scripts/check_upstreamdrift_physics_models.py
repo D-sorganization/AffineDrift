@@ -7,7 +7,7 @@ import json
 import sys
 import urllib.error
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from scripts.pinned_https import GITHUB_RAW_HOST, read_pinned_https, require_commit_sha
 
@@ -18,10 +18,12 @@ RAW_SOURCE = f"https://{GITHUB_RAW_HOST}/D-sorganization/UpstreamDrift/{{commit}
 
 def load_contract(path: Path = CONTRACT_PATH) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"contract in {path} must be a JSON object")
     schema = payload.get("schema_version")
     if schema != "affinedrift/upstreamdrift-physics-models-contract/v1":
         raise ValueError(f"unexpected contract schema in {path}: {schema!r}")
-    return payload
+    return cast(dict[str, Any], payload)
 
 
 def fetch_upstream_file(commit: str, relative_path: str) -> str:
