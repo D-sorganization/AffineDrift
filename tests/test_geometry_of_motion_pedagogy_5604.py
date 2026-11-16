@@ -56,10 +56,9 @@ def test_5604_vol0_ch02_stability_observability_use_quarto_equation_labels() -> 
 def test_5604_vol0_ch02_stability_theorem_is_numbered_callout() -> None:
     text = _read(VOL0_CH02)
     assert "::: {#thm-stability-classification}" in text
-    assert (
-        "@thm-stability-classification" in _read(VOL0_CH01)
-        or "@thm-stability-classification" in text
-    )
+    chapter_one = _read(VOL0_CH01)
+    assert "vol0_ch02_state_space.html#thm-stability-classification" in chapter_one
+    assert "@thm-stability-classification" not in chapter_one
 
 
 def test_5604_vol0_ch02_references_resolved_equations_in_prose() -> None:
