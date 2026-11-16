@@ -319,11 +319,12 @@ class BallFlightDynamics(DynamicalSystem):
         Position follows the cubic Hermite interpolant through both end states
         (using their velocities), which is exact for ballistic flight; velocity
         and spin are interpolated linearly. The crossing fraction is found by
-        bisection on the interpolated height. When the step did not start above
-        ground, the step-end state is clamped to ``z = 0`` instead.
+        bisection on the interpolated height. A ground-level launch with upward
+        velocity uses its descending crossing; without upward velocity, contact
+        occurs at the start of the step.
         """
-        if previous[2] <= 0.0:
-            clamped: np.ndarray[Any, Any] = current.copy()
+        if previous[2] < 0.0 or (previous[2] == 0.0 and previous[5] <= 0.0):
+            clamped: np.ndarray[Any, Any] = previous.copy()
             clamped[2] = 0.0
             return clamped
 
@@ -401,7 +402,7 @@ class BallFlightDynamics(DynamicalSystem):
             trajectory.append(self._state_from_vector(state_vec))
 
             # Stop at the first ground crossing; the first step counts too.
-            if state_vec[2] <= 0.0 and (previous[2] > 0.0 or t > dt):
+            if state_vec[2] <= 0.0 and (previous[2] >= 0.0 or t > dt):
                 trajectory.pop()
                 landed = self._interpolate_landing(previous, state_vec, dt)
                 trajectory.append(self._state_from_vector(landed))

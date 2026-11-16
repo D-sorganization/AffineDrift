@@ -48,3 +48,21 @@ def test_ball_landing_within_first_step_never_goes_underground() -> None:
     assert min(s.position[2] for s in trajectory) >= 0.0
     flight_time = (vz + math.sqrt(vz**2 + 2.0 * g * z0)) / g
     assert trajectory[-1].position[0] == pytest.approx(10.0 * flight_time, abs=1e-6)
+
+
+@pytest.mark.parametrize("vz", [0.1, 0.5])
+def test_ground_launch_lands_within_first_step(vz: float) -> None:
+    ball = _vacuum_ball()
+    state = BallFlightState(np.zeros(3), np.array([10.0, 0.0, vz]), np.zeros(3))
+    trajectory = ball.simulate(state, dt=0.2)
+    assert all(sample.position[2] >= 0.0 for sample in trajectory)
+    assert trajectory[-1].position[0] == pytest.approx(10.0 * 2.0 * vz / ball.gravity, abs=1e-6)
+
+
+@pytest.mark.parametrize("vz", [0.0, -1.0])
+def test_ground_contact_without_upward_velocity_stops_immediately(vz: float) -> None:
+    ball = _vacuum_ball()
+    state = BallFlightState(np.zeros(3), np.array([10.0, 0.0, vz]), np.zeros(3))
+    trajectory = ball.simulate(state, dt=0.2)
+    assert all(sample.position[2] >= 0.0 for sample in trajectory)
+    np.testing.assert_array_equal(trajectory[-1].position, state.position)
