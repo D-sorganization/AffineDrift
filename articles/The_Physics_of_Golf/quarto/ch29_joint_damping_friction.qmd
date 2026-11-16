@@ -94,6 +94,14 @@ f_d&=\begin{bmatrix}\bm 0\\-\bm M^{-1}\bm D\bm v\end{bmatrix},\\
 G&=\begin{bmatrix}\bm 0\\\bm M^{-1}\bm B\end{bmatrix}.
 \end{aligned}
 $$
+For the independent-coordinate viscous model above, the notation contract's full-bias convention is
+
+$$
+h(q,v)=C(q,v)v+D(q)v+g(q),\qquad (f_0+f_d)_v=-M(q)^{-1}h(q,v).
+$$
+
+Here the split into $f_0$ and $f_d$ isolates the damping contribution; zero-input drift retains both. Additional passive loads must be included in $h$ when retained by the model.
+
 Every vector field has $2n$ components; joint damping forces enter the acceleration block through the inverse mass matrix. A quaternion or other redundant orientation representation instead needs its declared kinematic map $\dot{\bm q}=\bm N(\bm q)\bm v$. In a closed chain, retain $\bm J_c^T\boldsymbol{\lambda}$ in the force balance and solve the compatible constraint equations, or eliminate the reactions consistently. The unconstrained $G$ above cannot simply be reused after that elimination.
 
 ### Conservative Coupling and Dissipated Power {#sec-damping-energy-ledger}
@@ -193,7 +201,7 @@ $$
 
 Separate generalized torques of arms with different coordinate spaces cannot simply be added and set to zero. Club force and moment balance retains its inertia, external loads and both contact wrenches. Ideal internal constraints redistribute work between components without creating extra total loss.
 
-If $\dot{\mathbf q}=\mathbf N\dot{\mathbf s}$ with $\mathbf J_c\mathbf N=0$, then $\mathbf D_r=\mathbf N^T\mathbf D\mathbf N$ and $\dot{\mathbf s}^{\,T}\mathbf D_r\dot{\mathbf s}=\dot{\mathbf q}^{\,T}\mathbf D\dot{\mathbf q}$. This proves preserved nonnegative loss while allowing off-diagonal reduced coupling. A changing basis also contributes kinematic terms to the dynamics. Moving constraints have prescribed nonzero velocity and can perform work; compliant or slipping contacts require explicit port laws rather than ideal no-slip closure.
+Let $\mathbf Z$ have full column rank with columns spanning the admissible joint-rate null space. This basis is distinct from the kinematic rate map $\bm N(\bm q)$ above. If $\dot{\mathbf q}=\mathbf Z\dot{\mathbf s}$ with $\mathbf J_c\mathbf Z=0$, then $\mathbf D_r=\mathbf Z^T\mathbf D\mathbf Z$ and $\dot{\mathbf s}^{\,T}\mathbf D_r\dot{\mathbf s}=\dot{\mathbf q}^{\,T}\mathbf D\dot{\mathbf q}$. This proves preserved nonnegative loss while allowing off-diagonal reduced coupling. A changing basis also contributes kinematic terms to the dynamics. Moving constraints have prescribed nonzero velocity and can perform work; compliant or slipping contacts require explicit port laws rather than ideal no-slip closure.
 
 ## The Damping Paradox
 
