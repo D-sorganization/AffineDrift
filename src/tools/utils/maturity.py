@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
@@ -84,8 +84,16 @@ _CONFIG_PATH = Path(__file__).resolve().parents[3] / "config" / "maturity.yml"
 _CACHED_VOCABULARY: MaturityVocabulary | None = None
 
 
+def _normalize_unique_key(raw: object, existing: dict[str, Any], section: str) -> str:
+    """Validate a nonempty string key and forbid normalized collisions."""
+    require(isinstance(raw, str) and bool(raw.strip()), f"{section} key must be a nonempty string")
+    clean = cast(str, raw).strip().lower()
+    require(clean not in existing, f"Duplicate normalized {section} key: {clean}")
+    return clean
+
+
 def load_maturity_config(config_path: Path | str | None = None) -> MaturityVocabulary:
-    """Load and validate the maturity vocabulary configuration."""
+    """Load a vocabulary with unique, nonempty normalized state and alias keys."""
     global _CACHED_VOCABULARY
     if config_path is None and _CACHED_VOCABULARY is not None:
         return _CACHED_VOCABULARY
@@ -102,11 +110,12 @@ def load_maturity_config(config_path: Path | str | None = None) -> MaturityVocab
 
     states: dict[str, MaturityStateDefinition] = {}
     for key, spec in raw_states.items():
+        clean_key = _normalize_unique_key(key, states, "state")
         require(isinstance(spec, dict), f"State '{key}' definition must be a mapping")
         for req_field in ("label", "definition", "establishes", "does_not_establish"):
             require(req_field in spec, f"State '{key}' missing required field: {req_field}")
-        states[key.strip().lower()] = MaturityStateDefinition(
-            key=key.strip().lower(),
+        states[clean_key] = MaturityStateDefinition(
+            key=clean_key,
             label=str(spec["label"]).strip(),
             definition=str(spec["definition"]).strip(),
             establishes=str(spec["establishes"]).strip(),
@@ -122,12 +131,13 @@ def load_maturity_config(config_path: Path | str | None = None) -> MaturityVocab
     require(isinstance(raw_mappings, dict), "'legacy_mappings' must be a mapping")
     legacy_mappings: dict[str, str] = {}
     for legacy_key, target in raw_mappings.items():
+        clean_key = _normalize_unique_key(legacy_key, legacy_mappings, "legacy alias")
         clean_target = str(target).strip().lower()
         require(
             clean_target in states,
             f"Legacy mapping '{legacy_key}' maps to unknown target state '{target}'",
         )
-        legacy_mappings[str(legacy_key).strip().lower()] = clean_target
+        legacy_mappings[clean_key] = clean_target
 
     vocab = MaturityVocabulary(states=states, legacy_mappings=legacy_mappings)
     if config_path is None:
