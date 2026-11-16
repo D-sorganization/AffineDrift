@@ -11,7 +11,11 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.cli_output import write_stderr, write_stdout
-from src.tools.upstream_implementation_bridge import load_ledger, verify_document
+from src.tools.upstream_implementation_bridge import (
+    load_ledger,
+    verify_document,
+    verify_remote_paths,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 LEDGER_PATH = ROOT / "data/companion/upstream_implementation_links.json"
@@ -24,6 +28,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--ledger", type=Path, default=None)
+    parser.add_argument(
+        "--skip-remote",
+        action="store_true",
+        help="Skip raw.githubusercontent.com existence checks for ledger paths.",
+    )
     args = parser.parse_args(argv)
     ledger_path = args.ledger or args.root / LEDGER_PATH.relative_to(ROOT)
 
@@ -34,6 +43,8 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     findings = verify_document(document, args.root)
+    if not args.skip_remote:
+        findings.extend(verify_remote_paths(document))
     if findings:
         for line in findings:
             write_stderr(line)

@@ -12,13 +12,16 @@ ROOT = Path(__file__).resolve().parents[1]
 STATES = "Available Validated Experimental Planned Deprecated Opinion".split()
 BANNED = (
     "active muscular control|muscular torque|golfer effort|golfer's muscles add|"
-    "active golfer control push|golfer-injected control|muscles stopped pushing"
+    "active golfer control push|golfer-injected control|muscles stopped pushing|"
+    "active muscle input|no help from the golfer"
 ).split("|")
 F12_FILES = (
-    "index.qmd pages/start-here.qmd pages/scope-and-limits.qmd pages/validation-roadmap.qmd "
+    "index.qmd pages/start-here.qmd pages/big-idea.qmd pages/about.qmd "
+    "pages/scope-and-limits.qmd pages/validation-roadmap.qmd "
     "data/trust/claim_registry.json _includes/generated/claims-ledger.qmd "
     "articles/_generated/trust/ad-ztcf-attribution.qmd"
 ).split()
+ONBOARDING_DRIFT_KEYS = ("passive loads", "constraint", "declared input")
 
 
 def _r(rel: str) -> str:
@@ -28,8 +31,9 @@ def _r(rel: str) -> str:
 def test_f12_declared_control_and_drift_wording() -> None:
     for rel in F12_FILES:
         assert all(p not in _r(rel).lower() for p in BANNED), rel
-    sh = _r("pages/start-here.qmd").lower()
-    assert all(k in sh for k in ("passive loads", "constraint", "declared input"))
+    for page in ("pages/start-here.qmd", "pages/big-idea.qmd"):
+        lower = _r(page).lower()
+        assert all(k in lower for k in ONBOARDING_DRIFT_KEYS), page
     assert (
         "dimensional consistency, coordinate invariance"
         not in _r("pages/scope-and-limits.qmd").lower()
