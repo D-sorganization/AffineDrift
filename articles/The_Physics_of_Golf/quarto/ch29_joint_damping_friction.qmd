@@ -199,15 +199,17 @@ If $\dot{\mathbf q}=\mathbf N\dot{\mathbf s}$ with $\mathbf J_c\mathbf N=0$, the
 
 ### Damping and Stability
 
-For an autonomous linear perturbation model,
+For an autonomous linear perturbation model, let $\boldsymbol\xi$ denote perturbation displacement. Write
 
 $$
-\mathbf M\ddot{\mathbf x}+(\mathbf G+\mathbf C)\dot{\mathbf x}+\mathbf K\mathbf x=0,
+\mathbf M\ddot{\boldsymbol\xi}+(\boldsymbol\Gamma+\mathbf D)\dot{\boldsymbol\xi}+\mathbf K\boldsymbol\xi=0,
 $$
 
-assume constant symmetric positive definite $\mathbf M,\mathbf K$, skew $\mathbf G$, and symmetric positive semidefinite $\mathbf C$. Then $E=\tfrac12\dot{\mathbf x}^T\mathbf M\dot{\mathbf x}+\tfrac12\mathbf x^T\mathbf K\mathbf x$ is positive definite and $\dot E=-\dot{\mathbf x}^T\mathbf C\dot{\mathbf x}\leq0$. This proves Lyapunov stability. Asymptotic stability additionally requires that the largest invariant set with zero dissipation contain only the equilibrium. Positive definite $\mathbf C$ suffices under these assumptions; semidefinite damping can leave undamped modes.
+and assume constant symmetric positive definite $\mathbf M,\mathbf K$, skew $\boldsymbol\Gamma$, and symmetric positive semidefinite $\mathbf D$. Then $E=\tfrac12\dot{\boldsymbol\xi}^T\mathbf M\dot{\boldsymbol\xi}+\tfrac12\boldsymbol\xi^T\mathbf K\boldsymbol\xi$ is positive definite and $\dot E=-\dot{\boldsymbol\xi}^T\mathbf D\dot{\boldsymbol\xi}\leq0$. This proves Lyapunov stability. Asymptotic stability additionally requires that the largest invariant set with zero dissipation contain only the equilibrium. Positive definite $\mathbf D$ suffices under these assumptions; semidefinite damping can leave undamped modes.
 
-With negative stiffness, even the scalar dimensionless equation $\ddot x+\dot x-x=0$ retains the growing rate $(\sqrt5-1)/2$. A stronger counterexample has $\mathbf M=\mathbf I$, $\mathbf K=-\mathbf I$ and $\mathbf G=\begin{bmatrix}0&-3\\3&0\end{bmatrix}$. With $\mathbf C=0$ its four distinct rates are $\pm i(3\pm\sqrt5)/2$. Adding the passive $\mathbf C=0.1\mathbf I$ produces a pair with positive real parts. Energy loss and instability coexist because the equilibrium energy is indefinite. Dissipation-induced instability is a documented phenomenon [@bloch1994dissipation], not a claim that this particular instability occurs in a golf club.
+With negative stiffness, even the scalar dimensionless equation $\ddot x+\dot x-x=0$ retains the growing rate $(\sqrt5-1)/2$. A stronger counterexample has $\mathbf M=\mathbf I$, $\mathbf K=-\mathbf I$ and $\boldsymbol\Gamma=\begin{bmatrix}0&-3\\3&0\end{bmatrix}$. With $\mathbf D=0$ its four distinct rates are $\pm i(3\pm\sqrt5)/2$. Adding the passive $\mathbf D=0.1\mathbf I$ produces a pair with positive real parts. Energy loss and instability coexist because the equilibrium energy is indefinite. Dissipation-induced instability is a documented phenomenon [@bloch1994dissipation], not a claim that this particular instability occurs in a golf club.
+
+Here $\boldsymbol\Gamma$ is the gyroscopic matrix and $\mathbf D$ is the frozen damping matrix. The chapter retains $G(x)$ for the control-affine input map and $C(q,\dot q)$ for the Coriolis matrix; $\boldsymbol\xi$ is not the full state $x=(q,v)$.
 
 A nonsymmetric loaded tangent, accelerating frame or time-varying swing requires its own stability analysis. Frozen eigenvalues and a nonsingular frequency response do not establish stable time evolution. Physical damping must remain separate from numerical stabilization.
 
@@ -219,7 +221,7 @@ A joint embedded in a coupled active chain need not have a single independently 
 
 ### Active Damping and Co-Contraction
 
-Impedance control concerns the dynamic relationship between motion and applied wrench [@hogan1985impedance]. For a local restoring force on the modeled limb, one convention is $\mathbf f=-\mathbf K(\mathbf x-\mathbf x_d)-\mathbf C(\dot{\mathbf x}-\dot{\mathbf x}_d)$. The sign reverses for the reaction exerted on its environment. A moving target can perform work even when the relative loss is passive.
+Impedance control concerns the dynamic relationship between motion and applied wrench [@hogan1985impedance]. For a local restoring force on the modeled limb at Cartesian position $\mathbf r$, one convention is $\mathbf f=-\mathbf K_{\rm cart}(\mathbf r-\mathbf r_d)-\mathbf D_{\rm cart}(\dot{\mathbf r}-\dot{\mathbf r}_d)$. The sign reverses for the reaction exerted on its environment. A moving target can perform work even when the relative loss is passive.
 
 Co-contraction can alter an identified impedance, but does not supply a universal independent adjustment of stiffness and damping. The identified change depends on activation, reflex delay, posture and task. Passive tissue loss and work by active control must be retained separately; an assumed change during transition is a hypothesis requiring measurement.
 
@@ -342,7 +344,7 @@ For a frozen small perturbation with point-motion map $\mathbf L$ and the $e^{i\
 
 $$
 \mathbf Y(\omega)=i\omega\mathbf L
-\left[\mathbf K-\omega^2\mathbf M+i\omega(\mathbf G+\mathbf C)\right]^{-1}\mathbf L^T.
+\left[\mathbf K-\omega^2\mathbf M+i\omega(\boldsymbol\Gamma+\mathbf D)\right]^{-1}\mathbf L^T.
 $$
 
 The transpose maps point wrench back to generalized force and preserves power. Translational and rotational rows have different units. Replacement of a constant-coefficient boundary by an identified frequency-dependent grip impedance depends on its qualification, but its storage and loss must not be counted twice. At a finite preload, differentiating the configuration-dependent port map also contributes geometric tangent terms. A singular or unresolved pencil requires refusal or a qualified alternative formulation, not an arbitrary pseudoinverse.

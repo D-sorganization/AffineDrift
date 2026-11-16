@@ -59,3 +59,25 @@ def test_notation_documents_pog_part_i_table() -> None:
     assert "Physics of Golf Part I Multibody Symbols" in text
     assert "| **$r_i$** | COM distance" in text
     assert "Motor Control Delay and Activation" in text
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        POG / "quarto" / "ch29_joint_damping_friction.qmd",
+        POG / "chapters" / "ch29_joint_damping_friction.tex",
+    ],
+)
+def test_ch29_gyroscopic_and_damping_symbols_are_distinct(path: Path) -> None:
+    """Stability and mobility use Gamma/D; G and C retain their dynamics roles."""
+    text = path.read_text(encoding="utf-8")
+    assert r"\mathbf M\ddot{\boldsymbol\xi}+(\boldsymbol\Gamma+\mathbf D)" in text
+    assert r"\dot E=-\dot{\boldsymbol\xi}^T\mathbf D\dot{\boldsymbol\xi}" in text
+    assert r"i\omega(\boldsymbol\Gamma+\mathbf D)" in text
+    assert r"\boldsymbol\Gamma=\begin{bmatrix}0&-3\\3&0\end{bmatrix}" in text
+    assert r"\mathbf D=0.1\mathbf I" in text
+    assert r"\mathbf G+\mathbf C" not in text
+    assert r"\mathbf C=0" not in text
+    assert r"-\mathbf D_{\rm cart}(\dot{\mathbf r}-\dot{\mathbf r}_d)" in text
+    assert "gyroscopic matrix" in text
+    assert "perturbation displacement" in text
