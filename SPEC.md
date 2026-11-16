@@ -232,6 +232,14 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-16 | #5741 | Add CI contract checker for learning-path citations, chapter pointers, and blocked resource URLs (#5618). |
+| 2026-11-16 | #5745 | Add CI check_motion_control_companions gate for contradictory sidecars |
+| 2026-11-16 | #5740 | Lock #5613 mechanics-reference notation contracts in pytest. |
+| 2026-11-16 | #5751 | Canonical two-hand F_d in NOTATION.md and killswitch post-delivery horizon disclosure. |
+| 2026-11-16 | #5760 | Add FDM content and notation regression guards, including Lin and Pandy DOI attribution and a mis-citation self-test. |
+| 2026-11-16 | #5742 | Lock Physics of Golf #5598 content corrections with regression tests. |
+| 2026-11-16 | #5755 | Add agent conventions registry and JSON Schema validation for conventions and canonical parameters. |
+| 2026-11-16 | #5761 | Project steward status 2026-11-16: refresh STATUS.md, mark IA-THEORY done on #4253 closure, submit DV-4253 resourcing to the Board. |
 | 2026-11-16 | #5735 | Align Bosch integration assembly instructions with rewritten motion-control chapters. |
 | 2026-11-16 | #5734 | Add PoG ch06/ch07 UpstreamDrift implementation bridge callouts and ledger entries. |
 | 2026-11-16 | #5725 | Site frames table, PoG wrench ordering, delivery-angle table, and launch-monitor appendix alignment (partial #5593). |

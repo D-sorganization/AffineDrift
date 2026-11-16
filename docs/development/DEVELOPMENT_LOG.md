@@ -273,12 +273,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5598
 - **Branch:** cursor/pog-content-corrections-5598-1e70
-- **PR:** #5651
+- **PR:** #5651, #5742
 - **Paths:** see #5651
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-14 (`18469085`; collated from changes/5598-physics-of-golf-content-corrections-piez.md)
+- **Last verified:** 2026-11-16 (`f53b1251`; collated from changes/5598-lock-physics-of-golf-5598-content-correc.md)
 - **Summary:** Physics of Golf content corrections (piezo form, shaft Cn, cross-refs, pedagogy)
-- **Next step:** Barb exact-head review and CI
+- **Next step:** Merge PR and close #5598.
 
 ### DL-#5625 · Document UpstreamDrift Humanoid Balance, WBC, and Learning/Analytics Gaps Grounded in Code.
 
@@ -299,10 +299,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5596
 - **Branch:** cursor/agent-readiness-5596-3da0
-- **PR:** #5662, #5726
+- **PR:** #5662, #5726, #5755
 - **Paths:** see #5662
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-15 (`5c602e68`; collated from changes/5596-expose-canonical-parameters-json-in-agen.md)
+- **Last verified:** 2026-11-16 (`e7b0ab1b`; collated from changes/5596-add-agent-conventions-registry-and-json.md)
 - **Summary:** Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates.
 - **Next step:** Merge after CI green.
 
@@ -468,10 +468,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5618
 - **Branch:** cursor/fix-learning-paths-resources-5618-288d
-- **PR:** #5668, #5695, #5729
+- **PR:** #5668, #5695, #5729, #5741
 - **Paths:** see #5668
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-15 (`1f8cbbbe`; collated from changes/5618-add-learning-path-regression-tests-locki.md)
+- **Last verified:** 2026-11-16 (`ec0f5ae8`; collated from changes/5618-learning-path-resource-contract-check.md)
 - **Summary:** Fix learning-path and resources citations, chapter pointers, and workflow install commands
 - **Next step:** Merge after CI green.
 
@@ -481,10 +481,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5615
 - **Branch:** cursor/motion-control-companion-reconcile-35e5
-- **PR:** #5665, #5735
+- **PR:** #5665, #5735, #5745
 - **Paths:** see #5665
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-16 (`82cd47e1`; collated from changes/5615-align-bosch-integration-assembly-instruc.md)
+- **Last verified:** 2026-11-16 (`4ab23cbc`; collated from changes/5615-add-ci-check-motion-control-companions-g.md)
 - **Summary:** Remove stale motion-control JSX/transcript; align companions with rewritten chapters.
 - **Next step:** Merge after CI green.
 
@@ -494,10 +494,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5613
 - **Branch:** cursor/mech-ref-5613-6fb2
-- **PR:** #5656
+- **PR:** #5656, #5740
 - **Paths:** see #5656
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`cb17457a`; collated from changes/5613-mechanics-reference-notation-mobility-di.md)
+- **Last verified:** 2026-11-16 (`d8335bad`; collated from changes/5613-lock-5613-mechanics-reference-notation-c.md)
 - **Summary:** Mechanics reference notation: mobility disambiguation, fibre symbols, reciprocity, ICC front matter
 - **Next step:** Merge after CI green.
 
@@ -546,10 +546,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5608
 - **Branch:** cursor/fdm-5608-equations-notation-3efd
-- **PR:** #5657, #5730
+- **PR:** #5657, #5730, #5760
 - **Paths:** see #5657
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-15 (`ef6405cf`; collated from changes/5608-align-fdm-drake-autodiff-permalinks-with.md)
+- **Last verified:** 2026-11-16 (`93269def`; collated from changes/5608-fdm-content-guards.md)
 - **Summary:** FDM book: Hermite-Simpson, notation table, core equations, UD link fixes
 - **Next step:** Merge after CI green
 
@@ -1385,10 +1385,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5611
 - **Branch:** merged via #5677
-- **PR:** #5677, #5703
+- **PR:** #5677, #5703, #5751
 - **Paths:** see #5677
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-14 (`1967c40c`; collated from changes/5611-unify-monograph-differential-force-notation.md)
+- **Last verified:** 2026-11-16 (`d9a901a5`; collated from changes/5611-notation-killswitch-delivery-horizon.md)
 - **Summary:** Disclose WSCG trace timing and planar wrist limits; fix Kao, Borzelli, and Tucker bibliography records; align articulated-engine versions with pinned JSON.
 - **Next step:** Shipped in PR #5677.
 
@@ -3052,16 +3052,16 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Deploys the canonical validator and fail-closed catalog hook, preserving v1 plans and separating pending resources from approval or measurement.
 - **Next step:** None. Merged to main.
 
-### DL-#4253 - Deferred Impact Evidence Planning
+### DL-#4253 · Deferred Impact Evidence Planning
 
 - **State:** shipped
 - **Owner:** codex (planning migration)
 - **Issue:** #4253
 - **Branch:** `docs/deferred-validation-planning`
-- **PR:** #4423
+- **PR:** #4423, #5761
 - **Paths:** `docs/development/planning/`, `README.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (PR #4423 merged 2026-09-22T21:53:38Z as `docs(planning): separate empirical impact evidence from synthesis`; catalog, three heavy-hit controls and 637-file title audit passed in CI.)
+- **Last verified:** 2026-11-16 (`c4ea2993`; collated from changes/4253-steward-status-2026-11-16.md)
 - **Summary:** Separates unavailable empirical/perceptual obligations from active qualified theory synthesis. Existing source issues and scientific acceptance criteria are preserved.
 - **Next step:** None. PR #4423 merged 2026-09-22; planning docs deployed. Epic #4253 remains open as a deferred impact research item.
 
