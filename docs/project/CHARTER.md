@@ -23,7 +23,7 @@ feature counts describe only the listed scopes, not overall scientific completio
 
 | ID | Feature | Status | Tracking | Notes |
 | --- | --- | --- | --- | --- |
-| IA-THEORY | Source review and qualified numerical impact/acoustics synthesis | in-progress | #4253 | Existing theory epic remains active for executable review and synthesis. |
+| IA-THEORY | Source review and qualified numerical impact/acoustics synthesis | done | #4253 | Tracking epic #4253 closed as completed 2026-10-09; physical/perceptual follow-on stays parked under DV-4253. |
 | DV-4253 | Physical and perceptual impact/acoustics evidence synthesis | parked | - | DV-4253: [Owner Plan](https://github.com/D-sorganization/AffineDrift/blob/main/docs/development/planning/DV-4253.md); Board decision pending; qualified physical and blinded perception evidence unavailable. |
 
 ## Source Authority
