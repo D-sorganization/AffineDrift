@@ -87,3 +87,8 @@ def test_find_citation_violations_reports_unresolved_keys_and_missing_bibliograp
     assert violation.document == Path("pages/example.qmd")
     assert violation.missing_bibliographies == (Path("pages/missing.bib"),)
     assert violation.unresolved_keys == ("missing2026",)
+
+
+def test_collect_citation_keys_keeps_prose_after_tilde_example() -> None:
+    text = "~~~python\n@decorator\n~~~\nCite @smith2020.\n"
+    assert collect_citation_keys(text) == {"smith2020"}
