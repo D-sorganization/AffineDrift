@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -15,6 +16,8 @@ from src.tools.shot_pattern_article.summary import (
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "articles/shot_pattern_analysis/data"
+SHOT_PATTERN_ROOT = ROOT / "articles/shot_pattern_analysis"
+ARTICLE = ROOT / "articles/shot-pattern-analysis.qmd"
 
 
 @pytest.mark.unit
@@ -39,3 +42,24 @@ def test_build_article_summary_writes_markdown_with_se_columns() -> None:
     assert "+0.00003" in summary["markdown_table"]
     assert len(summary["exclusion_by_cell"]) == 24
     assert "0.04%" in summary["exclusion_markdown"]
+
+
+@pytest.mark.content_lint
+def test_shot_pattern_committed_data_and_pinned_figure_pipeline() -> None:
+    """Tables/data are vendored; figure plates rebuild via pinned UpstreamDrift entrypoint."""
+    manifest_path = SHOT_PATTERN_ROOT / "source_manifest.json"
+    assert manifest_path.is_file()
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["study"]["figure_render_entrypoint"]
+    assert (SHOT_PATTERN_ROOT / "generators/README.md").is_file()
+    for name in (
+        "headline_paired_sg.csv",
+        "delivery_noise_profiles.json",
+        "club_parameters.json",
+        "strokes_gained_baseline.json",
+    ):
+        assert (DATA_DIR / name).is_file(), f"missing committed data artifact: {name}"
+    qmd = ARTICLE.read_text(encoding="utf-8")
+    assert "build_shot_pattern_article_artifacts" in qmd
+    assert "source_manifest.json" in qmd
+    assert "SGBroadie2012" in qmd or "strokes_gained_baseline.json" in qmd
