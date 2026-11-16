@@ -71,3 +71,38 @@ def test_notation_md_documents_gom_constrained_projector_split() -> None:
 )
 def test_volume0_rotation_chapters_include_notation_note(rel: str) -> None:
     assert "gom_rotation_notation_note.qmd" in _read(rel)
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd",
+        "articles/The_Geometry_of_Motion/Volume_I/chapters/ch03_superposition.tex",
+    ],
+)
+def test_ch03_lie_bracket_uses_one_input_column(rel: str) -> None:
+    """A bracket of vector fields cannot differentiate a multi-input matrix."""
+    text = _read(rel)
+    assert r"G_j(x)=G(x)e_j" in text
+    assert r"[f,G_j](x)=DG_j(x)f(x)-Df(x)G_j(x)" in text
+    assert r"[f,g](x)=DG(x)f(x)-Df(x)G(x)" not in text
+    assert r"G_j=(0,h_j(q))" in text
+    assert r"[f,G_j]=\begin{bmatrix}-h_j" in text
+    assert r"G_1=(0,1)" in text
+    assert r"[f,G_1]=(-1,0)" in text
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd",
+        "articles/The_Geometry_of_Motion/Volume_I/chapters/ch03_superposition.tex",
+    ],
+)
+def test_ch03_relative_degree_uses_declared_single_input_field(rel: str) -> None:
+    """Lie derivatives must use the declared single column of the input map."""
+    text = _read(rel)
+    assert r"G_1(x)=G(x)" in text
+    assert r"L_{G_1}L_f^kh=0" in text
+    assert r"b(x)=L_{G_1}L_f^{r-1}h" in text
+    assert r"L_gL_f" not in text
