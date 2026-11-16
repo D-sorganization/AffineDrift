@@ -317,6 +317,10 @@ jobs:
             --baseline config/latex-structure-baseline.json
       - name: Validate Article Frontmatter
         run: python3 scripts/validate_frontmatter.py
+      - name: Verify Geometry of Motion book landing pages
+        # Books/quarto landing blurbs and chapter deep links must track the
+        # manuscript chapter list and explicit section ids (#5606).
+        run: python3 scripts/check_gom_landing_pages.py
       - name: Verify Alt Text and Long Descriptions
         # Scoped to QMD content (alt text, heading hierarchy, long
         # descriptions for E8 SVG diagrams) via --qmd-only; the same script's
