@@ -1,0 +1,148 @@
+{
+  "schema": "affinedrift/agent-conventions/v1",
+  "scope_note": "Machine-readable sign, frame, rotation, unit, and control-affine conventions for AffineDrift prose and agents. Cite rendered pages with .html anchors; use UpstreamDrift Conventions for pinned code array layouts.",
+  "sources": [
+    {
+      "title": "Mathematical Notation Reference",
+      "source": "NOTATION.md",
+      "rendered": "/pages/notation.html"
+    },
+    {
+      "title": "UpstreamDrift Conventions Reference",
+      "source": "pages/upstreamdrift-conventions.qmd",
+      "rendered": "/pages/upstreamdrift-conventions.html"
+    }
+  ],
+  "conventions": [
+    {
+      "id": "si-units-default",
+      "category": "units",
+      "name": "SI base and derived units",
+      "summary": "Kinematic and dynamic quantities use SI unless a chapter declares otherwise: length m, mass kg, time s, force N, torque N·m, angles rad in dynamics.",
+      "unit": "SI",
+      "source_anchor": "/pages/notation.html#physical-quantities"
+    },
+    {
+      "id": "control-affine-drift-control",
+      "category": "control_affine",
+      "name": "Control-affine drift and control split",
+      "summary": "Plant ẋ = f_p(x) + G_p(x)u; drift is autonomous evolution at u=0; control is the channel zeroed by a counterfactual.",
+      "source_anchor": "/pages/notation.html#drift-and-control"
+    },
+    {
+      "id": "uppercase-g-input-map",
+      "category": "control_affine",
+      "name": "Uppercase G control map",
+      "summary": "Uppercase G(x) maps declared control to generalized forces in control-affine equations; lowercase g(x) is not the input map.",
+      "sign": "G uppercase site-wide",
+      "source_anchor": "/pages/notation.html#drift-and-control"
+    },
+    {
+      "id": "hamilton-quaternion-w-first",
+      "category": "rotation",
+      "name": "Hamilton quaternion (scalar-first)",
+      "summary": "Unit quaternions q=(w,x,y,z) with w²+x²+y²+z²=1; active rotation v'=qvq* on column vectors; q_WB maps body to world.",
+      "frame": "body to world active rotation",
+      "sign": "ijk=-1 Hamilton algebra",
+      "source_anchor": "/pages/notation.html#quaternions"
+    },
+    {
+      "id": "euler-intrinsic-zyx",
+      "category": "rotation",
+      "name": "Intrinsic Z-Y-X Euler (yaw-pitch-roll)",
+      "summary": "Default body-to-world active rotation R = R_Z(ψ) R_Y(θ) R_X(φ); gimbal lock at θ=±π/2.",
+      "frame": "body to world",
+      "source_anchor": "/pages/notation.html#euler-angles"
+    },
+    {
+      "id": "spatial-twist-angular-first",
+      "category": "spatial_vectors",
+      "name": "Spatial twist block order",
+      "summary": "Twists use V=(ω,v): angular velocity block first, then linear velocity of the reference point.",
+      "frame": "stated reference point",
+      "sign": "angular block first",
+      "source_anchor": "/pages/notation.html#screwtwist-notation"
+    },
+    {
+      "id": "spatial-wrench-angular-first",
+      "category": "spatial_vectors",
+      "name": "Spatial wrench block order",
+      "summary": "Wrenches use W=(n,f): moment about the reference point first, then force; power P=WᵀV.",
+      "sign": "angular block first",
+      "source_anchor": "/pages/notation.html#screwtwist-notation"
+    },
+    {
+      "id": "site-default-z-up-frame",
+      "category": "frame",
+      "name": "Site default target frame (Z-up)",
+      "summary": "+X along target line downrange, +Y golfer's left when looking downrange, +Z up; right-handed.",
+      "frame": "inertial Z-up",
+      "source_anchor": "/pages/notation.html#coordinate-frame-conventions"
+    },
+    {
+      "id": "right-hand-cross-product",
+      "category": "sign",
+      "name": "Cross product (right-hand rule)",
+      "summary": "u×v follows the right-hand rule; torque τ = r×F uses the same convention.",
+      "sign": "right-hand positive",
+      "source_anchor": "/pages/notation.html#cross-product-right-hand-rule"
+    },
+    {
+      "id": "angular-velocity-rhr",
+      "category": "sign",
+      "name": "Angular velocity axis (right-hand rule)",
+      "summary": "Thumb along ω; fingers curl in the positive rotation sense; counterclockwise positive when viewed from +ω.",
+      "sign": "right-hand rule",
+      "source_anchor": "/pages/notation.html#angular-velocity"
+    },
+    {
+      "id": "dcr-weighting-left",
+      "category": "sign",
+      "name": "DCR weighting on the left",
+      "summary": "DCR norms apply W on the left: ‖Wa_d‖₂ / (sup_{u∈𝒰} ‖W B_a u‖₂ + ε); declare equivalence to ‖·‖_M when using a metric.",
+      "frame": "task or state projection",
+      "source_anchor": "/pages/notation.html#term-dcr"
+    },
+    {
+      "id": "cor-signed-normal",
+      "category": "sign",
+      "name": "Coefficient of restitution (COR)",
+      "summary": "e = −(v_b⁺−v_c⁺)·n / (v_b⁻−v_c⁻)·n with unit normal n; passive non-superelastic rebounds give e∈[0,1].",
+      "unit": "dimensionless",
+      "source_anchor": "/pages/notation.html#physical-quantities"
+    },
+    {
+      "id": "dcr-vs-dgcr-acronyms",
+      "category": "sign",
+      "name": "DCR vs DgCR acronyms",
+      "summary": "DCR is reserved for Drift-Control Ratio; restitution drag-curve ratio is DgCR = (1−COR)/(1+COR), always positive.",
+      "sign": "DgCR ≥ 0",
+      "source_anchor": "/pages/notation.html#physical-quantities"
+    },
+    {
+      "id": "ztcf-zvcf-pointwise",
+      "category": "control_affine",
+      "name": "Pointwise ZTCF and ZVCF acceleration split",
+      "summary": "At fixed (q,q̇,z,p): q̈ = a_ZTCF + a_ZVCF with u=0 drift and measured control operand; identity is instantaneous only.",
+      "frame": "generalized coordinates",
+      "source_anchor": "/pages/notation.html#term-zvcf"
+    },
+    {
+      "id": "upstream-canonical-v2-si",
+      "category": "units",
+      "name": "UpstreamDrift canonical-v2 SI gravity",
+      "summary": "At pinned UpstreamDrift: SI (m, kg, s), world Z-up, g=[0,0,-9.80665] m/s² in canonical-v2; dynamic q/v in radians.",
+      "unit": "m/s²",
+      "frame": "world_Zup",
+      "source_anchor": "/pages/upstreamdrift-conventions.html#units-gravity"
+    },
+    {
+      "id": "upstream-spatial-jacobian-order",
+      "category": "spatial_vectors",
+      "name": "UpstreamDrift spatial Jacobian rows",
+      "summary": "Suite-wide spatial Jacobian is [angular; linear]; Pinocchio and Drake adapters restack to match engine_core contract.",
+      "sign": "[ω; v] row order",
+      "source_anchor": "/pages/upstreamdrift-conventions.html#per-engine-table"
+    }
+  ]
+}
