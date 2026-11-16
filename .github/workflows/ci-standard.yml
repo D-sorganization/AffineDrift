@@ -161,6 +161,9 @@ jobs:
         # #5626: fetch README at the pinned commit; AffineDrift install pages must not
         # teach steps the upstream README omits or contradict.
         run: python3 -m scripts.check_upstreamdrift_readme_parity
+      - name: Verify UpstreamDrift Headless and Agent Docs Match Contract
+        # #5626: published headless guide must cover ud-sim, MCP, REST, and diagnostics.
+        run: python3 -m scripts.check_upstreamdrift_headless_docs
       - name: Verify UpstreamDrift Conventions Page Matches Canonical-V2 Pin
         # #5619: conventions page and data/upstreamdrift/canonical_v2_page_contract.json
         # must stay aligned with docs/conventions/canonical-v2.md at the pinned commit.
