@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import re
 from pathlib import Path
 
 import numpy as np
@@ -62,15 +61,16 @@ def test_ch28_carries_effective_mass_derivation_and_gear_closure(edition: Path) 
 
 
 @pytest.mark.parametrize("edition", CH28, ids=("web", "print"))
-def test_ch28_gear_tangential_speed_order_of_magnitude(edition: Path) -> None:
-    """Illustrative impulse gives contact tangential speed stated in the closure note."""
+def test_ch28_normal_projection_and_gear_geometry(edition: Path) -> None:
+    """The normal-only offset cannot generate tangential contact motion."""
     text = edition.read_text(encoding="utf-8")
-    impulse_match = re.search(r"J\s*=\s*(\d+(?:\.\d+)?)\s*\\,?\s*\\mathrm\{N", text)
-    assert impulse_match is not None, "Expected illustrative normal impulse J (N s) in gear closure"
-    impulse = float(impulse_match.group(1))
-    delta_omega_z = R_OFFSET * impulse / I_ZZ
-    tangential = delta_omega_z * R_OFFSET
-    assert f"{tangential:.1f}" in text or f"{tangential:.2f}" in text
+    assert r"\hat n\cdot\Delta\mathbf v_P" in text
+    assert "normal velocity" in text
+    assert "front-to-back" in text
+    assert "laboratory frame" in text
+    assert "2.7" not in text
+    assert "@ex-gear_effect" not in text
+    assert r"\ref{ex:gear_effect}" not in text
 
 
 def test_centrifugal_stiffening_ratio_in_ch11() -> None:
