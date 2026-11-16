@@ -180,3 +180,57 @@ def test_examples_reject_invalid_shapes_and_nonfinite_parameters(example: Any) -
             example.vdp_candidate_residual(state)
     with pytest.raises(ValueError):
         example.vdp_candidate_residual(np.zeros(2), epsilon=-1)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("state", [-np.pi, -1.0, 0.0, 1.0, 2.0, np.pi])
+def test_pullback_certificate_matches_numerical_derivatives(example: Any, state: float) -> None:
+    """Differentiate the field and ruler independently of the certificate helper."""
+    point = example.scalar_pullback_example(state)
+    step = 1e-6
+
+    def field(position: float) -> float:
+        return float(-(position + 0.8 * np.sin(position)) / (1 + 0.8 * np.cos(position)))
+
+    def metric(position: float) -> float:
+        return float((1 + 0.8 * np.cos(position)) ** 2)
+
+    numerical_jacobian = (field(state + step) - field(state - step)) / (2 * step)
+    numerical_derivative = (metric(state + step) - metric(state - step)) / (2 * step)
+    assert point.jacobian == pytest.approx(numerical_jacobian, rel=2e-7, abs=2e-8)
+    assert point.metric_derivative == pytest.approx(
+        numerical_derivative * point.field, rel=2e-7, abs=2e-8
+    )
+    residual = point.metric_derivative + 2 * point.metric * point.jacobian
+    assert residual == pytest.approx(-2 * point.metric, abs=1e-12)
+    assert point.contraction_rate() == pytest.approx(1.0, abs=1e-12)
+
+
+@pytest.mark.integration
+def test_pullback_flow_has_exact_metric_distance_decay(example: Any) -> None:
+    """Independent ODE integration follows the chapter's finite-distance identity."""
+    from scipy.integrate import solve_ivp
+
+    times = np.linspace(0.0, 3.0, 31)
+    initial = [-4.0, 2.0]
+    flow = solve_ivp(
+        lambda _time, states: [example.scalar_pullback_example(x).field for x in states],
+        (times[0], times[-1]),
+        initial,
+        t_eval=times,
+        rtol=1e-10,
+        atol=1e-12,
+    )
+    assert flow.success
+    transformed = flow.y + 0.8 * np.sin(flow.y)
+    distance = np.abs(transformed[0] - transformed[1])
+    np.testing.assert_allclose(distance, distance[0] * np.exp(-times), rtol=2e-8, atol=2e-9)
+    euclidean_bound = 9 * np.exp(-times) * abs(initial[0] - initial[1])
+    assert np.all(np.abs(flow.y[0] - flow.y[1]) <= euclidean_bound)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("state", [np.nan, np.inf, -np.inf])
+def test_pullback_example_rejects_nonfinite_state(example: Any, state: float) -> None:
+    with pytest.raises(ValueError, match="finite"):
+        example.scalar_pullback_example(state)
