@@ -116,6 +116,18 @@ For $M\in\mathbb R^{m\times n}$ with rank $r$, the four subspaces are:
 
 Thus rank plus nullity equals the number of columns. The left kernel contains directions orthogonal to every attainable output; it is not the set of all vectors outside the image.
 
+### Worked Examples: Rank, Spectrum, and SVD
+
+For
+$$
+M=\begin{bmatrix}1&2&0\\2&4&0\\0&0&1\end{bmatrix},
+$$
+row reduction gives pivots in columns one and three, so $\operatorname{rank}M=2$ and $\ker M$ is spanned by $(2,-1,0)^T$.
+
+For $A=\begin{bmatrix}-2&1\\0&-3\end{bmatrix}$, the characteristic polynomial is $(\lambda+2)(\lambda+3)$, so the eigenvalues are $\lambda\in\{-2,-3\}$ with eigenvectors $(1,0)^T$ and $(1,-1)^T$.
+
+The shear $S=\begin{bmatrix}1&1\\0&1\end{bmatrix}$ has singular values $\sigma_1=(1+\sqrt5)/2$ and $\sigma_2=(\sqrt5-1)/2$. Its SVD directions are the standard diagonalization directions of $S^TS$; the larger singular value is the axis-normal stretch of the unit circle.
+
 If $M=J(\mathbf q)$, its image describes instantaneous task velocities and its kernel describes task-null joint velocities. If $M=C$ is a measurement matrix, its kernel contains states invisible **at that instant**. Dynamical unobservability additionally requires that the evolving state remain invisible.
 
 ### Instantaneous Rank and Finite-Time Control
@@ -176,7 +188,7 @@ For a constant continuous-time system $\dot{\mathbf x}=A\mathbf x$:
 
 - All eigenvalues with negative real parts give exponential asymptotic stability.
 - Any eigenvalue with positive real part gives instability.
-- If all real parts are nonpositive, stability on the imaginary-axis boundary requires every imaginary-axis eigenvalue to be semisimple: no Jordan block larger than one (see [Jordan classification in Chapter 2](vol0_ch02_state_space.html#sec-phase_portraits)). Such a system is not asymptotically stable if an imaginary-axis eigenvalue is present.
+- If all real parts are nonpositive, stability on the imaginary-axis boundary requires every imaginary-axis eigenvalue to be semisimple: no Jordan block larger than one (@thm-stability-classification in [State-Space Chapter 2](vol0_ch02_state_space.html#sec-phase_portraits)). Such a system is not asymptotically stable if an imaginary-axis eigenvalue is present.
 
 For example, $A=0$ has constant bounded solutions. The double-integrator $A$ above has the same two zero eigenvalues, but $\mathbf x(0)=(0,1)^T$ gives $\mathbf x(t)=(t,1)^T$, which is unbounded.
 
