@@ -160,12 +160,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.html` | `articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch25_motor_learning.html` | `articles/The_Physics_of_Golf/quarto/ch25_motor_learning.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch26_remarkable_brain.html` | `articles/The_Physics_of_Golf/quarto/ch26_remarkable_brain.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html` | `articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html` | `articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd` | 2 |
 | `/articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html` | `articles/The_Physics_of_Golf/quarto/ch28_impact_collision.qmd` | 2 |
 | `/articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.html` | `articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.html` | `articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd` | 15 |
-| `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | `articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | `articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd` | 2 |
 | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | `articles/The_Physics_of_Golf/quarto/ch32_putting.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/glossary.html` | `articles/The_Physics_of_Golf/quarto/glossary.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/index.html` | `articles/The_Physics_of_Golf/quarto/index.qmd` | 4 |
