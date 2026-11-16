@@ -42,6 +42,7 @@ _CH28_COR_BIB_KEYS = ("glossaryUSGAEquipment", "club_design_cg")
 
 
 def _bib_block(text: str, key: str) -> str | None:
+    """Return the complete balanced-brace entry for a key, or None if absent."""
     match = re.search(rf"^@\w+\s*\{{\s*{re.escape(key)}\s*,", text, re.MULTILINE)
     if not match:
         return None
@@ -78,6 +79,7 @@ def _bib_field(body: str, name: str) -> str:
 
 
 def _years_embedded_in_key(key: str) -> list[int]:
+    """Extract plausible publication years encoded in a bibliography key."""
     return [int(match) for match in YEAR_IN_KEY.findall(key) if 1900 <= int(match) <= 2030]
 
 
@@ -88,6 +90,7 @@ def check_obsolete_bib_keys(bib_text: str) -> list[str]:
 
 
 def check_required_bib_keys(bib_text: str) -> list[str]:
+    """Return violations for corrected source keys missing from the bibliography."""
     defined = {match.group(1) for match in ENTRY_HEAD.finditer(bib_text)}
     return [f"missing required bib key: {key}" for key in sorted(REQUIRED_BIB_KEYS - defined)]
 
@@ -123,6 +126,7 @@ def check_bib_key_year_alignment(bib_text: str) -> list[str]:
 
 
 def check_jorgensen_entry(bib_text: str) -> list[str]:
+    """Require metadata for the cited second edition despite the legacy key year."""
     block = _bib_block(bib_text, "Jorgensen1994")
     if block is None:
         return ["missing bib key: Jorgensen1994"]
@@ -138,6 +142,7 @@ def check_jorgensen_entry(bib_text: str) -> list[str]:
 
 
 def _ch28_paragraphs_lacking_cor_source(ch28: str) -> list[str]:
+    """Find numeric restitution claims without a supporting equipment citation."""
     lacking: list[str] = []
     for para in re.split(r"\n\s*\n", ch28):
         if not _CH28_COR_NUMERIC.search(para):
@@ -151,6 +156,7 @@ def _ch28_paragraphs_lacking_cor_source(ch28: str) -> list[str]:
 
 
 def check_ch28_impact_sourcing(ch28_text: str) -> list[str]:
+    """Require sources for impact-duration and restitution-limit claims."""
     violations: list[str] = []
     if "glossaryUSGAEquipment" not in ch28_text and "club_design_cg" not in ch28_text:
         violations.append("ch28: missing equipment-rules citation for conformance limits")
@@ -164,6 +170,7 @@ def check_ch28_impact_sourcing(ch28_text: str) -> list[str]:
 
 
 def check_ch25_ucm(ch25_text: str) -> list[str]:
+    """Require the uncontrolled-manifold method and its Scholz source."""
     violations: list[str] = []
     if "Scholz1999" not in ch25_text:
         violations.append("ch25: missing Scholz1999 UCM citation")
@@ -176,6 +183,7 @@ def check_ch25_ucm(ch25_text: str) -> list[str]:
 
 
 def check_ch27_equilibrium_point(ch27_text: str) -> list[str]:
+    """Require the equilibrium-point hypothesis and its supporting critique."""
     violations: list[str] = []
     lowered = ch27_text.lower()
     if "equilibrium-point" not in lowered and "equilibrium point" not in lowered:

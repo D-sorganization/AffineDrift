@@ -16,6 +16,7 @@ from src.tools.golf_physics_citation_integrity import find_violations
 
 
 def main() -> int:
+    """Report offline citation violations and return the gate exit status."""
     violations = find_violations()
     if not violations:
         print("Physics of Golf citation-integrity check passed.")
