@@ -520,7 +520,7 @@ It lies in the tangent space, not in the state manifold. It is a **hyperplane in
 $T_x\mathcal M$** exactly when $\operatorname{rank}G(x,t)=n-1$. The affine
 tangent space $x+T_xM$ of a constraint level set and the tangent plane to the
 graph of a scalar map are different geometric objects; the tangent-hyperplane
-series defines the title wording through $\mathcal A(x)$ in [Part 1](articles/tangent-hyperplanes-series/part-1-geometry.qmd).
+series defines the title wording through $\mathcal A(x)$ in [Part 1](../articles/tangent-hyperplanes-series/part-1-geometry.html).
 
 ### h, R, and Ξ (Hybrid Guard, Reset, Saltation)
 
