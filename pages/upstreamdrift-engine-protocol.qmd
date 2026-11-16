@@ -274,16 +274,20 @@ due to applied `tau`, with the contract `a_drift + a_control = a_full`
 
 | Engine | Sum versus the engine's own definition of `a_full` | Sum versus `M^-1 (tau - h)` | Basis |
 | --- | --- | --- | --- |
-| **MuJoCo** `compute_control_acceleration` | **Exact by construction**: control is defined as `a_full(tau) - a_drift`. Run: residual 1.1e-14 with an active `connect` constraint | Not equal when constraints or contacts are active; equal in the free chain (3.6e-15) | Run |
-| **MuJoCo** `compute_control_acceleration_at_state` | Not that identity: returns `M^-1 tau` at `q` with `v = 0`, even with constraints (run: 0.0 difference from `M^-1 tau`) | Equal | Run |
+| **MuJoCo** `compute_control_acceleration` | **Exact by construction**: control is defined as `a_full(tau) - a_drift`. Run: residual 1.1e-14 with an active `connect` constraint | Not guaranteed with constraints or passive forces absent from `h`; equality holds when drift is `-M^-1 h` and control is `M^-1 tau`. The free-chain 3.6e-15 above compares the control term only | Read and run as labeled |
+| **MuJoCo** `compute_control_acceleration_at_state` | Not that identity: returns `M^-1 tau` at `q` with `v = 0`, even with constraints (run: 0.0 difference from `M^-1 tau`) | The sum matches `M^-1 (tau - h)` only when its drift equals `-M^-1 h`; this helper does not remove constraints or damping from drift | Read and run as labeled |
 | **Drake, Pinocchio, OpenSim, JaxSim, pendulum** | Algebraically `M^-1 (tau - bias)`, if `bias` is the same one used for drift | Equal | Read |
 | **MyoSuite** | **Not guaranteed**: drift comes from a constrained forward pass while control is the unconstrained `M^-1 tau`; no `a_full` is defined in the mixin | Not applicable | Read, not run |
 
 Two consequences follow. First, a MuJoCo drift on a model with a grip weld, ground contact or
 joint damping is not the drift of Drake or Pinocchio on the same model, so cross-engine drift
 comparisons need a model where those terms are absent or matched. Second, the MuJoCo
-`a_control` is the *constrained increment* attributable to `tau`; it equals `M^-1 tau` only when no
-equality constraint or contact is active, which the run above shows by 64.77 rad/s² on a pinned tip.
+`a_control` is the *constrained increment* attributable to `tau`. An active constraint or contact
+does not force a difference for every input: at zero torque both increments are zero, and an
+ideal constraint projector can also preserve constraint-tangent inputs. The pinned-tip run
+demonstrates a difference of 64.77 rad/s² for its particular state and torque, not an
+if-and-only-if condition. The upstream method docstring's "only when" wording is therefore
+stronger than the implementation identity establishes.
 
 **Constrained helpers.**
 [`constrained_ztcf_zvcf.py`][constrained-mod] re-solves the closed-loop reaction through a KKT
@@ -311,7 +315,8 @@ control operand). The `PhysicsEngine` protocol still carries an older method nam
 | Zero-velocity gravity acceleration | not ZVCF | `compute_gravity_only_acceleration(q)` | Legacy diagnostic ([L233-L243][dyn-if-drift]) |
 | Old `compute_zvcf(q)` | not ZVCF | Deprecated shim to the row above in MuJoCo, Pinocchio and the putting-green engine ([MuJoCo L921-L927][mj-drift]) | Drake keeps a direct gravity-only implementation ([L713-L756][drake-drift]); OpenSim and MyoSuite compute a zero-control, zero-velocity forward pass, which includes model forces or constraints ([OpenSim L1020-L1035][os-ztcf], [MyoSuite L80-L102][myo-drift]) |
 
-`compute_zvcf(q)` returns a zero-velocity baseline (gravity-only acceleration at $v=0$, $u=0$), so its output must not be called ZVCF on this site: it will not reconstruct
+`compute_zvcf(q)` returns a legacy zero-velocity baseline at zero control, not necessarily gravity-only:
+some implementations retain model forces or constraints. Its output must not be called ZVCF on this site: it does not supply the control term required for
 $\ddot q \approx a_{\mathrm{ZTCF}}+a_{\mathrm{ZVCF}}$ under AffineDrift notation.
 
 ## Integrator, Timestep, and Contact Defaults {#integrator-defaults}
