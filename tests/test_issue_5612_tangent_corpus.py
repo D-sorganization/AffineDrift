@@ -138,7 +138,7 @@ def test_advanced_residual_article_names_matrix_measure() -> None:
 
 def test_notation_documents_hybrid_guard_saltation_and_reset() -> None:
     text = NOTATION.read_text(encoding="utf-8")
-    assert "h, R, and Ξ" in text
+    assert "Hybrid Guard, Reset, and Saltation" in text
     assert "Instantaneous Rate Set" in text
     assert "\\mathcal A(x)" in text
     assert "Saltation matrix at hybrid events" in text

@@ -522,7 +522,7 @@ use uppercase $G(q)$ for gravity. When a source convention must be quoted,
 identify it as source notation and translate immediately to the canonical
 symbols.
 
-### f₀, 𝒜(x), and the Title “Hyperplane” (Instantaneous Rate Set)
+### Instantaneous Rate Set and the Title “Hyperplane”
 
 For control-affine $\dot x=f_0(x,t)+G(x,t)u$, the **instantaneous rate set** at
 state $x$ is
@@ -539,7 +539,7 @@ tangent space $x+T_xM$ of a constraint level set and the tangent plane to the
 graph of a scalar map are different geometric objects; the tangent-hyperplane
 series defines the title wording through $\mathcal A(x)$ in [Part 1](../articles/tangent-hyperplanes-series/part-1-geometry.html).
 
-### h, R, and Ξ (Hybrid Guard, Reset, Saltation)
+### Hybrid Guard, Reset, and Saltation
 
 | Symbol   | Meaning                                                                 | Rule                                                                 |
 | -------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------- |
