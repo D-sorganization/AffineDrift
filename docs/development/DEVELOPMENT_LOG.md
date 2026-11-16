@@ -481,10 +481,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5615
 - **Branch:** cursor/motion-control-companion-reconcile-35e5
-- **PR:** #5665
+- **PR:** #5665, #5735
 - **Paths:** see #5665
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`2d280405`; collated from changes/5615-remove-stale-motion-control-jsx-transcri.md)
+- **Last verified:** 2026-11-16 (`82cd47e1`; collated from changes/5615-align-bosch-integration-assembly-instruc.md)
 - **Summary:** Remove stale motion-control JSX/transcript; align companions with rewritten chapters.
 - **Next step:** Merge after CI green.
 
@@ -624,10 +624,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5601
 - **Branch:** cursor/ud-implementation-links-5601-402a
-- **PR:** #5672
+- **PR:** #5672, #5734
 - **Paths:** see #5672
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`d46b1faf`; collated from changes/5601-pinned-upstreamdrift-implementation-brid.md)
+- **Last verified:** 2026-11-16 (`3c5333c3`; collated from changes/5601-add-pog-ch06-ch07-upstreamdrift-implemen.md)
 - **Summary:** Pinned UpstreamDrift implementation bridge includes for GOM vol0 and PoG algorithm chapters; added ledger and CI gate.
 - **Next step:** Barb arms after CI green.
 
@@ -1274,6 +1274,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5593 · Site Frames Table, PoG Wrench Ordering, Delivery-Angle Table, and Launch-Monitor Appendix Alignment (Partial #5593).
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5593
+- **Branch:** merged via #5725
+- **PR:** #5725
+- **Paths:** see #5725
+- **Started:** 2026-11-16
+- **Last verified:** 2026-11-16 (`5b2548e9`; collated from changes/5593-site-frames-table-pog-wrench-ordering-de.md)
+- **Summary:** Site frames table, PoG wrench ordering, delivery-angle table, and launch-monitor appendix alignment (partial #5593).
+- **Next step:** Shipped in PR #5725.
 
 ### DL-#5617 · Correct UpstreamDrift Accuracy on Models, Repositories, and Programming Pages; Re-Pin Companion to D56e3709.
 
