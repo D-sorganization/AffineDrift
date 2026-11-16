@@ -9,7 +9,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "pages/upstreamdrift-capture-to-model-pipeline.qmd"
-PINNED_COMMIT = "3afe09c1ed0247a459d16bf75cf0b28bb64f584a"
+PINNED_COMMIT = "ca9d8887f2ed46de484b64615dd4a50148e07bd0"
 
 
 @pytest.fixture(scope="module")
