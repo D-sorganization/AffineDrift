@@ -367,6 +367,10 @@ jobs:
         run: python3 scripts/check_bibliography_cross_file.py
       - name: Verify Citation Resolution
         run: python3 scripts/check_citation_resolution.py
+      - name: Verify Learning-Path and Resources Contracts
+        # Offline regression guard for #5618 parked links, chapter pointers,
+        # and attribution wording under resources/.
+        run: python3 scripts/check_learning_path_resources.py
       - name: Verify Quarto Citation Integrity
         run: python3 scripts/check_qmd_citation_keys.py
       - name: Verify Claim-Audit Evidence Ledgers
