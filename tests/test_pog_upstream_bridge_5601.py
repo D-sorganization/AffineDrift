@@ -48,3 +48,9 @@ def test_ch07_includes_upstream_bridge_and_names_rnea_cross_check_test() -> None
         assert "test_affine_structure_rigor.py" in chunk
         assert "test_complete_dynamics_against_independent_newton_euler" in chunk
         assert "test_constraint_forces_rigor" in chunk
+
+
+def test_ztcf_bridges_describe_optional_one_step_prediction() -> None:
+    for chapter in ("pog-ch27", "pog-ch31"):
+        include = ROOT / f"articles/_includes/upstream-implementation/{chapter}.qmd"
+        assert "optional one-step" in include.read_text(encoding="utf-8")

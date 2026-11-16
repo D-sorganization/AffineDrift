@@ -145,5 +145,7 @@ def verify_remote_paths(
             try:
                 fetch(commit, path)
             except (OSError, ValueError, urllib.error.URLError) as error:
-                findings.append(f"{bridge_id}: missing remote path {path} at {commit[:8]} ({error})")
+                findings.append(
+                    f"{bridge_id}: missing remote path {path} at {commit[:8]} ({error})"
+                )
     return findings
