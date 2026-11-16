@@ -84,3 +84,25 @@ class TestMasked:
         """`[^`]*` lets `` match as empty inline code, hiding the opener."""
         text = f"we said {OPEN}something long here\nand closed it.{CLOSE}\n"
         assert OPEN in masked(text)
+
+
+class TestMultiplePairsAndLongFences:
+    """Two pairs on one line, and fences longer than three backticks."""
+
+    def test_two_pairs_on_one_line_are_both_found(self) -> None:
+        """The first closing mark and the second opener must not read as code."""
+        text = f"He said {quoted('first')} and then {quoted('second')} to us.\n"
+        assert [q for _, q in find(text)] == ["first", "second"]
+
+    def test_pair_then_inline_code_still_finds_the_pair(self) -> None:
+        text = f"The {quoted('tangent')} of `f` is flat.\n"
+        assert [q for _, q in find(text)] == ["tangent"]
+
+    def test_a_four_backtick_fence_may_contain_a_three_backtick_line(self) -> None:
+        """The inner ``` is content, so the pair after it is still fenced."""
+        text = f"````\n```\n{quoted('not prose')}\n````\n"
+        assert find(text) == []
+
+    def test_a_tilde_fence_may_contain_a_shorter_tilde_line(self) -> None:
+        text = f"~~~~\n~~~\n{quoted('not prose')}\n~~~~\n"
+        assert find(text) == []

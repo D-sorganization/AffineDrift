@@ -35,14 +35,17 @@ from pathlib import Path
 ROOT = Path("articles")
 
 BLOCK = re.compile(
-    r"(?s)^\s*>?\s*```.*?^\s*>?\s*```"
-    r"|^\s*>?\s*~~~.*?^\s*>?\s*~~~"
+    r"(?s)^\s*>?\s*(?P<bt>`{3,}).*?^\s*>?\s*(?P=bt)"
+    r"|^\s*>?\s*(?P<tl>~{3,}).*?^\s*>?\s*(?P=tl)"
     r"|^\s*\$\$\s*$.*?^\s*\$\$"
     r"|\\begin\{(?:equation|align|gather|multline|displaymath|eqnarray)\*?\}.*?"
     r"\\end\{(?:equation|align|gather|multline|displaymath|eqnarray)\*?\}",
     re.MULTILINE,
 )
-INLINE = re.compile(r"\$\$.+?\$\$|\$[^$\n]+\$|`{1,3}[^`\n]+`{1,3}")
+# A code span's closing backticks are not followed by another backtick or a word
+# character. Without that, "``a'' and ``b''" reads "``a'' and ``" as one code span
+# and hides both the second opener and the first pair's closer.
+INLINE = re.compile(r"\$\$.+?\$\$|\$[^$\n]+\$|`{1,3}[^`\n]+`{1,3}(?![`\w])")
 PAIRED = re.compile(r"``(.+?)''", re.DOTALL)
 
 
