@@ -648,7 +648,8 @@ $\gamma=\dot J_c v$ in a fixed contact mode:
 
 | Symbol | Definition | Type |
 | ------ | ---------- | ---- |
-| $K_c$ | $J_c M^{-1} J_c^\top$ | Operational-space inertia |
+| $K_c$ | $J_c M^{-1} J_c^\top$ | Constraint inverse inertia |
+| $\Lambda_c$ | $K_c^{-1}$ | Operational-space inertia for independent constraint rows |
 | $\Pi_M$ | $I-M^{-1}J_c^\top K_c^{-1}J_c$ | $M$-orthogonal projector ($\Pi_M^2=\Pi_M$) |
 | $P_v$ | Same matrix as $\Pi_M$ | Velocity-space projector (Chapter 9 name) |
 | $\mathcal{H}_M$ | $\Pi_M M^{-1}$ | Constrained acceleration operator (not a projector) |

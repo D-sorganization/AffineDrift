@@ -71,3 +71,23 @@ def test_notation_md_documents_gom_constrained_projector_split() -> None:
 )
 def test_volume0_rotation_chapters_include_notation_note(rel: str) -> None:
     assert "gom_rotation_notation_note.qmd" in _read(rel)
+
+
+def test_superposition_brackets_act_on_one_input_column() -> None:
+    """A matrix-valued input map cannot stand in for a bracket's vector field."""
+    text = _read("articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd")
+    assert r"[f,G_j](x)=DG_j(x)f(x)-Df(x)G_j(x)" in text
+    assert "j-th column" in text
+    assert r"[f,g](x)=DG(x)f(x)-Df(x)G(x)" not in text
+    feedback = text.split("## Feedback Linearization Has a Local Domain of Validity", 1)[1]
+    assert r"G_1(x)=G(x)" in feedback
+    assert r"L_{G_1}L_f" in feedback
+    assert "L_g" not in feedback
+
+
+def test_constraint_gram_matrix_is_inverse_inertia() -> None:
+    """Keep K_c distinct from its operational-space inertia inverse."""
+    text = _read("NOTATION.md")
+    row = next(line for line in text.splitlines() if line.startswith("| $K_c$ |"))
+    assert "inverse inertia" in row.lower()
+    assert r"$K_c^{-1}$" in text
