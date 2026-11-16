@@ -35,6 +35,7 @@ def test_llms_txt_lists_notation_glossary_and_companion() -> None:
     assert "# AffineDrift" in llms
     assert "/pages/notation.html" in llms
     assert "/pages/glossary.html" in llms
+    assert "/pages/upstreamdrift-conventions.html" in llms
     assert "/models/programming/engines.html" in llms
     assert "/data/symbol_references.json" in llms
 
