@@ -1,6 +1,7 @@
 """Independent matrix, flow and noise checks for the contraction chapter."""
 
 import importlib
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -238,3 +239,37 @@ def test_pullback_example_rejects_nonfinite_state(example: Any, state: float) ->
 def test_pullback_example_rejects_unrepresentable_results(example: Any, state: float) -> None:
     with pytest.raises(ValueError, match="finite evaluation"):
         example.scalar_pullback_example(state)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "edition",
+    [
+        "quarto/ch04_contraction.qmd",
+        "Volume_I/chapters/ch04_contraction.tex",
+    ],
+)
+def test_cubic_ccm_example_states_the_general_gain_residual(edition: str) -> None:
+    chapter = (Path(__file__).parents[1] / "articles/The_Geometry_of_Motion" / edition).read_text()
+    assert r"\begin{pmatrix}0&1-k_p\\1-k_p&-2k_d\end{pmatrix}" in chapter
+    assert "indefinite when" in chapter
+    assert "k_p=1" in chapter
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("kp,kd", [(0.5, 0.7), (1.0, 1.0), (4.0, 2.0)])
+def test_cubic_ccm_gain_cases_match_independent_lyapunov_solution(
+    example: Any, kp: float, kd: float
+) -> None:
+    dynamics = np.array([[0.0, 1.0], [-kp, -kd]])
+    identity_residual = dynamics.T + dynamics
+    np.testing.assert_allclose(identity_residual, [[0, 1 - kp], [1 - kp, -2 * kd]])
+    if kp != 1:
+        assert np.linalg.det(identity_residual) < 0
+        assert example.local_contraction_rate(dynamics, np.eye(2), np.zeros((2, 2))) < 0
+    else:
+        assert example.local_contraction_rate(dynamics, np.eye(2), np.zeros((2, 2))) == 0
+    metric = solve_continuous_lyapunov(dynamics.T, -np.eye(2))
+    assert np.linalg.eigvalsh(metric).min() > 0
+    np.testing.assert_allclose(dynamics.T @ metric + metric @ dynamics, -np.eye(2), atol=1e-14)
+    assert example.local_contraction_rate(dynamics, metric, np.zeros((2, 2))) > 0
