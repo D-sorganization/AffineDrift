@@ -142,3 +142,10 @@ def test_notation_documents_hybrid_guard_saltation_and_reset() -> None:
     assert "Instantaneous Rate Set" in text
     assert "\\mathcal A(x)" in text
     assert "Saltation matrix at hybrid events" in text
+
+
+def test_notation_saltation_symbol_is_valid_inline_math() -> None:
+    text = NOTATION.read_text(encoding="utf-8")
+    saltation_row = next(line for line in text.splitlines() if "| Saltation matrix:" in line)
+    assert r"**$\Xi$**" in saltation_row
+    assert r"\\Xi" not in saltation_row

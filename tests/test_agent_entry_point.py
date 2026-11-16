@@ -35,6 +35,7 @@ def test_llms_txt_lists_notation_glossary_and_companion() -> None:
     assert "# AffineDrift" in llms
     assert "/pages/notation.html" in llms
     assert "/pages/glossary.html" in llms
+    assert "/pages/upstreamdrift-conventions.html" in llms
     assert "/models/programming/engines.html" in llms
     assert "/data/symbol_references.json" in llms
 
@@ -84,3 +85,10 @@ def test_llms_full_lists_canonical_parameters_json() -> None:
     manifest = load_manifest(MANIFEST_PATH.read_text(encoding="utf-8"))
     _, full = render_both(manifest)
     assert "`data/canonical_parameters.json`" in full
+
+
+def test_llms_full_lists_agent_conventions_json() -> None:
+    manifest = load_manifest(MANIFEST_PATH.read_text(encoding="utf-8"))
+    _, full = render_both(manifest)
+    assert "`data/agent/conventions.json`" in full
+    assert "/pages/upstreamdrift-conventions.html" in full
