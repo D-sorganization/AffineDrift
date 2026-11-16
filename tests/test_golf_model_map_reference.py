@@ -107,6 +107,7 @@ def test_golf_model_maps_covers_slice2_sections() -> None:
         "golfer-scapula/2.0",
         "isb_thorax",
         "SIDE_SIGN",
+        "sec-lead-trail-handedness",
         "arccos",
         "G^#",
     ):
@@ -115,3 +116,5 @@ def test_golf_model_maps_covers_slice2_sections() -> None:
     assert "golf-model-maps.html#sec-simscape-golfer-scapula" in simulink_page
     assert "arccos" in mocap_page
     assert "golf-model-maps.html#sec-pose-estimator-included-angle" in mocap_page
+    repo_3d = (ROOT / "repositories/repositories-3d-model.qmd").read_text(encoding="utf-8")
+    assert "golf-model-maps.html#sec-pose-estimator-included-angle" in repo_3d

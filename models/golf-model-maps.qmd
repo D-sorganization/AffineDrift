@@ -88,6 +88,25 @@ In `src/shared/python/anatomical_angles/golf_aliases.py`, `WRIST_GOLF_ALIASES` m
 `-ulnar_deviation`; `"release"` deliberately raises `ValueError` because it
 names a dynamic swing event rather than a signed angle.
 
+### Lead and Trail by Handedness {#sec-lead-trail-handedness}
+
+Profiles in `joint_conventions.py` report **anatomical left/right** first.
+Golf **lead** and **trail** follow declared handedness: for a right-handed golfer
+the lead side is the golfer's left arm and the trail side is the right; for a
+left-handed golfer the assignment reverses. The wrist `SIDE_SIGN` table above
+applies to anatomical `$L$`/`$R$` labels, not lead/trail directly—convert with
+handedness before comparing to coaching language.
+
+For trunk and pelvis (`trunk_pelvis.py`, `ZXY` sequence above), **golf turn**
+in swing analytics is trail-side **positive axial rotation** (`AR`) during the
+backswing for both right- and left-handed profiles (trail is handedness-resolved,
+not a separate ISB axis). **Forward bend** is reported as $-\text{FE}$. Three
+distinct **X-factor**-like quantities appear in reconstruction code and must not
+be interchanged: ISB thorax–pelvis `AR` difference, a projected-line torso–pelvis
+separation in `reconstruct/analytics.py`, and literature shoulder–pelvis measures;
+see [motion-capture conventions](../articles/technology-motion-capture.html) for
+study-comparison context.
+
 ## Pose-Estimator Included Angles vs. Anatomical Flexion {#sec-pose-estimator-included-angle}
 
 MediaPipe and OpenPose pipelines (`src/shared/python/pose_estimation/joint_angle_utils.py`,
