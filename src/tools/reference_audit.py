@@ -10,12 +10,15 @@ from src.core.contracts import require
 
 logger = logging.getLogger(__name__)
 
-BIB_ENTRY_PATTERN = re.compile(r"@\w+\s*\{\s*([^,\s]+)\s*,", re.IGNORECASE)
-CITE_PATTERN = re.compile(r"\\cite\w*\{([^}]+)\}")
+_ENTRY_TYPE = r"@(?!(?:comment|string|preamble)\b)\w+"
+BIB_ENTRY_PATTERN = re.compile(_ENTRY_TYPE + r"\s*\{\s*([^,\s]+)\s*,", re.IGNORECASE)
+CITE_PATTERN = re.compile(r"\\cite\w*\*?\s*(?:\[[^\]]*\]\s*){0,2}\{([^}]+)\}")
 DOI_PATTERN = re.compile(r"\bdoi\s*=", re.IGNORECASE)
 URL_PATTERN = re.compile(r"\burl\s*=", re.IGNORECASE)
 ISBN_PATTERN = re.compile(r"\bisbn\s*=", re.IGNORECASE)
-ENTRY_BLOCK_PATTERN = re.compile(r"@\w+\s*\{\s*([^,\s]+)\s*,(.*?)\n\}", re.IGNORECASE | re.DOTALL)
+ENTRY_BLOCK_PATTERN = re.compile(
+    _ENTRY_TYPE + r"\s*\{\s*([^,\s]+)\s*,(.*?)\n\}", re.IGNORECASE | re.DOTALL
+)
 
 
 def parse_bibtex_entry_keys(bib_text: str) -> set[str]:
