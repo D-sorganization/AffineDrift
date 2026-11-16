@@ -13,6 +13,7 @@ from typing import Any
 
 import yaml
 
+from scripts.quarto_fences import strip_fenced_code
 from src.tools.reference_audit import parse_bibtex_entry_keys
 from src.tools.utils.frontmatter import split_frontmatter
 
@@ -44,7 +45,6 @@ CROSS_REFERENCE_PREFIXES = (
     "wrn:",
 )
 CHAPTER_LABEL_PATTERN = re.compile(r"^ch\d", re.IGNORECASE)
-FENCED_CODE_PATTERN = re.compile(r"```.*?```", re.DOTALL)
 INLINE_CODE_PATTERN = re.compile(r"`[^`]+`")
 
 
@@ -172,7 +172,7 @@ def is_cross_reference(key: str) -> bool:
 def collect_citation_keys(text: str) -> set[str]:
     """Extract citation keys from qmd text, excluding Quarto cross-references."""
     _, body = strip_frontmatter(text)
-    body = FENCED_CODE_PATTERN.sub("", body)
+    body = strip_fenced_code(body)
     body = INLINE_CODE_PATTERN.sub("", body)
     keys = {match.group(1).rstrip(".,;:") for match in CITATION_PATTERN.finditer(body)}
     return {key for key in keys if not is_cross_reference(key)}

@@ -21,6 +21,8 @@ from collections.abc import (
 from pathlib import Path
 from typing import Any
 
+from scripts.quarto_fences import strip_fenced_code
+
 try:
     from src.tools.utils import find_markdown_files, setup_logging_with_timestamp
 except (ImportError, ModuleNotFoundError):  # pragma: no cover - lightweight CI fallback
@@ -333,17 +335,8 @@ def _find_raw_theorem_environments(filepath: Path, content: str) -> list[tuple[i
         return []
 
     issues: list[tuple[int, str, str]] = []
-    in_code_block = False
-
-    for line_num, line in enumerate(content.splitlines(), start=1):
+    for line_num, line in enumerate(strip_fenced_code(content).splitlines(), start=1):
         stripped = line.lstrip()
-
-        if stripped.startswith("```"):
-            in_code_block = not in_code_block
-            continue
-
-        if in_code_block:
-            continue
 
         match = RAW_THEOREM_ENVIRONMENT_RE.match(stripped)
         if match:
