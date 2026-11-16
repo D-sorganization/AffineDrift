@@ -1,6 +1,6 @@
 ---
 issue: 5604
-summary: "Add the positive state-dependent pullback metric certificate with matching print and web proofs"
+summary: "Verify positive nonlinear metric examples in print and web; correct general-gain cubic feedback cross terms"
 dl_state: "in_review"
 next_step: "Review this F9 worked-example slice; remaining chapter numbering gaps stay under #5604"
 branch: "fix/5604-pullback-metric"

@@ -361,6 +361,28 @@ The associated gain $K(x,t)=\tfrac12\rho(x,t)G(x,t)^TM(x,t)$ is independent of $
 $u(s)=u_*-\int_0^sK(c(r),t)c_r(r)\,dr$.
 Transporting that curve with its controls, or recomputing suitable geodesics in a sampled/continuous construction under the theorem's conditions, converts differential contraction into finite tracking. Path existence, solution existence and controller regularity are part of the result. A domain restriction or an actuator limit must be incorporated explicitly; the unconstrained theorem does not certify saturation, muscle activation limits or unilateral ground contact.
 
+\subsection{Worked CCM on a Cubic Restoring Term}
+
+For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$ with $G=[0,1]^\top$, the feedback $u=x_1^3-k_px_1-k_dx_2$, $k_p,k_d>0$, gives $A_{\mathrm{cl}}=[[0,1],[-k_p,-k_d]]$. Stability of this closed loop does not make the identity metric strictly contracting. Its residual is
+\begin{equation}
+A_{\mathrm{cl}}^T+A_{\mathrm{cl}}=
+\begin{pmatrix}0&1-k_p\\1-k_p&-2k_d\end{pmatrix}.
+\label{eq:ch4:cubic-identity}
+\end{equation}
+This matrix has determinant $-(1-k_p)^2$: it is indefinite when $k_p\ne1$, and negative semidefinite with a zero eigenvalue when $k_p=1$. Thus $M=I$ never supplies a positive strict contraction rate for these gains. For example, $k_p=4$, $k_d=2$ gives a positive residual eigenvalue $\sqrt{13}-2$, despite a stable closed loop.
+
+Instead solve $A_{\mathrm{cl}}^TM+MA_{\mathrm{cl}}=-I$. For $k_p=k_d=1$, take
+
+\begin{equation}
+M=\begin{pmatrix}3/2&1/2\\1/2&1\end{pmatrix},\qquad
+\lambda=\frac{2}{5+\sqrt5}>0.
+\label{eq:ch4:cubic-metric}
+\end{equation}
+
+The metric is positive with largest eigenvalue $(5+\sqrt5)/4$, so this rate satisfies the contraction residual inequality. It certifies the implemented field with a constant, uniformly bounded metric.
+
+The drift Jacobian is $A(x)=[[0,1],[-3x_1^2,0]]$, and $D_xu=[3x_1^2-k_p,-k_d]$. For the convention $\delta u=-K\delta x$, the differential gain is therefore $K(x)=[k_p-3x_1^2,k_d]$. Direct substitution gives $A(x)-GK(x)=A_{\mathrm{cl}}$ everywhere; with $\dot M=0$, the differential feedback residual is the same Lyapunov residual. The state-dependent gain must include the cubic cancellation. No actuator bound or saturation is certified by this unconstrained example.
+
 \subsection{Computational Approaches}
 
 For polynomial data, a domain certificate can require $M-\underline mI$ and the negative contraction residual to be positive-semidefinite through sum-of-squares representations, with suitable polynomial multipliers for the domain. The residual must include the desired $2\lambda M$ margin and all material derivatives. Such certificates are sufficient and may be conservative; failure of a selected polynomial degree does not prove that no smooth metric exists.
