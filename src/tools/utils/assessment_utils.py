@@ -7,6 +7,7 @@ and mappings used by various assessment and reporting scripts.
 from __future__ import annotations
 
 import logging
+import re
 
 from src.core.contracts import require
 
@@ -139,6 +140,11 @@ def classify_assessment_category(source_name: str, description: str = "") -> str
     require(len(source_name) > 0, "source_name must not be empty")
     text = (source_name + " " + description).lower()
 
+    # Explicit IDs take precedence over descriptive keyword guesses.
+    for category_id, category in CATEGORIES.items():
+        if re.search(rf"(?<!\w)assessment_{category_id.lower()}(?![a-z0-9])", source_name.lower()):
+            return category
+
     # Mappings aligned with CATEGORIES (A-O)
     mappings = {
         "Code Structure": ["code structure", "architecture", "structure", "Assessment_A"],
@@ -159,7 +165,7 @@ def classify_assessment_category(source_name: str, description: str = "") -> str
     }
 
     for category, keywords in mappings.items():
-        if any(k in text for k in keywords) or any(k in source_name for k in keywords):
+        if any(re.search(rf"(?<!\w){re.escape(k.lower())}(?!\w)", text) for k in keywords):
             return category
 
     return "General"
