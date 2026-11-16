@@ -118,3 +118,14 @@ def test_golf_model_maps_covers_slice2_sections() -> None:
     assert "golf-model-maps.html#sec-pose-estimator-included-angle" in mocap_page
     repo_3d = (ROOT / "repositories/repositories-3d-model.qmd").read_text(encoding="utf-8")
     assert "golf-model-maps.html#sec-pose-estimator-included-angle" in repo_3d
+
+
+@pytest.mark.integration
+def test_golf_turn_distinguishes_raw_isb_rotation_from_handedness_alias() -> None:
+    page = (ROOT / "models/golf-model-maps.qmd").read_text(encoding="utf-8")
+    section = page.split("{#sec-lead-trail-handedness}", 1)[1].split("\n## ", 1)[0]
+
+    assert "positive toward the golfer's anatomical left" in section
+    assert "`golf_turn = handedness_sign * AR`" in section
+    assert "| Right-Handed | -1 | Negative | Positive |" in section
+    assert "| Left-Handed | +1 | Positive | Positive |" in section

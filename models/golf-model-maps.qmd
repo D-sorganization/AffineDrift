@@ -97,10 +97,18 @@ left-handed golfer the assignment reverses. The wrist `SIDE_SIGN` table above
 applies to anatomical `$L$`/`$R$` labels, not lead/trail directly—convert with
 handedness before comparing to coaching language.
 
-For trunk and pelvis (`trunk_pelvis.py`, `ZXY` sequence above), **golf turn**
-in swing analytics is trail-side **positive axial rotation** (`AR`) during the
-backswing for both right- and left-handed profiles (trail is handedness-resolved,
-not a separate ISB axis). **Forward bend** is reported as $-\text{FE}$. Three
+For trunk and pelvis (`trunk_pelvis.py`, `ZXY` sequence above), raw ISB axial
+rotation (`AR`) is positive toward the golfer's anatomical left. Here we define
+**golf turn** as a coaching alias: `golf_turn = handedness_sign * AR`.
+The handedness sign makes trail-side backswing turn positive for either profile;
+it does not change the raw ISB axis or sign convention.
+
+| Profile | `handedness_sign` | Backswing Raw `AR` | Backswing `golf_turn` |
+|---|---|---|---|
+| Right-Handed | -1 | Negative | Positive |
+| Left-Handed | +1 | Positive | Positive |
+
+**Forward bend** is reported as $-\text{FE}$. Three
 distinct **X-factor**-like quantities appear in reconstruction code and must not
 be interchanged: ISB thorax–pelvis `AR` difference, a projected-line torso–pelvis
 separation in `reconstruct/analytics.py`, and literature shoulder–pelvis measures;
