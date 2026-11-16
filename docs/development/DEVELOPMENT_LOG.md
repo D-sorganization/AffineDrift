@@ -269,7 +269,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5598 · Physics of Golf Content Corrections (Piezo Form, Shaft Cn, Cross-Refs, Pedagogy)
 
-- **State:** shipped
+- **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5598
 - **Branch:** cursor/pog-content-corrections-5598-1e70
@@ -295,7 +295,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5596 · Add Llms.Txt Agent Entry Point, Extend Symbol Registry V2 From NOTATION.md, and CI Freshness Gates.
 
-- **State:** shipped
+- **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5596
 - **Branch:** cursor/agent-readiness-5596-3da0
@@ -464,7 +464,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5618 · Fix Learning-Path and Resources Citations, Chapter Pointers, and Workflow Install Commands
 
-- **State:** shipped
+- **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5618
 - **Branch:** cursor/fix-learning-paths-resources-5618-288d
@@ -477,7 +477,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5615 · Remove Stale Motion-Control JSX/Transcript; Align Companions With Rewritten Chapters.
 
-- **State:** shipped
+- **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5615
 - **Branch:** cursor/motion-control-companion-reconcile-35e5
@@ -490,7 +490,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5613 · Mechanics Reference Notation: Mobility Disambiguation, Fibre Symbols, Reciprocity, ICC Front Matter
 
-- **State:** shipped
+- **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5613
 - **Branch:** cursor/mech-ref-5613-6fb2
@@ -542,7 +542,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5608 · FDM Book: Hermite-Simpson, Notation Table, Core Equations, UD Link Fixes
 
-- **State:** shipped
+- **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5608
 - **Branch:** cursor/fdm-5608-equations-notation-3efd
@@ -594,7 +594,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5604 · Geometry of Motion Pedagogy: Prerequisites Map, Cross-Refs, KKT Display, Contraction Pedagogy, Vol 0 Numbering Pilot
 
-- **State:** shipped
+- **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5604
 - **Branch:** cursor/gom-pedagogy-5604-bdf7
@@ -620,7 +620,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5601 · Pinned UpstreamDrift Implementation Bridge Includes for GOM Vol0 and PoG Algorithm Chapters; Added Ledger and CI Gate.
 
-- **State:** shipped
+- **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5601
 - **Branch:** cursor/ud-implementation-links-5601-402a
@@ -646,7 +646,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5599 · Physics of Golf: Worked Examples for Impact, JCS, URDF, Putting, Calibration Tables
 
-- **State:** shipped
+- **State:** in_review
 - **Owner:** unassigned
 - **Issue:** #5599
 - **Branch:** cursor/pog-worked-examples-5599-ddf7
