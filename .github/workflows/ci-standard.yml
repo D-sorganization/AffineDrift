@@ -165,6 +165,8 @@ jobs:
         # #5619: conventions page and data/upstreamdrift/canonical_v2_page_contract.json
         # must stay aligned with docs/conventions/canonical-v2.md at the pinned commit.
         run: python3 -m scripts.check_upstreamdrift_conventions_page
+      - name: Verify UpstreamDrift physics inventory pin (#5624)
+        run: python3 -m scripts.check_upstreamdrift_physics_models
       - name: Verify Companion Catalog Covers Launcher Tiles at Active Pin
         # #5626: every launcher_manifest.json tile at the provider commit must appear
         # in the installed companion manifest (staleness guard after pin bumps).
