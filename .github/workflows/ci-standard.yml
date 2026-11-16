@@ -161,6 +161,8 @@ jobs:
         # #5626: fetch README at the pinned commit; AffineDrift install pages must not
         # teach steps the upstream README omits or contradict.
         run: python3 -m scripts.check_upstreamdrift_readme_parity
+      - name: Verify UpstreamDrift physics inventory pin (#5624)
+        run: python3 -m scripts.check_upstreamdrift_physics_models
       - name: Verify Companion Catalog Covers Launcher Tiles at Active Pin
         # #5626: every launcher_manifest.json tile at the provider commit must appear
         # in the installed companion manifest (staleness guard after pin bumps).

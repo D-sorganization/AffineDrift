@@ -4,16 +4,16 @@ description: "Pinned UpstreamDrift physics defaults for flight, impact, putting 
 author: "Dieter Olson"
 date: "2026-11-11"
 date-source: "editorial-board-review"
-date-modified: "2026-11-11"
-last-reviewed: "2026-11-11"
+date-modified: "2026-11-16"
+last-reviewed: "2026-11-16"
 canonical: "/articles/upstreamdrift-physics-models.html"
 status: "available"
 audience-level: "research"
 evidence-rung: "qualified-simulation"
 summary-plain: "Pinned UpstreamDrift defaults for putting, ball flight, impact, bunker, grip, metrics, and injury heuristics at a fixed commit, compared with AffineDrift derivations. Site–code disagreements are flagged with tracker links rather than silently rewriting textbook equations."
-abstract: "Implementation inventory for shared UpstreamDrift physics modules at commit 625a16e68: putting roll and capture rules, registered flight models and Rust kernel parameters, gear-effect and impact defaults, injury load bands, and ancillary bunker and metrics paths. Each row cites module locations and records mismatches against AffineDrift site models with links to AffineDrift #5624 and UpstreamDrift #15010/#15011."
+abstract: "Implementation inventory for shared UpstreamDrift physics modules at commit 4a1c5f43: putting roll and capture rules, registered flight models and Rust kernel parameters, gear-effect and impact defaults, injury load bands, and ancillary bunker and metrics paths. Each row cites module locations and records mismatches against AffineDrift site models with links to AffineDrift #5624 and UpstreamDrift #15010/#15011."
 key-takeaways:
-  - "UpstreamDrift putting roll applies the full slope gravity vector in roll, unlike the site's five-sevenths scaled roll law."
+  - "UpstreamDrift putting roll applies a five-sevenths scaled slope gravity term in pure roll (skid still uses full $g$), matching the site's rolling law at the pin reviewed here."
   - "Hole capture in code follows a chord bound near 1.64 m/s centre speed, not the finite-ball or Penner forms on the site."
   - "Default ball-flight APIs differ from the Naruo quartic treatment on the impact reference page; carry can spread tens of yards across registered models."
   - "Injury heuristics in code use discrete spinal load bands that do not match ch. 21 spine derivations verbatim."
@@ -28,7 +28,7 @@ css: ../css/upstreamdrift-physics-models.css
 ::: {.callout-important}
 ## Authority and Limit
 
-**State: Implementation inventory.** Every equation below is quoted from UpstreamDrift source at commit [`625a16e68`](https://github.com/D-sorganization/UpstreamDrift/tree/625a16e6897b88ab29fb5a64c65ecee820dd58f5) (protected `main` on 2026-11-11). AffineDrift theory pages ([Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html), [The Physics of the Rolling Putt](putting-roll-models.html), [Simulating the Green](green-simulation.html), [The Physics of Golf ch. 21](The_Physics_of_Golf/quarto/ch21_spine_modeling.html)) remain the site's derivations. Where they disagree with this inventory, the disagreement is **flagged** with a tracking link. Code-side corrections are tracked in [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010) (ball flight, putting, impact) and [UpstreamDrift #15011](https://github.com/D-sorganization/UpstreamDrift/issues/15011) (injury heuristics). This page addresses [AffineDrift #5624](https://github.com/D-sorganization/AffineDrift/issues/5624).
+**State: Implementation inventory.** Every equation below is quoted from UpstreamDrift source at commit [`4a1c5f43`](https://github.com/D-sorganization/UpstreamDrift/tree/4a1c5f43433c8bbfbe48e269fb0fcfeb61266829) (protected `main` on 2026-11-16). CI re-verifies this pin with `python3 -m scripts.check_upstreamdrift_physics_models`. AffineDrift theory pages ([Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html), [The Physics of the Rolling Putt](putting-roll-models.html), [Simulating the Green](green-simulation.html), [The Physics of Golf ch. 21](The_Physics_of_Golf/quarto/ch21_spine_modeling.html)) remain the site's derivations. Where they disagree with this inventory, the disagreement is **flagged** with a tracking link. Code-side corrections are tracked in [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010) (ball flight, putting, impact) and [UpstreamDrift #15011](https://github.com/D-sorganization/UpstreamDrift/issues/15011) (injury heuristics). This page addresses [AffineDrift #5624](https://github.com/D-sorganization/AffineDrift/issues/5624).
 :::
 
 ## Pin and How to Read the Tables
@@ -44,22 +44,17 @@ css: ../css/upstreamdrift-physics-models.css
 
 ### Roll Acceleration on a Slope
 
-In SP `putting_dynamics/solver.py`, the ground-mode ODE applies the height-field gradient unchanged in both slide and roll:
+In SP `putting_dynamics/solver.py`, `_derivative` starts from the small-slope gradient $-g\,\nabla h$, then branches by mode:
 
-$$
-g_{x,y} = -g\,\nabla h .
-$$
+- **SLIDE:** full in-plane gradient $g_{x,y} = -g\,\nabla h$.
+- **ROLL:** the same components scaled by $5/7$ (rigid-sphere rolling inertia partition, #15010).
 
-The site rolling law in [putting-roll-models](putting-roll-models.html) uses $\dot{\mathbf v} = \mathbf g_\parallel/(1+\alpha) - a_0\cos\beta\,\hat{\mathbf v}$ and treats adding full $\mathbf g_\parallel$ as a modelling error.
+The site rolling law in [putting-roll-models](putting-roll-models.html) uses $\dot{\mathbf v} = \mathbf g_\parallel/(1+\alpha) - a_0\cos\beta\,\hat{\mathbf v}$, which is the same $5/7$ gravity partition for pure roll when $\alpha=2/5$.
 
-::: {.callout-warning}
-## MISMATCH (G1): Full $g$ Gradient in Roll
+::: {.callout-note}
+## G1: Roll Slope Gravity (resolved at this pin)
 
-- **UpstreamDrift:** `$g_{x,y} = -g\nabla h$` in slide and roll (`solver.py`, `_derivative`).
-- **AffineDrift site:** Gravitational term scaled by $1/(1+\alpha)$ in roll.
-- **Tracker:** [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
-
-Example at 3 % downhill, Stimp 10, pure roll at 1.5 m/s: the code path is ~33 % longer than the site's $(5/7)g$ roll model for the same inputs (review finding on #5624).
+Pure-roll slope forcing in `putting_dynamics` now matches the site's $(5/7)g$ rolling law. Skid still uses the full gradient. The module-level docstring still states ``-g grad h`` without the roll partition — an UpstreamDrift documentation gap, not a runtime disagreement.
 :::
 
 ### Hole-Capture Speed
@@ -252,8 +247,8 @@ Values below are **defaults at the pin**; see [PARAMETERS.md](../PARAMETERS.md) 
 | Face friction | 0.18 (example) | 0.4 default |
 | Hole radius | 53.975 mm | 54 mm |
 | Capture (centre) | 1.31 / 1.63 m/s (site rules) | ~1.64 m/s (code chord) |
-| Roll slope gravity | $(5/7)\mathbf g_\parallel$ | full $\mathbf g_\parallel$ |
-| Critical grade @ Stimp 10 | ~7.84 % (site) | ~5.6 % ($=\mu_r$) |
+| Roll slope gravity | $(5/7)\mathbf g_\parallel$ in derived roll law | $(5/7)\mathbf g_\parallel$ in ROLL; full $\mathbf g_\parallel$ in SLIDE |
+| Critical grade @ Stimp 10 | ~7.84 % (site formula) | ~5.6 % ($=\mu_r$ at Stimp 10; static hold uses `mu_static`) |
 
 ## Related Articles
 

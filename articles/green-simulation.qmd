@@ -202,14 +202,14 @@ The [Python integrator](https://github.com/D-sorganization/Tools/blob/96ab281ef0
 
 In these inspected motion and surface paths, resistance is isotropic and scenario-constant; there is no resolved moisture evolution, calibrated spatial imperfection field, rim-contact dynamics or aerodynamic force. This is a bounded statement about these modules, not a survey of every component or commercial simulator. Omitting wind does not establish that wind is negligible for every condition or accuracy target. An unimplemented effect should enter the model's limitation statement and validation plan, rather than acquire invented constants.
 
-### 4.1 UpstreamDrift `putting_dynamics` at [`625a16e68`](https://github.com/D-sorganization/UpstreamDrift/tree/625a16e6897b88ab29fb5a64c65ecee820dd58f5)
+### 4.1 UpstreamDrift `putting_dynamics` at [`4a1c5f43`](https://github.com/D-sorganization/UpstreamDrift/tree/4a1c5f43433c8bbfbe48e269fb0fcfeb61266829)
 
-Source inspection for this column is dated **2026-11-11** (`src/shared/python/putting_dynamics/`). It is **not** a re-execution of the launcher tile. Full equations, capture bounds and mismatch flags live on [UpstreamDrift Physics Models](upstreamdrift-physics-models.html). Code-side corrections: [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
+Source inspection for this column is dated **2026-11-16** (`src/shared/python/putting_dynamics/`). It is **not** a re-execution of the launcher tile. Full equations, capture bounds and mismatch flags live on [UpstreamDrift Physics Models](upstreamdrift-physics-models.html). CI checks this pin with `scripts/check_upstreamdrift_physics_models.py`. Code-side corrections: [UpstreamDrift #15010](https://github.com/D-sorganization/UpstreamDrift/issues/15010).
 
 | Part | Observed behaviour at the pin | Consequence for interpretation |
 |---|---|---|
-| Motion | RK4 at 2 ms; modes `AIRBORNE → SLIDE → ROLL → REST` | Same step discipline as the Tools audit above, but a different slope term |
-| Slope term | Rolling uses $g_{x,y}=-g\,\nabla h$ without a $(1+\alpha)$ factor | Disagrees with the rolling law derived in [putting-roll-models](putting-roll-models.html) |
+| Motion | RK4 at 2 ms; modes `AIRBORNE → SLIDE → ROLL → REST` | Same step discipline as the Tools audit above |
+| Slope term | SLIDE: $g_{x,y}=-g\,\nabla h$; ROLL: $(5/7)\,g_{x,y}$ from the same gradient | Aligns with the $(5/7)g$ roll law in [putting-roll-models](putting-roll-models.html) once skid ends |
 | Capture | Chord bound $v_{\mathrm{capture}}=2\sqrt{R_h^2-b^2}\sqrt{g/(2r)}$ (~1.64 m/s centre) | Neither the finite-ball bound nor the Tools effective-radius proxy |
 | Friction defaults | `mu_slide=0.40`, `mu_static=0.08`, Stimp law uses 1.83 m/s release | Differs from several site examples and from §4 Tools groove derivation |
 | Stopping | Speed $\le 0.005$ m/s plus static-hold test on slope | No separate static rolling-couple feasibility table on the site |
