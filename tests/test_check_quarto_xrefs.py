@@ -103,3 +103,27 @@ class TestReferences:
     def test_an_email_like_string_is_not_a_reference(self, tmp_path: Path) -> None:
         _, used, _ = scan(write(tmp_path, "Contact someone@sec-ondary.example.\n"))
         assert used == []
+
+
+class TestFenceBoundaries:
+    """Only a matching, sufficiently long, bare fence closes an example."""
+
+    def test_shorter_nested_fence_stays_inside_example(self, tmp_path: Path) -> None:
+        text = "````markdown\n```python\n@sec-example\n```\n````\n@sec-real\n"
+        _, used, _ = scan(write(tmp_path, text))
+        assert used == [("sec-real", 6)]
+
+    def test_other_marker_does_not_close_example(self, tmp_path: Path) -> None:
+        text = "```text\n~~~\n@sec-example\n~~~\n```\n@sec-real\n"
+        _, used, _ = scan(write(tmp_path, text))
+        assert used == [("sec-real", 6)]
+
+    def test_info_string_does_not_close_example(self, tmp_path: Path) -> None:
+        text = "```text\n```python\n@sec-example\n```\n@sec-real\n"
+        _, used, _ = scan(write(tmp_path, text))
+        assert used == [("sec-real", 5)]
+
+    def test_longer_closing_fence_restores_definitions(self, tmp_path: Path) -> None:
+        text = "~~~text\n## Example {#sec-hidden}\n~~~~  \n## Real {#sec-real}\n"
+        defined, _, _ = scan(write(tmp_path, text))
+        assert set(defined) == {"sec-real"}
