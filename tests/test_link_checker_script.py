@@ -160,3 +160,35 @@ def test_main_writes_empty_json_report_when_no_warnings(
 
     report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report == []
+
+
+def test_extract_internal_refs_returns_full_labels(link_checker) -> None:
+    content = "See @fig-does-not-exist, @sec-ch7:mechanics and @eq-ch4:contraction-LMI."
+    assert link_checker.extract_internal_refs(content) == {
+        "fig-does-not-exist",
+        "sec-ch7:mechanics",
+        "eq-ch4:contraction-LMI",
+    }
+
+
+def test_find_ref_definitions_reads_attribute_and_chunk_labels(tmp_path, link_checker) -> None:
+    (tmp_path / "a.qmd").write_text(
+        "# Intro {#sec-intro}\n"
+        '![Cap](x.svg){#fig-pair fig-alt="alt"}\n'
+        "```{python}\n#| label: fig-plot\n```\n"
+        "## Mech {#sec-ch7:mechanics}\n",
+        encoding="utf-8",
+    )
+    assert link_checker.find_ref_definitions(str(tmp_path)) == {
+        "sec-intro",
+        "fig-pair",
+        "fig-plot",
+        "sec-ch7:mechanics",
+    }
+
+
+def test_check_file_flags_undefined_ref_when_same_prefix_is_defined(tmp_path, link_checker) -> None:
+    page = tmp_path / "page.qmd"
+    page.write_text("See @fig-pair and @fig-missing.\n", encoding="utf-8")
+    errors, _ = link_checker.check_file(page, {"fig-pair"}, internal_only=True)
+    assert errors == [f"{page}: Undefined reference: @fig-missing"]
