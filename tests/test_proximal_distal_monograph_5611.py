@@ -8,7 +8,9 @@ BIB = MONOGRAPH / "references.bib"
 CH03B = MONOGRAPH / "chapters/_ch03b_hand_path_attribution.qmd"
 CH05 = MONOGRAPH / "chapters/_ch05_two_hand_wrench.qmd"
 CH05B = MONOGRAPH / "chapters/_ch05b_forward_two_hand.qmd"
+CH04 = MONOGRAPH / "chapters/_ch04_counterfactual_ensemble.qmd"
 CH06_METHODS = MONOGRAPH / "chapters/_ch06_methods.qmd"
+NOTATION = ROOT / "NOTATION.md"
 CH06CD = MONOGRAPH / "chapters/_ch06cd_articulated_attribution.qmd"
 CH06BC = MONOGRAPH / "chapters/_ch06bc_torque_allocation_preload.qmd"
 CH07C = MONOGRAPH / "chapters/_ch07c_transmission_robustness.qmd"
@@ -113,6 +115,25 @@ def test_ch05_differential_normal_mode_sign_wording() -> None:
     assert "differential normal mode" in ch05
     assert "+258.0 N" in ch05
     assert "large and negative under @eq-normal-force-couple" not in ch05
+
+
+def test_notation_registers_canonical_two_hand_differential_force() -> None:
+    """NOTATION.md matches monograph lead-minus-trail differential convention (#5611 F9)."""
+    text = NOTATION.read_text(encoding="utf-8")
+    assert "## Two-Hand Grip Force Modes" in text
+    assert r"\mathbf F_d=\frac{\mathbf F_L-\mathbf F_T}{2}" in text
+    assert r"\mathbf d=\mathbf r_T-\mathbf r_L" in text
+    assert r"\mathbf M_{F,M}=-\mathbf d\times\mathbf F_d" in text
+    assert "do not reintroduce" in text.lower()
+
+
+def test_counterfactual_ensemble_discloses_post_delivery_horizons() -> None:
+    """Killswitch cuts that extend past the registered delivery event are flagged (#5611 F15)."""
+    ch04 = CH04.read_text(encoding="utf-8")
+    assert "0.3493" in ch04
+    assert "120 ms" in ch04
+    assert "no ball contact" in ch04.lower() or "no ball-contact" in ch04.lower()
+    assert "post-delivery" in ch04.lower() or "after the delivery" in ch04.lower()
 
 
 def test_lee2026_bibliography_record_matches_crossref_doi() -> None:
