@@ -325,6 +325,14 @@ def memory_tracking(
 # ---------------------------------------------------------------------------
 
 
+def _validate_benchmark_count(value: int, name: str, *, minimum: int) -> None:
+    """Reject invalid workload counts before any benchmark execution."""
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{name} must be an integer >= {minimum}")
+    if value < minimum:
+        raise ValueError(f"{name} must be >= {minimum}")
+
+
 def benchmark(
     func: Callable[..., Any],
     args: tuple[Any, ...] = (),
@@ -343,8 +351,8 @@ def benchmark(
         func: The callable to benchmark.
         args: Positional arguments to pass.
         kwargs: Keyword arguments to pass.
-        iterations: Number of timed iterations (must be >= 1).
-        warmup: Number of untimed warmup iterations.
+        iterations: Integer number of timed iterations (>= 1; booleans rejected).
+        warmup: Integer number of untimed warmup iterations (>= 0; booleans rejected).
         label: Optional label (defaults to ``func.__name__``).
         report: Optional ProfilingReport to collect the result into.
 
@@ -352,11 +360,11 @@ def benchmark(
         A BenchmarkResult with per-iteration timings.
 
     Raises:
-        ValueError: If iterations < 1.
+        ValueError: If either count violates its integer/range contract, before
+            the callable executes or the report changes.
     """
-    if iterations < 1:
-        msg = "iterations must be >= 1"
-        raise ValueError(msg)
+    _validate_benchmark_count(iterations, "iterations", minimum=1)
+    _validate_benchmark_count(warmup, "warmup", minimum=0)
     if kwargs is None:
         kwargs = {}
 
