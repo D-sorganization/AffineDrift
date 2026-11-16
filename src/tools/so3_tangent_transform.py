@@ -15,6 +15,14 @@ type Mat3 = NDArray[np.float64]
 ADJOINT_FD_DT = 4.0e-3
 ADJOINT_FD_EPS = 1.0e-5
 
+# Contract tolerance for "R is in SO(3)" at the so3_log boundary (#5186).
+SO3_ORTHOGONALITY_TOL = 1.0e-10
+# Below this angle the log uses the series theta / sin(theta) = 1 + theta^2 / 6 + ...
+_LOG_SMALL_ANGLE = 1.0e-6
+# At or above this angle sin(theta) is no longer a usable divisor; the axis is
+# recovered from the symmetric part of R instead.
+_LOG_LARGE_ANGLE = np.pi / 2.0
+
 
 def so3_hat(omega: Vec3) -> Mat3:
     """Map R3 to so(3)."""
@@ -35,7 +43,7 @@ def so3_vee(matrix: Mat3) -> Vec3:
 def so3_expm(omega: Vec3, dt: float) -> Mat3:
     """Rodrigues exponential for incremental rotation ``exp(hat(omega) dt)``."""
     angle = float(np.linalg.norm(omega) * dt)
-    if angle < 1e-12:
+    if abs(angle) < 1e-12:
         return np.eye(3, dtype=np.float64) + so3_hat(omega) * dt
     axis = omega / np.linalg.norm(omega)
     hat = so3_hat(axis)
@@ -43,6 +51,38 @@ def so3_expm(omega: Vec3, dt: float) -> Mat3:
         Mat3,
         np.eye(3, dtype=np.float64) + np.sin(angle) * hat + (1.0 - np.cos(angle)) * (hat @ hat),
     )
+
+
+def so3_log(rotation: Mat3, tol: float = SO3_ORTHOGONALITY_TOL) -> Vec3:
+    """Principal logarithm: ``omega`` in R3 with ``exp(hat(omega)) == rotation``.
+
+    Pre: ``rotation`` is a finite 3x3 matrix with ``max|R^T R - I| <= tol`` and
+    ``|det R - 1| <= tol``; otherwise ``ValueError``.
+    Post: ``0 <= |omega| <= pi``.  At exactly pi the axis sign is ambiguous and the
+    component of largest magnitude is chosen non-negative.
+    """
+    rot = np.asarray(rotation, dtype=np.float64)
+    if rot.shape != (3, 3) or not np.all(np.isfinite(rot)):
+        raise ValueError("rotation must be a finite 3x3 matrix")
+    if float(np.max(np.abs(rot.T @ rot - np.eye(3)))) > tol or abs(np.linalg.det(rot) - 1.0) > tol:
+        raise ValueError("rotation must be orthogonal with determinant +1")
+    skew_vec = so3_vee(rot)  # = sin(theta) * axis
+    sine = float(np.linalg.norm(skew_vec))
+    cosine = (float(np.trace(rot)) - 1.0) / 2.0
+    angle = float(np.arctan2(sine, cosine))
+    if angle < _LOG_SMALL_ANGLE:
+        return cast(Vec3, skew_vec * (1.0 + angle * angle / 6.0))
+    if angle < _LOG_LARGE_ANGLE:
+        return cast(Vec3, skew_vec * (angle / sine))
+    # Near pi: S = (R + R^T)/2 = cos I + (1 - cos) n n^T is well conditioned.
+    outer = (((rot + rot.T) / 2.0) - cosine * np.eye(3)) / (1.0 - cosine)
+    pivot = int(np.argmax(np.diag(outer)))
+    axis = outer[:, pivot] / np.sqrt(outer[pivot, pivot])
+    axis = axis / np.linalg.norm(axis)
+    direction = float(axis @ skew_vec)
+    if direction < 0.0 or (direction == 0.0 and axis[int(np.argmax(np.abs(axis)))] < 0.0):
+        axis = -axis
+    return cast(Vec3, angle * axis)
 
 
 def propagate_rotation_body(rotation: Mat3, omega_body: Vec3, dt: float) -> Mat3:
