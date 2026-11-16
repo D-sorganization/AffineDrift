@@ -151,6 +151,23 @@ The **Drag-Curve Ratio (DgCR)** is the restitution-derived ratio
 $(1-\mathrm{COR})/(1+\mathrm{COR})$; it is not an aerodynamic quantity and
 must never use the bare **DCR** acronym.
 
+### Two-Hand Grip Force Modes {#two-hand-grip-force-modes}
+
+Bilateral grip mechanics in the proximal-distal monograph use **lead** ($L$) and
+**trail** ($T$) hand contacts. The separation vector is
+$\mathbf d=\mathbf r_T-\mathbf r_L$. Common and differential force modes are
+
+$$
+\mathbf F_c=\frac{\mathbf F_L+\mathbf F_T}{2},
+\qquad
+\mathbf F_d=\frac{\mathbf F_L-\mathbf F_T}{2}.
+$$
+
+The force-generated midpoint moment is
+$\mathbf M_{F,M}=-\mathbf d\times\mathbf F_d$. Use $\mathbf F_d$ and
+$\mathbf d$ with these signs throughout; do not reintroduce trail-minus-lead or
+right-minus-left variants under other symbols ($\Delta\mathbf F$, $D$, and so on).
+
 ### Equation Symbol Definitions
 
 Pages that opt in to symbol hover references show these definitions when a
