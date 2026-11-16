@@ -111,19 +111,16 @@ def test_vdp_residual_matches_finite_differentiation(example: Any, point: list[f
     assert np.linalg.eigvalsh(actual).max() > 0
 
 
-def test_endpoint_quadratic_is_not_squared_geodesic_distance() -> None:
+def test_endpoint_quadratic_is_not_squared_geodesic_distance(example: Any) -> None:
     """A bounded pullback metric contracts while its endpoint surrogate grows."""
     state = 2.0
     phi = state + 0.8 * np.sin(state)
     first, second = 1 + 0.8 * np.cos(state), -0.8 * np.sin(state)
-    field = -phi / first
-    jacobian = -1 + phi * second / first**2
-    metric = first**2
-    derivative = 2 * first * second * field
-    assert derivative + 2 * metric * jacobian == pytest.approx(-2 * metric)
+    point = example.scalar_pullback_example(state)
+    assert point.contraction_rate() == pytest.approx(1.0)
     length = quad(lambda value: 1 + 0.8 * np.cos(value), 0, state)[0]
     assert length**2 == pytest.approx(phi**2)
-    endpoint_derivative = 2 * state * first * (first + state * second) * field
+    endpoint_derivative = 2 * state * first * (first + state * second) * point.field
     assert endpoint_derivative > 0
 
 
@@ -233,4 +230,11 @@ def test_pullback_flow_has_exact_metric_distance_decay(example: Any) -> None:
 @pytest.mark.parametrize("state", [np.nan, np.inf, -np.inf])
 def test_pullback_example_rejects_nonfinite_state(example: Any, state: float) -> None:
     with pytest.raises(ValueError, match="finite"):
+        example.scalar_pullback_example(state)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("state", [1e308, -1e308])
+def test_pullback_example_rejects_unrepresentable_results(example: Any, state: float) -> None:
+    with pytest.raises(ValueError, match="finite evaluation"):
         example.scalar_pullback_example(state)
