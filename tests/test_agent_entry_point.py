@@ -85,3 +85,10 @@ def test_llms_full_lists_canonical_parameters_json() -> None:
     manifest = load_manifest(MANIFEST_PATH.read_text(encoding="utf-8"))
     _, full = render_both(manifest)
     assert "`data/canonical_parameters.json`" in full
+
+
+def test_llms_full_lists_agent_conventions_json() -> None:
+    manifest = load_manifest(MANIFEST_PATH.read_text(encoding="utf-8"))
+    _, full = render_both(manifest)
+    assert "`data/agent/conventions.json`" in full
+    assert "/pages/upstreamdrift-conventions.html" in full
