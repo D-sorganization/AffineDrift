@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from src.tools.utils import file_utils
 
 
@@ -36,6 +38,32 @@ def test_find_qmd_files_includes_root_files(tmp_path: Path) -> None:
     (tmp_path / "index.qmd").write_text("# Index", encoding="utf-8")
     result = file_utils.find_qmd_files(tmp_path, exclude_dirs=[], include_root=True)
     assert any(f.name == "index.qmd" for f in result)
+
+
+@pytest.mark.parametrize("include_root", [False, True])
+@pytest.mark.parametrize("relative_root", [False, True])
+@pytest.mark.parametrize("string_root", [False, True])
+def test_qmd_root_flag_with_nested_and_excluded_files(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    include_root: bool,
+    relative_root: bool,
+    string_root: bool,
+) -> None:
+    for relative in ["index.qmd", "chapters/intro.qmd", "_site/ignored.qmd"]:
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("# Content", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    root = Path(".") if relative_root else tmp_path
+    root_arg = str(root) if string_root else root
+
+    result = file_utils.find_qmd_files(root_arg, exclude_dirs=["_site"], include_root=include_root)
+
+    expected = [Path("chapters/intro.qmd")]
+    if include_root:
+        expected.append(Path("index.qmd"))
+    assert sorted(path.resolve().relative_to(tmp_path) for path in result) == sorted(expected)
 
 
 def test_find_qmd_files_respects_exclude_dirs(tmp_path: Path) -> None:
