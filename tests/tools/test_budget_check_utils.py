@@ -224,3 +224,37 @@ class TestLoadConfig:
 
         with pytest.raises(AssertionError):
             load_config(tmp_path, "")
+
+
+@pytest.mark.parametrize("direct_roots", [False, True])
+@pytest.mark.parametrize(
+    ("extensions", "expected"),
+    [
+        (None, ["a.py", "b.PY", "c.txt", "script"]),
+        (set(), []),
+        ({".py"}, ["a.py", "b.PY"]),
+        ({""}, ["script"]),
+    ],
+)
+def test_extension_filter_applies_to_all_files(
+    tmp_path: Path, direct_roots: bool, extensions: set[str] | None, expected: list[str]
+) -> None:
+    """None means unrestricted; an explicit set matches every file's suffix."""
+    src = tmp_path / "src"
+    src.mkdir()
+    names = ["a.py", "b.PY", "c.txt", "script"]
+    for name in names:
+        (src / name).write_text("content", encoding="utf-8")
+    roots = [f"src/{name}" for name in names] if direct_roots else ["src"]
+    found = collect_matching_files(tmp_path, roots, [], extensions)
+    assert [path.name for path in found] == expected
+
+
+def test_extension_filter_preserves_exclusions_and_deduplication(tmp_path: Path) -> None:
+    """Filtering still applies with overlapping include roots and exclusions."""
+    src = tmp_path / "src"
+    src.mkdir()
+    for name in ["keep.py", "skip.py", "script"]:
+        (src / name).write_text("content", encoding="utf-8")
+    found = collect_matching_files(tmp_path, ["src", "src/keep.py"], ["skip"], {".py"})
+    assert found == [src / "keep.py"]
