@@ -1,8 +1,12 @@
 """Content contracts for AffineDrift #5610 (PDE energy ledger, closure, evidence strength)."""
 
+import json
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
+FORCE_SOURCE_ARCHIVE = ROOT / "reports/technical-review/force-work-provider-outcomes.json"
 MONOGRAPH = ROOT / "articles/proximal_distal_energy_transfer"
 WRAPPER = ROOT / "articles/proximal-distal-energy-transfer.qmd"
 
@@ -50,6 +54,43 @@ def test_ch03ba_states_velocity_bias_energy_neutral_identity() -> None:
     assert "do not appear as separate sinks" in text
     assert r"\mathrm d K/\mathrm dt" in text
     assert "opposes the instantaneous generalized velocity on net" not in text
+    assert r"\dot{\mathbf q}^{\mathsf T}(\boldsymbol\tau-\mathbf g-\mathbf d)" in text
+    assert r"\boldsymbol\tau+\mathbf g" not in text
+    assert r"\boldsymbol\tau+\mathbf g_{\mathrm{grav}}" not in text
+
+
+def _max_coriolis_impulse_row() -> dict[str, object]:
+    archive = json.loads(FORCE_SOURCE_ARCHIVE.read_text(encoding="utf-8"))
+    qualified = [r for r in archive["outcomes"] if r["status"] == "qualified_impact"]
+    return max(qualified, key=lambda r: r["coriolis_absolute_tangent_impulse_n_s"])
+
+
+def test_ch03ba_max_impulse_work_ledger_matches_archive_sums() -> None:
+    """Quoted component work and the velocity-bias pair sum match the registered archive."""
+    row = _max_coriolis_impulse_row()
+    text = CH03BA.read_text(encoding="utf-8")
+    assert row["candidate"]["wrist_restrain_nm"] == 10
+    assert row["candidate"]["onset_s"] == 0.1
+    coriolis = float(row["coriolis_work_j"])
+    squared = float(row["squared_speed_work_j"])
+    gravity = float(row["gravity_work_j"])
+    applied = float(row["applied_work_j"])
+    assert coriolis == pytest.approx(-100.69, abs=0.005)
+    assert squared == pytest.approx(-33.73, abs=0.005)
+    assert gravity == pytest.approx(25.56, abs=0.005)
+    assert applied == pytest.approx(358.20, abs=0.005)
+    bias_sum = coriolis + squared
+    four_sum = bias_sum + gravity + applied
+    assert bias_sum == pytest.approx(-134.42, abs=0.005)
+    assert four_sum == pytest.approx(249.34, abs=0.01)
+    assert four_sum != pytest.approx(bias_sum, abs=1.0)
+    assert "-100.69 J" in text
+    assert "-33.73 J" in text
+    assert "+25.56 J" in text
+    assert "+358.20 J" in text
+    assert "-134.42" in text
+    assert "213.6" not in text
+    assert "Their sum is $-134.42$" not in text
 
 
 def test_ch05b_does_not_claim_unreported_distal_speed_outcomes() -> None:
