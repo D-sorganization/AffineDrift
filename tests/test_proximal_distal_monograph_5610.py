@@ -89,6 +89,8 @@ def test_ch03ba_max_impulse_work_ledger_matches_archive_sums() -> None:
     assert "+25.56 J" in text
     assert "+358.20 J" in text
     assert "-134.42" in text
+    assert "+249.34" in text
+    assert "changing mass matrix" in text
     assert "213.6" not in text
     assert "Their sum is $-134.42$" not in text
 
