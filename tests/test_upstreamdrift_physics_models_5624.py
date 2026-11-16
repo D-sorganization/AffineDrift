@@ -66,9 +66,25 @@ def test_site_checks_fail_on_stale_g1_callout(tmp_path: Path) -> None:
         }
     ]
     repo = tmp_path
-    (repo / "articles").mkdir(exist_ok=True)
     errors = check_site_files(patched, repo_root=repo)
     assert any("MISMATCH (G1)" in item for item in errors)
+
+
+@pytest.mark.unit
+def test_upstream_checks_fail_without_roll_gravity_partition(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    contract = load_contract()
+    monkeypatch.setattr(
+        "scripts.check_upstreamdrift_physics_models.fetch_upstream_file",
+        lambda _commit, path: {
+            "src/shared/python/putting_dynamics/solver.py": (
+                "HOLE_RADIUS_M = 0.054\ncapture_speed_mps\n"
+            ),
+        }.get(path, ""),
+    )
+    errors = check_upstream_sources(contract)
+    assert any("_roll_g = 5.0 / 7.0" in item for item in errors)
 
 
 @pytest.mark.unit
@@ -84,7 +100,7 @@ def test_upstream_checks_require_roll_gravity_partition(monkeypatch: pytest.Monk
                 "cd0=0.21\nPENNER_LIFT_EXPONENT\nMAX_GOLF_BALL_LIFT_COEFFICIENT = 0.155\n"
             ),
             "src/shared/python/core/physics_constants.py": (
-                'SPIN_DECAY_RATE_S = PhysicalConstant(\n0.05\n"Trackman Data"\n'
+                'SPIN_DECAY_RATE_S = PhysicalConstant(0.05, "1/s", "Trackman Data"'
             ),
             "src/shared/python/putting_dynamics/friction.py": (
                 "STIMP_RELEASE_SPEED_MPS = 1.83\nDEFAULT_SLIDING_MU = 0.40\n"
@@ -104,8 +120,17 @@ def test_main_passes_with_live_upstream_and_current_site() -> None:
 @pytest.mark.unit
 def test_contract_lists_issue_trackers() -> None:
     payload = json.loads(
-        Path("data/upstreamdrift/physics_models_contract.json").read_text(encoding="utf-8")
+        (ROOT / "data/upstreamdrift/physics_models_contract.json").read_text(encoding="utf-8")
     )
     inventory = (ROOT / "articles/upstreamdrift-physics-models.qmd").read_text(encoding="utf-8")
     assert "15010" in inventory
     assert payload["upstream_commit"].startswith("4a1c5f4")
+
+
+@pytest.mark.unit
+def test_critical_grade_row_uses_roll_partition_threshold() -> None:
+    inventory = (ROOT / "articles/upstreamdrift-physics-models.qmd").read_text(encoding="utf-8")
+    assert "~5.6 %" not in inventory
+    row = next(line for line in inventory.splitlines() if "Critical grade @ Stimp 10" in line)
+    assert "~7.84 %" in row
+    assert "$(7/5)\\mu_r$" in row or "(7/5)" in row
