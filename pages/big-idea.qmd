@@ -6,7 +6,7 @@ page-layout: article
 caveats:
   evidence-level: "Conceptual overview and mathematical framing"
   establishes:
-    - "How the control-affine equation dx/dt = f(x) + G(x)u separates passive mechanical drift from active golfer input."
+    - "How the control-affine equation dx/dt = f(x) + G(x)u separates passive mechanical drift from the declared applied-control channel."
     - "How the pointwise Zero-Torque Counterfactual (ZTCF) family and Drift-Control Ratio (DCR) summarize downswing mechanics in a multibody model."
   does-not-establish:
     - "Direct measurement of live human muscle recruitment (EMG) or motor-control intent without experimental instrumentation."
@@ -24,14 +24,14 @@ This page explains the one idea behind most of AffineDrift. It uses no equations
 
 Think of a golf swing as a series of moments. At each moment the body and club have a position and a speed. In the next instant they change. AffineDrift splits that change into two arrows.
 
-The first arrow is the **drift**. It is what gravity and the motion already under way would do on their own, with no help from the golfer. The second arrow is the **push**. It is the extra change that the golfer's muscles add through the joints. Add the two arrows and you get the change the model predicts.
+The first arrow is the **drift**. It is where gravity, momentum, passive loads, and constraints carry the motion with zero declared input. The second arrow is the **push**. It is what the model's declared input (for example, net joint torque) adds at that instant. Add the two arrows and you get the change the model predicts.
 
 {{< include ../_includes/generated/drift-plus-control.qmd >}}
 
 The split comes from a model, not from a camera or a sensor. The model is a set of linked rods with joints. It is a tool for thinking, not a measured picture of a real golfer.
 
 ::: {.callout-note collapse="true" title="In symbols"}
-For readers who like symbols, the whole idea fits in one line: $\dot{x} = f(x) + G(x)u$. Here *x* holds the positions and speeds, *f(x)* is the drift arrow, and *G(x)u* is the push arrow, where *u* stands for the joint torques.
+For readers who like symbols, the whole idea fits in one line: $\dot{x} = f(x) + G(x)u$. Here *x* holds the positions and speeds, *f(x)* is the drift arrow, and *G(x)u* is the push arrow, where *u* is the model's declared control input (for example, net joint torques).
 :::
 
 ## A Swing on a Playground {#playground-swing}
@@ -43,7 +43,7 @@ Now a parent gives a push. The push only makes sense next to the drift. A small 
 That is the first lesson. To ask "what did the golfer add?" you first need "what would have happened anyway?"
 
 ::: {.callout-caution title="Where the analogy breaks"}
-A playground swing is one rope and one seat, and the parent pushes from outside. A golf swing is a chain of body parts and a club. The golfer pushes from inside, with muscles that act across joints and against the ground. A push at one joint also moves the other links, so the push arrow is spread along the whole chain.
+A playground swing is one rope and one seat, and the parent pushes from outside. A golf swing is a chain of body parts and a club. In the model, one joint's push moves the other links too, so the push arrow spreads along the chain. Declared input is not the same as measured muscle effort.
 :::
 
 ## A Thrown Ball and a Pushed Ball {#thrown-and-pushed}
@@ -60,7 +60,7 @@ A thrown ball has a clear moment of release. In the downswing, the golfer never 
 
 This question has a name on this site: the [zero-torque counterfactual](../articles/zero-torque-counterfactual.html) family, or ZTCF family for short ([glossary entry](../pages/glossary.html#zero-torque-counterfactual)).
 
-Pick one moment in the swing. Take the position and speed of every link at that moment. Then, in the model, set the golfer's joint torques to zero and let the model run on from there. The site calls this a branched run, because it branches off the real swing at one moment. Compare that run with the real swing. The gap between them shows what the push added from that moment on, according to the model.
+Pick one moment in the swing. Take the position and speed of every link at that moment. Then, in the model, set the declared input to zero (for example, net joint torques) and let the model run on from there. The site calls this a branched run, because it branches off the real swing at one moment. Compare that run with the real swing. The gap between them shows what the push added from that moment on, according to the model.
 
 There is a family of these comparisons. Some take a single snapshot, and some run the model forward from a chosen moment. Each page that uses one says which it means, because they answer different questions.
 
