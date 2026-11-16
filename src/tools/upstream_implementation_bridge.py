@@ -8,8 +8,12 @@ from __future__ import annotations
 
 import json
 import re
+import urllib.error
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
+
+from scripts.pinned_https import GITHUB_RAW_HOST, read_pinned_https, require_commit_sha
 
 SCHEMA = "affinedrift/upstream-implementation-links/v1"
 BLOB_PATTERN = re.compile(
@@ -101,4 +105,45 @@ def verify_document(document: dict[str, Any], root: Path) -> list[str]:
             findings.append("bridge entry must be an object")
             continue
         findings.extend(verify_bridge(bridge, root))
+    return findings
+
+
+FetchPath = Callable[[str, str], None]
+
+
+def _default_fetch_path(commit: str, path: str) -> None:
+    """Fetch one pinned UpstreamDrift path to prove it exists at ``commit``."""
+    require_commit_sha(commit)
+    normalized = path.lstrip("/")
+    url = f"https://{GITHUB_RAW_HOST}/D-sorganization/UpstreamDrift/{commit}/{normalized}"
+    read_pinned_https(url, host=GITHUB_RAW_HOST)
+
+
+def verify_remote_paths(
+    document: dict[str, Any],
+    *,
+    fetch_path: FetchPath | None = None,
+) -> list[str]:
+    """Verify ledger paths exist at their pinned commits on raw.githubusercontent.com."""
+    fetch = fetch_path or _default_fetch_path
+    findings: list[str] = []
+    seen: set[tuple[str, str]] = set()
+    for bridge in document["bridges"]:
+        if not isinstance(bridge, dict):
+            continue
+        bridge_id = str(bridge.get("id", "?"))
+        commit = str(bridge.get("commit", ""))
+        if not FULL_SHA.match(commit):
+            findings.append(f"{bridge_id}: commit must be a 40-character SHA for remote check")
+            continue
+        for raw_path in bridge.get("paths") or []:
+            path = str(raw_path).rstrip("/")
+            key = (commit, path)
+            if key in seen:
+                continue
+            seen.add(key)
+            try:
+                fetch(commit, path)
+            except (OSError, ValueError, urllib.error.URLError) as error:
+                findings.append(f"{bridge_id}: missing remote path {path} at {commit[:8]} ({error})")
     return findings

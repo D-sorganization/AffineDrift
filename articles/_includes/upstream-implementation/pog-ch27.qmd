@@ -1,0 +1,11 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-pog-ch27}
+
+::: {.callout-note appearance="simple"}
+Passive impedance and forward ZTCF constructions on this page describe the drift field $\dot x=f_{\mathrm{bare}}+f_{\mathrm{imp}}$ at a declared state. UpstreamDrift separates that drift from active control on backend-agnostic dynamics providers at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
+
+- **Engine-agnostic ZTCF accelerations:** [`ztcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/biomechanics/ztcf.py) — solves $M\ddot q=\tau_{\mathrm{passive}}-C-G$ with zero drive torque.
+- **Canonical drift/control split:** [`ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/simulation_backends/ztcf_zvcf.py) — pointwise ZTCF, ZVCF, and affine torque partition on a `DynamicsProvider`.
+- **Golf humanoid counterfactual runners:** [`counterfactuals.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/counterfactuals.py) — integrates zero-torque branches on the MuJoCo golf stack.
+
+**Convention note:** UpstreamDrift ZTCF modules evaluate instantaneous drift at measured states; they do not forward-integrate a counterfactual rollout unless a runner explicitly does so.
+:::

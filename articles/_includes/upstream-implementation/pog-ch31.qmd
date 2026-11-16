@@ -1,0 +1,11 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-pog-ch31}
+
+::: {.callout-note appearance="simple"}
+Launch counterfactuals in this chapter are model-internal comparisons: they hold contacts, passive elasticity, and any declared controller state as stated in the intervention. UpstreamDrift exposes the same zero-torque and drift-field primitives used elsewhere in the golf suite at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
+
+- **Drift acceleration under zero torque:** [`ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/simulation_backends/ztcf_zvcf.py) — `ztcf_acceleration` and `drift_and_control_split` on canonical-v2 trajectories.
+- **Shared ZTCF force pipeline:** [`ztcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/biomechanics/ztcf.py) — engine-agnostic passive-force path before impact contact models attach.
+- **Humanoid counterfactual integration:** [`counterfactuals.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/counterfactuals.py) — golf-model runners that branch from a measured pre-impact state.
+
+**Convention note:** predicted launch from a ZTCF branch is valid only inside the declared model, contact set, and intervention timing named in the run manifest—not as an equipment or training prescription.
+:::
