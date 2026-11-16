@@ -51,10 +51,12 @@ class ConventionsRegistry:
 
 
 def _load_schema(path: Path) -> dict[str, Any]:
+    """Load a bundled JSON Schema object for registry validation."""
     return cast(dict[str, Any], json.loads(path.read_text(encoding="utf-8")))
 
 
 def _validate_schema(instance: object, schema_path: Path, label: str) -> None:
+    """Reject registry documents that violate the supplied JSON Schema."""
     validator = Draft202012Validator(_load_schema(schema_path), format_checker=FormatChecker())
     errors = sorted(validator.iter_errors(instance), key=lambda err: list(err.absolute_path))
     if errors:
@@ -66,6 +68,7 @@ def _validate_schema(instance: object, schema_path: Path, label: str) -> None:
 
 
 def _entry(raw: dict[str, Any]) -> ConventionEntry:
+    """Convert a validated convention row into its immutable representation."""
     return ConventionEntry(
         id=str(raw["id"]),
         category=str(raw["category"]),
@@ -114,6 +117,7 @@ def validate_conventions_against_notation(registry: ConventionsRegistry, notatio
 
 
 def _anchor_id(source_anchor: str) -> str | None:
+    """Extract the heading fragment used to check a convention source."""
     match = re.search(r"#(.+)$", source_anchor)
     return match.group(1) if match else None
 
