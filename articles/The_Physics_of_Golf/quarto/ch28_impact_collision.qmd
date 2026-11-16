@@ -70,6 +70,27 @@ These distinctions underlie standard golf impact treatments~[@Jorgensen1994; @Pe
 
 ## Effective Mass and Off-Centre Impact
 
+### Deriving Directional Effective Mass {#sec-effective_mass_derivation}
+
+Treat the head as a free rigid body with centre-of-mass velocity $\mathbf v_c$
+and spin $\boldsymbol\omega$ immediately before contact. An isolated normal
+impulse $J\hat n$ on the ball implies reaction $-J\hat n$ on the head at
+contact offset $\mathbf r$ from the centre of mass. Linear and angular
+impulse--momentum give
+$$
+\Delta\mathbf v_c=-\frac{J\hat n}{M},\qquad
+\Delta\boldsymbol\omega=I_c^{-1}\bigl(\mathbf r\times(-J\hat n)\bigr).
+$$
+The contact-point velocity change is
+$$
+\Delta\mathbf v_P=\Delta\mathbf v_c+\Delta\boldsymbol\omega\times\mathbf r
+=-J\left[\frac{\hat n}{M}+\bigl(\mathbf r\times\hat n\bigr)^\top I_c^{-1}(\mathbf r\times\hat n)\,\hat n\right].
+$$
+The bracketed scalar is $1/M_{\rm eff}$ when $\mathbf r\cdot\hat n=0$ and the
+inertia tensor is expressed in the strike frame [@Jorgensen1994; @Penner2003].
+Projecting on $\hat n$ shows how much normal impulse is required per unit
+change in the normal component of contact velocity---the same coefficient that
+enters the rebound formulas below.
 
 For a free rigid clubhead, an impulse $J\hat n$ produces translational and
 rotational changes. With inertia tensor $I_c$ about its centre of mass,
@@ -114,6 +135,27 @@ Impulse $J\hat n$ on the ball implies reaction $-J\hat n$ on the head at the con
 Plan-view schematic of a rigid clubhead at off-centre impact. The impact normal unit vector points along the face normal into the ball. The offset vector runs from the head center of mass to the contact point on the heel side. The reaction impulse on the head acts opposite to the ball impulse along the impact normal. The induced head yaw rate arises from the heel-offset angular impulse about the center of mass.
 </details>
 :::
+
+### Gear-Effect Spin Closure {#sec-gear_effect_spin_closure}
+
+The heel-offset example above yields head yaw $\Delta\omega_z\simeq+0.02J/I_{zz}$.
+After the impulse, the face point at $\mathbf r$ acquires tangential velocity
+$|\Delta\boldsymbol\omega\times\mathbf r|\simeq|\Delta\omega_z|\,|\mathbf r|$.
+With an illustrative normal impulse $J=3.08\ \mathrm{N\,s}$---the same scale as a
+$0.04593\ \mathrm{kg}$ ball departing near $67\ \mathrm{m/s}$ in the centre-of-mass
+frame---this gives $\Delta\omega_z\simeq137\ \mathrm{rad/s}$ and
+$|\Delta\boldsymbol\omega\times\mathbf r|\simeq2.7\ \mathrm{m/s}$ tangential to
+the face. That tangential contact-point motion is not ball sidespin by itself:
+it changes the relative sliding velocity that friction must close.
+
+In gross sliding with coefficient $\mu=0.2$ (an illustrative value, not a
+universal calibration), a tangential impulse bounded by
+$\|J_t\|\le\mu J$ can add spin opposite in sign to the toe-ward sidespin tendency
+of a heel strike---the usual **gear-effect** statement in driver design
+[@Jorgensen1994]. Face bulge, roll, or a tilted normal supply the geometric bias;
+friction or tangential compliance supplies the spin impulse. The flat-face,
+centred-normal numbers in @ex-gear_effect isolate $M_{\rm eff}$ and head yaw
+without claiming a measured spin increment.
 
 ## Oblique Contact and Spin {#sec-oblique_contact_spin}
 
