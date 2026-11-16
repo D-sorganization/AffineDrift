@@ -1,0 +1,72 @@
+# Regression contracts for learning paths and resources prose (#5618).
+# Enforced by scripts/check_learning_path_resources.py and tests.
+
+global_rules:
+  - globs:
+      - resources/**/*.qmd
+    forbidden:
+      - pinocchio.org
+      - "Interaction Forces in Golf Swing (Carol Putnam)"
+      - "Personalized coaching using AffineDrift principles"
+      - "Multibody Impact Dynamics & Oblique Collision"
+      - "Aerodynamic Drag & Lift on Dimpled Spheres"
+      - "Comparing against a real recorded dataset checks whether"
+      - "by Michael T. Vaughn"
+      - "Contraction Analysis of Nonlinear Systems"
+      - "Verify flatness for acrobat"
+      - "Contraction mapping and fixed-point"
+
+file_rules:
+  - path: resources/resources-websites.qmd
+    required:
+      - stack-of-tasks.github.io/pinocchio
+
+  - path: resources/resources-books.qmd
+    required:
+      - "by Ville Hirvonen"
+      - "On Contraction Analysis for Non-linear Systems"
+
+  - path: resources/resources-papers.qmd
+    required:
+      - "Interaction Moments in Striking and Throwing"
+      - "10.1016/0021-9290(93)90084-R"
+
+  - path: resources/research-review-interaction-forces.qmd
+    required:
+      - "Golf-specific transfer remains site inference"
+
+  - path: resources/learning-path-foundations.qmd
+    forbidden:
+      - "No prerequisites assumed"
+      - "Walter Lewin"
+    required:
+      - "Chapters 3 and 8"
+      - "8.01SC"
+
+  - path: resources/learning-path-control-theory.qmd
+    required:
+      - "Chapters 13–14"
+      - "Contraction analysis (Lohmiller–Slotine)"
+      - "planar quadrotor"
+
+  - path: resources/learning-path-golf-science.qmd
+    required:
+      - ch11_flexible_shaft
+      - ch30_kinetic_chain
+      - "Assess coaching and fitting claims"
+
+  - path: resources/learning-path-biomechanics.qmd
+    forbidden:
+      - "Soh & Bhatnagar"
+    required:
+      - "Wolpert & Ghahramani (2000)"
+
+  - path: resources/on-ramp-paths.qmd
+    required:
+      - "../models/programming/workflows.html"
+      - installation-verification
+
+  - path: models/programming/workflows.qmd
+    required:
+      - "python3 -m scripts.companion_workflows execute"
+      - verify_installation.py

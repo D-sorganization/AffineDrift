@@ -8,6 +8,9 @@ Enforces:
 3. 3Blue1Brown is not listed twice in Foundations Module 1.
 4. Golf Science Module 1 links to the correct chapters (ch28, ch19, ch31) via relative anchors.
 5. Biomechanics schedule has no overlapping module weeks.
+
+#5618 citation, attribution, and URL regressions are also enforced offline by
+``config/learning_path_resource_contract.yml`` via ``scripts/check_learning_path_resources.py``.
 """
 
 from __future__ import annotations

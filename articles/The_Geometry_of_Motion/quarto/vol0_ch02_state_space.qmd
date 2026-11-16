@@ -303,23 +303,24 @@ At the top, the displacement is $\eta=\theta-\pi$, so $\ddot\eta=(g/\ell)\eta$ t
 ## Stability Requires More Than an Eigenvalue List
 []{#sec-phase_portraits}
 
-[]{#thm-stability}
-[]{#thm-stability_classification}
 []{#sec-equilibrium_summary}
 
 ### Linear Classification and Jordan Blocks
 
+::: {#thm-stability-classification}
+### LTI Stability From Eigenvalues and Jordan Form
+
 For an autonomous finite-dimensional LTI system, the origin is exponentially asymptotically stable exactly when $A$ is Hurwitz: all eigenvalues have negative real part. It is Lyapunov stable exactly when every eigenvalue has nonpositive real part and every eigenvalue on the imaginary axis is semisimple (all its Jordan blocks have size one). A positive real part or a nontrivial imaginary-axis Jordan block gives instability.
+:::
 
 In two real dimensions, real negative eigenvalues produce a stable node; real positive ones produce an unstable node. They do not produce spirals. Opposite signs give a saddle. Nonreal conjugates with negative or positive real part give inward or outward spirals. A nonzero purely imaginary pair gives a linear center with periodic elliptical orbits. Repeated real eigenvalues require the eigenvector/Jordan structure to distinguish node types. Zero eigenvalues require their own examination.
 
-For example,
-[]{#eq-state_jordan_example}
+For example, @eq-state-jordan-example shows a zero-eigenvalue pair with a nontrivial Jordan block:
 
 $$
 A=\begin{bmatrix}0&1\\0&0\end{bmatrix},\qquad
  e^{At}=\begin{bmatrix}1&t\\0&1\end{bmatrix}.
-$$
+$$ {#eq-state-jordan-example}
 
 Both eigenvalues are zero, but a nonzero initial velocity makes position grow without bound. Even when $A$ is Hurwitz, nonnormal matrices can amplify the Euclidean norm transiently. Eigenvalues describe asymptotic rates and modal structure; they do not determine every finite-time error or monotonicity property.
 
@@ -364,12 +365,11 @@ Rank alone says nothing about feasibility under torque, speed, contact or state 
 
 ### PBH Tests Use the Correct Side
 
-The equivalent Popov--Belevitch--Hautus test is
-[]{#eq-state_pbh}
+The equivalent Popov--Belevitch--Hautus test is @eq-state-pbh:
 
 $$
 \operatorname{rank}[\lambda I-A\ \ B]=n\quad\text{for every }\lambda\in\mathbb C.
-$$
+$$ {#eq-state-pbh}
 
 A failure means there is a nonzero complex row $w^*$ with $w^*A=\lambda w^*$ and $w^*B=0$: a left eigenvector annihilates the input. Right eigenvectors do not give this test. The double integrator above with $B=(0,1)^T$ is controllable, even though its right zero-eigenvector $(1,0)^T$ is orthogonal to $B$. The rank and Gramian formulations, with unrestricted-input assumptions, are also developed in Kia's lecture notes [@KiaReachabilityNotes].
 
@@ -377,16 +377,19 @@ A failure means there is a nonzero complex row $w^*$ with $w^*A=\lambda w^*$ and
 []{#sec-observability}
 
 
-Subtract the known forced response and direct feedthrough from the measured output. The remaining signal is $Ce^{At}x_0$. The initial state is uniquely recoverable from its noiseless history over a positive interval exactly when
-[]{#eq-observability_matrix}
+Subtract the known forced response and direct feedthrough from the measured output. The remaining signal is $Ce^{At}x_0$. The initial state is uniquely recoverable from its noiseless history over a positive interval exactly when @eq-observability-matrix holds:
 
 $$
 \mathcal O=\begin{bmatrix}C\\CA\\\vdots\\CA^{n-1}\end{bmatrix},\qquad
  \operatorname{rank}\mathcal O=n.
-$$
-[]{#def-observability_def}
-[]{#thm-observability_rank}
-[]{#thm-kalman_observability}
+$$ {#eq-observability-matrix}
+
+::: {#thm-kalman-observability}
+### Kalman Observability Rank Condition
+
+The pair $(A,C)$ is observable if and only if $\operatorname{rank}\mathcal O=n$ in @eq-observability-matrix.
+:::
+
 The observability Gramian $\int_0^T e^{A^Tt}C^TCe^{At}dt$ proves this by the same squared-norm argument. Formally differentiating the residual output generates the rows of $\mathcal O$; directly differentiating noisy measurements is usually a poor estimator. Independent sample noise of variance $\sigma^2$ gives variance $2\sigma^2/\Delta t^2$ in a forward difference. An observer needs a noise model, conditioning and bandwidth decisions in addition to structural observability.
 
 The duality is between reachability of $(A,B)$ and observability of $(A^T,B^T)$; similarly, observability of $(A,C)$ is reachability of $(A^T,C^T)$. In the motor example the controllability rank is three, but current-only measurement $C=(1,0,0)$ has observability rank two. An unknown constant angle offset leaves all future current measurements unchanged. Adding an angle measurement changes observability, not the open-loop pair $(A,B)$.

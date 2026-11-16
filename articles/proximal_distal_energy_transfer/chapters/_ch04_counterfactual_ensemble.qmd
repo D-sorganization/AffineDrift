@@ -47,6 +47,15 @@ residuals. Commands are sampled at every state time, including the terminal
 endpoint, so a horizon ending exactly on a torque switch uses the new endpoint
 command for terminal force and power.
 
+The registered restrain-then-drive reference row reaches its geometric
+delivery event at 0.3493 s (@sec-methods-impact). The latest cut time in this
+ensemble is 0.320 s, but a 120 ms horizon extends the compared futures to
+0.440 s, well after that event. The rigid-shaft model has **no ball contact**;
+both futures therefore continue in free flight once the club passes the
+delivery configuration. Cells in @fig-counterfactual-divergence-maps whose
+cut-plus-horizon interval crosses 0.3493 s compare **post-delivery**
+kinematics, not pre-impact downswing persistence alone.
+
 ## Why Cut Time and Horizon Matter {#sec-cut-horizon}
 
 A counterfactual effect is not a property of a trajectory in the abstract. It
