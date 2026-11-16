@@ -37,14 +37,17 @@ _BOOK2_WEB_LINK = re.compile(
 
 
 def _rel(repo_root: Path, path: Path) -> str:
+    """Display a repository-relative path consistently across operating systems."""
     return str(path.relative_to(repo_root)).replace("\\", "/")
 
 
 def _read(path: Path) -> str:
+    """Read a manuscript source using the repository's UTF-8 encoding."""
     return path.read_text(encoding="utf-8")
 
 
 def _volume0_violations(repo_root: Path) -> list[str]:
+    """Check that the introductory blurb names the supported rotation topics."""
     path = repo_root / "articles/The_Geometry_of_Motion/quarto/volume0.qmd"
     text = _read(path)
     violations: list[str] = []
@@ -58,6 +61,7 @@ def _volume0_violations(repo_root: Path) -> list[str]:
 
 
 def _volume1_violations(repo_root: Path) -> list[str]:
+    """Require the landing page to link every published Volume I chapter."""
     path = repo_root / "books/tangent-space-methods.qmd"
     text = _read(path)
     violations: list[str] = []
@@ -86,6 +90,7 @@ def _volume2_chapter_sections(repo_root: Path) -> list[tuple[str, str]]:
 
 
 def _volume2_violations(repo_root: Path) -> list[str]:
+    """Compare Volume II landing titles and links with manuscript sections."""
     landing_path = repo_root / "books/control-is-motion.qmd"
     text = _read(landing_path)
     violations: list[str] = []
@@ -124,6 +129,7 @@ def _volume2_violations(repo_root: Path) -> list[str]:
 
 
 def _stale_audit_violations(repo_root: Path) -> list[str]:
+    """Keep archived audit instructions out of the published manuscript tree."""
     gom_root = repo_root / "articles/The_Geometry_of_Motion"
     violations: list[str] = []
     for name in _STALE_AUDIT_FILES:
