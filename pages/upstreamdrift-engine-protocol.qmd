@@ -311,7 +311,7 @@ control operand). The `PhysicsEngine` protocol still carries an older method nam
 | Zero-velocity gravity acceleration | not ZVCF | `compute_gravity_only_acceleration(q)` | Legacy diagnostic ([L233-L243][dyn-if-drift]) |
 | Old `compute_zvcf(q)` | not ZVCF | Deprecated shim to the row above in MuJoCo, Pinocchio and the putting-green engine ([MuJoCo L921-L927][mj-drift]) | Drake keeps a direct gravity-only implementation ([L713-L756][drake-drift]); OpenSim and MyoSuite compute a zero-control, zero-velocity forward pass, which includes model forces or constraints ([OpenSim L1020-L1035][os-ztcf], [MyoSuite L80-L102][myo-drift]) |
 
-Calling `compute_zvcf(q)` and labeling the result "ZVCF" will not reconstruct
+`compute_zvcf(q)` returns a zero-velocity baseline (gravity-only acceleration at $v=0$, $u=0$), so its output must not be called ZVCF on this site: it will not reconstruct
 $\ddot q \approx a_{\mathrm{ZTCF}}+a_{\mathrm{ZVCF}}$ under AffineDrift notation.
 
 ## Integrator, Timestep, and Contact Defaults {#integrator-defaults}
