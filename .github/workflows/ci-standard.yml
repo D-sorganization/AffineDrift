@@ -165,6 +165,9 @@ jobs:
         # #5626: every launcher_manifest.json tile at the provider commit must appear
         # in the installed companion manifest (staleness guard after pin bumps).
         run: python3 -m scripts.check_companion_launcher_freshness
+      - name: Verify Motion-Control Companions Match Rewritten Chapters
+        # #5615: stale JSX companions and contradictory sidecar prose must not reappear.
+        run: python3 -m scripts.check_motion_control_companions
       - name: Verify Software Freshness Dashboard Is Current
         run: python3 -m scripts.generate_companion_freshness --check
       - name: Verify Symbol Registry Is Current
