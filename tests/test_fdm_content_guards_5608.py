@@ -8,6 +8,12 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BOOK_DIR = REPO_ROOT / "articles" / "forward_dynamics_matching"
 PANDOC_MATH_RESIDUE = re.compile(r"\(\\\|")
+LIN_PANDY_DOI = re.compile(r"Lin and Pandy[^\]]{0,120}10\.1016/j\.jbiomech\.2017\.04\.038")
+DORSCHKY_WRONG_DOI = re.compile(r"Dorschky.{0,120}?10\.1016/j\.jbiomech")
+WRONG_DORSCHKY_CITATION = (
+    "Dorschky et al., direct-collocation tracking of 3D locomotion, "
+    "DOI 10.1016/j.jbiomech.2017.04.038"
+)
 
 
 def _chapter(name: str) -> str:
@@ -16,9 +22,9 @@ def _chapter(name: str) -> str:
 
 def test_collocation_documents_hermite_simpson_defects() -> None:
     text = _chapter("07_collocation.qmd")
-    assert "### Hermite-Simpson Defects" in text
+    assert re.search(r"### Hermite[\u2013-]Simpson Defects", text)
     assert r"\frac{h_k}{6}" in text
-    assert "block bidiagonal" in text
+    assert re.search(r"block bidiagonal", text, re.IGNORECASE)
 
 
 def test_index_fixes_notation_and_exercise_scope() -> None:
@@ -30,16 +36,21 @@ def test_index_fixes_notation_and_exercise_scope() -> None:
     assert "Survey chapters (2, 3, and 24)" in text
 
 
+def test_dorschky_doi_guard_detects_wrong_citation() -> None:
+    """Self-test: negative guard must fire on the pre-#5608 mis-attributed citation."""
+    assert DORSCHKY_WRONG_DOI.search(WRONG_DORSCHKY_CITATION)
+    assert not LIN_PANDY_DOI.search(WRONG_DORSCHKY_CITATION)
+
+
 def test_collocation_doi_attributes_lin_and_pandy() -> None:
     text = _chapter("07_collocation.qmd")
-    assert "Lin and Pandy" in text
-    assert "10.1016/j.jbiomech.2017.04.038" in text
-    assert not re.search(r"Dorschky[^.]{0,80}10\.1016/j/jbiomech\.2017\.04\.038", text)
+    assert LIN_PANDY_DOI.search(text)
+    assert not DORSCHKY_WRONG_DOI.search(text)
 
 
 def test_gradients_describes_crocoddyl_integrator_semantics() -> None:
     text = _chapter("10_gradients.qmd")
-    assert "Rosenbrock" in text
+    assert re.search(r"rosenbrock", text, re.IGNORECASE)
     assert "node_integrator" in text
 
 
