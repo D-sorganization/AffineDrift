@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
@@ -29,6 +30,15 @@ def load_runtime_performance_budget(config_path: Path) -> dict[str, Any]:
     return data
 
 
+def _valid_limit(value: Any, *, allow_zero: bool = False) -> bool:
+    """Accept finite numeric limits; booleans are never performance thresholds."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    if isinstance(value, float) and not math.isfinite(value):
+        return False
+    return value >= 0 if allow_zero else value > 0
+
+
 def validate_budget_config(
     config: dict[str, Any],
     representative_routes: Iterable[dict[str, Any]] = REPRESENTATIVE_ROUTES,
@@ -42,7 +52,7 @@ def validate_budget_config(
     else:
         for key in REQUIRED_METRIC_KEYS:
             val = defaults.get(key)
-            if not isinstance(val, (int, float)) or val <= 0:
+            if not _valid_limit(val):
                 errors.append(f"Default metric '{key}' must be a positive number; got {val!r}")
 
     routes = config.get("routes")
@@ -66,11 +76,7 @@ def validate_budget_config(
         for key in REQUIRED_METRIC_KEYS:
             val = route_budget.get(key)
             if val is not None:
-                if (
-                    not isinstance(val, (int, float))
-                    or (key != "max_cls" and val <= 0)
-                    or (key == "max_cls" and val < 0)
-                ):
+                if not _valid_limit(val, allow_zero=key == "max_cls"):
                     errors.append(
                         f"Route '{route}' metric '{key}' must be a valid positive number; got {val!r}"
                     )

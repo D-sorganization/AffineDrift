@@ -243,7 +243,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5620 · UpstreamDrift Engine Protocol Reference Page (Drift/Control, Defaults, Validation).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5620
 - **Branch:** cursor/engine-protocol-reference-5620-615e
@@ -256,7 +256,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5602 · Harmonise Geometry of Motion Notation With NOTATION.md: Constrained Symbols, Transverse Coordinates, Chapter Notation Notes.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5602
 - **Branch:** cursor/gom-notation-harmonise-dd74
@@ -269,7 +269,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5598 · Physics of Golf Content Corrections (Piezo Form, Shaft Cn, Cross-Refs, Pedagogy)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5598
 - **Branch:** cursor/pog-content-corrections-5598-1e70
@@ -282,7 +282,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5625 · Document UpstreamDrift Humanoid Balance, WBC, and Learning/Analytics Gaps Grounded in Code.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5625
 - **Branch:** cursor/ud-learning-humanoid-5625-2b2c
@@ -295,7 +295,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5596 · Add Llms.Txt Agent Entry Point, Extend Symbol Registry V2 From NOTATION.md, and CI Freshness Gates.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5596
 - **Branch:** cursor/agent-readiness-5596-3da0
@@ -308,7 +308,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5623 · UpstreamDrift Capture-to-Model Pipeline Reference (Calibration Through Export).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5623
 - **Branch:** cursor/capture-to-model-pipeline-5623-43e3
@@ -321,7 +321,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5684 · Normalize SBOM Git Commit Timestamps to UTC Z for CycloneDX Determinism Across Git %cI Formats.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5684
 - **Branch:** cursor/shared-sbom-timestamp-1914
@@ -334,7 +334,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5643 · Programming Companion Onboarding Entrypoints; Datasets Ledger CC BY 4.0 Alignment.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5643
 - **Branch:** cursor/fix-onb-04-onb-07-5643-0eb3
@@ -347,7 +347,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5642 · Gemini Panel CVE-A3–A6: Technology Article Citation Fixes, Launch-Monitor Figure Generator, Cheetham Significance.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5642
 - **Branch:** cursor/issue-5642-gemini-panel-8ee7
@@ -360,7 +360,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5641 · Wrist Article: Evidence-Aligned Constraint Takeaway, Illustrative Iγ Label, UpstreamDrift Simscape Links.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5641
 - **Branch:** cursor/wrist-article-evidence-5641-9e6e
@@ -373,7 +373,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5640 · Align Theory-Part1 Front Matter With the Model-Conditioned Drift Contract.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5640
 - **Branch:** cursor/theory-part1-front-matter-5640-5385
@@ -386,7 +386,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5639 · Shot-Pattern Article Artifacts, Generators, and Trust Ledger Evidence Paths.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5639
 - **Branch:** cursor/shot-pattern-repro-5639-362c
@@ -399,7 +399,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5626 · Publish UpstreamDrift Getting-Started and Headless/Agent Guides; README Install CI Gate; Llms.Txt
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5626
 - **Branch:** cursor/upstreamdrift-getting-started-5626-8182
@@ -412,7 +412,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5624 · Document UpstreamDrift Ball Flight, Impact, Putting and Injury Models With Site–Code Mismatch Flags (Refs #5624).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5624
 - **Branch:** cursor/ud-physics-models-5624-6ace
@@ -425,7 +425,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5622 · FDM Runtime Reference: Acceptance Gates, Two-Window Fit, Ground-Support Pipeline, Contact Law, Glossary
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5622
 - **Branch:** cursor/motion-matching-glossary-5622-8405
@@ -438,7 +438,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5621 · MuJoCo Golf Model-Map Reference With Vendored MJCF Snapshots and Generator (Slice 1).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5621
 - **Branch:** cursor/golf-model-maps-5621-d77a
@@ -451,7 +451,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5619 · Add UpstreamDrift Conventions Reference Page (Pinned C8814a1b9d) With Nav Entry
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5619
 - **Branch:** cursor/upstreamdrift-conventions-ref-0c2c
@@ -464,7 +464,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5618 · Fix Learning-Path and Resources Citations, Chapter Pointers, and Workflow Install Commands
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5618
 - **Branch:** cursor/fix-learning-paths-resources-5618-288d
@@ -477,7 +477,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5615 · Remove Stale Motion-Control JSX/Transcript; Align Companions With Rewritten Chapters.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5615
 - **Branch:** cursor/motion-control-companion-reconcile-35e5
@@ -490,7 +490,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5613 · Mechanics Reference Notation: Mobility Disambiguation, Fibre Symbols, Reciprocity, ICC Front Matter
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5613
 - **Branch:** cursor/mech-ref-5613-6fb2
@@ -503,7 +503,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5612 · Tangent-Hyperplane Notation, Rate-Set Definition, Citations
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5612
 - **Branch:** cursor/tangent-notation-5612-8b6c
@@ -516,7 +516,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5610 · Proximal-Distal Energy Ledger, Closure Claims, and H4 Verdict Strength.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5610
 - **Branch:** cursor/pde-energy-ledger-closure-7b2c
@@ -529,7 +529,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5609 · Unify Lay Companion UpstreamDrift Pin and Fix Review Defects
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5609
 - **Branch:** cursor/pdc-upstream-pin-5609-9e7e
@@ -542,7 +542,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5608 · FDM Book: Hermite-Simpson, Notation Table, Core Equations, UD Link Fixes
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5608
 - **Branch:** cursor/fdm-5608-equations-notation-3efd
@@ -555,7 +555,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5607 · FDM Worked Examples Corrected; Reproduction Script and Chapter Consistency Fixes.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5607
 - **Branch:** cursor/fdm-worked-examples-5607-c54b
@@ -568,7 +568,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5606 · Sync GoM Book Landing Pages With Rendered Chapters and Archive Stale Audit Runbooks.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5606
 - **Branch:** cursor/gom-5603-5606-9baf
@@ -581,7 +581,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5605 · Geometry of Motion Citation Defects: Primary Sources, Contact Ledger, and Bibliography Hygiene.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5605
 - **Branch:** cursor/gom-citations-5605-8246
@@ -594,7 +594,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5604 · Geometry of Motion Pedagogy: Prerequisites Map, Cross-Refs, KKT Display, Contraction Pedagogy, Vol 0 Numbering Pilot
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5604
 - **Branch:** cursor/gom-pedagogy-5604-bdf7
@@ -607,7 +607,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5603 · Geometry of Motion: Cascade vs Partial Contraction, LQR Rho, Floating-Base Gravity, Van der Pol
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5603
 - **Branch:** cursor/gom-5603-5606-9baf
@@ -620,7 +620,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5601 · Pinned UpstreamDrift Implementation Bridge Includes for GOM Vol0 and PoG Algorithm Chapters; Added Ledger and CI Gate.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5601
 - **Branch:** cursor/ud-implementation-links-5601-402a
@@ -633,7 +633,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5600 · Physics of Golf Citation Metadata, Impact Sourcing, and Motor-Control Literature
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5600
 - **Branch:** cursor/pog-citations-5600-890b
@@ -646,7 +646,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5599 · Physics of Golf: Worked Examples for Impact, JCS, URDF, Putting, Calibration Tables
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5599
 - **Branch:** cursor/pog-worked-examples-5599-ddf7
@@ -659,7 +659,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5595 · Rebuild PARAMETERS.md From Sourced Canonical Registry With CI Check
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5595
 - **Branch:** cursor/parameters-ssot-5595-6ff0
@@ -672,7 +672,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5592 · Harmonize Canonical DCR, DIR, and Chart-Dependence Claims Across Site (#5592).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5592
 - **Branch:** cursor/dcr-5592-harmonize-3076
@@ -685,7 +685,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5590 · Replace Hand-Drawn Core-Theory ZTCF and Superposition Figures With Pinned Model Simulations.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5590
 - **Branch:** cursor/core-theory-figures-5590-f840
@@ -698,7 +698,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5589 · DgCR Restitution (Not Aerodynamic); COR Passive-Impact Qualifier
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5589
 - **Branch:** cursor/5589-notation-contract-a0fc
@@ -711,7 +711,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5588 · Align ZVCF With NOTATION Control Operand; Claim Ad-Zvcf-001; Notation Guard
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5588
 - **Branch:** cursor/zvcf-notation-5588-279e
@@ -724,7 +724,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5587 · Foreshortened Flexible Pendulum: Geometric Stiffening, Quadrature Tests, Critique Resolution
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5587
 - **Branch:** cursor/5587-geometric-stiffness-bd48
@@ -737,7 +737,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5632 · Harden CI Apt Bootstrap for Static-Checks and E2E Playwright System Deps.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5632
 - **Branch:** cursor/fix-ci-apt-headless-deps-040f
@@ -750,7 +750,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5627 · WEB-06.3 Sandbox Club Defaults With COM/Inertia; Drift-Plus-Control Caption Units.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5627
 - **Branch:** cursor/5627-sandbox-club-defaults-f3c8
@@ -763,7 +763,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5551 · Freeze the Dated Option A Input Definitions, rad-Space Bound Scope, and Single-Fixture Claim Boundary for Slice 1 Of #5550.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5551
 - **Branch:** staff/issue-remediator-5550-a80e94
@@ -776,7 +776,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5508 · Extend Deploy-Pages Timeout for Large Site Sync (Fleet-Main-Health)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5508
 - **Branch:** cursor/deploy-pages-timeout-5508-de74
@@ -789,7 +789,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5434 · Align Physics of Golf Ch06 ZVCF With NOTATION (Control Operand)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5434
 - **Branch:** cursor/pof-ch06-zvcf-canonical-5434-de74
@@ -802,7 +802,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5171 · Leave Modified Keyboard Shortcuts Untouched by Lazy Search
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #5171
 - **Branch:** codex/5171-native-search-shortcuts
@@ -815,7 +815,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4588 · Grandfather Evidence-Rung Qualified Token in Drift Lay Guide Front Matter
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #4588
 - **Branch:** cursor/fix-governance-baseline-drift-4588-de74
@@ -828,7 +828,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5430 · Restore ZVCF=Control and ZTCF=Drift in NOTATION.md and Mechanics Includes (#5430)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5430
 - **Branch:** cursor/zvcf-control-notation-5430-7c57
@@ -841,7 +841,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5433 · Update Critiques Responses to Reflect ZVCF = Control and Instant-vs-Trajectory Distinction.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5433
 - **Branch:** feat/5433-critiques-zvcf-control
@@ -854,7 +854,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5431 · Exactness Box for ZTCF/ZVCF Decomposition, Control-Affine / IAA Comparison, and Naming Note.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5431
 - **Branch:** feat/5431-articles-exactness-zvcf
@@ -867,7 +867,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5448 · Figure Exemptions Now State Provenance: The Proximal-Distal Figures Projected From the Pinned UpstreamDrift Release Cite Its Commit With a Hash Pin and an Explicit No-Run-Identity Marker, the Companion Figures Name Their Generator Scripts, and the Rest Are Marked Origin Unrecorded
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5448
 - **Branch:** brick/backlog-completion/5448-pd-projection-records
@@ -880,7 +880,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5421 · CI Gate: A Non-Draft Page May Embed a Figure Only When a Verified Projection Record Traces It or an Explicit, Reasoned Exemption Covers It; Draft Pages Warn
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5421
 - **Branch:** brick/backlog-completion/5421-figure-projection-check
@@ -893,7 +893,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5420 · Add the Provenance Caption Shortcode: A Figure Caption Naming the UpstreamDrift Model, Run_Id, Commit and Claim Class, Linked Only to the Public UD Repo (Fail Closed on Bad Values)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5420
 - **Branch:** brick/backlog-completion/5420-provenance-captions
@@ -906,7 +906,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5419 · Bind Every Markerless-Mocap Projection Artifact to Its UpstreamDrift Model_Id, Run_Id, Ud_Commit and Claim Class (Fail Closed)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5419
 - **Branch:** brick/backlog-completion/5419-projection-run-identity
@@ -919,7 +919,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5284 · Slack Take-Up as a Witness Article Draft
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5284
 - **Branch:** cursor/slack-takeup-witness-article-fd73
@@ -932,7 +932,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5178 · Outline Three Humanoid Launch Series With Rights and Publication Gates
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5178
 - **Branch:** codex/5178-launch-outlines
@@ -945,7 +945,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5177 · Document Humanoid Audiences and Planning Metadata Contract With UX Handoff
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5177
 - **Branch:** codex/5177-audience-metadata
@@ -958,7 +958,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5255 · Specify and Implement Versioned, Bounded #State= URL-Hash State Contract for Dcr-Visualizer (#5255)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5255
 - **Branch:** feat/5255-widget-url-hash-state
@@ -971,7 +971,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5251 · Draft JSON Schema and Provenance Field Spec for Asset_Manifest.Json (#5251)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5251
 - **Branch:** feat/5251-asset-manifest-provenance-spec
@@ -984,7 +984,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5250 · Measure 60-Day AGENT_HANDOFF.md and _quarto.yml Conflict Frequency and Recommend No-Go on .agent/state Split (#5250)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5250
 - **Branch:** feat/5250-measure-handoff-quarto-conflicts
@@ -997,7 +997,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5252 · Audit Self-Hosted Assets, SRI, and CSP Against ADR 0002 With Post-Render SRI Check (#5252)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5252
 - **Branch:** feat/5252-audit-sri-csp
@@ -1010,7 +1010,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5249 · Audit CI Workflow Permissions, Untrusted Run Interpolations, and Action SHA Pins (#5249)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5249
 - **Branch:** feat/5249-audit-workflows
@@ -1023,7 +1023,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5180 · Tangent-Space Review PR A: Affine Hub/Book Summaries and Volume I Chapter Read Links
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5180
 - **Branch:** cursor/tangent-review-pr-a-d406
@@ -1036,7 +1036,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5098 · Pin Merged UpstreamDrift Companion Commits and Refresh Article Status
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5098
 - **Branch:** fix/5098-merged-companion-pins
@@ -1049,7 +1049,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5192 · Add Intrinsic Dimensions and Aspect-Ratio CSS to Home Hero Graphic to Reduce Home Page CLS < 0.1
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5192
 - **Branch:** fix/5192-home-page-cls
@@ -1062,7 +1062,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5191 · Guard Unguarded Split on Head Closing Tag in Post-Render Scripts
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5191
 - **Branch:** fix/5191-guard-head-split
@@ -1075,7 +1075,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5207 · Preregister Simulation-Only Correction-Authority Analysis Contract and Edge-Case Oracles.
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5207
 - **Branch:** cursor/correction-authority-contract-5207-0c0c
@@ -1088,7 +1088,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5135 · Add the Core Slack-Representation Transmission Model (Dead-Zone, Smooth-Spring, Activation and Unequal-Lag Channels, Play Operator, Preparation Split) With Its Tests for the Managing Slack in Linked Systems Article
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5135
 - **Branch:** cursor/slack-transmission-core-7958
@@ -1101,7 +1101,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5164 · UX Slice 1: Remove Article Page Grid Column-Gap and Restore Mobile Reading Width
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5164
 - **Branch:** cursor/fix-article-grid-width-5164-6ba7
@@ -1114,7 +1114,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5179 · Exclude Test HTML Fixtures From Repository Link Scan so Deploy Website Passes
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5179
 - **Branch:** cursor/fix-deploy-check-links-skip-fixtures-9d63
@@ -1127,7 +1127,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5161 · Add Cursor Cloud Environment.Json Fleet Bootstrap (RM Cursor-Cloud-Bootstrap).
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5161
 - **Branch:** cursor/cursor-cloud-environment-e0f5
@@ -1140,7 +1140,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#2195 · Add Conflict-Disarm Caller Workflow (Dry-Run) for RM Rollout
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #2195
 - **Branch:** cursor/conflict-disarm-caller-e475
@@ -1153,7 +1153,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5094 · Add Null-Space Exploration Companion Examples and Property Tests for Propositions P1-P5 and P7 (AD-1 Of #5093)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5094
 - **Branch:** claude/nse-ad1-5094
@@ -1166,7 +1166,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5116 · Filter CI Render Cache Inputs Without Reducing Validation
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5116
 - **Branch:** fix/ci-render-cache-5116
@@ -1179,7 +1179,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5115 · Document CI Standard PR Job-Timing Profile
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5115
 - **Branch:** docs/ci-job-profile-5115
@@ -1192,7 +1192,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#5081 · Reconcile 71 Development-Log Review Entries With Merged Delivery and Outstanding Acceptance Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #5081
 - **Branch:** chore/reconcile-review-development-log
@@ -1205,7 +1205,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4533 · WEB-06.3 Drift vs Control Double-Pendulum Sandbox on Theory Part 1: Src/Affine_Control/double_pendulum_affine.py Split, Checked JS Mirror, Widget-Parity V1 Generator and Fixture, Jest/Pytest/Playwright Class A Checks
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #4533
 - **Branch:** claude/issue-4533
@@ -1219,7 +1219,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4961 · Route Book Readers to the Corrected Reviewed Manuscript Editions
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4961
 - **Branch:** feat/technical-review-consolidated-20261005
@@ -1233,7 +1233,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4947 · Consolidate Reviewed Mechanics, Control and Historical Corrections for Main Delivery
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4947
 - **Branch:** feat/technical-review-consolidated-20261005
@@ -1247,7 +1247,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4525 · Rename Critiques/DEFENSE_STRATEGY to the Neutral Adjudication-Summary With a Quarto Alias and Redirect-Ledger Entry
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** unassigned
 - **Issue:** #4525
 - **Branch:** claude/issue-4525-adjudication-summary
@@ -1261,7 +1261,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4779
 - **Issue:** #4538 (WEB-06.8; epic #4543)
@@ -2003,175 +2003,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Coarse-pointer 44px touch targets for sandbox, converter, dataset explorer, maturity badge
 - **Next step:** Shipped in PR #5330.
 
-### DL-#5182 · Retire Remaining 'Hyperplane' Display Text in the Manuscript Terminology Heading and the Book Ch.4 Blurb; Mathematical Object Names Were Already Disambiguated
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5182
-- **Branch:** merged via #5270
-- **PR:** #5270
-- **Paths:** see #5270
-- **Started:** 2026-11-01
-- **Last verified:** 2026-11-01 (`89bef879`; collated from changes/5182-retire-remaining-hyperplane-display-text.md)
-- **Summary:** Retire remaining 'hyperplane' display text in the manuscript terminology heading and the book Ch.4 blurb; mathematical object names were already disambiguated
-- **Next step:** Shipped in PR #5270.
-
-### DL-#5301 · Cross-Browser Nightly Renders the Site Once in a Build-Site Job; the Firefox and Webkit Legs Download It Instead of Each Rendering Under a 45-Minute Timeout
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5301
-- **Branch:** merged via #5305
-- **PR:** #5305
-- **Paths:** see #5305
-- **Started:** 2026-11-01
-- **Last verified:** 2026-11-01 (`2785ee80`; collated from changes/5301-cross-browser-nightly-renders-the-site-o.md)
-- **Summary:** Cross-Browser Nightly renders the site once in a build-site job; the firefox and webkit legs download it instead of each rendering under a 45-minute timeout
-- **Next step:** Shipped in PR #5305.
-
-### DL-#5300 · Conflict Disarm App Token Scoped to AffineDrift and Repository_Management With Contents Read, Pull-Requests Write and Issues Write
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5300
-- **Branch:** merged via #5303
-- **PR:** #5303
-- **Paths:** see #5303
-- **Started:** 2026-11-01
-- **Last verified:** 2026-11-01 (`8b156ea9`; collated from changes/5300-conflict-disarm-app-token-scoped-to-affi.md)
-- **Summary:** Conflict Disarm App token scoped to AffineDrift and Repository_Management with contents read, pull-requests write and issues write
-- **Next step:** Shipped in PR #5303.
-
-### DL-#5166 · UX Slice 3: One Heading Face Token, Strict H1-H4 Scale, 1Rem Body Floor, No Mid-Word Breaks, Custom.Scss Mirrors Tokens
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5166
-- **Branch:** claude/ad-5166-1
-- **PR:** #5235, #5272, #5280, #5297
-- **Paths:** see #5235
-- **Started:** 2026-10-29
-- **Last verified:** 2026-11-01 (`79487d50`; collated from changes/5166-close-ux-slice-3-component-headings-use.md)
-- **Summary:** UX slice 3: one heading face token, strict h1-h4 scale, 1rem body floor, no mid-word breaks, custom.scss mirrors tokens
-- **Next step:** Issue closes on merge.
-
-### DL-#5295 · Conflict Disarm Runs Its Job Inline (Reading RM's Conflict_Disarm Script via an App-Token Checkout) Instead of Calling an Internal Repository_Management Reusable Workflow, Which a Public Repo Cannot Do, so It No Longer Fails Every Run With 0 Jobs
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5295
-- **Branch:** merged via #5296
-- **PR:** #5296
-- **Paths:** see #5296
-- **Started:** 2026-11-01
-- **Last verified:** 2026-11-01 (`ac11321b`; collated from changes/5295-conflict-disarm-runs-its-job-inline-read.md)
-- **Summary:** Conflict Disarm runs its job inline (reading RM's conflict_disarm script via an App-token checkout) instead of calling an internal Repository_Management reusable workflow, which a public repo cannot do, so it no longer fails every run with 0 jobs
-- **Next step:** Shipped in PR #5296.
-
-### DL-#5293 · Fence the GAAI Ci-Watch-and-Fix Skill in Project Rules and Collapse the Duplicated CI Watch Section (RM #2567).
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5293
-- **Branch:** merged via #5294
-- **PR:** #5294
-- **Paths:** see #5294
-- **Started:** 2026-11-01
-- **Last verified:** 2026-11-01 (`e1b3ff17`; collated from changes/5293-gaai-fence.md)
-- **Summary:** Fence the GAAI ci-watch-and-fix skill in project rules and collapse the duplicated CI Watch section (RM #2567).
-- **Next step:** Shipped in PR #5294.
-
-### DL-#5289 · Docs: Root REVIEW.md With AffineDrift Review Rules (RM #2565 Rollout)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5289
-- **Branch:** merged via #5290
-- **PR:** #5290
-- **Paths:** see #5290
-- **Started:** 2026-11-01
-- **Last verified:** 2026-11-01 (`ae2229f5`; collated from changes/5289-review-md.md)
-- **Summary:** docs: root REVIEW.md with AffineDrift review rules (RM #2565 rollout)
-- **Next step:** Shipped in PR #5290.
-
-### DL-#5282 · Unblock Collate Change Fragments: Drop the Two Re-Added #5136 Fragments and Retarget the In-Review Slack Take-Up Article Fragment to #5284 (Owner Ruling, Option A)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5282
-- **Branch:** merged via #5285
-- **PR:** #5285
-- **Paths:** see #5285
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`83625712`; collated from changes/5282-unblock-collate-change-fragments-drop-th.md)
-- **Summary:** Unblock Collate Change Fragments: drop the two re-added #5136 fragments and retarget the in-review slack take-up article fragment to #5284 (owner ruling, option a)
-- **Next step:** Shipped in PR #5285.
-
-### DL-#5256 · Measure Passive RK4 Energy Drift in Ztcf-Explorer and Drift-Control-Sandbox; Keep RK4 in Both, Enforced by a Headless Jest Threshold Test
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5256
-- **Branch:** merged via #5278
-- **PR:** #5278
-- **Paths:** see #5278
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`972e0ca8`; collated from changes/5256-measure-passive-rk4-energy-drift-in-ztcf.md)
-- **Summary:** Measure passive RK4 energy drift in ztcf-explorer and drift-control-sandbox; keep RK4 in both, enforced by a headless Jest threshold test
-- **Next step:** Shipped in PR #5278.
-
-### DL-#5254 · Expose the ZTCF Explorer Through a Window.AffineDriftWidgets Controller (getState/setParam/Step) With a Polite Live Readout, Keyboard and Axe E2e Coverage
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5254
-- **Branch:** merged via #5283
-- **PR:** #5283
-- **Paths:** see #5283
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`930e6546`; collated from changes/5254-expose-the-ztcf-explorer-through-a-windo.md)
-- **Summary:** Expose the ZTCF explorer through a window.AffineDriftWidgets controller (getState/setParam/step) with a polite live readout, keyboard and axe e2e coverage
-- **Next step:** Shipped in PR #5283.
-
-### DL-#5240 · Bootstrap Python Requirements Before the Nightly Quarto Render
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5240
-- **Branch:** merged via #5265
-- **PR:** #5265, #5281
-- **Paths:** see #5265
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`2e2fd036`; collated from changes/5240-run-the-nightly-failure-reporter-as-a-mo.md)
-- **Summary:** Bootstrap Python requirements before the nightly Quarto render
-- **Next step:** Shipped in PR #5265.
-
-### DL-#5183 · Close-Out: Volume I Book Chapter Read Links Verified on Main (#5188); No Further Content Change.
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5183
-- **Branch:** merged via #5275
-- **PR:** #5275
-- **Paths:** see #5275
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`f0f13d7f`; collated from changes/5183-closeout-tangent-book-chapter-links.md)
-- **Summary:** Close-out: Volume I book chapter read links verified on main (#5188); no further content change.
-- **Next step:** Shipped in PR #5275.
-
-### DL-#5181 · Close-Out: Hub and Book Ch.1 Summaries Match Manuscript Affine Wording (#5188 Area).
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5181
-- **Branch:** merged via #5277
-- **PR:** #5277
-- **Paths:** see #5277
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`63e66c19`; collated from changes/5181-closeout-tangent-core-claim-wording.md)
-- **Summary:** Close-out: hub and book Ch.1 summaries match manuscript affine wording (#5188 area).
-- **Next step:** Shipped in PR #5277.
-
 ### DL-#5176 · Add Phase-Zero Humanoid Rights Ledger With Five Pending Artifact Reviews and AMASS Hold
 
 - **State:** shipped
@@ -2184,71 +2015,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-11-07 (`0497aa92`; collated from changes/5176-outline-ledger-candidates.md)
 - **Summary:** Add phase-zero humanoid rights ledger with five pending artifact reviews and AMASS hold
 - **Next step:** Review the planning inventory; exact versions and rights decisions remain owner-gated
-
-### DL-#5174 · Record Proposed Humanoid Expansion Scope, Upstream Boundary and Phase Gates
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5174
-- **Branch:** merged via #5267
-- **PR:** #5267
-- **Paths:** see #5267
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`268b7d7a`; collated from changes/5174-record-proposed-humanoid-expansion-scope.md)
-- **Summary:** Record proposed humanoid expansion scope, upstream boundary and phase gates
-- **Next step:** Shipped in PR #5267.
-
-### DL-#5170 · Reduce the Site-Search Index, Remove Chrome Text, Rank the Double-Pendulum Chapter, and Fit the Phone Search Panel to the Viewport
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5170
-- **Branch:** merged via #5276
-- **PR:** #5276
-- **Paths:** see #5276
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`8ca900c6`; collated from changes/5170-bound-search-and-lazy-load.md)
-- **Summary:** Reduce the site-search index, remove chrome text, rank the double-pendulum chapter, and fit the phone search panel to the viewport
-- **Next step:** Shipped in PR #5276.
-
-### DL-#5169 · Home Hero First, Balanced Hero Column, Figure Capped Near Design Size, Hub Prose Capped to Reading Measure
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5169
-- **Branch:** merged via #5271
-- **PR:** #5271
-- **Paths:** see #5271
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`a105b74f`; collated from changes/5169-home-hero-first-balanced-hero-column-fig.md)
-- **Summary:** Home hero first, balanced hero column, figure capped near design size, hub prose capped to reading measure
-- **Next step:** Shipped in PR #5271.
-
-### DL-#5168 · UX Slice 5: Compact Article Opening (Title Card, Abstract, Summary/Takeaways/Caveats Cards) and a Title-Fallback Filter for Empty Title Headings
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5168
-- **Branch:** merged via #5273
-- **PR:** #5273
-- **Paths:** see #5273
-- **Started:** 2026-10-31
-- **Last verified:** 2026-10-31 (`be47cdc1`; collated from changes/5168-ux-slice-5-compact-article-opening-title.md)
-- **Summary:** UX slice 5: compact article opening (title card, abstract, summary/takeaways/caveats cards) and a title-fallback filter for empty title headings
-- **Next step:** Shipped in PR #5273.
-
-### DL-#5167 · UX Slice 4: Labelled In-Header Theme Toggle, One-Row Phone Header, Unique Nav Landmarks, No First-Visit Update Toast
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5167
-- **Branch:** merged via #5238
-- **PR:** #5238, #5279
-- **Paths:** see #5238
-- **Started:** 2026-10-29
-- **Last verified:** 2026-10-31 (`94824961`; collated from changes/5167-phone-search-control-one-row.md)
-- **Summary:** UX slice 4: labelled in-header theme toggle, one-row phone header, unique nav landmarks, no first-visit update toast
-- **Next step:** Shipped in PR #5238.
 
 ### DL-#5209 · Option A-4 Prerequisite: Drop the Discarded Discrete_Lqr Stabilisability Probe From the #5208 Correction-Authority Evaluator (0.38 s per Call, Result Never Used); Red-Then-Green Regression Test
 
@@ -2263,97 +2029,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Option A-4 prerequisite: drop the discarded discrete_lqr stabilisability probe from the #5208 correction-authority evaluator (0.38 s per call, result never used); red-then-green regression test
 - **Next step:** Shipped in PR #5236.
 
-### DL-#5234 · Record Redirect for Unpublished Slack Article to Restore URL Stability Check in Deploy Workflow
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5234
-- **Branch:** merged via #5239
-- **PR:** #5239
-- **Paths:** see #5239
-- **Started:** 2026-10-29
-- **Last verified:** 2026-10-29 (`a82e307e`; collated from changes/5234-record-redirect-for-unpublished-slack-ar.md)
-- **Summary:** Record redirect for unpublished Slack article to restore URL stability check in deploy workflow
-- **Next step:** Shipped in PR #5239.
-
-### DL-#5208 · Add Offline LTV Correction-Authority Evaluator With Backward Gramian Recursion and Condition-Number Gate
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5208
-- **Branch:** merged via #5214
-- **PR:** #5214
-- **Paths:** see #5214
-- **Started:** 2026-10-27
-- **Last verified:** 2026-10-27 (`545aeebf`; collated from changes/5208-offline-ltv-correction-authority-evaluator.md)
-- **Summary:** Add offline LTV correction-authority evaluator with backward Gramian recursion and condition-number gate
-- **Next step:** Shipped in PR #5214.
-
-### DL-#5190 · Dedupe Citation_Reference Meta Tags in Post-Render Performance and Validate Single Emission
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5190
-- **Branch:** merged via #5220
-- **PR:** #5220
-- **Paths:** see #5220
-- **Started:** 2026-10-27
-- **Last verified:** 2026-10-27 (`875909ea`; collated from changes/5190-dedupe-citation-reference-meta-tags-in-p.md)
-- **Summary:** Dedupe citation_reference meta tags in post-render performance and validate single emission
-- **Next step:** Shipped in PR #5220.
-
-### DL-#5211 · Neutralize Dynamic Page Container Inline Min-Height in Post-Render and CSS to Eliminate Mobile Article CLS
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5211
-- **Branch:** merged via #5222
-- **PR:** #5222
-- **Paths:** see #5222
-- **Started:** 2026-10-26
-- **Last verified:** 2026-10-26 (`6d12b90a`; collated from changes/5211-fix-mobile-article-cls-min-height.md)
-- **Summary:** Neutralize dynamic page container inline min-height in post-render and CSS to eliminate mobile article CLS
-- **Next step:** Shipped in PR #5222.
-
-### DL-#5202 · Switch Page-Feedback Mailto Fallback to Dashboard@affinedrift.com
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5202
-- **Branch:** merged via #5221
-- **PR:** #5221
-- **Paths:** see #5221
-- **Started:** 2026-10-26
-- **Last verified:** 2026-10-26 (`eaf25036`; collated from changes/5202-switch-page-feedback-mailto-fallback-to.md)
-- **Summary:** Switch page-feedback mailto fallback to dashboard@affinedrift.com
-- **Next step:** Shipped in PR #5221.
-
-### DL-#5217 · Archive Old Terminal Development-Log Entries
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5217
-- **Branch:** merged via #5218
-- **PR:** #5218
-- **Paths:** see #5218
-- **Started:** 2026-10-26
-- **Last verified:** 2026-10-26 (`99169233`; collated from changes/5217-archive-development-log.md)
-- **Summary:** Archive old terminal development-log entries
-- **Next step:** Shipped in PR #5218.
-
-### DL-#5134 · Port the Lead-Wrist Preload Dead-Zone and Muscle Models With Reproduction Tests
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5134
-- **Branch:** merged via #5142
-- **PR:** #5142
-- **Paths:** see #5142
-- **Started:** 2026-10-26
-- **Last verified:** 2026-10-26 (`9c22501e`; collated from changes/5134-lead-wrist-preload-models.md)
-- **Summary:** Port the lead-wrist preload dead-zone and muscle models with reproduction tests
-- **Next step:** Shipped in PR #5142.
-
 ### DL-#5136 · Add the Shared Dead-Zone Chain Core, the Toy A Train Study and the Toy C Grasp-Kernel Counts For #5136
 
 - **State:** shipped
@@ -2366,19 +2041,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-11-07 (`fa59a7e1`; collated from changes/5136-unpublish-slack-take-up-witness-article.md)
 - **Summary:** Add the shared dead-zone chain core, the Toy A train study and the Toy C grasp-kernel counts for #5136
 - **Next step:** Shipped in PR #5149.
-
-### DL-#5165 · Scope Google Scholar Exports, Post-Render Head Performance Fixes, and Deferred Theme/Search Scripts for UX Slice 2.
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5165
-- **Branch:** merged via #5179
-- **PR:** #5179
-- **Paths:** see #5179
-- **Started:** 2026-10-25
-- **Last verified:** 2026-10-25 (`bd48564e`; collated from changes/5165-scope-google-scholar-exports-post-render.md)
-- **Summary:** Scope Google Scholar exports, post-render head performance fixes, and deferred theme/search scripts for UX slice 2.
-- **Next step:** Shipped in PR #5179.
 
 ### DL-#5137 · Correct the False If-and-Only-If in the After One Solution Level Sub-Fibre Claim: End Levels May Be Facets
 
@@ -2393,493 +2055,13 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Correct the false if-and-only-if in the After One Solution level sub-fibre claim: end levels may be facets
 - **Next step:** Shipped in PR #5152.
 
-### DL-#5131 · Bump Pypdf to 6.21.2 to Clear CVE-2026-115572/115580/115585 Failing Pip-Audit
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5131
-- **Branch:** merged via #5133
-- **PR:** #5133, #5275
-- **Paths:** see #5133
-- **Started:** 2026-10-24
-- **Last verified:** 2026-10-31 (`f0f13d7f`; collated from changes/5131-bump-pypdf-6-21-4-pip-audit.md)
-- **Summary:** Bump pypdf to 6.21.2 to clear CVE-2026-115572/115580/115585 failing pip-audit
-- **Next step:** Shipped in PR #5133.
-
-### DL-#5127 · Add .oss-scanner/ Security-Scan Contract (project.yaml, Offline Audit Dockerfile, Threat Model) for the Fleet Scanner Pilot
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5127
-- **Branch:** merged via #5128
-- **PR:** #5128
-- **Paths:** see #5128
-- **Started:** 2026-10-24
-- **Last verified:** 2026-10-24 (`b328c5b8`; collated from changes/5127-add-oss-scanner-security-scan-contract-p.md)
-- **Summary:** Add .oss-scanner/ security-scan contract (project.yaml, offline audit Dockerfile, threat model) for the fleet scanner pilot
-- **Next step:** Shipped in PR #5128.
-
-### DL-#5097 · Register the After One Solution Article: Claim-Audit Route Record, Articles Listing, Reciprocal Links, Notation Entries, Bibliography Registration and Review-Required UpstreamDrift Draft-PR Pins
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5097
-- **Branch:** merged via #5107
-- **PR:** #5107
-- **Paths:** see #5107
-- **Started:** 2026-10-24
-- **Last verified:** 2026-10-24 (`e2e393be`; collated from changes/5097-register-the-after-one-solution-article.md)
-- **Summary:** Register the After One Solution article: claim-audit route record, articles listing, reciprocal links, notation entries, bibliography registration and review-required UpstreamDrift draft-PR pins
-- **Next step:** Shipped in PR #5107.
-
-### DL-#5096 · Add the After One Solution Article on Exploring Dynamically Equivalent Force Allocations (Propositions P1-P7, Shared-Example Loader, Verified Bibliography)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5096
-- **Branch:** merged via #5107
-- **PR:** #5107, #5154
-- **Paths:** see #5107
-- **Started:** 2026-10-24
-- **Last verified:** 2026-10-24 (`00877e1d`; collated from changes/5096-refresh-nse-ad-3-agent-handoff-after-art.md)
-- **Summary:** Add the After One Solution article on exploring dynamically equivalent force allocations (propositions P1-P7, shared-example loader, verified bibliography)
-- **Next step:** AD-5 #5098 after UpstreamDrift owner merge
-
-### DL-#5095 · Add Nonlinear Solution-Manifold Continuation Examples (Tangent Predictor, Gauss-Newton Corrector, Rank-Drop Counterexample) and Tests for the Null-Space Exploration Section (P6)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5095
-- **Branch:** merged via #5101
-- **PR:** #5101, #5141
-- **Paths:** see #5101
-- **Started:** 2026-10-23
-- **Last verified:** 2026-10-24 (`83beecb8`; collated from changes/5095-add-nonlinear-solution-manifold-continua.md)
-- **Summary:** Add nonlinear solution-manifold continuation examples (tangent predictor, Gauss-Newton corrector, rank-drop counterexample) and tests for the null-space exploration section (P6)
-- **Next step:** Shipped in PR #5101.
-
-### DL-#5121 · Keep Companion Pin Writes Offline by Using Only an Installed Local Formatter With a Bounded Timeout.
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5121
-- **Branch:** merged via #5119
-- **PR:** #5119
-- **Paths:** see #5119
-- **Started:** 2026-10-22
-- **Last verified:** 2026-10-22 (`295ff41e`; collated from changes/5121-keep-companion-formatting-offline.md)
-- **Summary:** Keep companion pin writes offline by using only an installed local formatter with a bounded timeout.
-- **Next step:** Shipped in PR #5119.
-
-### DL-#5117 · Synchronize Patched Dependencies and Repair Accessible Control Names
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5117
-- **Branch:** merged via #5117
-- **PR:** #5117
-- **Paths:** see #5117
-- **Started:** 2026-10-22
-- **Last verified:** 2026-10-22 (`9ddb4d96`; collated from changes/5117-sync-dependency-lock.md)
-- **Summary:** Synchronize patched dependencies and repair accessible control names
-- **Next step:** Shipped in PR #5117.
-
-### DL-#5102 · Apply Prettier to Files Already Drifted on Main; Ignore the Attested Companion Snapshot
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5102
-- **Branch:** merged via #5104
-- **PR:** #5104, #5110, #5119
-- **Paths:** see #5104
-- **Started:** 2026-10-20
-- **Last verified:** 2026-10-22 (`295ff41e`; collated from changes/5102-protect-pinned-review-formatting.md)
-- **Summary:** Apply prettier to files already drifted on main; ignore the attested companion snapshot
-- **Next step:** Preserve the review bytes and inventory pin; future content changes require separate review and attestation.
-
-### DL-#5089 · Fix WCAG 2.5.3 Label-Content-Name-Mismatch on Reading-Time and Quarto TOC Landmarks
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5089
-- **Branch:** merged via #5090
-- **PR:** #5090
-- **Paths:** see #5090
-- **Started:** 2026-10-19
-- **Last verified:** 2026-10-19 (`b73193e3`; collated from changes/5089-fix-wcag-2-5-3-label-content-name-mismat.md)
-- **Summary:** Fix WCAG 2.5.3 label-content-name-mismatch on reading-time and Quarto TOC landmarks
-- **Next step:** Shipped in PR #5090.
-
-### DL-#5088 · Add Fleet Critic Review of the Recovered Forward Dynamics Matching Book: Unverified Cross-Repo Numeric Claims, Structure-Only Tests, Unguarded Editorial Policy (#5088)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5088
-- **Branch:** merged via #5076
-- **PR:** #5076, #5099, #5111
-- **Paths:** see #5076
-- **Started:** 2026-10-19
-- **Last verified:** 2026-10-22 (`8a002f89`; collated from changes/5088-close-fdm-book-provenance-guards-link-va.md)
-- **Summary:** Add Fleet Critic review of the recovered Forward Dynamics Matching book: unverified cross-repo numeric claims, structure-only tests, unguarded editorial policy (#5088)
-- **Next step:** Shipped in PR #5076.
-
-### DL-#4494 · Shared Open-by-Default Layman Component
-
-- **State:** shipped
-- **Owner:** claude
-- **Issue:** #4494 (mechanical sub-task); epic #4496
-- **Branch:** claude/issue-4494
-- **PR:** #5050
-- **Paths:** scripts/filters/laymans-terms.lua, _quarto.yml, styles.css, _templates/partials/laymans-terms.html, scripts/check_readability.py, articles/ (14 pages), tests/laymans-terms.test.js, tests/test_laymans_terms_component.py, tests/tools/test_check_readability.py
-- **Started:** 2026-10-04
-- **Last verified:** 2026-10-14 (`f35f0418`; collated from changes/4494-rewrite-plain-language-summaries-to-pass.md)
-- **Summary:** One Lua-filter component replaces 14 inline lay blocks; open by default, placed above the Abstract heading, native-button keyboard toggle. Wording unchanged; rewrite and page extension stay under #4494.
-- **Next step:** Owner prose judgment is not inferred from the automated Grade 10 gate.
-- **Shipped:** 2026-10-14 (merged PR #5050; `f35f04181a1f`)
-- **Status checked:** 2026-10-17 (GitHub PR #5050 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
-
-### DL-#4554 · WEB-08.2: Drift Plus Control Signature Graphic, an Inline Theme-Aware SVG Generated From the SimplePendulum Control-Affine Split, on the Home Page and Theory Part 1 Header
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4554
-- **Branch:** claude/issue-4554-signature-graphic
-- **PR:** #5051
-- **Paths:** see #4979
-- **Started:** 2026-10-06
-- **Last verified:** 2026-10-14 (`ba494b66`; collated from changes/4554-add-accessible-theme-adaptive-drift-plus.md)
-- **Summary:** WEB-08.2: Drift Plus Control signature graphic, an inline theme-aware SVG generated from the SimplePendulum control-affine split, on the home page and theory Part 1 header
-- **Next step:** Decide OG-card reuse separately; human physical sign-off is outside the recorded agent acceptance.
-- **Shipped:** 2026-10-14 (merged PR #5051; `ba494b663f53`)
-- **Status checked:** 2026-10-17 (GitHub PR #5051 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
-
-### DL-#4973 · Add Rigid SE(3) Golf_Model_3D Forward-Kinematics Provider (Slice 1; Refs Issue 4973)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4973
-- **Branch:** feat/4973-golf-model-3d
-- **PR:** #5024
-- **Paths:** see #5013
-- **Started:** 2026-10-12
-- **Last verified:** 2026-10-13 (`29908f5d`; collated from changes/4973-wire-johnson-2015-arm-into-a-spatial-arm.md)
-- **Summary:** Add rigid SE(3) golf_model_3d forward-kinematics provider (slice 1; Refs issue 4973)
-- **Next step:** Fuller golfer/shaft models remain separate from the three shipped slices.
-- **Shipped:** 2026-10-13 (merged PR #5024; `29908f5d7c9b`)
-- **Status checked:** 2026-10-17 (GitHub PR #5024 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
-
-### DL-#5007 · Disclose the Tools #5431 Distributed-Convention Fix on the Proximal-Distal Workbench and Impact-Optimality Pages (Historical Numbers Kept and Labelled)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5007
-- **Branch:** docs/5007-tools-5431-disclosure
-- **PR:** #5038
-- **Paths:** articles/proximal-distal-model-workbench.qmd,articles/impact-optimality-and-model-limits.qmd
-- **Started:** 2026-10-13
-- **Last verified:** 2026-10-13 (`8bb28f1f`; collated from changes/5007-tools-5431-disclosure.md)
-- **Summary:** Disclose the Tools #5431 distributed-convention fix on the proximal-distal workbench and impact-optimality pages (historical numbers kept and labelled)
-- **Next step:** Tools #5523 tracks the swing-result rerun separately from this shipped disclosure.
-- **Shipped:** 2026-10-13 (merged PR #5038; `8bb28f1f03ca`)
-- **Status checked:** 2026-10-17 (GitHub PR #5038 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
-
-### DL-#4719 · Adjudicate Historical Screw-Theory Research Outline (#4719)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4719
-- **Branch:** fix/4719-screw-outline-review
-- **PR:** #5043
-- **Paths:** see #5043
-- **Started:** 2026-10-13
-- **Last verified:** 2026-10-13 (`e12f7a44`; collated from changes/4719-adjudicate-historical-screw-theory-resea.md)
-- **Summary:** Adjudicate historical screw-theory research outline (#4719)
-- **Next step:** Recorded scope delivered in PR #5043; see the 2026-10-17 evidence audit for its bounded disposition.
-- **Shipped:** 2026-10-13 (merged PR #5043; `e12f7a44f943`)
-- **Status checked:** 2026-10-17 (GitHub PR #5043 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
-
-### DL-#5074 · Adversarial Review 2026-10-16: 35 Findings With Draft PR Pitches Under Docs/Development/Adversarial-Review/
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** PR #5074 (PR-keyed review deliverable; no GitHub issue)
-- **Branch:** claude/adversarial-review-2026-10-16
-- **PR:** #5074
-- **Paths:** docs/development/adversarial-review/2026-10-16
-- **Started:** 2026-10-16
-- **Last verified:** 2026-10-16 (`bc1b4ecc`; collated from changes/5074-adversarial-review-2026-10-16.md)
-- **Summary:** Adversarial review 2026-10-16: 35 findings with draft PR pitches under docs/development/adversarial-review/
-- **Next step:** Triage the Critical/High adversarial-review findings as separate work; this entry records delivery of the review document only.
-- **Shipped:** 2026-10-16 (merged PR #5074; `bc1b4eccee07`)
-- **Status checked:** 2026-10-17 (GitHub PR #5074 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
-
-### DL-#5077 · Clarify That Positive-Dimensional Null-Space Families Remain Uncountable While Equality Elimination Reduces Independent Coordinates and Finite-Resolution Candidates; Add a Checked Optimization Example and Cross-Link.
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5077
-- **Branch:** feat/nullspace-infinite-solution-explainer
-- **PR:** #5079
-- **Paths:** articles/degrees-of-freedom-and-dimensionality.qmd,articles/null-space-constraint-jacobian.qmd,tests/test_nullspace_infinity_explainer.py
-- **Started:** 2026-10-17
-- **Last verified:** 2026-10-17 (`0ea2920e`; collated from changes/5077-clarify-that-positive-dimensional-null-s.md)
-- **Summary:** Clarify that positive-dimensional null-space families remain uncountable while equality elimination reduces independent coordinates and finite-resolution candidates; add a checked optimization example and cross-link.
-- **Next step:** Shipped in PR #5079.
-
-### DL-#4948 · Recover Forward Dynamics Matching Research Book From Cloud Session and Add Structure Verification Tests
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4948
-- **Branch:** merged via #5070
-- **PR:** #5070
-- **Paths:** see #5070
-- **Started:** 2026-10-15
-- **Last verified:** 2026-10-15 (`1acf8892`; collated from changes/4948-recover-forward-dynamics-matching-resear.md)
-- **Summary:** Recover Forward Dynamics Matching research book from cloud session and add structure verification tests
-- **Next step:** Shipped in PR #5070.
-
-### DL-#4711 · Import Governed UpstreamDrift Proximal-Distal Release Fixing Koike (2016) Proceedings Metadata
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4711
-- **Branch:** merged via #5068
-- **PR:** #5068
-- **Paths:** see #5068
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`e8414245`; collated from changes/4711-import-governed-upstreamdrift-proximal-d.md)
-- **Summary:** Import governed UpstreamDrift proximal-distal release fixing Koike (2016) proceedings metadata
-- **Next step:** Shipped in PR #5068.
-
-### DL-#5065 · Publish Golf_Control_Theory and Scope-and-Limits to Resolve Deploy Website Link Check
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5065
-- **Branch:** merged via #5066
-- **PR:** #5066
-- **Paths:** see #5066
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`29cbb2aa`; collated from changes/5065-fix-deploy-website-link-resolution-a.md)
-- **Summary:** Add Golf_Control_Theory and scope-and-limits pages to fix broken link resolution on main
-- **Next step:** Shipped in PR #5066.
-
-### DL-#4512 · Implement What This Means for Golfers and Coaches Lua Filter With Epistemic Guardrails and Roll Out to Core Articles
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4512
-- **Branch:** merged via #5047
-- **PR:** #5047
-- **Paths:** see #5047
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`6f8dd8b6`; collated from changes/4512-implement-what-this-means-for-golfers-an.md)
-- **Summary:** Implement What This Means for Golfers and Coaches Lua filter with epistemic guardrails and roll out to core articles
-- **Next step:** Shipped in PR #5047.
-
-### DL-#4497 · Restructure Navbar Into Six Single-Purpose Menus With Zero Duplicate Links
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4497
-- **Branch:** merged via #5061
-- **PR:** #5061
-- **Paths:** see #5061
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`a2e3d741`; collated from changes/4497-restructure-navbar-into-six-single-purpo.md)
-- **Summary:** Restructure navbar into six single-purpose menus with zero duplicate links
-- **Next step:** Shipped in PR #5061.
-
-### DL-#4528 · Add ZTCF and DCR Falsification Atlases and Publish Model-to-Human Validation Roadmap
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4528
-- **Branch:** merged via #5046
-- **PR:** #5046
-- **Paths:** see #5046
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`52849ec4`; collated from changes/4528-add-ztcf-and-dcr-falsification-atlases-a.md)
-- **Summary:** Add ZTCF and DCR falsification atlases and publish Model-to-Human Validation Roadmap
-- **Next step:** Shipped in PR #5046.
-
-### DL-#4487 · Redesign Home Page Around Audience Routing, Progressive Math Disclosure, and Scientific Trust Strip
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4487
-- **Branch:** merged via #5058
-- **PR:** #5058
-- **Paths:** see #5058
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`bfcc99b3`; collated from changes/4487-redesign-home-page-around-audience-routi.md)
-- **Summary:** Redesign home page around audience routing, progressive math disclosure, and scientific trust strip
-- **Next step:** Shipped in PR #5058.
-
-### DL-#4522 · Register 12 Core Biomechanical and Control-Theoretic Theses in Claim_Registry.Json
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4522
-- **Branch:** merged via #5052
-- **PR:** #5052
-- **Paths:** see #5052
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`22dab862`; collated from changes/4522-register-12-core-biomechanical-and-contr.md)
-- **Summary:** Register 12 core biomechanical and control-theoretic theses in claim_registry.json
-- **Next step:** Shipped in PR #5052.
-
-### DL-#4088 · Withdraw the Synthetic Reader-Validation Study: Its Participant Data Was Generated, Not Collected; Remove the Generator, Schema, Published JSON and Partial
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4088
-- **Branch:** merged via #5054
-- **PR:** #5054
-- **Paths:** see #5054
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`d680d873`; collated from changes/4088-withdraw-the-synthetic-reader-validation.md)
-- **Summary:** Withdraw the synthetic reader-validation study: its participant data was generated, not collected; remove the generator, schema, published JSON and partial
-- **Next step:** Shipped in PR #5054.
-
-### DL-#4993 · Retry Live Gate on Transient Subresource 5Xx
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4993
-- **Branch:** merged via #5045
-- **PR:** #5045
-- **Paths:** see #5045
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`aae4c1ad`; collated from changes/4993-live-subresource-retry.md)
-- **Summary:** Retry live gate on transient subresource 5xx
-- **Next step:** Shipped in PR #5045.
-
-### DL-#4010 · Publish AffineDrift Adversarial Audit, Document 3-Tier Engine Equivalency in Companion Catalog, and Link Big Idea Explainer
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4010
-- **Branch:** merged via #5049
-- **PR:** #5049
-- **Paths:** see #5049
-- **Started:** 2026-10-14
-- **Last verified:** 2026-10-14 (`22888202`; collated from changes/4010-publish-affinedrift-adversarial-audit-do.md)
-- **Summary:** Publish AffineDrift adversarial audit, document 3-tier engine equivalency in companion catalog, and link Big Idea explainer
-- **Next step:** Shipped in PR #5049.
-
-### DL-#4127 · Generate Tools Capability Catalog and Golden-Vector Parity Suite
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4127
-- **Branch:** merged via #5026
-- **PR:** #5026
-- **Paths:** see #5026
-- **Started:** 2026-10-13
-- **Last verified:** 2026-10-13 (`53b8d97d`; collated from changes/4127-generate-tools-capability-catalog-and-go.md)
-- **Summary:** Generate tools capability catalog and golden-vector parity suite
-- **Next step:** Shipped in PR #5026.
-
-### DL-#4590 · WEB-12.4: Plain-Language Rewrite of Entry Pages (Home, Overview, About, Tools, Learning Paths, Books Hub, Resources Hub) With Every Caveat Preserved; Source Digests Re-Pinned
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4590
-- **Branch:** merged via #5021
-- **PR:** #5021
-- **Paths:** see #5021
-- **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`1e363187`; collated from changes/4590-web-12-4-plain-language-rewrite-of-entry.md)
-- **Summary:** WEB-12.4: plain-language rewrite of entry pages (home, Overview, About, Tools, Learning Paths, Books hub, Resources hub) with every caveat preserved; source digests re-pinned
-- **Next step:** Shipped in PR #5021.
-
-### DL-#5019 · Keep a Running Revision-Bound Website Deployment Active While Newer Pushes Coalesce
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5019
-- **Branch:** codex/shot-pattern-deploy-stability
-- **PR:** #5022
-- **Paths:** see #5022
-- **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`a49da727`; collated from changes/5019-deploy-stability.md)
-- **Summary:** Keep a running revision-bound website deployment active while newer pushes coalesce
-- **Next step:** Shipped in PR #5022.
-
-### DL-#5004 · Prepare a Model-Conditional Shot-Pattern Research Article and Share Preview
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #5004
-- **Branch:** codex/shot-pattern-report-publication
-- **PR:** #5005, #5016, #5022
-- **Paths:** see #5005
-- **Started:** 2026-10-12
-- **Last verified:** 2026-10-12 (`a49da727`; collated from changes/5004-publication-closure.md)
-- **Summary:** Prepare a model-conditional shot-pattern research article and share preview
-- **Next step:** AffineDrift publication is complete; UpstreamDrift integration and empirical qualification remain separately governed
-
-### DL-#4589 · Consolidate Pages/tools.qmd Scope Caveats Into the WEB-03.4 Caveats Block (Refs 4589, Page 1)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4589
-- **Branch:** merged via #5012
-- **PR:** #5012, #5053
-- **Paths:** see #5012
-- **Started:** 2026-10-12
-- **Last verified:** 2026-10-14 (`88bdf7f5`; collated from changes/4589-consolidate-repeated-inline-caveats-into.md)
-- **Summary:** Consolidate pages/tools.qmd scope caveats into the WEB-03.4 caveats block (Refs 4589, page 1)
-- **Next step:** Shipped in PR #5012.
-
-### DL-#4553 · Consolidate Okabe-Ito Palette CSS Tokens Into Css/Tokens/colors.css and Add Design Token Audit
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4553
-- **Branch:** merged via #5008
-- **PR:** #5008, #5060
-- **Paths:** see #5008
-- **Started:** 2026-10-12
-- **Last verified:** 2026-10-14 (`1bd5617e`; collated from changes/4553-remove-global-margin-padding-reset-from.md)
-- **Summary:** Consolidate Okabe-Ito palette CSS tokens into css/tokens/colors.css and add design token audit
-- **Next step:** Shipped in PR #5008.
-
-### DL-#4609 · Licensing: Code MIT, Written Text and Data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT Updated (Refs #4609)
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #4609
-- **Branch:** merged via #5006
-- **PR:** #5006, #5030
-- **Paths:** see #5006
-- **Started:** 2026-10-12
-- **Last verified:** 2026-10-13 (`c8d28097`; collated from changes/4609-educator-resources-page-four-teaching-mo.md)
-- **Summary:** Licensing: code MIT, written text and data CC BY 4.0 (LICENSE-CONTENT), README and COPYRIGHT updated (refs #4609)
-- **Next step:** Shipped in PR #5006.
-
-### DL-#1893 · Archive HANDOFF.md (129 Old Sections) and Shipped DEVELOPMENT_LOG.md Entries (17) Verbatim Into Docs/Development/Archive/ and the Yearly DL Archive (RM#1893).
-
-- **State:** shipped
-- **Owner:** unassigned
-- **Issue:** #1893
-- **Branch:** merged via #4991
-- **PR:** #4991, #5011
-- **Paths:** docs/development/HANDOFF.md; docs/development/DEVELOPMENT_LOG.md; docs/development/DEVELOPMENT_LOG_ARCHIVE_2026.md; docs/development/archive/HANDOFF_ARCHIVE_2026.md
-- **Started:** 2026-10-07
-- **Last verified:** 2026-10-12 (`61bd4399`; collated from changes/1893-re-archive-handoff-md-under-the-200-line.md)
-- **Summary:** Archive HANDOFF.md (129 old sections) and shipped DEVELOPMENT_LOG.md entries (17) verbatim into docs/development/archive/ and the yearly DL archive (RM#1893).
-- **Next step:** Shipped in PR #4991.
-
 ## Archive
 
 Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 
 ### DL-#4550 · Print and PDF Editions for Books and Core Series
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4686
 - **Issue:** #4550 (WEB-07.9; epic #4552)
@@ -2892,7 +2074,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Status checked:** 2026-10-17 (GitHub PR #4686 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 ### DL-#4565 · Math Accessibility Verification
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4674
 - **Issue:** #4565 (WEB-09.5; epic #4569 / E9)
@@ -2905,7 +2087,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Status checked:** 2026-10-17 (GitHub PR #4674 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 ### DL-#4551 · Parameters Page and Notation Quick-Reference Card
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4698
 - **Issue:** #4551 (epic #4552)
@@ -2919,7 +2101,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 
 ### DL-#4607 · Contributor and Reviewer Guide on the Site
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4698
 - **Issue:** #4607 (part of #4610)
@@ -2933,7 +2115,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 
 ### DL-#4547 · Deduplicate and Reconcile Bibliography Databases
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4676
 - **Issue:** #4547 (WEB-07.5)
@@ -2946,7 +2128,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Status checked:** 2026-10-17 (GitHub PR #4676 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 ### DL-#4564 · Cross-Browser Coverage (Nightly Firefox/WebKit)
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4685
 - **Issue:** #4564 (WEB-09.4; epic #4569 / E9)
@@ -2959,7 +2141,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Status checked:** 2026-10-17 (GitHub PR #4685 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 ### DL-#4546 · ScholarlyArticle and Book JSON-LD
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **Issue:** #4546 (epic #4552)
 - **PR:** #4629
@@ -2973,7 +2155,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 
 ### DL-#4548 · Render or Retire Orphaned Per-Article Bibliography Files
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4692
 - **Issue:** #4548 (epic #4552)
@@ -2987,7 +2169,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 
 ### DL-#4504 · Configure Search, and Include Maturity in Results
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4668
 - **Issue:** #4504 (WEB-02.10; epic #4514)
@@ -3000,7 +2182,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Status checked:** 2026-10-17 (GitHub PR #4668 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 ### DL-#4578 · Social Cards per Page
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4660
 - **Issue:** #4578 (WEB-10.10; epic #4579 / E10)
@@ -3013,7 +2195,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Status checked:** 2026-10-17 (GitHub PR #4660 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 ### DL-#4595 · Cache Quarto Renders in CI
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4663
 - **Issue:** #4595 (WEB-13.1; epic #4604 / E13)
@@ -3027,7 +2209,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 
 ### DL-#4563 · Restore the Ten Excluded Browser Tests
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude
 - **PR:** #4835
 - **Issue:** #4563 (WEB-09.3; epic #4569 / E9 — Accessibility Conformance)

@@ -286,8 +286,9 @@ class PuttingSimulator:
         while t < max_time:
             speed = math.sqrt(vx * vx + vy * vy)
 
-            # Stop if the ball has effectively stopped
-            if speed < 0.005:
+            # Stop only if the ball is slow AND the slope cannot overcome rolling
+            # resistance; otherwise a ball at rest on a steep slope would freeze.
+            if speed < 0.005 and not self._slope_overcomes_resistance(x, y, deceleration):
                 logger.debug("Putt stopped at (%.3f, %.3f) after %.2f s", x, y, t)
                 break
 
@@ -305,6 +306,22 @@ class PuttingSimulator:
             trajectory.append((x, y))
 
         return trajectory
+
+    def _slope_overcomes_resistance(self, x: float, y: float, deceleration: float) -> bool:
+        """Return True if gravity along the slope exceeds rolling resistance at (x, y).
+
+        A ball at rest only stays at rest while ``g * |grad z| <= deceleration``.
+
+        Args:
+            x: Ball x position in meters.
+            y: Ball y position in meters.
+            deceleration: Rolling-resistance deceleration in m/s^2.
+
+        Returns:
+            True if the ball would start (or keep) rolling from rest.
+        """
+        slope_x, slope_y = self.surface.evaluate_slope(x, y)
+        return GRAVITY_M_S2 * math.hypot(slope_x, slope_y) > deceleration
 
     def _putt_derivatives(
         self,

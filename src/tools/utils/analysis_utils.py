@@ -241,9 +241,23 @@ def collect_error_handling_metrics(content: str) -> ErrorHandlingMetrics:
     Returns:
         ``ErrorHandlingMetrics`` with try and bare-except counts.
     """
+    try:
+        tree = ast.parse(content)
+    except (SyntaxError, ValueError):
+        # Unparseable source: word-bounded textual fallback.
+        return ErrorHandlingMetrics(
+            try_count=len(re.findall(r"\btry\s*:", content)),
+            bare_except_count=len(re.findall(r"\bexcept\s*:", content)),
+        )
+    try_count = 0
+    bare_except_count = 0
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Try | ast.TryStar):
+            try_count += 1
+            bare_except_count += sum(1 for h in node.handlers if h.type is None)
     return ErrorHandlingMetrics(
-        try_count=content.count("try:"),
-        bare_except_count=len(re.findall(r"except\s*:", content)),
+        try_count=try_count,
+        bare_except_count=bare_except_count,
     )
 
 
