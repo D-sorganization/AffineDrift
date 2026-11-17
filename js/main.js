@@ -26,6 +26,7 @@ import {
     initAnchorLinks,
     initScrollSpy,
     initSkipToContent,
+    initSidebarClose,
 } from "./navigation.js";
 
 import {
@@ -77,6 +78,7 @@ runOnDomReady(function () {
     initAnchorLinks();
     initScrollSpy();
     initSkipToContent();
+    initSidebarClose();
 
     // --- Animations & Lazy Loading ---
     initFadeAnimations();

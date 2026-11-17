@@ -214,9 +214,10 @@ categories:
         <div class="site-card site-card--callout u-mb-4">
           <h2 class="u-mb-1">Authority Boundary</h2>
           <p>
-            <strong>This establishes</strong> verified software facts, support tiers, and execution
-            parameters exported from UpstreamDrift exact commit
-            <a href="{tree_url}" target="_blank" rel="noopener"><code>{commit}</code></a>.
+            <strong>This establishes</strong> the software facts, support tiers, and execution
+            parameters the provider declared at exact commit
+            <a href="{tree_url}" target="_blank" rel="noopener"><code>{commit}</code></a>,
+            with per-row qualification status in the catalog tables.
           </p>
           <p>
             <strong>This does not establish</strong> independent scientific consensus, coaching
@@ -238,8 +239,8 @@ categories:
         <article class="resource-card">
           <h3><a href="programs.html">Programs and Models ({prog_count})</a></h3>
           <p class="resource-description">
-            The full 70-record program and local model directory with interfaceKind, maturity,
-            and surface parity classifications.
+            The full {prog_count}-record program and local model directory with
+            interfaceKind, maturity, and surface parity classifications.
           </p>
           <a href="programs.html" class="resource-link">Browse Programs →</a>
         </article>
@@ -334,9 +335,18 @@ categories:
 
 ### Support Tier Definitions
 
-- **Supported (`F0`):** Core stack (e.g. MuJoCo). Fully tested across operating systems.
-- **Extended (`F1`):** Extended stack (e.g. Drake, Pinocchio). Tested in simulation suites.
-- **Experimental (`F2`):** Research-grade experimental interfaces (e.g. OpenSim, MyoSuite).
+Aligned with UpstreamDrift
+[engine support tiers](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/engines/support_tiers.md):
+
+- **Supported:** MuJoCo. Required pull-request CI in `ci-standard.yml` (Ubuntu runners).
+- **Extended:** Drake and Pinocchio. Nightly cross-engine validation plus targeted local runs.
+- **Experimental:** OpenSim, MyoSuite, and other experimental engines. Best-effort local
+  validation only; not a release gate.
+
+For the code-level `PhysicsEngine` method list, per-engine drift and control definitions,
+integrator defaults, simulation backends, and cross-engine validation tolerances, see the
+[UpstreamDrift Engine Protocol Reference](../../pages/upstreamdrift-engine-protocol.html)
+(pinned UpstreamDrift source; Refs #5620).
 
 ### Cross-Engine Mathematical Equivalency Tiers
 
@@ -364,10 +374,15 @@ categories:
                 f"| `{pid}` | {title} | `{kind}` | `{engine}` | `{maturity}` | {surfaces} |"
             )
         prog_table = "\n".join(rows) if rows else "| None | - | - | - | - | - |"
+        prog_count = len(self._programs)
+        prog_desc = (
+            f"Authoritative inventory of {prog_count} UpstreamDrift "
+            "simulation programs, solvers, and models"
+        )
 
         return f"""---
 title: "Programs and Models Directory"
-description: "Authoritative inventory of 70 UpstreamDrift simulation programs, solvers, and models"
+description: "{prog_desc}"
 categories:
 - models
 ---
@@ -379,7 +394,7 @@ categories:
 > **This establishes** the inventory of registered UpstreamDrift programs, models, and interfaces.
 > **This does not establish** experimental validation or clinical applicability.
 
-## Program Registry ({len(self._programs)} Records)
+## Program Registry ({prog_count} Records)
 
 | Program ID | Title | Kind | Engine | Maturity | Surfaces |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -485,6 +500,31 @@ categories:
 | Workflow ID | Title | Kind | Support Tier | Availability | Verification Method |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 {wf_table}
+
+## Local Installation and Verification
+
+Run these commands from the UpstreamDrift repository root after installing the Python 3.11 or 3.12
+environment described in the project README:
+
+```bash
+python3 -m pip install -e ".[dev]"
+python3 scripts/ci/verify_installation.py
+python3 -m scripts.companion_workflows execute --workflow-id installation-verification
+```
+
+**Expected result:** both verification commands exit with code `0` when the pinned companion
+provider contract is satisfied. A zero exit code does not imply that every optional engine or GUI
+extra is installed.
+
+To run another governed workflow after installation succeeds:
+
+```bash
+python3 -m scripts.companion_workflows execute --workflow-id reference-double-pendulum-simulation
+```
+
+**Expected result:** exit code `0` and workflow artifacts under
+`dist/companion-workflows/artifacts/` matching the catalog's declared SHA-256 evidence for that
+workflow id.
 """
 
     def generate_provenance(self) -> str:

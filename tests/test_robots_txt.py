@@ -53,6 +53,8 @@ def test_quarto_yml_declares_robots_txt_resource() -> None:
     config = yaml.safe_load(QUARTO_YML_PATH.read_text(encoding="utf-8"))
     resources = config.get("project", {}).get("resources", [])
     assert "robots.txt" in resources, "robots.txt must be listed in _quarto.yml project.resources"
+    for resource in ("llms.txt", "llms-full.txt", "data/agent/canonical_pages.json"):
+        assert resource in resources, f"{resource} must be listed in _quarto.yml project.resources"
 
 
 def test_render_critical_paths_are_crawlable() -> None:

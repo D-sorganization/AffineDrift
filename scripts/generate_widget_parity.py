@@ -27,7 +27,7 @@ from typing import Any
 import numpy as np
 
 from src.affine_control.double_pendulum_affine import (
-    DoublePendulumParams,
+    SANDBOX_DEFAULT_PARAMS,
     affine_split,
     generalized_torque,
     simulate,
@@ -35,7 +35,6 @@ from src.affine_control.double_pendulum_affine import (
 )
 from src.affine_control.ztcf_contract import execute_ztcf_intervention
 from src.affine_control.ztcf_explorer import DECLARED_TORQUE, HORIZON, STEPS, explore, load_fixture
-from src.core.constants import GRAVITY_M_S2
 from src.tools.rotation_reference_examples import (
     GIMBAL_COSINE_TOLERANCE,
     axis_angle_to_rotation,
@@ -81,7 +80,15 @@ def _floats(values: Any) -> Any:
 # --------------------------------------------------------------------------
 
 #: Declared illustrative parameters shared with js/drift-control-sandbox.js.
-SANDBOX_PARAMS = {"m1": 7.0, "m2": 0.6, "l1": 0.75, "l2": 1.1, "gravity": GRAVITY_M_S2}
+SANDBOX_PARAMS = {
+    "m1": SANDBOX_DEFAULT_PARAMS.m1,
+    "m2": SANDBOX_DEFAULT_PARAMS.m2,
+    "l1": SANDBOX_DEFAULT_PARAMS.l1,
+    "l2": SANDBOX_DEFAULT_PARAMS.l2,
+    "l_c2": SANDBOX_DEFAULT_PARAMS.l_c2,
+    "I_c2": SANDBOX_DEFAULT_PARAMS.I_c2,
+    "gravity": SANDBOX_DEFAULT_PARAMS.gravity,
+}
 SANDBOX_HORIZON = 0.5
 SANDBOX_STEPS = 500
 SANDBOX_SAMPLE_EVERY = 25
@@ -100,7 +107,7 @@ SPLIT_STATES = [
 
 
 def _sandbox_split_case(case_id: str, state: dict[str, Any]) -> dict[str, Any]:
-    params = DoublePendulumParams(**SANDBOX_PARAMS)
+    params = SANDBOX_DEFAULT_PARAMS
     torque = generalized_torque(state["shoulder"], state["wrist"])
     drift, input_qdd = affine_split(state["q"], state["qd"], torque, params)
     tip_drift, tip_input = tip_acceleration_split(state["q"], state["qd"], drift, input_qdd, params)
@@ -118,7 +125,7 @@ def _sandbox_split_case(case_id: str, state: dict[str, Any]) -> dict[str, Any]:
 
 
 def _sandbox_trajectory_case(preset: str) -> dict[str, Any]:
-    params = DoublePendulumParams(**SANDBOX_PARAMS)
+    params = SANDBOX_DEFAULT_PARAMS
     joints = SANDBOX_PRESETS[preset]
     torque = generalized_torque(joints["shoulder"], joints["wrist"])
     samples = simulate(params, SANDBOX_Q0, SANDBOX_QD0, torque, SANDBOX_HORIZON, SANDBOX_STEPS)

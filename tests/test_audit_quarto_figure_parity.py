@@ -295,8 +295,9 @@ class TestAuditBookPhysicsOfGolf:
         assert res.total_latex_tikz == 3
         assert res.total_latex_includegraphics == 33
         assert res.total_latex_fig_labels == 36
-        assert res.total_quarto_figures == 34
-        assert res.missing_figures_count == 2
+        # #5599 adds paired gear-effect and putting-break schematics in ch28/ch32.
+        assert res.total_quarto_figures == 36
+        assert res.missing_figures_count == 0
         assert res.is_in_full_parity is False
         muscle = next(
             chapter

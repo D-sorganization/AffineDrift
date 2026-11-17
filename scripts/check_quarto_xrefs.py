@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import re
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 
 # One Quarto project: references resolve across the files inside it.
@@ -41,7 +42,7 @@ STANDALONE = (Path("articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Uni
 PREFIXES = ("sec", "eq", "fig", "tbl", "thm", "lst", "wrn")
 _ALT = "|".join(PREFIXES)
 
-DEFINITION = re.compile(r"\{#((?:" + _ALT + r")-[A-Za-z0-9_:.-]+)\}")
+DEFINITION = re.compile(r"\{#((?:" + _ALT + r")-[A-Za-z0-9_:.-]+)(?:\s+[^}]*)?\}")
 REFERENCE = re.compile(r"(?<![\w`])@((?:" + _ALT + r")-[A-Za-z0-9_:.-]+)")
 HEADING = re.compile(r"^\s*#{1,6}\s")
 FENCE = re.compile(r"^\s*(```+|~~~+)")
@@ -57,6 +58,31 @@ def trim(key: str) -> str:
     return key.rstrip(".,;:-")
 
 
+def _prose_lines(path: Path) -> Iterator[tuple[int, str]]:
+    """Yield numbered lines outside fences, preserving source line numbers.
+
+    A closing fence must use the opening marker, be at least as long, and
+    contain only trailing whitespace. Shorter or mixed fences stay literal.
+    """
+    opening = ""
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        match = FENCE.match(line)
+        if opening:
+            if match is not None:
+                marker = match.group(1)
+                if (
+                    marker[0] == opening[0]
+                    and len(marker) >= len(opening)
+                    and not line[match.end() :].strip()
+                ):
+                    opening = ""
+            continue
+        if match is not None:
+            opening = match.group(1)
+            continue
+        yield number, line
+
+
 def scan(
     path: Path,
 ) -> tuple[dict[str, tuple[Path, int]], list[tuple[str, int]], list[tuple[str, int]]]:
@@ -65,17 +91,10 @@ def scan(
     referenced: list[tuple[str, int]] = []
     stranded: list[tuple[str, int]] = []
 
-    in_fence = False
     callout_depth = 0
     depth = 0
 
-    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-        if FENCE.match(line):
-            in_fence = not in_fence
-            continue
-        if in_fence:
-            continue
-
+    for number, line in _prose_lines(path):
         bare = INLINE_CODE.sub("", line)
 
         if DIV_OPEN.match(line):

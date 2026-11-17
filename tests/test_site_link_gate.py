@@ -233,6 +233,12 @@ class TestRelatedCoverage:
         report = run_site_gate(site, use_baseline=False)
         assert not any(e.startswith("books/index.qmd") for e in report["related-coverage"])
 
+    def test_draft_page_is_exempt(self, site: Path) -> None:
+        # Drafts are not rendered or published, so they need no Related Articles (#5426).
+        write_page(site / "articles" / "wip.qmd", "Body.\n", title="WIP", draft=True)
+        report = run_site_gate(site, use_baseline=False)
+        assert not any(e.startswith("articles/wip.qmd") for e in report["related-coverage"])
+
 
 class TestOrphans:
     def test_unreferenced_page_fails(self, site: Path) -> None:
@@ -260,6 +266,12 @@ class TestOrphans:
         )
         report = run_site_gate(site, use_baseline=False)
         assert "pages/nav-only.qmd" not in report["orphans"]
+
+    def test_draft_page_is_not_an_orphan(self, site: Path) -> None:
+        # A public page must not link to an unpublished draft, so drafts need no inbound link.
+        write_page(site / "articles" / "wip.qmd", "Body.\n", title="WIP", draft=True)
+        report = run_site_gate(site, use_baseline=False)
+        assert "articles/wip.qmd" not in report["orphans"]
 
     def test_index_page_is_exempt(self, site: Path) -> None:
         report = run_site_gate(site, use_baseline=False)

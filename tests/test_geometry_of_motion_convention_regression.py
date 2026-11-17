@@ -26,6 +26,13 @@ CH07_RECURSIVE_ALGORITHMS = (
     / "chapters"
     / "ch07_recursive_algorithms.tex"
 )
+CH10_ABA = (
+    REPO_ROOT
+    / "articles"
+    / "The_Geometry_of_Motion"
+    / "quarto"
+    / "vol0_ch10_articulated_body_algorithm.qmd"
+)
 
 
 def test_ch01_se3_kinematics_uses_body_twist_convention() -> None:
@@ -57,3 +64,14 @@ def test_ch07_parent_array_matches_the_described_branch_in_both_editions() -> No
         assert children == {0: [1], 1: [2, 3], 2: [], 3: [4], 4: []}
         assert "bodies 2 and 3 branch from body 1" in text
         assert "body 4 attaches to body 3" in text
+
+
+def test_ch10_featherstone_gravity_bookkeeping_is_internally_consistent() -> None:
+    """Fixed-base fictitious a_0 must not be double-counted in physical recovery."""
+    text = CH10_ABA.read_text(encoding="utf-8")
+    assert r"a_0=\mathbf{g}" in text
+    assert r"a_0^{\mathrm{phys}}=0" in text
+    assert "do not add $\\mathbf{g}$ again when interpreting base motion" in text
+    assert r"a_0^{\mathrm{phys}}=a_0+\mathbf{g}" in text
+    assert "that prescription is not passed through this recovery formula" in text
+    assert r"a_0^{\mathrm{phys}}=a_0+(0,-g)" not in text

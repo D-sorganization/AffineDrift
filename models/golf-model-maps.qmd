@@ -1,0 +1,131 @@
+---
+title: "Golf Model Maps"
+description: "Degree-of-freedom and joint tables for UpstreamDrift golf multibody models, pinned to a fixed provider commit."
+categories:
+- models
+---
+
+This reference maps generalized coordinates, joint orderings, kinematic
+conventions, and bilateral grip decompositions across the shipped UpstreamDrift
+golf multibody, biomechanics, and motion-capture modules at pinned commit
+[`625a16e6`](https://github.com/D-sorganization/UpstreamDrift/tree/625a16e6897b88ab29fb5a64c65ecee820dd58f5).
+
+::: {.callout-note title="Authority Boundary"}
+**This establishes** `qpos` / velocity index order, joint type, axis, limit,
+actuator name, and closed-loop equality constraints for four MuJoCo golf XML
+definitions; the 35-DOF `golfer-scapula/2.0` Simscape articulated chain,
+segment lengths, and signed log-column map; ISB anatomical angle Cardan
+sequences, wrist per-side sign tables, and golf aliases; the pose-estimator
+three-point included-angle convention ($\theta = \arccos(\hat{u}\cdot\hat{v})$);
+and the $6\times 12$ two-hand grasp map and hand-split coordinates.
+
+**This does not establish** full generated MJCF/URDF/OSIM tables for MyoSuite,
+Drake, OpenSim, or Pinocchio, nor unvalidated Simscape wrist/leg/head DOFs.
+Those extensions remain tracked under [AffineDrift #5621](https://github.com/D-sorganization/AffineDrift/issues/5621).
+:::
+
+## MuJoCo Motor-Driven Humanoids {#sec-mujoco-golf-maps}
+
+Regenerate after changing the manifest pin:
+
+```bash
+python3 -m scripts.generate_golf_model_maps
+```
+
+{{< include _generated/golf-model-maps-mujoco.qmd >}}
+
+## How to Read `q[i]` {#sec-reading-q}
+
+Use the `qpos` index for configuration components and the `v` index for generalized
+velocities. Motor actuators act on the listed hinge joints. `weld` and `connect`
+equalities enforce grip closure and (in the advanced model) hip attachment without
+adding independent coordinates; their forces depend on the MuJoCo solver.
+
+## Simscape Articulated Model (`golfer-scapula/2.0`) {#sec-simscape-golfer-scapula}
+
+The motion-capture reconstruction model (`golfer-scapula/2.0`,
+`src/motion_capture/reconstruct/model/golfer.py`) places every body frame at
+the Simscape `GolfSwing3D_Kinetic` sensor frame using identified constant pre/post
+rotations:
+
+$$\text{child} = \text{parent} \cdot R(\text{pre}) \cdot R_{\text{axes}}(q) \cdot R(\text{post})$$
+
+where rotations are intrinsic with the first listed axis outermost, and relative
+identifications solve $R_P^T R_C = A R(\pm q) B$ (maximum fit residual
+$\le 2.7 \times 10^{-4}\text{ rad}$ across 620 logged frames; forward replay within
+$\le 1.7 \times 10^{-3}\text{ rad}$ and $\le 0.6\text{ mm}$). Note that the
+kinematic tree puts the `torso` revolute (`z`) **before** the `spine` universal
+(`zx`) — the reverse of the prose order in the legacy MATLAB guide — and uses
+asymmetric left/right arm axis labels (`left_scapula` `xz` / `left_shoulder` `xyz`
+vs. `right_scapula` `yz` / `right_shoulder` `yzx`). The reconstruct world
+($x$ target, $y$ up, $z$ golfer's right) maps to Simscape world ($z_s$ up,
+$y_s$ golfer's right) via $(x_s, y_s, z_s) = (x, -z, y)$. Only the 23 trunk,
+scapula, shoulder, elbow, and forearm DOFs (plus 3 root translations and 3 root
+rotations in `SIMSCAPE_NAMES`) match logged sensors; wrist DOFs are named only and
+leg/head DOFs are omitted from the MATLAB model.
+
+```bash
+python3 -m scripts.generate_golf_model_maps --simscape-only
+```
+
+{{< include _generated/golf-model-maps-simscape.qmd >}}
+
+## ISB Anatomical Angle Conventions & Golf Aliases {#sec-isb-angle-conventions}
+
+UpstreamDrift reports clinical/anatomical angles (`src/shared/python/biomechanics/joint_conventions.py`, `src/shared/python/anatomical_angles/`) using calibrated right-handed ISB frames (Wu et al. 2002/2005) and distinct golf-alias tables:
+
+| Segment / Profile | Sequence | Ordered Components & Positive Sense | Singularity / Scope Notes |
+|---|---|---|---|
+| `isb_thorax` & `trunk_pelvis` | `ZXY` | `extension` (`FE`), `right_lateral_flexion` (`LB`), `left_axial_rotation` (`AR`) | Decomposes `lab^T R_segment`; `forward_bend = -FE`; `FE, AR -> NaN` at `\|LB\| = 90°` |
+| `isb_hip` | `ZXY` | `flexion_extension`, `adduction_abduction`, `internal_external_rotation` | Flexion-positive (opposite to spine extension-positive) |
+| `isb_glenohumeral` / `isb_thoracohumeral` | `YXY` | `plane_of_elevation`, `negative_elevation`, `internal_rotation` | Middle angle negated (`negative_middle=True`); `0°` abduction vs `90°` flexion |
+| `isb_elbow` | `ZXY` | `flexion`, `carrying_angle`, `pronation` | Source for forearm pronation (`forearm_in_humerus_rotation`) |
+| `isb_wrist` | `ZXY` | `flexion`, `ulnar_deviation`, `axial_rotation` | Radius→3rd metacarpal (`OBSERVABILITY = fitted_grip_rotation`); `SIDE_SIGN`: `R=(1,1,1)`, `L=(1,-1,-1)`; 3rd angle is **not** forearm pronation; `\|ulnar\| = 90° -> NaN` |
+| `grood_suntay_knee` | `XYZ` | `femoral_x_rotation`, `floating_axis_rotation`, `tibial_z_rotation` | Grood & Suntay (1983) floating-axis sequence |
+
+In `src/shared/python/anatomical_angles/golf_aliases.py`, `WRIST_GOLF_ALIASES` maps
+`"cupped"` to `-flexion`, `"bowed"` to `+flexion`, and `"hinge"` / `"cock"` to
+`-ulnar_deviation`; `"release"` deliberately raises `ValueError` because it
+names a dynamic swing event rather than a signed angle.
+
+## Pose-Estimator Included Angles vs. Anatomical Flexion {#sec-pose-estimator-included-angle}
+
+MediaPipe and OpenPose pipelines (`src/shared/python/pose_estimation/joint_angle_utils.py`,
+`src/tools/video_analyzer/analyzer.py`) compute three-keypoint limb angles from
+joint-to-proximal and joint-to-distal unit vectors:
+
+$$\theta = \arccos(\hat{u} \cdot \hat{v}) \in [0, \pi] \quad (\text{or } [0^\circ, 180^\circ]).$$
+
+Under this included-angle formula, a straight limb reads $\approx \pi\text{ rad}$
+($180^\circ$), whereas ISB anatomical flexion (`anatomical_angles/limbs.py`) is
+$0^\circ$ in neutral standing posture. For purely planar hinge motion,
+$\text{flexion}_{\text{anat}} \approx 180^\circ - \theta$; in general 3D motion,
+three-point angles mix planar flexion with ab/adduction and axial rotation and
+cannot be equated directly with signed Cardan coordinates.
+
+## Two-Hand Grasp Map and Hand-Split Coordinates {#sec-two-hand-grasp-map}
+
+In `src/shared/python/loop_nullspace/grip_split.py`, bilateral six-axis hand
+wrenches $y = (f_L, c_L, f_R, c_R) \in \mathbb{R}^{12}$ (each three force
+components plus three free couple components at grip points $r_L, r_R$ about
+their midpoint origin) map to the net club wrench $w = (F, M) \in \mathbb{R}^6$
+via the $6 \times 12$ grasp map $G$:
+
+$$w = G y = \begin{bmatrix} I_3 & 0 & I_3 & 0 \\ [\rho_L]_\times & I_3 & [\rho_R]_\times & I_3 \end{bmatrix} \begin{bmatrix} f_L \\ c_L \\ f_R \\ c_R \end{bmatrix}.$$
+
+Every admissible hand-load allocation decomposes into equal-split plus internal
+null-space coordinates $y = G^# w + K s$, where $G^#$ allocates half the net
+wrench to each hand, $G K = 0$ ($K \in \mathbb{R}^{12\times 6}$), and
+$s = \Phi y = \bigl(\tfrac{1}{2}(f_R - f_L),\, \tfrac{1}{2}(c_R - c_L)\bigr)$
+defines the six split coordinates $s_1$–$s_6$ (axial component positive when
+pulling right relative to left along $d$, negative when squeezing; compare the
+scalar point-force projection in `_ch05_two_hand_wrench.qmd`).
+
+## Related Articles
+
+- [MuJoCo Models](models-mujoco.html)
+- [Matlab Simulink Models](models-simulink.html)
+- [Technology: Motion Capture](../articles/technology-motion-capture.html)
+- [Model Ladder and Selection Protocol](model-ladder.html)
+- [The Physics of Golf, Chapter 23: URDF Robot Models](../articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html)
+- [UpstreamDrift Educational Integration](../articles/upstreamdrift-educational-integration.html)

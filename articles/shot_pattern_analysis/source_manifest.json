@@ -1,0 +1,34 @@
+{
+  "schema_version": "shot-pattern-article-source-v1",
+  "study": {
+    "repository": "D-sorganization/UpstreamDrift",
+    "commit": "d56e3709e65a01f70dbd1a8db86856a160a8559d",
+    "root": "docs/research/shot_pattern_analysis",
+    "release_tag": "shot-pattern-phase2-research-2026-10-10",
+    "release_url": "https://github.com/D-sorganization/UpstreamDrift/releases/tag/shot-pattern-phase2-research-2026-10-10",
+    "simulation_entrypoints": [
+      "src/tools/shot_pattern_analysis/matched_matrix.py",
+      "src/tools/shot_pattern_analysis/noise.py",
+      "src/tools/shot_pattern_analysis/matched_config.py"
+    ],
+    "figure_render_entrypoint": "docs/research/shot_pattern_analysis/phase2/presentation_v2/render.py",
+    "reproducing_guide": "docs/research/shot_pattern_analysis/phase2/REPRODUCING.md"
+  },
+  "publication": {
+    "repository": "D-sorganization/AffineDrift",
+    "root": "articles/shot_pattern_analysis",
+    "data": {
+      "headline_paired_sg.csv": "24 zero-lean scored cells with bootstrap paired SG",
+      "headline_dataset_meta.json": "bootstrap resample count and units",
+      "delivery_noise_profiles.json": "primitive Gaussian SDs for shaft_only and combined2",
+      "club_parameters.json": "matched club and ball geometry assumptions",
+      "strokes_gained_baseline.json": "Broadie historical tour baseline metadata"
+    },
+    "generators": {
+      "table_builder": "python3 -m scripts.build_shot_pattern_article_artifacts",
+      "upstream_sync": "scripts/sync_shot_pattern_upstream_data.py (refresh via UpstreamDrift headline_dataset.json)"
+    }
+  },
+  "asset_manifest": "articles/shot_pattern_analysis/asset_manifest.json",
+  "note": "Copied figure bytes retain the legacy study_source_commit in asset_manifest; numeric tables bind to the public UpstreamDrift commit above."
+}

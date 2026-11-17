@@ -123,10 +123,9 @@ class TestDcrFalsificationAtlas:
 
         chart_rec = record_map["dcr-atlas-coordinate-chart-invariance"]
         assert "crit-dcr-coordinate-invariance" == chart_rec["critique_id"]
-        assert (
-            "kinetic-energy" in chart_rec["discriminating_measurement"].lower()
-            or "riemannian" in chart_rec["discriminating_measurement"].lower()
-        )
+        dm = chart_rec["discriminating_measurement"].lower()
+        assert "canonical" in dm or "dcr" in dm
+        assert "chart" in dm or "coordinate" in dm
 
         reflex_rec = record_map["dcr-atlas-reflex-feedback-confounding"]
         assert "crit-neuromuscular-control" == reflex_rec["critique_id"]

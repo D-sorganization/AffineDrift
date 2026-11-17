@@ -19,6 +19,7 @@ project:
     - "evidence/**/*.qmd"
     - "repositories/**/*.qmd"
     - "articles/**/*.qmd"
+    - "!articles/slack-takeup-identifiability.qmd"
     - "!articles/tangent-hyperplane-contraction/**/*.qmd"
     - "!articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd"
     - "!articles/tangent-hyperplane-articles/Drafts_Original_Articles/**/*.qmd"
@@ -41,6 +42,7 @@ project:
     - articles/proximal_distal_energy_transfer/source_manifest.json
     - articles/forward_dynamics_matching/matching-forward-dynamics-draft.pdf
     - articles/forward_dynamics_matching/source_manifest.json
+    - articles/The_Geometry_of_Motion/Volume_V/main.pdf
     - articles/shot_pattern_analysis/
     - manifest.json
     - service-worker.js
@@ -52,6 +54,9 @@ project:
     - content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py
     - src/tools/wrist_universal_joint/grip_angle_polynomial_evaluator.js
     - robots.txt
+    - llms.txt
+    - llms-full.txt
+    - data/agent/canonical_pages.json
     # Referenced only via <source srcset> in pages/daydreams-doodles.qmd, which
     # Quarto does not detect, so publish them explicitly (#4558).
     - static/images/A-Dead-Fish-Swims.webp
@@ -160,6 +165,8 @@ website:
               href: articles/appendix-applications.html
             - text: "Consolidated Edition"
               href: articles/affine-nature-golf-swing.html
+            - text: "Lay Guide: Drift & Control"
+              href: articles/drift-is-the-past-control-is-the-present.html
     - id: tangent-nav
       title: "Tangent-Space Series"
       style: floating
@@ -255,6 +262,8 @@ website:
           href: articles/forward_dynamics_matching/25_maintenance.html
         - text: "Forward Surrogates and Multimodal Inverse Proposals"
           href: articles/forward_dynamics_matching/26_neural_proposals.html
+        - text: "Motion-Matching Runtime Reference"
+          href: articles/forward_dynamics_matching/27_runtime_reference.html
 
   navbar:
     logo: logo/logo-navbar.png
@@ -310,12 +319,18 @@ website:
             href: articles/technology-motion-capture.html
           - text: "Launch Monitors"
             href: articles/technology-launch-monitors.html
+          - text: "Slack in Linked Systems"
+            href: articles/slack-management-linked-systems.html
           - text: "The Reference-Point Problem"
             href: articles/reference-point-problem.html
       - text: "Tools"
         menu:
           - text: "Programs & Tools"
             href: pages/tools.html
+          - text: "UpstreamDrift Conventions Reference"
+            href: pages/upstreamdrift-conventions.html
+          - text: "UpstreamDrift Engine Protocol Reference"
+            href: pages/upstreamdrift-engine-protocol.html
           - text: "Programming Companion"
             href: models/models.html
           - text: "Fixture and Dataset Explorer"
@@ -368,6 +383,7 @@ bibliography:
   - references/forward-dynamics-matching.bib
   - references/impact-acoustics.bib
   - references/null-space-exploration.bib
+  - references/slack-management.bib
   - references/slack-takeup-witness.bib
   - references/proximal-distal-energy.bib
   - articles/The_Physics_of_Golf/golf_physics.bib

@@ -1,5 +1,5 @@
 {
-  "schema": "affinedrift/symbol-references/v1",
+  "schema": "affinedrift/symbol-references/v2",
   "source": "NOTATION.md",
   "anchor": "/pages/notation.html#equation-symbol-definitions",
   "symbols": [
@@ -7,49 +7,210 @@
       "key": "x",
       "tex": "x",
       "name": "State x",
-      "definition": "Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities."
+      "definition": "Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities.",
+      "shape": "vector",
+      "frame": "model coordinates",
+      "source_anchor": "/pages/notation.html#equation-symbol-definitions"
     },
     {
       "key": "f",
       "tex": "f(x)",
       "name": "Drift f(x)",
-      "definition": "Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load."
+      "definition": "Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load.",
+      "shape": "vector field",
+      "frame": "state",
+      "source_anchor": "/pages/notation.html#drift-and-control"
     },
     {
       "key": "G",
       "tex": "G(x)",
       "name": "Input map G(x)",
-      "definition": "Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations."
+      "definition": "Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations.",
+      "shape": "matrix",
+      "frame": "state",
+      "source_anchor": "/pages/notation.html#drift-and-control"
     },
     {
       "key": "u",
       "tex": "u",
       "name": "Control input u",
-      "definition": "Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set."
+      "definition": "Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set.",
+      "unit": "model-specific",
+      "shape": "vector",
+      "frame": "control",
+      "source_anchor": "/pages/notation.html#drift-and-control"
     },
     {
       "key": "M",
       "tex": "M(q)",
       "name": "Mass matrix M(q)",
-      "definition": "Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates."
+      "definition": "Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates.",
+      "shape": "matrix",
+      "frame": "generalized",
+      "sign": "SPD",
+      "source_anchor": "/pages/notation.html#term-zvcf"
+    },
+    {
+      "key": "q",
+      "tex": "q",
+      "name": "Generalized coordinates q",
+      "definition": "Joint or body coordinates in the mechanical state.",
+      "unit": "rad or m",
+      "shape": "vector",
+      "frame": "joint/body",
+      "source_anchor": "/pages/notation.html#term-zvcf"
+    },
+    {
+      "key": "qdot",
+      "tex": "\\dot q",
+      "name": "Generalized velocity q-dot",
+      "definition": "Time derivative of the generalized coordinates.",
+      "unit": "rad/s or m/s",
+      "shape": "vector",
+      "frame": "joint/body",
+      "source_anchor": "/pages/notation.html#term-zvcf"
+    },
+    {
+      "key": "h",
+      "tex": "h(q,\\dot q,z;p)",
+      "name": "Bias load h",
+      "definition": "Velocity-dependent, gravity, passive, and constraint loads in the equation $M(q)\\ddot q+h=B(q)u$.",
+      "unit": "N or N·m",
+      "shape": "vector",
+      "frame": "generalized",
+      "source_anchor": "/pages/notation.html#term-zvcf"
+    },
+    {
+      "key": "z",
+      "tex": "z",
+      "name": "Auxiliary state z",
+      "definition": "Declared auxiliary coordinates or frozen strategy variables in the effective plant.",
+      "unit": "model-specific",
+      "shape": "vector",
+      "frame": "model-defined",
+      "source_anchor": "/pages/notation.html#term-zvcf"
+    },
+    {
+      "key": "p",
+      "tex": "p",
+      "name": "Model parameters p",
+      "definition": "Contact mode, frozen impedance, and other declared frozen parameters collected in $p$.",
+      "source_anchor": "/pages/notation.html#drift-and-control"
+    },
+    {
+      "key": "tau",
+      "tex": "\\tau",
+      "name": "Generalized control tau",
+      "definition": "Applied generalized force or torque in the ZVCF evaluation protocol.",
+      "unit": "N or N·m",
+      "shape": "vector",
+      "frame": "generalized",
+      "source_anchor": "/pages/notation.html#term-zvcf"
     },
     {
       "key": "C",
       "tex": "C(q,\\dot q)",
       "name": "Coriolis matrix C(q, q-dot)",
-      "definition": "Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads."
+      "definition": "Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads.",
+      "shape": "matrix",
+      "frame": "generalized",
+      "source_anchor": "/pages/notation.html#equation-symbol-definitions"
     },
     {
       "key": "g",
       "tex": "g(q)",
       "name": "Gravity vector g(q)",
-      "definition": "Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity."
+      "definition": "Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity.",
+      "unit": "N or N·m",
+      "shape": "vector",
+      "frame": "generalized",
+      "source_anchor": "/pages/notation.html#equation-symbol-definitions"
     },
     {
       "key": "B",
       "tex": "B(q)",
       "name": "Actuation matrix B(q)",
-      "definition": "Maps the declared control input to generalized forces, so the applied load is B(q) times u."
+      "definition": "Maps the declared control input to generalized forces, so the applied load is B(q) times u.",
+      "shape": "matrix",
+      "frame": "generalized",
+      "source_anchor": "/pages/notation.html#equation-symbol-definitions"
+    },
+    {
+      "key": "ad",
+      "tex": "a_d",
+      "name": "Drift acceleration block",
+      "definition": "Drift contribution in the task or acceleration space used in the DCR.",
+      "unit": "m/s² or rad/s²",
+      "shape": "vector",
+      "frame": "task or state",
+      "source_anchor": "/pages/notation.html#term-dcr"
+    },
+    {
+      "key": "Ba",
+      "tex": "B_a",
+      "name": "Actuation acceleration map",
+      "definition": "Control block mapping admissible inputs to acceleration in the DCR.",
+      "unit": "per input",
+      "shape": "matrix",
+      "frame": "task or state",
+      "source_anchor": "/pages/notation.html#term-dcr"
+    },
+    {
+      "key": "W",
+      "tex": "W",
+      "name": "DCR weighting W",
+      "definition": "Declared scaling or metric for DCR norms.",
+      "shape": "matrix",
+      "frame": "task",
+      "sign": "PSD",
+      "source_anchor": "/pages/notation.html#term-dcr"
+    },
+    {
+      "key": "Uset",
+      "tex": "\\mathcal U(x)",
+      "name": "Admissible control set",
+      "definition": "Set of admissible control vectors at state $x$ for the DCR supremum.",
+      "shape": "set",
+      "frame": "control",
+      "source_anchor": "/pages/notation.html#term-dcr"
+    },
+    {
+      "key": "eps",
+      "tex": "\\varepsilon",
+      "name": "DCR regularizer epsilon",
+      "definition": "Regularizer preventing division by zero in the DCR denominator.",
+      "unit": "same as denominator",
+      "shape": "scalar",
+      "sign": ">0",
+      "source_anchor": "/pages/notation.html#term-dcr"
+    },
+    {
+      "key": "J",
+      "tex": "J",
+      "name": "Constraint Jacobian J",
+      "definition": "Constraint or task Jacobian; rows are individual constraints.",
+      "shape": "matrix",
+      "frame": "model-defined",
+      "source_anchor": "/pages/notation.html#j-j-p-n-and-z"
+    },
+    {
+      "key": "v",
+      "tex": "v",
+      "name": "Velocity vector v",
+      "definition": "Linear velocity vector (bold or bar notation in prose tables).",
+      "unit": "m/s",
+      "shape": "vector",
+      "frame": "stated frame",
+      "source_anchor": "/pages/notation.html#vectors--tensors"
+    },
+    {
+      "key": "lam",
+      "tex": "\\lambda",
+      "name": "Lambda",
+      "definition": "Eigenvalue or Lagrange multiplier depending on context.",
+      "unit": "context",
+      "shape": "scalar or vector",
+      "source_anchor": "/pages/notation.html#vectors--tensors"
     }
   ]
 }

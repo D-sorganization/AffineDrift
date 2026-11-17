@@ -21,7 +21,7 @@ An open-loop match is still conditional on the model. If the model uses ideal to
 Let $q$ denote configuration coordinates and $v$ generalized velocities. Configuration storage dimension need not equal tangent velocity dimension, particularly when orientations use unit quaternions. Write the kinematic evolution as
 
 $$
-\dot q=N(q)v.
+\dot q=N_{\mathrm{kin}}(q)v.
 $$
 
 A quaternion model must use its declared configuration update or retraction. Adding a tangent displacement directly to configuration storage is generally not a valid integration rule. Matching packages must therefore distinguish the coordinate representation from the physical degrees of freedom.
@@ -135,10 +135,10 @@ These dimensions interact. A longer arm can reduce marker error that previously 
 
 ## A Derived Ambiguity Example
 
-Consider a single-link planar pendulum with unknown inertia $I$, damping $d$, gravitational moment coefficient $G$, and unrestricted torque $u(t)$:
+Consider a single-link planar pendulum with unknown inertia $I$, damping $d$, gravitational moment coefficient $g_{\mathrm{m}}$ (not the gravity vector $g(q)$), and unrestricted torque $u(t)$:
 
 $$
-I\ddot q+d\dot q+G\sin q=u(t).
+I\ddot q+d\dot q+g_{\mathrm{m}}\sin q=u(t).
 $$
 
 Assume the complete trajectory $q(t)$ is known exactly. For every admissible parameter triple, define the torque by the left-hand side. Every such pair of parameters and torque reproduces the same observed motion. Perfect kinematics therefore does not identify inertia or damping when actuation is unrestricted.
@@ -147,14 +147,14 @@ If torque is measured independently, the equation becomes a regression in the pa
 
 $$
 u(t)=\begin{bmatrix}\ddot q&\dot q&\sin q\end{bmatrix}
-\begin{bmatrix}I\\d\\G\end{bmatrix}.
+\begin{bmatrix}I\\d\\g_{\mathrm{m}}\end{bmatrix}.
 $$
 
 Independent columns across the experiment can identify the three coefficients locally in this simplified model. Near-static data supplies little acceleration information, while a narrow motion interval can make columns nearly dependent.
 
 A torque prior does not create an independent measurement. Minimizing squared torque chooses one member of the family according to the objective. It may be a useful candidate, but its inertia estimate depends on the chosen regularization and bounds.
 
-A free-decay experiment with known zero input provides stronger information about coefficient ratios. Even then, multiplying $I$, $d$, and $G$ by a common factor leaves the zero-input equation unchanged. Absolute load scale requires another measurement or a fixed physical parameter.
+A free-decay experiment with known zero input provides stronger information about coefficient ratios. Even then, multiplying $I$, $d$, and $g_{\mathrm{m}}$ by a common factor leaves the zero-input equation unchanged. Absolute load scale requires another measurement or a fixed physical parameter.
 
 ## What Counts as a Result
 

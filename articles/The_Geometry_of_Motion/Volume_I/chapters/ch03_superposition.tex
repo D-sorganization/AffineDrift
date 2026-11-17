@@ -365,9 +365,9 @@ Contraction concerns separation of nearby trajectories under the same specified 
 \end{equation}
 Here $\dot P=\partial_tP+\sum_kF_k\partial_{x_k}P$ is the derivative along the flow. The inequality makes $\delta x^TP\delta x$ decay; domain and path conditions are then needed to translate this into a statement about distances between trajectories. An energy derivative along one trajectory is a different calculation. For a feedback law, $A$ must include the derivative of the feedback, and robustness needs a quantified perturbation margin in the same metric.
 
-A damped pendulum is passive at its torque--angular-velocity port, yet its upright equilibrium has linearization
+For the point-mass pendulum, let $I=m l^2$ and let $c_\tau$ be the viscous torque coefficient in N m s/rad, so the damping torque is $-c_\tau\dot\theta$. This is the physical coefficient called $c$ in Chapter 1; the normalized coefficient called $c$ in Chapter 2 equals $c_\tau/I$ (1/s). The pendulum is passive at its torque--angular-velocity port, yet its upright equilibrium has linearization
 \begin{equation}
-A_{\rm up}=\begin{bmatrix}0&1\\g/l&-d/I\end{bmatrix}.
+A_{\rm up}=\begin{bmatrix}0&1\\g/l&-c_\tau/I\end{bmatrix}.
 \end{equation}
 Its determinant is $-g/l<0$, so one eigenvalue is positive. Damping does not make a domain containing that equilibrium uniformly contracting. The energy Hessian also has a negative angular entry at the upright posture and cannot serve there as a positive-definite contraction metric. Multiple stationary solutions provide another obstruction to uniform incremental convergence on a domain containing them all.
 
@@ -416,18 +416,18 @@ Saturation composed with a raw command generally makes the raw-command map piece
 
 \subsection{The Order of Motions Can Matter}
 
-For smooth vector fields, use the convention
+For a smooth input map $G(x)\in\mathbb R^{n_x\times m}$, write its $j$-th column as $G_j(x)=G(x)e_j\in\mathbb R^{n_x}$, where $e_j$ is the $j$-th standard basis vector in input space. Both $f$ and $G_j$ are vector fields; $G$ is the full input map. Use the bracket convention
 \begin{equation}
-[f,g](x)=DG(x)f(x)-Df(x)G(x).
+[f,G_j](x)=DG_j(x)f(x)-Df(x)G_j(x).
 \label{eq:ch3:lie-bracket}
 \end{equation}
 Comparing short flow compositions in opposite orders produces a second-order difference involving this bracket, with a sign determined by the chosen composition order. This describes how the directions change as the state changes. It does not mean that any signed field, especially the uncontrolled drift, is physically reversible on demand.
 
-For second-order mechanics $f=(v,a_0(q,v))$ and a configuration-dependent input field $g_j=(0,h_j(q))$,
+For second-order mechanics $f=(v,a_0(q,v))$ and a configuration-dependent input field $G_j=(0,h_j(q))$,
 \begin{equation}
-[f,g_j]=\begin{bmatrix}-h_j\\D_qh_j\,v-D_va_0\,h_j\end{bmatrix}.
+[f,G_j]=\begin{bmatrix}-h_j\\D_qh_j\,v-D_va_0\,h_j\end{bmatrix}.
 \end{equation}
-The bracket has a configuration component, not merely an acceleration in an unactuated coordinate. Even a fully actuated $n$-coordinate system has at most $n$ immediate input directions in a $2n$-dimensional state space; time integration connects acceleration to velocity and position. For the normalized undamped pendulum, $f=(v,-\sin q)$ and $g=(0,1)$ give $[f,g]=(-1,0)$, so $g$ and $[f,g]$ span the two state directions without any intersegment inertia coupling.
+The bracket has a configuration component, not merely an acceleration in an unactuated coordinate. Even a fully actuated $n$-coordinate system has at most $n$ immediate input directions in a $2n$-dimensional state space; time integration connects acceleration to velocity and position. For the normalized undamped pendulum, $f=(v,-\sin q)$ and $G_1=(0,1)$ give $[f,G_1]=(-1,0)$, so $G_1$ and $[f,G_1]$ span the two state directions without any intersegment inertia coupling.
 
 \subsection{Accessibility Is Not Controllability}
 
@@ -439,7 +439,7 @@ For a golf mechanism, a proposed transfer into an unactuated shaft mode must be 
 
 \section{Feedback Linearization Has a Local Domain of Validity}
 
-For a smooth single-input system $\dot x=f(x)+G(x)u$ with scalar output $y=h(x)$, a constant relative degree $r$ on a neighborhood requires $L_gL_f^kh=0$ there for $k=0,\ldots,r-2$, and $b(x)=L_gL_f^{r-1}h\ne0$. Then
+For a smooth single-input system $\dot x=f(x)+G(x)u$ with scalar output $y=h(x)$, let $G_1(x)=G(x)$ denote its sole input vector field. A constant relative degree $r$ on a neighborhood requires $L_{G_1}L_f^kh=0$ there for $k=0,\ldots,r-2$, and $b(x)=L_{G_1}L_f^{r-1}h\ne0$. Then
 \begin{equation}
 y^{(r)}=L_f^rh+b(x)u,\qquad
 u=\frac{\nu-L_f^rh}{b(x)}
@@ -553,7 +553,7 @@ trajectory_defect = trajectories[7.5] - trajectories[5.0] - trajectories[2.5] + 
 \item \textbf{A Local Nonlinear Counterexample.} Solve $\dot x=x^2+u$ from $x(0)=0$ for positive constant $u$, restricting attention to times before the earliest finite-time blow-up. Compare the inputs $1$, $2$, and $3$. Verify fixed-state input affinity despite the nonzero trajectory defect.
 \item \textbf{A Passive but Unstable Posture.} Derive the damped pendulum's torque-port storage inequality after choosing an energy offset. Compute the upright linearization and energy Hessian. Identify which conclusion prevents global contraction on a domain containing that posture.
 \item \textbf{Motor Feasibility.} Let $R=2$ ohm, $k_t=0.1$ N m/A, $k_e=0.1$ V s/rad, $V_{\max}=24$ V, and $i_{\max}=10$ A. Find the quasistatic torque interval at $\omega=100$ rad/s. Explain why voltage has no instantaneous effect on torque when current is retained as a state.
-\item \textbf{Bracket Rank and One-Way Motion.} Compute $[f,g]$ for the normalized pendulum. For $\dot x_1=u$, $\dot x_2=x_1^2$, compute enough brackets to span the plane and explain why negative $x_2$ remains unreachable from the origin. State why an actuation matrix alone cannot settle the reachability of an unspecified underactuated model.
+\item \textbf{Bracket Rank and One-Way Motion.} Compute $[f,G_1]$ for the normalized pendulum. For $\dot x_1=u$, $\dot x_2=x_1^2$, compute enough brackets to span the plane and explain why negative $x_2$ remains unreachable from the origin. State why an actuation matrix alone cannot settle the reachability of an unspecified underactuated model.
 \item \textbf{Cancellation With a Bound.} For a pendulum with $|\tau|\le\tau_{\max}$, derive the feasible interval of virtual acceleration $\nu$ under gravity-compensating feedback. State the relative degree and whether internal zero dynamics exist for the angle output.
 \item \textbf{A Testable Swing Argument.} Propose a model-based test of the claim that proximal slowing transfers energy to the club. Specify subsystem boundaries, measured quantities, joint force and moment powers, shaft storage, external work, uncertainty, and the intervention used to distinguish transfer from simultaneous active work. Identify what the instantaneous acceleration decomposition can and cannot establish.
 \end{enumerate}

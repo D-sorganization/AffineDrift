@@ -218,6 +218,22 @@ def test_manifest_skips_quarto_alias_redirect_stubs(tmp_path: Path) -> None:
     ]
 
 
+def test_manifest_skips_pages_whose_source_is_a_draft(tmp_path: Path) -> None:
+    # Quarto writes an empty stub for a draft; it is not a public page (#5426).
+    docs = tmp_path / "docs"
+    _write_page(docs / "index.html", title="AffineDrift", h1="AffineDrift")
+    (docs / "articles").mkdir(parents=True)
+    (docs / "articles/wip.html").write_text("<html><body></body></html>", encoding="utf-8")
+    (tmp_path / "articles").mkdir()
+    (tmp_path / "articles/wip.qmd").write_text("---\ntitle: WIP\ndraft: true\n---\n")
+
+    manifest = build_manifest(
+        docs, source_root=tmp_path, source_revision="abc123", require_representative=False
+    )
+
+    assert [page["route"] for page in manifest["pages"]] == ["/"]
+
+
 def test_manifest_still_rejects_an_empty_page_that_is_not_a_redirect(tmp_path: Path) -> None:
     docs = tmp_path / "docs"
     _write_page(docs / "index.html", title="AffineDrift", h1="AffineDrift")

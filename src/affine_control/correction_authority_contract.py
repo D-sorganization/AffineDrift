@@ -1,7 +1,7 @@
 """Preregistered correction-authority contract and closed-form edge-case oracles."""
 
 from dataclasses import dataclass
-from math import isfinite
+from math import isclose, isfinite
 
 from src.affine_control.reachability import (
     LinearScalarSystem,
@@ -121,15 +121,31 @@ def double_integrator_position_interval(
     return (center - radius, center + radius)
 
 
+def margin_to_correction_target(
+    interval: tuple[float, float], target: float, tolerance: float, required_task_error: float
+) -> tuple[bool, float]:
+    """Return recoverability and signed margin to the declared correction target."""
+    if not isfinite(tolerance) or tolerance < 0.0:
+        raise ValueError("tolerance must be finite and nonnegative")
+    lower, upper = interval
+    clearance = min(upper - target, target - lower)
+    if clearance < -tolerance and not isclose(clearance, -tolerance, rel_tol=0.0, abs_tol=1e-9):
+        signed = target - lower if target < lower else upper - target
+        return False, signed
+    if lower <= target <= upper:
+        margin = clearance - tolerance if required_task_error == 0.0 else clearance
+    else:
+        margin = clearance + tolerance
+        if margin < 0.0 and isclose(margin, 0.0, rel_tol=0.0, abs_tol=1e-9):
+            margin = 0.0
+    return margin >= 0.0, margin
+
+
 def _margin_to_target(
     interval: tuple[float, float], target: float, tolerance: float, required_task_error: float
 ) -> float:
     """Return signed clearance from the reachable interval to the correction target."""
-    lower, upper = interval
-    if target < lower - tolerance or target > upper + tolerance:
-        return min(target - upper, lower - target)
-    clearance = min(upper - target, target - lower)
-    return clearance - tolerance if required_task_error == 0.0 else clearance
+    return margin_to_correction_target(interval, target, tolerance, required_task_error)[1]
 
 
 def evaluate_double_integrator_correction_authority(
@@ -143,8 +159,10 @@ def evaluate_double_integrator_correction_authority(
     """Return whether a double integrator can clear the declared task error."""
     interval = double_integrator_position_interval(position, velocity, input_bound, horizon)
     target = position - required_task_error
-    margin = _margin_to_target(interval, target, tolerance, required_task_error)
-    return CorrectionAuthorityOracleResult(recoverable=margin >= 0.0, margin=margin)
+    recoverable, margin = margin_to_correction_target(
+        interval, target, tolerance, required_task_error
+    )
+    return CorrectionAuthorityOracleResult(recoverable=recoverable, margin=margin)
 
 
 def evaluate_scalar_correction_authority(
@@ -156,8 +174,10 @@ def evaluate_scalar_correction_authority(
     """Return whether bounded input can eliminate the declared scalar task error."""
     interval = scalar_linear_reachable_interval(system, horizon)
     target = system.initial_state - required_task_error
-    margin = _margin_to_target(interval, target, tolerance, required_task_error)
-    return CorrectionAuthorityOracleResult(recoverable=margin >= 0.0, margin=margin)
+    recoverable, margin = margin_to_correction_target(
+        interval, target, tolerance, required_task_error
+    )
+    return CorrectionAuthorityOracleResult(recoverable=recoverable, margin=margin)
 
 
 def evaluate_planar_rank_deficient_authority(
@@ -169,10 +189,13 @@ def evaluate_planar_rank_deficient_authority(
     if required_task_error[1] != 0.0:
         return CorrectionAuthorityOracleResult(recoverable=False, margin=0.0)
     box = rank_deficient_reachable_box(system)
-    margin = _margin_to_target(
-        (box.lower[0], box.upper[0]), system.initial_state[0], tolerance, required_task_error[0]
+    recoverable, margin = margin_to_correction_target(
+        (box.lower[0], box.upper[0]),
+        system.initial_state[0],
+        tolerance,
+        required_task_error[0],
     )
-    return CorrectionAuthorityOracleResult(recoverable=margin >= 0.0, margin=margin)
+    return CorrectionAuthorityOracleResult(recoverable=recoverable, margin=margin)
 
 
 def preregistered_humanoid_correction_authority_protocol() -> CorrectionAuthorityProtocol:

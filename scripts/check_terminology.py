@@ -134,6 +134,18 @@ BANNED: tuple[tuple[str, str, str], ...] = (
         "active/muscular input equation",
         "declared control channel components",
     ),
+    (
+        r"a_\{\\mathrm\{ZVCF\}\}[^\n]{0,160}=-M\([^)]+\)\^\{-1\}h\([^,]+,\s*0",
+        "ZVCF gravity-only definition",
+        "ZVCF = M(q)^{-1} tau (control); name the gravity-only slice "
+        "zero-velocity zero-torque acceleration",
+    ),
+    (
+        r"(?i)ZTCF[^\n]{0,120}(?:\+|\bplus\b)[^\n]{0,160}M\(q\)\^\{-1\}\(\s*\\tau[^\n]{0,80}-\s*(?:b\(q,\s*0\)|g\()",
+        "ZTCF control-preserved double count",
+        "at a fixed state use total = ZTCF drift + ZVCF control (M^{-1} tau); "
+        "do not add M^{-1}(tau - g) or M^{-1}(tau - b(q,0)) to ZTCF",
+    ),
 )
 
 COMPILED = tuple((re.compile(pattern), rule, fix) for pattern, rule, fix in BANNED)

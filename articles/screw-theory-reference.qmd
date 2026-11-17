@@ -157,6 +157,29 @@ The corresponding three-vector relations are $\mathbf f_s=R\mathbf f_b$ and $\ma
 A twist map applied directly to a wrench generally violates these relations.
 The six components form dual objects, not interchangeable lists of numbers.
 
+## Reciprocal Screws and Constraint Couples {#sec-reciprocal-screws}
+
+Two screws are **reciprocal** when their power pairing vanishes:
+
+$$
+\mathcal F^\top\mathcal V
+=\mathbf m^\top\boldsymbol\omega+\mathbf f^\top\mathbf v=0.
+$$
+
+For a joint whose admissible relative twists span a subspace
+$\mathcal S\subset\mathbb R^6$, ideal constraint reactions lie in the **reciprocal
+wrench space** $\mathcal S^\perp=\{\mathcal F:\mathcal F^\top\mathcal V=0\
+\forall\mathcal V\in\mathcal S\}$. Row stacking of a twist basis gives
+$S\in\mathbb R^{k\times6}$ with $\operatorname{rank}S=k$; then
+$\mathcal S^\perp=\ker S$. For spatial screws, $\dim\mathcal S+\dim\mathcal S^\perp=6$.
+
+A universal joint admits relative rotation about two intersecting axes. In the
+forearm-aligned convention of [the wrist universal-joint article](wrist-universal-joint.html),
+the twist system has rank two and the reciprocal wrench system has rank four: three
+translational constraint forces at the common point plus a constraint couple along
+$\mathbf n_c=\mathbf a\times\mathbf b$ (the direction orthogonal to both joint axes).
+That couple is the screw dual of the two-dimensional twist subspace.
+
 ## Home Joint Screws and the Current Jacobian
 
 A joint's home screw describes its axis at a chosen reference configuration.

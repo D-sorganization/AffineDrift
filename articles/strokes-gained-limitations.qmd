@@ -100,6 +100,8 @@ $$
 
 The minimization is an additional decision problem. A regression fitted to observed play does not become optimal merely because it predicts remaining strokes. Broadie's dynamic-programming discussion explicitly motivates a near-optimal-play approximation for the professional data; it does not prove that every empirical benchmark or golfer satisfies that approximation. The distinction is also explicit in Sutton and Barto's treatment [@SGSuttonBarto2018, Sections 3.5–3.6].
 
+UpstreamDrift's `sg_optimizer` implements a **rasterised hole MDP** with sample-average Bellman backups, lie codes, hazard drop penalties, and `pga_tour.yaml` dispersion marked ESTIMATE where not tabulated—documented in [UpstreamDrift Learning, RL, and Analytics](upstreamdrift-learning-analytics.html). Its $V$ is strokes-to-hole under that model, not a generic Broadie benchmark export.
+
 A small absorbing model makes this visible. State 1 always moves to state 2 at cost one. From state 2, each shot costs one and has probability $0.75$ of finishing and $0.25$ of remaining there. Therefore $V_2=1+0.25V_2=4/3$ and $V_1=1+V_2=7/3$. These are correct policy values. If another available action finishes immediately from state 1 at cost one, the original policy is not optimal there.
 
 Even policy evaluation needs a sufficient state. If player identity persists between shots, pooling players and then treating the next shot as a fresh draw from a generic player can describe a different process. A conditional remaining-score average can still exist when the recorded state is insufficient for a closed Bellman recursion.

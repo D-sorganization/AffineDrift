@@ -145,13 +145,29 @@ def test_model_workbench_page_is_discoverable_and_uses_canonical_tools() -> None
     assert "articles/proximal-distal-model-workbench.html" in article_index
     assert "proximal-distal-model-workbench.html" in article
     assert (
-        "D-sorganization/Tools/tree/cefcc1878de11804c44cd7d1d19c0ffcf58fa89e/"
+        "D-sorganization/Tools/tree/3462749d814a0b0082544054f8d74f8fdbd8b497/"
         "src/pendulum_simulator"
     ) in workbench
+    assert "cefcc1878" not in workbench
     assert "D-sorganization/Tools/tree/main/" not in workbench
     assert "companion_catalog.json" in workbench
     assert "PyQt6" in workbench and "React/Tauri" in workbench
     assert "exploratory_model_output" in workbench
+    for catalog_title in ("Distal-Torque Onset Sensitivity", "Three-Link Transfer Cascade"):
+        assert catalog_title in workbench
+    for solver_contract in (
+        "solve_ivp",
+        "RK45",
+        "1e-8",
+        "1e-10",
+        "0.005",
+        "club_inertia.py",
+        "simulation_core.py",
+    ):
+        assert solver_contract in workbench
+    ch28 = (CHAPTERS / "ch28_practical_synthesis.qmd").read_text(encoding="utf-8")
+    assert "3462749d814a0b0082544054f8d74f8fdbd8b497" in ch28
+    assert "cefcc1878" not in ch28
     for heading in (
         "# Explore the Models",
         "## Choose a Guided Experiment",

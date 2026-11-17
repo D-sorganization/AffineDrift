@@ -141,29 +141,58 @@ Numerical checks should include forward/inverse closure, constraint residuals, p
 []{#the-zero-velocity-counterfactual}
 []{#inplain:zvcf_vs_ztcf}
 
-The **instantaneous Zero-Velocity Counterfactual (ZVCF)** evaluates acceleration at the same configuration with specified velocities reset and declared input zero. For the unconstrained convention above, holding $z,t,p$ fixed gives
+The **instantaneous Zero-Velocity Counterfactual (ZVCF)** names the **control operand** at a frozen state: joint velocities are set to zero for evaluation, the
+declared applied generalized torque $\tau$ stays on the right-hand side, and
+gravity is omitted from the ZVCF operand so it is counted once in drift (align
+with the [rendered notation page](../../../pages/notation.html)). For the unconstrained convention
+$M\dot v+h=Bu$ with $u=\tau$, holding $z,t,p$ fixed gives
 
 $$
-a_{\mathrm{ZVCF}}(q,z,t)=-M(q)^{-1}h(q,0,z,t).
+a_{\mathrm{ZVCF}}(q,z,p;\tau)=M(q)^{-1}B(q)\tau
+\quad\text{with}\quad \dot q=0.
 $$ {#eq-zvcf_eom}
 
-If flexible or actuator velocities are stored in $z$, say whether they are also reset. Setting rigid joint velocity to zero does not silently reset all internal motion. In a rigid model with gravity as the only retained zero-velocity load this is $-M^{-1}h_g$. Elastic strain, prescribed loads and internal-state forces can survive zero joint velocity, so ZVCF is not generally gravity-only.
+When $B=I$, this is $a_{\mathrm{ZVCF}}=M^{-1}\tau$.
 
-The difference
+Separately, the **static zero-velocity bias acceleration**
 
 $$
-a_0(q,v,z,t)=a_{\mathrm{ZVCF}}(q,z,t)+a_{\mathrm{velocity}}(q,v,z,t)
+a_{\mathrm{zv,bias}}(q,z,t)=-M(q)^{-1}h(q,0,z,t)
+$$ {#eq-zv-bias}
+
+isolates configuration- and internal-state-dependent bias at $\dot q=0$. Do not abbreviate this diagnostic as ZVCF. If flexible or actuator velocities are
+stored in $z$, say whether they are also reset. Setting rigid joint velocity
+to zero does not silently reset all internal motion. In a rigid model with
+gravity as the only retained load at $\dot q=0$, $a_{\mathrm{zv,bias}}$ is
+$-M^{-1}h_g$. Elastic strain, prescribed loads and internal-state forces can
+survive zero joint velocity, so $a_{\mathrm{zv,bias}}$ is not generally
+gravity-only.
+
+The drift block $a_0=-M^{-1}h(q,v,z,t)$ from @eq-ztcf_acceleration splits into
+that static slice plus whatever velocity-dependent effects remain:
+
+$$
+a_0(q,v,z,t)=a_{\mathrm{zv,bias}}(q,z,t)+a_{\mathrm{velocity}}(q,v,z,t)
 $$ {#eq-drift_decomposition}
 
-defines $a_{\mathrm{velocity}}$ by subtraction under identical remaining declarations. It includes all effects changed by that velocity reset, not just a selected Coriolis term. For constrained models, recompute the constraint acceleration baseline consistently, and first check that the reset is feasible. A prescribed coordinate $q=t$ requires $\dot q=1$; resetting it to zero violates the velocity constraint. A contact law can also change mode at zero velocity.
+defines $a_{\mathrm{velocity}}$ by subtraction under identical remaining
+declarations. It includes all effects that change when $\dot q$ moves away from
+zero, not just a selected Coriolis term. For constrained models, recompute the
+constraint acceleration baseline consistently, and first check that the reset is feasible. A prescribed coordinate $q=t$ requires $\dot q=1$;
+resetting it to zero violates the velocity constraint. A contact law can also
+change mode at zero velocity.
 
-This state reset is distinct from removing an input. It changes kinetic energy and may require an impulse if interpreted physically. Integrating afterward would define a separate initial-state intervention. Holding velocity zero for an interval would require a constraint or controller, not free evolution from the instantaneous sample.
+The ZVCF operand @eq-zvcf_eom is distinct from both input removal and the static
+bias @eq-zv-bias: it retains $\tau$ under the stated evaluation protocol.
+Integrating after a velocity reset would define a separate initial-state
+intervention. Holding velocity zero for an interval would require a constraint
+or controller, not free evolution from the instantaneous sample.
 
 ## Two Uniform Rods: A Mechanics Check {#sec-double_pendulum_ztcf}
 
 []{#double-pendulum-ztcf-a-worked-example}
 
-Use two planar uniform rods with a fixed base, no contact, no damping and uniform gravity. These are manufactured mechanics parameters, not anthropometry or a fitted golf swing. The inertial frame has $x$ right and $y$ up. Angle $q_1$ is counterclockwise from $+x$; $q_2$ is relative to rod 1, so rod 2 has absolute angle $q_1+q_2$. Positive inputs do positive work against positive coordinate velocities.
+Use two planar uniform rods with a fixed base, no contact, no damping and uniform gravity. These are manufactured mechanics parameters, not anthropometry or a fitted golf swing. The inertial frame has $x$ right and $y$ up. Angle $q_1$ is counterclockwise from $+x$; $q_2$ is relative to rod 1, so rod 2 has absolute angle $q_1+q_2$. This example measures $q_1$ from the horizontal $x$-axis, not from the downward vertical used in Chapters 3--5 and 8, so its gravity gradient contains cosines. Positive inputs do positive work against positive coordinate velocities.
 
 Take masses $(m_1,m_2)=(2,0.2)$ kg and lengths $(L_1,L_2)=(0.4,0.3)$ m. The COM distances are $r_i=L_i/2$, and COM inertias are $J_i=m_iL_i^2/12$. A pivot inertia would instead be $J_i+m_ir_i^2$; do not add the parallel-axis term twice. Set $g=9.81$ m/s$^2$ and $k=m_2L_1r_2=0.012$ kg·m$^2$.
 
@@ -260,14 +289,14 @@ Diagonal-only multiplication would give approximately $(-1.482810,0.763522)^T$ N
 []{#constraint:dcr_meaning}
 []{#inplain:dcr_blowup_reason}
 
-For a stated angular-acceleration projection $W$, norm and admissible input set $\mathcal U$, define
+For a stated angular-acceleration projection $W$, admissible input set $\mathcal U$, and reported regularizer $\varepsilon$, define (matching the [rendered notation page](../../../pages/notation.html))
 
 $$
 \mathrm{DCR}_{W,\mathcal U}(x)=
-\frac{\|Wa_0(x)\|}{\sup_{u\in\mathcal U(x)}\|WH(x)u\|+\varepsilon}.
+\frac{\|W a_d(x)\|_2}{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|_2+\varepsilon}.
 $$ {#eq-dcr_definition}
 
-The regularizer $\varepsilon$ has the denominator's units and must be reported. A zero control-effect denominator means there is no authority in that projection; regularization does not create it. For physical point acceleration, use the complete baseline $Ja_0+\dot Jv$ and operator $JH$. Coordinate rescaling changes an unqualified component norm, so specify what the projection measures.
+In this chapter $a_d=a_0$ is the modeled drift acceleration and $B_a=H=M^{-1}B$ for generalized torques $u$. The regularizer $\varepsilon$ has the denominator's units and must be reported. A zero control-effect denominator means there is no authority in that projection; regularization does not create it. For physical point acceleration, use the complete baseline $Ja_0+\dot Jv$ and operator $JH$. Coordinate rescaling changes an unqualified component norm, so specify what the projection measures.
 
 For the two-rod snapshot, choose $W=(0,1)$, absolute value, $B=I$, $\varepsilon=0$, and the illustrative torque box $|u_1|\le2$ N·m, $|u_2|\le0.2$ N·m. These are chosen limits, not muscular capacity estimates. The exact scalar projection bound is
 
@@ -337,7 +366,7 @@ Zero generalized torque can coexist with substantial antagonistic muscle forces.
 []{#summary-and-preview}
 []{#key-takeaways-the-zero-torque-counterfactual}
 
-The central chain of reasoning is: define the input and full state; derive the retained dynamics; distinguish a pointwise evaluation from an integrated intervention; project into a named physical output; then test numerical and model uncertainty. The same mass matrix couples torque and acceleration, while state evolution couples present input removal to future drift. ZVCF adds a distinct state reset, and DCR adds a magnitude comparison. None of these steps by itself identifies biological effort or finite-horizon control authority.
+The central chain of reasoning is: define the input and full state; derive the retained dynamics; distinguish a pointwise evaluation from an integrated intervention; project into a named physical output; then test numerical and model uncertainty. The same mass matrix couples torque and acceleration, while state evolution couples present input removal to future drift. ZVCF evaluates the **control operand** under a velocity reset, and DCR adds a magnitude comparison. None of these steps by itself identifies biological effort or finite-horizon control authority.
 
 The next chapter studies constraint forces. Those forces are essential to a feasible counterfactual whenever supports and contacts matter, even when all declared applied torques are zero.
 
@@ -350,6 +379,8 @@ The next chapter studies constraint forces. Those forces are essential to a feas
 1. For a uniform rod with mass $2$ kg and length $0.7$ m, let $\theta$ measure displacement from vertically downward. At $\theta=45^\circ$, the pivot inertia is $mL^2/3=0.326667$ kg·m$^2$ and gravity acceleration is $-3g\sin\theta/(2L)=-14.864395$ rad/s$^2$. Verify these values. An illustrative $+10$ N·m input adds $30.612245$ rad/s$^2$; it is not a measured muscle capacity.
 1. Replay the registered three-link Python golden fixture without changing its parameters or source authority. Report its terminal state and units, then assess step refinement separately. Explain why matching the fixture cannot establish a second engine, flexible-shaft validity or an individual golfer's muscle state.
 1. Define a fixed-time and an impact-event branch comparison. State what happens if a branch never reaches impact. For the double-integrator example, derive the displacement bound and explain why adding a final-velocity constraint can change the attainable endpoint.
+
+{{< include ../../_includes/upstream-implementation/pog-ch06.qmd >}}
 
 ## On This Site
 

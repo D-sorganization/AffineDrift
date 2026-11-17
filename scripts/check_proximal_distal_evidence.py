@@ -42,6 +42,7 @@ REQUIRED_CLOSURE_FIELDS = {
     "work_max_abs",
 }
 MAX_CLOSURE_ERROR = 1e-8
+MAX_COMPONENT_DECOMPOSITION_ERROR = 1e-8
 TWO_HAND_MODE_CONVENTION = "common=right+left; differential=(right-left)/2"
 PREVIEW_NUMERIC_FIELDS = {
     "time_constant_s",
@@ -177,6 +178,25 @@ def _validate_component_values(value: object, field: str, errors: list[str]) -> 
     for name in REQUIRED_COMPONENTS & set(components):
         if not _is_finite_number(components[name]):
             errors.append(f"{field}.{name} must be finite")
+    if missing or not REQUIRED_COMPONENTS <= set(components):
+        return
+    if not all(_is_finite_number(components[name]) for name in REQUIRED_COMPONENTS):
+        return
+    total = float(components["total"])
+    drift = float(components["drift"])
+    control = float(components["control"])
+    zvcf = float(components["zvcf"])
+    decomposition_error = abs(total - (drift + control))
+    if decomposition_error > MAX_COMPONENT_DECOMPOSITION_ERROR:
+        errors.append(
+            f"{field} must satisfy |total - (drift + control)| <= "
+            f"{MAX_COMPONENT_DECOMPOSITION_ERROR:g}; got {decomposition_error:g}"
+        )
+    if abs(control - zvcf) > MAX_COMPONENT_DECOMPOSITION_ERROR:
+        errors.append(
+            f"{field}.zvcf must equal control (ZVCF is torque-only; gravity belongs in drift); "
+            f"|control - zvcf| = {abs(control - zvcf):g}"
+        )
 
 
 def _validate_model_results(evidence: dict[str, Any]) -> list[str]:

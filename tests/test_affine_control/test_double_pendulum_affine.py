@@ -23,7 +23,7 @@ from src.affine_control.double_pendulum_affine import (
     tip_acceleration_split,
     tip_position,
 )
-from src.affine_control.dynamics import double_pendulum_mass_matrix
+from src.affine_control.dynamics import double_pendulum_coriolis
 from src.core.constants import GRAVITY_M_S2
 
 PARAMS = DoublePendulumParams(m1=7.0, m2=0.6, l1=0.75, l2=1.1, gravity=GRAVITY_M_S2)
@@ -53,7 +53,7 @@ def test_potential_matches_the_mass_matrix_so_unforced_energy_is_conserved() -> 
     samples = simulate(PARAMS, Q, QD, np.zeros(2), horizon=1.0, steps=2000)
 
     def energy(q: np.ndarray, qd: np.ndarray) -> float:
-        mass = double_pendulum_mass_matrix(q, PARAMS.m1, PARAMS.m2, PARAMS.l1, PARAMS.l2)
+        mass = PARAMS.mass_matrix(q)
         return float(0.5 * qd @ mass @ qd + potential(q, PARAMS))
 
     energies = [energy(s.q, s.qd) for s in samples]
@@ -73,9 +73,8 @@ def test_drift_does_not_depend_on_the_input_and_input_term_is_linear() -> None:
 def test_split_sums_to_the_equation_of_motion() -> None:
     torque = np.array([25.0, -3.0])
     drift, input_qdd = affine_split(Q, QD, torque, PARAMS)
-    mass = double_pendulum_mass_matrix(Q, PARAMS.m1, PARAMS.m2, PARAMS.l1, PARAMS.l2)
-    k = 0.5 * PARAMS.m2 * PARAMS.l1 * PARAMS.l2 * np.sin(Q[0] - Q[1])
-    coriolis_qd = np.array([k * QD[1] ** 2, -k * QD[0] ** 2])
+    mass = PARAMS.mass_matrix(Q)
+    coriolis_qd = double_pendulum_coriolis(Q, QD, PARAMS.m2, PARAMS.l1, PARAMS.l2) @ QD
     residual = mass @ (drift + input_qdd) + coriolis_qd + grad_potential(Q, PARAMS) - torque
     np.testing.assert_allclose(residual, 0.0, atol=1e-10)
 

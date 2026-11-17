@@ -30,6 +30,7 @@ from src.tools.site_page_scan import (
     extract_links,
     find_content_pages,
     is_book_chapter,
+    is_draft,
     page_body,
     parse_front_matter,
     strip_code,
@@ -173,12 +174,12 @@ def check_chapter_bridge_coverage(root: Path, pages: list[Path]) -> list[str]:
 def check_related_coverage(root: Path, pages: list[Path]) -> list[str]:
     """Require the canonical Related Articles component on content pages.
 
-    Book chapters and index/hub pages are exempt.
+    Book chapters, index/hub pages and unpublished drafts are exempt.
     """
     errors: list[str] = []
     for page in pages:
         rel = _rel(root, page)
-        if is_book_chapter(rel) or page.name == "index.qmd":
+        if is_book_chapter(rel) or page.name == "index.qmd" or is_draft(page):
             continue
         expanded = expand_includes(root, page)
         error = _related_errors_for_page(root, page, expanded)
@@ -220,7 +221,8 @@ def _nav_targets(root: Path) -> set[Path]:
 def check_orphans(root: Path, pages: list[Path]) -> list[str]:
     """Flag rendered pages with in-degree 0 from content pages or nav.
 
-    Index/hub pages are exempt: they are the site's entry points.
+    Index/hub pages are exempt: they are the site's entry points. Drafts are
+    exempt too: a published page must not link to an unpublished one.
     """
 
     def _norm(path: Path) -> Path:
@@ -248,6 +250,7 @@ def check_orphans(root: Path, pages: list[Path]) -> list[str]:
         if in_degree[_norm(page)] == 0
         and _norm(page) not in nav_targets
         and page.name != "index.qmd"
+        and not is_draft(page)
     ]
     return sorted(orphans)
 

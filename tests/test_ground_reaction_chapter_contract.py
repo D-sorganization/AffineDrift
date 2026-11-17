@@ -25,7 +25,7 @@ def test_chapter_defines_pointwise_reaction_counterfactuals() -> None:
     text = CHAPTER.read_text(encoding="utf-8")
 
     assert "Pointwise Ground-Reaction ZTCF" in text
-    assert "Pointwise Ground-Reaction ZVCF" in text
+    assert "Pointwise Zero-Velocity Reaction Evaluation" in text
     assert "must not be added" in text
     assert "not forward simulations" in text
 

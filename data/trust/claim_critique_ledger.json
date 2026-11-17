@@ -145,9 +145,51 @@
       "critique_id": "crit-geometric-stiffness-omission",
       "source_path": "critiques/geometric_stiffness_omission.md",
       "severity": "medium",
-      "disposition": "open",
-      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
-      "related_claim_ids": []
+      "disposition": "resolved",
+      "affected_pages": [
+        "articles/theory-part1.qmd",
+        "articles/theory-part4.qmd",
+        "articles/drifter-manifesto.qmd",
+        "articles/affine-nature-golf-swing.qmd"
+      ],
+      "related_claim_ids": [],
+      "contradiction_markers": [
+        "+A\\eta\\dot\\theta^2",
+        "J_0+A\\eta^2",
+        "\\begin{bmatrix}\\phi(s)\\eta\\\\-s\\end{bmatrix}"
+      ],
+      "adjudication": {
+        "rationale": "The planar flexible-pendulum benchmark now includes axial foreshortening, reversing centrifugal softening to geometric stiffening with quadrature-backed tests.",
+        "evidence_paths": [
+          "tests/test_modal_pendulum_rigor.py",
+          "tests/test_modal_pendulum_foreshortening.py",
+          "src/tools/modal_pendulum_foreshortening.py",
+          "articles/theory-part4.qmd",
+          "critiques/geometric_stiffness_omission.md"
+        ],
+        "verification_commit": "dd623a2be2e5852e453d809b9f50a8f19bdce91e",
+        "verified_on": "2026-11-10",
+        "reviewer": "cursor-cloud-adud-20261110-a1 protected review",
+        "falsifier": "A maintained canonical page reintroduces transverse-only placement without foreshortening and recovers k-A*omega^2 centrifugal softening.",
+        "uncertainty": "Correction is limited to the stated planar benchmark, not a calibrated club or 3-D shaft model.",
+        "next_gate": "Extend foreshortening consistently in higher-dimensional modal golf models without duplicating Part 4 prose."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-11-10",
+          "commit": "dd623a2be2e5852e453d809b9f50a8f19bdce91e",
+          "rationale": "Foreshortening and stiffening terms added with independent quadrature checks."
+        },
+        {
+          "from": "responded",
+          "to": "resolved",
+          "on": "2026-11-10",
+          "commit": "dd623a2be2e5852e453d809b9f50a8f19bdce91e",
+          "rationale": "Quadrature-backed tests and Part 1/4 prose published."
+        }
+      ]
     },
     {
       "critique_id": "crit-hard-constraint-fallacy",
@@ -491,9 +533,32 @@
       "critique_id": "crit-tip-mass-omission",
       "source_path": "critiques/tip_mass_omission.md",
       "severity": "critical",
-      "disposition": "open",
+      "disposition": "responded",
       "affected_pages": ["articles/theory-part1.qmd"],
-      "related_claim_ids": []
+      "related_claim_ids": [],
+      "adjudication": {
+        "rationale": "The WEB-06.3 drift-versus-control sandbox now defaults to a driver-scale club payload (mass, center of mass along link 2, and rotary inertia about the wrist) instead of a 0.6 kg midpoint point mass. Appendix B flexible-shaft free-tip boundary conditions and the full Lagrangian tip-mass integrals remain open.",
+        "evidence_paths": [
+          "tests/test_issue_5627_sandbox_club_defaults.py",
+          "tests/test_drift_control_sandbox_widget.py",
+          "src/affine_control/double_pendulum_affine.py"
+        ],
+        "verification_commit": "2174bf2581ad8d0deb61c818ee9c571186c08b97",
+        "verified_on": "2026-11-10",
+        "reviewer": "cursor-cloud-adud-20261110-a2",
+        "falsifier": "The sandbox again defaults to an unrealistic club mass or places the club center of mass at the link midpoint with zero rotary inertia.",
+        "uncertainty": "This response addresses the rigid double-pendulum sandbox only; the distributed shaft and mass-loaded tip boundary in Appendix B are not closed.",
+        "next_gate": "Integrate discrete clubhead kinetic energy and mass-loaded tip boundary conditions into the Part 1 flexible-shaft derivation, then re-adjudicate."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-11-10",
+          "commit": "2174bf2581ad8d0deb61c818ee9c571186c08b97",
+          "rationale": "Issue #5627: realistic sandbox club defaults and inertia-aware link 2."
+        }
+      ]
     },
     {
       "critique_id": "crit-validation-dimensionality-gap",

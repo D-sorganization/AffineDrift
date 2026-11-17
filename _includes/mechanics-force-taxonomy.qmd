@@ -5,16 +5,20 @@ Evaluate every row at the same declared state and in the same coordinates.
 |---|---|---|
 | Applied Generalized Load | $\tau_{\mathrm{ID}}=M\dot v+h$ | Net input required by the declared inverse-dynamics model |
 | Resultant Generalized Load | $\tau_{\text{total}}=M\dot v$ | Right-hand side of the acceleration balance |
-| Configuration Drift | $\tau_{\mathrm{ZVCF}}=-h(z,0)$ | Signed load at the specified velocity-reset state |
+| Pointwise Drift (ZTCF) | $\tau_{\mathrm{ZTCF}}=-h(z,v)$ | Autonomous load with declared control zero; includes gravity once |
+| Pointwise Control (ZVCF) | $\tau_{\mathrm{ZVCF}}=\bar B u$ | Declared control under the ZVCF evaluation protocol |
+| Zero-Velocity Baseline | $-h(z,0)$ | Configuration-dependent bias at zero velocity; not ZVCF control |
 | Velocity-Dependent Drift | $-[h(z,v)-h(z,0)]$ | Difference under that reset, including retained damping |
-| Declared Input Contribution | $\tau_{\text{input}}=\bar B u$ | Applied generalized load, not muscle-force allocation |
+| Declared Input Contribution | $\tau_{\text{input}}=\bar B u$ | Same control channel as ZVCF; not muscle-force allocation |
 
 : Generalized-Load Bookkeeping {#tbl-taxonomy}
 
-The first row must not also be called the sum of drift and input. Doing so
-counts $h$ twice. In redundant coordinates, constraint forces require their own
-balance; uniqueness of net reduced torque does not establish unique actuator,
-muscle, or bilateral hand-force allocation [@lynch2017modern].
+At a fixed achieved state, $\tau_{\text{total}}=\tau_{\mathrm{ZTCF}}+\tau_{\mathrm{ZVCF}}$
+because $M\dot v=-h+\bar B u$ is affine in the declared control. Do not add
+integrated counterfactual trajectories as though they superposed. In redundant
+coordinates, constraint forces require their own balance; uniqueness of net
+reduced torque does not establish unique actuator, muscle, or bilateral
+hand-force allocation [@lynch2017modern].
 
 For a chosen, identifiable reaction output in a fixed smooth contact mode,
 substituting acceleration into the reaction equations can yield
@@ -24,8 +28,9 @@ components. The result for a wrench is not obtained by relabeling an actuator
 torque. Changes of mode, friction branches or unidentified internal forces
 require additional treatment.
 
-There is no universal fourth "mixed force" equal to total minus a forward
-ZTCF load minus a ZVCF load. That expression can subtract overlapping baseline
+There is no universal fourth "mixed force" equal to total minus pointwise ZTCF
+drift minus pointwise ZVCF control minus a zero-velocity baseline. Mixing
+forward ZTCF trajectories with instantaneous operands subtracts overlapping
 terms at different states. To investigate interactions, define two interventions
 and a common outcome $Y$: the contrast
 $Y_{11}-Y_{10}-Y_{01}+Y_{00}$ measures nonadditivity for those interventions and

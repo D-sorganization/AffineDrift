@@ -44,3 +44,29 @@ This creates a "Causal Masking" effect where the _consequence_ of effort (veloci
 2.  **Causal Warning**: Add a warning that "Velocity-dependent drift forces are passive in mechanism but active in origin (historically induced by input)."
 3.  **Inline Edit**: In Section `sec-taxonomy` (Category 2):
     > "Note: While classified as 'Drift' because they do not depend on _instantaneous_ torque, these velocity-dependent forces are causally linked to _prior_ torque inputs that established the system's velocity. They represent the 'kinetic momentum' of the swing, not an exogenous source of energy."
+
+## Framework Response & Resolution
+
+### 1. Concurrence on Causal History vs. Instantaneous Separation
+The critique correctly distinguishes between instantaneous algebraic independence and cumulative causal attribution over time:
+- In control-affine dynamics $\dot{x} = f(x) + G(x)u$, the drift vector field $f(x)$ is algebraically independent of the *instantaneous* control input $u(t)$ at state $x(t)$.
+- However, $f(x)$ contains velocity-dependent terms (centrifugal, Coriolis, and passive dissipative forces) that were energized and shaped by the integral of *prior* control inputs $u(\tau)$ for $\tau < t$.
+- AffineDrift explicitly clarifies that calling drift "autonomous" denotes the absence of instantaneous torque requirement at that moment, not that drift energy is an exogenous or unearned gift from the environment.
+
+### 2. Canonical Definition: ZVCF as Control Acceleration
+Per governing decision (Dieter, 2026-11-03 7:16 PM PST), AffineDrift restores the original MATLAB `SCRIPT_ZVCF_GENERATOR.m` definition:
+- **ZVCF is the active control acceleration**:
+  $$a_{\mathrm{ZVCF}} = M(q)^{-1}\tau$$
+  with active muscular torques $\tau$ on, but velocity and gravity off ($\dot{q} = 0, g = 0$). This isolates the instantaneous acceleration produced by muscular torques alone, mapping directly to $G(x)u$ and biomechanical Induced Acceleration Analysis (IAA).
+- **ZTCF is autonomous drift**:
+  The pointwise ZTCF:
+  $$a_{\mathrm{ZTCF}} = M(q)^{-1}\left(-C(q,\dot{q})\dot{q} - g(q) - \tau_{\mathrm{passive}}\right)$$
+  gathers all passive terms (gravity, passive stiffness, and velocity-induced Coriolis/centrifugal forces) once into drift. Gravity is not double-counted.
+
+### 3. Pointwise Additivity vs. Trajectory Non-Additivity
+- **Pointwise Exactness**: At any fixed instantaneous state $(q, \dot{q})$, the linear acceleration decomposition:
+  $$a = a_{\mathrm{ZTCF}} + a_{\mathrm{ZVCF}}$$
+  is exact by linearity of inverse inertia $M(q)^{-1}$.
+- **Trajectory Non-Additivity**: Forward-integrated counterfactual trajectories do **not** sum:
+  $$x(t) \neq x_{\mathrm{ZTCF}}(t) + x_{\mathrm{ZVCF}}(t)$$
+  Because the equations of motion are nonlinear, counterfactual trajectories rapidly diverge. The framework restricts superposition strictly to the instantaneous local acceleration tangent space, resolving causal masking concerns.

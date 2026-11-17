@@ -14,13 +14,13 @@ intent by itself.
 | Acronym  | Canonical Expansion          | First-Use Qualifiers                           |
 | -------- | ---------------------------- | ---------------------------------------------- |
 | **ZTCF** | Zero-Torque Counterfactual   | pointwise, stitched, forward, branched, family |
-| **ZVCF** | Zero-Velocity Counterfactual | instantaneous                                  |
+| **ZVCF** | Zero-Velocity Counterfactual | control, instantaneous                         |
 | **DCR**  | Drift-Control Ratio          | ratio                                          |
 | **DgCR** | Drag-Curve Ratio             | ratio                                          |
 
 <!-- TERMINOLOGY-CONTRACT:END -->
 
-### Drift and Control
+### Drift and Control {#drift-and-control}
 
 For a declared control-affine effective plant,
 
@@ -44,7 +44,7 @@ silently move between drift and control. Exogenous disturbances that are not
 zeroed belong in a separately declared disturbance channel rather than being
 called control.
 
-### ZTCF Construction Family
+### ZTCF Construction Family {#term-ztcf}
 
 The **Zero-Torque Counterfactual (ZTCF) family** sets the declared applied
 generalized-control channel to zero while preserving the declared effective
@@ -62,7 +62,7 @@ The construction must be qualified on first use. ZTCF does not mean “no
 muscle,” “no EMG,” or “flaccid body.” It means zero value in the declared
 applied-control channel under the stated frozen-plant assumptions.
 
-### Instantaneous ZVCF
+### Pointwise ZTCF Drift and ZVCF Control {#term-zvcf}
 
 For second-order dynamics
 
@@ -70,24 +70,54 @@ $$
 M(q)\ddot q+h(q,\dot q,z;p)=B(q)u,
 $$
 
-the **instantaneous Zero-Velocity Counterfactual (ZVCF) acceleration** is
+evaluate two **pointwise** accelerations at the same achieved state
+$(q,\dot q,z;p)$. The historical acronym **ZVCF** (Zero-Velocity
+Counterfactual) names the **control** operand in the original MATLAB pipeline
+(`SCRIPT_ZVCF_GENERATOR.m`): torques on, generalized velocities zeroed, and
+gravity excluded from the ZVCF operand so gravity is counted once in drift.
+
+The **pointwise ZTCF (drift) acceleration** sets the declared applied control
+to zero while retaining the full bias load:
 
 $$
-a_{\mathrm{ZVCF}}(q,z;p)
-=-M(q)^{-1}h(q,0,z_0;p),
+a_{\mathrm{ZTCF}}(q,\dot q,z;p)=-M(q)^{-1}h(q,\dot q,z;p),
 \qquad u=0.
 $$
 
-All generalized velocities and declared velocity-like internal states are
-zeroed; configuration, contact mode, non-velocity internal state, and frozen
-parameters are held fixed. The ZVCF is an instantaneous acceleration, not a
-state or a releasable trajectory. It includes retained configuration-dependent
-autonomous loads and excludes both velocity-dependent terms and the direct
-control contribution. A generalized-force image may be reported as a **ZVCF
-generalized-force representation**, but that representation is not the ZVCF
-itself.
+It contains velocity-dependent terms, gravity, passive loads, and compatible
+constraint reactions declared in $h$.
 
-### DCR and DgCR
+The **pointwise ZVCF (control) acceleration** applies the measured or declared
+generalized control under the ZVCF evaluation protocol (zero velocity, no
+gravity in the control operand):
+
+$$
+a_{\mathrm{ZVCF}}(q,z;p;\tau)=M(q)^{-1}\tau,
+\qquad \dot q=0,\ u=\tau,
+$$
+
+Because the plant is affine in $u$ at fixed $(q,z,p)$, $M^{-1}B(q)u$ does not
+depend on $\dot q$ or on the gravitational part of $h$; the historical
+“zero-velocity, no-gravity” simulation was only a way to compute the control
+operand, not a separate physical state. Equivalently, $a_{\mathrm{ZVCF}}=M(q)^{-1}B(q)u$
+when $\tau=B(q)u$.
+
+Because the equation is affine in $u$ at fixed $(q,z,p)$, the achieved
+acceleration superposes exactly:
+
+$$
+\ddot q=a_{\mathrm{ZTCF}}(q,\dot q,z;p)+a_{\mathrm{ZVCF}}(q,z;p;\tau).
+$$
+
+Integrated forward or branched ZTCF trajectories do **not** generally add to
+integrated ZVCF evaluations; the identity is instantaneous at a fixed state
+only.
+
+A separate **zero-velocity baseline acceleration**
+$-M(q)^{-1}h(q,0,z;p)$ isolates configuration-dependent bias at zero velocity;
+do not abbreviate that diagnostic as ZVCF.
+
+### DCR and DgCR {#term-dcr}
 
 The **Drift-Control Ratio (DCR)** compares drift acceleration with the maximum
 available control acceleration in the same declared space:
@@ -99,14 +129,44 @@ $$
 $$
 
 $a_d$ and $B_a u$ are the drift and control blocks in one acceleration or
-task-projected space; $W$ supplies the declared scaling or metric;
-$\mathcal U(x)$ is the admissible control set; and $\varepsilon$ is a reported
-regularizer. A full-state norm that mixes position and velocity units is not a
-DCR. A ratio using the realized input rather than bounded authority must be
-called a **realized drift-to-input ratio**, not DCR.
+task-projected space. The **weighting** $W$ is applied on the left:
+$\lVert W z\rVert_2$ is the site-wide convention (row selector, diagonal
+scales, or task Jacobian). When a page instead writes
+$\lVert z\rVert_M=\sqrt{z^{\mathsf T}M z}$ with positive-definite $M$, declare
+$M$ and the equivalence to some $W$ with $\lVert W z\rVert_2=\lVert z\rVert_M$
+(for example $W=L^{\mathsf T}$ from a Cholesky factor $M=LL^{\mathsf T}$).
+$\mathcal U(x)$ is the admissible control set; $\varepsilon$ has the
+denominator's units and is a **reported** regularizer (use $\varepsilon=0$
+when capacity is strictly positive). A full-state norm that mixes position and
+velocity units is not a DCR. The **realized drift-to-input ratio (DIR)** uses the
+achieved input:
+$\lVert W a_d\rVert_2/(\lVert W B_a u\rVert_2+\varepsilon)$; never call that
+quantity DCR. Under a nonlinear coordinate change $q\mapsto\phi(\tilde q)$,
+the control capacity $\sup_{u\in\mathcal U}\lVert W B_a u\rVert_2$ built from
+covariant input effects is chart-consistent, but the drift acceleration
+$a_d=-M^{-1}h$ is chart-dependent unless a covariant (material) acceleration is
+used; a kinetic-energy norm does not make the drift term coordinate-invariant.
 
-The aerodynamic **Drag-Curve Ratio (DgCR)** remains
-$(1-\mathrm{COR})/(1+\mathrm{COR})$ and must never use the bare DCR acronym.
+The **Drag-Curve Ratio (DgCR)** is the restitution-derived ratio
+$(1-\mathrm{COR})/(1+\mathrm{COR})$; it is not an aerodynamic quantity and
+must never use the bare **DCR** acronym.
+
+### Two-Hand Grip Force Modes {#two-hand-grip-force-modes}
+
+Bilateral grip mechanics in the proximal-distal monograph use **lead** ($L$) and
+**trail** ($T$) hand contacts. The separation vector is
+$\mathbf d=\mathbf r_T-\mathbf r_L$. Common and differential force modes are
+
+$$
+\mathbf F_c=\frac{\mathbf F_L+\mathbf F_T}{2},
+\qquad
+\mathbf F_d=\frac{\mathbf F_L-\mathbf F_T}{2}.
+$$
+
+The force-generated midpoint moment is
+$\mathbf M_{F,M}=-\mathbf d\times\mathbf F_d$. Use $\mathbf F_d$ and
+$\mathbf d$ with these signs throughout; do not reintroduce trail-minus-lead or
+right-minus-left variants under other symbols ($\Delta\mathbf F$, $D$, and so on).
 
 ### Equation Symbol Definitions
 
@@ -117,16 +177,30 @@ site registry `data/symbol_references.json` is generated from this table.
 
 <!-- SYMBOL-REFERENCES:START -->
 
-| Key | Symbol        | Name                        | Definition                                                                                                                                                 |
-| --- | ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `x` | $x$           | State x                     | Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities.                                   |
-| `f` | $f(x)$        | Drift f(x)                  | Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load. |
-| `G` | $G(x)$        | Input map G(x)              | Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations.                       |
-| `u` | $u$           | Control input u             | Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set.                                            |
-| `M` | $M(q)$        | Mass matrix M(q)            | Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates.                                               |
-| `C` | $C(q,\dot q)$ | Coriolis matrix C(q, q-dot) | Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads.                                   |
-| `g` | $g(q)$        | Gravity vector g(q)         | Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity.                                        |
-| `B` | $B(q)$        | Actuation matrix B(q)       | Maps the declared control input to generalized forces, so the applied load is B(q) times u.                                                                |
+| Key | Symbol | Name | Definition | Unit | Shape | Frame | Sign | Source anchor |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `x` | $x$ | State x | Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities. | — | vector | model coordinates | — | /pages/notation.html#equation-symbol-definitions |
+| `f` | $f(x)$ | Drift f(x) | Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load. | — | vector field | state | — | /pages/notation.html#drift-and-control |
+| `G` | $G(x)$ | Input map G(x) | Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations. | — | matrix | state | — | /pages/notation.html#drift-and-control |
+| `u` | $u$ | Control input u | Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set. | model-specific | vector | control | — | /pages/notation.html#drift-and-control |
+| `M` | $M(q)$ | Mass matrix M(q) | Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates. | — | matrix | generalized | SPD | /pages/notation.html#term-zvcf |
+| `q` | $q$ | Generalized coordinates q | Joint or body coordinates in the mechanical state. | rad or m | vector | joint/body | — | /pages/notation.html#term-zvcf |
+| `qdot` | $\dot q$ | Generalized velocity q-dot | Time derivative of the generalized coordinates. | rad/s or m/s | vector | joint/body | — | /pages/notation.html#term-zvcf |
+| `h` | $h(q,\dot q,z;p)$ | Bias load h | Velocity-dependent, gravity, passive, and constraint loads in the equation $M(q)\ddot q+h=B(q)u$. | N or N·m | vector | generalized | — | /pages/notation.html#term-zvcf |
+| `z` | $z$ | Auxiliary state z | Declared auxiliary coordinates or frozen strategy variables in the effective plant. | model-specific | vector | model-defined | — | /pages/notation.html#term-zvcf |
+| `p` | $p$ | Model parameters p | Contact mode, frozen impedance, and other declared frozen parameters collected in $p$. | — | — | — | — | /pages/notation.html#drift-and-control |
+| `tau` | $\tau$ | Generalized control tau | Applied generalized force or torque in the ZVCF evaluation protocol. | N or N·m | vector | generalized | — | /pages/notation.html#term-zvcf |
+| `C` | $C(q,\dot q)$ | Coriolis matrix C(q, q-dot) | Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads. | — | matrix | generalized | — | /pages/notation.html#equation-symbol-definitions |
+| `g` | $g(q)$ | Gravity vector g(q) | Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity. | N or N·m | vector | generalized | — | /pages/notation.html#equation-symbol-definitions |
+| `B` | $B(q)$ | Actuation matrix B(q) | Maps the declared control input to generalized forces, so the applied load is B(q) times u. | — | matrix | generalized | — | /pages/notation.html#equation-symbol-definitions |
+| `ad` | $a_d$ | Drift acceleration block | Drift contribution in the task or acceleration space used in the DCR. | m/s² or rad/s² | vector | task or state | — | /pages/notation.html#term-dcr |
+| `Ba` | $B_a$ | Actuation acceleration map | Control block mapping admissible inputs to acceleration in the DCR. | per input | matrix | task or state | — | /pages/notation.html#term-dcr |
+| `W` | $W$ | DCR weighting W | Declared scaling or metric for DCR norms. | — | matrix | task | PSD | /pages/notation.html#term-dcr |
+| `Uset` | $\mathcal U(x)$ | Admissible control set | Set of admissible control vectors at state $x$ for the DCR supremum. | — | set | control | — | /pages/notation.html#term-dcr |
+| `eps` | $\varepsilon$ | DCR regularizer epsilon | Regularizer preventing division by zero in the DCR denominator. | same as denominator | scalar | — | >0 | /pages/notation.html#term-dcr |
+| `J` | $J$ | Constraint Jacobian J | Constraint or task Jacobian; rows are individual constraints. | — | matrix | model-defined | — | /pages/notation.html#j-j-p-n-and-z |
+| `v` | $v$ | Velocity vector v | Linear velocity vector (bold or bar notation in prose tables). | m/s | vector | stated frame | — | /pages/notation.html#vectors--tensors |
+| `lam` | $\lambda$ | Lambda | Eigenvalue or Lagrange multiplier depending on context. | context | scalar or vector | — | — | /pages/notation.html#vectors--tensors |
 
 <!-- SYMBOL-REFERENCES:END -->
 
@@ -154,9 +228,15 @@ site registry `data/symbol_references.json` is generated from this table.
 
 **Hamilton vs JPL Conventions:**
 
-- **Hamilton (default):** q = (w, x, y, z), quaternion multiplication q₁q₂
-- **JPL (aerospace):** q = (x, y, z, w), quaternion multiplication q₁ ⊗ q₂
-- **Current project:** Hamilton convention throughout unless otherwise noted
+- **Hamilton (default, site-wide):** $ijk=-1$ (right-handed algebra). Storage is
+  scalar-first $(w,x,y,z)$. Active rotation $\mathbf{v}'=q\mathbf{v}q^*$ on column
+  vectors; $q_{WB}$ maps body coordinates to world, with composition
+  $q_{WC}=q_{WB}\,q_{BC}$. Some libraries (for example SciPy, ROS) store the same
+  Hamilton algebra scalar-last; translate storage, not the algebra.
+- **JPL (aerospace literature):** $ijk=+1$ (left-handed algebra) with its usual passive
+  interpretation. Not used in AffineDrift unless a source is quoted and translated.
+- **Current project:** Hamilton algebra, scalar-first storage, active rotations,
+  consistent with [Rotation Representation Converter](../articles/rotation-converter.html).
 
 ### Euler Angles
 
@@ -171,9 +251,12 @@ site registry `data/symbol_references.json` is generated from this table.
 
 **Order Convention:** Z-Y-X (Yaw-Pitch-Roll)
 
-- Applied in extrinsic (fixed-frame) order
-- Equivalent to intrinsic X-Y-Z on moving frame
-- $R(\psi, \theta, \phi) = R_Z(\psi) R_Y(\theta) R_X(\phi)$
+- **Intrinsic** $Z$–$Y'$–$X''$ on moving body axes: yaw $\psi$ about $Z$, then pitch
+  $\theta$ about $Y'$, then roll $\phi$ about $X''$
+- **Equivalently extrinsic** $X$–$Y$–$Z$ on fixed axes (same active rotation matrix)
+- Active rotation of column vectors; $R(\psi,\theta,\phi)=R_Z(\psi)R_Y(\theta)R_X(\phi)$
+  maps body coordinates to world coordinates
+- Gimbal lock at pitch $\theta=\pm\pi/2$
 
 ---
 
@@ -189,12 +272,16 @@ site registry `data/symbol_references.json` is generated from this table.
 
 ### Screw/Twist Notation
 
-| Notation   | Meaning             | Type       | Components                                                                  |
-| ---------- | ------------------- | ---------- | --------------------------------------------------------------------------- |
-| **ξ**      | Screw/twist element | 6-D vector | $\xi = (\omega_x, \omega_y, \omega_z, v_x, v_y, v_z)^T$                     |
-| **[ξ]\_×** | Screw matrix form   | 4×4 matrix | $[\xi]_\times = \begin{pmatrix} [\omega]_\times & v \\ 0 & 0 \end{pmatrix}$ |
-| **V**      | Spatial velocity    | 6-D twist  | Linear + angular velocity                                                   |
-| **F**      | Spatial force       | 6-D wrench | Torque + linear force                                                       |
+| Notation      | Meaning             | Type       | Components                                                                                            |
+| ------------- | ------------------- | ---------- | ----------------------------------------------------------------------------------------------------- |
+| **ξ**         | Screw/twist element | 6-D vector | $\xi=(\omega_x,\omega_y,\omega_z,v_x,v_y,v_z)^T$ — angular block first                                |
+| **V**         | Spatial velocity    | 6-D twist  | $V=(\omega,v)$ — angular velocity, then linear velocity of the reference point                        |
+| **W**         | Spatial wrench      | 6-D wrench | $W=(\boldsymbol{\mathsf{n}},\mathbf{f})$ — moment about the reference point, then force               |
+| $\widehat\xi$ | se(3) hat matrix    | 4×4 matrix | $\widehat\xi=\begin{pmatrix}[\omega]_\times&\mathbf{v}\\0&0\end{pmatrix}$ (see screw-theory chapters) |
+
+**Block order and power pairing:** twists use $(\omega,v)$, wrenches use
+$(\boldsymbol{\mathsf{n}},\mathbf{f})$; $P=\mathsf{W}^T\mathsf{V}$ is instantaneous
+power. Name the reference point and frame (body vs spatial).
 
 ---
 
@@ -249,18 +336,20 @@ site registry `data/symbol_references.json` is generated from this table.
 
 ### Golf-Specific Quantities
 
-| Symbol   | Quantity                       | Definition                                                                                                                    | Units                     |
-| -------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| **CoG**  | Center of gravity              | Center of mass                                                                                                                | m (relative to reference) |
-| **COR**  | Coefficient of restitution     | (v_out - v_contact) / (v_in - v_contact)                                                                                      | Dimensionless, 0-1        |
-| **DCR**  | Drift-Control Ratio            | $\lVert W a_d(x)\rVert_2 /(\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon)$; see the canonical definition above | Dimensionless             |
-| **DgCR** | Drag–curve ratio (aerodynamic) | (1 - COR) / (1 + COR)                                                                                                         | Dimensionless, 0-1        |
-| **e**    | Coefficient of restitution     | Same as COR                                                                                                                   | Dimensionless             |
-| **v_0**  | Ball velocity (impact)         | Velocity immediately after impact                                                                                             | m/s                       |
-| **α**    | Launch angle                   | Angle above horizontal                                                                                                        | degrees (°) or radians    |
-| **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                         | RPM or rad/s              |
+| Symbol   | Quantity                       | Definition                                                                                                                                                                                                                                                                               | Units                     |
+| -------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| **CoG**  | Center of gravity              | Center of mass                                                                                                                                                                                                                                                                           | m (relative to reference) |
+| **COR**  | Coefficient of restitution     | $e=-(\mathbf{v}_b^+-\mathbf{v}_c^+)\cdot\mathbf{n}\;/\;(\mathbf{v}_b^--\mathbf{v}_c^-)\cdot\mathbf{n}$ with unit normal $\mathbf{n}$; signed approach normal speed is negative, so $e\in[0,1]$ for passive, non-superelastic rebounds (no net external energy supplied to the collision) | Dimensionless, 0-1        |
+| **DCR**  | Drift-Control Ratio            | $\lVert W a_d(x)\rVert_2 /(\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon)$; see the canonical definition above                                                                                                                                                            | Dimensionless             |
+| **DgCR** | Drag–Curve Ratio (restitution) | $(1-\mathrm{COR})/(1+\mathrm{COR})$; impact diagnostic from COR, not aerodynamic drag                                                                                                                                                                                                    | Dimensionless, 0-1        |
+| **e**    | Coefficient of restitution     | Same as COR                                                                                                                                                                                                                                                                              | Dimensionless             |
+| **v_0**  | Ball launch speed              | Ball center-of-mass speed immediately after separation (not the pre-impact approach speed)                                                                                                                                                                                               | m/s                       |
+| **α**    | Launch angle                   | Angle above horizontal                                                                                                                                                                                                                                                                   | degrees (°) or radians    |
+| **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                                                                                                                                                                                    | RPM or rad/s              |
+| **θ**    | Launch elevation (Ch. 31)      | Angle above horizontal at ball release in the Physics of Golf launch chapter; distinct from site-wide launch angle **α** when both appear                                                                                                         | degrees (°) or radians    |
+| **φ**    | Slope (putting green, Ch. 32)  | Green tilt in the putting chapter; distinct from roll-angle **φ** elsewhere when context differs                                                                                                                         | degrees (°) or radians    |
 
-**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
+**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The restitution-based drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
 **DgCR (Drag–curve ratio) Sign Convention:** Always positive
 
@@ -276,9 +365,9 @@ site registry `data/symbol_references.json` is generated from this table.
 
 **Convention:** Right-hand rule for all cross products
 
-- Curl fingers of right hand in direction of first vector
-- Extend thumb in direction of second vector
-- Result points in direction of thumb
+- Point fingers along the first vector and curl them toward the second through the
+  smaller angle between them (palm faces the turn)
+- The extended thumb gives the direction of $\mathbf{u}\times\mathbf{v}$
 
 **Example:** Torque = **r** × **F**
 
@@ -303,19 +392,20 @@ site registry `data/symbol_references.json` is generated from this table.
 
 **Hamilton Convention (default):**
 
-- q = (w, x, y, z) = scalar-first
-- Unit quaternion: w² + x² + y² + z² = 1
-- Rotation: **v'** = q **v** q⁻¹ (sandwich product)
+- $q=(w,x,y,z)$ scalar-first; $w^2+x^2+y^2+z^2=1$
+- Active rotation: $\mathbf{v}'=q\mathbf{v}q^*$ (column vectors)
+- $q_{WB}$ maps body to world; same algebra as the Euler $R$ above when both are declared
 
 ### Euler Angle Rotation
 
-**Convention:** Extrinsic Z-Y-X (Yaw-Pitch-Roll)
+**Convention:** Intrinsic $Z$–$Y'$–$X''$ (yaw–pitch–roll), equivalently extrinsic $X$–$Y$–$Z$
 
-- First: Rotate ψ about fixed Z-axis (yaw/heading)
-- Second: Rotate θ about fixed Y-axis (pitch)
-- Third: Rotate φ about fixed X-axis (roll)
+- **Intrinsic (moving axes):** $\psi$ about body $Z$, then $\theta$ about $Y'$, then $\phi$
+  about $X''$
+- **Extrinsic (fixed axes, same $R$):** $\phi$ about fixed $X$, then $\theta$ about fixed $Y$,
+  then $\psi$ about fixed $Z$
 
-**Matrix multiplication (right-to-left):**
+**Matrix multiplication (active rotation, body to world):**
 $$R = R_Z(\psi) R_Y(\theta) R_X(\phi)$$
 
 ### Coordinate Frame Conventions
@@ -333,7 +423,86 @@ $$R = R_Z(\psi) R_Y(\theta) R_X(\phi)$$
 - **Body frame**: Fixed to moving object, rotates with it
 - **Local frame**: Centered at local point of interest
 
+**Site default target frame (Z-up):** Right-handed inertial frame with **+X** along the
+target line downrange, **+Y** to the golfer's **left** when looking downrange, and **+Z**
+up. State the origin (ground point, pelvis, clubhead at address, etc.) wherever a model uses
+this frame. **Forward** and **lateral** in prose mean downrange and left-of-target unless a
+chapter declares another frame.
+
+**Common article variants (always declare locally):**
+
+| Name | +X | +Y | +Z | Where used |
+| ---- | -- | -- | -- | ---------- |
+| Site default (Z-up) | Target line | Left (downrange view) | Up | `NOTATION.md`, many fitting articles |
+| Y-up impact / green | Target line | Up | Right (downrange view) | Ball-flight and green chapters |
+| ISB-style segment | Anterior | Left | Superior | Some spine and clinical passages |
+| Planar PoG inertial | Chapter-specific (often +x right) | Often up | Out of plane | Physics of Golf Ch. 3–9 multibody examples |
+
+Before combining outputs from two chapters, apply the fixed axis permutation stated in each
+source (or in [UpstreamDrift Conventions](upstreamdrift-conventions.html) on the
+publication site — do not
+assume identical world axes because both triads are right-handed.
+
+**Spatial 6-vectors:** twists $\mathsf{V}=(\boldsymbol{\omega},\mathbf{v})$ and wrenches
+$\mathsf{W}=(\boldsymbol{\mathsf{n}},\mathbf{f})$ use **angular blocks first** (Featherstone /
+Lynch & Park; see table above). A chapter that stacks $(\mathbf{v},\boldsymbol{\omega})$ or
+$(\mathbf{f},\boldsymbol{\mathsf{n}})$ must say so at first use and give the permutation to the
+site ordering before building a 6-row Jacobian from multiple chapters.
+
+**Golf delivery angles (site default Z-up target frame).** Declare the frame before
+comparing chapters or vendor exports.
+
+| Quantity | Positive sense in site default frame | Typical symbol |
+| -------- | ------------------------------------ | -------------- |
+| Club path (horizontal) | Toward **+Y** (golfer's left downrange) | Path, $\gamma$ |
+| Launch azimuth / face horizontal | Toward **+Z** (golfer's right) when stated “right positive” | Varies by chapter |
+| Attack / dynamic loft tilt | **+Z** up (above horizontal in $x$–$y$ plane) | Attack, $\alpha$ |
+| Spin axis tilt | Right-hand rule about stated axis | Spin axis |
+
+Y-up article frames permute which axis carries “up” and “lateral”; map to this table before
+signing a quantity from one chapter against another. Vendor and launch-monitor monographs state
+their own target triads in place (see [Launch Monitor Technology](../articles/technology-launch-monitors.html) and the Launch Monitor Technology Review LaTeX monograph).
+
 ---
+
+### Physics of Golf Part I Multibody Symbols (Ch. 3–9)
+
+These symbols are shared across the planar multibody chapters that build the
+affine club-arm model. Local redefinitions must be bridged at first use.
+
+| Symbol | Meaning | Rule |
+| ------ | ------- | ---- |
+| **$r_i$** | COM distance from the proximal hinge of link $i$ | Lowercase $r_i$, not $c_i$ |
+| **$c$** or **$c_i$** | Velocity-bias (Christoffel) vector or component | Not a COM distance |
+| **$g_0$** | Gravitational acceleration magnitude | Scalar; $g$ in $V=mgy$ is the same magnitude in planar models |
+| **$\bm g$** or **$g$** | Gravity generalized-force vector | Lowercase; not the input map $G(x)$ |
+| **$J_c$** | Constraint Jacobian | Not $A$ unless the meaning is stated in a chapter-local note |
+| **$\bm S$** | Constraint-space inverse inertia ($J_c M^{-1} J_c^{\mathsf T}$) | Schur complement; not the delivery map |
+| **$h$** | Full bias load in $M\ddot q + h = B u + \cdots$ | Includes velocity terms and gravity unless a chapter lists exclusions |
+
+Second-order equations of motion in this block use $M(q)\ddot q + h(q,\dot q;\,p) = B(q)u + J_c^{\mathsf T}\lambda$ (plus any declared external loads). Gravity belongs in $h$ or in an explicitly named lowercase $\bm g$ vector, never uppercase $G$.
+
+### Motor Control Delay and Activation (Ch. 24–27)
+
+| Symbol | Meaning |
+| ------ | ------- |
+| **$d$** | Sensorimotor delay (seconds) in delayed feedback models |
+| **$T_a$** | First-order muscle or activation time constant (not joint torque $\tau$) |
+
+### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
+
+| Symbol    | Meaning                                                                    | Metric                                                        | Rule                                                                                           |
+| --------- | -------------------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **$J$**   | Constraint (or task) Jacobian, rows are constraints                        | None: a linear map between coordinate spaces                  | In the allocation problem $A x = b$ the balance matrix $A$ plays the role of $J$               |
+| **$J^+$** | Moore-Penrose pseudo-inverse of $J$                                        | Euclidean in both spaces                                      | Weighted version $W^{-1}J^\top(JW^{-1}J^\top)^{+}$ must name its weight $W$                    |
+| **$P_W$** | Projector onto $\ker J$ along the $W$-orthogonal complement                | The $W$ inner product; self-adjoint there ($WP_W=P_W^\top W$) | Not symmetric unless $W$ is a multiple of $I$; $P_I=I-J^+J$ is the Euclidean case              |
+| **$N$**   | Matrix whose columns are a basis of $\ker J$                               | None: any basis of $\ker J$ serves                            | A basis is not unique; $N$ is not $P_W$, and a result must not depend on which basis is chosen |
+| **$Z$**   | The same null-space basis, written $Z$ in the AffineDrift Python companion | None                                                          | The companion writes $u$ and $Z$ where the UpstreamDrift package writes $x$ and $N$            |
+
+**Disambiguation rule:** A projector $P$ is a square matrix that depends on a metric; a basis $N$ or
+$Z$ is a tall matrix that does not. Name the metric whenever a projector or pseudo-inverse is used,
+and note that $u$ here is an allocation variable, not the control input of the control-affine
+dynamics.
 
 ## Symbol Overloading Reference
 
@@ -417,6 +586,114 @@ dynamics.
 | Electrical | Voltage  | V (volts) | Scalar v     |
 
 **Disambiguation rule:** Bold **v** = velocity. Plain v = voltage (context dependent).
+
+---
+
+## Geometry of Motion Notation (Volumes 0–II)
+
+This section harmonises symbols across *Geometry of Motion* chapters with the
+canonical rules above. Chapters may keep historical local glyphs when a **notation
+note** in the chapter points here; new material follows the canonical row.
+
+### Volume 0: Rotations and Exponential Coordinates (Chapters 4–6)
+
+Canonical finite-rotation symbols (Volume 0 Chapter 6 is the reference chapter):
+
+| Object | Canonical symbol | Meaning |
+| ------ | ---------------- | ------- |
+| Unit rotation axis | $\hat{n}$ or $s$ | Unit vector in the rotation frame |
+| Rotation angle | $\theta$ | Signed angle about $\hat{n}$ |
+| Rotation vector | $\boldsymbol{\phi}=\hat{n}\,\theta$ | $\|\boldsymbol{\phi}\|=\theta$ |
+| Skew generator | $[\boldsymbol{\phi}]_\times$ or $\hat{\boldsymbol{\phi}}$ | Element of $\mathfrak{so}(3)$ |
+| Body/space frames | $\{s\}$, $\{b\}$ | $R_{sb}$ maps $b$-components to $s$-components |
+| Relative rotation | $R_{sb}$ | Not $R_{bs}$ without an explicit inversion statement |
+
+Chapter 4 historically uses axis $a$, angle $\alpha$ and rotation vector $u$ for
+the same objects; Chapter 5 uses screw direction $s$ and angle $\theta$. Treat
+those as chapter-local aliases linked by this table. Do not reuse $u$ for a unit
+axis in the same section where $u$ is a control input. Reserve $\varphi$ for
+Euler roll; do not also denote the rotation vector by $\varphi$.
+
+**SLERP:** interpolation fraction $s\in[0,1]$ (not $u$). Angular velocity along
+the geodesic may be written $\Omega$ in Chapter 4 and $\omega$ elsewhere; both
+are frame-labelled angular velocities.
+
+**Integrated exponential coordinates vs twist:** $(\boldsymbol{\phi},\boldsymbol{\rho})$
+denotes exponential coordinates on $SE(3)$ when stated; the 6-vector screw twist
+$\xi$ follows [Screw/Twist Notation](#screwtwist-notation). They are related by
+the exponential map but are not interchangeable symbols.
+
+### Volume 0: Spatial Algebra and Recursion (Chapters 7–12)
+
+| Object | Canonical symbol | Rule |
+| ------ | ---------------- | ---- |
+| Spatial twist | $\mathcal{V}=(\boldsymbol{\omega},\mathbf{v})^T$ | Angular component first |
+| Spatial wrench | $\mathcal{F}=(\mathbf{n},\mathbf{f})^T$ | Moment first; lowercase $\mathbf{f}$ is only the 3-force block |
+| se(3) hat | $[\xi]_\times$ or $\widehat{\xi}$ | Same $4\times4$ matrix as NOTATION screw row |
+| Joint motion subspace | $S_i$ | Columns span allowed joint motion in link frame |
+| PoE space screw axis | $\xi_i$ or $\mathcal{A}_i$ | Not $S_i$ (reserved for joint subspace) |
+| Parent link index | $\lambda(i)$ | Not $p(i)$ unless $p$ is explicitly position |
+| Spatial inertia | $\mathcal{I}_i$ | Distinct from configuration mass matrix $M(q)$ |
+| Joint-space bias | $h(q,\dot q)$ | Matches manipulator equation in [Canonical Control-Affine Terminology](#canonical-control-affine-terminology) |
+| Constraint Jacobian | $J_c$ | Rows are independent constraints; not $A$ when $A$ is a state Jacobian |
+
+Symbols $c$, $b$, $h$ and $S$ have chapter-local meanings (Coriolis offset, joint
+bias in Chapter 8, step size in optimization). A chapter notation note must flag
+any reuse.
+
+### Constrained Acceleration and Projectors (Chapters 3, 3b, 7, 9)
+
+For independent equality constraints $J_c\dot v=-\gamma$ with
+$\gamma=\dot J_c v$ in a fixed contact mode:
+
+| Symbol | Definition | Type |
+| ------ | ---------- | ---- |
+| $K_c$ | $J_c M^{-1} J_c^\top$ | Operational-space inertia |
+| $\Pi_M$ | $I-M^{-1}J_c^\top K_c^{-1}J_c$ | $M$-orthogonal projector ($\Pi_M^2=\Pi_M$) |
+| $P_v$ | Same matrix as $\Pi_M$ | Velocity-space projector (Chapter 9 name) |
+| $\mathcal{H}_M$ | $\Pi_M M^{-1}$ | Constrained acceleration operator (not a projector) |
+| $a_0^c$ | $-P_v M^{-1} h - M^{-1} J_c^\top K_c^{-1}\gamma$ | Constrained drift acceleration |
+| $B_a^c$ | $P_v M^{-1} B$ | Constrained input acceleration map |
+
+Chapter 3 Superposition writes $\Pi_M$ as $P$ in $P=I-M^{-1}J^T W^{-1}J$ with
+$W=JM^{-1}J^T$. Chapter 3b and induced-acceleration ledgers use $\mathcal{H}_M$,
+not $P$, for the map that premultiplies $Q_0$ or $B$. Using $P$ for both the
+projector and $\mathcal{H}_M$ is a notational collision.
+
+### Contraction Metrics (Volume I Chapter 4)
+
+| Symbol | Meaning in CCM chapters |
+| ------ | ----------------------- |
+| $M(x)$ | Riemannian metric or contraction metric (not $M(q)$ mass matrix in the same section without a note) |
+| $\rho(x)$ | CCM multiplier (positive function, not necessarily in $(0,1)$) |
+| $\varrho$ | Discrete contraction factor in $(0,1)$ when both appear |
+| $\Phi(t,s)$ | State-transition matrix of the first variation |
+| $\psi_k$ | Nonlinear discrete map when distinct from $\Phi$ |
+
+Chapters that overload $\rho$, $\Phi$, $D$, $d$, or $\lambda$ carry a local
+**notation note** listing the chapter-specific sense.
+
+### Optimal Control Hamiltonian vs Hessian (Volume I Chapters 5–6)
+
+| Symbol | Chapter 5 discrete DDP | Chapter 5 / 6 continuous or Riccati |
+| ------ | --------------------- | ------------------------------------- |
+| $\mathcal{H}_k$ | Hamiltonian (costate pairing) | — |
+| $H_{uu}$ or $Q_{uu}$ | Control Hessian block | — |
+| $N$ | Horizon length | Cross-weight matrix $N_k$ only with a chapter note |
+
+**Feedback sign convention:** Chapter 5 writes $A_{\mathrm{cl}}=A+BK$ with $K$ absorbing
+the sign; Chapters 6 and 8 use $u=-Kx$ so $A_{\mathrm{cl}}=A-BK$. Converting gains
+between chapters requires an explicit sign flip on $K$.
+
+### Volume II: Transverse Coordinates Along a Nominal Curve
+
+Let $\gamma(\tau)$ be a nominal trajectory, $T=\gamma'/v$ the unit tangent, and
+$E(\tau)\in\mathbb{R}^{n\times(n-1)}$ a smooth orthonormal normal frame
+($E^TE=I$, $E^TT=0$). **Reduced transverse coordinates** are
+$z=E(\tau)^T\delta x\in\mathbb{R}^{n-1}$. The orthogonal projector
+$P=EE^T=I-TT^T$ is an $n\times n$ matrix; $P\delta x\in\mathbb{R}^n$ is not
+the reduced coordinate vector. Phase is indexed by $\tau$ (or an equivalent
+scalar phase), not automatically by clock time $t$ alone.
 
 ---
 
@@ -558,12 +835,12 @@ From NOTATION.md:
 - ψ (psi) = yaw [Euler Angles section]
 - θ (theta) = pitch [Euler Angles section]
 - φ (phi) = roll [Euler Angles section]
-- Z-Y-X = extrinsic rotation order [Euler Angle Rotation section]
-- R = R_Z(ψ) R_Y(θ) R_X(φ) [Matrix form]
+- Z-Y-X = intrinsic $Z$–$Y'$–$X''$ / extrinsic $X$–$Y$–$Z$ [Euler Angle Rotation section]
+- R = R_Z(ψ) R_Y(θ) R_X(φ) maps body to world [Matrix form]
 
 ---
 
-**Last Updated:** April 2026  
+**Last Updated:** 2026-11-13  
 **Version:** 1.0  
 **Maintained By:** AffineDrift Documentation Team  
 **Status:** Authoritative Reference ✓

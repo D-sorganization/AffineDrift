@@ -12,6 +12,48 @@ from scripts import build_core_theory_figures
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FIGURES_DIR = REPO_ROOT / "articles/figures/core_theory"
 
+# Issue #5590: ZTCF and superposition flagship figures (not the DCR schematics).
+ISSUE_5590_PINNED_FIGURES: dict[str, str] = {
+    "fig_ztcf_trajectory_divergence.svg": "data/core_theory/ztcf_figure_run_v1.json",
+    "fig_ztcf_clubhead_speed_loss.svg": "data/core_theory/ztcf_figure_run_v1.json",
+    "fig_ztcf_passive_dynamics_attribution.svg": "data/core_theory/ztcf_figure_run_v1.json",
+    "fig_superposition_decomposition.svg": "data/core_theory/superposition_parallelogram_run_v1.json",
+    "fig_superposition_breakdown_boundary.svg": "data/core_theory/superposition_breakdown_run_v1.json",
+    "fig_superposition_modal_response.svg": "data/core_theory/ztcf_figure_run_v1.json",
+}
+
+
+def _figure_embed_pattern(fig_name: str) -> re.Pattern[str]:
+    escaped = re.escape(fig_name)
+    return re.compile(
+        rf"!\[([^\]]+)\]\([^\)]*{escaped}[^\)]*\)"
+        rf"(?:\{{[^\}}]*fig-alt=\"(?P<alt>[^\"]+)\"[^\}}]*\}})?",
+        re.DOTALL,
+    )
+
+
+def _iter_article_embeds(fig_name: str) -> list[tuple[str, str, str]]:
+    """Return (article_path, caption, fig_alt) for every Quarto embed of one SVG."""
+    pattern = _figure_embed_pattern(fig_name)
+    embeds: list[tuple[str, str, str]] = []
+    articles_dir = REPO_ROOT / "articles"
+    for article_path in sorted(articles_dir.rglob("*.qmd")):
+        content = article_path.read_text(encoding="utf-8")
+        for match in pattern.finditer(content):
+            rel = article_path.relative_to(REPO_ROOT).as_posix()
+            embeds.append((rel, match.group(1), (match.group("alt") or "")))
+    return embeds
+
+
+def _declares_pin_provenance(caption: str, alt_text: str, pin_path: str) -> bool:
+    wording = f"{caption} {alt_text}".lower()
+    return pin_path.lower() in wording
+
+
+def _declares_schematic_label(caption: str, alt_text: str) -> bool:
+    return "schematic" in caption.lower() and "schematic" in alt_text.lower()
+
+
 ARTICLE_FIGURE_MAP = {
     "articles/drift-control-ratio.qmd": [
         "fig_dcr_vector_decomposition.svg",
@@ -111,3 +153,25 @@ def test_figures_have_accessible_alt_text_and_captions(
         elif html_match:
             alt_text = html_match.group(1)
             assert len(alt_text.strip()) > 20, f"alt text too short for {fig_name}"
+
+
+def test_issue_5590_pin_records_exist_on_disk() -> None:
+    """Pinned core-theory figure runs referenced in articles must be committed."""
+    for pin_rel in set(ISSUE_5590_PINNED_FIGURES.values()):
+        pin_path = REPO_ROOT / pin_rel
+        assert pin_path.is_file(), f"Missing provenance record: {pin_rel}"
+        assert pin_path.suffix == ".json", pin_rel
+
+
+@pytest.mark.parametrize("fig_name,pin_path", list(ISSUE_5590_PINNED_FIGURES.items()))
+def test_issue_5590_figure_embeds_declare_pin_provenance(fig_name: str, pin_path: str) -> None:
+    """Each #5590 figure embed must cite its pin or be explicitly labelled schematic."""
+    embeds = _iter_article_embeds(fig_name)
+    assert embeds, f"No Quarto embed found for {fig_name}"
+    for article, caption, alt_text in embeds:
+        has_pin = _declares_pin_provenance(caption, alt_text, pin_path)
+        has_schematic = _declares_schematic_label(caption, alt_text)
+        assert has_pin or has_schematic, (
+            f"{fig_name} in {article} must cite {pin_path} in caption or fig-alt, "
+            "or declare schematic in both caption and fig-alt"
+        )

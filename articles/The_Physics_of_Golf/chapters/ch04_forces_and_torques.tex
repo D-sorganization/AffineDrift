@@ -287,9 +287,11 @@ OpenSim likewise distinguishes net generalized forces from the structural reacti
 \section{Wrenches: Forces, Moments and Power}
 
 \begin{definition}{A Wrench With a Declared Reference}{ch04_wrench}
-Use force-first ordering \(\bm w_H=(\bm f,\bm n_H)\) and matching twist \(\bm V_H=(\bm v_H,\bm\omega)\), expressed in the same axes. The moment is about H, not an unspecified point. The rigid-body power is
+Use site angular-first ordering (\texttt{NOTATION.md}):
+\(\bm V_H=(\bm\omega,\bm v_H)\) and \(\bm w_H=(\bm n_H,\bm f)\), expressed in the same axes.
+The moment is about H, not an unspecified point. The rigid-body power is
 \[
-P=\bm w_H^T\bm V_H=\bm f\cdot\bm v_H+\bm n_H\cdot\bm\omega.
+P=\bm w_H^T\bm V_H=\bm n_H\cdot\bm\omega+\bm f\cdot\bm v_H.
 \]
 For offset \(\bm d=\bm r_K-\bm r_H\), shift to K using
 \[

@@ -56,7 +56,9 @@ def _scan_directory_files(content_dir: str, include_critiques_md: bool) -> list[
         candidates = list(dir_path.rglob("*.qmd"))
         if include_critiques_md and content_dir == "critiques":
             candidates.extend(dir_path.rglob("*.md"))
-    return [p for p in candidates if not is_excluded_content_path(p, base_dir=dir_path)]
+    return [
+        p for p in candidates if p.is_file() and not is_excluded_content_path(p, base_dir=dir_path)
+    ]
 
 
 def collect_qmd_files(
@@ -66,13 +68,14 @@ def collect_qmd_files(
     """Collect all non-partial, non-excluded content files from content directories.
 
     Args:
-        content_dirs: Directories to scan. Defaults to DEFAULT_CONTENT_DIRS.
+        content_dirs: Directories to scan. None uses DEFAULT_CONTENT_DIRS; an empty list
+            selects no directories.
         include_critiques_md: Whether to include .md files in critiques directory.
 
     Returns:
-        Sorted list of Path objects for content files.
+        Sorted, unique paths to existing content files; directory candidates are excluded.
     """
-    dirs = content_dirs or DEFAULT_CONTENT_DIRS
+    dirs = DEFAULT_CONTENT_DIRS if content_dirs is None else content_dirs
     files: list[Path] = []
     for content_dir in dirs:
         files.extend(_scan_directory_files(content_dir, include_critiques_md))

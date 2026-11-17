@@ -26,6 +26,13 @@ the swing plane, $\theta_2$ the wrist angle of the club relative to the
 arm, and the club's absolute angle is
 $\theta_{\mathrm{club}} = \theta_1 + \theta_2$.
 
+The wrist hinge is an ideal revolute joint with **no hard joint stop** or
+anatomical range guard in the E1 plant. Representative programs can therefore
+fold the club to relative wrist angles well past typical human cocking limits;
+@sec-results records the committed minimum $\theta_2$ values alongside impact
+speed so readers can see when speed gains depend on unbounded folding rather
+than on declared actuator torque alone.
+
 Rollouts use the ODE reference backend (analytic dynamics, fixed-step
 RK4) with $\Delta t = 1$ ms over a 0.9 s horizon. Every rollout starts
 from the same top-of-backswing state,
@@ -50,8 +57,10 @@ onset time $t_{\mathrm{on}}$:
   $\tau_w = +15$ N·m.
 
 The onset grid is $t_{\mathrm{on}} \in \{0, 0.025, \dots, 0.35\}$ s
-(15 values). With both shoulder-torque levels this yields 92 distinct
-programs; `drive-only` at $t_{\mathrm{on}} = 0$ is the S1
+(15 values). With both shoulder-torque levels this yields 92 program rows and
+88 distinct schedules (at $t_{\mathrm{on}} = 0$, restrain-then-drive coincides
+with drive-only for both restraint levels); `drive-only` at $t_{\mathrm{on}} = 0$
+is the S1
 ("transfer early") pole of the design and `restrain-then-drive` with
 late onset is the S2 pole. Torque magnitudes sit inside the ranges used
 by comparable two- and three-segment studies
@@ -91,11 +100,11 @@ bottom of the swing can postpone the crossing into a second rotation
 while the shoulder keeps pumping energy — an artifact, not a swing. A
 trial is therefore outside the registered delivery-zone estimand unless the
 arm angle at the crossing
-satisfies $\theta_1 \le 2.0$ rad (a first-pass delivery); 29 of the 92
-programs were excluded by this rule, all of them heavy-restraint or
+satisfies $\theta_1 \le 2.0$ rad (a first-pass delivery); 29 of the 92 program
+rows were excluded by this rule, all of them heavy-restraint or
 very-late-onset programs. Every attempted program now records its first
 geometric crossing, speed, arm angle, and explicit acceptance status even when
-excluded. Bounds from 1.5 to 2.5 rad accept 58 to 69 of 92 programs; the
+excluded. Bounds from 1.5 to 2.5 rad accept 58 to 69 of the 92 rows; the
 grid-selected profile and onset remain unchanged at both shoulder-torque
 levels. This supports threshold robustness of the selected result, but it does
 not make 2.0 rad an anatomical cutoff or validate the endpoint as impact.

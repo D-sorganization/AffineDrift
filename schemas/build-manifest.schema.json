@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/schemas/build-manifest.schema.json",
+  "title": "AffineDriftBuildManifest",
+  "type": "object",
+  "required": [
+    "git_commit",
+    "quarto_version",
+    "python_lock_sha256",
+    "npm_lock_sha256",
+    "generated_at_utc"
+  ],
+  "properties": {
+    "git_commit": { "type": "string", "minLength": 7 },
+    "quarto_version": { "type": "string" },
+    "python_lock_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "npm_lock_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "generated_at_utc": { "type": "string" }
+  },
+  "additionalProperties": false
+}

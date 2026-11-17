@@ -238,3 +238,37 @@ def test_every_banned_pattern_has_a_suggested_fix() -> None:
     for pattern, rule, fix in BANNED:
         assert pattern and rule and fix
         assert len(fix) > 5
+
+
+class TestZvcfControlDecision5429:
+    """Issue #5429: ZVCF is control; gravity-only slice keeps a distinct name."""
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            "Then $a_{\\mathrm{ZVCF}}(q,z,t)=-M(q)^{-1}h(q,0,z,t)$ follows.\n",
+            "Use $a_{\\mathrm{ZVCF}}=-M(z)^{-1}h(z,0)$ at rest.\n",
+        ],
+    )
+    def test_zvcf_gravity_only_equation_is_detected(self, tmp_path: Path, body: str) -> None:
+        write_authority(tmp_path)
+        write(tmp_path, "articles/ch.qmd", body)
+
+        assert any(finding["rule"] == "ZVCF gravity-only definition" for finding in scan(tmp_path))
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            "At fixed state, $\\ddot q = a_{\\mathrm{ZTCF}} + M(q)^{-1}(\\tau-b(q,0))$.\n",
+            "Total acceleration is ZTCF plus $M(q)^{-1}(\\tau - g(q))$ here.\n",
+        ],
+    )
+    def test_ztcf_plus_control_preserved_double_count_is_detected(
+        self, tmp_path: Path, body: str
+    ) -> None:
+        write_authority(tmp_path)
+        write(tmp_path, "articles/ch.qmd", body)
+
+        assert any(
+            finding["rule"] == "ZTCF control-preserved double count" for finding in scan(tmp_path)
+        )
