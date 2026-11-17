@@ -86,8 +86,12 @@ WANTED = {"article", "inproceedings", "incollection", "conference"}
 
 
 def field(body: str, name: str) -> str:
-    """Read one BibTeX field, respecting nested braces in the value."""
-    m = re.search(name + r"\s*=\s*", body, re.I)
+    """Read one BibTeX field, respecting nested braces in the value.
+
+    The name must not be the tail of a longer one (``title`` in ``booktitle``),
+    and a ``"..."`` value ends at the next quote outside braces.
+    """
+    m = re.search(r"(?<![\w-])" + re.escape(name) + r"\s*=\s*", body, re.I)
     if not m:
         return ""
     i = m.end()
@@ -96,15 +100,18 @@ def field(body: str, name: str) -> str:
     if i >= len(body):
         return ""
     if body[i] in '{"':
-        close = "}" if body[i] == "{" else '"'
-        depth, j = 0, i
+        # A quoted value counts as already open at depth 1; braces nest inside both.
+        quoted = body[i] == '"'
+        depth, j = 1, i + 1
         while j < len(body):
-            if body[j] == body[i]:
+            if body[j] == "{":
                 depth += 1
-            elif body[j] == close:
+            elif body[j] == "}":
                 depth -= 1
-                if depth == 0:
-                    return re.sub(r"\s+", " ", body[i + 1 : j]).strip()
+            elif quoted and body[j] == '"' and depth == 1:
+                depth = 0
+            if depth == 0:
+                return re.sub(r"\s+", " ", body[i + 1 : j]).strip()
             j += 1
         return ""
     tail = re.match(r"([^,\n}]*)", body[i:])

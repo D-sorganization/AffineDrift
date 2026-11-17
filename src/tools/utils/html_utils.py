@@ -58,14 +58,14 @@ def update_metadata(template: str, title: str, description: str) -> str:
     # Replace title tag
     template = re.sub(
         r"<title>.*?</title>",
-        f"<title>{title_escaped} – AffineDrift</title>",
+        lambda _: f"<title>{title_escaped} – AffineDrift</title>",
         template,
     )
 
     # Replace meta description
     template = re.sub(
         r'<meta name="description" content="[^"]*">',
-        f'<meta name="description" content="{description_escaped}">',
+        lambda _: f'<meta name="description" content="{description_escaped}">',
         template,
     )
 
@@ -89,14 +89,14 @@ def update_title_block(template: str, title: str, description: str) -> str:
     # Replace h1 title
     template = re.sub(
         r'<h1 class="title">.*?</h1>',
-        f'<h1 class="title">{title_escaped}</h1>',
+        lambda _: f'<h1 class="title">{title_escaped}</h1>',
         template,
     )
 
     # Replace description div
     template = re.sub(
         r'<div class="description">\s*.*?\s*</div>',
-        f'<div class="description">\n    {description_escaped}\n  </div>',
+        lambda _: f'<div class="description">\n    {description_escaped}\n  </div>',
         template,
         flags=re.DOTALL,
     )

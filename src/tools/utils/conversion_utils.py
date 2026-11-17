@@ -13,12 +13,12 @@ from __future__ import annotations
 
 import logging
 import os
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from typing import Any
 
 
 def _validate_conversion_entry(
-    entry: dict[str, Any],
+    entry: object,
     logger: logging.Logger,
 ) -> tuple[str | None, str | None]:
     """Validate a single conversion entry and return (source, target) or (None, None).
@@ -33,6 +33,9 @@ def _validate_conversion_entry(
     Returns:
         Tuple of (source, target) strings if valid, or (None, None) on failure.
     """
+    if not isinstance(entry, Mapping):
+        logger.error("Invalid conversion entry: expected a mapping, got %r", entry)
+        return None, None
     source = entry.get("source")
     target = entry.get("target")
     if not isinstance(source, str) or not isinstance(target, str):
@@ -42,8 +45,11 @@ def _validate_conversion_entry(
             target,
         )
         return None, None
-    if not os.path.exists(source):
-        logger.warning("Source file not found: %s", source)
+    if any(not path.strip() or "\x00" in path for path in (source, target)):
+        logger.error("Invalid conversion entry: paths must be nonempty and contain no NUL")
+        return None, None
+    if not os.path.isfile(source):
+        logger.warning("Source file not found or not a regular file: %s", source)
         return None, None
     return source, target
 
@@ -81,7 +87,7 @@ def _execute_single_conversion(
 
 def batch_convert(
     converter: Any,
-    file_pairs: Iterable[dict[str, Any]],
+    file_pairs: Iterable[object],
     dry_run: bool,
     logger: logging.Logger,
 ) -> bool:
@@ -89,12 +95,14 @@ def batch_convert(
 
     Args:
         converter: Object that exposes a ``convert_file(source, target)`` method.
-        file_pairs: Iterable of dicts, each with ``"source"`` and ``"target"`` keys.
+        file_pairs: Iterable of mappings with nonempty source/target paths.
+            Invalid entries are logged and skipped; sources must be regular files.
         dry_run: When *True* log what would be converted without calling convert_file.
         logger: Logger instance used for progress and error messages.
 
     Returns:
-        ``True`` if every present source file converted without error, ``False`` otherwise.
+        ``True`` if every entry is valid and converts without error, ``False`` otherwise.
+        Invalid entries do not stop later valid entries from being processed.
 
     Raises:
         TypeError: If *file_pairs* is not iterable.
