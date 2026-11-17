@@ -44,7 +44,7 @@ class TestAlphaWarFlexibleShaftParams(unittest.TestCase):
         self.assertAlmostEqual(cpm, 347.25, places=1)
 
     def test_planar_gravity_cos_35_interpretation(self) -> None:
-        """35° FSP tilt maps standard gravity to ~8.04 m/s² (reference pins 8.033)."""
+        """35° FSP tilt from vertical maps standard gravity to ~8.04 m/s² (reference pins 8.033)."""
         projected = planar_gravity_m_s2(35.0)
         self.assertAlmostEqual(projected, 8.036, places=2)
         self.assertAlmostEqual(REFERENCE_GRAVITY_PLANAR_M_S2, 8.033, places=3)
@@ -60,7 +60,7 @@ class TestAlphaWarFlexibleShaftParams(unittest.TestCase):
             "shaft_stiffness_nm_rad",
             "lumped_shaft_equivalent_cpm",
             "gravity_planar_m_s2",
-            "swing_plane_tilt_from_horizontal_deg",
+            "swing_plane_tilt_from_vertical_deg",
         ):
             self.assertAlmostEqual(meta[key], expected[key], places=3, msg=key)
         self.assertIn("oracle 3", meta["cpm_formula"])

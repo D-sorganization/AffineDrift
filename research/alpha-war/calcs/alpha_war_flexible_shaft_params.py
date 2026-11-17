@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Any
 
 GRAVITY_M_S2 = 9.81
-SWING_PLANE_TILT_FROM_HORIZONTAL_DEG = 35.0
+SWING_PLANE_TILT_FROM_VERTICAL_DEG = 35.0
 REFERENCE_SHAFT_STIFFNESS_NM_RAD = 80.0
 REFERENCE_GRAVITY_PLANAR_M_S2 = 8.033
 REFERENCE_DISTAL_HEAD_MASS_KG = 0.20
@@ -40,7 +40,7 @@ class ShaftReferenceConfig:
     distal_head_mass_kg: float = REFERENCE_DISTAL_HEAD_MASS_KG
     distal_shaft_length_m: float = REFERENCE_DISTAL_SHAFT_LENGTH_M
     gravity_planar_m_s2: float = REFERENCE_GRAVITY_PLANAR_M_S2
-    swing_plane_tilt_deg: float = SWING_PLANE_TILT_FROM_HORIZONTAL_DEG
+    swing_plane_tilt_deg: float = SWING_PLANE_TILT_FROM_VERTICAL_DEG
 
     def __post_init__(self) -> None:
         """Validate all parameters are positive finite scalars (and tilt is finite)."""
@@ -52,10 +52,10 @@ class ShaftReferenceConfig:
 
 
 def planar_gravity_m_s2(
-    tilt_from_horizontal_deg: float = SWING_PLANE_TILT_FROM_HORIZONTAL_DEG,
+    tilt_from_vertical_deg: float = SWING_PLANE_TILT_FROM_VERTICAL_DEG,
 ) -> float:
-    """Return gravity projected into a swing plane tilted from horizontal by ``tilt``."""
-    tilt = _validate_finite_real("tilt_from_horizontal_deg", tilt_from_horizontal_deg)
+    """Return gravity projected into a swing plane tilted from vertical by ``tilt``."""
+    tilt = _validate_finite_real("tilt_from_vertical_deg", tilt_from_vertical_deg)
     return GRAVITY_M_S2 * math.cos(math.radians(tilt))
 
 
@@ -100,7 +100,7 @@ def reference_stiffness_metadata(
         "distal_head_mass_kg": float(cfg.distal_head_mass_kg),
         "distal_shaft_length_m": float(cfg.distal_shaft_length_m),
         "gravity_planar_m_s2": float(cfg.gravity_planar_m_s2),
-        "swing_plane_tilt_from_horizontal_deg": float(cfg.swing_plane_tilt_deg),
+        "swing_plane_tilt_from_vertical_deg": float(cfg.swing_plane_tilt_deg),
         "standard_gravity_m_s2": GRAVITY_M_S2,
         "planar_gravity_from_tilt_m_s2": float(projected),
         "lumped_shaft_natural_frequency_hz": float(hz),
