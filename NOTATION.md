@@ -648,12 +648,17 @@ $\gamma=\dot J_c v$ in a fixed contact mode:
 
 | Symbol | Definition | Type |
 | ------ | ---------- | ---- |
-| $K_c$ | $J_c M^{-1} J_c^\top$ | Operational-space inertia |
+| $K_c$ | $J_c M^{-1} J_c^\top$ | Constraint inverse inertia |
+| $\Lambda_c$ | $K_c^{-1}$ | Operational-space inertia for independent constraint rows |
 | $\Pi_M$ | $I-M^{-1}J_c^\top K_c^{-1}J_c$ | $M$-orthogonal projector ($\Pi_M^2=\Pi_M$) |
 | $P_v$ | Same matrix as $\Pi_M$ | Velocity-space projector (Chapter 9 name) |
 | $\mathcal{H}_M$ | $\Pi_M M^{-1}$ | Constrained acceleration operator (not a projector) |
 | $a_0^c$ | $-P_v M^{-1} h - M^{-1} J_c^\top K_c^{-1}\gamma$ | Constrained drift acceleration |
 | $B_a^c$ | $P_v M^{-1} B$ | Constrained input acceleration map |
+
+For two translational coordinates with $M=\operatorname{diag}(2,4)$ kg
+and $J_c=[1,1]$, the constraint matrix is $K_c=0.75$ kg$^{-1}$ and
+$\Lambda_c=4/3$ kg. The reciprocal units distinguish the two operators.
 
 Chapter 3 Superposition writes $\Pi_M$ as $P$ in $P=I-M^{-1}J^T W^{-1}J$ with
 $W=JM^{-1}J^T$. Chapter 3b and induced-acceleration ledgers use $\mathcal{H}_M$,

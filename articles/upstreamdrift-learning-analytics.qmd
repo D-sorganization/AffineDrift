@@ -10,7 +10,7 @@ canonical: "/articles/upstreamdrift-learning-analytics.html"
 summary-plain: "This reference catalogs UpstreamDrift learning and analytics modules at a pinned commit: hole MDP, shot-pattern scoring, RL Gymnasium environments, launch-monitor import, imitation scaffolding, and domain randomization. It records defaults and limits without prescribing training recipes."
 abstract: "Implementation map for UpstreamDrift learning, reinforcement-learning environments, and analytics at commit 3afe09c1. Covers strokes-gained hole value iteration, shot-pattern scoring constants, Gymnasium observation and action shapes, domain-randomization multipliers, launch-monitor profile detection, neural proposal versus CVAE paths, and simplified GAIL. Emphasizes what is implemented versus external trainer attachment and teaching-scaffold limitations."
 key-takeaways:
-  - "Hole MDP value iteration reports strokes-to-hole under dispersion profiles and YAML baselines, not Broadie tables alone."
+  - "With green-terminal preprocessing, hole MDP value iteration reports strokes-to-green; putting is not included."
   - "Gymnasium environments expose configurable observation blocks and default torque actions without an in-repo PPO bundle."
   - "Launch import maps columns with profile confidence below 0.5 falling back to a generic profile."
   - "Shipped GAIL scores policy actions with noise on expert states rather than full on-policy rollouts."
@@ -32,10 +32,24 @@ Implementation reference for learning and analytics modules at UpstreamDrift [`3
 ### State, Grid, and “Expected Strokes”
 
 - Course lies are rasterized to integer codes `LIE_CODES`: tee=0, fairway=1, rough=2, trees=3, sand=4, water=5, ob=6, green=7, holed=8 (`rasterize.py`).
-- Green cells are terminal for the putter; `strategy.py` maps green→holed for value termination.
-- `HoleMDP` value iteration estimates **strokes-to-hole-out from each cell** under a **player dispersion profile** and `pga_tour.yaml` baseline—not Broadie’s published tour tables alone. Dispersion uses `TiltedBivariateGaussian`: $\Delta_\|$ past target, $\Delta_\perp$ **left-positive**, correlation $\rho$.
-- Bellman backup (vectorized): for each cell, sample `n_samples` shot outcomes (common random numbers optional), cost $1 + \text{extra} + V(s')$; hazards (water/OB/off-grid) add **drop penalty** $1 + V_{\mathrm{current}}$ (`value_iteration.py` ~371–373).
+- In the raw `HoleMDP`, **only `holed` cells are terminal**. The optional `green_terminal()` helper copies the raster and relabels every green cell as `holed`, making all those cells terminal for every action. The solver does not call `green_terminal()` automatically; callers must choose the raster explicitly.
+- With that preprocessing, `HoleMDP` value iteration estimates **strokes-to-green from each cell** under a **player dispersion profile** and `pga_tour.yaml` dispersion baseline; **putting is not included**. The terminal label does not supply a Broadie strokes-to-hole-out boundary value. Dispersion uses `TiltedBivariateGaussian`: $\Delta_\|$ past target, $\Delta_\perp$ **left-positive**, correlation $\rho$.
+- Bellman backup (vectorized): for each cell, sample `n_samples` shot outcomes (fixed common random numbers across sweeps), cost $1 + \text{extra} + V(s')$; hazards (water/OB/off-grid) cost $2 + V(s)$: one stroke for the shot, one penalty stroke, then continuation from the current cell (`value_iteration.py` ~371–373).
 - Aim angles are **pin-relative** (0° points at the pin from each cell).
+
+The terminal contract is explicit in pinned
+[`green_terminal()`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/sg_optimizer/strategy.py#L56-L65)
+and the solver's
+[`_terminal_mask`](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/shared/python/sg_optimizer/mdp/value_iteration.py#L174-L183).
+For example, after relabelling, $V(s_{\mathrm{green}})=0$, so a deterministic
+shot reaching a green cell has cost $1+V(s_{\mathrm{green}})=1$. If a separate
+putting model assigned 1.8 expected putts at that landing point, a hole-out
+objective would count 2.8 expected strokes for that shot and continuation.
+That 1.8 is an illustrative value, not a shipped constant. A putting boundary
+that varies with landing position can also change the preferred approach;
+adding one constant after solving does not generally recover the hole-out
+optimal policy. The shot-pattern scoring kernel below is a separate model and
+is not automatically used as this MDP's terminal cost.
 
 Numbers flagged `# ESTIMATE:` in `pga_tour.yaml` (e.g. per-club $\rho$) are not direct Broadie tabulations.
 
