@@ -9,6 +9,42 @@ import pytest
 from src.tools.utils import html_utils
 
 
+@pytest.mark.parametrize("field", ["title", "description"])
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        (r"Angle \alpha <x>", r"Angle \alpha &lt;x&gt;"),
+        (r"Literal \1", r"Literal \1"),
+        (r"Literal \g<0>", r"Literal \g&lt;0&gt;"),
+        (r"C:\new\file", r"C:\new\file"),
+    ],
+)
+def test_generated_metadata_preserves_literal_backslashes(
+    tmp_path: Path, field: str, value: str, expected: str
+) -> None:
+    """Metadata and visible title blocks retain literal input and HTML escaping."""
+    metadata = {"title": "Normal title", "description": "Normal description"}
+    metadata[field] = value
+    template = (
+        "<title>OLD</title>"
+        '<meta name="description" content="OLD">'
+        '<h1 class="title">OLD</h1>'
+        '<div class="description">OLD</div>'
+        '<section class="article-section">OLD</section>'
+    )
+    output = tmp_path / "page.html"
+    assert html_utils.create_html_page(
+        title=metadata["title"],
+        description=metadata["description"],
+        body_html="<p>Body</p>",
+        output_file=output,
+        template_content=template,
+    )
+    rendered = output.read_text(encoding="utf-8")
+    assert rendered.count(expected) == 2
+    assert "OLD" not in rendered
+
+
 def test_imports():
     assert html_utils
 
