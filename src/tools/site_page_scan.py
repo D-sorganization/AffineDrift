@@ -60,8 +60,8 @@ def _pattern_to_regex(pattern: str) -> re.Pattern[str] | None:
 def rendered_relative_paths(root: Path) -> dict[str, list[re.Pattern[str]]] | None:
     """Return the site's rendered source paths per _quarto.yml, or None.
 
-    Returns None when no render list is declared, meaning every
-    front-matter page is considered rendered.
+    Returns None when no render list is declared or the YAML document is
+    not a mapping, meaning every front-matter page is considered rendered.
     """
     nav = root / NAV_FILE
     if not nav.is_file():
@@ -70,6 +70,9 @@ def rendered_relative_paths(root: Path) -> dict[str, list[re.Pattern[str]]] | No
         data = yaml.safe_load(nav.read_text(encoding="utf-8")) or {}
     except yaml.YAMLError as exc:
         logger.warning("Could not parse %s: %s", NAV_FILE, exc)
+        return None
+    if not isinstance(data, dict):
+        logger.warning("Expected a mapping in %s", NAV_FILE)
         return None
     project = data.get("project")
     render_list = project.get("render") if isinstance(project, dict) else None
