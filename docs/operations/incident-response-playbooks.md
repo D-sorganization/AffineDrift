@@ -150,7 +150,7 @@ Common causes:
 **Broken cross-reference:**
 ```bash
 # Find the reference
-grep -r "@sec-broken-ref" . --include="*.qmd"
+grep -r "[@]sec-broken-ref" . --include="*.qmd"
 # Fix the reference or add the label
 ```
 

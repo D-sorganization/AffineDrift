@@ -277,10 +277,12 @@ def convert_lists_to_html(content: str) -> str:
 
 
 def remove_comments(content: str) -> str:
-    """Remove LaTeX comments (lines starting with % and inline comments)."""
-    content = re.sub(r"^%.*$", "", content, flags=re.MULTILINE)
-    content = re.sub(r"%.*", "", content)
-    return content
+    r"""Remove unescaped percent comments, preserving line endings and ``\%``.
+
+    A percent sign starts a comment only after an even number of consecutive
+    backslashes; odd counts escape it. This does not parse verbatim environments.
+    """
+    return re.sub(r"(?<!\\)((?:\\\\)*)%[^\r\n]*", r"\1", content)
 
 
 def remove_document_structure(content: str) -> str:

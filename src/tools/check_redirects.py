@@ -34,20 +34,38 @@ def load_redirect_ledger(ledger_path: Path) -> dict[str, str]:
 
     An absent ledger means no redirects have been recorded yet, which is
     valid. A ledger entry missing ``from`` or ``to`` is a documentation
-    defect and fails loudly rather than being skipped silently.
+    defect and fails loudly rather than being skipped silently. Preconditions:
+    documents are mappings, redirects are lists, routes are nonempty strings,
+    and source routes are unique. Returns an unambiguous string mapping.
     """
     if not ledger_path.exists():
         return {}
 
-    data = yaml.safe_load(ledger_path.read_text(encoding="utf-8")) or {}
-    entries = data.get("redirects") or []
+    data = yaml.safe_load(ledger_path.read_text(encoding="utf-8"))
+    if data is None:
+        return {}
+    require(isinstance(data, dict), "redirect ledger must be a mapping")
+    entries = data.get("redirects")
+    if entries is None:
+        return {}
+    require(isinstance(entries, list), "redirect ledger redirects must be a list")
     redirects: dict[str, str] = {}
     for entry in entries:
         require(
             isinstance(entry, dict) and "from" in entry and "to" in entry,
             f"redirect ledger entry must have 'from' and 'to': {entry!r}",
         )
-        redirects[entry["from"]] = entry["to"]
+        source, target = entry["from"], entry["to"]
+        require(
+            isinstance(source, str) and bool(source.strip()),
+            "redirect source must be a nonempty string",
+        )
+        require(
+            isinstance(target, str) and bool(target.strip()),
+            "redirect target must be a nonempty string",
+        )
+        require(source not in redirects, f"duplicate redirect source: {source!r}")
+        redirects[source] = target
     return redirects
 
 

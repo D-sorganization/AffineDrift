@@ -43,3 +43,19 @@ def test_validate_bibtex_identifier_fields_requires_doi_or_url_or_isbn() -> None
 """
     errors = validate_bibtex_identifier_fields(bib_text)
     assert errors == ["missing_ids: missing DOI/URL/ISBN identifier"]
+
+
+def test_collect_citation_keys_reads_past_optional_arguments() -> None:
+    tex = r"\citep[p.~5]{a} \citet[see][ch.~2]{b, c} \cite*{d} \cite{e}"
+    assert collect_citation_keys_from_tex(tex) == {"a", "b", "c", "d", "e"}
+
+
+def test_bibtex_non_entry_blocks_are_not_citation_keys() -> None:
+    bib = (
+        "@comment{note, with a comma}\n"
+        '@string{pub = "Wiley"}\n'
+        "@preamble{'text', more}\n"
+        "@article{k1,\n  doi = {10.1/x}\n}\n"
+    )
+    assert parse_bibtex_entry_keys(bib) == {"k1"}
+    assert validate_bibtex_identifier_fields(bib) == []

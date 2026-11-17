@@ -147,3 +147,33 @@ class TestHoleDetection:
             sim.is_holed(float("nan"), 15.0, 0.0, 0.1, 15.0, 15.0)
         with pytest.raises(ContractViolationError):
             sim.is_holed(15.0, 15.0, float("inf"), 0.1, 15.0, 15.0)
+
+
+class TestRestOnSlope:
+    """A ball resting on a slope steeper than rolling resistance must roll."""
+
+    def test_ball_at_rest_on_steep_slope_rolls_downhill(self):
+        # slope_x = 0.10 -> gravity pulls toward -x with g * 0.10 = 0.981 m/s^2.
+        # Stimp 10 -> rolling resistance a = 1.83**2 / (2 * 10 * 0.3048) = 0.5494 m/s^2,
+        # which is smaller, so the ball cannot stay at rest.
+        # Net downhill acceleration once moving: 0.981 - 0.549 = 0.432 m/s^2,
+        # so after 1 s the displacement is about -0.5 * 0.432 * 1**2 = -0.216 m.
+        green = GreenSurface.create_sloped_green(30.0, 30.0, 10.0, 0.10, 0.0)
+        sim = PuttingSimulator(green)
+        positions = sim.simulate(15.0, 15.0, 0.0, 0.0, max_time=1.0)
+        assert positions[-1][0] - 15.0 == pytest.approx(-0.216, abs=0.01)
+
+    def test_ball_stopped_uphill_rolls_back_when_slope_exceeds_resistance(self):
+        # Rolled uphill at 10% slope the ball must not freeze at the apex:
+        # 0.981 m/s^2 of gravity beats 0.549 m/s^2 of rolling resistance.
+        green = GreenSurface.create_sloped_green(30.0, 30.0, 10.0, 0.10, 0.0)
+        sim = PuttingSimulator(green)
+        positions = sim.simulate(15.0, 15.0, 1.0, 0.0, max_time=6.0)
+        assert positions[-1][0] < max(p[0] for p in positions) - 0.5
+
+    def test_ball_at_rest_on_gentle_slope_stays(self):
+        # 2% slope: gravity 0.196 m/s^2 < resistance 0.549 m/s^2, ball holds still.
+        green = GreenSurface.create_sloped_green(30.0, 30.0, 10.0, 0.02, 0.0)
+        sim = PuttingSimulator(green)
+        positions = sim.simulate(15.0, 15.0, 0.0, 0.0, max_time=2.0)
+        assert positions[-1] == (15.0, 15.0)

@@ -275,3 +275,19 @@ class TestQuotes:
 
     def test_double_backtick(self) -> None:
         assert convert_quotes("``hello''") == '"hello"'
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        (r"Accuracy 95\% retained", r"Accuracy 95\% retained"),
+        (r"95\% retained % drop", r"95\% retained "),
+        (r"\\% drop", r"\\"),
+        (r"\\\% retained", r"\\\% retained"),
+        ("% drop\n95\\% retained\nplain % drop\n", "\n95\\% retained\nplain \n"),
+    ],
+)
+def test_remove_comments_respects_escaped_percent(source: str, expected: str) -> None:
+    """Escaped percent signs survive; unescaped comments and their text do not."""
+    assert remove_comments(source) == expected
+    assert remove_comments(expected) == expected

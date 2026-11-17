@@ -68,3 +68,8 @@ def test_find_unresolved_citations_reports_missing_keys(tmp_path: Path) -> None:
 
     normalized = [d.replace("\\", "/") for d in diagnostics]
     assert normalized == ["articles/demo/chapter.qmd: unresolved citation keys: missing2024"]
+
+
+def test_extract_citation_keys_keeps_prose_after_tilde_example() -> None:
+    text = "~~~python\n@decorator\n~~~\nCite @smith2020.\n"
+    assert extract_citation_keys(text) == {"smith2020"}
