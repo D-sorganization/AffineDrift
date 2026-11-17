@@ -94,21 +94,30 @@ def test_terminology_gate_passes_on_repo() -> None:
 
 
 @pytest.mark.integration
-def test_notation_pages_render() -> None:
+@pytest.mark.parametrize(
+    "source",
+    ["pages/notation.qmd", "pages/notation-quick-reference.qmd"],
+    ids=["canonical", "quick-reference"],
+)
+def test_notation_pages_render(source: str, tmp_path: Path) -> None:
+    """Render each source and its include independently of site-wide publication hooks."""
     quarto = shutil.which("quarto")
     if quarto is None:
         pytest.skip("Quarto is required for notation page render check")
+    source_path = tmp_path / source
+    source_path.parent.mkdir(parents=True)
+    shutil.copyfile(REPO_ROOT / source, source_path)
+    shutil.copyfile(NOTATION, tmp_path / "NOTATION.md")
     result = subprocess.run(
-        [
-            quarto,
-            "render",
-            "pages/notation.qmd",
-            "pages/notation-quick-reference.qmd",
-        ],
-        cwd=REPO_ROOT,
+        [quarto, "render", source, "--to", "html"],
+        cwd=tmp_path,
         capture_output=True,
         text=True,
         check=False,
         timeout=600,
     )
-    assert result.returncode == 0, f"quarto render failed:\n{result.stderr}\n{result.stdout}"
+    assert (
+        result.returncode == 0
+    ), f"quarto render failed for {source}:\n{result.stderr}\n{result.stdout}"
+
+    assert source_path.with_suffix(".html").is_file()
