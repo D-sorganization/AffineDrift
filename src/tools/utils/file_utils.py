@@ -54,9 +54,7 @@ def find_qmd_files(
 
     # Recursive search excluding certain directories
     for f in root.rglob("*.qmd"):
-        if not any(excluded in f.parts for excluded in exclude_dirs) and (
-            not include_root or f.parent != root
-        ):
+        if f.parent != root and not any(excluded in f.parts for excluded in exclude_dirs):
             files.append(f)
 
     return files

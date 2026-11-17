@@ -59,7 +59,7 @@ def is_external_url(url: str) -> bool:
     Returns:
         True if the URL starts with an external protocol prefix.
     """
-    return url.startswith(EXTERNAL_PREFIXES)
+    return url.startswith(EXTERNAL_PREFIXES) or url.startswith("//")
 
 
 def is_fragment_only(url: str) -> bool:
@@ -104,9 +104,9 @@ def normalize_internal_url(url: str) -> str | None:
         url: The raw URL extracted from markup.
 
     Returns:
-        The decoded, fragment-stripped URL, or None if it should be skipped.
+        The decoded local path without query or fragment, or None if skipped.
     """
-    stripped = strip_fragment(url)
+    stripped = strip_fragment(url).split("?", 1)[0]
     if not stripped:
         return None
     if is_external_url(stripped):
