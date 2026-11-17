@@ -118,11 +118,13 @@ def run_black_check(path: str = ".") -> dict[str, Any]:
         """Process black command output to extract formatting information."""
         return {
             "exit_code": result.returncode,
-            "files_to_format": result.stdout.count("would reformat"),
+            "files_to_format": sum(
+                line.startswith("would reformat ") for line in result.stderr.splitlines()
+            ),
         }
 
     return run_tool(
-        command=["black", "--check", "--quiet", path],
+        command=["black", "--check", path],
         tool_name="black",
         result_processor=process_black_result,
     )
