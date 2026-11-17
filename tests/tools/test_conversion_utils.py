@@ -176,3 +176,44 @@ class TestBatchConvertValidation:
         converter = MagicMock()
         result = batch_convert(converter, [], dry_run=False, logger=mock_logger)
         assert result is True
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+@pytest.mark.parametrize("invalid", [None, 7, "entry", [], {"target": "out"}])
+def test_invalid_entries_do_not_abort_batch(tmp_path, invalid: object, dry_run: bool) -> None:
+    """A rejected entry must not prevent a later valid conversion."""
+    source = tmp_path / "source.tex"
+    source.write_text("content", encoding="utf-8")
+    converter = MagicMock()
+    valid = {"source": str(source), "target": "valid.qmd"}
+    assert batch_convert(converter, [invalid, valid], dry_run, logging.getLogger(__name__)) is False
+    if dry_run:
+        converter.convert_file.assert_not_called()
+    else:
+        converter.convert_file.assert_called_once_with(str(source), "valid.qmd")
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+@pytest.mark.parametrize("target", ["", "   ", "out\x00.qmd"])
+def test_invalid_target_is_rejected(tmp_path, target: str, dry_run: bool) -> None:
+    """Invalid path strings never reach converters, even in dry runs."""
+    source = tmp_path / "source.tex"
+    source.write_text("content", encoding="utf-8")
+    converter = MagicMock()
+    assert not batch_convert(
+        converter, [{"source": str(source), "target": target}], dry_run, logging.getLogger(__name__)
+    )
+    converter.convert_file.assert_not_called()
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_directory_source_is_rejected(tmp_path, dry_run: bool) -> None:
+    """Existing directories are not valid input files."""
+    converter = MagicMock()
+    assert not batch_convert(
+        converter,
+        [{"source": str(tmp_path), "target": "out.qmd"}],
+        dry_run,
+        logging.getLogger(__name__),
+    )
+    converter.convert_file.assert_not_called()

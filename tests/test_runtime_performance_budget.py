@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 import scripts.check_runtime_performance_budget as budget_gate
 from scripts.check_runtime_performance_budget import (
     evaluate_runtime_metrics,
@@ -145,3 +147,27 @@ def test_playwright_e2e_spec_exists():
     content = spec_path.read_text(encoding="utf-8")
     assert "Runtime Performance Budgets" in content
     assert "runtime_performance_budget.json" in content
+
+
+@pytest.mark.parametrize("value", [True, False, float("nan"), float("inf"), -float("inf")])
+@pytest.mark.parametrize("key", budget_gate.REQUIRED_METRIC_KEYS)
+@pytest.mark.parametrize("scope", ["defaults", "route"])
+def test_nonfinite_and_boolean_limits_are_rejected(value, key, scope):
+    """Every configured limit must be finite and numeric, excluding booleans."""
+    defaults = dict(zip(budget_gate.REQUIRED_METRIC_KEYS, [3000, 0.1, 300, 2500000], strict=True))
+    config = {"defaults": defaults, "routes": {"/": {}}}
+    target = defaults if scope == "defaults" else config["routes"]["/"]
+    target[key] = value
+    errors = validate_budget_config(config, [{"route": "/"}])
+    assert any(key in error for error in errors)
+
+
+def test_zero_route_cls_and_finite_limits_remain_valid():
+    """Retain the documented zero layout-shift allowance for a route."""
+    config = {
+        "defaults": dict(
+            zip(budget_gate.REQUIRED_METRIC_KEYS, [3000, 0.1, 300, 2500000], strict=True)
+        ),
+        "routes": {"/": {"max_cls": 0}},
+    }
+    assert validate_budget_config(config, [{"route": "/"}]) == []
