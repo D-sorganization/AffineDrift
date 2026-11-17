@@ -47,7 +47,7 @@ class TestConvertAllLatex:
     def test_dry_run_all_missing_returns_false(self) -> None:
         """dry_run=True with all missing sources returns False."""
         m = self._import_convert_all_latex()
-        with patch("src.tools.utils.conversion_utils.os.path.exists", return_value=False):
+        with patch("src.tools.utils.conversion_utils.os.path.isfile", return_value=False):
             result = m.convert_all(dry_run=True)
         assert isinstance(result, bool)
         assert result is False
@@ -57,7 +57,7 @@ class TestConvertAllLatex:
         m = self._import_convert_all_latex()
         mock_converter_instance = MagicMock()
         with (
-            patch("src.tools.utils.conversion_utils.os.path.exists", return_value=True),
+            patch("src.tools.utils.conversion_utils.os.path.isfile", return_value=True),
             patch.object(m, "LaTeXToHTMLConverter", return_value=mock_converter_instance),
         ):
             result = m.convert_all(dry_run=True)
@@ -70,11 +70,12 @@ class TestConvertAllLatex:
         mock_converter_instance = MagicMock()
         mock_converter_instance.convert_file.side_effect = OSError("fail")
         with (
-            patch("src.tools.utils.conversion_utils.os.path.exists", return_value=True),
+            patch("src.tools.utils.conversion_utils.os.path.isfile", return_value=True),
             patch.object(m, "LaTeXToHTMLConverter", return_value=mock_converter_instance),
         ):
             result = m.convert_all(dry_run=False)
         assert result is False
+        assert mock_converter_instance.convert_file.call_count == len(m.CONVERSIONS)
 
 
 class TestConvertAllToQuarto:
@@ -102,16 +103,16 @@ class TestConvertAllToQuarto:
     def test_dry_run_all_missing_returns_false(self) -> None:
         """dry_run with all missing sources returns False."""
         m = self._import_convert_all_to_quarto()
-        with patch.object(m.os.path, "exists", return_value=False):
+        with patch.object(m.os.path, "isfile", return_value=False):
             result = m.convert_all(dry_run=True)
-        assert isinstance(result, bool)
+        assert result is False
 
     def test_dry_run_with_existing_sources_does_not_convert(self) -> None:
         """dry_run=True with existing sources should not call convert_file."""
         m = self._import_convert_all_to_quarto()
         mock_converter_instance = MagicMock()
         with (
-            patch.object(m.os.path, "exists", return_value=True),
+            patch.object(m.os.path, "isfile", return_value=True),
             patch.object(m, "LaTeXToQuartoConverter", return_value=mock_converter_instance),
         ):
             result = m.convert_all(dry_run=True)

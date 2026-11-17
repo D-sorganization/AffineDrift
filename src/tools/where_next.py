@@ -16,6 +16,8 @@ import yaml
 
 from src.tools.utils import escape_html
 
+EXTERNAL_HREF_PREFIXES = ("http://", "https://", "//", "mailto:")
+
 # The authoritative list of Core Pages defined under WEB-03.8 / issue #4510
 CORE_PAGES: tuple[str, ...] = (
     "articles/theory-part1.qmd",
@@ -74,7 +76,7 @@ def normalize_page_key(path_str: str) -> str:
 
 def compute_relative_href(from_page: str, target_href: str) -> str:
     """Compute relative href from the directory of from_page to target_href."""
-    if target_href.startswith(("http://", "https://", "#", "mailto:")):
+    if target_href.startswith((*EXTERNAL_HREF_PREFIXES, "#")):
         return target_href
 
     clean_target = target_href.split("#")[0].replace("\\", "/").lstrip("/")
@@ -163,7 +165,7 @@ def _validate_link_target(
         errors.append(f"{page_key}: link '{href}' in '{section}' missing 'title'")
 
     clean_href = href.split("#")[0].strip()
-    if not clean_href or clean_href.startswith(("http://", "https://", "mailto:")):
+    if not clean_href or clean_href.startswith(EXTERNAL_HREF_PREFIXES):
         return errors
 
     target_norm = normalize_page_key(clean_href)

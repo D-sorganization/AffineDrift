@@ -7,6 +7,7 @@ URL-hash state envelopes (#state=<urlencoded-json>).
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,19 @@ from src.core.contracts import require
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas" / "widgets" / "widget-url-state-v1.schema.json"
 MAX_HASH_LENGTH = 512
+
+
+def _is_finite_number(_checker: jsonschema.TypeChecker, value: object) -> bool:
+    """Exclude nonfinite floats, which can otherwise evade numeric bound checks."""
+    if isinstance(value, float) and not math.isfinite(value):
+        return False
+    return jsonschema.Draft202012Validator.TYPE_CHECKER.is_type(value, "number")
+
+
+_FINITE_NUMBER_VALIDATOR = jsonschema.validators.extend(
+    jsonschema.Draft202012Validator,
+    type_checker=jsonschema.Draft202012Validator.TYPE_CHECKER.redefine("number", _is_finite_number),
+)
 
 
 def load_widget_url_state_schema(schema_path: Path | None = None) -> dict[str, Any]:
@@ -41,7 +55,7 @@ def validate_widget_url_state_payload(
     """
     require(isinstance(payload, dict), "payload must be a mapping")
     schema = load_widget_url_state_schema(schema_path)
-    validator = jsonschema.Draft202012Validator(schema)
+    validator = _FINITE_NUMBER_VALIDATOR(schema)
     errors: list[str] = []
     for err in validator.iter_errors(payload):
         field = ".".join(str(p) for p in err.path) if err.path else "root"

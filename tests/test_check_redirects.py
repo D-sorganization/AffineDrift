@@ -247,3 +247,36 @@ def test_shipped_redirect_ledger_covers_removed_slack_article_route() -> None:
     ledger_path = ROOT_DIR / "config" / "redirects.yml"
     redirects = load_redirect_ledger(ledger_path)
     assert find_unredirected_removed_routes(previous, current, redirects) == []
+
+
+@pytest.mark.parametrize(
+    "document",
+    [
+        "[]",
+        "false",
+        "42",
+        "redirects: {}",
+        "redirects: false",
+        "redirects: /old.html",
+        "redirects:\n  - from: /old.html\n    to: null\n",
+        "redirects:\n  - from: /old.html\n    to: ''\n",
+        "redirects:\n  - from: 42\n    to: /new.html\n",
+        "redirects:\n  - from: ' '\n    to: /new.html\n",
+        "redirects:\n  - from: /old.html\n    to: /new.html\n"
+        "  - from: /old.html\n    to: /other.html\n",
+    ],
+)
+def test_redirect_ledger_rejects_malformed_boundary_values(tmp_path: Path, document: str) -> None:
+    """Invalid YAML shapes and ambiguous routes fail with an explicit contract error."""
+    ledger = tmp_path / "redirects.yml"
+    ledger.write_text(document, encoding="utf-8")
+    with pytest.raises(PreconditionError):
+        load_redirect_ledger(ledger)
+
+
+@pytest.mark.parametrize("document", ["", "null", "{}", "redirects: null", "redirects: []"])
+def test_redirect_ledger_accepts_empty_mapping_documents(tmp_path: Path, document: str) -> None:
+    """A missing redirects list remains a valid empty ledger."""
+    ledger = tmp_path / "redirects.yml"
+    ledger.write_text(document, encoding="utf-8")
+    assert load_redirect_ledger(ledger) == {}
