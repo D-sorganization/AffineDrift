@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import pytest
+import yaml
+
 from src.tools.utils.quarto_transforms import (
     clean_quarto_latex_commands,
     convert_quarto_environments,
@@ -98,3 +101,41 @@ def test_create_frontmatter_and_section_conversion() -> None:
     assert "toc-depth: 3" in frontmatter
     assert "##### Small" in sections
     assert "###### Tiny" in sections
+
+
+@pytest.mark.parametrize("key", ["title", "author", "date"])
+@pytest.mark.parametrize(
+    "value",
+    [
+        'A "quoted" value',
+        r"C:\new\test",
+        "line one\nline two",
+        "Drift: α & β",
+        "Golf 🏌 and dynamics 𝑀",
+        r"Literal escapes: \ud83c\udfcc",
+        "controls: \x7f\x80\x9f",
+        "separators: \u0085\u2028\u2029",
+        "---\nformat: raw",
+    ],
+)
+def test_frontmatter_metadata_round_trips(key: str, value: str) -> None:
+    """Metadata must stay literal YAML strings and preserve the format configuration."""
+    metadata = {"title": "Title", "author": "Author", "date": "2026-11-16"}
+    metadata[key] = value
+    original = metadata.copy()
+    text = create_quarto_frontmatter(metadata)
+    parsed = yaml.safe_load(text.split("---\n", 2)[1])
+    assert {field: parsed[field] for field in metadata} == original
+    assert metadata == original
+    assert parsed["format"]["html"] == {
+        "toc": True,
+        "toc-depth": 3,
+        "number-sections": False,
+        "code-fold": True,
+    }
+
+
+def test_frontmatter_requires_all_metadata_keys() -> None:
+    """The caller must supply the three required metadata fields."""
+    with pytest.raises(KeyError, match="author"):
+        create_quarto_frontmatter({"title": "Title"})
