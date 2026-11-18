@@ -429,10 +429,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5596
 - **Branch:** cursor/agent-readiness-5596-3da0
-- **PR:** #5662, #5726, #5755
+- **PR:** #5662, #5726, #5755, #5786
 - **Paths:** see #5662
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-16 (`e7b0ab1b`; collated from changes/5596-add-agent-conventions-registry-and-json.md)
+- **Last verified:** 2026-11-18 (`a557ddf4`; collated from changes/5596-export-structured-metadata-for-notation.md)
 - **Summary:** Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates.
 - **Next step:** Merge after CI green.
 
@@ -663,10 +663,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5609
 - **Branch:** cursor/pdc-upstream-pin-5609-9e7e
-- **PR:** #5658, #5702, #5728
+- **PR:** #5658, #5702, #5728, #5743
 - **Paths:** see #5658
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-15 (`4cbec560`; collated from changes/5609-unify-lay-companion-lead-trail-different.md)
+- **Last verified:** 2026-11-18 (`fe022198`; collated from changes/5609-document-companion-vs-monograph-upstream.md)
 - **Summary:** Unify lay companion UpstreamDrift pin and fix review defects
 - **Next step:** Merge after CI green.
 
@@ -728,12 +728,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5604
 - **Branch:** cursor/gom-pedagogy-5604-bdf7
-- **PR:** #5676, #5754
+- **PR:** #5676, #5754, #5790
 - **Paths:** see #5676
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-17 (`29a2d4bb`; collated from changes/5604-volume-0-numbering-pilot-ch01-worked-exa.md)
+- **Last verified:** 2026-11-18 (`c2ddb48b`; collated from changes/5604-add-the-positive-state-dependent-pullbac.md)
 - **Summary:** Geometry of Motion pedagogy: prerequisites map, cross-refs, KKT display, contraction pedagogy, Vol 0 numbering pilot
-- **Next step:** CI green on PR #5754.
+- **Next step:** Review this F9 worked-example slice; remaining chapter numbering gaps stay under #5604
 
 ### DL-#5603 · Geometry of Motion: Cascade vs Partial Contraction, LQR Rho, Floating-Base Gravity, Van der Pol
 
@@ -1404,6 +1404,58 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5837 · Interpolate the Ball-Flight Ground Crossing Instead of Clamping Z Only, and Test Landing on the First Integration Step.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5837
+- **Branch:** merged via #5841
+- **PR:** #5841
+- **Paths:** see #5841
+- **Started:** 2026-11-18
+- **Last verified:** 2026-11-18 (`fcc87c2e`; collated from changes/5837-ball-flight-landing-interpolation.md)
+- **Summary:** Interpolate the ball-flight ground crossing instead of clamping z only, and test landing on the first integration step.
+- **Next step:** Shipped in PR #5841.
+
+### DL-#5821 · Serialize Generated Assessment Issue Titles as Quoted YAML Scalars.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5821
+- **Branch:** merged via #5825
+- **PR:** #5825
+- **Paths:** see #5825
+- **Started:** 2026-11-18
+- **Last verified:** 2026-11-18 (`6fd33d4b`; collated from changes/5821-report-metadata.md)
+- **Summary:** Serialize generated assessment issue titles as quoted YAML scalars.
+- **Next step:** Shipped in PR #5825.
+
+### DL-#5816 · Escape Metadata Scalars When Generating Quarto YAML Frontmatter
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5816
+- **Branch:** merged via #5818
+- **PR:** #5818
+- **Paths:** see #5818
+- **Started:** 2026-11-18
+- **Last verified:** 2026-11-18 (`d681cc6e`; collated from changes/5816-escape-metadata-scalars-when-generating.md)
+- **Summary:** Escape metadata scalars when generating Quarto YAML frontmatter
+- **Next step:** Shipped in PR #5818.
+
+### DL-#5789 · Remove the Retired Vendored GAAI Tree, Daemon Launcher, and Slash-Commands
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5789
+- **Branch:** merged via #5789
+- **PR:** #5789
+- **Paths:** see #5789
+- **Started:** 2026-11-18
+- **Last verified:** 2026-11-18 (`88a63cba`; collated from changes/5789-remove-vendored-gaai.md)
+- **Summary:** Remove the retired vendored GAAI tree, daemon launcher, and slash-commands
+- **Next step:** Shipped in PR #5789.
 
 ### DL-#5844 · Putting Simulation No Longer Freezes a Ball at Rest or at an Uphill Apex When the Slope Exceeds Rolling Resistance.
 

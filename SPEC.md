@@ -232,6 +232,13 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-18 | #5841 | Interpolate the ball-flight ground crossing instead of clamping z only, and test landing on the first integration step. |
+| 2026-11-18 | #5825 | Serialize generated assessment issue titles as quoted YAML scalars. |
+| 2026-11-18 | #5818 | Escape metadata scalars when generating Quarto YAML frontmatter |
+| 2026-11-18 | #5789 | Remove the retired vendored GAAI tree, daemon launcher, and slash-commands |
+| 2026-11-18 | #5743 | Document companion vs monograph UpstreamDrift evidence pins; extend #5609 regression tests for ch06/ch11 notation and atlas revision alignment. |
+| 2026-11-18 | #5790 | Verify positive nonlinear metric examples in print and web; correct general-gain cubic feedback cross terms |
+| 2026-11-18 | #5786 | Export structured metadata for notation and engine references and derive glossary DefinedTerm entries from their canonical definitions. |
 | 2026-11-18 | #5846 | Distinguish ball and assembly masses and declare local angle/inertia notation in Chapter 32 print and web sources. |
 | 2026-11-17 | #5845 | Putting simulation no longer freezes a ball at rest or at an uphill apex when the slope exceeds rolling resistance. |
 | 2026-11-17 | #5842 | Share line-preserving matching fence parsing across citation and raw-theorem lints |
