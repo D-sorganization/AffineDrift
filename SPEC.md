@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-18 | #5846 | Distinguish ball and assembly masses and declare local angle/inertia notation in Chapter 32 print and web sources. |
 | 2026-11-17 | #5845 | Putting simulation no longer freezes a ball at rest or at an uphill apex when the slope exceeds rolling resistance. |
 | 2026-11-17 | #5842 | Share line-preserving matching fence parsing across citation and raw-theorem lints |
 | 2026-11-17 | #5840 | Scan complete JavaScript sources for multiline imports and report dependency violations at the import start line. |
