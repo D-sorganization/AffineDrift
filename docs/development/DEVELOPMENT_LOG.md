@@ -241,6 +241,136 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5838 · Scan Complete JavaScript Sources for Multiline Imports and Report Dependency Violations at the Import Start Line.
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #5838
+- **Branch:** codex/burn1116-ct4-5838-multiline-imports
+- **PR:** #5840
+- **Paths:** scripts/check_js_dependency_boundaries.py,tests/test_check_js_dependency_boundaries.py
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`0e3563f1`; collated from changes/5838-multiline-js-imports.md)
+- **Summary:** Scan complete JavaScript sources for multiline imports and report dependency violations at the import start line.
+- **Next step:** Review and merge after CI passes
+
+### DL-#5811 · Preserve Literal Backslashes and HTML Escaping in Generated Page Title and Description Fields
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5811
+- **Branch:** codex/5811-literal-html-metadata
+- **PR:** #5814
+- **Paths:** see #5814
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`136b9dc2`; collated from changes/5811-preserve-literal-backslashes-and-html-es.md)
+- **Summary:** Preserve literal backslashes and HTML escaping in generated page title and description fields
+- **Next step:** Independent review and required CI
+
+### DL-#5804 · Reject Nonfinite Numeric Widget URL-State Payloads While Retaining Schema Bounds
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5804
+- **Branch:** codex/5804-finite-widget-state
+- **PR:** #5809
+- **Paths:** see #5809
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`420bbe9f`; collated from changes/5804-reject-nonfinite-numeric-widget-url-stat.md)
+- **Summary:** Reject nonfinite numeric widget URL-state payloads while retaining schema bounds
+- **Next step:** Independent review and required CI
+
+### DL-#5797 · Honor Include_Root=False in Quarto Discovery Without Duplicate Root Entries
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5797
+- **Branch:** codex/burn1116-5797-qmd-root
+- **PR:** #5799
+- **Paths:** src/tools/utils/file_utils.py,tests/test_file_utils.py
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`306a2c30`; collated from changes/5797-qmd-root-flag.md)
+- **Summary:** Honor include_root=False in Quarto discovery without duplicate root entries
+- **Next step:** CI and automated review
+
+### DL-#5791 · Count Actual Black Per-File Stderr Diagnostics and Retain Read-Only Checks
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5791
+- **Branch:** codex/burn1116-5791-black-count
+- **PR:** #5795
+- **Paths:** src/tools/utils/shell_utils.py,tests/test_shell_utils.py
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`943fa6a8`; collated from changes/5791-black-format-count.md)
+- **Summary:** Count actual Black per-file stderr diagnostics and retain read-only checks
+- **Next step:** CI and automated review
+
+### DL-#5783 · Cover Canonical and Legacy Frontmatter Fallback Boundaries Without Changing Parser Behavior
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5783
+- **Branch:** codex/burn1116-5783-frontmatter
+- **PR:** #5785
+- **Paths:** see #5785
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`648db8c3`; collated from changes/5783-cover-canonical-and-legacy-frontmatter-f.md)
+- **Summary:** Cover canonical and legacy frontmatter fallback boundaries without changing parser behavior
+- **Next step:** Review and CI
+
+### DL-#5782 · Preserve Network-Path Footer URLs During Rendering and Validation
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5782
+- **Branch:** codex/burn1116-ct4-footer-url
+- **PR:** #5784
+- **Paths:** src/tools/where_next.py
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`7baad336`; collated from changes/5782-preserve-network-path-footer-urls-during.md)
+- **Summary:** Preserve network-path footer URLs during rendering and validation
+- **Next step:** CI and independent review
+
+### DL-#5778 · Separate URL Queries and Protocol-Relative URLs From Local Link Filenames
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5778
+- **Branch:** codex/burn1116-ct4-link-url
+- **PR:** #5780
+- **Paths:** src/tools/utils/link_utils.py
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`4b8ddfdf`; collated from changes/5778-separate-url-queries-and-protocol-relati.md)
+- **Summary:** Separate URL queries and protocol-relative URLs from local link filenames
+- **Next step:** CI and independent review
+
+### DL-#5777 · Validate Quarto YAML Document Mappings Before Inspecting Render Configuration
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5777
+- **Branch:** codex/burn1116-ct4-site-config
+- **PR:** #5779
+- **Paths:** src/tools/site_page_scan.py
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`7164e231`; collated from changes/5777-validate-quarto-yaml-document-mappings-b.md)
+- **Summary:** Validate Quarto YAML document mappings before inspecting render configuration
+- **Next step:** CI and independent review
+
+### DL-#5770 · Keep Slack Take-Up Fragment Checks Valid After Development-Log Archiving
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5770
+- **Branch:** chore/devlog-archive-1116
+- **PR:** #5771
+- **Paths:** tests/test_change_fragment_5284_slack_takeup.py
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`9bc363ff`; collated from changes/5770-archive-slack-takeup-regression.md)
+- **Summary:** Keep Slack Take-Up fragment checks valid after development-log archiving
+- **Next step:** Review PR #5771 remediation; armd owns arming and merging.
+
 ### DL-#5620 · UpstreamDrift Engine Protocol Reference Page (Drift/Control, Defaults, Validation).
 
 - **State:** shipped
@@ -260,10 +390,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5602
 - **Branch:** cursor/gom-notation-harmonise-dd74
-- **PR:** #5681
+- **PR:** #5681, #5764
 - **Paths:** see #5681
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-14 (`cd83dafe`; collated from changes/5602-harmonise-geometry-of-motion-notation-wi.md)
+- **Last verified:** 2026-11-17 (`3034b1b3`; collated from changes/5602-correct-gom-chapter-3-lie-brackets-and-r.md)
 - **Summary:** Harmonise Geometry of Motion notation with NOTATION.md: constrained symbols, transverse coordinates, chapter notation notes.
 - **Next step:** Merge after CI green; ch03b operational-inertia prose uses K_c.
 
@@ -286,10 +416,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5625
 - **Branch:** cursor/ud-learning-humanoid-5625-2b2c
-- **PR:** #5670
+- **PR:** #5670, #5766
 - **Paths:** see #5670
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-14 (`3037712f`; collated from changes/5625-humanoid-balance-wbc-learning.md)
+- **Last verified:** 2026-11-17 (`99ab875b`; collated from changes/5625-correct-sg-hole-mdp-terminal-semantics-g.md)
 - **Summary:** Document UpstreamDrift humanoid balance, WBC, and learning/analytics gaps grounded in code.
 - **Next step:** Merge after CI green.
 
@@ -312,10 +442,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5623
 - **Branch:** cursor/capture-to-model-pipeline-5623-43e3
-- **PR:** #5669
+- **PR:** #5669, #5767
 - **Paths:** see #5669
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-14 (`f2a4491c`; collated from changes/5623-capture-to-model-pipeline.md)
+- **Last verified:** 2026-11-17 (`f84036e7`; collated from changes/5623-capture-to-model-reference.md)
 - **Summary:** UpstreamDrift capture-to-model pipeline reference (calibration through export).
 - **Next step:** Merge after CI green.
 
@@ -403,10 +533,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5626
 - **Branch:** cursor/upstreamdrift-getting-started-5626-8182
-- **PR:** #5663, #5686, #5717, #5732
+- **PR:** #5663, #5686, #5717, #5732, #5756
 - **Paths:** see #5663
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-15 (`730049b4`; collated from changes/5626-disambiguate-physicsengine-compute-zvcf.md)
+- **Last verified:** 2026-11-17 (`a7ae6c8d`; collated from changes/5626-agent-manifest-headless-gate-496e.md)
 - **Summary:** Publish UpstreamDrift getting-started and headless/agent guides; README install CI gate; llms.txt
 - **Next step:** Barb arms after CI green
 
@@ -572,10 +702,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5606
 - **Branch:** cursor/gom-5603-5606-9baf
-- **PR:** #5653, #5701
+- **PR:** #5653, #5701, #5746
 - **Paths:** see #5653
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`fee52513`; collated from changes/5606-sync-gom-book-landing-pages-with-rendere.md)
+- **Last verified:** 2026-11-17 (`3f29ead5`; collated from changes/5606-validate-geometry-of-motion-landing-page.md)
 - **Summary:** Sync GoM book landing pages with rendered chapters and archive stale audit runbooks.
 - **Next step:** CI green
 
@@ -598,12 +728,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5604
 - **Branch:** cursor/gom-pedagogy-5604-bdf7
-- **PR:** #5676
+- **PR:** #5676, #5754
 - **Paths:** see #5676
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`22eed1fb`; collated from changes/5604-geometry-of-motion-pedagogy-prerequisite.md)
+- **Last verified:** 2026-11-17 (`29a2d4bb`; collated from changes/5604-volume-0-numbering-pilot-ch01-worked-exa.md)
 - **Summary:** Geometry of Motion pedagogy: prerequisites map, cross-refs, KKT display, contraction pedagogy, Vol 0 numbering pilot
-- **Next step:** Merge after CI green.
+- **Next step:** CI green on PR #5754.
 
 ### DL-#5603 · Geometry of Motion: Cascade vs Partial Contraction, LQR Rho, Floating-Base Gravity, Van der Pol
 
@@ -624,10 +754,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5601
 - **Branch:** cursor/ud-implementation-links-5601-402a
-- **PR:** #5672, #5734
+- **PR:** #5672, #5734, #5752
 - **Paths:** see #5672
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-16 (`3c5333c3`; collated from changes/5601-add-pog-ch06-ch07-upstreamdrift-implemen.md)
+- **Last verified:** 2026-11-17 (`3d48e78f`; collated from changes/5601-pog-ch27-ch31-remote-bridge-verify.md)
 - **Summary:** Pinned UpstreamDrift implementation bridge includes for GOM vol0 and PoG algorithm chapters; added ledger and CI gate.
 - **Next step:** Barb arms after CI green.
 
@@ -637,10 +767,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5600
 - **Branch:** cursor/pog-citations-5600-890b
-- **PR:** #5675
+- **PR:** #5675, #5748
 - **Paths:** see #5675
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`55ba3cb3`; collated from changes/5600-physics-of-golf-citation-metadata-impact.md)
+- **Last verified:** 2026-11-17 (`0a1e93d2`; collated from changes/5600-add-a-physics-of-golf-citation-integrity.md)
 - **Summary:** Physics of Golf citation metadata, impact sourcing, and motor-control literature
 - **Next step:** Barb exact-head review after CI green
 
@@ -650,12 +780,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5599
 - **Branch:** cursor/pog-worked-examples-5599-ddf7
-- **PR:** #5660
+- **PR:** #5660, #5753
 - **Paths:** see #5660
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`4d2f8bb2`; collated from changes/5599-physics-of-golf-worked-examples-for-impa.md)
+- **Last verified:** 2026-11-17 (`82c7ada0`; collated from changes/5599-ch28-effective-mass-derivation-gear-effe.md)
 - **Summary:** Physics of Golf: worked examples for impact, JCS, URDF, putting, calibration tables
-- **Next step:** Merge after CI green.
+- **Next step:** Merge; remaining #5599 slices may close epic after review.
 
 ### DL-#5595 · Rebuild PARAMETERS.md From Sourced Canonical Registry With CI Check
 
@@ -689,10 +819,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5590
 - **Branch:** cursor/core-theory-figures-5590-f840
-- **PR:** #5666, #5687
+- **PR:** #5666, #5687, #5770
 - **Paths:** see #5666
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-14 (`224c1e42`; collated from changes/5590-core-theory-figure-provenance-gate.md)
+- **Last verified:** 2026-11-17 (`12e984ea`; collated from changes/5590-pointwise-drift-reachability.md)
 - **Summary:** Replace hand-drawn core-theory ZTCF and superposition figures with pinned model simulations.
 - **Next step:** Merge after CI green; close #5590 when acceptance checklist is verified on main.
 
@@ -1275,6 +1405,279 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5844 · Putting Simulation No Longer Freezes a Ball at Rest or at an Uphill Apex When the Slope Exceeds Rolling Resistance.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5844
+- **Branch:** merged via #5845
+- **PR:** #5845
+- **Paths:** see #5845
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`2f6f5f5c`; collated from changes/5844-putting-slope-rest.md)
+- **Summary:** Putting simulation no longer freezes a ball at rest or at an uphill apex when the slope exceeds rolling resistance.
+- **Next step:** Shipped in PR #5845.
+
+### DL-#5839 · Share Line-Preserving Matching Fence Parsing Across Citation and Raw-Theorem Lints
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5839
+- **Branch:** merged via #5842
+- **PR:** #5842
+- **Paths:** see #5842
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`35e771df`; collated from changes/5839-quarto-fence-lints.md)
+- **Summary:** Share line-preserving matching fence parsing across citation and raw-theorem lints
+- **Next step:** Shipped in PR #5842.
+
+### DL-#5834 · Link-Checker Compares Full Quarto Labels so Undefined @fig-/@sec- References Are Reported; Accepts Attribute, Chunk and Colon Labels
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5834
+- **Branch:** merged via #5835
+- **PR:** #5835
+- **Paths:** see #5835
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`6e3a3baa`; collated from changes/5834-link-checker-compares-full-quarto-labels.md)
+- **Summary:** link-checker compares full Quarto labels so undefined @fig-/@sec- references are reported; accepts attribute, chunk and colon labels
+- **Next step:** Shipped in PR #5835.
+
+### DL-#5833 · Count Try Blocks and Bare Excepts From the AST Instead of Substrings in Analysis_Utils (#5833).
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5833
+- **Branch:** merged via #5836
+- **PR:** #5836
+- **Paths:** see #5836
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`ede334e0`; collated from changes/5833-error-handling-metrics-ast.md)
+- **Summary:** Count try blocks and bare excepts from the AST instead of substrings in analysis_utils (#5833).
+- **Next step:** Shipped in PR #5836.
+
+### DL-#5831 · Reference Audit Keeps Cite Keys With Optional Arguments and Ignores Comment, String and Preamble Blocks
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5831
+- **Branch:** merged via #5832
+- **PR:** #5832
+- **Paths:** see #5832
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`73e480fb`; collated from changes/5831-reference-audit-keeps-cite-keys-with-opt.md)
+- **Summary:** Reference audit keeps cite keys with optional arguments and ignores comment, string and preamble blocks
+- **Next step:** Shipped in PR #5832.
+
+### DL-#5828 · Reject Empty or Ambiguous Normalized Maturity State and Legacy Alias Keys
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5828
+- **Branch:** merged via #5830
+- **PR:** #5830
+- **Paths:** see #5830
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`cc10aedf`; collated from changes/5828-reject-empty-or-ambiguous-normalized-mat.md)
+- **Summary:** Reject empty or ambiguous normalized maturity state and legacy alias keys
+- **Next step:** Shipped in PR #5830.
+
+### DL-#5827 · Validate Benchmark Counts Before Executing Warmup or Timed Workloads
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5827
+- **Branch:** merged via #5829
+- **PR:** #5829
+- **Paths:** see #5829
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`c7837937`; collated from changes/5827-validate-benchmark-counts-before-executi.md)
+- **Summary:** Validate benchmark counts before executing warmup or timed workloads
+- **Next step:** Shipped in PR #5829.
+
+### DL-#5822 · Development Log: Mark 91 Entries With Merged PRs Shipped to Clear the Wip_Ceiling
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5822
+- **Branch:** merged via #5823
+- **PR:** #5823
+- **Paths:** see #5823
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`291c1de1`; collated from changes/5822-development-log-mark-91-entries-with-mer.md)
+- **Summary:** Development log: mark 91 entries with merged PRs shipped to clear the wip_ceiling
+- **Next step:** Shipped in PR #5823.
+
+### DL-#5820 · Match Assessment Category IDs Case-Insensitively and Avoid Partial-Word Classification.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5820
+- **Branch:** merged via #5824
+- **PR:** #5824
+- **Paths:** see #5824
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`63e61d55`; collated from changes/5820-assessment-classifier.md)
+- **Summary:** Match assessment category IDs case-insensitively and avoid partial-word classification.
+- **Next step:** Shipped in PR #5824.
+
+### DL-#5819 · Make the Display-Maths Checker Honour Code-Fence Character and Length so Nested Fences No Longer Invert Its State.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5819
+- **Branch:** merged via #5826
+- **PR:** #5826
+- **Paths:** see #5826
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`38499c79`; collated from changes/5819-display-math-fence-length.md)
+- **Summary:** Make the display-maths checker honour code-fence character and length so nested fences no longer invert its state.
+- **Next step:** Shipped in PR #5826.
+
+### DL-#5813 · Honor Explicit Extension Filters Including Empty Sets and Extensionless Files
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5813
+- **Branch:** merged via #5817
+- **PR:** #5817
+- **Paths:** see #5817
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`a4a77250`; collated from changes/5813-honor-explicit-extension-filters-includi.md)
+- **Summary:** Honor explicit extension filters including empty sets and extensionless files
+- **Next step:** Shipped in PR #5817.
+
+### DL-#5812 · Reject Malformed Conversion Entries and Directory Sources Before Dispatch
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5812
+- **Branch:** merged via #5815
+- **PR:** #5815
+- **Paths:** see #5815
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`6d79bbc8`; collated from changes/5812-reject-malformed-conversion-entries-and.md)
+- **Summary:** Reject malformed conversion entries and directory sources before dispatch
+- **Next step:** Shipped in PR #5815.
+
+### DL-#5805 · Respect Explicit Empty Content Scans and Omit Directory Candidates
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5805
+- **Branch:** merged via #5808
+- **PR:** #5808
+- **Paths:** see #5808
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`0adcb5d5`; collated from changes/5805-respect-explicit-empty-content-scans-and.md)
+- **Summary:** Respect explicit empty content scans and omit directory candidates
+- **Next step:** Shipped in PR #5808.
+
+### DL-#5803 · Preserve Escaped Percent Signs and Following Prose in LaTeX Comment Cleanup
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5803
+- **Branch:** merged via #5806
+- **PR:** #5806
+- **Paths:** see #5806
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`2e9bdeca`; collated from changes/5803-preserve-escaped-percent-signs-and-follo.md)
+- **Summary:** Preserve escaped percent signs and following prose in LaTeX comment cleanup
+- **Next step:** Shipped in PR #5806.
+
+### DL-#5801 · Preserve Literal Backslashes in HTML Metadata and Visible Title Replacements
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5801
+- **Branch:** merged via #5802
+- **PR:** #5802
+- **Paths:** see #5802
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`712a66cd`; collated from changes/5801-preserve-literal-backslashes-in-html-met.md)
+- **Summary:** Preserve literal backslashes in HTML metadata and visible title replacements
+- **Next step:** Shipped in PR #5802.
+
+### DL-#5796 · Reject Non-Finite and Boolean Runtime Performance Budget Limits.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5796
+- **Branch:** merged via #5800
+- **PR:** #5800
+- **Paths:** see #5800
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`52ffdd54`; collated from changes/5796-runtime-budget-limits.md)
+- **Summary:** Reject non-finite and boolean runtime performance budget limits.
+- **Next step:** Shipped in PR #5800.
+
+### DL-#5793 · Preserve Matching Code Fence Boundaries in the Quarto Cross-Reference Scanner.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5793
+- **Branch:** merged via #5798
+- **PR:** #5798
+- **Paths:** see #5798
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`bce5c1ff`; collated from changes/5793-quarto-xref-fences.md)
+- **Summary:** Preserve matching code fence boundaries in the Quarto cross-reference scanner.
+- **Next step:** Shipped in PR #5798.
+
+### DL-#5787 · Validate Redirect Ledger Document and Route Types and Reject Duplicate Source Routes
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5787
+- **Branch:** merged via #5788
+- **PR:** #5788
+- **Paths:** see #5788
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`797eba00`; collated from changes/5787-validate-redirect-ledger.md)
+- **Summary:** Validate redirect ledger document and route types and reject duplicate source routes
+- **Next step:** Shipped in PR #5788.
+
+### DL-#5775 · Check_Bibliography_Metadata: Field() No Longer Reads Booktitle as Title or Drops Quoted Values; Offline Tests Added
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5775
+- **Branch:** merged via #5776
+- **PR:** #5776
+- **Paths:** see #5776
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`c2fa00b9`; collated from changes/5775-check-bibliography-metadata-field-no-lon.md)
+- **Summary:** check_bibliography_metadata: field() no longer reads booktitle as title or drops quoted values; offline tests added
+- **Next step:** Shipped in PR #5776.
+
+### DL-#5772 · Render Notation Smoke-Test Documents Separately Instead of Passing the Second Page as a Pandoc Input.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5772
+- **Branch:** merged via #5773
+- **PR:** #5773
+- **Paths:** see #5773
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`fe006d5b`; collated from changes/5772-quarto-notation-smoke.md)
+- **Summary:** Render notation smoke-test documents separately instead of passing the second page as a Pandoc input.
+- **Next step:** Shipped in PR #5773.
+
+### DL-#5769 · Distinguish Constraint Inverse Inertia K_C From Operational-Space Inertia K_C^-1 and Provide a Dimensional Example.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5769
+- **Branch:** merged via #5768
+- **PR:** #5768
+- **Paths:** see #5768
+- **Started:** 2026-11-17
+- **Last verified:** 2026-11-17 (`ce3fec12`; collated from changes/5769-constraint-inverse-inertia.md)
+- **Summary:** Distinguish constraint inverse inertia K_c from operational-space inertia K_c^-1 and provide a dimensional example.
+- **Next step:** Shipped in PR #5768.
+
 ### DL-#5593 · Site Frames Table, PoG Wrench Ordering, Delivery-Angle Table, and Launch-Monitor Appendix Alignment (Partial #5593).
 
 - **State:** shipped
@@ -1333,10 +1736,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5597
 - **Branch:** merged via #5680
-- **PR:** #5680
+- **PR:** #5680, #5765
 - **Paths:** see #5680
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-14 (`be38b53b`; collated from changes/5597-harmonise-pog-ch08-ch10-ch25-notation-wi.md)
+- **Last verified:** 2026-11-17 (`db9f2e1d`; collated from changes/5597-disambiguate-chapter-29-gyroscopic-and-d.md)
 - **Summary:** Harmonise PoG ch08/ch10/ch25 notation with NOTATION.md; extend notation gate
 - **Next step:** Shipped in PR #5680.
 
@@ -1398,10 +1801,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5594
 - **Branch:** gemini-ct/5594-onboarding-copy
-- **PR:** #5693
+- **PR:** #5693, #5747
 - **Paths:** see #5693
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`a447f3b5`; collated from changes/5594-onboarding-copy-ladders-badges.md)
+- **Last verified:** 2026-11-17 (`84aef0f7`; collated from changes/5594-align-big-idea-and-about-onboarding-with.md)
 - **Summary:** Align onboarding control copy, single evidence ladder, canonical badges, and inventory counts (#5594).
 - **Next step:** Shipped in PR #5693.
 

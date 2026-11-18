@@ -232,6 +232,49 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-17 | #5845 | Putting simulation no longer freezes a ball at rest or at an uphill apex when the slope exceeds rolling resistance. |
+| 2026-11-17 | #5842 | Share line-preserving matching fence parsing across citation and raw-theorem lints |
+| 2026-11-17 | #5840 | Scan complete JavaScript sources for multiline imports and report dependency violations at the import start line. |
+| 2026-11-17 | #5835 | link-checker compares full Quarto labels so undefined @fig-/@sec- references are reported; accepts attribute, chunk and colon labels |
+| 2026-11-17 | #5836 | Count try blocks and bare excepts from the AST instead of substrings in analysis_utils (#5833). |
+| 2026-11-17 | #5832 | Reference audit keeps cite keys with optional arguments and ignores comment, string and preamble blocks |
+| 2026-11-17 | #5830 | Reject empty or ambiguous normalized maturity state and legacy alias keys |
+| 2026-11-17 | #5829 | Validate benchmark counts before executing warmup or timed workloads |
+| 2026-11-17 | #5823 | Development log: mark 91 entries with merged PRs shipped to clear the wip_ceiling |
+| 2026-11-17 | #5824 | Match assessment category IDs case-insensitively and avoid partial-word classification. |
+| 2026-11-17 | #5826 | Make the display-maths checker honour code-fence character and length so nested fences no longer invert its state. |
+| 2026-11-17 | #5817 | Honor explicit extension filters including empty sets and extensionless files |
+| 2026-11-17 | #5815 | Reject malformed conversion entries and directory sources before dispatch |
+| 2026-11-17 | #5814 | Preserve literal backslashes and HTML escaping in generated page title and description fields |
+| 2026-11-17 | #5808 | Respect explicit empty content scans and omit directory candidates |
+| 2026-11-17 | #5809 | Reject nonfinite numeric widget URL-state payloads while retaining schema bounds |
+| 2026-11-17 | #5806 | Preserve escaped percent signs and following prose in LaTeX comment cleanup |
+| 2026-11-17 | #5802 | Preserve literal backslashes in HTML metadata and visible title replacements |
+| 2026-11-17 | #5799 | Honor include_root=False in Quarto discovery without duplicate root entries |
+| 2026-11-17 | #5800 | Reject non-finite and boolean runtime performance budget limits. |
+| 2026-11-17 | #5798 | Preserve matching code fence boundaries in the Quarto cross-reference scanner. |
+| 2026-11-17 | #5795 | Count actual Black per-file stderr diagnostics and retain read-only checks |
+| 2026-11-17 | #5788 | Validate redirect ledger document and route types and reject duplicate source routes |
+| 2026-11-17 | #5785 | Cover canonical and legacy frontmatter fallback boundaries without changing parser behavior |
+| 2026-11-17 | #5784 | Preserve network-path footer URLs during rendering and validation |
+| 2026-11-17 | #5780 | Separate URL queries and protocol-relative URLs from local link filenames |
+| 2026-11-17 | #5779 | Validate Quarto YAML document mappings before inspecting render configuration |
+| 2026-11-17 | #5776 | check_bibliography_metadata: field() no longer reads booktitle as title or drops quoted values; offline tests added |
+| 2026-11-17 | #5773 | Render notation smoke-test documents separately instead of passing the second page as a Pandoc input. |
+| 2026-11-17 | #5771 | Keep Slack Take-Up fragment checks valid after development-log archiving |
+| 2026-11-17 | #5768 | Distinguish constraint inverse inertia K_c from operational-space inertia K_c^-1 and provide a dimensional example. |
+| 2026-11-17 | #5756 | Add UpstreamDrift install and headless guides to the agent manifest, preserve the headless documentation contract, and refresh README parity pins. |
+| 2026-11-17 | #5766 | Correct SG hole-MDP terminal semantics: green-terminal preprocessing excludes putting from the value function. |
+| 2026-11-17 | #5767 | Document pinned capture-to-model commands, reconstruction and smoothing objectives, marker imports, scaling and model export. |
+| 2026-11-17 | #5746 | Validate Geometry of Motion landing-page chapter titles and anchors against manuscript metadata; refresh publication evidence for corrected Volume II links. |
+| 2026-11-17 | #5754 | Volume 0 numbering pilot, ch01 worked examples, books prerequisite map. |
+| 2026-11-17 | #5764 | Correct GoM input-field notation, align print/web tangent and time-interval definitions, and declare damping units and contraction aliases. |
+| 2026-11-17 | #5752 | Add PoG ch27/ch31 UpstreamDrift ZTCF bridge includes; verify ledger paths at pin via raw.githubusercontent.com. |
+| 2026-11-17 | #5748 | Add a Physics of Golf citation-integrity gate for obsolete keys, bibliography years and required chapter sources. |
+| 2026-11-17 | #5753 | Ch28 effective-mass derivation, gear-effect closure, and #5599 regression tests |
+| 2026-11-17 | #5765 | Disambiguate Chapter 29 gyroscopic, damping, null-basis, rate-map and full-bias notation in print and web sources. |
+| 2026-11-17 | #5747 | Align Big Idea and About onboarding with the declared control contract and refresh bound audit evidence |
+| 2026-11-17 | #5770 | Correct pointwise drift descriptions and remove an unsupported reachability claim. |
 | 2026-11-16 | #5741 | Add CI contract checker for learning-path citations, chapter pointers, and blocked resource URLs (#5618). |
 | 2026-11-16 | #5745 | Add CI check_motion_control_companions gate for contradictory sidecars |
 | 2026-11-16 | #5740 | Lock #5613 mechanics-reference notation contracts in pytest. |
