@@ -63,6 +63,39 @@ def test_notation_documents_pog_part_i_table() -> None:
 
 @pytest.mark.parametrize(
     "path",
+    [POG / "quarto" / "ch32_putting.qmd", POG / "chapters" / "ch32_putting.tex"],
+)
+def test_ch32_ball_and_pendulum_masses_remain_distinct(path: Path) -> None:
+    """The slip, normal-load, pendulum and impact laws identify their own mass."""
+    text = path.read_text(encoding="utf-8")
+    for expression in (
+        r"I=\kappa m_bR^2",
+        r"\frac{m_b\kappa}{2(1+\kappa)}",
+        r"N=m_bg\cos\alpha",
+        r"I_p\ddot\theta+m_agd\sin\theta",
+        r"\frac{I_p}{m_ad}",
+        r"v_b^+=(1+e)M U_h/(M+m_b)",
+    ):
+        assert expression in text
+    assert "assembly mass" in text
+    assert "ball mass" in text
+    for ambiguous in (r"\kappa mR^2", r"+mgd\sin", "N=mg", "(M+m)"):
+        assert ambiguous not in text
+
+
+@pytest.mark.parametrize(
+    "path",
+    [POG / "quarto" / "ch32_putting.qmd", POG / "chapters" / "ch32_putting.tex"],
+)
+def test_ch32_declares_local_angle_and_inertia_notation(path: Path) -> None:
+    """A reader crossing from launch mechanics can distinguish the local symbols."""
+    text = path.read_text(encoding="utf-8")
+    assert "slope angle" in text and "attack angle" in text
+    assert "inertia factor" in text and "inverse effective mass" in text
+
+
+@pytest.mark.parametrize(
+    "path",
     [
         POG / "quarto" / "ch29_joint_damping_friction.qmd",
         POG / "chapters" / "ch29_joint_damping_friction.tex",

@@ -8,9 +8,11 @@ A putting model has three connected stages: the golfer moves the putter, impact 
 \section{Rolling Versus Sliding Dynamics}
 \label{sec:putting_roll_slide}
 
+Here $\alpha$ denotes the local slope angle, not the attack angle in Chapter 31; $\kappa$ is the dimensionless ball inertia factor, not the inverse effective mass $\kappa_n$ used there. The stroke coordinate $\theta$ below is a pendulum angle, not the launch elevation of Chapter 31. The assembly mass $m_a$ and the free putter mass $M$ are distinct from the ball mass $m_b$.
+
 Initial spin is an outcome of impact, not universally zero. Loft, impact location and contact conditions can also produce a short airborne or bouncing phase. Penner explicitly distinguishes those possibilities before adopting pure rolling as an approximation for his path calculations \cite{penner2002putting}. The following contact model begins after any flight: a rigid spherical ball remains on a stationary, level plane, with constant kinetic friction and no rolling-resistance moment during the sliding interval.
 
-Let $R$ be ball radius, $I=\kappa mR^2$ its central inertia, and choose the positive angular rate so forward rolling satisfies $v=R\omega$. A uniform solid sphere has $\kappa=2/5$; a layered golf ball need not have exactly that value. The signed slip speed is $s=v-R\omega$. For $s\ne0$,
+Let $m_b$ be the ball mass, $R$ its radius, $I=\kappa m_bR^2$ its central inertia, and choose the positive angular rate so forward rolling satisfies $v=R\omega$. A uniform solid sphere has $\kappa=2/5$; a layered golf ball need not have exactly that value. The signed slip speed is $s=v-R\omega$. For $s\ne0$,
 \begin{align}
 \dot v&=-\mu_k g\,\operatorname{sgn}(s),&
 \dot\omega&=\frac{\mu_k g}{\kappa R}\operatorname{sgn}(s).
@@ -20,10 +22,10 @@ Friction opposes \emph{slip}, not necessarily translation: an overspinning ball 
 t_r&=\frac{\kappa|v_0-R\omega_0|}{(1+\kappa)\mu_k g},&
 v_r&=\frac{v_0+\kappa R\omega_0}{1+\kappa},\\
 x_r&=v_0t_r-\frac12\mu_k g\,\operatorname{sgn}(s_0)t_r^2,&
-E_0-E_r&=\frac{m\kappa}{2(1+\kappa)}s_0^2.
+E_0-E_r&=\frac{m_b\kappa}{2(1+\kappa)}s_0^2.
 \end{align}
 Here $x_r$ is signed displacement, not path length if translation reverses. Pure rolling initially gives $t_r=0$. These formulas require $\mu_k>0$ and do not cover a bouncing, deforming or intermittently contacting ball. The combined rotational and translational energy is
-$E=\tfrac12mv^2+\tfrac12I\omega^2$; during slip, $\dot E=-\mu_kmg|s|$.
+$E=\tfrac12m_bv^2+\tfrac12I\omega^2$; during slip, $\dot E=-\mu_km_bg|s|$.
 
 For the illustrative values $v_0=2.0$~m/s, $\omega_0=0$, $\mu_k=0.25$ and $g=9.81$~m/s$^2$, the uniform-sphere model gives
 \[
@@ -35,7 +37,7 @@ It dissipates $2/7$ of the initial kinetic energy. This example already contradi
 \section{Putt Paths on Slopes}
 \label{sec:putting_slopes}
 
-After rolling begins, model the green locally as a fixed plane with slope angle $\alpha$, downslope unit vector $\hat{\mathbf s}$ and sufficient static traction to maintain rolling. Represent resistance by a moment of magnitude $c_rNR$ opposing the rolling angular velocity, where $N=mg\cos\alpha$ and $c_r\ge0$ is dimensionless. This is a declared effective contact law, not a kinetic-sliding coefficient. Neglect aerodynamic forces and spin about the plane normal.
+After rolling begins, model the green locally as a fixed plane with slope angle $\alpha$, downslope unit vector $\hat{\mathbf s}$ and sufficient static traction to maintain rolling. Represent resistance by a moment of magnitude $c_rNR$ opposing the rolling angular velocity, where $N=m_bg\cos\alpha$ and $c_r\ge0$ is dimensionless. This is a declared effective contact law, not a kinetic-sliding coefficient. Neglect aerodynamic forces and spin about the plane normal.
 
 Eliminating the tangential contact force between Newton's and Euler's equations, using the no-slip relation, gives
 \begin{equation}
@@ -82,10 +84,10 @@ Penner uses a historical entry-speed estimate of $1.83$~m/s \cite{penner2002putt
 \section{A Compound Pendulum Is a Conditional Stroke Model}
 \label{sec:putting_pendulum}
 
-For a rigid assembly rotating about a fixed horizontal pivot, let $I_p$ be inertia about that pivot and $d$ the pivot-to-COM distance. With a point torque $\tau(t)$ and no other losses,
+For a rigid assembly rotating about a fixed horizontal pivot, let $m_a$ be the assembly mass, $I_p$ its inertia about that pivot and $d$ the pivot-to-COM distance. With a point torque $\tau(t)$ and no other losses,
 \begin{equation}
-I_p\ddot\theta+mgd\sin\theta=\tau(t),\qquad
-L_{\mathrm{eff}}=\frac{I_p}{md}.
+I_p\ddot\theta+m_agd\sin\theta=\tau(t),\qquad
+L_{\mathrm{eff}}=\frac{I_p}{m_ad}.
 \end{equation}
 The equivalent pendulum length $L_{\mathrm{eff}}$ is not generally the actual pivot-to-putterhead radius $\ell_h$. Linearizing near the downward equilibrium and setting $\tau=0$ gives
 \[
@@ -104,7 +106,7 @@ For passive release from angle $\theta_0$, the ideal assembly's head speed at it
 U_h=\ell_h\sqrt{\frac{2g}{L_{\mathrm{eff}}}(1-\cos\theta_0)}
 \simeq\ell_h\omega_n|\theta_0|.
 \end{equation}
-This is \emph{putterhead speed}, not ball launch speed. In an ideal one-dimensional central collision of a moving free putter mass $M$ with a stationary ball of mass $m$, coefficient of restitution $e$ gives $v_b^+=(1+e)M U_h/(M+m)$. Real impact geometry, inertia, shaft/hand coupling, spin and the subsequent contact transition require a richer model or measured calibration. Do not silently identify $M$ with total putter mass or treat the central-collision formula as a complete golf impact law.
+This is \emph{putterhead speed}, not ball launch speed. In an ideal one-dimensional central collision of a moving free putter mass $M$ with a stationary ball of mass $m_b$, coefficient of restitution $e$ gives $v_b^+=(1+e)M U_h/(M+m_b)$. Real impact geometry, inertia, shaft/hand coupling, spin and the subsequent contact transition require a richer model or measured calibration. Do not silently identify $M$ with total putter mass or treat the central-collision formula as a complete golf impact law.
 
 For a declared impact-to-established-roll speed gain $k_{\mathrm{imp}}$, write $v_r=k_{\mathrm{imp}}U_h$. Combining this calibration with level constant deceleration yields
 \begin{equation}
@@ -124,4 +126,4 @@ Direction and speed errors must also be separated from aiming and green reading.
 
 \subsection{Worked Answers}\label{sec:putting_worked_answers}
 
-(1) With $v_0=2.0\ \mathrm{m/s}$, $R\omega_0=3.0\ \mathrm{m/s}$, $v_r=2.2857\ \mathrm{m/s}$, $t_r=0.1165\ \mathrm s$, energy loss $(m/7)s_0^2$. (2) At $t=0.10\ \mathrm s$, $x\simeq0.199\ \mathrm m$, $y\simeq0.00122\ \mathrm m$. (3) Stimp 9 and 12~ft give $a_0\simeq0.610$ and $0.458\ \mathrm{m/s^2}$.
+(1) With $v_0=2.0\ \mathrm{m/s}$, $R\omega_0=3.0\ \mathrm{m/s}$, $v_r=2.2857\ \mathrm{m/s}$, $t_r=0.1165\ \mathrm s$, energy loss $(m_b/7)s_0^2$. (2) At $t=0.10\ \mathrm s$, $x\simeq0.199\ \mathrm m$, $y\simeq0.00122\ \mathrm m$. (3) Stimp 9 and 12~ft give $a_0\simeq0.610$ and $0.458\ \mathrm{m/s^2}$.
