@@ -84,3 +84,18 @@ def test_5604_vol0_ch01_prose_worked_rank_eigen_svd_examples() -> None:
 )
 def test_5604_vol0_no_stray_empty_span_anchors(rel: Path, forbidden_span: str) -> None:
     assert forbidden_span not in _read(rel)
+
+
+@pytest.mark.integration
+def test_5604_positive_metric_certificate_is_present_in_both_book_formats() -> None:
+    base = REPO_ROOT / "articles/The_Geometry_of_Motion"
+    web = _read(base / "quarto/ch04_contraction.qmd")
+    manuscript = _read(base / "Volume_I/chapters/ch04_contraction.tex")
+    heading = "Worked Example: A State-Dependent Metric"
+    for text in (web, manuscript):
+        assert heading in text
+        assert r"\dot M+2MA=-2M" in text
+    assert "$$ {#eq-ch4-pullback-certificate}" in web
+    assert "@sec-ch4-pullback-certificate" in web
+    assert r"\label{sec:ch4-pullback-certificate}" in manuscript
+    assert r"\ref{sec:ch4-pullback-certificate}" in manuscript

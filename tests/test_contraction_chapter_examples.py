@@ -1,6 +1,7 @@
 """Independent matrix, flow and noise checks for the contraction chapter."""
 
 import importlib
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -111,19 +112,16 @@ def test_vdp_residual_matches_finite_differentiation(example: Any, point: list[f
     assert np.linalg.eigvalsh(actual).max() > 0
 
 
-def test_endpoint_quadratic_is_not_squared_geodesic_distance() -> None:
+def test_endpoint_quadratic_is_not_squared_geodesic_distance(example: Any) -> None:
     """A bounded pullback metric contracts while its endpoint surrogate grows."""
     state = 2.0
     phi = state + 0.8 * np.sin(state)
     first, second = 1 + 0.8 * np.cos(state), -0.8 * np.sin(state)
-    field = -phi / first
-    jacobian = -1 + phi * second / first**2
-    metric = first**2
-    derivative = 2 * first * second * field
-    assert derivative + 2 * metric * jacobian == pytest.approx(-2 * metric)
+    point = example.scalar_pullback_example(state)
+    assert point.contraction_rate() == pytest.approx(1.0)
     length = quad(lambda value: 1 + 0.8 * np.cos(value), 0, state)[0]
     assert length**2 == pytest.approx(phi**2)
-    endpoint_derivative = 2 * state * first * (first + state * second) * field
+    endpoint_derivative = 2 * state * first * (first + state * second) * point.field
     assert endpoint_derivative > 0
 
 
@@ -180,3 +178,98 @@ def test_examples_reject_invalid_shapes_and_nonfinite_parameters(example: Any) -
             example.vdp_candidate_residual(state)
     with pytest.raises(ValueError):
         example.vdp_candidate_residual(np.zeros(2), epsilon=-1)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("state", [-np.pi, -1.0, 0.0, 1.0, 2.0, np.pi])
+def test_pullback_certificate_matches_numerical_derivatives(example: Any, state: float) -> None:
+    """Differentiate the field and ruler independently of the certificate helper."""
+    point = example.scalar_pullback_example(state)
+    step = 1e-6
+
+    def field(position: float) -> float:
+        return float(-(position + 0.8 * np.sin(position)) / (1 + 0.8 * np.cos(position)))
+
+    def metric(position: float) -> float:
+        return float((1 + 0.8 * np.cos(position)) ** 2)
+
+    numerical_jacobian = (field(state + step) - field(state - step)) / (2 * step)
+    numerical_derivative = (metric(state + step) - metric(state - step)) / (2 * step)
+    assert point.jacobian == pytest.approx(numerical_jacobian, rel=2e-7, abs=2e-8)
+    assert point.metric_derivative == pytest.approx(
+        numerical_derivative * point.field, rel=2e-7, abs=2e-8
+    )
+    residual = point.metric_derivative + 2 * point.metric * point.jacobian
+    assert residual == pytest.approx(-2 * point.metric, abs=1e-12)
+    assert point.contraction_rate() == pytest.approx(1.0, abs=1e-12)
+
+
+@pytest.mark.integration
+def test_pullback_flow_has_exact_metric_distance_decay(example: Any) -> None:
+    """Independent ODE integration follows the chapter's finite-distance identity."""
+    from scipy.integrate import solve_ivp
+
+    times = np.linspace(0.0, 3.0, 31)
+    initial = [-4.0, 2.0]
+    flow = solve_ivp(
+        lambda _time, states: [example.scalar_pullback_example(x).field for x in states],
+        (times[0], times[-1]),
+        initial,
+        t_eval=times,
+        rtol=1e-10,
+        atol=1e-12,
+    )
+    assert flow.success
+    transformed = flow.y + 0.8 * np.sin(flow.y)
+    distance = np.abs(transformed[0] - transformed[1])
+    np.testing.assert_allclose(distance, distance[0] * np.exp(-times), rtol=2e-8, atol=2e-9)
+    euclidean_bound = 9 * np.exp(-times) * abs(initial[0] - initial[1])
+    assert np.all(np.abs(flow.y[0] - flow.y[1]) <= euclidean_bound)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("state", [np.nan, np.inf, -np.inf])
+def test_pullback_example_rejects_nonfinite_state(example: Any, state: float) -> None:
+    with pytest.raises(ValueError, match="finite"):
+        example.scalar_pullback_example(state)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("state", [1e308, -1e308])
+def test_pullback_example_rejects_unrepresentable_results(example: Any, state: float) -> None:
+    with pytest.raises(ValueError, match="finite evaluation"):
+        example.scalar_pullback_example(state)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "edition",
+    [
+        "quarto/ch04_contraction.qmd",
+        "Volume_I/chapters/ch04_contraction.tex",
+    ],
+)
+def test_cubic_ccm_example_states_the_general_gain_residual(edition: str) -> None:
+    chapter = (Path(__file__).parents[1] / "articles/The_Geometry_of_Motion" / edition).read_text()
+    assert r"\begin{pmatrix}0&1-k_p\\1-k_p&-2k_d\end{pmatrix}" in chapter
+    assert "indefinite when" in chapter
+    assert "k_p=1" in chapter
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("kp,kd", [(0.5, 0.7), (1.0, 1.0), (4.0, 2.0)])
+def test_cubic_ccm_gain_cases_match_independent_lyapunov_solution(
+    example: Any, kp: float, kd: float
+) -> None:
+    dynamics = np.array([[0.0, 1.0], [-kp, -kd]])
+    identity_residual = dynamics.T + dynamics
+    np.testing.assert_allclose(identity_residual, [[0, 1 - kp], [1 - kp, -2 * kd]])
+    if kp != 1:
+        assert np.linalg.det(identity_residual) < 0
+        assert example.local_contraction_rate(dynamics, np.eye(2), np.zeros((2, 2))) < 0
+    else:
+        assert example.local_contraction_rate(dynamics, np.eye(2), np.zeros((2, 2))) == 0
+    metric = solve_continuous_lyapunov(dynamics.T, -np.eye(2))
+    assert np.linalg.eigvalsh(metric).min() > 0
+    np.testing.assert_allclose(dynamics.T @ metric + metric @ dynamics, -np.eye(2), atol=1e-14)
+    assert example.local_contraction_rate(dynamics, metric, np.zeros((2, 2))) > 0
