@@ -546,10 +546,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5624
 - **Branch:** cursor/ud-physics-models-5624-6ace
-- **PR:** #5664
+- **PR:** #5664, #5758
 - **Paths:** see #5664
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`37b4ea66`; collated from changes/5624-document-upstreamdrift-ball-flight-impac.md)
+- **Last verified:** 2026-11-18 (`4e5b0444`; collated from changes/5624-refresh-physics-inventory-pin.md)
 - **Summary:** Document UpstreamDrift ball flight, impact, putting and injury models with site–code mismatch flags (Refs #5624).
 - **Next step:** Merge after CI green.
 
@@ -1404,6 +1404,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Status checked:** 2026-10-17 (GitHub PR #4779 merged; docs/development/development-log-review-reconciliation-2026-10-17.md)
 
 ## Shipped (Last 90 Days)
+
+### DL-#5807 · Fix Check_Latex_Quotes Missing a Second LaTeX Quote Pair on One Line and Closing Fences Early on Longer Fence Runs.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5807
+- **Branch:** merged via #5810
+- **PR:** #5810
+- **Paths:** see #5810
+- **Started:** 2026-11-18
+- **Last verified:** 2026-11-18 (`d82ab710`; collated from changes/5807-latex-quotes-masking.md)
+- **Summary:** Fix check_latex_quotes missing a second LaTeX quote pair on one line and closing fences early on longer fence runs.
+- **Next step:** Shipped in PR #5810.
 
 ### DL-#5837 · Interpolate the Ball-Flight Ground Crossing Instead of Clamping Z Only, and Test Landing on the First Integration Step.
 

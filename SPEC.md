@@ -232,6 +232,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-18 | #5810 | Fix check_latex_quotes missing a second LaTeX quote pair on one line and closing fences early on longer fence runs. |
+| 2026-11-18 | #5758 | Re-audit UpstreamDrift physics inventory at main; CI contract for pin and site copy |
 | 2026-11-18 | #5841 | Interpolate the ball-flight ground crossing instead of clamping z only, and test landing on the first integration step. |
 | 2026-11-18 | #5825 | Serialize generated assessment issue titles as quoted YAML scalars. |
 | 2026-11-18 | #5818 | Escape metadata scalars when generating Quarto YAML frontmatter |
