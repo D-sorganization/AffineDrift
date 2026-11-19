@@ -556,7 +556,7 @@ series defines the title wording through $\mathcal A(x)$ in [Part 1](../articles
 | -------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | **$h$**  | Guard function for a mode transition; event when $h(x,t)=0$ (or $h(t,x^-)=0$ at an impact) | Lowercase $h$ for hybrid guards in the tangent-hyperplane corpus; not the ZVCF bias load $h(q,\dot q,z;p)$ unless the section is explicitly about mechanics loads |
 | **$R$**  | Reset map $x^+=R(t,x^-)$ at an event                                    | Distinguish from rotation matrix **R** only by context (hybrid vs attitude) |
-| **$\\Xi$** | Saltation matrix: first-variation map across a state-triggered event at common clock time | Standard symbol in Part 6 and Hybrid Tangent Spaces; do not label saltation as $S$ (Riccati/value matrix elsewhere) |
+| **$\Xi$** | Saltation matrix: first-variation map across a state-triggered event at common clock time | Standard symbol in Part 6 and Hybrid Tangent Spaces; do not label saltation as $S$ (Riccati/value matrix elsewhere) |
 
 **Disambiguation rule:** Event sensitivity uses $\Xi$, not $S$. Hybrid guards use
 $h$, not $g$. Within smooth modes, propagate with the variational transition
