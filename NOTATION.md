@@ -533,6 +533,35 @@ use uppercase $G(q)$ for gravity. When a source convention must be quoted,
 identify it as source notation and translate immediately to the canonical
 symbols.
 
+### f₀, 𝒜(x), and the Title “Hyperplane” (Instantaneous Rate Set)
+
+For control-affine $\dot x=f_0(x,t)+G(x,t)u$, the **instantaneous rate set** at
+state $x$ is
+
+$$
+\mathcal A(x)=f_0(x,t)+\operatorname{im}G(x,t)\subset T_x\mathcal M,
+\qquad
+\dim\mathcal A(x)=\operatorname{rank}G(x,t).
+$$
+
+It lies in the tangent space, not in the state manifold. It is a **hyperplane in
+$T_x\mathcal M$** exactly when $\operatorname{rank}G(x,t)=n-1$. The affine
+tangent space $x+T_xM$ of a constraint level set and the tangent plane to the
+graph of a scalar map are different geometric objects; the tangent-hyperplane
+series defines the title wording through $\mathcal A(x)$ in [Part 1](../articles/tangent-hyperplanes-series/part-1-geometry.html).
+
+### h, R, and Ξ (Hybrid Guard, Reset, Saltation)
+
+| Symbol   | Meaning                                                                 | Rule                                                                 |
+| -------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **$h$**  | Guard function for a mode transition; event when $h(x,t)=0$ (or $h(t,x^-)=0$ at an impact) | Lowercase $h$ for hybrid guards in the tangent-hyperplane corpus; not the ZVCF bias load $h(q,\dot q,z;p)$ unless the section is explicitly about mechanics loads |
+| **$R$**  | Reset map $x^+=R(t,x^-)$ at an event                                    | Distinguish from rotation matrix **R** only by context (hybrid vs attitude) |
+| **$\\Xi$** | Saltation matrix: first-variation map across a state-triggered event at common clock time | Standard symbol in Part 6 and Hybrid Tangent Spaces; do not label saltation as $S$ (Riccati/value matrix elsewhere) |
+
+**Disambiguation rule:** Event sensitivity uses $\Xi$, not $S$. Hybrid guards use
+$h$, not $g$. Within smooth modes, propagate with the variational transition
+matrix; at events, compose with $\Xi$ before continuing the flow.
+
 ### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
 
 | Symbol    | Meaning                                                                    | Metric                                                        | Rule                                                                                           |
@@ -783,7 +812,7 @@ Quick lookup table for symbols used in the project:
 | Δ      | Delta  | Change/difference operator               |
 | Θ      | Theta  | Moment of inertia tensor, potential      |
 | Λ      | Lambda | Eigenvalue matrix, cosmological constant |
-| Ξ      | Xi     | (rarely used in project)                 |
+| Ξ      | Xi     | Saltation matrix at hybrid events (tangent-hyperplane series) |
 | Π      | Pi     | Product operator, Poincaré map           |
 | Σ      | Sigma  | Summation operator, covariance           |
 | Φ      | Phi    | Potential energy, flux                   |
