@@ -136,7 +136,6 @@ See `.logging-standard.md` for full details.
 
 ## Slash Commands
 
-
 ## Specification
 
 This repository's specification is defined in `SPEC.md` at the repo root.
