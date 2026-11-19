@@ -57,7 +57,13 @@ def test_ch25_reserves_uppercase_g_for_input_map(path: Path) -> None:
 def test_notation_documents_pog_part_i_table() -> None:
     text = NOTATION.read_text(encoding="utf-8")
     assert "Physics of Golf Part I Multibody Symbols" in text
-    assert "| **$r_i$** | COM distance" in text
+    rows = (
+        [cell.strip() for cell in line.split("|")]
+        for line in text.splitlines()
+        if line.startswith("|")
+    )
+    row = next(cells for cells in rows if cells[1] == "**$r_i$**")
+    assert row[2].startswith("COM distance")
     assert "Motor Control Delay and Activation" in text
 
 

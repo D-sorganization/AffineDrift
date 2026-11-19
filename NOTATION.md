@@ -429,6 +429,17 @@ up. State the origin (ground point, pelvis, clubhead at address, etc.) wherever 
 this frame. **Forward** and **lateral** in prose mean downrange and left-of-target unless a
 chapter declares another frame.
 
+**Club frame (typical):** Origin at the hosel, shaft midpoint, head center of mass,
+or another declared head point. Unless a chapter defines face-normal head axes
+instead, take **$+z$ along the shaft toward the grip**, **$+x$ in the face plane**
+toward the toe (heel–toe), and **$+y = +z \times +x$** (right-handed). Face azimuth,
+loft, and path angles always refer to a declared normal or shaft direction in the
+stated parent frame.
+
+**Ball frame (typical):** Origin at the ball's geometric center. Axes are usually
+aligned with the site target frame at address or at impact, as declared in the
+collision or aerodynamics model.
+
 **Common article variants (always declare locally):**
 
 | Name | +X | +Y | +Z | Where used |
