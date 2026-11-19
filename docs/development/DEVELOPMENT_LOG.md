@@ -637,10 +637,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5612
 - **Branch:** cursor/tangent-notation-5612-8b6c
-- **PR:** #5655
+- **PR:** #5655, #5749
 - **Paths:** see #5655
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`a1cf68db`; collated from changes/5612-tangent-hyperplane-notation-rate-set-def.md)
+- **Last verified:** 2026-11-19 (`84ddb306`; collated from changes/5612-tangent-hyperplane-corpus-notation-lock.md)
 - **Summary:** Tangent-hyperplane notation, rate-set definition, citations
 - **Next step:** Merge after CI green.
 
