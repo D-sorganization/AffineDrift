@@ -1749,10 +1749,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5593
 - **Branch:** merged via #5725
-- **PR:** #5725
+- **PR:** #5725, #5762
 - **Paths:** see #5725
 - **Started:** 2026-11-16
-- **Last verified:** 2026-11-16 (`5b2548e9`; collated from changes/5593-site-frames-table-pog-wrench-ordering-de.md)
+- **Last verified:** 2026-11-19 (`b7f61258`; collated from changes/5593-book-front-matter-lm-frame-mapping.md)
 - **Summary:** Site frames table, PoG wrench ordering, delivery-angle table, and launch-monitor appendix alignment (partial #5593).
 - **Next step:** Shipped in PR #5725.
 
