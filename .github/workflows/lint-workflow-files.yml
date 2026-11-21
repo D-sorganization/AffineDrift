@@ -54,8 +54,17 @@ jobs:
             [ -z "$f" ] && continue
             [ ! -f "$f" ] && continue  # deleted file — skip
             # Check timeout-minutes (anywhere in file); RM #2195 reusable caller sets them upstream
-            if [ "$(basename "$f")" != "conflict-disarm.yml" ] && ! grep -q '^\s*timeout-minutes:' "$f"; then
-              FAIL="${FAIL}\n  - $f: missing timeout-minutes"
+            # A job that calls a reusable workflow must NOT set timeout-minutes: GitHub allows
+            # only uses/with/secrets/strategy/needs/if/concurrency/permissions/name on such a
+            # job, so the key belongs to the called workflow (#5853). A file with no runs-on:
+            # anywhere has no inline job that could carry the requirement, so it is exempt.
+            if ! grep -q '^\s*timeout-minutes:' "$f"; then
+              if grep -qE '^[[:space:]]*uses:[[:space:]]*[^[:space:]]*/\.github/workflows/' "$f" &&
+                 ! grep -qE '^[[:space:]]*runs-on:' "$f"; then
+                echo "::notice::$f only calls reusable workflows; timeout-minutes is set upstream."
+              else
+                FAIL="${FAIL}\n  - $f: missing timeout-minutes"
+              fi
             fi
             # Check concurrency block
             if ! grep -q '^concurrency:' "$f"; then
