@@ -452,6 +452,17 @@ The unresolved questions are specific: the current model's reference point, its 
 
 The aim is neither to dismiss launch monitors nor to let their labels stand in for mechanics. It is to connect a recorded number to a physical quantity, a defensible uncertainty statement and a question about the coupled swing that the available evidence can answer.
 
+## Appendix: Import Contract (Tools / UpstreamDrift)
+
+AffineDrift documents vendor **definitions** above. **Ingestion** uses the shared canonical layer (`Tools` → `shared.python.launch_monitor`, re-exported through UpstreamDrift `launch_monitor_model`):
+
+- **33** named metrics with SI storage (`schema.py` `METRICS`); angles in radians, speeds in m/s, distances in metres unless converted at import.
+- **Unit precedence:** explicit mapping unit → header suffix → profile default; profile defaults map canonical metres to **yards** for length metrics.
+- **Vendor detection:** signature overlap score; below **50%** → `generic` profile (`profiles.py` `detect_profile`).
+- **Sign normalisation:** unit conversion only—left/right and path conventions documented in this reference are **not** auto-corrected to a single tour frame.
+
+Worked failure mode: a CSV listing apex height in feet with no unit token is interpreted through the length default (yards) unless the column mapping overrides it. See [UpstreamDrift Learning, RL, and Analytics](upstreamdrift-learning-analytics.html).
+
 ## Related Articles
 
 ::: {.callout-note title="See Also"}

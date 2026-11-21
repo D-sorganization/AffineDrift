@@ -36,6 +36,17 @@ def test_educational_integration_references_verified_installation_entrypoint() -
 
 
 @pytest.mark.unit
+def test_workflows_page_documents_installation_commands() -> None:
+    """Governed workflows page lists clone/install/run commands for installation-verification."""
+    content = _read_file("models/programming/workflows.qmd")
+    assert "python3 scripts/ci/verify_installation.py" in content
+    assert (
+        "python3 -m scripts.companion_workflows execute --workflow-id installation-verification"
+        in content
+    )
+
+
+@pytest.mark.unit
 def test_engines_matrix_references_verified_installation_workflow() -> None:
     """Generated engines page references the governed installation verification workflow."""
     content = _read_file("models/programming/engines.qmd")

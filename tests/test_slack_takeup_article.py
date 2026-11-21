@@ -64,6 +64,16 @@ def _quoted(results: dict[str, Any]) -> list[str]:
 def test_article_quotes_only_generated_numbers() -> None:
     """Every generated number appears in the prose, and every figure has alt text."""
     text = ARTICLE.read_text(encoding="utf-8")
+    assert "draft: true" in text
+    assert "Unpublished Draft Source" in text
+    assert "#5284" in text
+    assert "**seven** unknowns" in text
+    assert "open, **High**" in text or "High**-severity" in text
+    assert "held-out trials" in text
+    assert "## References" in text and "## Appendix" in text
+    assert text.find("## Appendix") < text.find("## References")
+    assert "each mover's grip" in text
+    assert "summarize" in text
     missing = [
         value
         for value in _quoted(json.loads(RESULTS.read_text(encoding="utf-8")))

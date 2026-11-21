@@ -1,0 +1,77 @@
+---
+title: "Humanoid Balance Quantities in UpstreamDrift"
+description: "ZMP, capture point, LIPM, and centroidal MPC as implemented in UpstreamDrift, with sign conventions and usage limits."
+author: "Dieter Olson"
+date: "2026-11-11"
+date-source: "editorial-board-review"
+date-modified: "2026-11-11"
+last-reviewed: "2026-11-11"
+canonical: "/articles/upstreamdrift-humanoid-balance.html"
+summary-plain: "This reference maps ZMP, capture point, and centroidal MPC to UpstreamDrift at a pinned commit. It records sign conventions, defaults, and validity flags. It does not certify hardware walking performance."
+abstract: "Implementation reference for humanoid balance quantities in UpstreamDrift at commit 3afe09c1: ZMP from centroidal kinematics with free-fall guard, finite-difference acceleration caveats, LIPM capture point, and a reduced-state centroidal MPC prototype. Formulas and defaults are tied to cited module paths for audit; walking performance on hardware is out of scope."
+key-takeaways:
+  - "ZMP validity requires an in-polygon horizontal point and avoids trusted acceleration from finite differences alone."
+  - "Capture-point scaling uses omega equals square root of g over relative CoM height with a 0.01 m floor."
+  - "Default support is a centred 0.26 m by 0.15 m rectangle unless a measured foot polygon is supplied."
+  - "Centroidal MPC uses a 50 kg fallback mass when the engine reports no total mass."
+categories:
+  - reference
+  - robotics
+status: "available"
+audience-level: "research"
+evidence-rung: "qualified-simulation"
+upstream-pin: "3afe09c1ed0247a459d16bf75cf0b28bb64f584a"
+---
+
+This page maps textbook balance quantities to the UpstreamDrift implementation audited at commit [`3afe09c1`](https://github.com/D-sorganization/UpstreamDrift/commit/3afe09c1ed0247a459d16bf75cf0b28bb64f584a). It cites module paths only; it does not validate hardware walking performance.
+
+## Frame and Validity
+
+`ZMPComputer` (`src/robotics/locomotion/zmp_computer.py`) assumes a flat ground plane at `ground_height` (default $z=0$) with **$z$ up**. Center of pressure (CoP) equals ZMP on that plane. `ZMPResult.is_valid` is true only when the horizontal ZMP lies inside the supplied support polygon **and** CoM acceleration was not estimated by finite differences (see below).
+
+## ZMP From Centroidal Kinematics
+
+With CoM position $\mathbf{c}$, acceleration $\mathbf{a}_c$, angular-momentum rate $\dot{\mathbf{L}}_c$, mass $m$, and $z_{\mathrm{rel}} = c_z - z_{\mathrm{ground}}$, the code uses vertical denominator $d = a_{c,z} + g$. For $|d| < 10^{-6}$ it returns a free-fall result (`_free_fall_result`) instead of dividing.
+
+Horizontal components match the module docstring in `compute_zmp`:
+
+$$
+x_{\mathrm{zmp}} = c_x - z_{\mathrm{rel}}\frac{a_{c,x}}{d} - \frac{\dot{L}_{c,y}}{m\,d},
+\qquad
+y_{\mathrm{zmp}} = c_y - z_{\mathrm{rel}}\frac{a_{c,y}}{d} + \frac{\dot{L}_{c,x}}{m\,d}.
+$$
+
+**Sign convention:** the $\dot{L}$ terms carry **no** factor of $z_{\mathrm{rel}}$; only the linear-acceleration terms do. The $y$ equation adds $\dot{L}_x$ where the $x$ equation subtracts $\dot{L}_y$—this matches the horizontal moment balance stated in the file header.
+
+Total normal force is reported as $m(d) = m(a_{c,z}+g)$.
+
+### Finite-Difference Acceleration
+
+When `com_acceleration` is omitted, the class estimates it from velocity history and `dt`. In that case `is_valid` is forced **false** and `validity_reason` records the estimation caveat, even if the ZMP lies in the polygon.
+
+### Default Support Polygon
+
+If `support_polygon` is `None`, the code warns and uses a **origin-centred** rectangle $0.26\,\mathrm{m}\times 0.15\,\mathrm{m}$ (half-length $0.13\,\mathrm{m}$, half-width $0.075\,\mathrm{m}$). Feet away from the world origin therefore appear “out of support” unless a measured foot polygon is supplied (`_check_support`, ~lines 496–512).
+
+## Capture Point and DCM
+
+`compute_capture_point` and `compute_dcm` implement the LIPM scaling $\omega = \sqrt{g/z_{\mathrm{rel}}}$ with $z_{\mathrm{rel}} \leftarrow 0.01\,\mathrm{m}$ if non-positive. Horizontal capture point:
+
+$$
+\xi_x = c_x + \frac{\dot{c}_x}{\omega}, \qquad
+\xi_y = c_y + \frac{\dot{c}_y}{\omega}.
+$$
+
+**Worked numeric check (code conventions):** $z_{\mathrm{rel}}=0.9\,\mathrm{m}$, $g=9.81\,\mathrm{m/s}^2$ gives $\omega \approx 3.30\,\mathrm{rad/s}$. With $\dot{c}_x=0.5\,\mathrm{m/s}$ and $c_x=0$, $\xi_x \approx 0.151\,\mathrm{m}$ ahead—useful when auditing `stability_margin` signs.
+
+## Centroidal MPC (Research Prototype)
+
+`CentroidalMPC` (`src/research/mpc/specialized.py`) plans over a 9-state vector $[\mathbf{c}, \dot{\mathbf{c}}, \mathbf{L}_c]$ with contact forces at 1–4 points. Mass resolves from `get_total_mass()`, `total_mass`, or `mass` on the engine when present; otherwise it falls back to **`_DEFAULT_CENTROIDAL_MASS_KG = 50`**. Contact positions default to a biped-style spread along $y$ at fixed $x=0.1\,\mathrm{m}$.
+
+The centroidal momentum matrix $A_G(q)$ used elsewhere appears on the `HumanoidCapable` protocol (`src/robotics/core/protocols.py`); this MPC layer uses the reduced lumped model above rather than a full $A_G$ assembly.
+
+## Related Articles
+
+- [Whole-Body Control in UpstreamDrift](upstreamdrift-whole-body-control.html) — hierarchical QP contact dynamics.
+- [UpstreamDrift Learning, RL, and Analytics](upstreamdrift-learning-analytics.html) — Gymnasium environments and training-stack status.
+- [Degrees of Freedom and Dimensionality](degrees-of-freedom-and-dimensionality.html) — model coordinates and actuation layout.

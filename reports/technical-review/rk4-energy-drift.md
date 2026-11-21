@@ -21,16 +21,16 @@ on the passive case to keep, or should either widget switch integrator?
 
 ## Results
 
-| Widget | Horizon | dt | Steps | Max Relative Drift |
-| --- | --- | --- | --- | --- |
-| ztcf-explorer (default) | 0.2 s | 1 ms | 200 | 2.9e-12 |
-| ztcf-explorer | 0.2 s | 2 ms | 100 | 1.2e-10 |
-| ztcf-explorer | 0.2 s | 4 ms | 50 | 2.0e-9 |
-| ztcf-explorer (10× horizon) | 2.0 s | 1 ms | 2000 | 1.1e-8 |
-| drift-control-sandbox (default) | 0.5 s | 1 ms | 500 | 7.6e-11 |
-| drift-control-sandbox | 0.5 s | 2 ms | 250 | 1.3e-9 |
-| drift-control-sandbox | 0.5 s | 4 ms | 125 | 2.0e-8 |
-| drift-control-sandbox (10× horizon) | 5.0 s | 1 ms | 5000 | 4.6e-9 |
+| Widget                              | Horizon | dt   | Steps | Max Relative Drift |
+| ----------------------------------- | ------- | ---- | ----- | ------------------ |
+| ztcf-explorer (default)             | 0.2 s   | 1 ms | 200   | 2.9e-12            |
+| ztcf-explorer                       | 0.2 s   | 2 ms | 100   | 1.2e-10            |
+| ztcf-explorer                       | 0.2 s   | 4 ms | 50    | 2.0e-9             |
+| ztcf-explorer (10× horizon)         | 2.0 s   | 1 ms | 2000  | 1.1e-8             |
+| drift-control-sandbox (default)     | 0.5 s   | 1 ms | 500   | 7.6e-11            |
+| drift-control-sandbox               | 0.5 s   | 2 ms | 250   | 1.3e-9             |
+| drift-control-sandbox               | 0.5 s   | 4 ms | 125   | 2.0e-8             |
+| drift-control-sandbox (10× horizon) | 5.0 s   | 1 ms | 5000  | 4.6e-9             |
 
 Initial energies are 13.13 J (ztcf-explorer) and 27.44 J (sandbox). Halving dt
 cuts the drift about 16×, which is RK4's fourth order. So the drift is

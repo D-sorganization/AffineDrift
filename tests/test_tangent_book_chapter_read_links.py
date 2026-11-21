@@ -44,15 +44,24 @@ def _chapter_blocks() -> dict[int, str]:
     return {int(match.group(1)): match.group(2) for match in _CHAPTER_SECTION.finditer(text)}
 
 
-def _first_local_read_link(block: str) -> tuple[str, str]:
+def _local_read_links(block: str) -> list[tuple[str, str]]:
+    links: list[tuple[str, str]] = []
     for link_text, href in _RESOURCE_LINK.findall(block):
         if href.startswith("http"):
             continue
         if "Source" in link_text or "Notebook" in link_text:
             continue
-        if link_text.strip().lower().startswith("read"):
-            return link_text, href
-    raise AssertionError(f"No local read link found in chapter block:\n{block[:200]}...")
+        if link_text.strip().lower().startswith("read") or link_text.lower().startswith(
+            "shorter route"
+        ):
+            links.append((link_text, href))
+    if not links:
+        raise AssertionError(f"No local read link found in chapter block:\n{block[:200]}...")
+    return links
+
+
+def _first_local_read_link(block: str) -> tuple[str, str]:
+    return _local_read_links(block)[0]
 
 
 def _href_basename(href: str) -> str:
@@ -60,70 +69,99 @@ def _href_basename(href: str) -> str:
 
 
 def test_volume_i_chapter_read_links_name_targets_and_match_topics() -> None:
-    """Ch.1–Ch.8 read links must open on-topic material and say what they open."""
+    """Ch.1–Ch.8 primary read links open canonical GoM HTML; shorter routes stay on-topic."""
     blocks = _chapter_blocks()
-    expectations: dict[int, dict[str, object]] = {
+    canonical_html: dict[int, str] = {
+        1: "ch01_foundations.html",
+        2: "ch02_variational.html",
+        3: "ch03_superposition.html",
+        4: "ch04_contraction.html",
+        5: "ch05_optimal_control.html",
+        6: "ch06_duality.html",
+        7: "ch07_counterfactuals.html",
+        8: "ch08_applications.html",
+    }
+    shorter_routes: dict[int, dict[str, object]] = {
         1: {
             "href_name": "part-1-geometry.html",
-            "text_tokens": ("Part 1", "Geometry"),
+            "text_tokens": ("Part 1",),
             "forbidden_hrefs": (),
         },
         2: {
             "href_name": "part-2-dynamics.html",
-            "text_tokens": ("Part 2", "Dynamics"),
+            "text_tokens": ("Part 2",),
             "forbidden_hrefs": (),
         },
         4: {
             "href_name": "part-5-contraction.html",
-            "text_tokens": ("Part 5", "Contraction"),
+            "text_tokens": ("Part 5",),
             "forbidden_hrefs": ("part-4-residuals-curvature.html",),
         },
         5: {
             "href_name": "part-3-control.html",
-            "text_tokens": ("Part 3", "Control"),
+            "text_tokens": ("Part 3",),
             "forbidden_hrefs": (),
         },
         6: {
             "href_name": "Contraction_Tangent_Unification.html",
             "fragment": "riccati-value-functions-and-contraction",
-            "text_tokens": ("Riccati Value Functions and Contraction",),
+            "text_tokens": ("Riccati",),
             "forbidden_hrefs": ("part-4-residuals-curvature.html",),
         },
         7: {
             "href_name": "Tangent_Hyperplanes_Unified_Thesis.html",
             "fragment": "counterfactual-decomposition",
-            "text_tokens": ("Counterfactual", "manuscript"),
+            "text_tokens": ("counterfactual",),
             "forbidden_hrefs": (),
         },
         8: {
             "href_name": "part-7-residual-aware.html",
-            "text_tokens": ("Part 7", "Residual-Aware"),
+            "text_tokens": ("Part 7",),
             "forbidden_hrefs": (),
         },
     }
 
-    for chapter, rules in expectations.items():
-        link_text, href = _first_local_read_link(blocks[chapter])
+    for chapter, html_name in canonical_html.items():
+        links = _local_read_links(blocks[chapter])
+        primary_text, primary_href = links[0]
         assert (
-            rules["href_name"] in href
-        ), f"Ch.{chapter} href {href!r} missing {rules['href_name']!r}"
+            html_name in primary_href
+        ), f"Ch.{chapter} primary href {primary_href!r} missing {html_name!r}"
+        assert f"Chapter {chapter}" in primary_text or "on the web" in primary_text
+
+    for chapter, rules in shorter_routes.items():
+        block = blocks[chapter]
+        links = _local_read_links(block)
+        assert (
+            len(links) >= 2
+        ), f"Ch.{chapter} should list a shorter-route link after the canonical chapter"
+        shorter_text, shorter_href = links[1]
+        assert (
+            rules["href_name"] in shorter_href
+        ), f"Ch.{chapter} shorter route {shorter_href!r} missing {rules['href_name']!r}"
         fragment = rules.get("fragment")
         if fragment:
-            assert f"#{fragment}" in href, f"Ch.{chapter} should anchor #{fragment} in {href!r}"
+            assert f"#{fragment}" in shorter_href, f"Ch.{chapter} should anchor #{fragment}"
         for token in rules["text_tokens"]:
-            assert token in link_text, f"Ch.{chapter} link text {link_text!r} missing {token!r}"
+            assert (
+                token.lower() in shorter_text.lower()
+            ), f"Ch.{chapter} shorter link {shorter_text!r} missing {token!r}"
         for forbidden in rules["forbidden_hrefs"]:
-            assert forbidden not in href, f"Ch.{chapter} still points at {forbidden!r}"
+            assert forbidden not in block, f"Ch.{chapter} still points at {forbidden!r}"
 
-        basename = _href_basename(href)
+        basename = _href_basename(shorter_href)
         if basename in _SERIES_PART_TITLES:
             title = _SERIES_PART_TITLES[basename]
             topic_words = [word for word in title.split(":", 1)[-1].split() if len(word) > 3]
+            href_slug = basename.replace(".html", "").replace("-", " ")
             assert any(
-                word in link_text for word in topic_words
-            ), f"Ch.{chapter} link text should reflect target title {title!r}"
+                word in shorter_text
+                or word.lower() in href_slug
+                or word.lower().replace("-", " ") in href_slug
+                for word in topic_words
+            ), f"Ch.{chapter} shorter link should reflect target title {title!r}"
         elif basename == "Tangent_Hyperplanes_Unified_Thesis.html":
-            assert "Counterfactual" in link_text
+            assert "counterfactual" in shorter_text.lower()
             assert _MANUSCRIPT_TITLE  # referenced for future extensions
 
     ch7_block = blocks[7]
@@ -131,12 +169,14 @@ def test_volume_i_chapter_read_links_name_targets_and_match_topics() -> None:
 
 
 def test_volume_i_chapter_link_explainer_precedes_chapter_one() -> None:
-    """The book page must explain compact-series links before any chapter section."""
+    """The book page must explain chapter vs shorter-route links before any chapter section."""
     text = BOOK_PAGE.read_text(encoding="utf-8")
     explainer = text.index("## Reading the Chapter Links")
     chapter_one = text.index("## Chapter 1:")
     assert explainer < chapter_one
-    assert "No Volume I chapter has its own web page yet" in text
+    assert "No Volume I chapter has its own web page yet" not in text
+    assert "Read chapter" in text
+    assert "Shorter route" in text
 
 
 def test_tangent_summaries_do_not_overstate_linear_superposition() -> None:

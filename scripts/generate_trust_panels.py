@@ -87,6 +87,7 @@ def validate_registry(registry: object, schema_path: Path = DEFAULT_SCHEMA) -> N
 
     page_ids: set[str] = set()
     claim_ids: set[str] = set()
+    provenance_entries: list[tuple[str, str]] = []
     for page in pages:
         if not isinstance(page, dict):
             raise TrustContractError("Each page must be an object")
@@ -105,6 +106,39 @@ def validate_registry(registry: object, schema_path: Path = DEFAULT_SCHEMA) -> N
                 raise TrustContractError(f"Duplicate claim_id: {claim_id}")
             claim_ids.add(claim_id)
             validate_non_amplification(claim)
+            for item in claim.get("software_provenance", []):
+                if isinstance(item, dict):
+                    provenance_entries.append(
+                        (str(item.get("path", "")), str(item.get("sha256", "")))
+                    )
+
+    seen_provenance_hashes: dict[str, str] = {}
+    seen_path_digests: dict[str, str] = {}
+    for path, digest in provenance_entries:
+        prior_digest = seen_path_digests.get(path)
+        if prior_digest is not None and prior_digest != digest:
+            raise TrustContractError(
+                f"Inconsistent software_provenance sha256 for {path}: {prior_digest} vs {digest}"
+            )
+        seen_path_digests[path] = digest
+        prev_path = seen_provenance_hashes.get(digest)
+        if prev_path is not None and prev_path != path:
+            raise TrustContractError(
+                f"Duplicate software_provenance sha256 {digest} across distinct paths: "
+                f"{prev_path} and {path}"
+            )
+        seen_provenance_hashes[digest] = path
+
+    for path, digest in provenance_entries:
+        target = REPO_ROOT / path
+        if not target.is_file():
+            raise TrustContractError(f"Missing software_provenance file: {path}")
+        actual = hashlib.sha256(target.read_bytes()).hexdigest()
+        if actual != digest:
+            raise TrustContractError(
+                f"software_provenance sha256 mismatch for {path}: "
+                f"registry has {digest}, file has {actual}"
+            )
 
 
 def load_registry(

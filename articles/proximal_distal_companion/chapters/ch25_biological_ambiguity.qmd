@@ -35,11 +35,11 @@ passive tissues.
 
 Separate contact ambiguity from muscle ambiguity. Fix a club reference $O$ and
 contact points $\mathbf r_L=(-0.1,0,0)$ and
-$\mathbf r_R=(0.1,0,0)\,\mathrm m$. All components below use one right-handed
-frame. Here $\mathbf F_i$ is hand $i$'s force and $\mathbf C_i$ is its
-contact couple; both act **on the club**:
+$\mathbf r_T=(0.1,0,0)\,\mathrm m$ for the lead and trail hands. All components
+below use one right-handed frame. Here $\mathbf F_i$ is hand $i$'s force and
+$\mathbf C_i$ is its contact couple; both act **on the club**:
 
-| Allocation | $F_{Ly}$ (N) | $F_{Ry}$ (N) | $C_{Lz}$ (N m) | $C_{Rz}$ (N m) |
+| Allocation | $F_{Ly}$ (N) | $F_{Ty}$ (N) | $C_{Lz}$ (N m) | $C_{Tz}$ (N m) |
 |---|---:|---:|---:|---:|
 | A | -10 | 110 | 0 | 0 |
 | B | 30 | 70 | 4 | 4 |
@@ -48,8 +48,8 @@ All unlisted components vanish. Both allocations satisfy
 
 $$
 \begin{aligned}
-\mathbf F&=\mathbf F_L+\mathbf F_R=(0,100,0)\,\mathrm N,\\
-\mathbf M_O&=\sum_{i=L,R}(\mathbf r_i\times\mathbf F_i+\mathbf C_i)
+\mathbf F&=\mathbf F_L+\mathbf F_T=(0,100,0)\,\mathrm N,\\
+\mathbf M_O&=\sum_{i\in\{L,T\}}(\mathbf r_i\times\mathbf F_i+\mathbf C_i)
 =(0,0,12)\,\mathrm{N\,m}.
 \end{aligned}
 $$ {#eq-lay-biology-matched-wrench}
@@ -60,7 +60,7 @@ These are full resultant-wrench matches within an ideal contact model.
 Grip pressure, friction, and tissue limits determine actual feasibility.
 
 The equal force at each hand, $\mathbf F_c=\mathbf F/2$, contributes
-$(\mathbf r_L+\mathbf r_R)\times\mathbf F_c=0$ at this midpoint. Changing arm
+$(\mathbf r_L+\mathbf r_T)\times\mathbf F_c=0$ at this midpoint. Changing arm
 posture while keeping the contact points, force components, and reference fixed
 cannot create a new common-force moment arm. Physically shifting both contacts
 $0.02\,\mathrm m$ along $+x$ relative to the same $O$ raises the moment to

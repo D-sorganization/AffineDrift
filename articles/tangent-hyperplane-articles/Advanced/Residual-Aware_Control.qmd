@@ -131,12 +131,12 @@ Alternatively, define the **closed-loop field** $F_K(t,z)=F(t,z,\bar v+K(z-\bar 
 
 #### Computing the Hessian Bound {#computing-the-hessian-bound}
 
-For a control-affine field $F(z,v)=f(z)+\sum_jg_j(z)v_j$,
+For a control-affine field $F(z,v)=f(z)+\sum_j G_j(z)v_j$,
 
 $$
 \begin{aligned}
-D^2_{zz}F&=D^2f+\sum_jv_jD^2g_j,\\
-D^2_{zv_j}F&=Dg_j,\qquad D^2_{vv}F=0.
+D^2_{zz}F&=D^2f+\sum_jv_jD^2 G_j,\\
+D^2_{zv_j}F&=D G_j,\qquad D^2_{vv}F=0.
 \end{aligned}
 $$ {#eq-hessian-def}
 
@@ -151,14 +151,14 @@ Finite differences and automatic differentiation evaluate derivatives at points.
 
 $$
 \dot\theta=\omega,\qquad
-\dot\omega=-\frac gL\sin\theta-\frac b{mL^2}\omega+\frac u{mL^2}.
+\dot\omega=-\frac{g_0}L\sin\theta-\frac b{mL^2}\omega+\frac u{mL^2}.
 $$
 
 The acceleration component's state Hessian is
 
 $$
 H_{\dot\omega}=
-\begin{bmatrix}(g/L)\sin\theta&0\\0&0\end{bmatrix}.
+\begin{bmatrix}(g_0/L)\sin\theta&0\\0&0\end{bmatrix}.
 $$ {#eq-pendulum-hessian}
 
 Its sign follows by differentiating $-\sin\theta$ twice. In unscaled coordinates the acceleration remainder from an angular displacement $\Delta\theta$ obeys
@@ -284,7 +284,7 @@ An optimizer can use a large interval if the **discrete flow** over that interva
 
 ### Adaptive Timestep Selection Rule {#adaptive-timestep-selection-rule}
 
-On one interval, suppose $\|N\|\le q=M\rho^2/2$, where $\rho$ bounds the actual joined deviation, and $\|\Phi(t,s)\|\le e^{a(t-s)}$. A convenient Euclidean growth bound is any upper bound on the largest eigenvalue of $(A+A^T)/2$ throughout the interval. This follows by differentiating the squared norm of a variational solution. It accounts for non-normal transient growth that eigenvalues of $A$ alone can miss.
+On one interval, suppose $\|N\|\le q=M\rho^2/2$, where $\rho$ bounds the actual joined deviation, and $\|\Phi(t,s)\|\le e^{a(t-s)}$. A convenient Euclidean growth bound is any upper bound on the **matrix measure** (logarithmic norm) of $A$, equivalently the largest eigenvalue of $(A+A^T)/2$ throughout the interval. This follows by differentiating the squared norm of a variational solution. It accounts for non-normal transient growth that eigenvalues of $A$ alone can miss.
 
 For a comparison reset to $r(0)=0$, the local error bound is
 
@@ -367,8 +367,8 @@ $$
 \mathcal T(t)=\bar z(t)\oplus E(t).
 $$ {#eq-tube-def}
 
-For a discrete local error model $e^+=A_Ke+w$, a sufficient fixed-set condition is
-$A_KE\oplus W\subseteq E$. A state constraint requires $\bar z\in\mathcal X\ominus E$; under $v=\bar v+Ke$, input admissibility requires $\bar v\in\mathcal U\ominus KE$. The disturbance set must include the bounded nonlinear remainder and all other modeled uncertainty. A state-dependent remainder often makes finding $E$ a self-consistent containment problem.
+For a discrete local error model $e^+=A_Ke+w$, the **robust positively invariant (RPI)** fixed-set condition
+$A_KE\oplus W\subseteq E$ is sufficient. A state constraint requires $\bar z\in\mathcal X\ominus E$; under $v=\bar v+Ke$, input admissibility requires $\bar v\in\mathcal U\ominus KE$. The disturbance set must include the bounded nonlinear remainder and all other modeled uncertainty. A state-dependent remainder often makes finding $E$ a self-consistent containment problem.
 
 By contrast, in the nonexpansive, constant-bound case a local validity calculation gives only
 
@@ -438,12 +438,12 @@ The contact impulse must also satisfy the assumed unilateral and friction condit
 
 ### Residual Monitoring Across Contact Events {#residual-monitoring-for-fall-detection}
 
-For a smooth guard $g(t,z)=0$ and reset $R(t,z)$, event-time variation contributes to the linearized jump. At a transverse, isolated event with the same nearby mode sequence, the saltation matrix is
+For a smooth guard $h(t,z)=0$ and reset $R(t,z)$, event-time variation contributes to the linearized jump. At a transverse, isolated event with the same nearby mode sequence, the saltation matrix is
 
 $$
 \Xi=D_zR+
-\frac{(F^+-D_zR\,F^--D_tR)D_zg}
-{D_tg+D_zg\,F^-}.
+\frac{(F^+-D_zR\,F^--D_tR)D_z h}
+{D_t h+D_z h\,F^-}.
 $$
 
 Use smooth transition matrices within modes and $\Xi$ at the event. The denominator must be nonzero. Grazing, simultaneous competing guards, and changes in event sequence require additional analysis. Kong and colleagues derive this event-time correction and its assumptions [@Kong2023saltation]. A smooth Hessian bound should not be integrated through an instantaneous reset as though the vector field remained smooth.
@@ -464,11 +464,11 @@ The state model may include joint configurations and velocities, club bending/to
 
 #### Residual-Aware Trajectory Refinement {#residual-aware-trajectory-refinement}
 
-Let $y=c(z(T))$ be a smooth pre-impact task output and $C_T=Dc(\bar z(T))$. To first order, the contribution of the flow remainder to the output discrepancy is $C_Tr(T)$. The norm contribution generated at time $s$ is weighted by $\|C_T\Phi(T,s)\|$, not merely by $\|N(s)\|$:
+Let $y=c(z(T))$ be a smooth pre-impact task output and $J_y=Dc(\bar z(T))$. To first order, the contribution of the flow remainder to the output discrepancy is $J_y r(T)$. The norm contribution generated at time $s$ is weighted by $\|J_y\Phi(T,s)\|$, not merely by $\|N(s)\|$:
 
 $$
-\|C_Tr(T)\|\le
-\int_{t_0}^T\|C_T\Phi(T,s)\|\,\|N(s)\|\,ds.
+\|J_y r(T)\|\le
+\int_{t_0}^T\|J_y\Phi(T,s)\|\,\|N(s)\|\,ds.
 $$
 
 For a fully rigorous output bound, also enclose the nonlinear remainder of $c$ over the relevant states. For a differentiable event-to-output map, include event-time and reset sensitivities. If the impact sequence changes, a single smooth map may cease to describe the comparison.

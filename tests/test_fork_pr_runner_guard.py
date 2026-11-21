@@ -523,6 +523,7 @@ FORK_ROUTED_JOBS = [
     ("lint-workflow-files.yml", "lint"),
     ("ci-standard.yml", "website-lint"),
     ("anti-phantom-merge.yml", "guard"),
+    ("label-merge-guard.yml", "block-do-not-merge"),
     ("compile-textbooks.yml", "pick-runner"),
     ("compile-textbooks.yml", "compile"),
 ]

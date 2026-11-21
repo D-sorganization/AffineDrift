@@ -301,7 +301,7 @@ This and the body-frame equation are compatible descriptions, not extra terms to
 []{#sec-composite_rigid_body}
 []{#alg-alg_crb}
 
-Consider an open tree of N rigid bodies with a fixed base, one scalar degree of freedom per joint and constant local joint-motion direction $S_i$. Let $\lambda(i)$ be the parent, indexed before its child. Define $X_i$ to map the parent's motion coordinates into the child's frame, and express each body inertia $\mathcal I_i$ in its own frame. At a fixed configuration, the motion recursion is [$\mathcal V_i=X_i\mathcal V_{\lambda(i)}+S_i\dot q_i$]{.long-inline-math role="group" aria-label="Inline calculation 62; scroll horizontally" tabindex="0"}.
+Consider an open tree of N rigid bodies with a fixed base, one scalar degree of freedom per joint and constant local joint-motion direction $S_i$. Let $\lambda(i)$ be the parent, indexed before its child. Define $X_i$ to map the parent's motion coordinates into the child's frame, and express each body inertia $\mathcal I_i$ in its own frame. The composite-rigid-body construction that accumulates locked-subtree inertias into the joint-space mass matrix follows Walker and Orin and Featherstone's algorithmic treatment [@WalkerOrin1982; @Featherstone2008]. At a fixed configuration, the motion recursion is [$\mathcal V_i=X_i\mathcal V_{\lambda(i)}+S_i\dot q_i$]{.long-inline-math role="group" aria-label="Inline calculation 62; scroll horizontally" tabindex="0"}.
 
 The composite inertia $\mathcal I_i^C$ describes the subtree below i with its internal joints instantaneously locked. Initialize every composite to its own body inertia, visit children before parents, and accumulate
 
@@ -419,6 +419,8 @@ assert np.isclose(energy, 0.15875)  # J
 ```
 
 The scalar energy checks are frame invariant. The tree checks compare the recursive joint matrix against independently propagated body Jacobians, including a branched tree with nontrivial rotations and offsets. Point-particle energy sums independently verify inertia transport. These checks deliberately exercise off-center and noncommuting cases: all-zero offsets or identical axes can hide a reversed transform. A successful self-consistency test does not by itself validate the underlying physical parameter values.
+
+{{< include ../../_includes/upstream-implementation/gom-vol0-ch08.qmd >}}
 
 ## Fifteen Exercises
 []{#sec-spatial_exercises}

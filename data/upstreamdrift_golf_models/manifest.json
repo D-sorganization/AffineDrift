@@ -1,0 +1,65 @@
+{
+  "schema": "affinedrift.upstreamdrift-golf-models/v1",
+  "upstream_repository": "https://github.com/D-sorganization/UpstreamDrift",
+  "upstream_commit": "625a16e6897b88ab29fb5a64c65ecee820dd58f5",
+  "mujoco_models": [
+    {
+      "id": "canonical",
+      "title": "Canonical Floating-Hip Humanoid",
+      "upstream_path": "src/engines/physics_engines/mujoco/_golf_swing_canonical_xml.py",
+      "upstream_symbol": "CANONICAL_GOLF_HUMANOID_XML",
+      "snapshot_path": "data/upstreamdrift_golf_models/mujoco/canonical.xml",
+      "content_sha256": "6a67baa8fabd8ae7a9cb67bde9bd0618ae680499a6e29cfe7fa000e6b302aa1c"
+    },
+    {
+      "id": "advanced",
+      "title": "Advanced Biomechanical Golf Swing",
+      "upstream_path": "src/engines/physics_engines/mujoco/_golf_swing_advanced_xml.py",
+      "upstream_symbol": "ADVANCED_BIOMECHANICAL_GOLF_SWING_XML",
+      "snapshot_path": "data/upstreamdrift_golf_models/mujoco/advanced.xml",
+      "content_sha256": "0a640d4eb24a40318883eca215d687fa7f7579ffee3a6f7d568675e9e107725f"
+    },
+    {
+      "id": "full_body",
+      "title": "Full-Body Golf Swing",
+      "upstream_path": "src/engines/physics_engines/mujoco/_golf_swing_full_body_xml.py",
+      "upstream_symbol": "FULL_BODY_GOLF_SWING_XML",
+      "snapshot_path": "data/upstreamdrift_golf_models/mujoco/full_body.xml",
+      "content_sha256": "1740fac75b76266c55eaff3e7ec8fa1da03dbf8c33f1dd3762437d64c0663120"
+    },
+    {
+      "id": "upper_body",
+      "title": "Upper-Body Golf Swing",
+      "upstream_path": "src/engines/physics_engines/mujoco/_golf_swing_upper_body_xml.py",
+      "upstream_symbol": "UPPER_BODY_GOLF_SWING_XML",
+      "snapshot_path": "data/upstreamdrift_golf_models/mujoco/upper_body.xml",
+      "content_sha256": "a5840799bc2d6c4676828135452bb70868dc0caf76e25c5cc664aeb8ba08e690"
+    }
+  ],
+  "myosuite_assets": {
+    "upstream_path": "src/engines/physics_engines/mujoco/golf_swing_models_xml.py",
+    "entries": [
+      {
+        "id": "myoupperbody",
+        "relative_path": "myo_sim/body/myoupperbody.xml",
+        "declared_nq": 19,
+        "declared_nu": 20,
+        "note": "Torso, head, and both arms (per upstream module comment)."
+      },
+      {
+        "id": "myobody",
+        "relative_path": "myo_sim/body/myobody.xml",
+        "declared_nq": 52,
+        "declared_nu": 290,
+        "note": "Full musculoskeletal model with muscle–tendon units (per upstream comment)."
+      },
+      {
+        "id": "myoarm_simple",
+        "relative_path": "myo_sim/arm/myoarm_simple.xml",
+        "declared_nq": 14,
+        "declared_nu": null,
+        "note": "Bilateral arms with simplified torso (per upstream comment)."
+      }
+    ]
+  }
+}

@@ -15,6 +15,7 @@ import json
 import re
 from pathlib import Path
 
+from src.tools.site_page_scan import is_draft_front_matter
 from src.tools.utils import setup_logging
 from src.tools.utils.content_utils import collect_qmd_files, read_qmd_with_frontmatter
 
@@ -61,6 +62,8 @@ def build_index(content_dirs: list[str]) -> dict[str, dict[str, str]]:
     index: dict[str, dict[str, str]] = {}
     for filepath in collect_qmd_files(content_dirs):
         _content, frontmatter = read_qmd_with_frontmatter(filepath)
+        if is_draft_front_matter(frontmatter):
+            continue
         status = frontmatter.get("status") or frontmatter.get("maturity")
         if not status:
             continue

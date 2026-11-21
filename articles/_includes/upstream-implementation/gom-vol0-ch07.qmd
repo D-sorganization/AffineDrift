@@ -1,0 +1,10 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-gom-vol0-ch07}
+
+::: {.callout-note appearance="simple"}
+The textbook examples here call AffineDrift teaching modules under `src/tools/articulated_body_examples.py`. UpstreamDrift's production tree dynamics use the same angular-first spatial ordering and recursive Newton–Euler structure at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
+
+- **Inverse dynamics entry point:** [`rnea.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/rigid_body_dynamics/rnea.py) — recursive Newton–Euler torque recovery for the golf humanoid model stack.
+- **Spatial motion/force operators:** [`spatial_vectors.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/spatial_algebra/spatial_vectors.py) — `crm`, `crf`, and skew helpers used by the engine wrappers.
+
+**Convention note:** engine wrappers in this tree evaluate bias forces with negated uniform gravity (`NEG_DEFAULT_GRAVITY` in the MuJoCo golf dynamics package), matching the textbook's stated gravity sign in the prepared-tree examples.
+:::

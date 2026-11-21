@@ -13,6 +13,7 @@ from src.affine_control.correction_authority_contract import (
     evaluate_double_integrator_correction_authority,
     evaluate_planar_rank_deficient_authority,
     evaluate_scalar_correction_authority,
+    margin_to_correction_target,
     preregistered_humanoid_correction_authority_protocol,
     validate_correction_authority_protocol,
 )
@@ -140,6 +141,47 @@ def test_contract_rejects_forbidden_overclaim_phrasing(phrase: str) -> None:
         reject_forbidden_protocol_phrases(phrase)
 
 
+@pytest.mark.parametrize(
+    ("interval", "target", "tolerance", "recoverable", "margin"),
+    (
+        ((0.0, 1.0), 0.5, 0.1, True, 0.4),
+        ((0.0, 1.0), -0.1, 0.1, True, 0.0),
+        ((0.0, 1.0), -0.100001, 0.1, False, pytest.approx(-0.100001)),
+        ((0.0, 1.0), -0.2, 0.1, False, pytest.approx(-0.2)),
+        ((0.0, 1.0), 1.1, 0.1, True, 0.0),
+        ((0.0, 1.0), 1.100001, 0.1, False, pytest.approx(-0.100001)),
+        ((0.0, 1.0), -0.099999, 0.1, True, pytest.approx(1e-6, rel=0, abs=1e-5)),
+        ((0.0, 1.0), 1.05, 0.1, True, pytest.approx(0.05)),
+    ),
+)
+def test_margin_to_correction_target_tolerance_band(
+    interval: tuple[float, float],
+    target: float,
+    tolerance: float,
+    recoverable: bool,
+    margin: object,
+) -> None:
+    got_rec, got_margin = margin_to_correction_target(interval, target, tolerance, 0.0)
+    assert got_rec is recoverable
+    if isinstance(margin, float):
+        assert got_margin == pytest.approx(margin, abs=1e-12)
+    else:
+        assert got_margin == margin
+
+
+def test_margin_rejects_far_outside_reachable_interval() -> None:
+    result = evaluate_double_integrator_correction_authority(
+        required_task_error=-10.0,
+        position=0.0,
+        velocity=0.0,
+        input_bound=1.0,
+        horizon=1.0,
+        tolerance=0.05,
+    )
+    assert result.recoverable is False
+    assert result.margin < 0.0
+
+
 @pytest.mark.content_lint
 def test_public_protocol_doc_records_simulation_only_assumptions() -> None:
     source = ARTICLE.read_text(encoding="utf-8")
@@ -152,5 +194,7 @@ def test_public_protocol_doc_records_simulation_only_assumptions() -> None:
         "lead-time",
         "HypothesisResult",
         "no uncalibrated numbers",
+        "peak_per_channel",
+        "input_set_norm",
     ):
         assert statement in source

@@ -17,6 +17,8 @@ const {
   trimCacheEntries,
   networkFirstWithTimeout,
   cacheFirst,
+  routeFor,
+  responseChanged,
 } = self.AffineDriftServiceWorkerUtils;
 
 // Network-first navigation timeout: returning visitors get the latest deploy,
@@ -109,26 +111,36 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fall back to network
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') return;
-
-  // Skip cross-origin requests (fonts, CDN, etc.)
-  if (!event.request.url.startsWith(self.location.origin)) {
-    return;
-  }
+  // Non-GET and cross-origin requests (fonts, CDN, etc.) are left to the browser.
+  const route = routeFor(event.request, self.location.origin);
+  if (route === 'skip') return;
 
   // HTML navigations: network-first so returning visitors always get the latest
   // deploy (content-only article edits do not bust CACHE_NAME, so cache-first
   // would serve stale article HTML — see issue #3221). Falls back to the cached
-  // copy, then offline.html, on a slow/failed network.
-  if (event.request.mode === 'navigate') {
+  // copy, then offline.html, on a slow/failed network. The page being loaded is
+  // already the fresh copy, so this never raises the update notice (issue #5315).
+  if (route === 'navigate') {
     event.respondWith(
       networkFirstWithTimeout(event.request, {
         cacheName: CACHE_NAME,
         offlineUrl: OFFLINE_URL,
         timeoutMs: NAV_TIMEOUT_MS,
-        persistFn: (cache, request, response) =>
-          storeResponse(cache, request, response, true),
+        persistFn: (cache, request, response) => storeResponse(cache, request, response),
+      })
+    );
+    return;
+  }
+
+  // JSON/CSV data (search index, listings, bibliography) is not content-hashed
+  // into CACHE_NAME, so cache-first would serve a stale index after a deploy.
+  // Network-first keeps it fresh; the cached copy is only an offline fallback.
+  if (route === 'data') {
+    event.respondWith(
+      networkFirstWithTimeout(event.request, {
+        cacheName: CACHE_NAME,
+        timeoutMs: NAV_TIMEOUT_MS,
+        persistFn: (cache, request, response) => storeResponse(cache, request, response),
       })
     );
     return;
@@ -136,17 +148,17 @@ self.addEventListener('fetch', (event) => {
 
   // Static subresources (CSS/JS/images/fonts) are content-hashed by CACHE_NAME,
   // so cache-first is correct and fastest. Keep a background revalidation so a
-  // changed-but-same-URL asset still refreshes for the next load.
+  // changed-but-same-URL asset still refreshes for the next load, and only
+  // announce an update when the revalidated copy actually differs.
   const backgroundUpdate = caches.match(event.request).then((cachedResponse) => {
     if (!cachedResponse) return;
 
     return fetch(event.request)
-      .then((response) => {
-        if (response && response.status === 200) {
-          return caches.open(CACHE_NAME).then((cache) =>
-            storeResponse(cache, event.request, response, true)
-          );
-        }
+      .then(async (response) => {
+        if (!response || response.status !== 200) return;
+        const changed = await responseChanged(cachedResponse, response);
+        const cache = await caches.open(CACHE_NAME);
+        return storeResponse(cache, event.request, response, changed);
       })
       .catch(() => {/* Network failed, but we have cache */ });
   });

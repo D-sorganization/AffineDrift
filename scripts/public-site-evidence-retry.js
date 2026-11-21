@@ -1,13 +1,100 @@
 /** Bounded evidence reload when first-party subresources return transient 5xx. */
 
-const { navigateWithRetry, retryDelay } = require('./public-site-navigation.js');
+const {
+  RETRYABLE_STATUS_CODES,
+  navigateWithRetry,
+  retryDelay,
+} = require('./public-site-navigation.js');
 const {
   failuresAreOnlyRetriableSubresourceNoise,
+  hasTransientSubresourceFailure,
+  isActionableConsoleError,
   isActionablePageError,
 } = require('./public-site-browser-noise.js');
 
 function sleepMs(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function createPageListeners(page, options) {
+  const consoleErrors = [];
+  const pageErrors = [];
+  const failedRequests = [];
+  const transientResponses = [];
+  const onConsole = (message) => {
+    if (message.type() === 'error' && isActionableConsoleError(message.text())) {
+      consoleErrors.push(message.text());
+    }
+  };
+  const onPageError = (error) => pageErrors.push(error.message);
+  const onRequestFailed = (request) => {
+    const target = new URL(request.url());
+    const isRequiredMathRuntime = target.href.startsWith(
+      'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/',
+    );
+    if (target.origin === new URL(options.baseUrl).origin || isRequiredMathRuntime) {
+      failedRequests.push(`${target.pathname}: ${request.failure()?.errorText ?? 'failed'}`);
+    }
+  };
+  const onResponse = (response) => {
+    try {
+      const status = typeof response.status === 'function' ? response.status() : response.status;
+      if (RETRYABLE_STATUS_CODES.has(status)) {
+        const url = typeof response.url === 'function' ? response.url() : response.url;
+        transientResponses.push({ url, status });
+      }
+    } catch {}
+  };
+  page.on('console', onConsole);
+  page.on('pageerror', onPageError);
+  page.on('requestfailed', onRequestFailed);
+  page.on('response', onResponse);
+  return {
+    consoleErrors,
+    pageErrors,
+    failedRequests,
+    transientResponses,
+    onConsole,
+    onPageError,
+    onRequestFailed,
+    onResponse,
+    resetAttemptEvidence: () => {
+      consoleErrors.length = 0;
+      pageErrors.length = 0;
+      failedRequests.length = 0;
+      transientResponses.length = 0;
+    },
+    detach: () => {
+      page.off('console', onConsole);
+      page.off('pageerror', onPageError);
+      page.off('requestfailed', onRequestFailed);
+      page.off('response', onResponse);
+    },
+  };
+}
+
+function isRemoteBaseUrl(baseUrl) {
+  if (!baseUrl || typeof baseUrl !== 'string') return false;
+  try {
+    const parsed = new URL(baseUrl);
+    const host = parsed.hostname.toLowerCase();
+    return (
+      host !== 'localhost' &&
+      host !== '127.0.0.1' &&
+      host !== '0.0.0.0' &&
+      host !== '::1' &&
+      !host.endsWith('.local')
+    );
+  } catch {
+    return false;
+  }
+}
+
+function shouldRetryEvidenceAttempt(failures, listeners = {}, options = {}) {
+  if (!Array.isArray(failures) || failures.length === 0) return false;
+  if (hasTransientSubresourceFailure(failures, listeners)) return true;
+  if (isRemoteBaseUrl(options.baseUrl)) return true;
+  return false;
 }
 
 async function collectEvidenceAttempt(page, item, options, listeners, pageVerification) {
@@ -58,6 +145,9 @@ async function collectEvidenceAttempt(page, item, options, listeners, pageVerifi
   failures.push(...listeners.consoleErrors.map((error) => `console: ${error}`));
   failures.push(...listeners.pageErrors.filter(isActionablePageError).map((error) => `pageerror: ${error}`));
   failures.push(...listeners.failedRequests.map((error) => `requestfailed: ${error}`));
+  for (const resp of listeners.transientResponses ?? []) {
+    failures.push(`response: subresource HTTP ${resp.status} on ${resp.url}`);
+  }
 
   return {
     failures,
@@ -71,6 +161,7 @@ async function collectEvidenceAttempt(page, item, options, listeners, pageVerifi
 
 async function collectEvidenceWithSubresourceRetries(page, item, options, listeners, pageVerification) {
   const maxEvidenceAttempts = options.documentRetries + 1;
+  const sleepFn = options.sleepFn ?? sleepMs;
   let evidenceAttemptCount = 0;
   let subresourceRetried = false;
   let response = null;
@@ -83,13 +174,13 @@ async function collectEvidenceWithSubresourceRetries(page, item, options, listen
     if (evidenceAttempt > 1) {
       subresourceRetried = true;
       const delayMs = retryDelay(options.documentRetryDelayMs, evidenceAttempt - 1);
-      if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1') {
+      if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1' || options.verbose) {
         console.log(
           `Transient subresource load on ${item.route} (${item.viewport.id}, ${item.theme}); ` +
           `retrying evidence in ${delayMs}ms (attempt ${evidenceAttempt}/${maxEvidenceAttempts})...`,
         );
       }
-      await sleepMs(delayMs);
+      await sleepFn(delayMs);
       listeners.resetAttemptEvidence();
     }
     const attempt = await collectEvidenceAttempt(page, item, options, listeners, pageVerification);
@@ -102,7 +193,7 @@ async function collectEvidenceWithSubresourceRetries(page, item, options, listen
     failures = attempt.failures;
     if (failures.length === 0) break;
     if (options.documentRetries === 0) break;
-    if (!failuresAreOnlyRetriableSubresourceNoise(failures)) break;
+    if (!shouldRetryEvidenceAttempt(failures, listeners, options)) break;
     if (evidenceAttempt === maxEvidenceAttempts) break;
   }
   return {
@@ -119,4 +210,7 @@ async function collectEvidenceWithSubresourceRetries(page, item, options, listen
 
 module.exports = {
   collectEvidenceWithSubresourceRetries,
+  createPageListeners,
+  isRemoteBaseUrl,
+  shouldRetryEvidenceAttempt,
 };

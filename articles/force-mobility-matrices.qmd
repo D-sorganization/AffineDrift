@@ -84,11 +84,17 @@ The golf swing is the same. Your hands are one point, the clubhead is another. T
 
 These instantaneous capabilities are captured compactly by two geometric objects:
 
-- the **mobility ellipsoid**, the task velocities produced by a specified
-  joint-rate budget; and
+- the **velocity (manipulability) ellipsoid**, the task velocities produced by a
+  specified joint-rate budget; and
 - the **force ellipsoid**, or more generally force preimage, the task loads
   compatible with a specified generalized-load budget in an idealized
   balance calculation.
+
+The ellipsoid here is purely **kinematic**: it maps a joint-rate budget through
+$J$ only. In impedance control and task-space dynamics the symbol *mobility* often
+denotes the dynamic tensor $H=JM^{-1}J^{\mathsf T}$ (inverse operational-space
+inertia), with $\Lambda=H^{-1}$; see @sec-dynamics-compliance below and the
+[multibody drift-control comparison](calculation-framework-comparison/multibody-drift-control-v3.html).
 
 Reciprocal radii require compatible dual budgets, not merely the same
 Jacobian. Inertia, actuator capacity, contact and compliance must be added
@@ -117,10 +123,12 @@ v_p=J_p(q)\dot q,
 \qquad J_p=\frac{\partial p}{\partial q}.
 $$
 
-For a spatial task, one consistent ordering is $V=(v_p,\omega)$, paired with
-the wrench $W=(F,m_p)$ at the **same point** and in the **same frame**. Their
-pairing is power: $W^TV=F^Tv_p+m_p^T\omega$. Moment must be shifted when the
-reference point changes. Body or spatial twist conventions are equally usable
+For a spatial task this page uses linear-first $V=(v_p,\omega)$ with force-first
+$W=(F,m_p)$ at the **same point** and in the **same frame** (power
+$W^TV=F^Tv_p+m_p^T\omega$). The site contract in [NOTATION](../pages/notation.html)
+uses angular-first $(\omega,v_p)$ and $(m_p,F)$; permute the two three-blocks before
+stacking a 6-row Jacobian with PoG or Geometry of Motion chapters. Moment must be
+shifted when the reference point changes. Body or spatial twist conventions are equally usable
 when their velocity, Jacobian and wrench definitions match throughout.
 
 A pose is not globally a vector in $\mathbb R^6$. A local orientation-chart
@@ -134,7 +142,7 @@ from a unit velocity in a single joint.
 Thus, the geometry of $J$ encodes the instantaneous mechanical leverage of the 
 entire body at that moment.
 
-## The Mobility Ellipsoid
+## The Velocity (Manipulability) Ellipsoid {#sec-velocity-manipulability-ellipsoid}
 
 Write a joint-rate budget as $\dot q^T H\dot q\leq1$, where $H$ is positive
 definite and includes the scales needed to make the expression dimensionless.
@@ -409,7 +417,7 @@ $JRJ^T$ is unchanged. A stiffness change does not literally inflate that
 force ellipsoid. A capacity change instead requires an updated admissible
 load set, whose values need evidence.
 
-## Dynamics, Compliance and Impact Need Additional Models
+## Dynamics, Compliance and Impact Need Additional Models {#sec-dynamics-compliance}
 
 ### Acceleration Authority and Apparent Inertia
 

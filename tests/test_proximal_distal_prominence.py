@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MONOGRAPH_ROUTE = "articles/proximal_distal_energy_transfer/index.html"
 MONOGRAPH_SOURCE_COMMIT = "85cce4d3307bb7ad3953d9fc6e583e370803515c"
-TOOLS_SOURCE_COMMIT = "cefcc1878de11804c44cd7d1d19c0ffcf58fa89e"
+TOOLS_SOURCE_COMMIT = "3462749d814a0b0082544054f8d74f8fdbd8b497"
 
 
 def _read(relative_path: str) -> str:

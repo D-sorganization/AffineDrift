@@ -194,3 +194,20 @@ def test_create_html_page_with_fix_paths(tmp_path: Path) -> None:
     )
     content = out.read_text()
     assert "../" in content
+
+
+@pytest.mark.parametrize(
+    "text", [r"Path C:\new", r"Group \1", r"Math \alpha", r"Literal \g<missing>"]
+)
+@pytest.mark.parametrize("visible", [False, True])
+def test_metadata_preserves_literal_backslashes(text: str, visible: bool) -> None:
+    """User text is escaped as HTML without interpreting regex replacement syntax."""
+    if visible:
+        template = '<h1 class="title">Old</h1><div class="description">Old</div>'
+        result = html_utils.update_title_block(template, text, text)
+        assert f'<h1 class="title">{html_utils.escape_html(text)}</h1>' in result
+    else:
+        template = '<title>Old</title><meta name="description" content="Old">'
+        result = html_utils.update_metadata(template, text, text)
+        assert f"<title>{html_utils.escape_html(text)} – AffineDrift</title>" in result
+    assert result.count(html_utils.escape_html(text)) == 2

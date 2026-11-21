@@ -124,3 +124,25 @@
 .page-header-cite-link:focus-visible {
   color: var(--color-primary-dark);
 }
+
+@media (pointer: coarse) {
+  .badge--maturity {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.65rem;
+  }
+
+  /* Title-block chrome under 44px on a 390px touch scan (#5314): category
+     chip links (~15px tall) and Quarto's Code tools button (38px). */
+  #title-block-header .quarto-category a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 0.25rem;
+  }
+
+  #title-block-header #quarto-code-tools-source {
+    min-height: 44px;
+  }
+}

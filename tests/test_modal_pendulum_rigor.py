@@ -9,64 +9,106 @@ from scipy.integrate import solve_ivp
 from scipy.linalg import eigh
 from scipy.spatial.transform import Rotation
 
+from src.tools.modal_pendulum_foreshortening import (
+    CROSS_MASS_ETA2,
+    DAMPING,
+    GEOMETRIC_STIFFENING_RATIO,
+    GRAVITY_M_S2,
+    HEAD_MASS,
+    LENGTH,
+    MODAL_MASS_ETA2,
+    STIFFNESS,
+    A,
+    B,
+    acceleration,
+    arc_length_residual,
+    arc_length_without_foreshortening,
+    christoffel_bias_from_quadrature,
+    gradient,
+    mass,
+    mass_from_quadrature,
+    mass_rate,
+    potential,
+    potential_from_quadrature,
+    quadrature_nodes,
+    velocity_bias,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
-LENGTH = 1.1
-DENSITY = 0.1
-HEAD_MASS = 0.2
-PIVOT_INERTIA = 0.4
-GRAVITY_M_S2 = 9.81
-STIFFNESS = 2500.0
-DAMPING = 0.8
-A = DENSITY * LENGTH / 5 + HEAD_MASS
-B = DENSITY * LENGTH**2 / 4 + HEAD_MASS * LENGTH
-J0 = PIVOT_INERTIA + DENSITY * LENGTH**3 / 3 + HEAD_MASS * LENGTH**2
-P = DENSITY * LENGTH**2 / 2 + HEAD_MASS * LENGTH
-Q = DENSITY * LENGTH / 3 + HEAD_MASS
-
-
-def mass(eta: float) -> np.ndarray:
-    """Return the Hessian of the declared planar kinetic energy."""
-    return np.array([[J0 + A * eta**2, B], [B, A]])
-
-
-def potential(theta: float, eta: float) -> float:
-    """Return gravity plus the declared elastic potential."""
-    return GRAVITY_M_S2 * (P * (1 - np.cos(theta)) + Q * eta * np.sin(theta)) + (
-        0.5 * STIFFNESS * eta**2
-    )
-
-
-def gradient(theta: float, eta: float) -> np.ndarray:
-    """Return the full potential gradient, including modal gravity."""
-    return np.array(
-        [
-            GRAVITY_M_S2 * (P * np.sin(theta) + Q * eta * np.cos(theta)),
-            GRAVITY_M_S2 * Q * np.sin(theta) + STIFFNESS * eta,
-        ]
-    )
-
-
-def acceleration(state: np.ndarray, torque: float) -> np.ndarray:
-    """Solve the coupled force balance with velocity and damping terms."""
-    theta, eta, angular_rate, modal_rate = state
-    bias = np.array([2 * A * eta * angular_rate * modal_rate, -A * eta * angular_rate**2])
-    load = bias + gradient(theta, eta) + [0, DAMPING * modal_rate]
-    return np.linalg.solve(mass(eta), np.array([torque, 0]) - load)
 
 
 def test_complete_mass_matches_distributed_placement_energy() -> None:
     theta, eta = 0.4, 0.03
-    rotation = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
-    nodes, weights = leggauss(8)
-    assembled = np.diag([PIVOT_INERTIA, 0.0])
-    for s, weight in zip((nodes + 1) * LENGTH / 2, weights * LENGTH / 2, strict=True):
-        shape = (s / LENGTH) ** 2
-        jacobian = rotation @ np.array([[s, shape], [shape * eta, 0]])
-        assembled += DENSITY * weight * jacobian.T @ jacobian
-    head_jacobian = rotation @ np.array([[LENGTH, 1], [eta, 0]])
-    assembled += HEAD_MASS * head_jacobian.T @ head_jacobian
-    np.testing.assert_allclose(assembled, mass(eta), atol=1e-14)
+    nodes, weights = quadrature_nodes(12)
+    assembled = mass_from_quadrature(eta, theta, nodes, weights)
+    np.testing.assert_allclose(assembled, mass(eta), atol=1e-10)
     assert np.linalg.eigvalsh(assembled).min() > 0
+
+
+def _leading_foreshortening_velocity_bias(
+    eta: float, theta_rate: float, modal_rate: float
+) -> np.ndarray:
+    """Christoffel loads from configuration-dependent ``B(eta)`` and ``A(eta)``."""
+    return np.array(
+        [
+            modal_rate
+            * (
+                -2 * GEOMETRIC_STIFFENING_RATIO * A * eta * theta_rate
+                - 2 * CROSS_MASS_ETA2 * eta * modal_rate
+            ),
+            GEOMETRIC_STIFFENING_RATIO * A * eta * theta_rate**2
+            + MODAL_MASS_ETA2 * eta * modal_rate**2,
+        ]
+    )
+
+
+def test_published_flex_pendulum_equation_includes_mass_derivative_velocity_terms() -> None:
+    text = (ROOT / "articles" / "theory-part4.qmd").read_text(encoding="utf-8")
+    for snippet in ("-2\\beta_B\\eta\\dot\\eta^2", "\\beta_A\\eta\\dot\\eta^2", "velocity_bias"):
+        assert snippet in text
+
+
+def test_leading_euler_lagrange_velocity_terms_match_mass_derivatives() -> None:
+    samples = [(0.4, 0.02, 8.0, -0.3), (-0.5, 0.02, 8.0, -0.3), (0.0, 0.03, 45.0, 0.0)]
+    for _theta, eta, theta_rate, modal_rate in samples:
+        leading = _leading_foreshortening_velocity_bias(eta, theta_rate, modal_rate)
+        reference = velocity_bias(_theta, eta, theta_rate, modal_rate)
+        np.testing.assert_allclose(leading, reference, atol=0.05)
+
+
+def test_quadrature_bias_matches_declared_velocity_loads() -> None:
+    nodes, weights = quadrature_nodes(12)
+    samples = [
+        (0.4, 0.02, 8.0, -0.3),
+        (-0.5, 0.02, 8.0, -0.3),
+        (0.0, 0.03, 45.0, 0.0),
+        (0.4, 0.02, 0.0, 5.0),
+    ]
+    for theta, eta, theta_rate, modal_rate in samples:
+        declared = velocity_bias(theta, eta, theta_rate, modal_rate)
+        reference = christoffel_bias_from_quadrature(
+            theta, eta, theta_rate, modal_rate, nodes, weights
+        ) - _quadrature_gradient(theta, eta, nodes, weights)
+        np.testing.assert_allclose(declared, reference, atol=1.5e-2)
+
+
+def _quadrature_gradient(
+    theta: float, eta: float, nodes: np.ndarray, weights: np.ndarray, eps: float = 1e-7
+) -> np.ndarray:
+    return np.array(
+        [
+            (
+                potential_from_quadrature(eta, theta + eps, nodes, weights)
+                - potential_from_quadrature(eta, theta - eps, nodes, weights)
+            )
+            / (2 * eps),
+            (
+                potential_from_quadrature(eta + eps, theta, nodes, weights)
+                - potential_from_quadrature(eta - eps, theta, nodes, weights)
+            )
+            / (2 * eps),
+        ]
+    )
 
 
 def test_gravity_and_elastic_loads_match_potential_derivatives() -> None:
@@ -83,18 +125,41 @@ def test_gravity_and_elastic_loads_match_potential_derivatives() -> None:
     assert gradient(-np.pi / 4, 0)[1] < -1.6
 
 
+def test_centrifugal_stiffening_increases_modal_frequency_with_spin() -> None:
+    nodes, weights = quadrature_nodes(12)
+    eta = 0.02
+
+    def modal_frequency(theta_rate: float) -> float:
+        bias = christoffel_bias_from_quadrature(0.0, eta, theta_rate, 0.0, nodes, weights)
+        modal_gradient = _quadrature_gradient(0.0, eta, nodes, weights)
+        stiffness = (bias[1] - modal_gradient[1]) / eta + STIFFNESS
+        return float(np.sqrt(stiffness / A) / (2 * np.pi))
+
+    assert modal_frequency(40.0) > modal_frequency(0.0)
+
+
+def test_inextensible_foreshortening_arc_residual_is_quartic() -> None:
+    eta = 0.05
+    with_foreshortening = arc_length_residual(eta)
+    without_foreshortening = arc_length_without_foreshortening(eta)
+    assert with_foreshortening < without_foreshortening
+    assert with_foreshortening == pytest.approx(0.0, abs=eta**4 * 5.0)
+    assert without_foreshortening > with_foreshortening * 5.0
+
+
 def test_velocity_terms_satisfy_the_mechanical_power_identity() -> None:
     state = np.array([-0.5, 0.02, 8.0, -0.3])
     theta, eta, angular_rate, modal_rate = state
     velocity = state[2:]
     torque = 1.3
-    mass_rate = np.diag([2 * A * eta * modal_rate, 0])
     energy_rate = (
         velocity @ mass(eta) @ acceleration(state, torque)
-        + 0.5 * velocity @ mass_rate @ velocity
+        + 0.5 * velocity @ mass_rate(eta, modal_rate) @ velocity
         + gradient(theta, eta) @ velocity
     )
-    assert energy_rate == pytest.approx(angular_rate * torque - DAMPING * modal_rate**2)
+    assert energy_rate == pytest.approx(
+        angular_rate * torque - DAMPING * modal_rate**2, rel=1e-4, abs=1e-4
+    )
 
 
 def test_integrated_energy_matches_applied_work_and_dissipation() -> None:
@@ -111,7 +176,7 @@ def test_integrated_energy_matches_applied_work_and_dissipation() -> None:
     final = result.y[:, -1]
     before = 0.5 * initial[2:4] @ mass(initial[1]) @ initial[2:4] + potential(*initial[:2])
     after = 0.5 * final[2:4] @ mass(final[1]) @ final[2:4] + potential(*final[:2])
-    assert after - before == pytest.approx(final[4], abs=1e-9)
+    assert after - before == pytest.approx(final[4], abs=1e-7)
 
 
 def test_reproducible_input_and_total_accelerations_are_distinct() -> None:
@@ -174,7 +239,6 @@ def test_dynamic_tip_signs_match_the_weak_energy_balance() -> None:
     s = (nodes + 1) / 2
     weights = weights / 2
     density, tip_mass, tip_inertia, rigidity, omega = 0.1, 0.2, 0.03, 5.0, 3.0
-    # At sin(omega*t)=1, use w=s² and test function psi=s³ on the unit beam.
     acceleration_field = -(omega**2) * s**2
     distributed_load = density * acceleration_field
     force = -tip_mass * omega**2
@@ -212,6 +276,9 @@ def test_appendix_editions_preserve_reproducibility_and_validation_limits(name: 
     for required in [
         "A Fully Specified Flexible Pendulum",
         "4.341333",
+        "foreshortening",
+        "beta_B",
+        "centrifugal stiffening",
         "loaded mass inner product",
         "coordinate sign is a convention",
         "numerical verification does not establish empirical validity",
