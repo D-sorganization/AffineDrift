@@ -51,3 +51,24 @@ def test_check_rules_flags_forbidden_js_import(tmp_path: Path) -> None:
     violations = check_rules(tmp_path)
     assert len(violations) == 1
     assert "must not import" in violations[0]
+
+
+def test_multiline_imports_report_start_lines_and_dependency_violations(tmp_path: Path) -> None:
+    _write(
+        tmp_path / "config/js_dependency_boundaries.json",
+        '{"rules": [{"source_prefix": "js/", "forbidden_prefixes": ["scripts/"]}],'
+        ' "exclude_substrings": []}',
+    )
+    _write(
+        tmp_path / "js/main.js",
+        '// Header\nimport {\n  helper,\n} from "../scripts/static.js";\n'
+        '\nconst lazy = import(\n  "../scripts/dynamic.js"\n);\n'
+        '\nimport {\n  allowed,\n} from "./allowed.js";\n',
+    )
+
+    violations = check_rules(tmp_path)
+
+    assert violations == [
+        "js/main.js:2 js/ must not import scripts/ (found: ../scripts/static.js)",
+        "js/main.js:6 js/ must not import scripts/ (found: ../scripts/dynamic.js)",
+    ]

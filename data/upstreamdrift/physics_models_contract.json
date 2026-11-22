@@ -1,0 +1,87 @@
+{
+  "schema_version": "affinedrift/upstreamdrift-physics-models-contract/v1",
+  "upstream_commit": "4a1c5f43433c8bbfbe48e269fb0fcfeb61266829",
+  "upstream_source_checks": [
+    {
+      "id": "g1_roll_slope",
+      "path": "src/shared/python/putting_dynamics/solver.py",
+      "required_substrings": [
+        "_roll_g = 5.0 / 7.0",
+        "HOLE_RADIUS_M = 0.054",
+        "capture_speed_mps"
+      ],
+      "forbidden_substrings": []
+    },
+    {
+      "id": "g4_penner_lift",
+      "path": "src/shared/python/physics/flight_models.py",
+      "required_substrings": [
+        "cd0=0.21",
+        "PENNER_LIFT_EXPONENT",
+        "MAX_GOLF_BALL_LIFT_COEFFICIENT = 0.155"
+      ],
+      "forbidden_substrings": []
+    },
+    {
+      "id": "g6_spin_decay",
+      "path": "src/shared/python/core/physics_constants.py",
+      "required_substrings": [
+        "SPIN_DECAY_RATE_S = PhysicalConstant(0.05, \"1/s\", \"Trackman Data\""
+      ],
+      "forbidden_substrings": []
+    },
+    {
+      "id": "g3_putting_friction_defaults",
+      "path": "src/shared/python/putting_dynamics/friction.py",
+      "required_substrings": [
+        "STIMP_RELEASE_SPEED_MPS = 1.83",
+        "DEFAULT_SLIDING_MU = 0.40",
+        "DEFAULT_STATIC_MU = 0.08"
+      ],
+      "forbidden_substrings": []
+    }
+  ],
+  "site_file_checks": [
+    {
+      "path": "articles/upstreamdrift-physics-models.qmd",
+      "required_substrings": [
+        "4a1c5f43433c8bbfbe48e269fb0fcfeb61266829",
+        "scaled by $5/7$",
+        "MISMATCH (G2)",
+        "MISMATCH (G4",
+        "#15010",
+        "#15011",
+        "#5624"
+      ],
+      "forbidden_substrings": [
+        "625a16e6897b88ab29fb5a64c65ecee820dd58f5",
+        "MISMATCH (G1)",
+        "applies the full small-slope gradient",
+        "Roll slope gravity | $(5/7)\\mathbf g_\\parallel$ | full $\\mathbf g_\\parallel$",
+        "~5.6 %"
+      ]
+    },
+    {
+      "path": "articles/green-simulation.qmd",
+      "required_substrings": [
+        "4a1c5f43433c8bbfbe48e269fb0fcfeb61266829",
+        "$(5/7)\\,g_{x,y}$",
+        "upstreamdrift-physics-models.html"
+      ],
+      "forbidden_substrings": [
+        "625a16e6897b88ab29fb5a64c65ecee820dd58f5",
+        "without a $(1+\\alpha)$ factor"
+      ]
+    },
+    {
+      "path": "articles/putting-roll-models.qmd",
+      "required_substrings": [
+        "upstreamdrift-physics-models.html",
+        "(5/7)"
+      ],
+      "forbidden_substrings": [
+        "full small-slope gradient $-g\\nabla h$ in roll as well as slide"
+      ]
+    }
+  ]
+}

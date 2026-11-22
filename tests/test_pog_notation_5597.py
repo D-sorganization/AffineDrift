@@ -57,5 +57,96 @@ def test_ch25_reserves_uppercase_g_for_input_map(path: Path) -> None:
 def test_notation_documents_pog_part_i_table() -> None:
     text = NOTATION.read_text(encoding="utf-8")
     assert "Physics of Golf Part I Multibody Symbols" in text
-    assert "| **$r_i$** | COM distance" in text
+    rows = (
+        [cell.strip() for cell in line.split("|")]
+        for line in text.splitlines()
+        if line.startswith("|")
+    )
+    row = next(cells for cells in rows if cells[1] == "**$r_i$**")
+    assert row[2].startswith("COM distance")
     assert "Motor Control Delay and Activation" in text
+
+
+@pytest.mark.parametrize(
+    "path",
+    [POG / "quarto" / "ch32_putting.qmd", POG / "chapters" / "ch32_putting.tex"],
+)
+def test_ch32_ball_and_pendulum_masses_remain_distinct(path: Path) -> None:
+    """The slip, normal-load, pendulum and impact laws identify their own mass."""
+    text = path.read_text(encoding="utf-8")
+    for expression in (
+        r"I=\kappa m_bR^2",
+        r"\frac{m_b\kappa}{2(1+\kappa)}",
+        r"N=m_bg\cos\alpha",
+        r"I_p\ddot\theta+m_agd\sin\theta",
+        r"\frac{I_p}{m_ad}",
+        r"v_b^+=(1+e)M U_h/(M+m_b)",
+    ):
+        assert expression in text
+    assert "assembly mass" in text
+    assert "ball mass" in text
+    for ambiguous in (r"\kappa mR^2", r"+mgd\sin", "N=mg", "(M+m)"):
+        assert ambiguous not in text
+
+
+@pytest.mark.parametrize(
+    "path",
+    [POG / "quarto" / "ch32_putting.qmd", POG / "chapters" / "ch32_putting.tex"],
+)
+def test_ch32_declares_local_angle_and_inertia_notation(path: Path) -> None:
+    """A reader crossing from launch mechanics can distinguish the local symbols."""
+    text = path.read_text(encoding="utf-8")
+    assert "slope angle" in text and "attack angle" in text
+    assert "inertia factor" in text and "inverse effective mass" in text
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        POG / "quarto" / "ch29_joint_damping_friction.qmd",
+        POG / "chapters" / "ch29_joint_damping_friction.tex",
+    ],
+)
+def test_ch29_gyroscopic_and_damping_symbols_are_distinct(path: Path) -> None:
+    """Stability and mobility use Gamma/D; G and C retain their dynamics roles."""
+    text = path.read_text(encoding="utf-8")
+    assert r"\mathbf M\ddot{\boldsymbol\xi}+(\boldsymbol\Gamma+\mathbf D)" in text
+    assert r"\dot E=-\dot{\boldsymbol\xi}^T\mathbf D\dot{\boldsymbol\xi}" in text
+    assert r"i\omega(\boldsymbol\Gamma+\mathbf D)" in text
+    assert r"\boldsymbol\Gamma=\begin{bmatrix}0&-3\\3&0\end{bmatrix}" in text
+    assert r"\mathbf D=0.1\mathbf I" in text
+    assert r"\mathbf G+\mathbf C" not in text
+    assert r"\mathbf C=0" not in text
+    assert r"-\mathbf D_{\rm cart}(\dot{\mathbf r}-\dot{\mathbf r}_d)" in text
+    assert "gyroscopic matrix" in text
+    assert "perturbation displacement" in text
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        POG / "quarto" / "ch29_joint_damping_friction.qmd",
+        POG / "chapters" / "ch29_joint_damping_friction.tex",
+    ],
+)
+def test_ch29_null_basis_is_distinct_from_coordinate_rate_map(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    assert r"\bm N(\bm q)\bm v" in text
+    assert r"\mathbf J_c\mathbf Z=0" in text
+    assert r"\mathbf D_r=\mathbf Z^T\mathbf D\mathbf Z" in text
+    assert "full column rank" in text
+    assert r"\mathbf N\dot{\mathbf s}" not in text
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        POG / "quarto" / "ch29_joint_damping_friction.qmd",
+        POG / "chapters" / "ch29_joint_damping_friction.tex",
+    ],
+)
+def test_ch29_full_bias_includes_declared_passive_damping(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    assert r"h(q,v)=C(q,v)v+D(q)v+g(q)" in text
+    assert r"(f_0+f_d)_v=-M(q)^{-1}h(q,v)" in text
+    assert "full-bias convention" in text

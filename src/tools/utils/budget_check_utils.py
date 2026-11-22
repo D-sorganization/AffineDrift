@@ -74,7 +74,8 @@ def collect_matching_files(
         include_roots: Path prefixes that must match.
         exclude_substrings: Substrings that disqualify a path.
         allowed_extensions: If provided, only files whose lowered suffix
-            is in this set are returned.
+            is in this set are returned. An empty set matches no files;
+            include the empty string to match extensionless files.
 
     Returns:
         Sorted list of matching ``Path`` objects.
@@ -96,7 +97,7 @@ def collect_matching_files(
             rel = path.relative_to(repo_root)
             if not is_included(rel, include_roots, exclude_substrings):
                 continue
-            if allowed_extensions and path.suffix and path.suffix.lower() not in allowed_extensions:
+            if allowed_extensions is not None and path.suffix.lower() not in allowed_extensions:
                 continue
             matched.append(path)
     return sorted(set(matched))

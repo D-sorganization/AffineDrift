@@ -352,6 +352,198 @@
       "literal_checks": []
     },
     {
+      "id": "spin_decay_rate",
+      "category": "Ball flight",
+      "name": "Exponential spin decay rate (Rust / MacDonald–Hanzely)",
+      "symbol": "k",
+      "unit": "s⁻¹",
+      "definition": "Spin decay coefficient in dω/dt = −kω used by the Rust trajectory kernel and several registered flight models.",
+      "value": "0.05",
+      "value_kind": "scalar",
+      "source": "UpstreamDrift physics_constants.SPIN_DECAY_RATE_S (provenance string cites Trackman Data)",
+      "rule_or_standard": "Engineering default (verify against launch-monitor exports)",
+      "chapters": [
+        "articles/upstreamdrift-physics-models",
+        "articles/impact-mechanics-and-ball-flight"
+      ],
+      "upstream": [
+        {
+          "path": "src/shared/python/core/physics_constants.py",
+          "symbol": "SPIN_DECAY_RATE_S"
+        }
+      ],
+      "affine_refs": [],
+      "literal_checks": []
+    },
+    {
+      "id": "hole_radius_usga",
+      "category": "Putting",
+      "name": "Hole radius (USGA)",
+      "symbol": "R_h",
+      "unit": "m",
+      "definition": "Radius of a regulation hole (4.25 in diameter).",
+      "value": "0.054",
+      "value_kind": "scalar",
+      "source": "USGA hole diameter; UpstreamDrift putting_dynamics.solver.HOLE_RADIUS_M",
+      "rule_or_standard": "USGA",
+      "chapters": [
+        "articles/putting-roll-models",
+        "articles/green-simulation",
+        "articles/upstreamdrift-physics-models"
+      ],
+      "upstream": [
+        {
+          "path": "src/shared/python/putting_dynamics/solver.py",
+          "symbol": "HOLE_RADIUS_M"
+        }
+      ],
+      "affine_refs": [],
+      "literal_checks": []
+    },
+    {
+      "id": "stimp_release_speed",
+      "category": "Putting",
+      "name": "Stimpmeter release speed (calibration)",
+      "symbol": "v_{\\mathrm{release}}",
+      "unit": "m/s",
+      "definition": "Release speed used in the Stimp-to-rolling-resistance inversion (not necessarily the flat-ramp closed form).",
+      "value": "1.83",
+      "value_kind": "scalar",
+      "source": "USGA stimpmeter convention restated in UpstreamDrift putting_dynamics/friction.py",
+      "rule_or_standard": "USGA convention",
+      "chapters": [
+        "articles/putting-roll-models",
+        "articles/upstreamdrift-physics-models"
+      ],
+      "upstream": [
+        {
+          "path": "src/shared/python/putting_dynamics/friction.py",
+          "symbol": "STIMP_RELEASE_SPEED_MPS"
+        }
+      ],
+      "affine_refs": [],
+      "literal_checks": []
+    },
+    {
+      "id": "putting_sliding_friction",
+      "category": "Putting",
+      "name": "Green sliding friction (default)",
+      "symbol": "\\mu_{\\mathrm{slide}}",
+      "unit": "—",
+      "definition": "Kinetic Coulomb coefficient for the putting skid phase in UpstreamDrift putting_dynamics.",
+      "value": "0.40",
+      "value_kind": "scalar",
+      "source": "UpstreamDrift putting_dynamics/friction.DEFAULT_SLIDING_MU",
+      "rule_or_standard": "Engineering default",
+      "chapters": [
+        "articles/green-simulation",
+        "articles/upstreamdrift-physics-models"
+      ],
+      "upstream": [
+        {
+          "path": "src/shared/python/putting_dynamics/friction.py",
+          "symbol": "DEFAULT_SLIDING_MU"
+        }
+      ],
+      "affine_refs": [],
+      "literal_checks": []
+    },
+    {
+      "id": "putting_static_hold",
+      "category": "Putting",
+      "name": "Static rolling hold (default)",
+      "symbol": "\\mu_{\\mathrm{static}}",
+      "unit": "—",
+      "definition": "Maximum slope magnitude a resting ball can hold before re-starting roll.",
+      "value": "0.08",
+      "value_kind": "scalar",
+      "source": "UpstreamDrift putting_dynamics/friction.DEFAULT_STATIC_MU",
+      "rule_or_standard": "Engineering default",
+      "chapters": [
+        "articles/green-simulation",
+        "articles/upstreamdrift-physics-models"
+      ],
+      "upstream": [
+        {
+          "path": "src/shared/python/putting_dynamics/friction.py",
+          "symbol": "DEFAULT_STATIC_MU"
+        }
+      ],
+      "affine_refs": [],
+      "literal_checks": []
+    },
+    {
+      "id": "green_contact_cor",
+      "category": "Putting",
+      "name": "Green contact restitution (default)",
+      "symbol": "e_g",
+      "unit": "—",
+      "definition": "Normal restitution applied on airborne hop contacts with the green surface.",
+      "value": "0.78",
+      "value_kind": "scalar",
+      "source": "UpstreamDrift physics_constants.GREEN_RESTITUTION (uncited engineering default)",
+      "rule_or_standard": "Engineering placeholder",
+      "chapters": [
+        "articles/upstreamdrift-physics-models"
+      ],
+      "upstream": [
+        {
+          "path": "src/shared/python/core/physics_constants.py",
+          "symbol": "GREEN_RESTITUTION"
+        }
+      ],
+      "affine_refs": [],
+      "literal_checks": []
+    },
+    {
+      "id": "typical_contact_duration",
+      "category": "Impact & contact",
+      "name": "Typical club–ball contact duration",
+      "symbol": "t_c",
+      "unit": "s",
+      "definition": "Representative impact duration for driver strikes in high-speed video studies.",
+      "value": "0.0005",
+      "value_kind": "scalar",
+      "source": "UpstreamDrift physics_constants.TYPICAL_CONTACT_DURATION_S",
+      "rule_or_standard": "Literature typical",
+      "chapters": [
+        "PoG ch28",
+        "articles/upstreamdrift-physics-models"
+      ],
+      "upstream": [
+        {
+          "path": "src/shared/python/core/physics_constants.py",
+          "symbol": "TYPICAL_CONTACT_DURATION_S"
+        }
+      ],
+      "affine_refs": [],
+      "literal_checks": []
+    },
+    {
+      "id": "air_dynamic_viscosity",
+      "category": "Environment",
+      "name": "Air dynamic viscosity (15 °C)",
+      "symbol": "\\mu",
+      "unit": "Pa·s",
+      "definition": "Dynamic viscosity of air at 15 °C used for Reynolds-number aerodynamics.",
+      "value": "1.789×10⁻⁵",
+      "value_kind": "scalar",
+      "source": "ISO 2533; UpstreamDrift AIR_VISCOSITY_KG_M_S",
+      "rule_or_standard": "ISA",
+      "chapters": [
+        "articles/impact-mechanics-and-ball-flight",
+        "articles/upstreamdrift-physics-models"
+      ],
+      "upstream": [
+        {
+          "path": "src/shared/python/core/physics_constants.py",
+          "symbol": "AIR_VISCOSITY_KG_M_S"
+        }
+      ],
+      "affine_refs": [],
+      "literal_checks": []
+    },
+    {
       "id": "clubhead_cog_offset",
       "category": "Club & equipment",
       "name": "Clubhead center-of-gravity offset",

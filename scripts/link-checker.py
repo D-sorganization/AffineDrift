@@ -45,7 +45,12 @@ class SafeRedirectHandler(HTTPRedirectHandler):
 
 
 # Configuration
-INTERNAL_REF_PATTERN = r"@(sec|fig|eq|tbl|lst|exr)-[\w-]+"
+# Pandoc identifiers may contain ":" (e.g. sec-ch7:mechanics); a label must end on a
+# word character so trailing sentence punctuation is not captured.
+_LABEL = r"(?:sec|fig|eq|tbl|lst|exr)-[\w:-]*\w"
+INTERNAL_REF_PATTERN = rf"@({_LABEL})"
+# Attribute labels ({#fig-x} or {#fig-x fig-alt="..."}) and code-chunk labels.
+REF_DEFINITION_PATTERNS = (rf"\{{#({_LABEL})[\s}}]", rf"#\|\s*label:\s*({_LABEL})")
 EXTERNAL_URL_PATTERN = r"https?://[^\s\)\]\}]+"
 KNOWN_FRAGILE_URLS = {
     "github.com",
@@ -105,9 +110,8 @@ def find_ref_definitions(root_dir: str) -> set[str]:
         try:
             with open(file_path, encoding="utf-8", errors="ignore") as f:
                 content = f.read()
-                # Look for {#sec-xxx} or {#fig-xxx} patterns (label definitions)
-                labels = re.findall(r"\{#(sec|fig|eq|tbl|lst|exr)-[\w-]+\}", content)
-                defined_refs.update(labels)
+                for pattern in REF_DEFINITION_PATTERNS:
+                    defined_refs.update(re.findall(pattern, content))
         except Exception as e:
             print(f"Warning: Could not read {file_path}: {e}", file=sys.stderr)
     return defined_refs
@@ -225,7 +229,7 @@ def check_file(
         # Check internal references
         if not external_only:
             refs_used = extract_internal_refs(content)
-            for ref in refs_used:
+            for ref in sorted(refs_used):
                 if ref not in defined_refs:
                     errors.append(f"{file_path}: Undefined reference: @{ref}")
 

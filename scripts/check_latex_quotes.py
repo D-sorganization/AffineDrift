@@ -35,14 +35,16 @@ from pathlib import Path
 ROOT = Path("articles")
 
 BLOCK = re.compile(
-    r"(?s)^\s*>?\s*```.*?^\s*>?\s*```"
-    r"|^\s*>?\s*~~~.*?^\s*>?\s*~~~"
+    r"(?s)^\s*>?\s*(?P<bt>`{3,}).*?^\s*>?\s*(?P=bt)"
+    r"|^\s*>?\s*(?P<tl>~{3,}).*?^\s*>?\s*(?P=tl)"
     r"|^\s*\$\$\s*$.*?^\s*\$\$"
     r"|\\begin\{(?:equation|align|gather|multline|displaymath|eqnarray)\*?\}.*?"
     r"\\end\{(?:equation|align|gather|multline|displaymath|eqnarray)\*?\}",
     re.MULTILINE,
 )
-INLINE = re.compile(r"\$\$.+?\$\$|\$[^$\n]+\$|`{1,3}[^`\n]+`{1,3}")
+# Avoid treating the next LaTeX opener followed by a word as a code closer.
+# masked() also protects adjacent pairs beginning with punctuation or whitespace.
+INLINE = re.compile(r"\$\$.+?\$\$|\$[^$\n]+\$|`{1,3}[^`\n]+`{1,3}(?![`\w])")
 PAIRED = re.compile(r"``(.+?)''", re.DOTALL)
 
 
@@ -57,7 +59,14 @@ def masked(text: str) -> str:
 
     for match in BLOCK.finditer(text):
         blank(match.start(), match.end())
-    for match in INLINE.finditer("".join(out)):
+    inline_text = "".join(out)
+    for match in INLINE.finditer(inline_text):
+        first = PAIRED.match(inline_text, match.start())
+        following = PAIRED.match(inline_text, match.end() - 2)
+        # Adjacent LaTeX pairs can resemble a code span ending at the next
+        # opening quote. Preserve both pairs, regardless of the next character.
+        if first is not None and following is not None and first.end() <= following.start():
+            continue
         blank(match.start(), match.end())
     return "".join(out)
 

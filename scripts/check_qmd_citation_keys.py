@@ -13,13 +13,13 @@ from typing import Any
 
 import yaml
 
+from scripts.quarto_fences import strip_fenced_code
 from src.tools.reference_audit import parse_bibtex_entry_keys
 from src.tools.utils.frontmatter import split_frontmatter
 
 logger = logging.getLogger(__name__)
 
 QMD_CITATION_PATTERN = re.compile(r"(?<![\w/])@([A-Za-z0-9][A-Za-z0-9:_-]*)")
-FENCED_CODE_BLOCK_PATTERN = re.compile(r"```.*?```", re.DOTALL)
 INLINE_CODE_PATTERN = re.compile(r"`[^`]*`")
 IGNORED_CITATION_PREFIXES = (
     "app:",
@@ -56,7 +56,7 @@ def extract_frontmatter(text: str) -> dict[str, Any]:
 
 def extract_citation_keys(text: str) -> set[str]:
     """Return the set of bibliography citation keys referenced in QMD text."""
-    text = FENCED_CODE_BLOCK_PATTERN.sub("", text)
+    text = strip_fenced_code(text)
     text = INLINE_CODE_PATTERN.sub("", text)
     keys = {
         match.group(1)

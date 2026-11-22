@@ -15,7 +15,7 @@
 | `deploy-website.yml` | `contents: read, pages: write, id-token: write` | none | none |
 | `label-merge-guard.yml` | `contents: read, pull-requests: read, issues: write` | none | none |
 | `link-checker.yml` | `contents: read, issues: write` | none | none |
-| `lint-workflow-files.yml` | `contents: read, pull-requests: write` | `L81: github.event.pull_request.number` | none |
+| `lint-workflow-files.yml` | `contents: read, pull-requests: write` | `L90: github.event.pull_request.number` | none |
 | `local-only-runner-guard.yml` | `contents: read` | none | none |
 | `pr-body-lint.yml` | `contents: read, issues: read, pull-requests: read` | none | none |
 | `release.yml` | `contents: write` | none | none |
@@ -27,6 +27,6 @@
 - **Top-level `permissions`**: All 18 workflows under `.github/workflows` explicitly declare top-level `permissions:` (`0` missing).
 - **Action SHA pinning (`uses:`)**: All 18 workflows have `0` unpinned action references (`conflict-disarm.yml` references the allowed fleet reusable workflow `D-sorganization/Repository_Management/.github/workflows/reusable-conflict-disarm.yml@main`; all other actions use 40-character commit SHAs).
 - **Untrusted `run:` interpolations (`${{ github.event.* }}`)**:
-  - `lint-workflow-files.yml` (`L81`): interpolates `github.event.pull_request.number` (integer PR number).
+  - `lint-workflow-files.yml` (`L90`): interpolates `github.event.pull_request.number` (integer PR number).
   - `spec-check.yml` (`L54`): interpolates `github.event.pull_request.base.sha` (40-hex commit SHA).
   - No workflow interpolates user-controlled text fields (`issue.title`, `issue.body`, `pull_request.title`, `pull_request.body`, `comment.body`, or `head.ref`) directly into `run:`.

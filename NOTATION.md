@@ -429,6 +429,17 @@ up. State the origin (ground point, pelvis, clubhead at address, etc.) wherever 
 this frame. **Forward** and **lateral** in prose mean downrange and left-of-target unless a
 chapter declares another frame.
 
+**Club frame (typical):** Origin at the hosel, shaft midpoint, head center of mass,
+or another declared head point. Unless a chapter defines face-normal head axes
+instead, take **$+z$ along the shaft toward the grip**, **$+x$ in the face plane**
+toward the toe (heel–toe), and **$+y = +z \times +x$** (right-handed). Face azimuth,
+loft, and path angles always refer to a declared normal or shaft direction in the
+stated parent frame.
+
+**Ball frame (typical):** Origin at the ball's geometric center. Axes are usually
+aligned with the site target frame at address or at impact, as declared in the
+collision or aerodynamics model.
+
 **Common article variants (always declare locally):**
 
 | Name | +X | +Y | +Z | Where used |
@@ -521,6 +532,35 @@ Some symbols are used for multiple meanings depending on context. Use surroundin
 use uppercase $G(q)$ for gravity. When a source convention must be quoted,
 identify it as source notation and translate immediately to the canonical
 symbols.
+
+### f₀, 𝒜(x), and the Title “Hyperplane” (Instantaneous Rate Set)
+
+For control-affine $\dot x=f_0(x,t)+G(x,t)u$, the **instantaneous rate set** at
+state $x$ is
+
+$$
+\mathcal A(x)=f_0(x,t)+\operatorname{im}G(x,t)\subset T_x\mathcal M,
+\qquad
+\dim\mathcal A(x)=\operatorname{rank}G(x,t).
+$$
+
+It lies in the tangent space, not in the state manifold. It is a **hyperplane in
+$T_x\mathcal M$** exactly when $\operatorname{rank}G(x,t)=n-1$. The affine
+tangent space $x+T_xM$ of a constraint level set and the tangent plane to the
+graph of a scalar map are different geometric objects; the tangent-hyperplane
+series defines the title wording through $\mathcal A(x)$ in [Part 1](../articles/tangent-hyperplanes-series/part-1-geometry.html).
+
+### h, R, and Ξ (Hybrid Guard, Reset, Saltation)
+
+| Symbol   | Meaning                                                                 | Rule                                                                 |
+| -------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **$h$**  | Guard function for a mode transition; event when $h(x,t)=0$ (or $h(t,x^-)=0$ at an impact) | Lowercase $h$ for hybrid guards in the tangent-hyperplane corpus; not the ZVCF bias load $h(q,\dot q,z;p)$ unless the section is explicitly about mechanics loads |
+| **$R$**  | Reset map $x^+=R(t,x^-)$ at an event                                    | Distinguish from rotation matrix **R** only by context (hybrid vs attitude) |
+| **$\Xi$** | Saltation matrix: first-variation map across a state-triggered event at common clock time | Standard symbol in Part 6 and Hybrid Tangent Spaces; do not label saltation as $S$ (Riccati/value matrix elsewhere) |
+
+**Disambiguation rule:** Event sensitivity uses $\Xi$, not $S$. Hybrid guards use
+$h$, not $g$. Within smooth modes, propagate with the variational transition
+matrix; at events, compose with $\Xi$ before continuing the flow.
 
 ### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
 
@@ -648,12 +688,17 @@ $\gamma=\dot J_c v$ in a fixed contact mode:
 
 | Symbol | Definition | Type |
 | ------ | ---------- | ---- |
-| $K_c$ | $J_c M^{-1} J_c^\top$ | Operational-space inertia |
+| $K_c$ | $J_c M^{-1} J_c^\top$ | Constraint inverse inertia |
+| $\Lambda_c$ | $K_c^{-1}$ | Operational-space inertia for independent constraint rows |
 | $\Pi_M$ | $I-M^{-1}J_c^\top K_c^{-1}J_c$ | $M$-orthogonal projector ($\Pi_M^2=\Pi_M$) |
 | $P_v$ | Same matrix as $\Pi_M$ | Velocity-space projector (Chapter 9 name) |
 | $\mathcal{H}_M$ | $\Pi_M M^{-1}$ | Constrained acceleration operator (not a projector) |
 | $a_0^c$ | $-P_v M^{-1} h - M^{-1} J_c^\top K_c^{-1}\gamma$ | Constrained drift acceleration |
 | $B_a^c$ | $P_v M^{-1} B$ | Constrained input acceleration map |
+
+For two translational coordinates with $M=\operatorname{diag}(2,4)$ kg
+and $J_c=[1,1]$, the constraint matrix is $K_c=0.75$ kg$^{-1}$ and
+$\Lambda_c=4/3$ kg. The reciprocal units distinguish the two operators.
 
 Chapter 3 Superposition writes $\Pi_M$ as $P$ in $P=I-M^{-1}J^T W^{-1}J$ with
 $W=JM^{-1}J^T$. Chapter 3b and induced-acceleration ledgers use $\mathcal{H}_M$,
@@ -767,7 +812,7 @@ Quick lookup table for symbols used in the project:
 | Δ      | Delta  | Change/difference operator               |
 | Θ      | Theta  | Moment of inertia tensor, potential      |
 | Λ      | Lambda | Eigenvalue matrix, cosmological constant |
-| Ξ      | Xi     | (rarely used in project)                 |
+| Ξ      | Xi     | Saltation matrix at hybrid events (tangent-hyperplane series) |
 | Π      | Pi     | Product operator, Poincaré map           |
 | Σ      | Sigma  | Summation operator, covariance           |
 | Φ      | Phi    | Potential energy, flux                   |

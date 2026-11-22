@@ -23,6 +23,48 @@ from src.tools.utils.widget_url_state_schema import (  # noqa: E402 -- reason: t
 DCR_JS_PATH = REPO_ROOT / "js" / "dcr-visualizer.js"
 
 
+@pytest.fixture
+def widget_payload() -> dict[str, Any]:
+    """Return an independent valid v1 envelope for numeric boundary checks."""
+    return {
+        "v": 1,
+        "w": "dcr-visualizer",
+        "p": {"x0": 1.0, "ubar": 1.0, "horizon": 1.0, "phase": 0.5},
+    }
+
+
+@pytest.mark.parametrize("field", ["x0", "ubar", "horizon", "phase"])
+@pytest.mark.parametrize("invalid", [float("nan"), float("inf"), float("-inf"), True])
+def test_widget_numeric_state_rejects_nonfinite_values_and_booleans(
+    widget_payload: dict[str, Any], field: str, invalid: float | bool
+) -> None:
+    """Every numeric parameter rejects values outside the JSON number contract."""
+    widget_payload["p"][field] = invalid
+    errors = validate_widget_url_state_payload(widget_payload)
+    assert any(error.startswith(f"p.{field}:") for error in errors)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("x0", -100),
+        ("x0", 100),
+        ("ubar", 100),
+        ("ubar", 0.5),
+        ("horizon", 0),
+        ("horizon", 20),
+        ("phase", 0),
+        ("phase", 1),
+    ],
+)
+def test_widget_numeric_state_preserves_finite_boundaries(
+    widget_payload: dict[str, Any], field: str, value: float
+) -> None:
+    """The finite-number guard preserves the ranges declared by the schema."""
+    widget_payload["p"][field] = value
+    assert validate_widget_url_state_payload(widget_payload) == []
+
+
 def _run_node_eval(expr: str) -> dict[str, Any]:
     node_bin = shutil.which("node") or "/usr/bin/node"
     script = (

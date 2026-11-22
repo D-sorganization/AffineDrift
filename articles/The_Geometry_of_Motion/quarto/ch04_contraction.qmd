@@ -14,6 +14,10 @@ bibliography: ../geometry_of_motion.bib
 
 
 
+**Notation Note.** Here $M(x,t)$ is the contraction metric, not the mechanical mass matrix $M(q)$. It plays the role denoted by $P$ in Chapters 2 and 3; their rates $\alpha$ and $\lambda$ both denote a positive contraction rate in the corresponding inequality. The inverse metric $W=M^{-1}$ here is not the constraint-space Schur complement called $W$ in Chapter 3.
+
+Local aliases are scoped by section: $\rho(x)$ is the CCM multiplier, whereas $0<\rho<1$ in the discrete certificate is a discrete contraction factor. $\Phi_k$ denotes the nonlinear discrete map, whereas $\Phi(t,s)$ denotes the linear state-transition matrix. $D$ is a coordinate-scaling matrix in the scaling example and a disturbance bound in the robustness discussion; $\mathcal D$ is the domain. Likewise $d(t)$ denotes a disturbance signal, a scalar $d$ later bounds metric-unit forcing, and $d_{M,t}$ is metric distance. The rate $\lambda$ is distinct from the generalized eigenvalue $\lambda_{\max}(H,M)$. Carry the defining section and arguments when comparing these symbols across chapters.
+
 Contraction asks how differences between solutions evolve under the same specified dynamics. In a golf model, that question is incomplete until we identify the state, the feedback policy, the perturbation, the comparison clock and the delivery outcome. Two swings can approach the same geometric path while arriving at different times; two clubheads can arrive similarly while internal joint states differ. Full-state, same-time contraction is one precise and demanding property among these possibilities.
 
 The useful promise is conditional: a verified differential inequality can bound an entire family of perturbations without simulating every initial condition. The work is to establish that inequality over an appropriate domain, connect its metric to physical units, and show that the implemented controller and contact events satisfy its assumptions. A positive stiffness, a negative instantaneous eigenvalue or a visually repeatable motion is not that certificate.
@@ -322,6 +326,44 @@ The metric $M_*=[[1,1],[1,2]]$ instead gives $A^TM_*+M_*A+4M_*=[[0,0],[0,-2]]$, 
 
 Multiplying a metric by a positive scalar does not change its certified rate. For an unknown metric, fix $\lambda$, impose positive metric bounds or a normalization, and solve a feasibility problem. Searching rates by bisection is distinct from calling a joint optimization in $(M,\lambda)$ one LMI. Nonlinear domain certification and controller constraints require further work.
 
+## Worked Example: A State-Dependent Metric {#sec-ch4-pullback-certificate}
+
+Use a dimensionless state and choose the time unit so that the transformed flow is $\dot z=-z$. Define the same coordinate map used later to distinguish geodesic distance from an endpoint quadratic:
+
+$$
+\begin{aligned}
+\phi(x)&=x+0.8\sin x,\\
+\theta(x)&=\phi'(x)=1+0.8\cos x,\\
+f(x)&=-\frac{\phi(x)}{\theta(x)}.
+\end{aligned}
+$$ {#eq-ch4-pullback-field}
+
+Because $0.2\leq\theta\leq1.8$, $\phi$ is a smooth increasing bijection of $\mathbb R$ onto itself. The solution $x(t)=\phi^{-1}(e^{-t}\phi(x_0))$ exists for every $t\geq0$, so the whole real line is a forward-complete invariant domain. Pull back the Euclidean metric in $z$:
+
+$$
+\begin{aligned}
+M(x)&=\theta(x)^2,\qquad 0.04\leq M(x)\leq3.24,\\
+A(x)&=-1+\frac{\phi(x)\theta'(x)}{\theta(x)^2}.
+\end{aligned}
+$$ {#eq-ch4-pullback-metric}
+
+Along the field, $\dot M=M'(x)f(x)=-2\phi(x)\theta'(x)$. Substitution gives the global certificate
+
+$$
+\dot M+2MA=-2M.
+$$ {#eq-ch4-pullback-certificate}
+
+Thus the length rate is exactly $\lambda=1$ per chosen time unit; the squared length decays at rate two. This analytic identity holds at every real state. In this one-dimensional model the distance and its flow are explicit:
+
+$$
+\begin{aligned}
+d_M(x_1,x_2)&=|\phi(x_1)-\phi(x_2)|,\\
+d_M(x_1(t),x_2(t))&=e^{-t}d_M(x_1(0),x_2(0)).
+\end{aligned}
+$$ {#eq-ch4-pullback-distance}
+
+The uniform metric bounds also give $|x_1(t)-x_2(t)|\leq9e^{-t}|x_1(0)-x_2(0)|$. These statements specify the domain, nonconstant metric, total derivative, differential inequality, and finite-distance consequence. Its scalar coordinate construction is explicit; a higher-dimensional metric factor need not integrate to such a global coordinate map.
+
 ## Hierarchical (Cascade) Combination
 []{#sec-ch4:cascade}
 
@@ -522,9 +564,25 @@ Transporting that curve with its controls, or recomputing suitable geodesics in 
 ::: {.callout-note}
 ### Worked CCM on a Cubic Restoring Term
 
-For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$ with $G=[0,1]^\top$, the feedback $u=x_1^3-k_px_1-k_dx_2$ with $k_p,k_d>0$ yields the linear closed loop $\dot x_1=x_2$, $\dot x_2=-k_px_1-k_dx_2$ and the constant Jacobian $A_{\mathrm{cl}}=[[0,1],[-k_p,-k_d]]$. The identity metric is not a strict contraction metric for $A_{\mathrm{cl}}$: for $M=I$, $A_{\mathrm{cl}}^TM+MA_{\mathrm{cl}}=\operatorname{diag}(0,-2k_d)$ is only negative semidefinite. Solving $A_{\mathrm{cl}}^TM+MA_{\mathrm{cl}}=-I$ gives a constant metric; with $k_p=k_d=1$, one choice is $M=[[3/2,1/2],[1/2,1]]$, which certifies a positive contraction rate on that field (@sec-ch4:example).
+For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$ with $G=[0,1]^\top$, the feedback $u=x_1^3-k_px_1-k_dx_2$, $k_p,k_d>0$, gives $A_{\mathrm{cl}}=[[0,1],[-k_p,-k_d]]$. Stability of this closed loop does not make the identity metric strictly contracting. Its residual is
 
-For control contraction metrics, the drift Jacobian is $A(x)=[[0,1],[-3x_1^2,0]]$ while $\partial u/\partial x=[3x_1^2-k_p,\,-k_d]$, so the differential gain $K(x)=[k_p-3x_1^2,\,k_d]$ in $\delta u=-K\delta x$ is state-dependent and is not the constant row $-[k_p,k_d]$. Nevertheless $A(x)-GK(x)=A_{\mathrm{cl}}$ everywhere, so with this constant $M$ and $\dot M=0$ the CCM residual reduces to the same linear contraction inequality on $A_{\mathrm{cl}}$.
+$$
+A_{\mathrm{cl}}^T+A_{\mathrm{cl}}=
+\begin{pmatrix}0&1-k_p\\1-k_p&-2k_d\end{pmatrix}.
+$$ {#eq-ch4-cubic-identity}
+
+This matrix has determinant $-(1-k_p)^2$: it is indefinite when $k_p\ne1$, and negative semidefinite with a zero eigenvalue when $k_p=1$. Thus $M=I$ never supplies a positive strict contraction rate for these gains. For example, $k_p=4$, $k_d=2$ gives a positive residual eigenvalue $\sqrt{13}-2$, despite a stable closed loop.
+
+Instead solve $A_{\mathrm{cl}}^TM+MA_{\mathrm{cl}}=-I$. For $k_p=k_d=1$, take
+
+$$
+M=\begin{pmatrix}3/2&1/2\\1/2&1\end{pmatrix},\qquad
+\lambda=\frac{2}{5+\sqrt5}>0.
+$$ {#eq-ch4-cubic-metric}
+
+The metric is positive with largest eigenvalue $(5+\sqrt5)/4$, so this rate satisfies the contraction residual inequality. It certifies the implemented field with a constant, uniformly bounded metric.
+
+The drift Jacobian is $A(x)=[[0,1],[-3x_1^2,0]]$, and $D_xu=[3x_1^2-k_p,-k_d]$. For the convention $\delta u=-K\delta x$, the differential gain is therefore $K(x)=[k_p-3x_1^2,k_d]$. Direct substitution gives $A(x)-GK(x)=A_{\mathrm{cl}}$ everywhere; with $\dot M=0$, the differential feedback residual is the same Lyapunov residual. The state-dependent gain must include the cubic cancellation. No actuator bound or saturation is certified by this unconstrained example.
 :::
 
 ### Computational Approaches
@@ -828,7 +886,7 @@ which decays at least as $e^{-2\lambda\tau}$. At nonsmooth distance points inter
 :::
 
 
-In general $\mathcal V$ is not $(x-x_*)^TM(x)(x-x_*)$. For a concrete counterexample, let $z=\phi(x)=x+0.8\sin x$, so $0.2\leq\phi'(x)\leq1.8$, and define $\dot x=-\phi(x)/\phi'(x)$. In $z$ coordinates this is $\dot z=-z$, so $M(x)=\phi'(x)^2$ is a uniformly bounded contraction metric. The squared distance to zero is $\phi(x)^2$. The endpoint surrogate $x^2\phi'(x)^2$ has derivative
+In general $\mathcal V$ is not $(x-x_*)^TM(x)(x-x_*)$. The globally contracting pullback model in @sec-ch4-pullback-certificate supplies a concrete counterexample. The squared distance to zero is $\phi(x)^2$. The endpoint surrogate $x^2\phi'(x)^2$ has derivative
 $2x\phi'(x)[\phi'(x)+x\phi''(x)]\dot x$, which is positive at $x=2$. The distinction is a real failure of the proposed Lyapunov argument, not a notational preference.
 
 ## Contraction in Biomechanical Systems
@@ -964,7 +1022,7 @@ The following program runs from the repository root with NumPy and SciPy. The he
 import numpy as np
 from scipy.linalg import solve_continuous_lyapunov
 from src.tools.contraction_examples import (
-    local_contraction_rate, vdp_candidate_residual,
+    local_contraction_rate, scalar_pullback_example, vdp_candidate_residual,
 )
 
 A = np.array([[-2.0, 1.0], [0.0, -3.0]])
@@ -977,8 +1035,9 @@ print(local_contraction_rate(A, M, zero))
 cascade = np.array([[-1.0, 4.0], [0.0, -1.0]])
 print(local_contraction_rate(cascade, np.diag([1.0, 25.0]), zero))
 print(vdp_candidate_residual(np.zeros(2)))
+print(scalar_pullback_example(2.0).contraction_rate())
 ```
-The outputs are the identity rate approximately $1.792893$, the Lyapunov metric given above, its generalized rate $30/(13+\sqrt{13})$, the cascade rate $0.6$, and the rejected Van der Pol residual $[[0.6,-0.2],[-0.2,1.92]]$. Independent checks compare metric decay with exact matrix exponentials, differentiate the nonlinear field and candidate metric numerically, verify the dual congruence, integrate the OU variance and tube forcing, and construct the endpoint-distance counterexample. These calculations test the displayed mathematics; they are not simulated or measured golfer performance.
+The outputs are the identity rate approximately $1.792893$, the Lyapunov metric given above, its generalized rate $30/(13+\sqrt{13})$, the cascade rate $0.6$, the rejected Van der Pol residual $[[0.6,-0.2],[-0.2,1.92]]$, and the scalar pullback rate $1$. Independent checks compare metric decay with exact matrix exponentials, differentiate the nonlinear field and candidate metric numerically, verify the dual congruence, integrate the OU variance and tube forcing, and construct the endpoint-distance counterexample. These calculations test the displayed mathematics; they are not simulated or measured golfer performance.
 
 ## Chapter Summary
 

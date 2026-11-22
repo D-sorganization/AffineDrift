@@ -4,12 +4,16 @@
 -- _includes/article-schema.html, which was dead (referenced by no page) and
 -- broken (`{{< meta >}}` shortcodes do not expand inside raw HTML includes);
 -- resolving metadata here, in Lua, avoids that failure mode.
+-- Technical references can link sources with schema-citations; DefinedTermSet
+-- exports the canonical glossary-entry blocks rather than a second term catalog.
 local SUPPORTED_TYPES = {
   ScholarlyArticle = true,
   Book = true,
   Chapter = true,
   Dataset = true,
   SoftwareSourceCode = true,
+  TechArticle = true,
+  DefinedTermSet = true,
 }
 
 local PUBLISHER_JSON = '{"@type": "Organization", "name": "AffineDrift", '
@@ -20,6 +24,10 @@ local function json_escape(value)
   value = value:gsub('"', '\\"')
   value = value:gsub("\r\n", "\\n")
   value = value:gsub("[\r\n]", "\\n")
+  value = value:gsub("<", "\\u003c")
+  value = value:gsub("[%z\1-\31]", function(char)
+    return string.format("\\u%04x", string.byte(char))
+  end)
   return value
 end
 
@@ -89,9 +97,60 @@ local function push(fields, field)
   end
 end
 
+local function citation_json(meta)
+  if meta == nil then
+    return nil
+  end
+  local citations = {}
+  for _, item in ipairs(meta) do
+    local value = meta_string(item)
+    assert(value ~= nil and value:match("^https://"),
+      "schema-citations must contain absolute HTTPS references")
+    table.insert(citations, '"' .. json_escape(value) .. '"')
+  end
+  return "[" .. table.concat(citations, ", ") .. "]"
+end
+
+local glossary_entries = {}
+local glossary_heading = nil
+
+local function remember_term(block, identifier)
+  table.insert(glossary_entries, {
+    name = glossary_heading,
+    description = pandoc.write(pandoc.Pandoc(block.content), "plain",
+      pandoc.WriterOptions({wrap_text = "none"})),
+    identifier = identifier,
+  })
+end
+
+local function glossary_json(base_url)
+  assert(base_url ~= nil and base_url:match("^https://"),
+    "DefinedTermSet requires an absolute HTTPS schema-url")
+  local terms = {}
+  for _, term in ipairs(glossary_entries) do
+    assert(term.name ~= nil and term.identifier:match("^def%-%S+$"),
+      "glossary-entry requires a heading and stable def-* identifier")
+    local fields = {'"@type": "DefinedTerm"'}
+    push(fields, str_field("name", term.name))
+    push(fields, str_field("description", term.description))
+    push(fields, str_field("termCode", term.identifier))
+    push(fields, str_field("url", base_url .. "#" .. term.identifier))
+    push(fields, str_field("inDefinedTermSet", base_url))
+    table.insert(terms, "{" .. table.concat(fields, ", ") .. "}")
+  end
+  assert(#terms > 0, "DefinedTermSet requires glossary-entry definitions")
+  return "[" .. table.concat(terms, ", ") .. "]"
+end
+
+local function reset_glossary()
+  glossary_entries = {}
+  glossary_heading = nil
+end
+
 function Pandoc(doc)
   local schema_type = meta_string(doc.meta["schema-type"])
   if schema_type == nil or not SUPPORTED_TYPES[schema_type] then
+    reset_glossary()
     return doc
   end
 
@@ -105,15 +164,17 @@ function Pandoc(doc)
     '"@type": "' .. schema_type .. '"',
   }
 
-  if schema_type == "ScholarlyArticle" or schema_type == "Chapter" then
+  if schema_type == "ScholarlyArticle" or schema_type == "TechArticle" or schema_type == "Chapter" then
     push(fields, str_field("headline", title))
   else
     push(fields, str_field("name", title))
   end
   push(fields, str_field("description", description))
   push(fields, raw_field("publisher", PUBLISHER_JSON))
+  push(fields, str_field("url", meta_string(doc.meta["schema-url"])))
+  push(fields, raw_field("citation", citation_json(doc.meta["schema-citations"])))
 
-  if schema_type == "ScholarlyArticle" then
+  if schema_type == "ScholarlyArticle" or schema_type == "TechArticle" then
     push(fields, raw_field("author", author_json))
     push(fields, str_field("datePublished", date))
     push(fields, raw_field("isAccessibleForFree", "true"))
@@ -142,10 +203,33 @@ function Pandoc(doc)
       meta_string(doc.meta["code-repository"]) or "https://github.com/D-sorganization/AffineDrift"
     ))
     push(fields, str_field("programmingLanguage", meta_string(doc.meta["programming-language"])))
+  elseif schema_type == "DefinedTermSet" then
+    push(fields, raw_field("hasDefinedTerm", glossary_json(meta_string(doc.meta["schema-url"]))))
   end
 
   local json = "{\n  " .. table.concat(fields, ",\n  ") .. "\n}"
   quarto.doc.include_text("in-header", '<script type="application/ld+json">\n' .. json .. "\n</script>")
 
+  reset_glossary()
   return doc
 end
+
+-- Quarto exposes def-* entries as Theorem nodes, with the ID moved off the Div.
+-- Block callbacks run in reading order before Pandoc emits the collected metadata.
+return {{
+  Header = function(block)
+    glossary_heading = pandoc.utils.stringify(block.content)
+  end,
+  Theorem = function(node)
+    local div = node.div
+    if div.classes:includes("glossary-entry") then
+      remember_term(div, node.identifier)
+    end
+  end,
+  Div = function(block)
+    if block.identifier ~= "" and block.classes:includes("glossary-entry") then
+      remember_term(block, block.identifier)
+    end
+  end,
+  Pandoc = Pandoc,
+}}

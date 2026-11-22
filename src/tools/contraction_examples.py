@@ -1,5 +1,7 @@
 """Pointwise calculations for the contraction chapter, not domain certificates."""
 
+from dataclasses import dataclass
+
 import numpy as np
 from numpy.typing import NDArray
 from scipy.linalg import eigvalsh
@@ -60,3 +62,50 @@ def vdp_candidate_residual(state: Array, epsilon: float = 0.5, rate: float = 0.3
         [[0.0, 1.0], [-1 - 2 * epsilon * position * velocity, epsilon * (1 - position**2)]]
     )
     return np.asarray(derivative + jacobian.T @ ruler + ruler @ jacobian + 2 * rate * ruler)
+
+
+PULLBACK_AMPLITUDE = 0.8  # The chapter's globally invertible x + a*sin(x) map.
+
+
+@dataclass(frozen=True)
+class ScalarPullbackExample:
+    """Pointwise field, Jacobian, metric and its material derivative.
+
+    Values describe the fixed scalar teaching model in the contraction chapter;
+    the global certificate follows from the chapter's analytic identity.
+    """
+
+    field: float
+    jacobian: float
+    metric: float
+    metric_derivative: float
+
+    def contraction_rate(self) -> float:
+        """Return the signed local length rate using the shared matrix calculation."""
+        return local_contraction_rate(
+            np.array([[self.jacobian]]),
+            np.array([[self.metric]]),
+            np.array([[self.metric_derivative]]),
+        )
+
+
+def scalar_pullback_example(state: float) -> ScalarPullbackExample:
+    """Evaluate the pullback of z_dot=-z under z=x+0.8*sin(x).
+
+    Require a finite scalar state and finite representable results. The returned
+    metric is positive, and its residual M_dot+2*M*A equals -2*M analytically.
+    The material derivative includes the implemented field, not just dM/dx.
+    """
+    position = float(state)
+    if not np.isfinite(position):
+        raise ValueError("state must be finite")
+    phi = position + PULLBACK_AMPLITUDE * float(np.sin(position))
+    theta = 1 + PULLBACK_AMPLITUDE * float(np.cos(position))
+    curvature = -PULLBACK_AMPLITUDE * float(np.sin(position))
+    field = -phi / theta
+    jacobian = -1 + phi * curvature / theta**2
+    metric = theta**2
+    derivative = 2 * theta * curvature * field
+    if not np.isfinite([field, jacobian, metric, derivative]).all():
+        raise ValueError("state must allow finite evaluation")
+    return ScalarPullbackExample(field, jacobian, metric, derivative)

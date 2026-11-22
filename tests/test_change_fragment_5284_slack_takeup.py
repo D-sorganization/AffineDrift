@@ -22,6 +22,9 @@ def test_fragment_5284_retargets_slack_takeup_from_5136() -> None:
         return
 
     assert not paths, f"expected at most one 5284-* fragment, got {[p.name for p in paths]}"
-    devlog = (ROOT / "docs/development/DEVELOPMENT_LOG.md").read_text(encoding="utf-8")
+    development = ROOT / "docs/development"
+    log_paths = [development / "DEVELOPMENT_LOG.md"]
+    log_paths.extend(sorted(development.glob("DEVELOPMENT_LOG_ARCHIVE_*.md")))
+    devlog = "\n".join(path.read_text(encoding="utf-8") for path in log_paths)
     assert "### DL-#5284" in devlog
     assert "### DL-#5282" in devlog

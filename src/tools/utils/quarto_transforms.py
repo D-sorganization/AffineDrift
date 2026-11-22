@@ -6,6 +6,7 @@ conversion pipelines or tested independently.
 
 from __future__ import annotations
 
+import json
 import re
 
 
@@ -95,12 +96,23 @@ def clean_quarto_latex_commands(content: str) -> str:
     )
 
 
+def _quote_yaml_string(value: str) -> str:
+    """Quote a YAML scalar using code-point escapes instead of UTF-16 pairs."""
+    quoted = json.dumps(value, ensure_ascii=False)
+    # YAML folds Unicode line breaks and rejects raw C1 controls. Its eight-digit
+    # escape also preserves supplementary characters as single code points.
+    return re.sub(r"[\x7f-\U0010ffff]", lambda match: f"\\U{ord(match[0]):08x}", quoted)
+
+
 def create_quarto_frontmatter(metadata: dict[str, str]) -> str:
-    """Create Quarto YAML frontmatter from a metadata dictionary."""
+    """Create frontmatter preserving required title/author/date strings literally.
+
+    Required metadata keys raise KeyError when absent. Double-quoted YAML scalars
+    preserve quotes, backslashes, line breaks and supplementary Unicode.
+    """
     frontmatter = "---\n"
-    frontmatter += f'title: "{metadata["title"]}"\n'
-    frontmatter += f'author: "{metadata["author"]}"\n'
-    frontmatter += f'date: "{metadata["date"]}"\n'
+    for key in ("title", "author", "date"):
+        frontmatter += f"{key}: {_quote_yaml_string(metadata[key])}\n"
     frontmatter += """format:
   html:
     toc: true

@@ -4,8 +4,6 @@
 
 <!-- Claude Code reads CLAUDE.md; the line above imports AGENTS.md, the single source of agent guidance. Edit AGENTS.md (or its fleet-rules sources), not this file. -->
 
-> **GAAI Fleet Member.** GAAI framework installed in `.gaai/`. Read `.gaai/core/GAAI.md` for full governance spec.
-> Rules: `@.gaai/core/contexts/rules/base.rules.md` and `@.gaai/project/contexts/rules/project.rules.md`
 > All work on `main` branch. PRs target `main`.
 
 ## What This Is
@@ -137,9 +135,6 @@ See `.logging-standard.md` for full details.
 - Shared engineering principles (DRY tracking, module budgets, root hygiene) are consistent across the fleet.
 
 ## Slash Commands
-
-- `/gaai-deliver` — Run Delivery Loop for next ready backlog item
-- `/gaai-status` — Show current backlog and memory state
 
 ## Specification
 
