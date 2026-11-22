@@ -1405,6 +1405,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5853 · Let the Workflow-File Gate Accept Reusable-Workflow Callers, Which GitHub Forbids From Setting Timeout-Minutes, and Drop the Invalid Key From the PR Body Lint Caller (#5853).
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5853
+- **Branch:** merged via #5854
+- **PR:** #5854
+- **Paths:** see #5854
+- **Started:** 2026-11-21
+- **Last verified:** 2026-11-21 (`3c2feb65`; collated from changes/5853-let-the-workflow-file-gate-accept-reusab.md)
+- **Summary:** Let the workflow-file gate accept reusable-workflow callers, which GitHub forbids from setting timeout-minutes, and drop the invalid key from the PR body lint caller (#5853).
+- **Next step:** Shipped in PR #5854.
+
 ### DL-#5807 · Fix Check_Latex_Quotes Missing a Second LaTeX Quote Pair on One Line and Closing Fences Early on Longer Fence Runs.
 
 - **State:** shipped

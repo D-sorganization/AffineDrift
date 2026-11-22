@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-21 | #5854 | Let the workflow-file gate accept reusable-workflow callers, which GitHub forbids from setting timeout-minutes, and drop the invalid key from the PR body lint caller (#5853). |
 | 2026-11-19 | #5749 | Lock #5612 tangent-hyperplane notation contracts and extend NOTATION.md hybrid symbols. |
 | 2026-11-19 | #5762 | Book index frame callouts, LM article site-default maps, club/ball frame pins in NOTATION. |
 | 2026-11-18 | #5810 | Fix check_latex_quotes missing a second LaTeX quote pair on one line and closing fences early on longer fence runs. |
