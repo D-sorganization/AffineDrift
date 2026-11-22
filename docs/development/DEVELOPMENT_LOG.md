@@ -1762,12 +1762,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5593
 - **Branch:** merged via #5725
-- **PR:** #5725, #5762
+- **PR:** #5725, #5762, #5856
 - **Paths:** see #5725
 - **Started:** 2026-11-16
-- **Last verified:** 2026-11-19 (`b7f61258`; collated from changes/5593-book-front-matter-lm-frame-mapping.md)
+- **Last verified:** 2026-11-22 (`ef5d840d`; collated from changes/5593-document-frame-and-spatial-vector-conven.md)
 - **Summary:** Site frames table, PoG wrench ordering, delivery-angle table, and launch-monitor appendix alignment (partial #5593).
-- **Next step:** Shipped in PR #5725.
+- **Next step:** Review frame guidance and links
 
 ### DL-#5617 · Correct UpstreamDrift Accuracy on Models, Repositories, and Programming Pages; Re-Pin Companion to D56e3709.
 
