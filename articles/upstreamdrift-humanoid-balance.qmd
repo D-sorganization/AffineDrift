@@ -25,6 +25,16 @@ upstream-pin: "3afe09c1ed0247a459d16bf75cf0b28bb64f584a"
 
 This page maps textbook balance quantities to the UpstreamDrift implementation audited at commit [`3afe09c1`](https://github.com/D-sorganization/UpstreamDrift/commit/3afe09c1ed0247a459d16bf75cf0b28bb64f584a). It cites module paths only; it does not validate hardware walking performance.
 
+## Moment Balance on Flat Ground
+
+On flat ground ($z$ up), centre of pressure and ZMP coincide. `ZMPComputer.compute_zmp` states the horizontal moment balance used in code: with displacement $\mathbf{d}=\mathbf{c}-\mathbf{p}_{\mathrm{zmp}}$, net linear “wrench” $\mathbf{A}=m(\mathbf{a}_c+g\hat{\mathbf{z}})$, and centroidal angular-momentum rate $\dot{\mathbf{L}}_c$,
+
+$$
+\frac{\mathrm{d}\mathbf{L}_c}{\mathrm{d}t} + \mathbf{d}\times\mathbf{A} = \mathbf{0}
+$$
+
+in horizontal components ([`zmp_computer.py` docstring](https://github.com/D-sorganization/UpstreamDrift/blob/3afe09c1ed0247a459d16bf75cf0b28bb64f584a/src/robotics/locomotion/zmp_computer.py#L143-L151)). Solving for $\mathbf{p}_{\mathrm{zmp}}$ yields the component equations below; CoP $\equiv$ ZMP on this plane.
+
 ## Frame and Validity
 
 `ZMPComputer` (`src/robotics/locomotion/zmp_computer.py`) assumes a flat ground plane at `ground_height` (default $z=0$) with **$z$ up**. Center of pressure (CoP) equals ZMP on that plane. `ZMPResult.is_valid` is true only when the horizontal ZMP lies inside the supplied support polygon **and** CoM acceleration was not estimated by finite differences (see below).
