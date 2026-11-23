@@ -1,0 +1,81 @@
+---
+title: "Drake and Pinocchio Golf URDF Joint Map"
+description: "Source-verified joint axes, ranges, and attachment topology for the on-disk golfer URDF shared by Drake and Pinocchio."
+categories:
+  - models
+---
+
+The on-disk `models/generated/golfer.urdf` shipped by Drake and Pinocchio
+contains **43 revolute joints and four fixed joints** at UpstreamDrift
+[`8cf45c0a`](https://github.com/D-sorganization/UpstreamDrift/tree/8cf45c0a986bca8c5fe414ab2858925a4dcd9a26).
+Both copies are byte-identical. This reference extends the
+[MuJoCo and Simscape model maps](golf-model-maps.html) with this specific
+URDF; it does not cover `golfer_ik.urdf` or the separate Drake Python-generated humanoid.
+
+## Source and Regeneration
+
+- [Pinocchio URDF](https://github.com/D-sorganization/UpstreamDrift/blob/8cf45c0a986bca8c5fe414ab2858925a4dcd9a26/src/engines/physics_engines/pinocchio/models/generated/golfer.urdf)
+- [Drake URDF](https://github.com/D-sorganization/UpstreamDrift/blob/8cf45c0a986bca8c5fe414ab2858925a4dcd9a26/src/engines/physics_engines/drake/models/generated/golfer.urdf)
+
+Their SHA-256 is `1a91720cd7539fb009b2ab42b62526213152d78cf7af5bb1865913c2d6e9f824`.
+Generate from a local UpstreamDrift clone containing the pinned commit:
+
+```bash
+python3 -m scripts.generate_urdf_golf_map --upstream /path/to/UpstreamDrift
+python3 -m scripts.generate_urdf_golf_map --upstream /path/to/UpstreamDrift --check
+```
+
+The generator verifies both full source digests and byte identity before
+extracting every joint. It does not read the clone's working-tree URDFs.
+
+## Joint Axes, Signs, and Ranges
+
+**XML Row is declaration order, not native `q` or `v` index order.** Each
+revolute joint supplies one rotational coordinate (radians) and velocity
+(radians per second). Its positive sense is right-handed about the listed
+axis in the joint frame. Parent-to-joint `origin xyz/rpy` transforms remain
+in the linked URDF; the axis is not a world axis or an anatomical flexion label.
+Ranges below are the literal `limit lower/upper` values, without degree conversion.
+Fixed joints supply no independent coordinate; their axes and limits are absent.
+
+{{< include _generated/golf-urdf-joints.qmd >}}
+
+## Native Coordinate Indices and the Root
+
+The [Pinocchio loader](https://github.com/D-sorganization/UpstreamDrift/blob/8cf45c0a986bca8c5fe414ab2858925a4dcd9a26/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L164-L183)
+calls `pin.buildModelFromUrdf(path)` without a `JointModelFreeFlyer` argument;
+the [motion-matching loader](https://github.com/D-sorganization/UpstreamDrift/blob/8cf45c0a986bca8c5fe414ab2858925a4dcd9a26/src/engines/physics_engines/pinocchio/python/motion_matching/simulate.py#L418-L437)
+does the same. The URDF declares `pelvis` as its root and has no floating joint.
+The file header's assertion that a free-flyer is attached at load time therefore
+does not describe these loader calls. For their fixed-root model, the 43 scalar
+revolute joints account for `nq = nv = 43`.
+
+Query the constructed model for index order rather than indexing by XML Row:
+
+```python
+import pinocchio as pin
+
+model = pin.buildModelFromUrdf(urdf_path)
+index_map = [
+    (model.names[jid], joint.idx_q, joint.nq, joint.idx_v, joint.nv)
+    for jid, joint in enumerate(model.joints)
+    if joint.nv
+]
+```
+
+The [Drake loader](https://github.com/D-sorganization/UpstreamDrift/blob/8cf45c0a986bca8c5fe414ab2858925a4dcd9a26/src/engines/physics_engines/drake/python/motion_matching/humanoid_urdf.py#L1052-L1098)
+passes an explicit file path to `Parser.AddModels`. Inspect the finalized plant's
+joint `position_start()` and `velocity_start()` and its root mobilization before
+building control vectors. This table does not certify Drake's native index order
+or root configuration size. Omitting the path selects a different Python-generated
+tree with `left_hand` / `right_hand` names, outside this table's scope.
+
+## Club Attachment and Grip Closure
+
+The fixed path is `thorax3` → `mid_hands` → `club_shaft` → `club_head`.
+In this on-disk file neither hand is the club's parent, and no second-hand
+closure constraint is declared. The hips are revolute chains under `pelvis`.
+Do not transfer the MuJoCo `weld`/`connect` equality description to this URDF.
+A consumer adding a hand constraint or bushing changes the model beyond this
+file's tree. The separate Drake generator's right-hand weld and optional
+left-hand bushing likewise do not establish bilateral closure for this file.
