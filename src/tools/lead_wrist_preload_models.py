@@ -1,9 +1,7 @@
 """Dead-zone and reduced-muscle preload models for the firm-lead-wrist article (#5134).
 
 A self-contained port of two UpstreamDrift studies at 3fd2a59e390523169df846a3bbb395a6203c382c:
-``scripts/research/proximal_distal_energy/torque_allocation_preload.py`` at the lay
-companion UpstreamDrift pin in ``data/companion/proximal_distal_companion_upstream_pin.json``
-(#5609) (a two-channel
+``scripts/research/proximal_distal_energy/torque_allocation_preload.py`` (a two-channel
 transmission with a rotational dead zone) and ``advanced_biological_bridge.py`` (identical at the site-pinned b700e589; Hill-type
 activation and series-force dynamics). Both compare a *persistent-direction* program, in which
 the arm channel stays positive and the wrist channel stays negative, with a *complete role
