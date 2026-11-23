@@ -120,8 +120,8 @@ def main() -> int:
     parser.add_argument(
         "--verify-remotes",
         action=argparse.BooleanOptionalAction,
-        default=True,
-        help="query GitHub for pin commit and linked blob paths (default: on)",
+        default=False,
+        help="query GitHub for pin commit and linked blob paths (opt-in; local dev)",
     )
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
