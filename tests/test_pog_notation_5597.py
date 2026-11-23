@@ -219,3 +219,15 @@ def test_ch31_face_weight_and_wind_symbols_are_distinct(path: Path) -> None:
     assert r"C\Phi(T,s)G(x(s))" in text
     assert r"\lambda\simeq w\phi" not in text
     assert "v_B-w(r_B,t)" not in text
+
+
+@pytest.mark.parametrize("path", CH31)
+def test_ch31_sensitivity_example_and_exercises_use_w_face(path: Path) -> None:
+    """The bare weight symbol must not survive in sensitivity, example or exercises."""
+    text = path.read_text(encoding="utf-8")
+    assert r"R\sec^2\lambda\,w_{\mathrm{face}}" in text
+    assert r"R\sec^2\lambda\,(1-w_{\mathrm{face}})" in text
+    assert text.count(r"$w_{\mathrm{face}}=0.76$") >= 3
+    assert r"constant $w_{\mathrm{face}}$" in text
+    for bare in (r"$w=0.76$", "constant $w$", r"\,w,", r"(1-w)"):
+        assert bare not in text, bare
