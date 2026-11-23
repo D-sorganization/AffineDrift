@@ -232,6 +232,11 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-23 | #5867 | Remove placeholder data/upstreamdrift/path_anchors_5624 anti-phantom tree |
+| 2026-11-23 | #5862 | Pin the corrected proximal-distal monograph prose (energy ledger, closure claim, verdict strength) with regression tests |
+| 2026-11-23 | #5858 | Bundle #5626 acceptance gates in one integration test for issue close-out |
+| 2026-11-23 | #5859 | UpstreamDrift humanoid balance, WBC, and learning analytics reference completion |
+| 2026-11-23 | #5860 | Close #5624: agent discovery for physics inventory and bundled acceptance gates |
 | 2026-11-22 | #5856 | Document frame and spatial-vector conventions on remaining book landing pages |
 | 2026-11-21 | #5854 | Let the workflow-file gate accept reusable-workflow callers, which GitHub forbids from setting timeout-minutes, and drop the invalid key from the PR body lint caller (#5853). |
 | 2026-11-19 | #5749 | Lock #5612 tangent-hyperplane notation contracts and extend NOTATION.md hybrid symbols. |

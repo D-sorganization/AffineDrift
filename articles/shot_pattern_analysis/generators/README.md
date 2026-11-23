@@ -2,7 +2,7 @@
 
 AffineDrift publishes the reviewed presentation plates under this directory. Numeric tables and delivery assumptions are vendored under `../data/` and rebuilt with `python3 -m scripts.build_shot_pattern_article_artifacts`.
 
-Full figure regeneration runs in UpstreamDrift after restoring the phase-2 data archives listed in [RELEASE_ASSETS.json](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/shot_pattern_analysis/phase2/RELEASE_ASSETS.json):
+Full figure regeneration runs in UpstreamDrift after restoring the phase-2 data archives listed in [RELEASE_ASSETS.json](https://github.com/D-sorganization/UpstreamDrift/blob/d56e3709e65a01f70dbd1a8db86856a160a8559d/docs/research/shot_pattern_analysis/phase2/RELEASE_ASSETS.json):
 
 ```bash
 MPLBACKEND=Agg python -m docs.research.shot_pattern_analysis.phase2.presentation_v2.render
