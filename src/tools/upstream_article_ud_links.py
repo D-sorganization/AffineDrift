@@ -34,6 +34,7 @@ def load_contract(path: Path) -> dict[str, Any]:
 
 
 def _iter_scan_files(root: Path, scan_roots: Sequence[str]) -> Iterable[Path]:
+    """Yield Markdown and Quarto sources under each configured scan root."""
     for rel in scan_roots:
         base = root / rel
         if not base.is_dir():
@@ -44,6 +45,7 @@ def _iter_scan_files(root: Path, scan_roots: Sequence[str]) -> Iterable[Path]:
 
 
 def _line_number(text: str, index: int) -> int:
+    """Return the 1-based line number for a character offset in ``text``."""
     return text.count("\n", 0, index) + 1
 
 
@@ -92,6 +94,7 @@ def verify_contract(document: dict[str, Any], root: Path) -> list[str]:
 
 
 def _raw_url(commit: str, repo_path: str) -> str:
+    """Build a pinned raw.githubusercontent.com URL for an UpstreamDrift path."""
     commit = require_commit_sha(commit)
     return f"https://{GITHUB_RAW_HOST}/D-sorganization/UpstreamDrift/{commit}/{repo_path}"
 
@@ -129,5 +132,6 @@ def verify_remote_paths(
 
 
 def _default_fetch(commit: str, repo_path: str) -> None:
+    """Fetch one pinned UpstreamDrift object; raise when the path is missing."""
     url = _raw_url(commit, repo_path)
     read_pinned_https(url, host=GITHUB_RAW_HOST, timeout=60.0)
