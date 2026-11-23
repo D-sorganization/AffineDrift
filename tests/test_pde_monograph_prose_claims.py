@@ -11,6 +11,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+
 ARTICLES = Path(__file__).resolve().parents[1] / "articles"
 CHAPTERS = ARTICLES / "proximal_distal_energy_transfer" / "chapters"
 WRAPPER = ARTICLES / "proximal-distal-energy-transfer.qmd"
@@ -55,16 +57,42 @@ def test_ch06d_closure_claim_separates_constraint_residuals_from_integration_err
     assert "across all rollouts" not in ch06d
 
 
-def test_ch06d_closure_caveat_stays_in_the_residual_paragraph() -> None:
-    # The 3.77% caveat must sit in the same paragraph as the machine-precision
-    # figures, not be detached from them.
-    ch06d = _chapter("_ch06d_uncertainty_control.qmd")
-    start = ch06d.index("Constraint and identity residuals on this ensemble")
-    end = ch06d.index("pde_monograph_numerical_claims", start)
-    paragraph = ch06d[start:end]
+RESIDUAL_ANCHOR = "Constraint and identity residuals on this ensemble"
+BLANK_LINE = re.compile(r"\n[ \t\r]*\n")
+
+
+def _residual_paragraph(raw: str) -> str:
+    """Return the whitespace-normalised paragraph that opens with the residual anchor.
+
+    Paragraph boundaries are blank lines, so the slice is taken from the *raw*
+    text and only then collapsed; normalising first would erase the boundaries.
+    """
+    start = raw.index(RESIDUAL_ANCHOR)
+    boundary = BLANK_LINE.search(raw, start)
+    stop = boundary.start() if boundary else len(raw)
+    return re.sub(r"\s+", " ", raw[start:stop])
+
+
+def _assert_caveat_in_residual_paragraph(raw: str) -> None:
+    paragraph = _residual_paragraph(raw)
     assert "machine precision" in paragraph
     assert "3.77%" in paragraph
     assert "materially below" not in paragraph
+
+
+def test_ch06d_closure_caveat_stays_in_the_residual_paragraph() -> None:
+    # The 3.77% caveat must sit in the same paragraph as the machine-precision
+    # figures, not be detached from them.
+    raw = (CHAPTERS / "_ch06d_uncertainty_control.qmd").read_text(encoding="utf-8")
+    _assert_caveat_in_residual_paragraph(raw)
+
+
+def test_residual_paragraph_guard_rejects_a_detached_caveat() -> None:
+    raw = (CHAPTERS / "_ch06d_uncertainty_control.qmd").read_text(encoding="utf-8")
+    detached = raw.replace("W. The same 4 ms", "W.\n\nThe same 4 ms")
+    assert detached != raw, "mutation did not apply; chapter wording changed"
+    with pytest.raises(AssertionError):
+        _assert_caveat_in_residual_paragraph(detached)
 
 
 def test_h4_verdict_is_stated_at_the_strength_six_samples_support() -> None:
