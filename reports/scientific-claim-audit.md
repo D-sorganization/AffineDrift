@@ -17,7 +17,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 |---|---|---:|
 | `/` | `index.qmd` | 4 |
 | `/articles/affine-nature-golf-swing.html` | `articles/affine-nature-golf-swing.qmd` | 7 |
-| `/articles/after-one-solution-null-space-exploration.html` | `articles/after-one-solution-null-space-exploration.qmd` | 9 |
+| `/articles/after-one-solution-null-space-exploration.html` | `articles/after-one-solution-null-space-exploration.qmd` | 10 |
 | `/articles/appendix-applications.html` | `articles/appendix-applications.qmd` | 1 |
 | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` | 1 |
 | `/articles/core-theses-registry.html` | `articles/core-theses-registry.qmd` | 15 |
