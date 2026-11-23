@@ -153,3 +153,11 @@ def test_5604_positive_metric_certificate_is_present_in_both_book_formats() -> N
     assert "@sec-ch4-pullback-certificate" in web
     assert r"\label{sec:ch4-pullback-certificate}" in manuscript
     assert r"\ref{sec:ch4-pullback-certificate}" in manuscript
+
+
+def test_5604_vol0_ch04_embedded_quaternion_demo_matches_source_file() -> None:
+    """The listing typeset in the chapter must be byte-identical to the tested file."""
+    demo = REPO_ROOT / "articles/The_Geometry_of_Motion/Volume_0/code/quaternion_demo.py"
+    match = re.search(r"```python\n(\"\"\"Quaternion operations.*?)\n```", _read(VOL0_CH04), re.S)
+    assert match, "quaternion demo listing missing from vol0 ch04"
+    assert match.group(1) + "\n" == demo.read_bytes().decode("utf-8")
