@@ -546,12 +546,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5624
 - **Branch:** cursor/ud-physics-models-5624-6ace
-- **PR:** #5664, #5758, #5860
+- **PR:** #5664, #5758, #5860, #5867
 - **Paths:** see #5664
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-23 (`d681233c`; collated from changes/5624-closeout-acceptance-gates.md)
+- **Last verified:** 2026-11-23 (`0fe68736`; collated from changes/5624-remove-path-anchors.md)
 - **Summary:** Document UpstreamDrift ball flight, impact, putting and injury models with site–code mismatch flags (Refs #5624).
-- **Next step:** Merge to close #5624
+- **Next step:** Merge after CI
 
 ### DL-#5622 · FDM Runtime Reference: Acceptance Gates, Two-Window Fit, Ground-Support Pipeline, Contact Law, Glossary
 

@@ -147,31 +147,25 @@ Euler-type coordinates describe an orientation by three sequential rotations. A 
 ### The ZYX Convention
 
 Start with aligned frames, yaw by $\psi$ about $z_s$, pitch by $\theta$ about the resulting current $y$ axis, then roll by $\phi$ about the resulting current $x$ axis. Each body-axis increment postmultiplies the current orientation, giving
-[]{#eq-euler_zyx}
-
 $$
 R(\phi,\theta,\psi)=R_z(\psi)R_y(\theta)R_x(\phi).
-$$
-This is intrinsic ZYX, and equivalently fixed-axis XYZ applied in chronological order roll, pitch, yaw. Using $c_a=\cos a$ and $s_a=\sin a$, direct multiplication gives
-[]{#eq-euler_zyx_full}
-
+$$ {#eq-euler-zyx}
+This is intrinsic ZYX, and equivalently fixed-axis XYZ applied in chronological order roll, pitch, yaw. Using $c_a=\cos a$ and $s_a=\sin a$, direct multiplication expands @eq-euler-zyx to
 $$
 R=\begin{bmatrix}
  c_\psi c_\theta&c_\psi s_\theta s_\phi-s_\psi c_\phi&c_\psi s_\theta c_\phi+s_\psi s_\phi\\
  s_\psi c_\theta&s_\psi s_\theta s_\phi+c_\psi c_\phi&s_\psi s_\theta c_\phi-c_\psi s_\phi\\
  -s_\theta&c_\theta s_\phi&c_\theta c_\phi
  \end{bmatrix}.
-$$
+$$ {#eq-euler-zyx-full}
 For $(\phi,\theta,\psi)=(45^\circ,30^\circ,60^\circ)$ this is approximately
-[]{#eq-euler_numeric_example}
-
 $$
 R=\begin{bmatrix}
  .433013&-.435596&.789149\\
  .750000&.659740&-.047367\\
  -.500000&.612372&.612372
  \end{bmatrix}.
-$$
+$$ {#eq-euler-numeric-example}
 The unrounded product is exactly orthogonal. Reversing the factors generally gives a different orientation, although that wrong-convention result is also orthogonal. This illustrates why checking only $R^TR$ cannot detect a frame convention error.
 
 ### The ZXZ Convention
@@ -185,8 +179,6 @@ If the chronological current-axis rotations are $\phi$ about $z$, $\theta$ about
 
 
 For intrinsic ZYX, express angular velocity in spatial components and order the coordinate rates as $(\dot\phi,\dot\theta,\dot\psi)$. Each angle contributes about its current spatial axis. Therefore
-[]{#eq-euler_spatial_rate_map}
-
 $$
 \omega_s=J_s\begin{bmatrix}\dot\phi\\\dot\theta\\\dot\psi\end{bmatrix},\qquad
  J_s=\begin{bmatrix}
@@ -194,18 +186,16 @@ $$
  s_\psi c_\theta&c_\psi&0\\
  -s_\theta&0&1
  \end{bmatrix}.
-$$
-The columns are $R_zR_ye_x$, $R_ze_y$ and $e_z$, respectively. Expanding the determinant gives $\det J_s=\cos\theta$. At $\theta=\pi/2$, the roll column is $-e_z$ and the yaw column is $e_z$: only their difference contributes about that direction, and $(1,0,1)^T$ lies in the kernel. Rank is two. At $-\pi/2$, the two columns coincide instead.
+$$ {#eq-euler-spatial-rate-map}
+The columns are $R_zR_ye_x$, $R_ze_y$ and $e_z$, respectively. Expanding the determinant of @eq-euler-spatial-rate-map gives $\det J_s=\cos\theta$. At $\theta=\pi/2$, the roll column is $-e_z$ and the yaw column is $e_z$: only their difference contributes about that direction, and $(1,0,1)^T$ lies in the kernel. Rank is two. At $-\pi/2$, the two columns coincide instead.
 
 []{#euler-angles-where-singularities-propagate}
 
 The singular values follow from
-[]{#eq-euler_rate_conditioning}
-
 $$
 J_s^TJ_s=\begin{bmatrix}1&0&-\sin\theta\\0&1&0\\-\sin\theta&0&1\end{bmatrix}.
-$$
-Away from the singular set, the 2-norm condition number is $\sqrt{(1+|\sin\theta|)/(1-|\sin\theta|)}$. It is about 114.59 at 89 degrees of pitch. The forward map remains bounded; its inverse becomes ill-conditioned. Small orientation-rate or measurement errors can demand very large changes in the inferred Euler rates. This is different from claiming that small angle changes inevitably cause arbitrarily large physical rotations.
+$$ {#eq-euler-rate-conditioning}
+Away from the singular set, the 2-norm condition number of @eq-euler-spatial-rate-map is $\sqrt{(1+|\sin\theta|)/(1-|\sin\theta|)}$. It is about 114.59 at 89 degrees of pitch. The forward map remains bounded; its inverse becomes ill-conditioned. Small orientation-rate or measurement errors can demand very large changes in the inferred Euler rates. This is different from claiming that small angle changes inevitably cause arbitrarily large physical rotations.
 
 The freely rotating body still has three physical rotational freedoms. The selected chart fails to represent all instantaneous directions regularly at that point. A mechanical three-gimbal device can also lose instantaneous actuation directions when its physical axes align, but that is a statement about the mechanism. Neither phenomenon makes the laws of mathematics fail or guarantees a computer crash. Controllers must handle the relevant coordinate and actuator maps explicitly.
 
@@ -290,11 +280,9 @@ Use scalar-first Hamilton quaternions $q=(w,v)=(w,x,y,z)\in\mathbb H$, with $i^2
 ### Quaternion Operations
 
 Distributing products and collecting real and imaginary parts gives
-[]{#eq-hamilton_product}
-
 $$
 (w,v)\otimes(s,u)=(ws-v^Tu,\;wu+sv+v\times u).
-$$
+$$ {#eq-hamilton-product}
 The conjugate is $q^*=(w,-v)$ and $q\otimes q^*=(w^2+v^Tv,0)$. Define $\|q\|=\sqrt{w^2+v^Tv}$. For $q\ne0$, the inverse is $q^{-1}=q^*/\|q\|^2$; for a unit quaternion it is simply $q^*$. Zero has no inverse and cannot be normalized to an orientation.
 
 For example, with $c=1/\sqrt2$, $(c,c,0,0)\otimes(c,0,c,0)=(1,1,1,1)/2$. The factors represent 90-degree rotations about $x$ and $y$, respectively. Their product applies the $y$ rotation first and then the $x$ rotation. Its unit norm follows exactly; replacing $c$ by rounded 0.7071 does not preserve exact unit norm.
@@ -407,12 +395,10 @@ It is nonsingular at $\pi$ and singular at nonzero multiples of $2\pi$. The prin
 
 
 Normalize the two nonzero endpoints. Set $a=q_0$ and choose $b=q_1$ if $q_0^Tq_1\ge0$, otherwise $b=-q_1$. With $c=a^Tb\in[0,1]$ and $\Omega=\arccos c$, short-arc interpolation is
-[]{#eq-slerp}
-
 $$
 q(u)=\frac{\sin((1-u)\Omega)}{\sin\Omega}a+
       \frac{\sin(u\Omega)}{\sin\Omega}b,\quad 0\le u\le 1.
-$$
+$$ {#eq-slerp}
 Changing only the dot product's sign without changing $b$ is incorrect. At $\Omega=0$, define $q(u)=a$. Antipodal quaternion inputs then describe a stationary orientation after sign alignment, not a mandatory full revolution. At $c=0$, both endpoint signs define equally short 180-degree physical rotations; the data or application must select a path.
 
 To derive the formula, take $n=(b-ca)/\sin\Omega$ for $\Omega>0$. Then $a,n$ are orthonormal and $q(u)=a\cos(u\Omega)+n\sin(u\Omega)$. Resolving $n$ into $a,b$ gives the displayed sine weights. Moreover $\|dq/du\|=\Omega$; the quaternion remains on the unit sphere and traverses its great-circle arc at constant speed. The corresponding physical rotation angle is $2\Omega$, so over a duration $T$ with $u=t/T$ the angular-speed magnitude is $2\Omega/T$ [@Shoemake1985RotationReview].
@@ -523,7 +509,8 @@ The following self-contained NumPy program is the actual file exercised by the r
 
 Self-contained by design: this file is typeset into the chapter as a worked
 example, so it depends only on NumPy and repeats nothing the chapter has not
-already derived. Equation numbers in the comments refer to Chapter 4.
+already derived. Display labels in the chapter are @eq-hamilton-product and
+@eq-slerp above.
 
 Correctness is pinned by tests/test_affine_control/test_quaternion_demo.py --
 the properties asserted there (unit norm, orthogonality of the rotation matrix,
@@ -563,7 +550,7 @@ def _unit_vector(value: Array, size: int, name: str) -> Array:
 
 
 def hamilton_product(p: Array, q: Array) -> Array:
-    """Quaternion product, equation (eq:hamilton_product).
+    """Quaternion product; implements the labeled display eq-hamilton-product.
 
     Both arguments are ordered [w, x, y, z]. The product is not commutative;
     ``hamilton_product(p, q)`` applies ``q`` first, then ``p``.
@@ -660,7 +647,7 @@ def from_matrix(matrix: Array) -> Array:
 
 
 def slerp(q0: Array, q1: Array, t: float) -> Array:
-    """Spherical linear interpolation, equation (eq:slerp).
+    """Spherical linear interpolation; implements the labeled display eq-slerp.
 
     Two details matter and neither is cosmetic:
 

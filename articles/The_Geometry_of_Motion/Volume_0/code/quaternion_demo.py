@@ -2,7 +2,8 @@
 
 Self-contained by design: this file is typeset into the chapter as a worked
 example, so it depends only on NumPy and repeats nothing the chapter has not
-already derived. Equation numbers in the comments refer to Chapter 4.
+already derived. Display labels in the chapter are @eq-hamilton-product and
+@eq-slerp above.
 
 Correctness is pinned by tests/test_affine_control/test_quaternion_demo.py --
 the properties asserted there (unit norm, orthogonality of the rotation matrix,
@@ -42,7 +43,7 @@ def _unit_vector(value: Array, size: int, name: str) -> Array:
 
 
 def hamilton_product(p: Array, q: Array) -> Array:
-    """Quaternion product, equation (eq:hamilton_product).
+    """Quaternion product; implements the labeled display eq-hamilton-product.
 
     Both arguments are ordered [w, x, y, z]. The product is not commutative;
     ``hamilton_product(p, q)`` applies ``q`` first, then ``p``.
@@ -139,7 +140,7 @@ def from_matrix(matrix: Array) -> Array:
 
 
 def slerp(q0: Array, q1: Array, t: float) -> Array:
-    """Spherical linear interpolation, equation (eq:slerp).
+    """Spherical linear interpolation; implements the labeled display eq-slerp.
 
     Two details matter and neither is cosmetic:
 
