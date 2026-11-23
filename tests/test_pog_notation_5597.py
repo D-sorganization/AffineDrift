@@ -65,6 +65,9 @@ def test_notation_documents_pog_part_i_table() -> None:
     row = next(cells for cells in rows if cells[1] == "**$r_i$**")
     assert row[2].startswith("COM distance")
     assert "Motor Control Delay and Activation" in text
+    assert "Physics of Golf Contact Events and Launch Symbols" in text
+    assert "**$Q_{\\mathrm{p}}$**" in text
+    assert "**$\\sigma_L$**" in text
 
 
 @pytest.mark.parametrize(
@@ -150,3 +153,69 @@ def test_ch29_full_bias_includes_declared_passive_damping(path: Path) -> None:
     assert r"h(q,v)=C(q,v)v+D(q)v+g(q)" in text
     assert r"(f_0+f_d)_v=-M(q)^{-1}h(q,v)" in text
     assert "full-bias convention" in text
+
+
+CH18 = (
+    POG / "quarto" / "ch18_inverse_dynamics_parallel.qmd",
+    POG / "chapters" / "ch18_inverse_dynamics_parallel.tex",
+)
+CH19 = (
+    POG / "quarto" / "ch19_aerodynamic_drag.qmd",
+    POG / "chapters" / "ch19_aerodynamic_drag.tex",
+)
+CH14 = (
+    POG / "quarto" / "ch14_complete_swing.qmd",
+    POG / "chapters" / "ch14_complete_swing.tex",
+)
+CH28 = (
+    POG / "quarto" / "ch28_impact_collision.qmd",
+    POG / "chapters" / "ch28_impact_collision.tex",
+)
+CH31 = (
+    POG / "quarto" / "ch31_swing_plane_launch.qmd",
+    POG / "chapters" / "ch31_swing_plane_launch.tex",
+)
+
+
+@pytest.mark.parametrize("path", CH18)
+def test_ch18_disambiguates_input_dimension_residual_and_passive_loads(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    assert r"u\in\mathbb R^m" in text
+    assert r"Q_{\mathrm{p}}" in text
+    assert r"Az_\ell=\varrho" in text
+    assert r"At constant constraint rank $\rho$" in text
+    assert "r=M\\ddot q+h-p-Q_e" not in text
+    assert "u\\in\\mathbb R^p" not in text
+
+
+@pytest.mark.parametrize("path", CH19)
+def test_ch19_passive_loads_use_q_p_not_rhs_p(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    assert r"M\ddot q+h=Bu+Q_{\mathrm{p}}+Q_{\rm aero}" in text
+    assert "full-bias convention" in text
+    assert r"M\ddot q+h=Bu+p+" not in text
+
+
+@pytest.mark.parametrize("path", CH14 + CH31)
+def test_contact_events_use_psi_not_gravity_g(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    assert r"\psi(x,t)=0" in text or r"\psi(x(T))=0" in text
+    assert "g(x,t)=0" not in text
+    assert "g(x(T))=0" not in text
+
+
+@pytest.mark.parametrize("path", CH28 + CH31)
+def test_spin_loft_uses_sigma_l_not_transition_phi(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    assert r"\cos\sigma_L" in text
+    assert r"\Phi=\arccos(n^T\hat v)" not in text
+
+
+@pytest.mark.parametrize("path", CH31)
+def test_ch31_face_weight_and_wind_symbols_are_distinct(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    assert r"w_{\mathrm{face}}" in text
+    assert "v_w(r_B,t)" in text
+    assert r"C\Phi(T,s)G(x(s))" in text
+    assert r"\lambda\simeq w\phi" not in text
+    assert "v_B-w(r_B,t)" not in text
