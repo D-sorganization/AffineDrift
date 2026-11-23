@@ -9,8 +9,10 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 VOL0_CH02 = REPO_ROOT / "articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.qmd"
+VOL0_CH04 = REPO_ROOT / "articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.qmd"
 VOL0_CH01 = REPO_ROOT / "articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.qmd"
 ROADMAP = REPO_ROOT / "books/roadmap.qmd"
+GOM_QUARTO = REPO_ROOT / "articles/The_Geometry_of_Motion/quarto"
 
 QUARTO_EQ_LABEL = re.compile(r"\$\$\s*\{#(eq-[A-Za-z0-9_:-]+)\}")
 EMPTY_SPAN_EQ = re.compile(r"\[\]\{#(eq-[A-Za-z0-9_:-]+)\}")
@@ -84,6 +86,58 @@ def test_5604_vol0_ch01_prose_worked_rank_eigen_svd_examples() -> None:
 )
 def test_5604_vol0_no_stray_empty_span_anchors(rel: Path, forbidden_span: str) -> None:
     assert forbidden_span not in _read(rel)
+
+
+def test_5604_volume_i_chapter_prose_uses_html_links_not_bare_numbers() -> None:
+    paths = [
+        GOM_QUARTO / "ch02_variational.qmd",
+        GOM_QUARTO / "ch03_superposition.qmd",
+        GOM_QUARTO / "ch04_contraction.qmd",
+        GOM_QUARTO / "ch06_duality.qmd",
+        GOM_QUARTO / "ch08_applications.qmd",
+    ]
+    required_links = {
+        "ch02_variational.qmd": ("ch01_foundations.html", "ch03_superposition.html"),
+        "ch03_superposition.qmd": ("ch01_foundations.html", "ch02_variational.html"),
+        "ch04_contraction.qmd": ("ch02_variational.html", "ch03_superposition.html"),
+        "ch06_duality.qmd": ("ch05_optimal_control.html",),
+        "ch08_applications.qmd": ("ch07_counterfactuals.html",),
+    }
+    forbidden_phrases = (
+        "used in Chapters 1",
+        "in Chapter 1;",
+        "in Chapter 2 equals",
+        "in Chapters 2 and 3",
+        "called $W$ in Chapter 3.",
+        "Chapter 5 instead",
+        "see Chapter 7 definition",
+        "ledgers (Chapter 3b)",
+    )
+    for path in paths:
+        text = _read(path)
+        for phrase in forbidden_phrases:
+            assert phrase not in text, f"{path.name} still contains {phrase!r}"
+        for link in required_links[path.name]:
+            assert link in text, f"{path.name} should link to {link}"
+
+
+def test_5604_vol0_ch04_euler_and_quaternion_labels_use_quarto_equation_ids() -> None:
+    text = _read(VOL0_CH04)
+    required = {
+        "eq-euler-zyx",
+        "eq-euler-zyx-full",
+        "eq-euler-spatial-rate-map",
+        "eq-hamilton-product",
+        "eq-slerp",
+    }
+    found = set(QUARTO_EQ_LABEL.findall(text))
+    missing = required - found
+    assert not missing, f"Missing Quarto equation labels in ch04: {missing}"
+    assert "@eq-euler-zyx" in text
+    assert "@eq-euler-spatial-rate-map" in text
+    assert "[]{#eq-euler_zyx}" not in text
+    assert "[]{#eq-hamilton_product}" not in text
+    assert "eq:hamilton_product" not in text
 
 
 @pytest.mark.integration
