@@ -546,12 +546,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5624
 - **Branch:** cursor/ud-physics-models-5624-6ace
-- **PR:** #5664, #5758, #5860
+- **PR:** #5664, #5758, #5860, #5867
 - **Paths:** see #5664
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-23 (`d681233c`; collated from changes/5624-closeout-acceptance-gates.md)
+- **Last verified:** 2026-11-23 (`0fe68736`; collated from changes/5624-remove-path-anchors.md)
 - **Summary:** Document UpstreamDrift ball flight, impact, putting and injury models with site–code mismatch flags (Refs #5624).
-- **Next step:** Merge to close #5624
+- **Next step:** Merge after CI
 
 ### DL-#5622 · FDM Runtime Reference: Acceptance Gates, Two-Window Fit, Ground-Support Pipeline, Contact Law, Glossary
 
@@ -754,10 +754,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5601
 - **Branch:** cursor/ud-implementation-links-5601-402a
-- **PR:** #5672, #5734, #5752
+- **PR:** #5672, #5734, #5752, #5880
 - **Paths:** see #5672
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-17 (`3d48e78f`; collated from changes/5601-pog-ch27-ch31-remote-bridge-verify.md)
+- **Last verified:** 2026-11-23 (`8b239fd0`; collated from changes/5601-record-upstreamdrift-citation-verificati.md)
 - **Summary:** Pinned UpstreamDrift implementation bridge includes for GOM vol0 and PoG algorithm chapters; added ledger and CI gate.
 - **Next step:** Barb arms after CI green.
 
