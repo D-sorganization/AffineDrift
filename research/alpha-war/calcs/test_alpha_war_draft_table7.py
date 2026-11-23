@@ -78,6 +78,9 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
             "### Table 7.1: Reference-Point Transport on Simulated WSCG Trajectory", draft_text
         )
         self.assertIn("measured share of physiological muscle torque", draft_text)
+        self.assertIn("generation_provenance.wscg_input_sha256", draft_text)
+        self.assertIn("938df10a", draft_text)
+        self.assertIn("WSCG_2024_LEGACY_EVIDENCE_AUDIT.md", draft_text)
         grober_row = next(
             ln for ln in draft_text.splitlines() if "Grober (2020 arXiv)" in ln and "|" in ln
         )

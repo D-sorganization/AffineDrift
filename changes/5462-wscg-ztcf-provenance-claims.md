@@ -1,7 +1,7 @@
 ---
 issue: 5462
-summary: "Qualify WSCG/ZTCF provenance and 86.04% diagnostic ratio in Alpha War v1"
-branch: "cursor/5462-ztcf-claims-3977"
+summary: "Pin WSCG bundle SHA-256 provenance and UpstreamDrift audit links for ZTCF (#5462)"
+branch: "cursor/5462-wscg-ztcf-061d"
 ---
 
-Refs #5462: Grober §5.5 conditional signage; Table 5A.1 simulation labeling; draft tests.
+Refs #5462: §3.4 wrist-only torque-cut + generation_provenance hashes; CLM-MCH-04 evidence column; draft table7 contract test.
