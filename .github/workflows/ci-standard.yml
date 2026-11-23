@@ -185,6 +185,8 @@ jobs:
         run: python3 -m scripts.generate_agent_entry_point --check
       - name: Verify Agent Convention and Parameter Registries
         run: python3 -m scripts.check_agent_registries --check
+      - name: Verify Site Frame Convention Cross-Links (#5593)
+        run: python3 scripts/check_site_frame_conventions.py
       - name: Generate Content Inventory
         # #4602: a fresh page inventory (word count, status, last-reviewed,
         # link health) for every build. It is an artifact, not a staleness
