@@ -232,6 +232,12 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-23 | #5866 | Remove placeholder src/learning anti-phantom path anchor |
+| 2026-11-23 | #5871 | Pin Chapter 7c transmission ledger numbers to local study snapshots; correct contact-power residual |
+| 2026-11-23 | #5863 | Close-out #5609: verify companion UpstreamDrift blob links at pin and bundle acceptance |
+| 2026-11-23 | #5872 | Volume I chapter cross-links and Volume 0 ch04 equation-numbering pilot |
+| 2026-11-23 | #5873 | Extend spatial-algebra notation notes to Volume 0 Ch.8–12 and harmonise Volume II control-affine G notation with NOTATION.md |
+| 2026-11-23 | #5869 | Pin UpstreamDrift article links, loop_nullspace bridge include, and permalink CI gate |
 | 2026-11-23 | #5880 | Record UpstreamDrift citation verification for the Slack articles; flag VAR-05 wording |
 | 2026-11-23 | #5867 | Remove placeholder data/upstreamdrift/path_anchors_5624 anti-phantom tree |
 | 2026-11-23 | #5862 | Pin the corrected proximal-distal monograph prose (energy ledger, closure claim, verdict strength) with regression tests |
