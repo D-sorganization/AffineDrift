@@ -36,8 +36,8 @@ def test_gom_readme_concordance_matches_books_index() -> None:
 
 def test_volume_v_title_page_uses_series_not_volume_i_heading() -> None:
     """Volume V LaTeX title page must not reuse the Volume I canonical title."""
-    tex = (
-        ROOT / "articles" / "The_Geometry_of_Motion" / "Volume_V" / "main.tex"
-    ).read_text(encoding="utf-8")
+    tex = (ROOT / "articles" / "The_Geometry_of_Motion" / "Volume_V" / "main.tex").read_text(
+        encoding="utf-8"
+    )
     assert "Tangent-Space Methods for Nonlinear Control and Biomechanics" not in tex
     assert "The Geometry of Motion" in tex
