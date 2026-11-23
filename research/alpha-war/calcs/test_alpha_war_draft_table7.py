@@ -44,6 +44,21 @@ class TestAlphaWarDraftTable7(unittest.TestCase):
                 msg=f"{station} @ {state_key}",
             )
 
+    def test_critiques_5396_audit_and_panel_on_thesis(self) -> None:
+        """#5396 audit lives under research/alpha-war/critiques with panel turnover."""
+        critiques = ALPHA_WAR_DIR / "critiques"
+        panel = critiques / "panel-th_bb97958bf095.md"
+        audit = critiques / "audit-5396-claims-and-calcs.md"
+        self.assertTrue(panel.is_file(), "panel turnover record required in critiques/")
+        self.assertTrue(audit.is_file(), "branch audit report required in critiques/")
+        panel_flags = panel.read_text(encoding="utf-8")
+        for key in ("draft: true", "th_bb97958bf095", "CLM-SGN-01"):
+            self.assertIn(key, panel_flags)
+        audit_text = audit.read_text(encoding="utf-8")
+        self.assertIn("alpha-war-v1.md", audit_text)
+        self.assertIn(panel.name, audit_text)
+        self.assertFalse((ALPHA_WAR_DIR / "work" / audit.name).exists())
+
     def test_ztcf_share_derived_from_json_matches_draft(self) -> None:
         """ZTCF share at t=0.2151 s derived from JSON (86.04%) must match draft prose."""
         payload = json.loads(JSON_PATH.read_text(encoding="utf-8"))
