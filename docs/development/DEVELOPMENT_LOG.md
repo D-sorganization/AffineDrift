@@ -650,10 +650,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5610
 - **Branch:** cursor/pde-energy-ledger-closure-7b2c
-- **PR:** #5637
+- **PR:** #5637, #5862
 - **Paths:** see #5637
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`f0bccb52`; collated from changes/5610-proximal-distal-energy-ledger-closure-cl.md)
+- **Last verified:** 2026-11-23 (`af9148ff`; collated from changes/5610-pin-the-corrected-proximal-distal-monogr.md)
 - **Summary:** Proximal-distal energy ledger, closure claims, and H4 verdict strength.
 - **Next step:** Merge after CI green.
 
