@@ -89,3 +89,17 @@ def test_nested_book_frame_links_resolve_to_site_pages(path: Path) -> None:
     for link in links:
         target = link.split("#", 1)[0].replace(".html", ".qmd")
         assert (path.parent / target).is_file(), link
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        ROOT / "articles" / "forward_dynamics_matching" / "index.qmd",
+        ROOT / "books" / "tangent-space-methods.qmd",
+    ],
+    ids=["forward-dynamics", "tangent-space"],
+)
+def test_remaining_book_landings_link_frame_conventions(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    assert "coordinate-frame-conventions" in text
+    assert "angular-first" in text

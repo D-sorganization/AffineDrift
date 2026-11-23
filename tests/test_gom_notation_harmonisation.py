@@ -146,3 +146,40 @@ def test_contraction_chapter_declares_local_metric_and_multiplier_aliases(suffix
         "generalized eigenvalue",
     ):
         assert phrase in text
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.qmd",
+        "articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.qmd",
+        "articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.qmd",
+        "articles/The_Geometry_of_Motion/quarto/vol0_ch11_lagrangian_mechanics.qmd",
+        "articles/The_Geometry_of_Motion/quarto/vol0_ch12_machine_learning.qmd",
+    ],
+)
+def test_volume0_spatial_chapters_include_notation_note(rel: str) -> None:
+    assert "gom_spatial_algebra_notation_note.qmd" in _read(rel)
+
+
+def test_volume2_entry_includes_control_affine_notation_note() -> None:
+    assert "gom_volume2_control_affine_notation_note.qmd" in _read(
+        "articles/The_Geometry_of_Motion/quarto/volume2.qmd"
+    )
+
+
+def test_volume2_content_uses_uppercase_input_map_notation() -> None:
+    text = _read("articles/The_Geometry_of_Motion/quarto/volume2_content.qmd")
+    assert r"\dot x=Ax+Gu" in text
+    assert r"\dot x=Ax+gu" not in text
+    assert r"\sum_i G_i(x)u_i" in text
+    assert r"\sum_i g_i(x)u_i" not in text
+    assert r"[G_i,G_j]=DG_j\,G_i-DG_i\,G_j" in text
+    assert r"\sum_j(\sigma_j+N_je)\,dW_j" in text
+    assert r"(g_j+N_je)" not in text
+
+
+def test_notation_md_documents_volume2_sigma_diffusion() -> None:
+    text = _read("NOTATION.md")
+    assert "stochastic diffusion" in text.lower() or "diffusion direction" in text.lower()
+    assert r"\sigma_j" in text
