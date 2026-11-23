@@ -1,0 +1,45 @@
+name: Alpha War Draft Quarto
+
+on:
+  pull_request:
+    paths:
+      - "research/alpha-war/draft/**"
+      - "research/alpha-war/calcs/test_alpha_war_quarto_unpublished.py"
+      - ".github/workflows/alpha-war-draft-quarto.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alpha-war-draft-quarto-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unpublished-render-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Resolve pinned Quarto version
+        id: quarto
+        run: echo "version=$(tr -d '[:space:]' < .quarto-version)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        with:
+          version: ${{ steps.quarto.outputs.version }}
+
+      - name: Unpublished guard and zero-warning render (#5370)
+        env:
+          CODECOV_TOKEN: unused
+        run: |
+          quarto --version
+          cd research/alpha-war/calcs
+          python3 -m unittest test_alpha_war_quarto_unpublished -v
