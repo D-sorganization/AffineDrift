@@ -416,12 +416,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5625
 - **Branch:** cursor/ud-learning-humanoid-5625-2b2c
-- **PR:** #5670, #5766
+- **PR:** #5670, #5766, #5859
 - **Paths:** see #5670
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-17 (`99ab875b`; collated from changes/5625-correct-sg-hole-mdp-terminal-semantics-g.md)
+- **Last verified:** 2026-11-23 (`28d25bca`; collated from changes/5625-humanoid-learning-analytics.md)
 - **Summary:** Document UpstreamDrift humanoid balance, WBC, and learning/analytics gaps grounded in code.
-- **Next step:** Merge after CI green.
+- **Next step:** Merge after CI and Barb review
 
 ### DL-#5596 · Add Llms.Txt Agent Entry Point, Extend Symbol Registry V2 From NOTATION.md, and CI Freshness Gates.
 
@@ -533,12 +533,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5626
 - **Branch:** cursor/upstreamdrift-getting-started-5626-8182
-- **PR:** #5663, #5686, #5717, #5732, #5756
+- **PR:** #5663, #5686, #5717, #5732, #5756, #5858
 - **Paths:** see #5663
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-17 (`a7ae6c8d`; collated from changes/5626-agent-manifest-headless-gate-496e.md)
+- **Last verified:** 2026-11-23 (`456050ae`; collated from changes/5626-acceptance-gate-bundle.md)
 - **Summary:** Publish UpstreamDrift getting-started and headless/agent guides; README install CI gate; llms.txt
-- **Next step:** Barb arms after CI green
+- **Next step:** Merged via #5858; closes #5626 acceptance bundle
 
 ### DL-#5624 · Document UpstreamDrift Ball Flight, Impact, Putting and Injury Models With Site–Code Mismatch Flags (Refs #5624).
 
@@ -546,12 +546,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5624
 - **Branch:** cursor/ud-physics-models-5624-6ace
-- **PR:** #5664, #5758
+- **PR:** #5664, #5758, #5860
 - **Paths:** see #5664
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-18 (`4e5b0444`; collated from changes/5624-refresh-physics-inventory-pin.md)
+- **Last verified:** 2026-11-23 (`d681233c`; collated from changes/5624-closeout-acceptance-gates.md)
 - **Summary:** Document UpstreamDrift ball flight, impact, putting and injury models with site–code mismatch flags (Refs #5624).
-- **Next step:** Merge after CI green.
+- **Next step:** Merge to close #5624
 
 ### DL-#5622 · FDM Runtime Reference: Acceptance Gates, Two-Window Fit, Ground-Support Pipeline, Contact Law, Glossary
 
@@ -650,10 +650,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5610
 - **Branch:** cursor/pde-energy-ledger-closure-7b2c
-- **PR:** #5637
+- **PR:** #5637, #5862
 - **Paths:** see #5637
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`f0bccb52`; collated from changes/5610-proximal-distal-energy-ledger-closure-cl.md)
+- **Last verified:** 2026-11-23 (`af9148ff`; collated from changes/5610-pin-the-corrected-proximal-distal-monogr.md)
 - **Summary:** Proximal-distal energy ledger, closure claims, and H4 verdict strength.
 - **Next step:** Merge after CI green.
 
@@ -1405,6 +1405,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#5853 · Let the Workflow-File Gate Accept Reusable-Workflow Callers, Which GitHub Forbids From Setting Timeout-Minutes, and Drop the Invalid Key From the PR Body Lint Caller (#5853).
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #5853
+- **Branch:** merged via #5854
+- **PR:** #5854
+- **Paths:** see #5854
+- **Started:** 2026-11-21
+- **Last verified:** 2026-11-21 (`3c2feb65`; collated from changes/5853-let-the-workflow-file-gate-accept-reusab.md)
+- **Summary:** Let the workflow-file gate accept reusable-workflow callers, which GitHub forbids from setting timeout-minutes, and drop the invalid key from the PR body lint caller (#5853).
+- **Next step:** Shipped in PR #5854.
+
 ### DL-#5807 · Fix Check_Latex_Quotes Missing a Second LaTeX Quote Pair on One Line and Closing Fences Early on Longer Fence Runs.
 
 - **State:** shipped
@@ -1749,12 +1762,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5593
 - **Branch:** merged via #5725
-- **PR:** #5725, #5762
+- **PR:** #5725, #5762, #5856
 - **Paths:** see #5725
 - **Started:** 2026-11-16
-- **Last verified:** 2026-11-19 (`b7f61258`; collated from changes/5593-book-front-matter-lm-frame-mapping.md)
+- **Last verified:** 2026-11-22 (`ef5d840d`; collated from changes/5593-document-frame-and-spatial-vector-conven.md)
 - **Summary:** Site frames table, PoG wrench ordering, delivery-angle table, and launch-monitor appendix alignment (partial #5593).
-- **Next step:** Shipped in PR #5725.
+- **Next step:** Review frame guidance and links
 
 ### DL-#5617 · Correct UpstreamDrift Accuracy on Models, Repositories, and Programming Pages; Re-Pin Companion to D56e3709.
 
