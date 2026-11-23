@@ -1,0 +1,33 @@
+{
+  "schema_version": "affinedrift/upstreamdrift-5626-evidence/v1",
+  "issue": 5626,
+  "acceptance": {
+    "install_readme_parity": [
+      "pages/upstreamdrift-getting-started.qmd",
+      "data/upstreamdrift/install_readme_contract.json",
+      "scripts.check_upstreamdrift_readme_parity",
+      "scripts.check_upstreamdrift_install_docs"
+    ],
+    "headless_and_agent_guide": [
+      "pages/upstreamdrift-headless-and-agents.qmd",
+      "data/upstreamdrift/headless_agent_contract.json",
+      "scripts.check_upstreamdrift_headless_docs"
+    ],
+    "companion_catalog_pin": {
+      "provider_commit": "d56e3709e65a01f70dbd1a8db86856a160a8559d",
+      "catalog_page": "models/programming/programs.qmd",
+      "upstream_launcher": "src/config/launcher_manifest.json",
+      "gate": "scripts.check_companion_launcher_freshness"
+    },
+    "agent_discovery": ["llms.txt", "llms-full.txt", "data/agent/canonical_pages.json"]
+  },
+  "upstreamdrift_citations": {
+    "readme_install_commit": "4a1c5f43433c8bbfbe48e269fb0fcfeb61266829",
+    "sim_run_docs": "docs/development/sim_run_mcp.md",
+    "sim_run_schema": "schemas/sim-run-v1.json",
+    "cli_module": "src/sim_run/cli.py",
+    "mcp_module": "src/sim_run/mcp.py"
+  },
+  "merged_pr_slices": [5663, 5686, 5732, 5756],
+  "close_out_pr_evidence": "tests/test_upstreamdrift_5626_acceptance.py"
+}

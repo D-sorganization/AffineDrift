@@ -70,3 +70,12 @@ def test_5626_llms_txt_advertises_install_and_headless_guides() -> None:
     assert "upstreamdrift-getting-started" in llms
     assert "upstreamdrift-headless-and-agents" in llms
     assert "ud-sim" in llms
+
+
+@pytest.mark.unit
+def test_5626_evidence_manifest_lists_gates() -> None:
+    """Evidence JSON under tests/evidence/ anchors #5626 close-out for audits."""
+    path = ROOT / "tests/evidence/5626-upstreamdrift-guides.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    gates = payload["acceptance"]["install_readme_parity"]
+    assert "scripts.check_upstreamdrift_readme_parity" in gates
