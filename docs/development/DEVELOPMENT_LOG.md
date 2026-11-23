@@ -754,10 +754,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5601
 - **Branch:** cursor/ud-implementation-links-5601-402a
-- **PR:** #5672, #5734, #5752
+- **PR:** #5672, #5734, #5752, #5880
 - **Paths:** see #5672
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-17 (`3d48e78f`; collated from changes/5601-pog-ch27-ch31-remote-bridge-verify.md)
+- **Last verified:** 2026-11-23 (`8b239fd0`; collated from changes/5601-record-upstreamdrift-citation-verificati.md)
 - **Summary:** Pinned UpstreamDrift implementation bridge includes for GOM vol0 and PoG algorithm chapters; added ledger and CI gate.
 - **Next step:** Barb arms after CI green.
 
