@@ -740,6 +740,12 @@ $P=EE^T=I-TT^T$ is an $n\times n$ matrix; $P\delta x\in\mathbb{R}^n$ is not
 the reduced coordinate vector. Phase is indexed by $\tau$ (or an equivalent
 scalar phase), not automatically by clock time $t$ alone.
 
+**Control-affine columns and stochastic diffusion (Volume II).** Write
+$G_j=G(x)e_j$ for the $j$-th input column. In linear SDE expansions,
+$\sigma_j\in\mathbb{R}^n$ denotes a diffusion direction associated with
+Brownian component $W_j$; it is not the gravity vector $g(q)$ and not an
+unindexed input map $g(x)$.
+
 ---
 
 ## Component Notation
