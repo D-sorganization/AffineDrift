@@ -17,6 +17,10 @@ UNCERTAINTY_NPZ = REPO_ROOT / "data/illustrations/uncertainty_control_study.npz"
 TRANSMISSION_CLOSURE_JSON = (
     REPO_ROOT / "data/proximal_distal_energy_transfer/transmission_robustness_closure_snapshot.json"
 )
+TRANSMISSION_CH07C_JSON = (
+    REPO_ROOT
+    / "data/proximal_distal_energy_transfer/transmission_robustness_ch07c_claims_snapshot.json"
+)
 
 PROGRAM_ORDER = (
     "passive_wrist",
@@ -71,6 +75,26 @@ class TorqueProgramCounts:
     duplicates_at_zero_onset_per_shoulder: int
 
 
+@dataclass(frozen=True)
+class Ch07cTransmissionClaims:
+    """Held-out transmission figures quoted in Chapter 7c."""
+
+    held_out_perturbations: int
+    clock_q10_delivery_speed_m_s: float
+    state_q10_delivery_speed_m_s: float
+    clock_mean_face_path_deg: float
+    state_mean_face_path_deg: float
+    clock_q90_peak_hand_force_n: float
+    state_q90_peak_hand_force_n: float
+    higher_impedance_nominal_speed_m_s: float
+    higher_impedance_mean_face_path_deg: float
+    null_variance: float
+    task_relevant_variance: float
+    null_variance_per_dof: float
+    task_relevant_variance_per_dof: float
+    synergy_index: float
+
+
 def _interpolated_percentile(values: np.ndarray, percentile: float) -> float:
     """Linearly interpolate an order statistic (Hyndman type 7 style for small n)."""
     if values.ndim != 1:
@@ -106,6 +130,63 @@ def count_e1_torque_programs() -> TorqueProgramCounts:
         program_rows=2 * rows_per_shoulder,
         distinct_programs=2 * len(distinct_per_shoulder),
         duplicates_at_zero_onset_per_shoulder=len(restrain_levels),
+    )
+
+
+def _round_display(value: float, digits: int = 2) -> float:
+    """Round a float the way monograph prose quotes it (half-away-from-zero)."""
+    return float(f"{value:.{digits}f}")
+
+
+def _format_scientific_latex(value: float, sig: int = 3) -> str:
+    """Format a small magnitude for LaTeX scientific notation (e.g. 8.53×10⁻¹⁴)."""
+    if value == 0.0:
+        raise ValueError("value must be non-zero")
+    exponent = int(f"{value:.{sig - 1}e}".split("e")[-1])
+    mantissa = value / (10.0**exponent)
+    mantissa_text = f"{mantissa:.{sig - 1}f}".rstrip("0").rstrip(".")
+    return f"${mantissa_text}\\times10^{{{exponent}}}$"
+
+
+def load_ch07c_transmission_claims(
+    path: Path = TRANSMISSION_CH07C_JSON,
+) -> Ch07cTransmissionClaims:
+    """Load pinned Chapter 7c transmission numbers from the local claims snapshot."""
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    paired = payload["clock_vs_state_paired_held_out"]
+    higher = payload["state_triggered_higher_impedance"]
+    task_map = payload["local_task_map"]
+    nullity = int(task_map["nullity"])
+    task_rank = int(task_map["task_rank"])
+    null_var = float(task_map["null_variance"])
+    task_var = float(task_map["task_relevant_variance"])
+    return Ch07cTransmissionClaims(
+        held_out_perturbations=int(payload["design"]["held_out_perturbations"]),
+        clock_q10_delivery_speed_m_s=float(
+            paired["delivery_speed_q10_m_s"]["clock_restrain_then_drive"]
+        ),
+        state_q10_delivery_speed_m_s=float(
+            paired["delivery_speed_q10_m_s"]["state_triggered_handoff"]
+        ),
+        clock_mean_face_path_deg=float(
+            paired["face_path_error_mean_deg"]["clock_restrain_then_drive"]
+        ),
+        state_mean_face_path_deg=float(
+            paired["face_path_error_mean_deg"]["state_triggered_handoff"]
+        ),
+        clock_q90_peak_hand_force_n=float(
+            paired["peak_hand_force_q90_n"]["clock_restrain_then_drive"]
+        ),
+        state_q90_peak_hand_force_n=float(
+            paired["peak_hand_force_q90_n"]["state_triggered_handoff"]
+        ),
+        higher_impedance_nominal_speed_m_s=float(higher["nominal_delivery_speed_m_s"]),
+        higher_impedance_mean_face_path_deg=float(higher["held_out_mean_face_path_error_deg"]),
+        null_variance=null_var,
+        task_relevant_variance=task_var,
+        null_variance_per_dof=null_var / nullity,
+        task_relevant_variance_per_dof=task_var / task_rank,
+        synergy_index=float(task_map["synergy_index"]),
     )
 
 
@@ -174,6 +255,7 @@ def render_verification_report() -> str:
     """Build a human-readable report of the reproduced monograph numbers."""
     h4 = compute_h4_held_out_contrast()
     closure = load_integrator_closure()
+    ch07c = load_ch07c_transmission_claims()
     constraint_closure = load_uncertainty_integrator_closure()
     programs = count_e1_torque_programs()
     work_energy_pct = 100.0 * closure.maximum_normalized_work_energy_residual
@@ -195,6 +277,12 @@ def render_verification_report() -> str:
         f"E1 torque programs: {programs.program_rows} rows, {programs.distinct_programs} distinct",
         f"  ({programs.duplicates_at_zero_onset_per_shoulder} duplicate restrain rows per shoulder at",
         "  t_on=0).",
+        "Chapter 7c transmission (held-out q10, means, UCM totals):",
+        f"  clock q10={ch07c.clock_q10_delivery_speed_m_s:.3f} m/s, state q10="
+        f"{ch07c.state_q10_delivery_speed_m_s:.3f} m/s;",
+        f"  face/path mean {ch07c.clock_mean_face_path_deg:.2f} -> "
+        f"{ch07c.state_mean_face_path_deg:.2f} deg;",
+        f"  contact-power residual {closure.maximum_contact_power_residual_w:.3e} W.",
     ]
     return "\n".join(lines)
 
