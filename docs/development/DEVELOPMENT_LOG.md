@@ -416,12 +416,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5625
 - **Branch:** cursor/ud-learning-humanoid-5625-2b2c
-- **PR:** #5670, #5766
+- **PR:** #5670, #5766, #5859
 - **Paths:** see #5670
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-17 (`99ab875b`; collated from changes/5625-correct-sg-hole-mdp-terminal-semantics-g.md)
+- **Last verified:** 2026-11-23 (`28d25bca`; collated from changes/5625-humanoid-learning-analytics.md)
 - **Summary:** Document UpstreamDrift humanoid balance, WBC, and learning/analytics gaps grounded in code.
-- **Next step:** Merge after CI green.
+- **Next step:** Merge after CI and Barb review
 
 ### DL-#5596 · Add Llms.Txt Agent Entry Point, Extend Symbol Registry V2 From NOTATION.md, and CI Freshness Gates.
 
@@ -533,12 +533,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5626
 - **Branch:** cursor/upstreamdrift-getting-started-5626-8182
-- **PR:** #5663, #5686, #5717, #5732, #5756
+- **PR:** #5663, #5686, #5717, #5732, #5756, #5858
 - **Paths:** see #5663
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-17 (`a7ae6c8d`; collated from changes/5626-agent-manifest-headless-gate-496e.md)
+- **Last verified:** 2026-11-23 (`456050ae`; collated from changes/5626-acceptance-gate-bundle.md)
 - **Summary:** Publish UpstreamDrift getting-started and headless/agent guides; README install CI gate; llms.txt
-- **Next step:** Barb arms after CI green
+- **Next step:** Merged via #5858; closes #5626 acceptance bundle
 
 ### DL-#5624 · Document UpstreamDrift Ball Flight, Impact, Putting and Injury Models With Site–Code Mismatch Flags (Refs #5624).
 
@@ -546,12 +546,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5624
 - **Branch:** cursor/ud-physics-models-5624-6ace
-- **PR:** #5664, #5758
+- **PR:** #5664, #5758, #5860
 - **Paths:** see #5664
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-18 (`4e5b0444`; collated from changes/5624-refresh-physics-inventory-pin.md)
+- **Last verified:** 2026-11-23 (`d681233c`; collated from changes/5624-closeout-acceptance-gates.md)
 - **Summary:** Document UpstreamDrift ball flight, impact, putting and injury models with site–code mismatch flags (Refs #5624).
-- **Next step:** Merge after CI green.
+- **Next step:** Merge to close #5624
 
 ### DL-#5622 · FDM Runtime Reference: Acceptance Gates, Two-Window Fit, Ground-Support Pipeline, Contact Law, Glossary
 
