@@ -40,6 +40,33 @@ def test_closure_claim_is_restated_against_the_integrator_residual() -> None:
     assert "not a machine-precision closure claim" in ch07c
 
 
+def test_ch06d_closure_claim_separates_constraint_residuals_from_integration_error() -> None:
+    ch06d = _chapter("_ch06d_uncertainty_control.qmd")
+    # Constraint/identity residuals are machine precision ...
+    assert "Constraint and identity residuals on this ensemble are at machine precision" in ch06d
+    # ... but the integrator's work--energy residual is a distinct, larger quantity.
+    assert "The same 4 ms projected integrator nonetheless carries" in ch06d
+    assert (
+        "worst normalized work--energy residual of 3.77% on the registered pathway audit" in ch06d
+    )
+    assert "comparable in order to the 6.5% speed contrast" in ch06d
+    # The old unqualified claim (#5610 F2) must not return, in any wording variant.
+    assert "Numerical closure remains materially below the reported effects" not in ch06d
+    assert "across all rollouts" not in ch06d
+
+
+def test_ch06d_closure_caveat_stays_in_the_residual_paragraph() -> None:
+    # The 3.77% caveat must sit in the same paragraph as the machine-precision
+    # figures, not be detached from them.
+    ch06d = _chapter("_ch06d_uncertainty_control.qmd")
+    start = ch06d.index("Constraint and identity residuals on this ensemble")
+    end = ch06d.index("pde_monograph_numerical_claims", start)
+    paragraph = ch06d[start:end]
+    assert "machine precision" in paragraph
+    assert "3.77%" in paragraph
+    assert "materially below" not in paragraph
+
+
 def test_h4_verdict_is_stated_at_the_strength_six_samples_support() -> None:
     ch06d = _chapter("_ch06d_uncertainty_control.qmd")
     assert "$n=6$, paired by seed" in ch06d
