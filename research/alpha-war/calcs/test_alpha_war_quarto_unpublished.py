@@ -58,16 +58,17 @@ class TestAlphaWarQuartoUnpublished(unittest.TestCase):
         self.assertNotIn("alpha-war-v1", yml)
 
     def test_no_markdown_under_alpha_war_critiques_directory(self) -> None:
-        """Site render glob ``critiques/*.md`` also picks up nested ``critiques/`` trees."""
+        """Nested ``critiques/*.md`` must stay excluded and marked do-not-publish (#5396)."""
         critiques_dir = ALPHA_WAR_DIR / "critiques"
         if not critiques_dir.is_dir():
             return
-        stray_markdown = sorted(path.name for path in critiques_dir.glob("*.md"))
-        self.assertEqual(
-            stray_markdown,
-            [],
-            "Move internal alpha-war notes to work/ so Quarto does not emit draft stubs",
-        )
+        yml = QUARTO_YML.read_text(encoding="utf-8")
+        self.assertIn("!research/alpha-war/**/*.md", yml)
+        for path in sorted(critiques_dir.glob("*.md")):
+            flags = _frontmatter_flags(path.read_text(encoding="utf-8"))
+            self.assertEqual(flags.get("draft"), "true", path.name)
+            self.assertEqual(flags.get("listing"), "false", path.name)
+            self.assertEqual(flags.get("status"), "do-not-publish", path.name)
 
     def test_all_citations_resolve_in_references_bib(self) -> None:
         """Every [@key] citation in alpha-war-v1.md must exist in references.bib."""
