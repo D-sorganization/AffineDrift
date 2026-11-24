@@ -1,0 +1,22 @@
+{
+  "issue": 5590,
+  "summary": "ZTCF and superposition flagship figures cite pinned simulation runs; provenance gate blocks hand-drawn regressions.",
+  "pin_records": [
+    "data/core_theory/ztcf_figure_run_v1.json",
+    "data/core_theory/superposition_parallelogram_run_v1.json",
+    "data/core_theory/superposition_breakdown_run_v1.json"
+  ],
+  "generator_modules": [
+    "scripts/core_theory_figures/ztcf.py",
+    "scripts/core_theory_figures/superposition.py",
+    "data/core_theory/figure_provenance_manifest.json"
+  ],
+  "provenance_check": "scripts/check_core_theory_figure_provenance.py",
+  "merged_prereq_prs": [5666, 5687, 5770],
+  "model_ladder_f15": true,
+  "acceptance_pytest_modules": [
+    "tests/test_issue_5590_acceptance.py",
+    "tests/test_core_theory_figures.py",
+    "tests/test_core_theory_5590_residual.py"
+  ]
+}
