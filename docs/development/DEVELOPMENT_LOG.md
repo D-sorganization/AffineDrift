@@ -429,10 +429,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5596
 - **Branch:** cursor/agent-readiness-5596-3da0
-- **PR:** #5662, #5726, #5755, #5786
+- **PR:** #5662, #5726, #5755, #5786, #5843
 - **Paths:** see #5662
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-18 (`a557ddf4`; collated from changes/5596-export-structured-metadata-for-notation.md)
+- **Last verified:** 2026-11-24 (`6afbbb1d`; collated from changes/5596-complete-canonical-agent-model-map-disco.md)
 - **Summary:** Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates.
 - **Next step:** Merge after CI green.
 
