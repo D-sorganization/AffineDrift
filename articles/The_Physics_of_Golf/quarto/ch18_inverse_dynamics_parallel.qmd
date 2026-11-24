@@ -54,12 +54,13 @@ $J_c=D_q\Phi\in\mathbb R^{k\times n}$ contain independent rows in the contact
 mode under consideration. Write
 $$
 M(q)\ddot q+h(q,\dot q)
- =B(q)u+p(q,\dot q,z)+Q_e+J_c(q)^T\lambda.
+ =B(q)u+Q_{\mathrm{p}}(q,\dot q,z)+Q_e+J_c(q)^T\lambda.
 $$ {#eq-eom_constrained}
 Here $h$ contains the declared inertial bias and gravitational generalized
-loads; $u\in\mathbb R^p$ contains the selected applied inputs; $B$ maps them
-into generalized loads; $p$ contains separately modeled passive or other
-constitutive loads, with internal states $z$ when needed; and $Q_e$ contains
+loads; $u\in\mathbb R^m$ contains the selected applied inputs ($m$ is the input
+dimension, not linear momentum); $B$ maps them into generalized loads;
+$Q_{\mathrm{p}}$ contains separately modeled passive or other constitutive
+loads, with internal states $z$ when needed; and $Q_e$ contains
 known external loads. A load belongs in exactly one term. Unknown hand or
 ground loads cannot be placed in $Q_e$ and simultaneously treated as already
 measured. Their parameters must instead join the unknown vector.
@@ -70,10 +71,10 @@ or moment according to their coordinates; they are not all Cartesian forces.
 The matrix often written $C(q,\dot q)$ is a representation of an inertial bias
 vector $C\dot q$, not a list of independent physical forces at the hands.
 
-For a regular fully actuated open tree with $B=I$ and known $p,Q_e$, inverse
-dynamics evaluates
+For a regular fully actuated open tree with $B=I$ and known $Q_{\mathrm{p}},Q_e$,
+inverse dynamics evaluates
 $$
-u=M\ddot q+h-p-Q_e.
+u=M\ddot q+h-Q_{\mathrm{p}}-Q_e.
 $$ {#eq-inverse_open}
 There is no mass-matrix inversion in this expression. A positive-definite mass
 matrix follows when every nonzero independent coordinate velocity produces
@@ -175,7 +176,8 @@ J_c\dot q=0,\qquad
 $$ {#eq-constraint_acceleration}
 They test whether a candidate trajectory respects the declared constraint;
 they contain no independent measurement of $\lambda$.
-At constant rank $r$, feasible local configuration dimension is $n-r$.
+At constant constraint rank $\rho$, feasible local configuration dimension is
+$n-\rho$.
 At a singular point, extra linearized directions need not extend to finite
 feasible motions. Low speed at address or transition is not evidence of rank
 loss; finite tissue stiffness is not a kinematic rank calculation.
@@ -198,9 +200,9 @@ still be exchanged without changing the observed motion.
 At a specified state and acceleration, define the known model residual and
 unknown vector by
 $$
-r=M\ddot q+h-p-Q_e,\qquad
+\varrho=M\ddot q+h-Q_{\mathrm{p}}-Q_e,\qquad
  z_\ell=\begin{bmatrix}u\\\lambda\end{bmatrix},\qquad
- A=\begin{bmatrix}B&J_c^T\end{bmatrix},\qquad Az_\ell=r.
+ A=\begin{bmatrix}B&J_c^T\end{bmatrix},\qquad Az_\ell=\varrho.
 $$ {#eq-inverse_underdetermined_formal}
 Use $z_\ell$ for load unknowns to distinguish them from constitutive states.
 For a consistent linear problem, the solution set is $z_{\ell,0}+\ker A$.
@@ -610,7 +612,7 @@ and ideal reaction in a fixed contact mode satisfy
 $$
 \begin{bmatrix}M&-J_c^T\\J_c&0\end{bmatrix}
  \begin{bmatrix}\ddot q\\\lambda\end{bmatrix}
- =\begin{bmatrix}Bu+p+Q_e-h\\-\dot J_c\dot q\end{bmatrix}.
+ =\begin{bmatrix}Bu+Q_{\mathrm{p}}+Q_e-h\\-\dot J_c\dot q\end{bmatrix}.
 $$ {#eq-forward_wellposed}
 If $M\succ0$ and $J_c$ has full row rank, the matrix is nonsingular. To see
 this, a homogeneous solution obeys $M\delta a-J_c^T\delta\lambda=0$ and
