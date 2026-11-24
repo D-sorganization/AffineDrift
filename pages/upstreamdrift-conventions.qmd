@@ -96,7 +96,7 @@ MuJoCo ↔ Pinocchio quaternion swap example:
 
 | Topic | UpstreamDrift canonical usage | AffineDrift site note |
 | --- | --- | --- |
-| 6D spatial Jacobian rows | **`[ω; v]`** (angular first) | [NOTATION.md](https://github.com/D-sorganization/AffineDrift/blob/main/NOTATION.md#L221-L224) declares `ξ = (ω, v)` but describes `V` as "Linear + angular" and `F` as "Torque + linear force", which reads as conflicting orderings |
+| 6D spatial Jacobian rows | **`[ω; v]`** (angular first) | Site [NOTATION](notation.html#screwtwist-notation) uses angular-first `V=(ω,v)` and `W=(n,f)`; monograph passages that use force-first wrenches must permute blocks |
 | Floating-base `v` in canonical-v2 | World linear + **body** angular | Site articles sometimes use all-world or all-body twists without stating the split |
 | Drake native spatial velocity | Often `[angular; linear]` in Jacobians; joint velocity blocks may differ | Match CC-28 adapter, not a textbook excerpt |
 | Input map in dynamics | UpstreamDrift `SPEC.md` uses **`ẋ = f(x) + g(x)u`** (lowercase **g**) | AffineDrift [NOTATION.md](https://github.com/D-sorganization/AffineDrift/blob/main/NOTATION.md) reserves **G(x)** for the input matrix and warns against lowercase `g(x)` for the map |
