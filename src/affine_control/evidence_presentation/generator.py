@@ -76,6 +76,7 @@ def _collect_companion_entities(companion_file: Path) -> list[EvidencePresentati
                     description=f"Physics engine {ename}",
                     commit_sha=source_commit,
                     provenance_hash=manifest_sha,
+                    support_tier=eng.get("support_tier"),
                 )
             )
 
@@ -92,6 +93,7 @@ def _collect_companion_entities(companion_file: Path) -> list[EvidencePresentati
                     description=desc,
                     commit_sha=source_commit,
                     provenance_hash=manifest_sha,
+                    support_tier=prog.get("support_tier"),
                 )
             )
 
@@ -107,6 +109,7 @@ def _collect_companion_entities(companion_file: Path) -> list[EvidencePresentati
                     description=ftitle,
                     commit_sha=source_commit,
                     provenance_hash=manifest_sha,
+                    support_tier=feat.get("support_tier"),
                 )
             )
 
@@ -123,6 +126,7 @@ def _collect_companion_entities(companion_file: Path) -> list[EvidencePresentati
                     description=wtitle,
                     commit_sha=wcommit,
                     provenance_hash=manifest_sha,
+                    support_tier=wf.get("support_tier"),
                 )
             )
     return vms

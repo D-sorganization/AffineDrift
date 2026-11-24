@@ -119,7 +119,7 @@
   }, true);
 
   document.addEventListener("keyup", (event) => {
-    if (isFormTarget(event.target)) return;
+    if (event.ctrlKey || event.metaKey || event.altKey || isFormTarget(event.target)) return;
     const optionElement = document.querySelector("#quarto-search-options");
     if (!optionElement) return;
 

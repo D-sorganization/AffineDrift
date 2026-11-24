@@ -48,9 +48,12 @@ one-mode reduction and six-mode Euler--Bernoulli reference share the same
 assembled mass, stiffness, damping, tip inertia, and loads. The reduced model
 closely follows slow loading but misses higher-mode history under a short
 force-and-moment pulse, even when their peak deflections are similar. Synthetic
-modal identification, mesh convergence, and work--energy closure pass. This
-does not calibrate equipment or show that the result survives coupling the
-beam into the two-hand constrained solve.
+modal identification, mesh convergence, and work--energy closure pass. It does
+not calibrate equipment. The forward modal-shaft coupling in @sec-forward-modal-shaft
+**was** executed inside the planar constrained solve: the negative force-generated
+couple and geometry controls persist, but the registered 5% deflection screen fails
+(maximum 13.5% of shaft length), so the run is an out-of-domain stress test rather
+than quantitative beam evidence.
 
 The articulated finite-base extension closes the next numerical mechanism
 gate while producing an adverse primary inference result. Across 384 pathway
@@ -127,16 +130,17 @@ The coupled uncertainty/control phase rejects two additional shortcuts. A net
 planar wrench cannot uniquely identify both hand forces, and six summary
 observables cannot identify the complete 12-parameter vector. Separate
 training and held-out ensembles leave objective-dependent tradeoffs among all
-eight command programs. Early restraint improves held-out lower-tail speed
-relative to late drive but increases the planar face/path error, so the result
-supports a conditional model mechanism rather than a universal or
-physiological strategy.
+eight command programs. On $n=6$ held-out cases, early restraint improves the
+interpolated lower-tail speed relative to late drive but increases the planar
+face/path error, so the result is consistent with a conditional model mechanism
+only; it is not a universal or physiological strategy.
 
 The experimental phase is preregistered but not empirically executed. Its
 machine-readable protocol fixes six synchronized modalities, participant-level
 holdout, identity-safe provenance, filtering and residual sensitivities, and
-four prediction-specific falsifiers. The synthetic dry run passes all intake
-and fail-closed controls, but it cannot advance H1--H4. Governed human data are
+six prediction-specific falsifiers (EXP-H1--EXP-H6). The synthetic dry run passes
+all intake and fail-closed controls, but it cannot advance the registered
+computational hypotheses. Governed human data are
 still required.
 
 The open-resource layer now supplies model-tier presets, a hash-pinned release

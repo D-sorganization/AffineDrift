@@ -17,6 +17,29 @@ before review. Collection-level entries below do not approve their members.
 | Open X-Embodiment                | Not selected; pin each sub-dataset version | Pending review per sub-dataset                         | Candidate trajectory examples; scope to be reviewed                              | Unassigned | PENDING  |
 | LeRobot datasets/models          | Not selected; pin each artifact revision   | Pending review per artifact                            | Candidate dataset/model examples; scope to be reviewed                           | Unassigned | PENDING  |
 | AMASS                            | Not selected                               | Terms not reviewed; no licence interpretation recorded | No use while on hold; proposed use must be specified for review                  | Unassigned | ON-HOLD  |
+| MuJoCo engine | Not selected; pin release and artifact set | Pending review of selected release and redistributed artifacts | Parity benchmarks, contact comparisons and simulated MPC replay | Unassigned | PENDING |
+| Drake engine | Not selected; pin release and artifact set | Pending review of selected release and redistributed artifacts | Parity benchmarks, contact comparisons and simulated MPC replay | Unassigned | PENDING |
+| Pinocchio engine | Not selected; pin release and artifact set | Pending review of selected release and redistributed artifacts | Parity comparisons, wrench transforms and dynamics cross-checks | Unassigned | PENDING |
+| MJX engine | Not selected; pin release and artifact set | Pending review of selected release and redistributed artifacts | Batched parity and throughput examples; no agreement result asserted | Unassigned | PENDING |
+| Synthetic benchmark inputs and output traces | Not selected; pin authored inputs, model and outputs | Pending review of authorship and all included model assets | Reproduce the proposed cross-engine comparison | Unassigned | PENDING |
+| Synthetic contact traces | Not selected; pin authored traces, model and outputs | Pending review of authorship and all included model assets | Check transforms and balance with known inputs | Unassigned | PENDING |
+| Synthetic target trajectories | Not selected; pin authored targets, model and replay outputs | Pending review of authorship and all included model assets | Reproducible minimal controller examples | Unassigned | PENDING |
+| Any future measured force-plate data | No dataset selected | Pending review of a named dataset, consent and permitted derived outputs | Candidate model-observation comparisons; no data collection authorized | Unassigned | PENDING |
+
+## Outline Candidate Reconciliation
+
+The additional rows above record candidates from the three #5178
+[launch outlines](outlines/). They do not select an engine release or dataset.
+Grouped engine mentions in an outline resolve to a separate `engine` row for
+each named engine; the MuJoCo engine is distinct from the Menagerie model
+collection. Synthetic inputs also need review of authorship, included model
+assets and derived outputs; the word "synthetic" grants no clearance.
+
+These entries make the remaining reviews visible, not complete. Replace each
+planning placeholder with its exact version and intended-use evidence before
+any decision to use it. Every additional row remains PENDING with an unassigned
+reviewer. The original five candidates and AMASS's ON-HOLD status are unchanged;
+phase-0 exit still requires Dieter's approval.
 
 ## Decision Evidence
 

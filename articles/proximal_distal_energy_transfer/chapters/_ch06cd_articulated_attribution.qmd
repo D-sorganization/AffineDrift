@@ -44,9 +44,12 @@ therefore also records denominator suppression and cancellation indexes.
 The atlas reuses the six synthetic subject profiles, three grip spans, and
 thirteen closed states per case, for 234 states and twenty generalized
 coordinates. Each state receives the declared 1 mm club-translation and
-0.05 m/s club-velocity perturbation. MuJoCo 3.12.0 and Pinocchio 4.1.0 evaluate
+0.05 m/s club-velocity perturbation. MuJoCo 3.8.0 and Pinocchio 3.8.0 evaluate
 the mass, bias, contact, and acceleration operators independently; no forward
-step is taken. Zero-contact, zero-velocity, gravity-off, coincident/reversed
+step is taken. The pinned JSON summary below records these engine version fields
+explicitly (the identical numeric strings are independent library releases, not
+a copy-paste artifact). Zero-contact,
+zero-velocity, gravity-off, coincident/reversed
 moment-arm, coordinate-rescaling, and deliberately corrupted-force controls
 are all registered before interpreting the attribution.
 
@@ -74,7 +77,8 @@ questions and cannot be substituted for one another.
 
 The machine-readable [JSON summary](https://github.com/D-sorganization/UpstreamDrift/blob/b700e58941205af6f673f13ebbffcd30f8cca9d8/docs/research/proximal_distal_energy_transfer/data/articulated_drift_contact_attribution.json)
 and [NPZ arrays](https://github.com/D-sorganization/UpstreamDrift/blob/b700e58941205af6f673f13ebbffcd30f8cca9d8/docs/research/proximal_distal_energy_transfer/data/articulated_drift_contact_attribution.npz) retain every
-state, engine, contribution, denominator, control, and gate. This result is a
+state, engine, contribution, denominator, control, and gate, including the
+`engines` block with MuJoCo and Pinocchio version strings. This result is a
 pointwise synthetic mechanics attribution under an imposed perturbation. It
 does not establish persistence through contact transitions, accumulated
 impulse or work, zero-velocity constraint force, biological torque or effort,

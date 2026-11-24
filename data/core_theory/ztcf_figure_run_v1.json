@@ -1,0 +1,15 @@
+{
+  "schema_version": "affinedrift.core-theory-figure-run/v1",
+  "figure_set": "ztcf",
+  "description": "Pinned inputs for core-theory ZTCF SVG figures (GolfModel three-link teaching model).",
+  "model_fixture": "data/ztcf/planar_golf_forward_fixture_v2.json",
+  "declared_torque_nm": [40.0, 15.0, 3.0],
+  "horizon_s": 0.2,
+  "steps": 200,
+  "branch_intervention_steps": [0, 50, 100, 150],
+  "solver": "fixed-step RK4",
+  "engine_paths": [
+    "src/affine_control/golf_model.py::GolfModel.ztcf_trajectory",
+    "src/affine_control/ztcf_explorer.py::actual_trajectory"
+  ]
+}

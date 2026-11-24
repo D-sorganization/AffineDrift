@@ -118,7 +118,7 @@ def test_project_companion_entity() -> None:
         commit_sha="2eb6e9a7852c00223594806a127a3c3c78d46db1",
         provenance_hash="a" * 64,
     )
-    assert vm.tier == EvidenceTier.QUALIFIED_SIMULATION.value
+    assert vm.tier == EvidenceTier.SOFTWARE_ARTIFACT.value
     assert vm.kind == "engine"
     assert vm.source_revision == "2eb6e9a7852c00223594806a127a3c3c78d46db1"
 

@@ -61,6 +61,11 @@
     svg: {
       fontCache: 'global'
     },
+    chtml: {
+      // Keep scripts/superscripts readable on phones (#5326); default minScale 0.5
+      // can render ~9px glyphs inside 16px body text.
+      minScale: 0.85
+    },
     options: {
       skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
       ignoreHtmlClass: 'tex2jax_ignore',

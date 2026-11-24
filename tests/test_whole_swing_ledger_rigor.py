@@ -113,7 +113,7 @@ def test_point_mass_energy_does_not_use_directional_impact_effective_mass() -> N
         "strain energy remains stored energy",
         "finite same-state comparison",
         "bounded hand forces",
-        "a1a613999eb0c744da96caa040941955eb210a21",
+        "85cce4d3307bb7ad3953d9fc6e583e370803515c",
         "@marsan2019",
     ],
 )

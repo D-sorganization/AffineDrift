@@ -37,13 +37,37 @@ STYLE = ROOT / "css" / "components" / "symbol-hover.css"
 ADOPTER = ROOT / "articles" / "theory-part1.qmd"
 #: The symbols named by the issue, plus gravity and the actuation matrix that
 #: appear in the same theory Part 1 force balance.
-REQUIRED_KEYS = {"x", "f", "G", "u", "M", "C", "g", "B"}
+REGISTRY_KEYS = {
+    "x",
+    "f",
+    "G",
+    "u",
+    "M",
+    "C",
+    "g",
+    "B",
+    "h",
+    "q",
+    "qdot",
+    "v",
+    "tau",
+    "J",
+    "lam",
+    "ad",
+    "Ba",
+    "W",
+    "Uset",
+    "eps",
+    "z",
+    "p",
+}
+THEORY_PART_ONE_SYMREF_KEYS = {"x", "f", "G", "u", "M", "C", "g", "B"}
 SYMREF_RE = re.compile(r"\\symref\{([^{}]*)\}")
 _EXCLUDED_DIRS = {"node_modules", "_site", ".quarto", ".git", "docs"}
 _TABLE = (
     "<!-- SYMBOL-REFERENCES:START -->\n\n"
-    "| Key | Symbol | Name | Definition |\n"
-    "| --- | --- | --- | --- |\n"
+    "| Key | Symbol | Name | Definition | Unit | Shape | Frame | Sign | Source anchor |\n"
+    "| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n"
     "{rows}\n\n"
     "<!-- SYMBOL-REFERENCES:END -->\n"
 )
@@ -100,7 +124,7 @@ def test_parse_reads_key_tex_name_and_definition() -> None:
     [
         ("no markers here", "markers"),
         (_table(), "no symbol rows"),
-        (_table("| `f` | $f$ | Drift |"), "four cells"),
+        (_table("| `f` | $f$ | Drift | Def | extra |"), "four or nine cells"),
         (_table("| `f` | $f$ | Drift | One. |", "| `f` | $f$ | Drift | Two. |"), "duplicate"),
         (_table("| `f-1` | $f$ | Drift | One. |"), "key"),
         (_table("| `f` | f | Drift | One. |"), "TeX"),
@@ -114,7 +138,7 @@ def test_parse_fails_closed_on_malformed_tables(text: str, message: str) -> None
 
 def test_notation_table_defines_the_required_symbols() -> None:
     refs = parse_symbol_table(NOTATION.read_text(encoding="utf-8"))
-    assert REQUIRED_KEYS <= {ref.key for ref in refs}
+    assert REGISTRY_KEYS <= {ref.key for ref in refs}
 
 
 def test_registry_is_current() -> None:
@@ -153,7 +177,7 @@ def test_only_opted_in_pages_use_symref() -> None:
 def test_theory_part_one_adopts_symbol_hover() -> None:
     text = ADOPTER.read_text(encoding="utf-8")
     assert _front_matter(text).get("symbol-hover") is True
-    assert REQUIRED_KEYS <= set(SYMREF_RE.findall(text))
+    assert THEORY_PART_ONE_SYMREF_KEYS <= set(SYMREF_RE.findall(text))
 
 
 def test_filter_is_registered_and_assets_are_self_hosted() -> None:

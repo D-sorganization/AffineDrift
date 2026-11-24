@@ -70,6 +70,15 @@ def test_schema_is_valid_draft_2020_12_and_mapping_conforms() -> None:
     Draft202012Validator(schema).validate(json.loads(MAPPING.read_text(encoding="utf-8")))
 
 
+def test_regenerate_claim_audit_evidence_keeps_atlas_authority_digests_current() -> None:
+    """Atlas authority pins must track regenerated claim-audit evidence (#5593)."""
+    from scripts.regenerate_claim_audit_evidence import refresh_atlas_authorities
+
+    mapping = json.loads(MAPPING.read_text(encoding="utf-8"))
+    assert refresh_atlas_authorities(mapping, ROOT) == 0
+    load_atlas(_paths())
+
+
 def test_atlas_covers_each_required_falsification_theme_exactly_once() -> None:
     """The six issue-mandated alternative mechanisms must not disappear."""
     atlas = load_atlas(_paths())

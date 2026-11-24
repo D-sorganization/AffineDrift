@@ -45,6 +45,8 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         "Dockerfile",
         "LICENSE",
         "LICENSE-CONTENT",
+        "llms-full.txt",
+        "llms.txt",
         "Makefile",
         "NOTATION.md",
         "PARAMETERS.md",
@@ -117,6 +119,7 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "pics",
         "references",
         "reports",
+        # Motion-measurement epic (#5408) critique tree; thesis collateral (#5466) uses the same layout.
         "research",
         "repositories",
         "resources",

@@ -13,7 +13,7 @@ DEFERRED_AUDIT_SCOPE_COUNTS = {
     f"{ISSUE_ROOT}/4056": 16,
     f"{ISSUE_ROOT}/4057": 40,
     f"{ISSUE_ROOT}/4058": 29,
-    f"{ISSUE_ROOT}/4059": 18,
+    f"{ISSUE_ROOT}/4059": 21,
     f"{ISSUE_ROOT}/4060": 14,
     f"{ISSUE_ROOT}/4061": 22,
     f"{ISSUE_ROOT}/4062": 6,
@@ -67,7 +67,7 @@ APPLIED_ARTICLE_ROUTES = frozenset(
         "/articles/proximal-distal-model-workbench.html",
         "/articles/proximal_distal_energy_transfer/index.html",
         "/articles/putting-roll-models.html",
-        "/articles/slack-takeup-identifiability.html",
+        "/articles/slack-management-linked-systems.html",
         "/articles/strokes-gained-limitations.html",
         "/articles/technology-club-fitting.html",
         "/articles/technology-force-measurement.html",
@@ -75,6 +75,10 @@ APPLIED_ARTICLE_ROUTES = frozenset(
         "/articles/technology-launch-monitors.html",
         "/articles/technology-motion-capture.html",
         "/articles/upstreamdrift-educational-integration.html",
+        "/articles/upstreamdrift-humanoid-balance.html",
+        "/articles/upstreamdrift-learning-analytics.html",
+        "/articles/upstreamdrift-physics-models.html",
+        "/articles/upstreamdrift-whole-body-control.html",
     }
 )
 

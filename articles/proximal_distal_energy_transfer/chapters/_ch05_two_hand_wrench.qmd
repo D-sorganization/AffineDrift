@@ -388,6 +388,20 @@ as the onset of the passive mechanism would therefore be incorrect. DELTA asks
 how BASE differs from the pointwise zero-command reaction. The ZTCF curve itself
 is the relevant evidence for a moment that remains without current command.
 
+### Archived Trace Horizon and Event Registration {#sec-two-hand-trace-timing}
+
+This Simscape export spans **0.2801 s** at a 0.1 ms sample interval (2,801
+samples). Clubhead speed peaks at **115.1 mph** at **0.1933 s**. The archived
+tables include **no registered ball-impact or delivery-crossing event** for this
+two-hand trace, unlike the planar E1 programs in @sec-results, which register a
+first valid upward club-vertical crossing (for example 0.3493 s in the reference
+60/−10/+15 N·m program). The ZTCF negative couple interval therefore lies
+entirely **after peak clubhead speed** (approximately 0.182–0.270 s) inside a
+follow-through window with no modeled impact physics. Reconstructed contact-force
+work integrates to −149 J over that interval, but most of that duration is
+deceleration and redirection after peak speed rather than pre-impact
+late-downswing delivery.
+
 ## Local Force Geometry Through the Downswing {#sec-two-hand-local-forces}
 
 ![Opposing Local Hand Forces Persist in Pointwise ZTCF](figures/fig_two_hand_local_force_components.pdf){#fig-two-hand-local-forces width=100%}
@@ -395,7 +409,8 @@ is the relevant evidence for a moment that remains without current command.
 The local force histories in @fig-two-hand-local-forces expose the mechanism
 hidden by the resultant. Near the ZTCF minimum, the lead and trail normal forces
 are +249.8 N and -266.2 N. Their opposition makes the differential normal mode
-large and negative under @eq-normal-force-couple. At the same instant, the lead
+large and positive (+258.0 N), which produces a negative midpoint couple under
+@eq-normal-force-couple. At the same instant, the lead
 and trail axial forces are -497.5 N and +30.4 N. Those axial loads influence the
 resultant and internal loading, but their direct midpoint moment is suppressed
 by the small perpendicular lever arm.
@@ -463,11 +478,11 @@ $$ {#eq-two-hand-rigid-power}
 The archived model contains two distinct moving contacts. An exact two-point
 force-power identity is therefore more informative. With
 $\Delta\mathbf v=\mathbf v_T-\mathbf v_L$ and
-$\Delta\mathbf F=(\mathbf F_T-\mathbf F_L)/2$,
+$\mathbf F_d=\frac{\mathbf F_L-\mathbf F_T}{2}$ from @eq-common-differential-forces,
 
 $$
 P_F=\mathbf F_L\cdot\mathbf v_L+\mathbf F_T\cdot\mathbf v_T
-=\mathbf R\cdot\mathbf v_M+\Delta\mathbf F\cdot\Delta\mathbf v.
+=\mathbf R\cdot\mathbf v_M-\mathbf F_d\cdot\Delta\mathbf v.
 $$ {#eq-two-contact-power}
 
 The relative-velocity term can be separated into rigid rotation and a small

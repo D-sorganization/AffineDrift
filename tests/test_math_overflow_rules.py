@@ -181,7 +181,7 @@ class TestNoDuplicateMathOverflowRules:
         assert "scrollbar-width: thin" in bodies
         assert "-webkit-overflow-scrolling: touch" in bodies
         assert "font-size: 0.9em !important" in bodies
-        assert "font-size: 0.85em !important" in bodies
+        assert "font-size: 0.82em !important" in bodies
 
     def test_padding_top_and_scroll_behavior_are_scoped_to_math_display_only(self):
         """`padding-top`/`scroll-behavior` must apply to `.math.display` alone.

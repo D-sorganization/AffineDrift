@@ -1,34 +1,34 @@
-The ZVCF is a **state evaluation**, not a trajectory held in equilibrium.
-With $z=(q,\eta)$ and $v=\dot z$, evaluate $h_0(z)=h(z,0)$ while retaining
-the declared deformation, parameters, other internal states, and contact mode.
-For stationary constraints and the smooth mechanical model used here,
+At each achieved state, the **pointwise ZTCF (drift)** and **pointwise ZVCF
+(control)** accelerations decompose the model response under the original MATLAB
+convention: drift carries velocity terms and gravity once; control applies
+declared torques with velocities zeroed and gravity off in the ZVCF operand.
+
+With $M(z)\dot v+h(z,v)=\bar B u$ and applied generalized load
+$\tau_{\mathrm{ID}}=\bar B u$,
 
 $$
-\tau_{\mathrm{ZVCF}}:=-h_0(z),\qquad
-a_{\mathrm{ZVCF}}=-M(z)^{-1}h_0(z).
+a_{\mathrm{ZTCF}}=-M(z)^{-1}h(z,v),\qquad
+a_{\mathrm{ZVCF}}=M(z)^{-1}\tau_{\mathrm{ID}},
 $$ {#eq-zvcf_accel}
 
-This uses the **signed drift-force** convention. Software that reports the
-positive holding load instead returns $h_0$; label the sign explicitly.
-In particular,
+evaluated under the ZVCF protocol on the control side. At the same state,
 
 $$
-\mathrm{ID}(z,0,0)=h_0(z),\qquad
-\mathrm{ID}(z,0,a_{\mathrm{ZVCF}})=0.
+\dot v=a_{\mathrm{ZTCF}}+a_{\mathrm{ZVCF}}.
 $$ {#eq-zvcf_id}
 
-Holding every coordinate of an underactuated model may require fictitious
-actuators: $h_0$ need not lie in $\operatorname{range}(\bar B)$.
-The formal holding load remains a useful diagnostic, not an executable policy.
-For time-dependent constraints, zero velocity may be inadmissible; use a
-constraint-consistent evaluation rather than silently resetting the state.
+Integrated counterfactual trajectories do not inherit this sum.
 
-At the same configuration, define
+The **zero-velocity baseline load** $h_0(z)=h(z,0)$ and acceleration
+$-M(z)^{-1}h_0(z)$ answer a different question (configuration-dependent bias
+at zero velocity). Label that diagnostic explicitly; it is not the ZVCF control
+component.
+
+At the same configuration, the velocity-dependent drift increment is
 
 $$
 \tau_{\mathrm{vel.\,drift}}:=-[h(z,v)-h(z,0)],\qquad
-\tau_{\text{drift}}=\tau_{\mathrm{ZVCF}}+
-\tau_{\mathrm{vel.\,drift}}.
+\tau_{\text{drift}}=-h(z,0)+\tau_{\mathrm{vel.\,drift}}=-h(z,v).
 $$ {#eq-zvcf_split}
 
 This difference contains every retained term that changes under the specified
@@ -43,9 +43,9 @@ prestress can both contribute at zero velocity. For a beam under constant
 tension $N>0$, the transverse restoring operator contains
 $EI\,w_{ssss}-N\,w_{ss}$ even when $w_t=0$. Centrifugal loading is one possible
 source of prestress; it is not the definition of geometric stiffness.
-ZVCF subtraction is one reproducible way to partition loads. Direct evaluation
-of the declared equation terms is another. Neither establishes material and
-geometric stiffness separately without the tangent model.
+Zero-velocity baseline subtraction is one reproducible way to partition loads.
+Direct evaluation of the declared equation terms is another. Neither establishes
+material and geometric stiffness separately without the tangent model.
 
 The useful golf question is therefore precise: how much does a specified load
 change when velocity is reset, and how sensitive is the answer to retained

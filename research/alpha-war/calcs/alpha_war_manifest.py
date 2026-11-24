@@ -22,6 +22,7 @@ GENERATOR_SOURCE_REL = (
     "alpha_war_json_compare.py",
     "alpha_war_roll_projection.py",
     "alpha_war_hand_force_bounds.py",
+    "alpha_war_flexible_shaft_params.py",
     "alpha_war_figures.py",
 )
 

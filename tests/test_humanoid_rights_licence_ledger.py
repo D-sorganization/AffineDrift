@@ -1,5 +1,6 @@
 """Keep phase-zero artifact reviews explicit and prevent accidental approval."""
 
+import re
 from pathlib import Path
 
 import pytest
@@ -49,3 +50,23 @@ def test_ledger_template_has_required_columns() -> None:
         "reviewer",
         "decision",
     ]
+
+
+@pytest.mark.parametrize("outline", sorted((LEDGER.parent / "outlines").glob("series-*.md")))
+def test_outline_candidates_resolve_to_distinct_ledger_rows(outline: Path) -> None:
+    """Every declared outline candidate needs an explicit, uncleared planning row."""
+    rows = ledger_rows()
+    section = outline.read_text(encoding="utf-8").split("## Engines and Datasets\n", 1)[1]
+    section = section.split("\n## ", 1)[0]
+    candidates = [
+        line.split("|")[1].strip() for line in section.splitlines() if line.startswith("|")
+    ][2:]
+    assert candidates, f"No candidate table found in {outline.name}"
+    for candidate in candidates:
+        engines = re.findall(r"\b(?:MuJoCo|Drake|Pinocchio|MJX)\b", candidate)
+        artifacts = [f"{engine} engine" for engine in engines] or [candidate]
+        for artifact in artifacts:
+            assert artifact in rows, f"{outline.name}: missing ledger row for {artifact}"
+            assert len(rows[artifact]) == 6 and all(rows[artifact])
+            assert rows[artifact][-1] == ("ON-HOLD" if artifact == "AMASS" else "PENDING")
+            assert rows[artifact][-2] == "Unassigned"

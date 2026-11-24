@@ -119,7 +119,9 @@ def audit_workflows(workflow_dir: Path = WORKFLOW_DIR) -> list[WorkflowAuditReco
     if not workflow_dir.exists() or not workflow_dir.is_dir():
         raise ValueError(f"Workflow directory does not exist: {workflow_dir}")
 
-    workflow_paths = sorted(workflow_dir.glob("*.yml")) + sorted(workflow_dir.glob("*.yaml"))
+    workflow_paths = sorted(workflow_dir.glob("*.yml"), key=lambda p: p.name) + sorted(
+        workflow_dir.glob("*.yaml"), key=lambda p: p.name
+    )
     raw_unpinned = find_unpinned_actions(workflow_dir)
     unpinned_by_name: dict[str, list[str]] = {}
     for item in raw_unpinned:

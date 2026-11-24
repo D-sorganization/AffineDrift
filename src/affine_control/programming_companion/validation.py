@@ -81,6 +81,9 @@ def _validate_fetch(
 
 def _validate_repository_path(value: str) -> None:
     """Require an unambiguous repository-relative POSIX path."""
+    if value.startswith("tools://"):
+        _validate_repository_path(value.removeprefix("tools://"))
+        return
     parts = value.split("/")
     if (
         not value

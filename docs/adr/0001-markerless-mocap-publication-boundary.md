@@ -34,6 +34,10 @@ Every public projection must conform to
 
 - an exact 40-character source commit and matching revision-pinned source links;
 - SHA-256 and byte-size locks for every projected artifact;
+- a run identity on every artifact (`model_id`, `model_revision`, `run_id`, `ud_commit`,
+  `claim_class`), named after the UpstreamDrift run-manifest-v1 contract
+  (UpstreamDrift #14431), where `run_id` is the SHA-256 of the canonical run manifest and
+  every citing claim shares the artifact's claim class;
 - approved security and privacy reviews, sanitized-artifact-only retention, and
   public-release consent for live-lab evidence;
 - explicit `observed`, `derived`, `model_scenario`, or `unavailable` claim classes;

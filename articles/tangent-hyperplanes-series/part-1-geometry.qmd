@@ -1,6 +1,6 @@
 ---
-title: "Tangent Hyperplanes I: Geometry"
-description: "Geometric foundations of tangent hyperplanes: configuration manifolds, vector fields, and infinitesimal state representations."
+title: "Tangent-Space Series, Part 1: Geometry"
+description: "Geometric foundations of tangent spaces: configuration manifolds, vector fields, and infinitesimal state representations."
 aliases:
   - ../tangent-hyperplane-articles/Tangent_Hyperplanes.html
   - ../tangent-hyperplane-contraction/index.html
@@ -30,7 +30,25 @@ $$
 
 Here $Dh$ is a $p\times n$ matrix. For multiple constraints this is matrix-vector multiplication, not a scalar dot product. Full rank is what makes the kernel precisely the tangent space of the level set.
 
-The affine tangent space is $x+T_xM$. It passes through $x$ in the ambient space; it need not lie on $M$. It is a **hyperplane only when its codimension is one**. With two independent constraints in three dimensions, the affine tangent space is a line. The series title uses the familiar hyperplane picture, but the general construction is a tangent space.
+The affine tangent space is $x+T_xM$. It passes through $x$ in the ambient space; it need not lie on $M$. It is a **hyperplane only when its codimension is one**. With two independent constraints in three dimensions, the affine tangent space is a line. Legacy URLs and filenames still use the older `tangent-hyperplanes` slug; the general construction is a tangent space, not necessarily a hyperplane.
+
+## Instantaneous Rate Sets (Title “Hyperplane”)
+
+Separate from the affine tangent space $x+T_xM$ in the ambient space, a control-affine model
+
+$$
+\dot x=f_0(x,t)+G(x,t)u
+$$
+
+defines at each state $x$ the **instantaneous rate set**
+
+$$
+\mathcal A(x)=f_0(x,t)+\operatorname{im}G(x,t)\subset T_x\mathcal M,
+\qquad
+\dim\mathcal A(x)=\operatorname{rank}G(x,t).
+$$
+
+This set lies in the tangent space at $x$, not in the state space itself. It is a **hyperplane in $T_x\mathcal M$** exactly when $\operatorname{rank}G=n-1$. For second-order mechanical state $x=(q,\dot q)$ with $d$ coordinates and input map $G=[0;\,M^{-1}B]$, one has $\operatorname{rank}G\le d$ while $\dim T_x\mathcal M=2d$, so the rate set is a hyperplane of $T_x\mathcal M$ only when $d=1$; in acceleration space the same directions form a hyperplane when there are $d-1$ independent actuators. [Part 2](./part-2-dynamics.html) develops the variational equation along trajectories; the rate set is its fixed-state slice.
 
 ## Finite Displacements and Smoothness
 

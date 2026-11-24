@@ -120,12 +120,12 @@ This is an exact equation for the derivative of the solution family under the re
 
 ### Finite Prediction Error
 
-In fixed, declared state/input scalings, write the continuous dynamics as $\dot z=g(t,z,v)$. Let $(\bar z,\bar v)$ be a nominal state/input trajectory satisfying these dynamics. Set $e=z-\bar z$, $\Delta v=v-\bar v$, and let $\eta$ solve the linear comparison model $\dot\eta=A\eta+B\Delta v$ with $\eta(t_0)=e(t_0)$, where now $A=g_z$ and $B=g_v$ along the nominal motion, and $\Phi$ is the state-transition matrix of this scaled $A$. Define
+In fixed, declared state/input scalings, write the continuous dynamics as $\dot z=F(t,z,v)$. Let $(\bar z,\bar v)$ be a nominal state/input trajectory satisfying these dynamics. Set $e=z-\bar z$, $\Delta v=v-\bar v$, and let $\eta$ solve the linear comparison model $\dot\eta=A\eta+B\Delta v$ with $\eta(t_0)=e(t_0)$, where now $A=F_z$ and $B=F_v$ along the nominal motion, and $\Phi$ is the state-transition matrix of this scaled $A$. Define
 
 $$
 \begin{aligned}
-N={}&g(t,\bar z+e,\bar v+\Delta v)\\
-&-g(t,\bar z,\bar v)-Ae-B\Delta v,\\
+N={}&F(t,\bar z+e,\bar v+\Delta v)\\
+&-F(t,\bar z,\bar v)-Ae-B\Delta v,\\
 r={}&e-\eta.
 \end{aligned}
 $$
@@ -175,12 +175,12 @@ Let $x^-$ and $x^+$ denote states immediately before and after an event. For an 
 
 $$
 \begin{aligned}
-\xi^+&=S\xi^-,\\
-S&=R_x+\frac{(f^+-R_xf^--R_t)h_x}{h_t+h_xf^-}.
+\xi^+&=\Xi\xi^-,\\
+\Xi&=R_x+\frac{(f^+-R_xf^--R_t)h_x}{h_t+h_xf^-}.
 \end{aligned}
 $$
 
-Here $h_x$ is a row derivative; incoming and outgoing fields are evaluated on their respective sides of the event under the specified input policy. Smooth guards/resets, a nonzero denominator, and a locally consistent event sequence are essential. The reset derivative alone applies to an appropriate prescribed-time reset; it generally omits the timing effect for state-triggered events. See the [saltation derivation](Advanced/Hybrid_Tangent_Spaces.html#sec-tangent-jumps) and [Kong and colleagues, Section III](https://arxiv.org/html/2306.06862v2#S3). Neither $R_x$ nor $S$ is generally an orthogonal rotation.
+Here $h_x$ is a row derivative; incoming and outgoing fields are evaluated on their respective sides of the event under the specified input policy. Smooth guards/resets, a nonzero denominator, and a locally consistent event sequence are essential. The reset derivative alone applies to an appropriate prescribed-time reset; it generally omits the timing effect for state-triggered events. See the [saltation derivation](Advanced/Hybrid_Tangent_Spaces.html#sec-tangent-jumps) and [Kong and colleagues, Section III](https://arxiv.org/html/2306.06862v2#S3). Neither $R_x$ nor $\Xi$ is generally an orthogonal rotation.
 
 ## Glossary and Notation
 

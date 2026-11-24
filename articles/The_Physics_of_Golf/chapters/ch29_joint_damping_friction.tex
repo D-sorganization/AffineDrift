@@ -127,7 +127,15 @@ f_0&=\begin{bmatrix}\bm v\\-\bm M^{-1}(\bm C\bm v+\bm g)\end{bmatrix},\\
 f_d&=\begin{bmatrix}\bm 0\\-\bm M^{-1}\bm D\bm v\end{bmatrix},\\
 G&=\begin{bmatrix}\bm 0\\\bm M^{-1}\bm B\end{bmatrix}.
 \end{aligned}
-\] Every vector field has \(2n\) components; joint damping forces enter the acceleration block through the inverse mass matrix. A quaternion or other redundant orientation representation instead needs its declared kinematic map \(\dot{\bm q}=\bm N(\bm q)\bm v\). In a closed chain, retain \(\bm J_c^T\boldsymbol{\lambda}\) in the force balance and solve the compatible constraint equations, or eliminate the reactions consistently. The unconstrained \(G\) above cannot simply be reused after that elimination.
+\] For the independent-coordinate viscous model above, the notation contract's full-bias convention is
+
+\[
+h(q,v)=C(q,v)v+D(q)v+g(q),\qquad (f_0+f_d)_v=-M(q)^{-1}h(q,v).
+\]
+
+Here the split into \(f_0\) and \(f_d\) isolates the damping contribution; zero-input drift retains both. Additional passive loads must be included in \(h\) when retained by the model.
+
+Every vector field has \(2n\) components; joint damping forces enter the acceleration block through the inverse mass matrix. A quaternion or other redundant orientation representation instead needs its declared kinematic map \(\dot{\bm q}=\bm N(\bm q)\bm v\). In a closed chain, retain \(\bm J_c^T\boldsymbol{\lambda}\) in the force balance and solve the compatible constraint equations, or eliminate the reactions consistently. The unconstrained \(G\) above cannot simply be reused after that elimination.
 
 \subsection{Conservative Coupling and Dissipated Power}\label{sec-damping-energy-ledger}
 
@@ -207,7 +215,7 @@ Uniformly scaling all velocities by a factor scales this force by the factor squ
 
 At a prescribed state with diagonal passive joint damping, the local loss is \(P_i=c_i\dot q_i^2\). The mass matrix affects the resulting accelerations and trajectory, but does not insert an extra downstream inertia multiplier into this instantaneous loss. Neither the proximal nor the distal joint must dissipate more. Relative joint rates must not be replaced by absolute segment rates.
 
-For a synthetic pair with equal \(c_i=0.2\) N m s/rad and rates 10 and 30 rad/s, the losses are 20 and 180 W. Reversing the rates reverses the ranking. Integrating along matched trajectories gives a loss comparison; recomputing a freely evolving swing can also change actuator work and delivered geometry. The previous shoulder/wrist speed estimate and its power ratio are withdrawn because they did not establish those coordinates or measurement conditions.
+For a synthetic pair with equal \(c_i=0.2\) N m s/rad and rates 10 and 30 rad/s, the losses are 20 and 180 W. Reversing the rates reverses the ranking. Integrating along matched trajectories gives a loss comparison; recomputing a freely evolving swing can also change actuator work and delivered geometry.
 
 \subsection{Constraint Coupling in Parallel
 Mechanisms}\label{constraint-coupling-in-parallel-mechanisms}
@@ -220,31 +228,33 @@ P_{\rm constraint}=\dot{\mathbf q}^{\,T}\mathbf J_c^T\boldsymbol\lambda=0.
 
 Separate generalized torques of arms with different coordinate spaces cannot simply be added and set to zero. Club force and moment balance retains its inertia, external loads and both contact wrenches. Ideal internal constraints redistribute work between components without creating extra total loss.
 
-If \(\dot{\mathbf q}=\mathbf N\dot{\mathbf s}\) with \(\mathbf J_c\mathbf N=0\), then \(\mathbf D_r=\mathbf N^T\mathbf D\mathbf N\) and \(\dot{\mathbf s}^{\,T}\mathbf D_r\dot{\mathbf s}=\dot{\mathbf q}^{\,T}\mathbf D\dot{\mathbf q}\). This proves preserved nonnegative loss while allowing off-diagonal reduced coupling. A changing basis also contributes kinematic terms to the dynamics. Moving constraints have prescribed nonzero velocity and can perform work; compliant or slipping contacts require explicit port laws rather than ideal no-slip closure.
+Let \(\mathbf Z\) have full column rank with columns spanning the admissible joint-rate null space. This basis is distinct from the kinematic rate map \(\bm N(\bm q)\) above. If \(\dot{\mathbf q}=\mathbf Z\dot{\mathbf s}\) with \(\mathbf J_c\mathbf Z=0\), then \(\mathbf D_r=\mathbf Z^T\mathbf D\mathbf Z\) and \(\dot{\mathbf s}^{\,T}\mathbf D_r\dot{\mathbf s}=\dot{\mathbf q}^{\,T}\mathbf D\dot{\mathbf q}\). This proves preserved nonnegative loss while allowing off-diagonal reduced coupling. A changing basis also contributes kinematic terms to the dynamics. Moving constraints have prescribed nonzero velocity and can perform work; compliant or slipping contacts require explicit port laws rather than ideal no-slip closure.
 
 \section{The Damping Paradox}\label{sec:damping_paradox}\label{the-damping-paradox}
 
 \subsection{Damping and Stability}\label{damping-and-stability}
 
-For an autonomous linear perturbation model,
+For an autonomous linear perturbation model, let \(\boldsymbol\xi\) denote perturbation displacement. Write
 
 \[
-\mathbf M\ddot{\mathbf x}+(\mathbf G+\mathbf C)\dot{\mathbf x}+\mathbf K\mathbf x=0,
+\mathbf M\ddot{\boldsymbol\xi}+(\boldsymbol\Gamma+\mathbf D)\dot{\boldsymbol\xi}+\mathbf K\boldsymbol\xi=0,
 \]
 
-assume constant symmetric positive definite \(\mathbf M,\mathbf K\), skew \(\mathbf G\), and symmetric positive semidefinite \(\mathbf C\). Then \(E=\tfrac12\dot{\mathbf x}^T\mathbf M\dot{\mathbf x}+\tfrac12\mathbf x^T\mathbf K\mathbf x\) is positive definite and \(\dot E=-\dot{\mathbf x}^T\mathbf C\dot{\mathbf x}\leq0\). This proves Lyapunov stability. Asymptotic stability additionally requires that the largest invariant set with zero dissipation contain only the equilibrium. Positive definite \(\mathbf C\) suffices under these assumptions; semidefinite damping can leave undamped modes.
+and assume constant symmetric positive definite \(\mathbf M,\mathbf K\), skew \(\boldsymbol\Gamma\), and symmetric positive semidefinite \(\mathbf D\). Then \(E=\tfrac12\dot{\boldsymbol\xi}^T\mathbf M\dot{\boldsymbol\xi}+\tfrac12\boldsymbol\xi^T\mathbf K\boldsymbol\xi\) is positive definite and \(\dot E=-\dot{\boldsymbol\xi}^T\mathbf D\dot{\boldsymbol\xi}\leq0\). This proves Lyapunov stability. Asymptotic stability additionally requires that the largest invariant set with zero dissipation contain only the equilibrium. Positive definite \(\mathbf D\) suffices under these assumptions; semidefinite damping can leave undamped modes.
 
 With negative stiffness, even the scalar dimensionless equation
 \(\ddot x+\dot x-x=0\) retains the growing rate \((\sqrt5-1)/2\). A
 stronger counterexample has \(\mathbf M=\mathbf I\),
 \(\mathbf K=-\mathbf I\) and
-\(\mathbf G=\begin{bmatrix}0&-3\\3&0\end{bmatrix}\). With
-\(\mathbf C=0\) its four distinct rates are \(\pm i(3\pm\sqrt5)/2\).
-Adding the passive \(\mathbf C=0.1\mathbf I\) produces a pair with
+\(\boldsymbol\Gamma=\begin{bmatrix}0&-3\\3&0\end{bmatrix}\). With
+\(\mathbf D=0\) its four distinct rates are \(\pm i(3\pm\sqrt5)/2\).
+Adding the passive \(\mathbf D=0.1\mathbf I\) produces a pair with
 positive real parts. Energy loss and instability coexist because the
 equilibrium energy is indefinite. Dissipation-induced instability is a
 documented phenomenon \citep{bloch1994dissipation}, not a claim that
 this particular instability occurs in a golf club.
+
+Here \(\boldsymbol\Gamma\) is the gyroscopic matrix and \(\mathbf D\) is the frozen damping matrix. The chapter retains \(G(x)\) for the control-affine input map and \(C(q,\dot q)\) for the Coriolis matrix; \(\boldsymbol\xi\) is not the full state \(x=(q,v)\).
 
 A nonsymmetric loaded tangent, accelerating frame or time-varying swing requires its own stability analysis. Frozen eigenvalues and a nonsingular frequency response do not establish stable time evolution. Physical damping must remain separate from numerical stabilization.
 
@@ -258,7 +268,7 @@ A joint embedded in a coupled active chain need not have a single independently 
 \subsection{Active Damping and
 Co-Contraction}\label{active-damping-and-co-contraction}
 
-Impedance control concerns the dynamic relationship between motion and applied wrench \citep{hogan1985impedance}. For a local restoring force on the modeled limb, one convention is \(\mathbf f=-\mathbf K(\mathbf x-\mathbf x_d)-\mathbf C(\dot{\mathbf x}-\dot{\mathbf x}_d)\). The sign reverses for the reaction exerted on its environment. A moving target can perform work even when the relative loss is passive.
+Impedance control concerns the dynamic relationship between motion and applied wrench \citep{hogan1985impedance}. For a local restoring force on the modeled limb at Cartesian position \(\mathbf r\), one convention is \(\mathbf f=-\mathbf K_{\rm cart}(\mathbf r-\mathbf r_d)-\mathbf D_{\rm cart}(\dot{\mathbf r}-\dot{\mathbf r}_d)\). The sign reverses for the reaction exerted on its environment. A moving target can perform work even when the relative loss is passive.
 
 Co-contraction can alter an identified impedance, but does not supply a universal independent adjustment of stiffness and damping. The identified change depends on activation, reflex delay, posture and task. Passive tissue loss and work by active control must be retained separately; an assumed change during transition is a hypothesis requiring measurement.
 
@@ -292,7 +302,7 @@ h(v)&=\tau_k+(\tau_s-\tau_k)e^{-(|v|/v_s)^2},\\
 \end{aligned}
 \]
 
-Here \(\tau_s\geq\tau_k>0\), \(v_s>0\), and \(c\geq0\). The dry-friction magnitude approaches \(\tau_s\) at vanishing nonzero speed and \(\tau_k\) at high speed; the viscous term can still grow. Power is \(-h(v)|v|-cv^2\leq0\). The separate zero-speed inclusion handles sticking. This fixes the reversed limits in the previous expression and does not identify a golfer's joint law.
+Here \(\tau_s\geq\tau_k>0\), \(v_s>0\), and \(c\geq0\). The dry-friction magnitude approaches \(\tau_s\) at vanishing nonzero speed and \(\tau_k\) at high speed; the viscous term can still grow. Power is \(-h(v)|v|-cv^2\leq0\). The separate zero-speed inclusion handles sticking. This phenomenological form does not identify a golfer's joint law.
 
 \subsection{LuGre Friction Model}\label{lugre-friction-model}
 
@@ -372,7 +382,7 @@ A recorded decay can combine shaft material loss, head and adhesive loss, grip/f
 
 For a lightly damped isolated mode, \(Q\approx1/(2\zeta)\) relates a conventional quality factor to modal damping ratio. With \(x(t)=A e^{-\zeta\omega_n t}\cos(\omega_d t+\phi)\) and \(\omega_d=\omega_n\sqrt{1-\zeta^2}\), the logarithmic decrement is \(\delta=2\pi\zeta/\sqrt{1-\zeta^2}\). The energy lost between corresponding peaks is a fraction \(1-e^{-2\delta}\). Thus defining \(Q\) directly as \(2\pi\) times starting energy divided by that finite-cycle loss agrees with \(1/(2\zeta)\) only in the weak-loss limit.
 
-For a synthetic 100 Hz mode with \(\zeta=0.01\), the conventional \(Q=50\), the amplitude time constant is about 0.159 s, and the corresponding peak-to-peak energy loss is about 11.8\%. Higher \(Q\) means weaker fractional damping under these conventions; it does not mean higher stiffness. The previously unsourced steel/graphite ranges and contradictory material ranking are withdrawn.
+For a synthetic 100 Hz mode with \(\zeta=0.01\), the conventional \(Q=50\), the amplitude time constant is about 0.159 s, and the corresponding peak-to-peak energy loss is about 11.8\%. Higher \(Q\) means weaker fractional damping under these conventions; it does not mean higher stiffness.
 
 \subsection{Lead-Lag Dynamics and
 Damping}\label{lead-lag-dynamics-and-damping}
@@ -385,7 +395,7 @@ For a frozen small perturbation with point-motion map \(\mathbf L\) and the \(e^
 
 \[
 \mathbf Y(\omega)=i\omega\mathbf L
-\left[\mathbf K-\omega^2\mathbf M+i\omega(\mathbf G+\mathbf C)\right]^{-1}\mathbf L^T.
+\left[\mathbf K-\omega^2\mathbf M+i\omega(\boldsymbol\Gamma+\mathbf D)\right]^{-1}\mathbf L^T.
 \]
 
 The transpose maps point wrench back to generalized force and preserves power. Translational and rotational rows have different units. Replacement of a constant-coefficient boundary by an identified frequency-dependent grip impedance depends on its qualification, but its storage and loss must not be counted twice. At a finite preload, differentiating the configuration-dependent port map also contributes geometric tangent terms. A singular or unresolved pencil requires refusal or a qualified alternative formulation, not an arbitrary pseudoinverse.

@@ -9,8 +9,10 @@ map in dependency order and regenerates the derived reports:
 
 1. ``data/trust/site_trust_surface_audit.json`` (source, include, finding digests)
 2. ``reports/site-trust-surface-audit.md``
-3. ``data/trust/claim_audit_inventory.json`` (review and finding digests)
-4. ``data/trust/generated/claim_audit_report.json`` + ``reports/scientific-claim-audit.md``
+3. ``data/trust/book_publication_audit.json`` (corrected-finding digests)
+4. ``data/trust/proximal_distal_falsification_atlas.json`` (authority digests)
+5. ``data/trust/claim_audit_inventory.json`` (review and finding digests)
+6. ``data/trust/generated/claim_audit_report.json`` + ``reports/scientific-claim-audit.md``
 
 Only digest values are rewritten, in place, so prettier-formatted ledgers keep their
 formatting; the declared evidence paths, rationales, reviewers and commits are never
@@ -31,6 +33,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import cast
 
+from scripts.book_publication_audit import DEFAULT_AUDIT as BOOK_PUBLICATION_AUDIT
 from scripts.claim_audit_evidence import ReviewEvidenceError, evidence_digests, file_sha256
 from scripts.claim_audit_types import AuditSources, GenerationOptions, ReportTargets
 from scripts.generate_claim_audit_inventory import (
@@ -53,6 +56,7 @@ from scripts.site_trust_surface_audit import DEFAULT_SCHEMA as SITE_SCHEMA
 
 ROOT = Path(__file__).resolve().parent.parent
 HEX_DIGITS = frozenset("0123456789abcdef")
+PROXIMAL_DISTAL_ATLAS = ROOT / "data/trust/proximal_distal_falsification_atlas.json"
 
 
 class EvidenceRegenerationError(ValueError):
@@ -176,6 +180,24 @@ def refresh_site_audit(document: dict[str, object], root: Path) -> int:
     return changed
 
 
+def refresh_atlas_authorities(document: dict[str, object], root: Path) -> int:
+    """Refresh pinned SHA-256 values for falsification-atlas authority files."""
+    authorities = document.get("authorities")
+    if not isinstance(authorities, dict):
+        raise EvidenceRegenerationError("atlas authorities must be an object")
+    changed = 0
+    for label, raw_authority in authorities.items():
+        if not isinstance(raw_authority, dict):
+            raise EvidenceRegenerationError(f"atlas authority {label} must be an object")
+        authority = cast(dict[str, object], raw_authority)
+        relative = authority.get("path")
+        digest = _source_digest(root, relative, f"atlas authority {label}")
+        if authority.get("sha256") != digest:
+            authority["sha256"] = digest
+            changed += 1
+    return changed
+
+
 def refresh_inventory(document: dict[str, object], root: Path) -> int:
     """Refresh review and corrected-finding digests of the route inventory."""
     changed = 0
@@ -223,6 +245,9 @@ def regenerate(root: Path = ROOT, *, check: bool = False) -> list[str]:
         if not check:
             raise EvidenceRegenerationError(str(exc)) from exc
         drift.append(f"{_relative(DEFAULT_REPORT)} ({exc})")
+
+    _refresh_ledger(BOOK_PUBLICATION_AUDIT, refresh_inventory, root, check, drift)
+    _refresh_ledger(PROXIMAL_DISTAL_ATLAS, refresh_atlas_authorities, root, check, drift)
 
     _refresh_ledger(DEFAULT_INVENTORY, refresh_inventory, root, check, drift)
     try:

@@ -22,18 +22,25 @@ from src.affine_control.programming_companion import (
     SnapshotStore,
 )
 
-FIXTURE_MANIFEST = Path("tests/fixtures/companion/manifest_v1_0_0_authoritative.json")
 PINNED_SCHEMA = Path("schemas/upstreamdrift-companion-v1.schema.json")
 POLICY = ConsumerPolicy.upstreamdrift_actions_artifact()
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _active_manifest_bytes() -> bytes:
+    """Use the committed active pin manifest so artifact-install tests track the live schema."""
+    lock = json.loads((REPO_ROOT / "data/companion/active-lock.json").read_text(encoding="utf-8"))
+    snap = REPO_ROOT / "data/companion/snapshots" / str(lock["snapshot"]["id"]) / "manifest.json"
+    return snap.read_bytes()
 
 
 def _write_bundle(root: Path, manifest_bytes: bytes | None = None) -> tuple[Path, str]:
     """Write a bundle shaped like the published artifact and return (dir, commit)."""
-    manifest = json.loads(FIXTURE_MANIFEST.read_text(encoding="utf-8"))
+    payload = manifest_bytes or _active_manifest_bytes()
+    manifest = json.loads(payload)
     commit = str(manifest["source"]["commit"])
     bundle = root / "bundle"
     bundle.mkdir(parents=True)
-    payload = manifest_bytes or FIXTURE_MANIFEST.read_bytes()
     files = {POLICY.manifest_path: payload, POLICY.schema_path: PINNED_SCHEMA.read_bytes()}
     for name, data in files.items():
         (bundle / name).write_bytes(data)
@@ -141,10 +148,11 @@ def test_install_writes_lock_snapshot_and_acquisition_receipt(tmp_path: Path) ->
     lock = SnapshotStore(store).active_lock()
     assert lock is not None
     assert lock.source_commit == commit
-    assert lock.manifest_sha256 == hashlib.sha256(FIXTURE_MANIFEST.read_bytes()).hexdigest()
+    active_manifest = _active_manifest_bytes()
+    assert lock.manifest_sha256 == hashlib.sha256(active_manifest).hexdigest()
     assert lock.manifest_url == POLICY.object_url(commit, POLICY.manifest_path)
     payloads = SnapshotStore(store).snapshot_bytes(lock)
-    assert payloads["manifest.json"] == FIXTURE_MANIFEST.read_bytes()
+    assert payloads["manifest.json"] == active_manifest
     receipt = json.loads((store / "acquisition.json").read_text(encoding="utf-8"))
     assert receipt["schema_version"] == cli.ACQUISITION_SCHEMA
     assert receipt["artifact_name"] == f"upstreamdrift-companion-{commit}"
@@ -198,7 +206,7 @@ def test_replacing_a_pin_requires_the_active_lock_digest(tmp_path: Path) -> None
     bundle, commit = _write_bundle(tmp_path)
     store = tmp_path / "store"
     assert cli.install(_args(bundle, commit, store), bundle, commit) == 0
-    other = json.loads(FIXTURE_MANIFEST.read_text(encoding="utf-8"))
+    other = json.loads(_active_manifest_bytes())
     other["source"]["commit"] = "c" * 40
     other_bundle, _ = _write_bundle(tmp_path / "second", json.dumps(other, indent=2).encode())
     # A different pin without --replace conflicts and leaves the store intact.
@@ -222,6 +230,18 @@ def test_replacing_a_pin_requires_the_active_lock_digest(tmp_path: Path) -> None
     )
     lock = SnapshotStore(store).active_lock()
     assert lock is not None and lock.source_commit == "c" * 40
+
+
+@pytest.mark.unit
+def test_committed_acquisition_receipt_requires_verified_provenance() -> None:
+    """The repo pin must cite a verified Actions artifact, not a skipped local install."""
+    receipt_path = REPO_ROOT / "data/companion/acquisition.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert receipt.get("artifact_id") is not None, "committed artifact_id must not be null"
+    assert receipt.get("workflow_run_id") is not None, "committed workflow_run_id must not be null"
+    attestation = str(receipt.get("attestation", ""))
+    assert attestation != "skipped", "committed acquisition must not use skip-attestation"
+    assert attestation.startswith("verified"), attestation
 
 
 @pytest.mark.unit

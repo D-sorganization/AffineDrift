@@ -4,6 +4,16 @@ description: "Forward Surrogates and Multimodal Inverse Proposals: forward dynam
 
 # Forward Surrogates and Multimodal Inverse Proposals
 
+## Repository Status (UpstreamDrift)
+
+| Code path | Model family | Inputs / outputs | Evidence on main |
+|-----------|--------------|------------------|------------------|
+| `src/shared/python/neural_motion/proposals/model.py` | Time-averaged masked MLP + `tanh` heads | Mean masked trajectory, mask, horizon, $q_0$, $v_0$ → control modes | Scaffold; fail-closed native success claims |
+| `motion_matching.inverse` + `training/runtime/adapters/pytorch_cvae.py` | Conditional VAE proposal | ELBO-trained latent proposals | Separate from `neural_motion` |
+| FiLM sequence surrogate (this chapter, below) | Time-conditioned forward map | Control coeffs → trajectories | Supervised simulator fit |
+
+The sections below teach proposal **families** generically. Map a family to a module before claiming the repository implements it.
+
 ## Two Different Learned Maps
 
 A forward surrogate approximates the expensive simulator's map from inputs to observations. An inverse proposal approximates a distribution of inputs compatible with observations. These maps have different training labels, uncertainty, and validation requirements, even when both produce candidates for the same native fit.

@@ -1,0 +1,24 @@
+{
+  "schema_version": "affinedrift.core-theory-figure-run/v1",
+  "figure_set": "superposition_breakdown",
+  "description": "Pinned planar double-pendulum run for superposition-breakdown and modal figures.",
+  "params": {
+    "m1_kg": 2.5,
+    "m2_kg": 0.4,
+    "l1_m": 0.65,
+    "l2_m": 0.95,
+    "gravity_m_s2": 9.81
+  },
+  "initial_state": {
+    "q_rad": [0.7853981633974483, -1.0471975511965976],
+    "qd_rad_s": [2.0, -1.5]
+  },
+  "torques_nm": {
+    "u1_shoulder_wrist": [50.0, 0.0],
+    "u2_shoulder_wrist": [0.0, 15.0]
+  },
+  "horizon_s": 0.08,
+  "steps": 800,
+  "solver": "fixed-step RK4",
+  "engine_path": "src/affine_control/dynamics.py::planar_double_pendulum_trajectory"
+}

@@ -1,0 +1,11 @@
+## Where This Lives in UpstreamDrift {#sec-upstream-implementation-pog-ch06}
+
+::: {.callout-note appearance="simple"}
+AffineDrift publishes the `affinedrift.ztcf-intervention/v1` schema and golden fixtures under `data/ztcf/`, checked by `tests/test_ztcf_intervention_contract.py`. Production counterfactual runners for the MuJoCo golf humanoid stack live in UpstreamDrift at commit [`27b6eead`](https://github.com/D-sorganization/UpstreamDrift/commit/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da).
+
+- **Engine-agnostic forward ZTCF:** [`ztcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/biomechanics/ztcf.py) — passive-force pipeline from stated dynamics matrices.
+- **Forward and branched ZTCF/ZVCF backends:** [`ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/shared/python/simulation_backends/ztcf_zvcf.py) — counterfactual branches across registered engines.
+- **Golf humanoid counterfactuals:** [`counterfactuals.py`](https://github.com/D-sorganization/UpstreamDrift/blob/27b6eeadbbd970bebb8926a3c83aeaea1f6ee4da/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/counterfactuals.py) — zero-torque integration on the pinned golf model.
+
+**Convention note:** AffineDrift fixtures document the public intervention contract; UpstreamDrift modules implement the same split on full humanoid models with engine-specific constraint handling.
+:::

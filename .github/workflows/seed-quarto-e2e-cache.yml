@@ -1,0 +1,101 @@
+name: Seed Quarto E2E Render Cache
+
+# Option 2 from #5342: after render inputs stabilize on main, seed the exact
+# quarto_cache_key entry on the default branch so pull requests and merge groups
+# can restore it (GitHub Actions cache scoping).
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.qmd"
+      - "**.yml"
+      - "**.yaml"
+      - "css/**"
+      - "js/**"
+      - "_quarto.yml"
+      - "_includes/**"
+      - "pages/**"
+      - "articles/**"
+      - "books/**"
+      - "models/**"
+      - "resources/**"
+      - "references/**"
+      - "styles.css"
+      - ".quarto-version"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seed-quarto-e2e-cache-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  seed:
+    timeout-minutes: 90
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Compute Quarto render cache key
+        id: quarto_cache_key
+        run: |
+          key=$(python3 scripts/quarto_cache_key.py --repo-root .)
+          echo "key=$key" >> "$GITHUB_OUTPUT"
+
+      - name: Restore cached Quarto render
+        id: quarto_cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            _site
+            .quarto
+          key: ${{ steps.quarto_cache_key.outputs.key }}
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: ".nvmrc"
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Bootstrap Python venv
+        run: |
+          python -m venv "$RUNNER_TEMP/seed-venv"
+          source "$RUNNER_TEMP/seed-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install --no-cache-dir -r requirements.txt
+          echo "$RUNNER_TEMP/seed-venv/bin" >> "$GITHUB_PATH"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Resolve pinned Quarto version
+        id: quarto
+        run: echo "version=$(tr -d '[:space:]' < .quarto-version)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        with:
+          version: ${{ steps.quarto.outputs.version }}
+
+      - name: Remove .env.example
+        run: rm -f .env.example
+
+      - name: Render site when cache misses
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        run: quarto render --to html
+
+      - name: Sync frontend assets after render
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        run: |
+          python3 scripts/sync_frontend_assets.py
+          python3 scripts/bundle_css.py
+          python3 scripts/prune_internal_docs_from_deploy.py --docs-dir _site
+          python3 scripts/public_site_manifest.py
