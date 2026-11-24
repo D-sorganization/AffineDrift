@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-24 | #5874 | Harmonise PoG ch14/18/19/28/31 notation (Q_p, psi, sigma_L, v_w); extend NOTATION.md PoG tables and pytest guards. |
 | 2026-11-23 | #5866 | Remove placeholder src/learning anti-phantom path anchor |
 | 2026-11-23 | #5871 | Pin Chapter 7c transmission ledger numbers to local study snapshots; correct contact-power residual |
 | 2026-11-23 | #5863 | Close-out #5609: verify companion UpstreamDrift blob links at pin and bundle acceptance |

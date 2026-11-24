@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import jsonschema
+import pytest
 
 from scripts.generate_agent_entry_point import main as generate_agent_entry_point
 from src.tools.agent_entry_point import (
@@ -92,3 +93,47 @@ def test_llms_full_lists_agent_conventions_json() -> None:
     _, full = render_both(manifest)
     assert "`data/agent/conventions.json`" in full
     assert "/pages/upstreamdrift-conventions.html" in full
+
+
+@pytest.mark.parametrize(
+    "route", ["/models/golf-model-maps.html", "/pages/upstreamdrift-engine-protocol.html"]
+)
+def test_agent_index_lists_model_maps_and_engine_protocol(route: str) -> None:
+    """Expose the canonical model and engine references required by #5596."""
+    manifest = load_manifest(MANIFEST_PATH.read_text(encoding="utf-8"))
+    llms, full = render_both(manifest)
+    assert route in llms
+    assert route in full
+
+
+def test_agent_index_has_unique_page_routes() -> None:
+    """One canonical route carries all its source artifacts in one entry."""
+    manifest = load_manifest(MANIFEST_PATH.read_text(encoding="utf-8"))
+    paths = [page.path for section in manifest.sections for page in section.pages]
+    assert len(paths) == len(set(paths))
+    conventions = next(
+        page
+        for section in manifest.sections
+        for page in section.pages
+        if page.path == "/pages/upstreamdrift-conventions.html"
+    )
+    assert "data/agent/conventions.json" in conventions.artifacts
+    assert "data/upstreamdrift/canonical_v2_page_contract.json" in conventions.artifacts
+
+
+def test_agent_index_has_no_empty_heading() -> None:
+    """Every generated section must contain links rather than another heading."""
+    manifest = load_manifest(MANIFEST_PATH.read_text(encoding="utf-8"))
+    llms, _ = render_both(manifest)
+    assert "## Notation and Conventions\n\n##" not in llms
+
+
+@pytest.mark.parametrize("other_section", [False, True])
+def test_manifest_refuses_duplicate_routes(other_section: bool) -> None:
+    """Reject ambiguous curated input before publishing either generated index."""
+    payload = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    first_page = payload["sections"][0]["pages"][0]
+    section = payload["sections"][1 if other_section else 0]
+    section["pages"].append(first_page.copy())
+    with pytest.raises(ValueError, match="duplicate page path"):
+        load_manifest(json.dumps(payload))

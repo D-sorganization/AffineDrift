@@ -66,8 +66,13 @@ def load_manifest(text: str) -> AgentManifest:
     if payload.get("schema") != SCHEMA:
         raise ValueError(f"unsupported manifest schema: {payload.get('schema')!r}")
     sections: list[AgentSection] = []
+    page_paths: set[str] = set()
     for block in payload["sections"]:
         pages = tuple(_page(entry) for entry in block["pages"])
+        for page in pages:
+            if page.path in page_paths:
+                raise ValueError(f"duplicate page path: {page.path!r}")
+            page_paths.add(page.path)
         sections.append(AgentSection(str(block["name"]), pages))
     if not sections:
         raise ValueError("manifest must contain at least one section")
@@ -102,7 +107,6 @@ def render_llms_txt(manifest: AgentManifest) -> str:
         "",
         manifest.reading_order_note,
         "",
-        "## Notation and Conventions",
     ]
     for section in manifest.sections:
         lines.extend(["", f"## {section.name}"])
