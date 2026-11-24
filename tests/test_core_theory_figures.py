@@ -8,19 +8,12 @@ from pathlib import Path
 import pytest
 
 from scripts import build_core_theory_figures
+from scripts.core_theory_figure_provenance_data import pinned_figures
+
+ISSUE_5590_PINNED_FIGURES = pinned_figures()
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FIGURES_DIR = REPO_ROOT / "articles/figures/core_theory"
-
-# Issue #5590: ZTCF and superposition flagship figures (not the DCR schematics).
-ISSUE_5590_PINNED_FIGURES: dict[str, str] = {
-    "fig_ztcf_trajectory_divergence.svg": "data/core_theory/ztcf_figure_run_v1.json",
-    "fig_ztcf_clubhead_speed_loss.svg": "data/core_theory/ztcf_figure_run_v1.json",
-    "fig_ztcf_passive_dynamics_attribution.svg": "data/core_theory/ztcf_figure_run_v1.json",
-    "fig_superposition_decomposition.svg": "data/core_theory/superposition_parallelogram_run_v1.json",
-    "fig_superposition_breakdown_boundary.svg": "data/core_theory/superposition_breakdown_run_v1.json",
-    "fig_superposition_modal_response.svg": "data/core_theory/ztcf_figure_run_v1.json",
-}
 
 
 def _figure_embed_pattern(fig_name: str) -> re.Pattern[str]:
