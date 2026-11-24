@@ -1814,10 +1814,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5597
 - **Branch:** merged via #5680
-- **PR:** #5680, #5765, #5846
+- **PR:** #5680, #5765, #5846, #5874
 - **Paths:** see #5680
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-18 (`7c152d2c`; collated from changes/5597-putting-mass-notation.md)
+- **Last verified:** 2026-11-24 (`4faa2224`; collated from changes/5597-pog-eom-events-launch-symbols.md)
 - **Summary:** Harmonise PoG ch08/ch10/ch25 notation with NOTATION.md; extend notation gate
 - **Next step:** Shipped in PR #5680.
 
