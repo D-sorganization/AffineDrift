@@ -390,10 +390,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5602
 - **Branch:** cursor/gom-notation-harmonise-dd74
-- **PR:** #5681, #5764
+- **PR:** #5681, #5764, #5873
 - **Paths:** see #5681
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-17 (`3034b1b3`; collated from changes/5602-correct-gom-chapter-3-lie-brackets-and-r.md)
+- **Last verified:** 2026-11-23 (`98bbbc60`; collated from changes/5602-spatial-vol2-control-affine-notation.md)
 - **Summary:** Harmonise Geometry of Motion notation with NOTATION.md: constrained symbols, transverse coordinates, chapter notation notes.
 - **Next step:** Merge after CI green; ch03b operational-inertia prose uses K_c.
 
@@ -416,12 +416,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5625
 - **Branch:** cursor/ud-learning-humanoid-5625-2b2c
-- **PR:** #5670, #5766, #5859
+- **PR:** #5670, #5766, #5859, #5866
 - **Paths:** see #5670
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-23 (`28d25bca`; collated from changes/5625-humanoid-learning-analytics.md)
+- **Last verified:** 2026-11-23 (`03f39738`; collated from changes/5625-remove-learning-anchor.md)
 - **Summary:** Document UpstreamDrift humanoid balance, WBC, and learning/analytics gaps grounded in code.
-- **Next step:** Merge after CI and Barb review
+- **Next step:** Reopen #5859 or merge follow-up; phantom-guard override per owner if needed
 
 ### DL-#5596 · Add Llms.Txt Agent Entry Point, Extend Symbol Registry V2 From NOTATION.md, and CI Freshness Gates.
 
@@ -650,10 +650,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5610
 - **Branch:** cursor/pde-energy-ledger-closure-7b2c
-- **PR:** #5637, #5862
+- **PR:** #5637, #5862, #5871
 - **Paths:** see #5637
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-23 (`af9148ff`; collated from changes/5610-pin-the-corrected-proximal-distal-monogr.md)
+- **Last verified:** 2026-11-23 (`23d89dc2`; collated from changes/5610-ch07c-transmission-data-contract.md)
 - **Summary:** Proximal-distal energy ledger, closure claims, and H4 verdict strength.
 - **Next step:** Merge after CI green.
 
@@ -663,12 +663,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5609
 - **Branch:** cursor/pdc-upstream-pin-5609-9e7e
-- **PR:** #5658, #5702, #5728, #5743
+- **PR:** #5658, #5702, #5728, #5743, #5863
 - **Paths:** see #5658
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-18 (`fe022198`; collated from changes/5609-document-companion-vs-monograph-upstream.md)
+- **Last verified:** 2026-11-23 (`4a8662c1`; collated from changes/5609-close-out-5609-verify-companion-upstream.md)
 - **Summary:** Unify lay companion UpstreamDrift pin and fix review defects
-- **Next step:** Merge after CI green.
+- **Next step:** Merge after quality-gate green.
 
 ### DL-#5608 · FDM Book: Hermite-Simpson, Notation Table, Core Equations, UD Link Fixes
 
@@ -728,12 +728,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5604
 - **Branch:** cursor/gom-pedagogy-5604-bdf7
-- **PR:** #5676, #5754, #5790
+- **PR:** #5676, #5754, #5790, #5872
 - **Paths:** see #5676
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-18 (`c2ddb48b`; collated from changes/5604-add-the-positive-state-dependent-pullbac.md)
+- **Last verified:** 2026-11-23 (`6ab85392`; collated from changes/5604-gom-volume-i-xrefs-vol0-ch04-labels.md)
 - **Summary:** Geometry of Motion pedagogy: prerequisites map, cross-refs, KKT display, contraction pedagogy, Vol 0 numbering pilot
-- **Next step:** Review this F9 worked-example slice; remaining chapter numbering gaps stay under #5604
+- **Next step:** Continue vol0 ch03–ch06 label migration, contraction Θ/F subsection, ch01 prerequisite pass
 
 ### DL-#5603 · Geometry of Motion: Cascade vs Partial Contraction, LQR Rho, Floating-Base Gravity, Van der Pol
 
@@ -754,12 +754,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5601
 - **Branch:** cursor/ud-implementation-links-5601-402a
-- **PR:** #5672, #5734, #5752, #5880
+- **PR:** #5672, #5734, #5752, #5880, #5869
 - **Paths:** see #5672
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-23 (`8b239fd0`; collated from changes/5601-record-upstreamdrift-citation-verificati.md)
+- **Last verified:** 2026-11-23 (`69213dfe`; collated from changes/5601-upstream-article-link-pins.md)
 - **Summary:** Pinned UpstreamDrift implementation bridge includes for GOM vol0 and PoG algorithm chapters; added ledger and CI gate.
-- **Next step:** Barb arms after CI green.
+- **Next step:** Merge after CI; follow-up slices for remaining book/article bridges
 
 ### DL-#5600 · Physics of Golf Citation Metadata, Impact Sourcing, and Motor-Control Literature
 
