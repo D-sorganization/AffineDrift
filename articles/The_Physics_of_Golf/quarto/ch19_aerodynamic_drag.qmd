@@ -176,12 +176,14 @@ $r_i\times F_i$ is not a general $n$-coordinate load vector.
 
 Use one consistent sign convention in the equations:
 $$
-M\ddot q+h=Bu+p+Q_{\rm aero}+J_c^T\lambda.
+M\ddot q+h=Bu+Q_{\mathrm{p}}+Q_{\rm aero}+J_c^T\lambda.
 $$ {#eq-eom-with-drag}
 The drag force already contains its resisting sign. It enters the right-hand
 side as written; adding an extra minus sign there would reverse its action.
-Here $h$ contains the declared inertial bias and gravity, $p$ other constitutive
-loads, and $J_c^T\lambda$ the ideal closure reactions. Other external loads
+Here $h$ collects the declared inertial bias and gravity (full-bias convention;
+passive damping belongs in $h$ when it is part of the declared bias). The
+vector $Q_{\mathrm{p}}$ carries other constitutive loads on the right-hand side,
+and $J_c^T\lambda$ the ideal closure reactions. Other external loads
 must also be included where appropriate.
 
 For a regular fixed contact mode, eliminating reactions gives an acceleration
@@ -241,11 +243,11 @@ itself establish forgiveness on off-center impacts.
 
 For $B=I$ and known reactions and other loads, rearrangement gives
 $$
-u=M\ddot q+h-p-Q_{\rm aero}-J_c^T\lambda.
+u=M\ddot q+h-Q_{\mathrm{p}}-Q_{\rm aero}-J_c^T\lambda.
 $$ {#eq-inverse-dyn-full}
 There is no leading $M^{-1}$. The result has generalized-load units, not
 acceleration units. With the same known boundaries, omitting $Q_{\rm aero}$
-gives $u_{\rm omit}=M\ddot q+h-p-J_c^T\lambda$, hence
+gives $u_{\rm omit}=M\ddot q+h-Q_{\mathrm{p}}-J_c^T\lambda$, hence
 $$
 u-u_{\rm omit}=-Q_{\rm aero}.
 $$ {#eq-inverse-dyn-error}
