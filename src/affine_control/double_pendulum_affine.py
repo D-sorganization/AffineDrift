@@ -192,7 +192,9 @@ def tip_acceleration_split(
     """Split the tip acceleration ``J qdd + Jdot qd`` into drift and input parts.
 
     ``Jdot qd`` depends only on the state, so it belongs to the drift (theory
-    Part 1: the kinematic term "remains in the same-state baseline").
+    Part 1: the kinematic term "remains in the same-state baseline"). The
+    model-ladder swing viewer colours by the instantaneous input share of this
+    split along a torque-driven trajectory (#5590 F15).
     """
     q = np.asarray(q, dtype=float)
     qd = np.asarray(qd, dtype=float)
