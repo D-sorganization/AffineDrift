@@ -429,10 +429,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5596
 - **Branch:** cursor/agent-readiness-5596-3da0
-- **PR:** #5662, #5726, #5755, #5786
+- **PR:** #5662, #5726, #5755, #5786, #5843
 - **Paths:** see #5662
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-18 (`a557ddf4`; collated from changes/5596-export-structured-metadata-for-notation.md)
+- **Last verified:** 2026-11-24 (`6afbbb1d`; collated from changes/5596-complete-canonical-agent-model-map-disco.md)
 - **Summary:** Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates.
 - **Next step:** Merge after CI green.
 
@@ -1762,12 +1762,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5593
 - **Branch:** merged via #5725
-- **PR:** #5725, #5762, #5856
+- **PR:** #5725, #5762, #5856, #5888
 - **Paths:** see #5725
 - **Started:** 2026-11-16
-- **Last verified:** 2026-11-22 (`ef5d840d`; collated from changes/5593-document-frame-and-spatial-vector-conven.md)
+- **Last verified:** 2026-11-25 (`19028732`; collated from changes/5593-close-out-frame-conventions.md)
 - **Summary:** Site frames table, PoG wrench ordering, delivery-angle table, and launch-monitor appendix alignment (partial #5593).
-- **Next step:** Review frame guidance and links
+- **Next step:** Merge after quality-gate green; PR description omits closure keywords for Anti-Phantom Rule 3.
 
 ### DL-#5617 · Correct UpstreamDrift Accuracy on Models, Repositories, and Programming Pages; Re-Pin Companion to D56e3709.
 
@@ -1814,10 +1814,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5597
 - **Branch:** merged via #5680
-- **PR:** #5680, #5765, #5846
+- **PR:** #5680, #5765, #5846, #5874
 - **Paths:** see #5680
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-18 (`7c152d2c`; collated from changes/5597-putting-mass-notation.md)
+- **Last verified:** 2026-11-24 (`4faa2224`; collated from changes/5597-pog-eom-events-launch-symbols.md)
 - **Summary:** Harmonise PoG ch08/ch10/ch25 notation with NOTATION.md; extend notation gate
 - **Next step:** Shipped in PR #5680.
 
