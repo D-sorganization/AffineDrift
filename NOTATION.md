@@ -408,7 +408,7 @@ power. Name the reference point and frame (body vs spatial).
 **Matrix multiplication (active rotation, body to world):**
 $$R = R_Z(\psi) R_Y(\theta) R_X(\phi)$$
 
-### Coordinate Frame Conventions
+### Coordinate Frame Conventions {#coordinate-frame-conventions}
 
 | Axis             | Direction            | Notation            |
 | ---------------- | -------------------- | ------------------- |
@@ -502,20 +502,20 @@ Second-order equations of motion in this block use $M(q)\ddot q + h(q,\dot q;\,p
 
 ### Physics of Golf Second-Order Loads and Inverse Dynamics (Ch. 18–19)
 
-| Symbol               | Meaning                                                                    | Rule                                                                        |
-| -------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| **$Q_{\mathrm{p}}$** | Passive or other constitutive generalized loads on the EOM right-hand side | Not linear momentum $p$ nor the parameter set in $h(q,\dot q;\,p)$          |
-| **$\varrho$**        | Known model residual in underdetermined inverse dynamics (Ch. 18)          | $\varrho=M\ddot q+h-Q_{\mathrm{p}}-Q_e$; not a position vector $\mathbf{r}$ |
-| **$m$**              | Applied-input dimension in $u\in\mathbb{R}^m$ (Ch. 18)                     | Not mass nor momentum                                                       |
+| Symbol                | Meaning                                                                    | Rule                                                                        |
+| --------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **$Q\_{\mathrm{p}}$** | Passive or other constitutive generalized loads on the EOM right-hand side | Not linear momentum $p$ nor the parameter set in $h(q,\dot q;\,p)$          |
+| **$\varrho$**         | Known model residual in underdetermined inverse dynamics (Ch. 18)          | $\varrho=M\ddot q+h-Q_{\mathrm{p}}-Q_e$; not a position vector $\mathbf{r}$ |
+| **$m$**               | Applied-input dimension in $u\in\mathbb{R}^m$ (Ch. 18)                     | Not mass nor momentum                                                       |
 
 ### Physics of Golf Contact Events and Launch Symbols (Ch. 14, 28, 31)
 
-| Symbol                  | Meaning                                                        | Rule                                        |
-| ----------------------- | -------------------------------------------------------------- | ------------------------------------------- |
-| **$\psi$**              | Contact event function $\psi(x,t)=0$                           | Not the gravity load $g(q)$                 |
-| **$\sigma_L$**          | Spin loft angle                                                | Not the state-transition matrix $\Phi(T,s)$ |
-| **$w_{\mathrm{face}}$** | Empirical face/path weight in horizontal launch-direction laws | Not wind velocity                           |
-| **$v_w$**               | Wind velocity field                                            | $v_r=v_B-v_w$ is air-relative velocity      |
+| Symbol                   | Meaning                                                        | Rule                                        |
+| ------------------------ | -------------------------------------------------------------- | ------------------------------------------- |
+| **$\psi$**               | Contact event function $\psi(x,t)=0$                           | Not the gravity load $g(q)$                 |
+| **$\sigma_L$**           | Spin loft angle                                                | Not the state-transition matrix $\Phi(T,s)$ |
+| **$w\_{\mathrm{face}}$** | Empirical face/path weight in horizontal launch-direction laws | Not wind velocity                           |
+| **$v_w$**                | Wind velocity field                                            | $v_r=v_B-v_w$ is air-relative velocity      |
 
 ### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
 
