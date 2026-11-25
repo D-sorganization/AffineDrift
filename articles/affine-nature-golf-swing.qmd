@@ -24,7 +24,7 @@ categories:
 
 ## Abstract
 
-The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate net generalized loads consistent with motion and external-force measurements, but it does not identify individual-muscle forces, neural intent, or a unique real-world cause. This paper develops a strictly theoretical control-affine model and separates its instantaneous vector field into autonomous (drift) and declared-input terms. The Zero Torque Counterfactual (ZTCF) family, Zero Velocity Counterfactual (ZVCF), and force taxonomy are model-conditioned diagnostics; empirical interpretation requires parameter identification, qualifying measurements, and validation.
+The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate net generalized loads consistent with motion and external-force measurements, but it does not identify individual-muscle forces, neural intent, or a unique real-world cause. This paper develops a strictly theoretical control-affine model and separates its instantaneous vector field into autonomous (drift) and declared-input terms. The Zero Torque Counterfactual (ZTCF) family, Zero Velocity Counterfactual (ZVCF), and force taxonomy are model-conditioned diagnostics; empirical interpretation requires parameter identification, qualifying measurements, and validation. @sec-two-handed-null-space restates the two-handed case in a layman register and a scientist register. That section is a labeled slice: its figures and swing results are pending verified simulation exports, and it does not complete the flagship.
 
 {{< include ../_includes/control-affine-attribution-boundary.qmd >}}
 
@@ -133,7 +133,7 @@ The key mathematical observation is that the golfer--club--shaft system can be m
 
 This foundational treatment provides a declared mechanical model and illustrative numerical consistency checks. It does not report calibrated golfer simulations or experimental validation. The linked counterfactual and application articles develop proposed analyses; successful prediction, physiological interpretation, and technique comparisons require their own data and evidence.
 
-The remainder of the paper is organized as follows. @sec-system defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables. @sec-affine derives the unified control-affine form for the coupled rigid--flexible system. @sec-drift_input formalizes the drift--input decomposition. @sec-ZTCF and @sec-zvcf introduce the ZTCF and ZVCF constructions. @sec-drift_invariance discusses drift invariance and input constraints. @sec-taxonomy presents a force taxonomy based on the affine mapping. @sec-limitations summarizes the theoretical limitations of the framework, and @sec-conclusion concludes with directions for future theoretical and empirical work. Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
+The remainder of the paper is organized as follows. @sec-system defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables. @sec-affine derives the unified control-affine form for the coupled rigid--flexible system. @sec-drift_input formalizes the drift--input decomposition. @sec-ZTCF and @sec-zvcf introduce the ZTCF and ZVCF constructions. @sec-two-handed-null-space states one two-handed null-space account in a layman register and a scientist register, and labels its figures as pending verified exports. @sec-drift_invariance discusses drift invariance and input constraints. @sec-taxonomy presents a force taxonomy based on the affine mapping. @sec-limitations summarizes the theoretical limitations of the framework, and @sec-conclusion concludes with directions for future theoretical and empirical work. Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
 
 To rigorously distinguish 'drift' from 'input', we must first define the mechanical universe in which these forces exist. The concepts of active and passive are not absolute; they are defined relative to the system boundary. A force that is 'external' to a sub-component may be 'internal' to the whole. Therefore, before deriving equations, we must explicitly fix the boundaries of the golfer--club--shaft system, specifying exactly which degrees of freedom are malleable (flexible modes) and which are directly actuated (joints).
 
@@ -706,6 +706,127 @@ At a specified configuration, reset the declared velocity coordinates while reta
 
 {{< include ../_includes/mechanics-zero-velocity.qmd >}}
 
+## Two-Handed Null Space in Two Registers {#sec-two-handed-null-space}
+
+::: {.callout-important}
+## Figures and Results Await Verified Exports
+
+This is slice 1 of the two-handed account. No admitted two-handed simulation export is wired in. Figures and results in this section are pending verified simulation exports. The equations are the declared wrench family. The blocks marked Schematic Placeholder are text labels for later figures. They are not data and they are not plots. This slice does not complete the flagship.
+:::
+
+### The Layman Story {#sec-two-handed-layman}
+
+ZTCF is the club's natural drift. It is the motion gravity and momentum would produce if the driving torque were set to zero at that state.
+
+ZVCF is the golfer's active effort. In this section that phrase means the rest of the same swing: the part the equations assign to the driving torque. ZTCF and ZVCF add to the total. The club the golfer actually swings is the sum.
+
+The two hands can share that total in more than one way and still produce the exact same swing. One hand can push along the grip while the other pulls. The pushes cancel, the club's net load is unchanged, and the hands are fighting each other. The minimum-squared-force null-space solution removes that fight. It is one concrete least-force way to produce the exact same swing without the hands fighting each other. Other required forces, including the pair that makes a turning moment, can remain.
+
+::: {.callout-note}
+## Schematic Placeholder: Natural Drift and Active Effort
+
+Intended figure, not included: a tip-to-tail drawing of the ZTCF midhands wrench, then the ZVCF midhands wrench, ending at the total, with the opposite order drawn separately. Both orders end at the same total. No numbers and no export name are shown, because no verified export is wired in.
+:::
+
+::: {.callout-note}
+## Schematic Placeholder: Least-Force Hand Split
+
+Intended figure, not included: the left-hand and right-hand forces for the least-force member, beside one other member of the same family whose along-grip pair is nonzero. The net club wrench is the same in both drawings. The badge on this drawing is `allocation-only` until a forward replay exists. No arrow lengths are invented here.
+:::
+
+::: {.callout-note}
+## Schematic Placeholder: Cancellation Along the Grip
+
+Intended figure, not included: the cancellation metric beside the least-force choice. The metric is named and given units of force in the scientist account below. This placeholder has no curve and no time axis.
+:::
+
+### The Scientist Account {#sec-two-handed-scientist}
+
+The rigid closed-chain balance used for this hand-load family is
+
+$$
+M(q)\ddot q+C(q,\dot q)\dot q+g(q)=\tau.
+$$ {#eq-two-hand-affine}
+
+Here $q$ is an independent rigid coordinate chart with $M(q)\succ 0$, $C(q,\dot q)\dot q$ is the velocity load, $g(q)$ collects the declared configuration loads, and $\tau$ is the generalized torque. Shaft modes, passive joint loads, and constraint reactions stay in the fuller balance of @eq-appendix_eom. This display does not replace that balance. It is the rigid oracle for the two-handed split below. The section applies only while the hands stay a positive distance apart and the contact mode stays the one used to form $\tau$.
+
+Let the hands act on the club at $p_L$ and $p_R$, with span and unit grip axis
+
+$$
+d=\lVert p_R-p_L\rVert,\qquad
+u=(p_R-p_L)/d,\qquad d>0.
+$$ {#eq-two-hand-span}
+
+Write $F$ for the midhands force resultant and $m_{\mathrm{net}}$ for the midhands moment resultant, both expressed at the midpoint $(p_L+p_R)/2$. Let $m_L$ and $m_R$ be the intrinsic hand couples. The residual moment left for the hand forces is
+
+$$
+m'=m_{\mathrm{net}}-m_L-m_R.
+$$ {#eq-two-hand-residual}
+
+For fixed couples, the exact one-parameter family of hand forces is
+
+$$
+\begin{aligned}
+f_L&=F/2+(u\times m')/d+\alpha u,\\
+f_R&=F/2-(u\times m')/d-\alpha u.
+\end{aligned}
+$$ {#eq-two-hand-family}
+
+The sum is $F$ for every $\alpha$. The parameter $\alpha$ adds equal-and-opposite forces along $u$. Those forces produce no net force and no moment about the midpoint, because they lie on the line through both hands. Substituting the family into the midpoint moment identity $(d/2)\,u\times(f_R-f_L)$ returns $m'-(u\cdot m')u$. The family therefore meets the full residual moment if and only if the compatibility condition holds:
+
+$$
+u\cdot m'=0.
+$$ {#eq-two-hand-compatibility}
+
+The axial moment $u\cdot m'$ cannot be made by hand forces. It has to be carried by the intrinsic couples. When the condition fails, the displayed forces realize only the part of $m'$ perpendicular to $u$.
+
+For fixed $F$, $m'$, and $d>0$, the cross term in $\alpha$ vanishes because $u\cdot(u\times m')=0$, and the squared force expands as
+
+$$
+\lVert f_L\rVert^2+\lVert f_R\rVert^2
+=\tfrac12\lVert F\rVert^2
++2\lVert(u\times m')/d\rVert^2
++2\alpha^2.
+$$ {#eq-two-hand-squared}
+
+The right-hand side is minimized at $\alpha=0$. That statement is for fixed couples and no extra constraint on $\alpha$. It is the minimum-squared-force member of this family.
+
+Two objectives stay separate. $J_F$ is a time-weighted integral of squared hand force. The identity above says that pointwise $\alpha=0$ minimizes $J_F$ when every frame keeps the couples fixed and no constraint binds $\alpha$. The cancellation metric is
+
+$$
+C=\lVert f_L\rVert+\lVert f_R\rVert-\lVert F\rVert.
+$$ {#eq-two-hand-cancellation}
+
+$C$ is nonnegative by the triangle inequality. It measures opposing-force cancellation, in force units. Minimizing $C$ is not the same objective as minimizing $J_F$, and this section does not treat $\alpha=0$ as a minimizer of $C$.
+
+The Total midhands wrench $(F,m_{\mathrm{net}})$ is invariant for a fixed motion and fixed external loads: every admissible hand split sums to that wrench. The ZTCF and ZVCF midhands wrenches are invariant when the attribution operator that splits Total is pinned. Under that pinned operator,
+
+$$
+\mathrm{ZVCF}=\mathrm{Total}-\mathrm{ZTCF}
+$$ {#eq-two-hand-zvcf}
+
+at the midhands wrench. A different operator can move ZTCF and ZVCF while Total stays fixed, so the operator is part of the claim. In this section ZVCF is that declared-input wrench. @sec-zvcf uses the same name for a velocity reset, which evaluates configuration loads after the declared velocities are set to zero. The two uses are not interchangeable. Grip feasibility is enforced on the physical Total loads. An optimization over ZVCF loads is a different problem from an optimization over Total loads.
+
+### Couple Policy {#sec-two-handed-couples}
+
+The primary couple policy in this account is axial-only. Each hand's couple may vary only along $u$, and only inside the declaration that makes $u\cdot m'=0$. The perpendicular part of $m'$ stays with the force pair $(u\times m')/d$, and the least-squares force member remains $\alpha=0$ once those axial couples are chosen.
+
+The bounded variant keeps the same axial components inside a declared bound. An active bound is an extra constraint. The squared-force minimizer then need not sit at $\alpha=0$, and a bound can make the unconstrained axial choice infeasible.
+
+An unconstrained couple policy is not used here. If $m_L$ and $m_R$ may absorb all of $m_{\mathrm{net}}$, then $m'=0$ and the $\alpha=0$ forces collapse to $F/2$. The policy has to be declared before the minimum is quoted.
+
+### Allocation Badges {#sec-two-handed-badges}
+
+`allocation-only` marks a hand split that satisfies the wrench equations on a frozen motion. It has not been integrated forward.
+
+`forward-replayed` marks a candidate that has been integrated with the declared plant and controller and still matches the motion inside the declared tolerance. A candidate that cannot be replayed keeps the `allocation-only` badge.
+
+This slice attaches neither badge to a numerical swing. No admitted export is present to replay. The equations are allocation statements. A later slice may mark a candidate `forward-replayed` only after that replay exists.
+
+### What This Slice Leaves Open {#sec-two-handed-open}
+
+The layman story and the wrench family are the content of slice 1. Verified simulation exports, both tip-to-tail orders drawn from those exports, a null-space overlay that holds the ZTCF wrench fixed, and a plotted $C$ series are later work. Until those exports are admitted and checked, this section does not report a recorded swing and does not complete the flagship.
+
 ## Evidence Needed for a Golf Interpretation
 
 An ordinary recorded swing does not directly reveal its alternative zero-input trajectory. Zero **net** torque can occur despite nonzero individual muscle forces; whether an entire zero-input branch is feasible depends on the actuator and contact model. The obstacle is counterfactual identification and intervention fidelity, not a universal impossibility of zero net torque.
@@ -876,6 +997,8 @@ Same-state identities can remain exact while an inaccurate model predicts the wr
 The strongest use of this framework connects three levels. First, inverse dynamics and a declared force balance characterize instantaneous loads. Second, forward and sensitivity calculations explain how input history changes posture, velocity and shaft storage. Third, an event-aware output evaluates the resulting delivery and uncertainty at contact. Each level adds assumptions and evidence requirements to the preceding one.
 
 The force taxonomy has configuration-dependent, velocity-dependent and declared-input terms. A nonlinear interaction between experimental factors is a property of a chosen outcome contrast; it is not an additional universal force. Earlier torque can appear later through a motion-dependent term, and current torque can affect speed, direction, shaft deformation and contact timing together.
+
+@sec-two-handed-null-space records the two-handed null-space family and the layman reading of natural drift, declared effort, and one least-force hand split. The figures and numerical swing results for that account are pending verified simulation exports.
 
 ## Application of Research
 
