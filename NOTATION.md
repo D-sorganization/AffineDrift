@@ -177,30 +177,30 @@ site registry `data/symbol_references.json` is generated from this table.
 
 <!-- SYMBOL-REFERENCES:START -->
 
-| Key | Symbol | Name | Definition | Unit | Shape | Frame | Sign | Source anchor |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `x` | $x$ | State x | Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities. | — | vector | model coordinates | — | /pages/notation.html#equation-symbol-definitions |
-| `f` | $f(x)$ | Drift f(x) | Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load. | — | vector field | state | — | /pages/notation.html#drift-and-control |
-| `G` | $G(x)$ | Input map G(x) | Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations. | — | matrix | state | — | /pages/notation.html#drift-and-control |
-| `u` | $u$ | Control input u | Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set. | model-specific | vector | control | — | /pages/notation.html#drift-and-control |
-| `M` | $M(q)$ | Mass matrix M(q) | Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates. | — | matrix | generalized | SPD | /pages/notation.html#term-zvcf |
-| `q` | $q$ | Generalized coordinates q | Joint or body coordinates in the mechanical state. | rad or m | vector | joint/body | — | /pages/notation.html#term-zvcf |
-| `qdot` | $\dot q$ | Generalized velocity q-dot | Time derivative of the generalized coordinates. | rad/s or m/s | vector | joint/body | — | /pages/notation.html#term-zvcf |
-| `h` | $h(q,\dot q,z;p)$ | Bias load h | Velocity-dependent, gravity, passive, and constraint loads in the equation $M(q)\ddot q+h=B(q)u$. | N or N·m | vector | generalized | — | /pages/notation.html#term-zvcf |
-| `z` | $z$ | Auxiliary state z | Declared auxiliary coordinates or frozen strategy variables in the effective plant. | model-specific | vector | model-defined | — | /pages/notation.html#term-zvcf |
-| `p` | $p$ | Model parameters p | Contact mode, frozen impedance, and other declared frozen parameters collected in $p$. | — | — | — | — | /pages/notation.html#drift-and-control |
-| `tau` | $\tau$ | Generalized control tau | Applied generalized force or torque in the ZVCF evaluation protocol. | N or N·m | vector | generalized | — | /pages/notation.html#term-zvcf |
-| `C` | $C(q,\dot q)$ | Coriolis matrix C(q, q-dot) | Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads. | — | matrix | generalized | — | /pages/notation.html#equation-symbol-definitions |
-| `g` | $g(q)$ | Gravity vector g(q) | Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity. | N or N·m | vector | generalized | — | /pages/notation.html#equation-symbol-definitions |
-| `B` | $B(q)$ | Actuation matrix B(q) | Maps the declared control input to generalized forces, so the applied load is B(q) times u. | — | matrix | generalized | — | /pages/notation.html#equation-symbol-definitions |
-| `ad` | $a_d$ | Drift acceleration block | Drift contribution in the task or acceleration space used in the DCR. | m/s² or rad/s² | vector | task or state | — | /pages/notation.html#term-dcr |
-| `Ba` | $B_a$ | Actuation acceleration map | Control block mapping admissible inputs to acceleration in the DCR. | per input | matrix | task or state | — | /pages/notation.html#term-dcr |
-| `W` | $W$ | DCR weighting W | Declared scaling or metric for DCR norms. | — | matrix | task | PSD | /pages/notation.html#term-dcr |
-| `Uset` | $\mathcal U(x)$ | Admissible control set | Set of admissible control vectors at state $x$ for the DCR supremum. | — | set | control | — | /pages/notation.html#term-dcr |
-| `eps` | $\varepsilon$ | DCR regularizer epsilon | Regularizer preventing division by zero in the DCR denominator. | same as denominator | scalar | — | >0 | /pages/notation.html#term-dcr |
-| `J` | $J$ | Constraint Jacobian J | Constraint or task Jacobian; rows are individual constraints. | — | matrix | model-defined | — | /pages/notation.html#j-j-p-n-and-z |
-| `v` | $v$ | Velocity vector v | Linear velocity vector (bold or bar notation in prose tables). | m/s | vector | stated frame | — | /pages/notation.html#vectors--tensors |
-| `lam` | $\lambda$ | Lambda | Eigenvalue or Lagrange multiplier depending on context. | context | scalar or vector | — | — | /pages/notation.html#vectors--tensors |
+| Key    | Symbol            | Name                        | Definition                                                                                                                                                 | Unit                | Shape            | Frame             | Sign | Source anchor                                    |
+| ------ | ----------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ---------------- | ----------------- | ---- | ------------------------------------------------ |
+| `x`    | $x$               | State x                     | Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities.                                   | —                   | vector           | model coordinates | —    | /pages/notation.html#equation-symbol-definitions |
+| `f`    | $f(x)$            | Drift f(x)                  | Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load. | —                   | vector field     | state             | —    | /pages/notation.html#drift-and-control           |
+| `G`    | $G(x)$            | Input map G(x)              | Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations.                       | —                   | matrix           | state             | —    | /pages/notation.html#drift-and-control           |
+| `u`    | $u$               | Control input u             | Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set.                                            | model-specific      | vector           | control           | —    | /pages/notation.html#drift-and-control           |
+| `M`    | $M(q)$            | Mass matrix M(q)            | Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates.                                               | —                   | matrix           | generalized       | SPD  | /pages/notation.html#term-zvcf                   |
+| `q`    | $q$               | Generalized coordinates q   | Joint or body coordinates in the mechanical state.                                                                                                         | rad or m            | vector           | joint/body        | —    | /pages/notation.html#term-zvcf                   |
+| `qdot` | $\dot q$          | Generalized velocity q-dot  | Time derivative of the generalized coordinates.                                                                                                            | rad/s or m/s        | vector           | joint/body        | —    | /pages/notation.html#term-zvcf                   |
+| `h`    | $h(q,\dot q,z;p)$ | Bias load h                 | Velocity-dependent, gravity, passive, and constraint loads in the equation $M(q)\ddot q+h=B(q)u$.                                                          | N or N·m            | vector           | generalized       | —    | /pages/notation.html#term-zvcf                   |
+| `z`    | $z$               | Auxiliary state z           | Declared auxiliary coordinates or frozen strategy variables in the effective plant.                                                                        | model-specific      | vector           | model-defined     | —    | /pages/notation.html#term-zvcf                   |
+| `p`    | $p$               | Model parameters p          | Contact mode, frozen impedance, and other declared frozen parameters collected in $p$.                                                                     | —                   | —                | —                 | —    | /pages/notation.html#drift-and-control           |
+| `tau`  | $\tau$            | Generalized control tau     | Applied generalized force or torque in the ZVCF evaluation protocol.                                                                                       | N or N·m            | vector           | generalized       | —    | /pages/notation.html#term-zvcf                   |
+| `C`    | $C(q,\dot q)$     | Coriolis matrix C(q, q-dot) | Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads.                                   | —                   | matrix           | generalized       | —    | /pages/notation.html#equation-symbol-definitions |
+| `g`    | $g(q)$            | Gravity vector g(q)         | Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity.                                        | N or N·m            | vector           | generalized       | —    | /pages/notation.html#equation-symbol-definitions |
+| `B`    | $B(q)$            | Actuation matrix B(q)       | Maps the declared control input to generalized forces, so the applied load is B(q) times u.                                                                | —                   | matrix           | generalized       | —    | /pages/notation.html#equation-symbol-definitions |
+| `ad`   | $a_d$             | Drift acceleration block    | Drift contribution in the task or acceleration space used in the DCR.                                                                                      | m/s² or rad/s²      | vector           | task or state     | —    | /pages/notation.html#term-dcr                    |
+| `Ba`   | $B_a$             | Actuation acceleration map  | Control block mapping admissible inputs to acceleration in the DCR.                                                                                        | per input           | matrix           | task or state     | —    | /pages/notation.html#term-dcr                    |
+| `W`    | $W$               | DCR weighting W             | Declared scaling or metric for DCR norms.                                                                                                                  | —                   | matrix           | task              | PSD  | /pages/notation.html#term-dcr                    |
+| `Uset` | $\mathcal U(x)$   | Admissible control set      | Set of admissible control vectors at state $x$ for the DCR supremum.                                                                                       | —                   | set              | control           | —    | /pages/notation.html#term-dcr                    |
+| `eps`  | $\varepsilon$     | DCR regularizer epsilon     | Regularizer preventing division by zero in the DCR denominator.                                                                                            | same as denominator | scalar           | —                 | >0   | /pages/notation.html#term-dcr                    |
+| `J`    | $J$               | Constraint Jacobian J       | Constraint or task Jacobian; rows are individual constraints.                                                                                              | —                   | matrix           | model-defined     | —    | /pages/notation.html#j-j-p-n-and-z               |
+| `v`    | $v$               | Velocity vector v           | Linear velocity vector (bold or bar notation in prose tables).                                                                                             | m/s                 | vector           | stated frame      | —    | /pages/notation.html#vectors--tensors            |
+| `lam`  | $\lambda$         | Lambda                      | Eigenvalue or Lagrange multiplier depending on context.                                                                                                    | context             | scalar or vector | —                 | —    | /pages/notation.html#vectors--tensors            |
 
 <!-- SYMBOL-REFERENCES:END -->
 
@@ -346,8 +346,8 @@ power. Name the reference point and frame (body vs spatial).
 | **v_0**  | Ball launch speed              | Ball center-of-mass speed immediately after separation (not the pre-impact approach speed)                                                                                                                                                                                               | m/s                       |
 | **α**    | Launch angle                   | Angle above horizontal                                                                                                                                                                                                                                                                   | degrees (°) or radians    |
 | **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                                                                                                                                                                                    | RPM or rad/s              |
-| **θ**    | Launch elevation (Ch. 31)      | Angle above horizontal at ball release in the Physics of Golf launch chapter; distinct from site-wide launch angle **α** when both appear                                                                                                         | degrees (°) or radians    |
-| **φ**    | Slope (putting green, Ch. 32)  | Green tilt in the putting chapter; distinct from roll-angle **φ** elsewhere when context differs                                                                                                                         | degrees (°) or radians    |
+| **θ**    | Launch elevation (Ch. 31)      | Angle above horizontal at ball release in the Physics of Golf launch chapter; distinct from site-wide launch angle **α** when both appear                                                                                                                                                | degrees (°) or radians    |
+| **φ**    | Slope (putting green, Ch. 32)  | Green tilt in the putting chapter; distinct from roll-angle **φ** elsewhere when context differs                                                                                                                                                                                         | degrees (°) or radians    |
 
 **Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The restitution-based drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
@@ -408,7 +408,7 @@ power. Name the reference point and frame (body vs spatial).
 **Matrix multiplication (active rotation, body to world):**
 $$R = R_Z(\psi) R_Y(\theta) R_X(\phi)$$
 
-### Coordinate Frame Conventions
+### Coordinate Frame Conventions {#coordinate-frame-conventions}
 
 | Axis             | Direction            | Notation            |
 | ---------------- | -------------------- | ------------------- |
@@ -442,12 +442,12 @@ collision or aerodynamics model.
 
 **Common article variants (always declare locally):**
 
-| Name | +X | +Y | +Z | Where used |
-| ---- | -- | -- | -- | ---------- |
-| Site default (Z-up) | Target line | Left (downrange view) | Up | `NOTATION.md`, many fitting articles |
-| Y-up impact / green | Target line | Up | Right (downrange view) | Ball-flight and green chapters |
-| ISB-style segment | Anterior | Left | Superior | Some spine and clinical passages |
-| Planar PoG inertial | Chapter-specific (often +x right) | Often up | Out of plane | Physics of Golf Ch. 3–9 multibody examples |
+| Name                | +X                                | +Y                    | +Z                     | Where used                                 |
+| ------------------- | --------------------------------- | --------------------- | ---------------------- | ------------------------------------------ |
+| Site default (Z-up) | Target line                       | Left (downrange view) | Up                     | `NOTATION.md`, many fitting articles       |
+| Y-up impact / green | Target line                       | Up                    | Right (downrange view) | Ball-flight and green chapters             |
+| ISB-style segment   | Anterior                          | Left                  | Superior               | Some spine and clinical passages           |
+| Planar PoG inertial | Chapter-specific (often +x right) | Often up              | Out of plane           | Physics of Golf Ch. 3–9 multibody examples |
 
 Before combining outputs from two chapters, apply the fixed axis permutation stated in each
 source (or in [UpstreamDrift Conventions](upstreamdrift-conventions.html) on the
@@ -463,12 +463,12 @@ site ordering before building a 6-row Jacobian from multiple chapters.
 **Golf delivery angles (site default Z-up target frame).** Declare the frame before
 comparing chapters or vendor exports.
 
-| Quantity | Positive sense in site default frame | Typical symbol |
-| -------- | ------------------------------------ | -------------- |
-| Club path (horizontal) | Toward **+Y** (golfer's left downrange) | Path, $\gamma$ |
+| Quantity                         | Positive sense in site default frame                        | Typical symbol    |
+| -------------------------------- | ----------------------------------------------------------- | ----------------- |
+| Club path (horizontal)           | Toward **+Y** (golfer's left downrange)                     | Path, $\gamma$    |
 | Launch azimuth / face horizontal | Toward **+Z** (golfer's right) when stated “right positive” | Varies by chapter |
-| Attack / dynamic loft tilt | **+Z** up (above horizontal in $x$–$y$ plane) | Attack, $\alpha$ |
-| Spin axis tilt | Right-hand rule about stated axis | Spin axis |
+| Attack / dynamic loft tilt       | **+Z** up (above horizontal in $x$–$y$ plane)               | Attack, $\alpha$  |
+| Spin axis tilt                   | Right-hand rule about stated axis                           | Spin axis         |
 
 Y-up article frames permute which axis carries “up” and “lateral”; map to this table before
 signing a quantity from one chapter against another. Vendor and launch-monitor monographs state
@@ -481,24 +481,41 @@ their own target triads in place (see [Launch Monitor Technology](../articles/te
 These symbols are shared across the planar multibody chapters that build the
 affine club-arm model. Local redefinitions must be bridged at first use.
 
-| Symbol | Meaning | Rule |
-| ------ | ------- | ---- |
-| **$r_i$** | COM distance from the proximal hinge of link $i$ | Lowercase $r_i$, not $c_i$ |
-| **$c$** or **$c_i$** | Velocity-bias (Christoffel) vector or component | Not a COM distance |
-| **$g_0$** | Gravitational acceleration magnitude | Scalar; $g$ in $V=mgy$ is the same magnitude in planar models |
-| **$\bm g$** or **$g$** | Gravity generalized-force vector | Lowercase; not the input map $G(x)$ |
-| **$J_c$** | Constraint Jacobian | Not $A$ unless the meaning is stated in a chapter-local note |
-| **$\bm S$** | Constraint-space inverse inertia ($J_c M^{-1} J_c^{\mathsf T}$) | Schur complement; not the delivery map |
-| **$h$** | Full bias load in $M\ddot q + h = B u + \cdots$ | Includes velocity terms and gravity unless a chapter lists exclusions |
+| Symbol                 | Meaning                                                         | Rule                                                                  |
+| ---------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------- |
+| **$r_i$**              | COM distance from the proximal hinge of link $i$                | Lowercase $r_i$, not $c_i$                                            |
+| **$c$** or **$c_i$**   | Velocity-bias (Christoffel) vector or component                 | Not a COM distance                                                    |
+| **$g_0$**              | Gravitational acceleration magnitude                            | Scalar; $g$ in $V=mgy$ is the same magnitude in planar models         |
+| **$\bm g$** or **$g$** | Gravity generalized-force vector                                | Lowercase; not the input map $G(x)$                                   |
+| **$J_c$**              | Constraint Jacobian                                             | Not $A$ unless the meaning is stated in a chapter-local note          |
+| **$\bm S$**            | Constraint-space inverse inertia ($J_c M^{-1} J_c^{\mathsf T}$) | Schur complement; not the delivery map                                |
+| **$h$**                | Full bias load in $M\ddot q + h = B u + \cdots$                 | Includes velocity terms and gravity unless a chapter lists exclusions |
 
 Second-order equations of motion in this block use $M(q)\ddot q + h(q,\dot q;\,p) = B(q)u + J_c^{\mathsf T}\lambda$ (plus any declared external loads). Gravity belongs in $h$ or in an explicitly named lowercase $\bm g$ vector, never uppercase $G$.
 
 ### Motor Control Delay and Activation (Ch. 24–27)
 
-| Symbol | Meaning |
-| ------ | ------- |
-| **$d$** | Sensorimotor delay (seconds) in delayed feedback models |
+| Symbol    | Meaning                                                                  |
+| --------- | ------------------------------------------------------------------------ |
+| **$d$**   | Sensorimotor delay (seconds) in delayed feedback models                  |
 | **$T_a$** | First-order muscle or activation time constant (not joint torque $\tau$) |
+
+### Physics of Golf Second-Order Loads and Inverse Dynamics (Ch. 18–19)
+
+| Symbol               | Meaning                                                                    | Rule                                                                        |
+| -------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **$Q_{\mathrm{p}}$** | Passive or other constitutive generalized loads on the EOM right-hand side | Not linear momentum $p$ nor the parameter set in $h(q,\dot q;\,p)$          |
+| **$\varrho$**        | Known model residual in underdetermined inverse dynamics (Ch. 18)          | $\varrho=M\ddot q+h-Q_{\mathrm{p}}-Q_e$; not a position vector $\mathbf{r}$ |
+| **$m$**              | Applied-input dimension in $u\in\mathbb{R}^m$ (Ch. 18)                     | Not mass nor momentum                                                       |
+
+### Physics of Golf Contact Events and Launch Symbols (Ch. 14, 28, 31)
+
+| Symbol                  | Meaning                                                        | Rule                                        |
+| ----------------------- | -------------------------------------------------------------- | ------------------------------------------- |
+| **$\psi$**              | Contact event function $\psi(x,t)=0$                           | Not the gravity load $g(q)$                 |
+| **$\sigma_L$**          | Spin loft angle                                                | Not the state-transition matrix $\Phi(T,s)$ |
+| **$w_{\mathrm{face}}$** | Empirical face/path weight in horizontal launch-direction laws | Not wind velocity                           |
+| **$v_w$**               | Wind velocity field                                            | $v_r=v_B-v_w$ is air-relative velocity      |
 
 ### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
 
@@ -552,11 +569,11 @@ series defines the title wording through $\mathcal A(x)$ in [Part 1](../articles
 
 ### h, R, and Ξ (Hybrid Guard, Reset, Saltation)
 
-| Symbol   | Meaning                                                                 | Rule                                                                 |
-| -------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| **$h$**  | Guard function for a mode transition; event when $h(x,t)=0$ (or $h(t,x^-)=0$ at an impact) | Lowercase $h$ for hybrid guards in the tangent-hyperplane corpus; not the ZVCF bias load $h(q,\dot q,z;p)$ unless the section is explicitly about mechanics loads |
-| **$R$**  | Reset map $x^+=R(t,x^-)$ at an event                                    | Distinguish from rotation matrix **R** only by context (hybrid vs attitude) |
-| **$\Xi$** | Saltation matrix: first-variation map across a state-triggered event at common clock time | Standard symbol in Part 6 and Hybrid Tangent Spaces; do not label saltation as $S$ (Riccati/value matrix elsewhere) |
+| Symbol    | Meaning                                                                                    | Rule                                                                                                                                                              |
+| --------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **$h$**   | Guard function for a mode transition; event when $h(x,t)=0$ (or $h(t,x^-)=0$ at an impact) | Lowercase $h$ for hybrid guards in the tangent-hyperplane corpus; not the ZVCF bias load $h(q,\dot q,z;p)$ unless the section is explicitly about mechanics loads |
+| **$R$**   | Reset map $x^+=R(t,x^-)$ at an event                                                       | Distinguish from rotation matrix **R** only by context (hybrid vs attitude)                                                                                       |
+| **$\Xi$** | Saltation matrix: first-variation map across a state-triggered event at common clock time  | Standard symbol in Part 6 and Hybrid Tangent Spaces; do not label saltation as $S$ (Riccati/value matrix elsewhere)                                               |
 
 **Disambiguation rule:** Event sensitivity uses $\Xi$, not $S$. Hybrid guards use
 $h$, not $g$. Within smooth modes, propagate with the variational transition
@@ -631,7 +648,7 @@ dynamics.
 
 ## Geometry of Motion Notation (Volumes 0–II)
 
-This section harmonises symbols across *Geometry of Motion* chapters with the
+This section harmonises symbols across _Geometry of Motion_ chapters with the
 canonical rules above. Chapters may keep historical local glyphs when a **notation
 note** in the chapter points here; new material follows the canonical row.
 
@@ -639,14 +656,14 @@ note** in the chapter points here; new material follows the canonical row.
 
 Canonical finite-rotation symbols (Volume 0 Chapter 6 is the reference chapter):
 
-| Object | Canonical symbol | Meaning |
-| ------ | ---------------- | ------- |
-| Unit rotation axis | $\hat{n}$ or $s$ | Unit vector in the rotation frame |
-| Rotation angle | $\theta$ | Signed angle about $\hat{n}$ |
-| Rotation vector | $\boldsymbol{\phi}=\hat{n}\,\theta$ | $\|\boldsymbol{\phi}\|=\theta$ |
-| Skew generator | $[\boldsymbol{\phi}]_\times$ or $\hat{\boldsymbol{\phi}}$ | Element of $\mathfrak{so}(3)$ |
-| Body/space frames | $\{s\}$, $\{b\}$ | $R_{sb}$ maps $b$-components to $s$-components |
-| Relative rotation | $R_{sb}$ | Not $R_{bs}$ without an explicit inversion statement |
+| Object             | Canonical symbol                                          | Meaning                                              |
+| ------------------ | --------------------------------------------------------- | ---------------------------------------------------- |
+| Unit rotation axis | $\hat{n}$ or $s$                                          | Unit vector in the rotation frame                    |
+| Rotation angle     | $\theta$                                                  | Signed angle about $\hat{n}$                         |
+| Rotation vector    | $\boldsymbol{\phi}=\hat{n}\,\theta$                       | $\|\boldsymbol{\phi}\|=\theta$                       |
+| Skew generator     | $[\boldsymbol{\phi}]_\times$ or $\hat{\boldsymbol{\phi}}$ | Element of $\mathfrak{so}(3)$                        |
+| Body/space frames  | $\{s\}$, $\{b\}$                                          | $R_{sb}$ maps $b$-components to $s$-components       |
+| Relative rotation  | $R_{sb}$                                                  | Not $R_{bs}$ without an explicit inversion statement |
 
 Chapter 4 historically uses axis $a$, angle $\alpha$ and rotation vector $u$ for
 the same objects; Chapter 5 uses screw direction $s$ and angle $\theta$. Treat
@@ -665,17 +682,17 @@ the exponential map but are not interchangeable symbols.
 
 ### Volume 0: Spatial Algebra and Recursion (Chapters 7–12)
 
-| Object | Canonical symbol | Rule |
-| ------ | ---------------- | ---- |
-| Spatial twist | $\mathcal{V}=(\boldsymbol{\omega},\mathbf{v})^T$ | Angular component first |
-| Spatial wrench | $\mathcal{F}=(\mathbf{n},\mathbf{f})^T$ | Moment first; lowercase $\mathbf{f}$ is only the 3-force block |
-| se(3) hat | $[\xi]_\times$ or $\widehat{\xi}$ | Same $4\times4$ matrix as NOTATION screw row |
-| Joint motion subspace | $S_i$ | Columns span allowed joint motion in link frame |
-| PoE space screw axis | $\xi_i$ or $\mathcal{A}_i$ | Not $S_i$ (reserved for joint subspace) |
-| Parent link index | $\lambda(i)$ | Not $p(i)$ unless $p$ is explicitly position |
-| Spatial inertia | $\mathcal{I}_i$ | Distinct from configuration mass matrix $M(q)$ |
-| Joint-space bias | $h(q,\dot q)$ | Matches manipulator equation in [Canonical Control-Affine Terminology](#canonical-control-affine-terminology) |
-| Constraint Jacobian | $J_c$ | Rows are independent constraints; not $A$ when $A$ is a state Jacobian |
+| Object                | Canonical symbol                                 | Rule                                                                                                          |
+| --------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Spatial twist         | $\mathcal{V}=(\boldsymbol{\omega},\mathbf{v})^T$ | Angular component first                                                                                       |
+| Spatial wrench        | $\mathcal{F}=(\mathbf{n},\mathbf{f})^T$          | Moment first; lowercase $\mathbf{f}$ is only the 3-force block                                                |
+| se(3) hat             | $[\xi]_\times$ or $\widehat{\xi}$                | Same $4\times4$ matrix as NOTATION screw row                                                                  |
+| Joint motion subspace | $S_i$                                            | Columns span allowed joint motion in link frame                                                               |
+| PoE space screw axis  | $\xi_i$ or $\mathcal{A}_i$                       | Not $S_i$ (reserved for joint subspace)                                                                       |
+| Parent link index     | $\lambda(i)$                                     | Not $p(i)$ unless $p$ is explicitly position                                                                  |
+| Spatial inertia       | $\mathcal{I}_i$                                  | Distinct from configuration mass matrix $M(q)$                                                                |
+| Joint-space bias      | $h(q,\dot q)$                                    | Matches manipulator equation in [Canonical Control-Affine Terminology](#canonical-control-affine-terminology) |
+| Constraint Jacobian   | $J_c$                                            | Rows are independent constraints; not $A$ when $A$ is a state Jacobian                                        |
 
 Symbols $c$, $b$, $h$ and $S$ have chapter-local meanings (Coriolis offset, joint
 bias in Chapter 8, step size in optimization). A chapter notation note must flag
@@ -686,15 +703,15 @@ any reuse.
 For independent equality constraints $J_c\dot v=-\gamma$ with
 $\gamma=\dot J_c v$ in a fixed contact mode:
 
-| Symbol | Definition | Type |
-| ------ | ---------- | ---- |
-| $K_c$ | $J_c M^{-1} J_c^\top$ | Constraint inverse inertia |
-| $\Lambda_c$ | $K_c^{-1}$ | Operational-space inertia for independent constraint rows |
-| $\Pi_M$ | $I-M^{-1}J_c^\top K_c^{-1}J_c$ | $M$-orthogonal projector ($\Pi_M^2=\Pi_M$) |
-| $P_v$ | Same matrix as $\Pi_M$ | Velocity-space projector (Chapter 9 name) |
-| $\mathcal{H}_M$ | $\Pi_M M^{-1}$ | Constrained acceleration operator (not a projector) |
-| $a_0^c$ | $-P_v M^{-1} h - M^{-1} J_c^\top K_c^{-1}\gamma$ | Constrained drift acceleration |
-| $B_a^c$ | $P_v M^{-1} B$ | Constrained input acceleration map |
+| Symbol          | Definition                                       | Type                                                      |
+| --------------- | ------------------------------------------------ | --------------------------------------------------------- |
+| $K_c$           | $J_c M^{-1} J_c^\top$                            | Constraint inverse inertia                                |
+| $\Lambda_c$     | $K_c^{-1}$                                       | Operational-space inertia for independent constraint rows |
+| $\Pi_M$         | $I-M^{-1}J_c^\top K_c^{-1}J_c$                   | $M$-orthogonal projector ($\Pi_M^2=\Pi_M$)                |
+| $P_v$           | Same matrix as $\Pi_M$                           | Velocity-space projector (Chapter 9 name)                 |
+| $\mathcal{H}_M$ | $\Pi_M M^{-1}$                                   | Constrained acceleration operator (not a projector)       |
+| $a_0^c$         | $-P_v M^{-1} h - M^{-1} J_c^\top K_c^{-1}\gamma$ | Constrained drift acceleration                            |
+| $B_a^c$         | $P_v M^{-1} B$                                   | Constrained input acceleration map                        |
 
 For two translational coordinates with $M=\operatorname{diag}(2,4)$ kg
 and $J_c=[1,1]$, the constraint matrix is $K_c=0.75$ kg$^{-1}$ and
@@ -707,24 +724,24 @@ projector and $\mathcal{H}_M$ is a notational collision.
 
 ### Contraction Metrics (Volume I Chapter 4)
 
-| Symbol | Meaning in CCM chapters |
-| ------ | ----------------------- |
-| $M(x)$ | Riemannian metric or contraction metric (not $M(q)$ mass matrix in the same section without a note) |
-| $\rho(x)$ | CCM multiplier (positive function, not necessarily in $(0,1)$) |
-| $\varrho$ | Discrete contraction factor in $(0,1)$ when both appear |
-| $\Phi(t,s)$ | State-transition matrix of the first variation |
-| $\psi_k$ | Nonlinear discrete map when distinct from $\Phi$ |
+| Symbol      | Meaning in CCM chapters                                                                             |
+| ----------- | --------------------------------------------------------------------------------------------------- |
+| $M(x)$      | Riemannian metric or contraction metric (not $M(q)$ mass matrix in the same section without a note) |
+| $\rho(x)$   | CCM multiplier (positive function, not necessarily in $(0,1)$)                                      |
+| $\varrho$   | Discrete contraction factor in $(0,1)$ when both appear                                             |
+| $\Phi(t,s)$ | State-transition matrix of the first variation                                                      |
+| $\psi_k$    | Nonlinear discrete map when distinct from $\Phi$                                                    |
 
 Chapters that overload $\rho$, $\Phi$, $D$, $d$, or $\lambda$ carry a local
 **notation note** listing the chapter-specific sense.
 
 ### Optimal Control Hamiltonian vs Hessian (Volume I Chapters 5–6)
 
-| Symbol | Chapter 5 discrete DDP | Chapter 5 / 6 continuous or Riccati |
-| ------ | --------------------- | ------------------------------------- |
-| $\mathcal{H}_k$ | Hamiltonian (costate pairing) | — |
-| $H_{uu}$ or $Q_{uu}$ | Control Hessian block | — |
-| $N$ | Horizon length | Cross-weight matrix $N_k$ only with a chapter note |
+| Symbol               | Chapter 5 discrete DDP        | Chapter 5 / 6 continuous or Riccati                |
+| -------------------- | ----------------------------- | -------------------------------------------------- |
+| $\mathcal{H}_k$      | Hamiltonian (costate pairing) | —                                                  |
+| $H_{uu}$ or $Q_{uu}$ | Control Hessian block         | —                                                  |
+| $N$                  | Horizon length                | Cross-weight matrix $N_k$ only with a chapter note |
 
 **Feedback sign convention:** Chapter 5 writes $A_{\mathrm{cl}}=A+BK$ with $K$ absorbing
 the sign; Chapters 6 and 8 use $u=-Kx$ so $A_{\mathrm{cl}}=A-BK$. Converting gains
@@ -812,18 +829,18 @@ Quick lookup table for symbols used in the project:
 
 ### Uppercase Greek
 
-| Symbol | Name   | Uses                                     |
-| ------ | ------ | ---------------------------------------- |
-| Γ      | Gamma  | Surface tension, Christoffel symbols     |
-| Δ      | Delta  | Change/difference operator               |
-| Θ      | Theta  | Moment of inertia tensor, potential      |
-| Λ      | Lambda | Eigenvalue matrix, cosmological constant |
+| Symbol | Name   | Uses                                                          |
+| ------ | ------ | ------------------------------------------------------------- |
+| Γ      | Gamma  | Surface tension, Christoffel symbols                          |
+| Δ      | Delta  | Change/difference operator                                    |
+| Θ      | Theta  | Moment of inertia tensor, potential                           |
+| Λ      | Lambda | Eigenvalue matrix, cosmological constant                      |
 | Ξ      | Xi     | Saltation matrix at hybrid events (tangent-hyperplane series) |
-| Π      | Pi     | Product operator, Poincaré map           |
-| Σ      | Sigma  | Summation operator, covariance           |
-| Φ      | Phi    | Potential energy, flux                   |
-| Ψ      | Psi    | Wave function, potential                 |
-| Ω      | Omega  | Solid angle, frequency, domain           |
+| Π      | Pi     | Product operator, Poincaré map                                |
+| Σ      | Sigma  | Summation operator, covariance                                |
+| Φ      | Phi    | Potential energy, flux                                        |
+| Ψ      | Psi    | Wave function, potential                                      |
+| Ω      | Omega  | Solid angle, frequency, domain                                |
 
 ---
 
