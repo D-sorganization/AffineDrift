@@ -22,11 +22,13 @@ logger = logging.getLogger(__name__)
 
 
 def _reject(message: str) -> NoReturn:
+    """Log the contract failure and raise it."""
     logger.error("%s", message)
     raise ClosedChainHandLoadError(message)
 
 
 def _pairs(items: list[tuple[str, object]]) -> dict[str, object]:
+    """Build an object and reject a repeated JSON key."""
     parsed: dict[str, object] = {}
     for key, value in items:
         if key in parsed:
@@ -49,17 +51,20 @@ def _read_json(path: Path) -> dict[str, object]:
 
 
 def _require_version(payload: dict[str, object], expected: str, label: str) -> None:
+    """Reject a document or manifest whose schema version is not v1."""
     if payload.get("schema_version") != expected:
         _reject(f"unknown {label} schema version: {payload.get('schema_version')!r}")
 
 
 def _validation_message(exc: ValidationError) -> str:
+    """Return the first schema error with its field location."""
     error = exc.errors()[0]
     location = ".".join(str(part) for part in error["loc"])
     return f"{location}: {error['msg']}" if location else str(error["msg"])
 
 
 def _parse[ModelT: BaseModel](model: type[ModelT], payload: dict[str, object]) -> ModelT:
+    """Validate one object and raise the hand-load error on schema failure."""
     try:
         return model.model_validate(payload)
     except ValidationError as exc:
@@ -67,6 +72,7 @@ def _parse[ModelT: BaseModel](model: type[ModelT], payload: dict[str, object]) -
 
 
 def _require_provenance(record: ClosedChainHandLoadRecord, manifest: UpstreamManifest) -> None:
+    """Require every provenance field to match the UpstreamDrift manifest."""
     left = record.provenance.model_dump()
     right = manifest.provenance.model_dump()
     for name, value in left.items():
@@ -75,6 +81,7 @@ def _require_provenance(record: ClosedChainHandLoadRecord, manifest: UpstreamMan
 
 
 def _require_superposition(record: ClosedChainHandLoadRecord) -> None:
+    """Require ZTCF + ZVCF = Total on every numeric midhands channel."""
     tolerance = record.superposition_tolerance
     for index, frame in enumerate(record.frames):
         message = superposition_error(frame, tolerance)
@@ -85,12 +92,7 @@ def _require_superposition(record: ClosedChainHandLoadRecord) -> None:
 def load_closed_chain_hand_load(
     document_path: Path, manifest_path: Path
 ) -> ClosedChainHandLoadRecord:
-    """Load a document and require its SHA-256 provenance to match a manifest.
-
-    Preconditions: both paths are UTF-8 JSON objects of the v1 schemas.
-    Postconditions: numeric channels satisfy ZTCF + ZVCF = Total within tolerance,
-    provenance matches, and ``UNAVAILABLE`` is preserved.
-    """
+    """Load a v1 document whose SHA-256 provenance matches the manifest."""
     document = _read_json(document_path)
     manifest_payload = _read_json(manifest_path)
     _require_version(document, DOCUMENT_SCHEMA_VERSION, "document")

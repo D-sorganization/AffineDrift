@@ -1,7 +1,6 @@
-"""Versioned schema for two-handed closed-chain ZTCF and ZVCF hand loads.
+"""Closed-chain ZTCF/ZVCF hand-load schema, separate from ``ztcf_contract.py``.
 
-Separate from the serial planar model in ``ztcf_contract.py``. Missing quantities
-are ``UNAVAILABLE``. ``opposing_force_cancellation`` is ``||f_L|| + ||f_R|| - ||F||``.
+Missing quantities are ``UNAVAILABLE``. Cancellation is ``||f_L|| + ||f_R|| - ||F||``.
 Couple policies are ``axial-only`` (primary) and ``bounded``.
 """
 
@@ -29,6 +28,7 @@ class ClosedChainHandLoadError(ValueError):
 
 
 def _finite(value: object) -> float:
+    """Return a finite float. Booleans are rejected so flags are not coerced."""
     if isinstance(value, bool) or not isinstance(value, int | float):
         raise ValueError("must be a finite number")
     number = float(value)
@@ -38,12 +38,14 @@ def _finite(value: object) -> float:
 
 
 def _scalar(value: object) -> Scalar:
+    """Keep an explicit unavailable scalar instead of substituting zero."""
     if value == UNAVAILABLE:
         return UNAVAILABLE
     return _finite(value)
 
 
 def _quantity(value: object) -> Quantity:
+    """Keep an explicit unavailable vector instead of substituting zeros."""
     if value == UNAVAILABLE:
         return UNAVAILABLE
     if not isinstance(value, list) or len(value) != VECTOR_WIDTH:
@@ -163,23 +165,21 @@ def to_document(record: ClosedChainHandLoadRecord) -> dict[str, object]:
 
 
 def _is_number_vector(value: Quantity) -> TypeGuard[Vec3]:
+    """Return whether a wrench component is numeric."""
     return isinstance(value, tuple)
-
-
-def _residual_limit(component: float, tolerance: float) -> float:
-    return tolerance + tolerance * abs(component)
 
 
 def _channel_error(
     name: str, total: Quantity, ztcf: Quantity, zvcf: Quantity, tolerance: float
 ) -> str | None:
+    """Return why one wrench channel is not an admissible ZTCF/ZVCF split."""
     if total == UNAVAILABLE and ztcf == UNAVAILABLE and zvcf == UNAVAILABLE:
         return None
     if not (_is_number_vector(total) and _is_number_vector(ztcf) and _is_number_vector(zvcf)):
         return f"{name} mixes UNAVAILABLE with numeric wrench components"
     for index in range(VECTOR_WIDTH):
         residual = abs((ztcf[index] + zvcf[index]) - total[index])
-        if residual > _residual_limit(total[index], tolerance):
+        if residual > tolerance + tolerance * abs(total[index]):
             return f"{name} violates ZTCF + ZVCF = Total"
     return None
 
