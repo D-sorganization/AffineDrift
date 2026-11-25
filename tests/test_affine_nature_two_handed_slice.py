@@ -35,6 +35,8 @@ def test_slice_callout_states_that_exports_are_pending() -> None:
     assert "No admitted two-handed simulation export is wired in." in section
     assert "This slice does not complete the flagship." in section
     assert section.count("Schematic Placeholder:") == 3
+    assert section.count("::: {.callout-warning}") == 3
+    assert "::: {.callout-note}" not in section
     assert "![" not in section
 
 
