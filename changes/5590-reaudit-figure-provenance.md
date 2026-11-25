@@ -1,7 +1,6 @@
 ---
 issue: 5590
 summary: "Re-audit #5590: cite teaching-model figure sources and label the lay schematic."
-dl_state: "in_review"
 next_step: "Replace the teaching-model panels when an admitted UpstreamDrift two-handed export exists."
 title: "Core-Theory Figure Provenance"
 branch: "cursor/reaudit-5590-figure-provenance-1b7a"
