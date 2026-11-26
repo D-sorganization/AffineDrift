@@ -36,9 +36,7 @@ CH11 = (
     / "ch11_counterfactual_scissors.qmd"
 )
 TAXONOMY_ID = "tbl-counterfactual-taxonomy"
-TAXONOMY_LINK = (
-    "/articles/proximal-distal-a-journey-through-the-swing.html#" + TAXONOMY_ID
-)
+TAXONOMY_LINK = "/articles/proximal-distal-a-journey-through-the-swing.html#" + TAXONOMY_ID
 
 
 def _read(path: Path) -> str:
