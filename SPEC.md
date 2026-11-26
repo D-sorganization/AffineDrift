@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-26 | #5892 | Re-audit #5590: cite teaching-model figure sources and label the lay schematic. |
 | 2026-11-26 | #5901 | Pin planar momentum-energy ledger parity to one analytic fixture |
 | 2026-11-26 | #5900 | Add a reserved notation symbol registry checked against NOTATION.md. |
 | 2026-11-26 | #5891 | State the two-handed null-space account in layman and scientist registers, with figures pending verified exports. |
