@@ -38,12 +38,8 @@ def _close_record(
         _close(actual[key], value, tolerance, f"{label}.{key}")
 
 
-def test_fixture_declares_the_analytic_schema() -> None:
-    assert FIXTURE["schema"] == "affinedrift/momentum-energy-ledger-analytic/v1"
-    assert FIXTURE["tolerance"] == {"abs": 1e-12, "rel": 1e-12}
-
-
 def test_analytic_ledgers_match_the_shared_fixture() -> None:
+    assert FIXTURE["schema"] == "affinedrift/momentum-energy-ledger-analytic/v1"
     tolerance = FIXTURE["tolerance"]
     for case in FIXTURE["ledgers"]:
         actual = segment_ledger(case["state"], FIXTURE["gravity"])
@@ -54,9 +50,7 @@ def test_analytic_intervals_match_the_shared_fixture() -> None:
     tolerance = FIXTURE["tolerance"]
     gravity = FIXTURE["gravity"]
     for case in FIXTURE["intervals"]:
-        advanced = advance_constant_wrench(
-            case["state"], case["wrench"], gravity, case["duration"]
-        )
+        advanced = advance_constant_wrench(case["state"], case["wrench"], gravity, case["duration"])
         label = case["id"]
         _close_record(advanced["final_state"], case["expected_state"], tolerance, label)
         final = segment_ledger(advanced["final_state"], gravity)

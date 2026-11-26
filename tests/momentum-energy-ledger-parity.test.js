@@ -1,8 +1,4 @@
-/**
- * Browser parity for the planar momentum and energy ledger (#5886).
- * Golden values: tests/fixtures/momentum_energy_ledger_analytic.json.
- * Python reference: src/affine_control/momentum_energy_ledger.py.
- */
+/** Browser parity for js/momentum-energy-ledger.js against the shared analytic fixture. */
 const fs = require('fs');
 const path = require('path');
 const ledger = require('../js/momentum-energy-ledger.js');
@@ -10,18 +6,12 @@ const ledger = require('../js/momentum-energy-ledger.js');
 const fixture = JSON.parse(fs.readFileSync(
   path.join(__dirname, 'fixtures/momentum_energy_ledger_analytic.json'), 'utf8'));
 
-function expectClose(actual, expected, tolerance, label) {
-  const bound = tolerance.abs + tolerance.rel * Math.abs(expected);
-  const gap = Math.abs(actual - expected);
-  if (!(gap <= bound)) {
-    throw new Error(`${label}: |${actual} - ${expected}| = ${gap} > ${bound}`);
-  }
-}
-
 function expectRecord(actual, expected, tolerance, label) {
   expect(Object.keys(actual).sort()).toEqual(Object.keys(expected).sort());
-  for (const key of Object.keys(expected)) {
-    expectClose(actual[key], expected[key], tolerance, `${label}.${key}`);
+  for (const [key, value] of Object.entries(expected)) {
+    const bound = tolerance.abs + tolerance.rel * Math.abs(value);
+    const gap = Math.abs(actual[key] - value);
+    if (!(gap <= bound)) throw new Error(`${label}.${key}: |${gap}| > ${bound}`);
   }
 }
 
