@@ -1,5 +1,11 @@
 # Current Agent Handoff
 
+## Core-Theory Figure Audit (#5590)
+
+- Lane 3B re-audit. ZTCF and superposition panels are AffineDrift teaching-model output with pin files under `data/core_theory/`, not admitted UpstreamDrift two-handed exports. Captions name that limit and the replacement condition. The lay DCR arrows are labelled schematic — not simulation output.
+- The superposition position residual matches leading order $O(\Delta t^4)$ (velocity $O(\Delta t^3)$, not drawn). The double-pendulum worked example now states mid-link masses in kilograms, lengths in metres, and the Coriolis bias.
+- Follow-ups: replace the panels when an admitted two-handed export exists; the centripetal example in `articles/affine-nature-golf-swing.qmd` is owned by another lane.
+
 ## Shot-Pattern Publication
 
 - AffineDrift issue #5004 is closed after protected PR #5005 (`ace2a1ac49ec179f982f4457b0e3a2ccb3c16a84`) and mobile-title PR #5016 (`8162b803e96aefbc998d13dc68b9fd1f1678a455`) merged. The source is `articles/shot-pattern-analysis.qmd`; identities for all nine report/graphic assets are in `articles/shot_pattern_analysis/asset_manifest.json`.

@@ -99,6 +99,9 @@ def test_noscript_summary_matches_the_data() -> None:
     page = (ROOT / "models" / "model-ladder.qmd").read_text(encoding="utf-8")
     last = FRAMES[-1]
     assert f"about {round(last['clubheadSpeed'])} m/s after {last['t']:.2f} s" in page
+    prose = " ".join(page.split())
+    assert "passive dynamics supply" not in prose
+    assert "drift term at the current torque-driven state" in prose
 
 
 def test_model_joint_positions_end_at_the_club_tip() -> None:
