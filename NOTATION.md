@@ -517,6 +517,12 @@ Second-order equations of motion in this block use $M(q)\ddot q + h(q,\dot q;\,p
 | **$w_{\mathrm{face}}$** | Empirical face/path weight in horizontal launch-direction laws | Not wind velocity |
 | **$v_w$** | Wind velocity field | $v_r=v_B-v_w$ is air-relative velocity |
 
+### Physics of Golf Mass-Metric Projector (Ch. 23)
+
+| Symbol | Meaning | Rule |
+| ------ | ------- | ---- |
+| **$P_M$** | Dynamically consistent projector onto $\ker J$ | $P_M=I-\bar J J$ with $\bar J=M^{-1}J^T(JM^{-1}J^T)^{-1}$; this is $P_W$ at $W=M$, not a null basis $N$ |
+
 ### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
 
 | Symbol    | Meaning                                                                    | Metric                                                        | Rule                                                                                           |
