@@ -1,47 +1,166 @@
 {
   "schema": "affinedrift/momentum-energy-ledger-analytic/v1",
   "gravity": 10.0,
-  "tolerance": {"abs": 1e-12, "rel": 1e-12},
+  "tolerance": { "abs": 1e-12, "rel": 1e-12 },
   "notes": "Planar rigid segment. y is up. gravity is the downward acceleration. External force acts at the centre of mass. Expected numbers are closed form, independent of either runtime. Kinetic energy is Konig's split. Origin angular momentum is r cross p plus I omega.",
   "ledgers": [
     {
       "id": "spinning-translation",
-      "state": {"mass": 2.0, "inertia_about_com": 0.5, "com_x": 3.0, "com_y": 4.0, "com_vx": 1.0, "com_vy": -2.0, "angular_velocity": 4.0},
-      "expected": {"linear_momentum_x": 2.0, "linear_momentum_y": -4.0, "angular_momentum_about_com": 2.0, "angular_momentum_about_origin": -18.0, "kinetic_energy": 9.0, "potential_energy": 80.0, "mechanical_energy": 89.0}
+      "state": {
+        "mass": 2.0,
+        "inertia_about_com": 0.5,
+        "com_x": 3.0,
+        "com_y": 4.0,
+        "com_vx": 1.0,
+        "com_vy": -2.0,
+        "angular_velocity": 4.0
+      },
+      "expected": {
+        "linear_momentum_x": 2.0,
+        "linear_momentum_y": -4.0,
+        "angular_momentum_about_com": 2.0,
+        "angular_momentum_about_origin": -18.0,
+        "kinetic_energy": 9.0,
+        "potential_energy": 80.0,
+        "mechanical_energy": 89.0
+      }
     },
     {
       "id": "point-at-rest",
-      "state": {"mass": 1.0, "inertia_about_com": 0.0, "com_x": 1.0, "com_y": 2.0, "com_vx": 0.0, "com_vy": 0.0, "angular_velocity": 0.0},
-      "expected": {"linear_momentum_x": 0.0, "linear_momentum_y": 0.0, "angular_momentum_about_com": 0.0, "angular_momentum_about_origin": 0.0, "kinetic_energy": 0.0, "potential_energy": 20.0, "mechanical_energy": 20.0}
+      "state": {
+        "mass": 1.0,
+        "inertia_about_com": 0.0,
+        "com_x": 1.0,
+        "com_y": 2.0,
+        "com_vx": 0.0,
+        "com_vy": 0.0,
+        "angular_velocity": 0.0
+      },
+      "expected": {
+        "linear_momentum_x": 0.0,
+        "linear_momentum_y": 0.0,
+        "angular_momentum_about_com": 0.0,
+        "angular_momentum_about_origin": 0.0,
+        "kinetic_energy": 0.0,
+        "potential_energy": 20.0,
+        "mechanical_energy": 20.0
+      }
     }
   ],
   "intervals": [
     {
       "id": "free-fall",
-      "state": {"mass": 2.0, "inertia_about_com": 0.5, "com_x": 3.0, "com_y": 4.0, "com_vx": 1.0, "com_vy": -2.0, "angular_velocity": 4.0},
-      "wrench": {"force_x": 0.0, "force_y": 0.0, "torque_about_com": 0.0},
+      "state": {
+        "mass": 2.0,
+        "inertia_about_com": 0.5,
+        "com_x": 3.0,
+        "com_y": 4.0,
+        "com_vx": 1.0,
+        "com_vy": -2.0,
+        "angular_velocity": 4.0
+      },
+      "wrench": { "force_x": 0.0, "force_y": 0.0, "torque_about_com": 0.0 },
       "duration": 0.2,
-      "expected_state": {"mass": 2.0, "inertia_about_com": 0.5, "com_x": 3.2, "com_y": 3.4, "com_vx": 1.0, "com_vy": -4.0, "angular_velocity": 4.0},
-      "expected_ledger": {"linear_momentum_x": 2.0, "linear_momentum_y": -8.0, "angular_momentum_about_com": 2.0, "angular_momentum_about_origin": -30.4, "kinetic_energy": 21.0, "potential_energy": 68.0, "mechanical_energy": 89.0},
-      "expected_balance": {"linear_impulse_x": 0.0, "linear_impulse_y": -4.0, "angular_impulse_about_origin": -12.4, "work_at_com": 0.0}
+      "expected_state": {
+        "mass": 2.0,
+        "inertia_about_com": 0.5,
+        "com_x": 3.2,
+        "com_y": 3.4,
+        "com_vx": 1.0,
+        "com_vy": -4.0,
+        "angular_velocity": 4.0
+      },
+      "expected_ledger": {
+        "linear_momentum_x": 2.0,
+        "linear_momentum_y": -8.0,
+        "angular_momentum_about_com": 2.0,
+        "angular_momentum_about_origin": -30.4,
+        "kinetic_energy": 21.0,
+        "potential_energy": 68.0,
+        "mechanical_energy": 89.0
+      },
+      "expected_balance": {
+        "linear_impulse_x": 0.0,
+        "linear_impulse_y": -4.0,
+        "angular_impulse_about_origin": -12.4,
+        "work_at_com": 0.0
+      }
     },
     {
       "id": "point-mass-drop",
-      "state": {"mass": 1.0, "inertia_about_com": 0.0, "com_x": 0.0, "com_y": 2.0, "com_vx": 0.0, "com_vy": 0.0, "angular_velocity": 0.0},
-      "wrench": {"force_x": 0.0, "force_y": 0.0, "torque_about_com": 0.0},
+      "state": {
+        "mass": 1.0,
+        "inertia_about_com": 0.0,
+        "com_x": 0.0,
+        "com_y": 2.0,
+        "com_vx": 0.0,
+        "com_vy": 0.0,
+        "angular_velocity": 0.0
+      },
+      "wrench": { "force_x": 0.0, "force_y": 0.0, "torque_about_com": 0.0 },
       "duration": 0.2,
-      "expected_state": {"mass": 1.0, "inertia_about_com": 0.0, "com_x": 0.0, "com_y": 1.8, "com_vx": 0.0, "com_vy": -2.0, "angular_velocity": 0.0},
-      "expected_ledger": {"linear_momentum_x": 0.0, "linear_momentum_y": -2.0, "angular_momentum_about_com": 0.0, "angular_momentum_about_origin": 0.0, "kinetic_energy": 2.0, "potential_energy": 18.0, "mechanical_energy": 20.0},
-      "expected_balance": {"linear_impulse_x": 0.0, "linear_impulse_y": -2.0, "angular_impulse_about_origin": 0.0, "work_at_com": 0.0}
+      "expected_state": {
+        "mass": 1.0,
+        "inertia_about_com": 0.0,
+        "com_x": 0.0,
+        "com_y": 1.8,
+        "com_vx": 0.0,
+        "com_vy": -2.0,
+        "angular_velocity": 0.0
+      },
+      "expected_ledger": {
+        "linear_momentum_x": 0.0,
+        "linear_momentum_y": -2.0,
+        "angular_momentum_about_com": 0.0,
+        "angular_momentum_about_origin": 0.0,
+        "kinetic_energy": 2.0,
+        "potential_energy": 18.0,
+        "mechanical_energy": 20.0
+      },
+      "expected_balance": {
+        "linear_impulse_x": 0.0,
+        "linear_impulse_y": -2.0,
+        "angular_impulse_about_origin": 0.0,
+        "work_at_com": 0.0
+      }
     },
     {
       "id": "constant-wrench",
-      "state": {"mass": 2.0, "inertia_about_com": 0.5, "com_x": 0.0, "com_y": 1.0, "com_vx": 0.0, "com_vy": 0.0, "angular_velocity": 0.0},
-      "wrench": {"force_x": 4.0, "force_y": 0.0, "torque_about_com": 1.0},
+      "state": {
+        "mass": 2.0,
+        "inertia_about_com": 0.5,
+        "com_x": 0.0,
+        "com_y": 1.0,
+        "com_vx": 0.0,
+        "com_vy": 0.0,
+        "angular_velocity": 0.0
+      },
+      "wrench": { "force_x": 4.0, "force_y": 0.0, "torque_about_com": 1.0 },
       "duration": 0.5,
-      "expected_state": {"mass": 2.0, "inertia_about_com": 0.5, "com_x": 0.25, "com_y": -0.25, "com_vx": 1.0, "com_vy": -5.0, "angular_velocity": 1.0},
-      "expected_ledger": {"linear_momentum_x": 2.0, "linear_momentum_y": -10.0, "angular_momentum_about_com": 0.5, "angular_momentum_about_origin": -1.5, "kinetic_energy": 26.25, "potential_energy": -5.0, "mechanical_energy": 21.25},
-      "expected_balance": {"linear_impulse_x": 2.0, "linear_impulse_y": -10.0, "angular_impulse_about_origin": -1.5, "work_at_com": 1.25}
+      "expected_state": {
+        "mass": 2.0,
+        "inertia_about_com": 0.5,
+        "com_x": 0.25,
+        "com_y": -0.25,
+        "com_vx": 1.0,
+        "com_vy": -5.0,
+        "angular_velocity": 1.0
+      },
+      "expected_ledger": {
+        "linear_momentum_x": 2.0,
+        "linear_momentum_y": -10.0,
+        "angular_momentum_about_com": 0.5,
+        "angular_momentum_about_origin": -1.5,
+        "kinetic_energy": 26.25,
+        "potential_energy": -5.0,
+        "mechanical_energy": 21.25
+      },
+      "expected_balance": {
+        "linear_impulse_x": 2.0,
+        "linear_impulse_y": -10.0,
+        "angular_impulse_about_origin": -1.5,
+        "work_at_com": 1.25
+      }
     }
   ]
 }

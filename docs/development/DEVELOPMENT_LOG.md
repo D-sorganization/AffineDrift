@@ -241,6 +241,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5886 · Pin Planar Momentum-Energy Ledger Parity to One Analytic Fixture
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5886
+- **Branch:** cursor/momentum-energy-ledger-parity-159d
+- **PR:** #5901
+- **Paths:** see #5901
+- **Started:** 2026-11-26
+- **Last verified:** 2026-11-26 (`f25ac9db`; collated from changes/5886-momentum-energy-ledger-parity.md)
+- **Summary:** Pin planar momentum-energy ledger parity to one analytic fixture
+- **Next step:** Follow-up slices: multi-segment balance, carpets, and the explorer page.
+
+### DL-#5122 · Two-Handed Null-Space Slice for the Flagship Article
+
+- **State:** in_review
+- **Owner:** cursor
+- **Issue:** #5122
+- **Branch:** cursor/dual-register-swing-slice-35c1
+- **PR:** #5891
+- **Paths:** `articles/affine-nature-golf-swing.qmd`
+- **Started:** 2026-11-26
+- **Last verified:** 2026-11-26 (`e9f4f1a8`; collated from changes/5122-dual-register-two-handed-slice.md)
+- **Summary:** State the two-handed null-space account in layman and scientist registers, with figures pending verified exports.
+- **Next step:** Slice 2 replaces the schematic placeholders with verified two-handed exports and replay badges.
+
 ### DL-#5838 · Scan Complete JavaScript Sources for Multiline Imports and Report Dependency Violations at the Import Start Line.
 
 - **State:** in_review
@@ -429,10 +455,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5596
 - **Branch:** cursor/agent-readiness-5596-3da0
-- **PR:** #5662, #5726, #5755, #5786, #5843
+- **PR:** #5662, #5726, #5755, #5786, #5843, #5900
 - **Paths:** see #5662
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-24 (`6afbbb1d`; collated from changes/5596-complete-canonical-agent-model-map-disco.md)
+- **Last verified:** 2026-11-26 (`cf7be8b5`; collated from changes/5596-add-a-reserved-notation-symbol-registry.md)
 - **Summary:** Add llms.txt agent entry point, extend symbol registry v2 from NOTATION.md, and CI freshness gates.
 - **Next step:** Merge after CI green.
 
@@ -819,12 +845,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5590
 - **Branch:** cursor/core-theory-figures-5590-f840
-- **PR:** #5666, #5687, #5770
+- **PR:** #5666, #5687, #5770, #5892
 - **Paths:** see #5666
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-17 (`12e984ea`; collated from changes/5590-pointwise-drift-reachability.md)
+- **Last verified:** 2026-11-26 (`bb228e84`; collated from changes/5590-reaudit-figure-provenance.md)
 - **Summary:** Replace hand-drawn core-theory ZTCF and superposition figures with pinned model simulations.
-- **Next step:** Merge after CI green; close #5590 when acceptance checklist is verified on main.
+- **Next step:** Replace the teaching-model panels when an admitted UpstreamDrift two-handed export exists.
 
 ### DL-#5589 · DgCR Restitution (Not Aerodynamic); COR Passive-Impact Qualifier
 
