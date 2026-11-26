@@ -75,7 +75,7 @@ Conversions run **only at the engine adapter boundary** unless noted. Low-level
 | **MuJoCo / MJX** | `[xyz, quat_wxyz, …]` | w-first `(w,x,y,z)` | Free-joint `qvel`: linear in **world**, angular in **body** (matches v2 base block) | Quaternion order only at pose-IO boundary; `canonical-v2` state mapping per CC-10 | Raw [`physics_engine.get_state`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/physics_engine.py#L254-L258) returns native `qpos`/`qvel` |
 | **Pinocchio** | `[xyz, quat_xyzw]` | **w-last** `(x,y,z,w)` | Free-flyer linear & angular in **body/local** frame; Jacobian native `[linear; angular]` | Reorder quaternion; rotate base linear vel/accel to world via `velocity_map` (CC-9); **restack** spatial Jacobian to `[angular; linear]` | Internal `data.q`, `data.v` until adapter export |
 | **Drake** | `QuaternionFloatingJoint`: `[quat_wxyz, xyz]` or URDF RPY `[xyz, rpy]` | w-first for quaternion joint | Spatial Jacobian `[angular; linear]` in Drake native API | Base block reorder + RPY path via `se3` (CC-28) | Internal `MultibodyPlant` state vector layout |
-| **JaxSim** | `[xyz, quat_wxyz, joints…]` in backend data | w-first | Backend default **mixed**: body angular + world linear at COM | Reads/writes **canonical** `[angular; linear]` base `v` via [`velocity_conventions`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/engine_core/velocity_conventions.py); see [`jaxsim_backend.py` `get_state`/`set_state`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/engines/physics_engines/jaxsim/jaxsim_backend.py#L100-L131) | Native JaxSim tape if bypassing backend wrapper |
+| **JaxSim** | `[xyz, quat_wxyz, joints…]` in backend data | w-first | Backend default **mixed**: body angular + world linear at COM | Reads/writes `[angular; linear]` base velocity via [`velocity_conventions`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/engine_core/velocity_conventions.py); that stack reverses canonical-v2 `[v_world; ω_body]`. See [`jaxsim_backend.py` `get_state`/`set_state`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/engines/physics_engines/jaxsim/jaxsim_backend.py#L100-L131) | Native JaxSim tape if bypassing backend wrapper |
 | **MyoSuite** | MuJoCo MJCF free joint (same as MuJoCo row) | w-first | MuJoCo free-joint `qvel` pattern | Same family as MuJoCo CC-10 / MyoSuite adapter | Activation & muscle states (not part of `q`,`v` contract) |
 | **OpenSim** | `FreeJoint` coordinates (often XYZ Euler) | n/a (Euler joints) | Per-coordinate speeds, **degrees** on disk | Degrees → radians at pose boundary (CC-10) | `.osim` shoulder **Y sign flips** per model |
 | **Simscape** | Parameter-bus start pose, **degrees** | n/a | Pose import only (no shared v2 dynamics export) | Degrees → radians at boundary | Simulink internal states |
@@ -96,8 +96,8 @@ MuJoCo ↔ Pinocchio quaternion swap example:
 
 | Topic | UpstreamDrift canonical usage | AffineDrift site note |
 | --- | --- | --- |
-| 6D spatial Jacobian rows | **`[ω; v]`** (angular first) | Site [NOTATION](notation.html#screwtwist-notation) uses angular-first `V=(ω,v)` and `W=(n,f)`; monograph passages that use force-first wrenches must permute blocks |
-| Floating-base `v` in canonical-v2 | World linear + **body** angular | Site articles sometimes use all-world or all-body twists without stating the split |
+| 6D spatial Jacobian rows | **`[ω; v]`** (angular, then linear) | [NOTATION](notation.html#screwtwist-notation) uses angular-first `V=(ω,v)` and `W=(n,f)`; a force-first wrench `(f,n)` must be permuted before `WᵀV` |
+| Floating-base `v` in canonical-v2 | **linear then angular:** `[v_world; ω_body]`, then joint rates. This is the reverse block order of `SPATIAL_JACOBIAN_ORDER` and of site twist `V=(ω,v)` | Do not copy an angular-first twist into canonical-v2 `v`, or the linear-first base velocity into a spatial Jacobian |
 | Drake native spatial velocity | Often `[angular; linear]` in Jacobians; joint velocity blocks may differ | Match CC-28 adapter, not a textbook excerpt |
 | Input map in dynamics | UpstreamDrift `SPEC.md` uses **`ẋ = f(x) + g(x)u`** (lowercase **g**) | AffineDrift [NOTATION.md](https://github.com/D-sorganization/AffineDrift/blob/main/NOTATION.md) reserves **G(x)** for the input matrix and warns against lowercase `g(x)` for the map |
 
@@ -115,8 +115,8 @@ is in use.
 | **Impact parameters (ADR-0041 default)** | Z-up; golfer faces **−X**; target **−Y** | Launch-monitor-style club metrics | [`impact_parameters/__init__.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/impact_parameters/__init__.py#L7-L37) |
 | **Ball flight integrator** | Z-up; **+X** forward at azimuth 0; **+Y left** | Trajectory / spin vector | [`flight_models.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/shared/python/physics/flight_models.py#L228-L248) |
 
-**Camera storage convention:** extrinsics are **`T_world_from_camera`** (not world-from-camera
-inversion). OpenCV camera axes: **+z forward, +y down**
+**Camera storage convention:** extrinsics are **`T_world_from_camera`** (not
+`T_camera_from_world`). OpenCV camera axes: **+z forward, +y down**
 ([`cameras.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/motion_capture/reconstruct/cameras.py#L3-L8)).
 AffineDrift [Motion Capture](../articles/technology-motion-capture.html) discusses
 `P = K[R|t]` with world→camera; multiply through the stored direction when fitting UD calibrations.
@@ -177,7 +177,7 @@ reference table** (full NOTATION harmonisation remains out of scope here).
 | World frame | Mix of Z-up ([NOTATION](notation.html)) and Y-up golf articles (`x` target, `y` up) | Z-up canonical-v2; multiple named frames (table above) | Apply fixed axis permutation per source frame; never assume one global site frame |
 | Target / path sign | Several articles: path **right** positive | Impact params: in-to-out positive; SG optimizer: **left** positive lateral | Multiply lateral component by −1 when crossing tables; document handedness |
 | Euler pose | [NOTATION.md](https://github.com/D-sorganization/AffineDrift/blob/main/NOTATION.md#L188-L203) extrinsic Z-Y-X radians | **`canonical-v1` intrinsic XYZ degrees** | Reorder rotation sequence and convert units before Pose Studio import |
-| Spatial 6-vectors | Mix of angular-first, linear-first, and force-first wrenches across books | Suite Jacobian and canonical-v2 base `v`: **angular then linear**; separate wrench policies in biomechanics modules | Permute blocks consistently; check power pairing `WᵀV` |
+| Spatial 6-vectors | Mix of angular-first, linear-first, and force-first stacks | Jacobian and NOTATION `V=(ω,v)`, `W=(n,f)`: **angular then linear**. Canonical-v2 base `v`: **linear then angular** (`[v_world; ω_body]`), the reverse block order of `SPATIAL_JACOBIAN_ORDER` | Permute before `WᵀV`; do not treat canonical-v2 `v` as a spatial twist |
 | Gravity magnitude | Often `9.81` in prose | **`9.80665`** m/s² | Use UD constant when reproducing UD numbers |
 | Camera extrinsics | Textbook `P=K[R|t]` world→camera | Stored **`T_world_from_camera`** | Invert/transpose per [`cameras.py`](https://github.com/D-sorganization/UpstreamDrift/blob/c8814a1b9d120ce382ee1de9a6583bb5ef569a15/src/motion_capture/reconstruct/cameras.py#L3-L8) |
 

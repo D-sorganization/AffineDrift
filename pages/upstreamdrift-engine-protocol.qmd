@@ -30,9 +30,9 @@ every narrative shortcut on this site. All UpstreamDrift evidence links below us
 (re-checked 2026-11-11 for issue #5620).
 
 For array layouts, frames, and quaternion order when moving state between engines, see
-the merged [UpstreamDrift Conventions Reference](upstreamdrift-conventions.html)
-(`pages/upstreamdrift-conventions.qmd`). AffineDrift's programming
-catalog remains [Engines and Runtime Support](../models/programming/engines.html).
+the [UpstreamDrift Conventions Reference](upstreamdrift-conventions.html).
+AffineDrift's programming catalog remains
+[Engines and Runtime Support](../models/programming/engines.html).
 
 ## The `PhysicsEngine` Contract {#physics-engine-contract}
 
@@ -143,7 +143,7 @@ physical sum in every engine.**
 | **Pendulum** | Analytical passive dynamics ([`compute_drift_acceleration`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L245-L268)) | `M⁻¹ τ` | N/A | Teaching models |
 | **Putting green** | Rolling + slope drift ([`shared_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/putting_green/python/shared_engine.py#L216-L220)) | `τ / m` | Rolling resistance in drift | Specialized 2-D ball model |
 | **Simscape adapter** | **Deferred stub** | **Deferred stub** | N/A | Not available ([`adapter.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/simscape/adapter.py#L702-L722)) |
-| **JaxSim** | *Not verified in this pass* | *Not verified in this pass* | — | See UpstreamDrift `docs/engines/jaxsim.md` |
+| **JaxSim** | Unverified at this pin | Unverified at this pin | Unverified at this pin | Unverified at this pin |
 
 **Constrained superposition:** when welds, loops, or contacts participate in forward dynamics, use the
 constraint-aware helpers in
@@ -181,7 +181,7 @@ Always pass **`dt` explicitly** when comparing engines or publishing trajectorie
 | Suite constant | **0.001 s** | `DEFAULT_TIME_STEP` | [`core/constants.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/shared/python/core/constants.py#L99-L101) |
 | MuJoCo golf / myo models | **0.002 s**, RK4 | Per-model `<option timestep="…" integrator="RK4"/>` | e.g. [`golfer.xml`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/models/generated/golfer.xml#L4) |
 | MuJoCo simple pendulum | **0.01 s** | Default MuJoCo integrator | [`simple_pendulum.xml`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/mujoco/models/simple_pendulum.xml#L3) |
-| Pinocchio engine | Uses suite `DEFAULT_TIME_STEP` for stepping; **`integrator="rk4"`** default, **`semi_implicit` optional** | [`PinocchioPhysicsEngine.__init__`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L68-L104) |
+| Pinocchio engine | Uses suite `DEFAULT_TIME_STEP` for stepping | **`integrator="rk4"`** default, **`semi_implicit` optional** | [`PinocchioPhysicsEngine.__init__`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pinocchio/python/pinocchio_physics_engine.py#L68-L104) |
 | OpenSim engine | **`_time_step = 0.01` s** | Simbody manager step | [`opensim_physics_engine.py`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/opensim/python/opensim_physics_engine.py#L83-L83) |
 | Pendulum engine | **0.01 s** if `step(dt=None)` | Analytical RK inside dynamics | [`pendulum_physics_engine.step`](https://github.com/D-sorganization/UpstreamDrift/blob/625a16e6897b88ab29fb5a64c65ecee820dd58f5/src/engines/physics_engines/pendulum/python/pendulum_physics_engine.py#L134-L136) |
 | Drake | Discrete plant per model | Set at URDF/SDF load | Model-dependent |
@@ -229,7 +229,7 @@ Condensed decision hints **from those documents and this commit's code**:
 | Differentiable batched rollouts | **`mjx`** backend | See backend table in `simulation_backends/README.md` |
 | GPU throughput sweeps | **`mjwarp`** backend | Batched rollouts; not faster for a single 2-DoF rollout |
 | Drift/control on Simscape Multibody | **Not available** | Adapter returns deferred stubs |
-| Counterfactuals on JaxSim | *Verify against current manifest* | Capability taxonomy lists partial contact / counterfactual gaps |
+| Counterfactuals on JaxSim | Unverified at this pin | Unverified at this pin |
 
 AffineDrift's companion [Engines and Runtime Support](../models/programming/engines.html)
 lists provider support **tiers** only; this page is the code-grounded supplement.
@@ -307,7 +307,5 @@ implementation; **unverified in this pass:** full lower-body `SPEC.md` walk-thro
 
 - [Programming Companion](../models/models.html) — artifact-pinned catalog boundary
 - [Models: Pendulum](../models/models-pendulum.html) — AffineDrift entry pointing at UpstreamDrift pendulum assets
-
-Refs #5620
 
 
