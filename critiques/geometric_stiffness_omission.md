@@ -50,7 +50,7 @@ The transverse-only placement $p=R(\theta)[\phi\eta,-s]$ lengthened the arc at $
 
 ### 2. Inextensible foreshortening and stiffening
 
-The benchmark now uses $u(s)=\tfrac12\eta^2\int_0^s\phi'(\xi)^2\,d\xi$ and body points $[\phi\eta,-(s-u)]$. That yields $J(\eta)=J_0-\tfrac{A}{3}\eta^2$ and replaces the centripetal softening term with $\tfrac{A}{3}\eta\dot\theta^2$ stiffening in @eq-eta_planar, plus the leading $O(\eta)$ axial gravity correction from lowered distributed mass height.
+The benchmark now uses $u_{\mathrm{ax}}(s)=\tfrac12\eta^2\int_0^s\phi'(\xi)^2\,d\xi$ and body points $[\phi\eta,-(s-u_{\mathrm{ax}}(s))]$. That yields $J(\eta)=J_0-\tfrac{A}{3}\eta^2$ and replaces the centripetal softening term with $\tfrac{A}{3}\eta\dot\theta^2$ stiffening in @eq-eta_planar, plus the leading $O(\eta^2)$ axial gravity correction from lowered distributed mass height.
 
 ### 3. Executable verification
 
