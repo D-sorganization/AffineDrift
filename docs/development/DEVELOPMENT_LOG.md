@@ -598,12 +598,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5621
 - **Branch:** cursor/golf-model-maps-5621-d77a
-- **PR:** #5659, #5698, #5689
+- **PR:** #5659, #5698, #5689, #5759
 - **Paths:** see #5659
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-13 (`1b75012c`; collated from changes/5621-use-defusedxml-in-golf-model-map-to-sati.md)
+- **Last verified:** 2026-11-26 (`26800130`; collated from changes/5621-lead-trail-sign.md)
 - **Summary:** MuJoCo golf model-map reference with vendored MJCF snapshots and generator (slice 1).
-- **Next step:** Follow-up slices for Simscape golfer-scapula, joint-angle conventions, and grasp split.
+- **Next step:** Review PR #5759 and verify CI; operator handles arming.
 
 ### DL-#5619 · Add UpstreamDrift Conventions Reference Page (Pinned C8814a1b9d) With Nav Entry
 
