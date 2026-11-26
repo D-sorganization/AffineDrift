@@ -263,17 +263,26 @@ def test_superposition_theorem_double_pendulum():
     result = _field(block, "Result")
 
     assert "gravity" in given.lower(), "Given line must state whether gravity is included"
+    assert "mid-link" in given.lower()
+    assert "absolute" in given.lower()
+    assert re.search(r"l_1=l_2=[^$]*\$\s*m\b", given), "lengths must be in metres, not kilograms"
+    assert re.search(r"l_1=l_2=[^$]*\$\s*kg", given) is None
+    sha = _capture(r"commit `([0-9a-f]{40})`", given)
+    assert sha == "3673c2e9b2b3c6d1f1115c68dcf474a452da15f2"
 
-    common = float(_capture(r"m_1=m_2=l_1=l_2=(-?\d+\.?\d*)", given))
+    mass = float(_capture(r"m_1=m_2=(-?\d+\.?\d*)", given))
+    length = float(_capture(r"l_1=l_2=(-?\d+\.?\d*)", given))
     q = [float(v) for v in _numbers(_capture(r"\$q=\(([^)]*)\)\$", given))]
     qd = [float(v) for v in _numbers(_capture(r"\\dot q=\(([^)]*)\)", given))]
     tau1 = [float(v) for v in _numbers(_capture(r"\\tau_1=\(([^)]*)\)", given))]
     tau2 = [float(v) for v in _numbers(_capture(r"\\tau_2=\(([^)]*)\)", given))]
 
-    mass_matrix = double_pendulum_mass_matrix(np.array(q), common, common, common, common)
-    bias = double_pendulum_coriolis(np.array(q), np.array(qd), common, common, common) @ np.array(
-        qd
-    )
+    mass_matrix = double_pendulum_mass_matrix(np.array(q), mass, mass, length, length)
+    bias = double_pendulum_coriolis(np.array(q), np.array(qd), mass, length, length) @ np.array(qd)
+    printed_mass = _numbers(_capture(r"\\begin\{bmatrix\}(.*?)\\end\{bmatrix\}", given))
+    _assert_tokens_match(mass_matrix.reshape(-1), printed_mass)
+    printed_bias = _numbers(_capture(r"C\(q,\\dot q\)\\dot q=\(([^)]*)\)", given))
+    _assert_tokens_match(bias, printed_bias)
 
     def phi(tau: list[float]) -> np.ndarray:
         return np.linalg.solve(mass_matrix, np.asarray(tau, dtype=float) - bias)

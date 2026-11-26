@@ -125,9 +125,14 @@ def test_prose_and_housekeeping_corrections():
     assert "only" in content.lower() and "\\tau" in content
     # 7: playground push notes single instant vs buildup over time
     assert "single instant" in content.lower()
-    # 8: downswing duration cited or hedged, not presented as an unsourced fact
-    assert "fradkin2004" in content or "hellstrom2009" in content
-    assert "exact segment definitions" in content.lower() or "vary" in content.lower()
+    # 8: downswing duration cites Choi et al. 2014 Table 1, not an unsourced range
+    assert "Cheon2014GolfJerk" in content
+    assert "0.307" in content
+    assert "39.2" in content
+    assert "230 to 260" not in content
+    assert "50 to 70 mph" not in content
+    assert "illustrative assumption of about fifty milliseconds" in content
+    assert "schematic — not simulation output" in content
     # 9: Karl lead-in, pointwise qualifier, verified date, for a given model
     assert "mass times acceleration equals the forces, split into two piles" in content.lower()
     assert "pointwise zero-torque counterfactual" in content.lower()
