@@ -86,7 +86,9 @@ def build_ztcf_trajectory_divergence(output_path: Path) -> None:
         )
         axis.set_xlabel("Club tip $x$ (m)")
         axis.set_ylabel("Club tip $y$ (m)")
-        axis.set_title("Schematic: ZTCF Branch Paths From Pinned GolfModel Run", fontweight="bold")
+        axis.set_title(
+            "Teaching-Model ZTCF Branch Paths, Not an UpstreamDrift Export", fontweight="bold"
+        )
         axis.legend(loc="best", fontsize=8.5)
         _save(fig, output_path)
 

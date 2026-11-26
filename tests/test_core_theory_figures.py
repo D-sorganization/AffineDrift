@@ -175,3 +175,31 @@ def test_issue_5590_figure_embeds_declare_pin_provenance(fig_name: str, pin_path
             f"{fig_name} in {article} must cite {pin_path} in caption or fig-alt, "
             "or declare schematic in both caption and fig-alt"
         )
+
+
+_UD_REPLACEMENT = (
+    "Replace with a pinned UpstreamDrift simulation output and provenance record "
+    "once an admitted two-handed export exists."
+)
+
+
+@pytest.mark.parametrize("fig_name", list(ISSUE_5590_PINNED_FIGURES))
+def test_issue_5590_simulation_embeds_name_the_upstream_replacement(fig_name: str) -> None:
+    """Local integrations stay labelled as such until an admitted UD export exists."""
+    embeds = _iter_article_embeds(fig_name)
+    assert embeds, fig_name
+    for article, _caption, alt_text in embeds:
+        assert _UD_REPLACEMENT in alt_text, f"{fig_name} in {article} alt lacks the UD replacement"
+        assert (
+            "not simulation output" not in alt_text.lower()
+        ), f"{fig_name} in {article} is integrator output; do not call it a non-simulation"
+
+
+def test_ztcf_path_title_is_teaching_model_not_a_false_schematic() -> None:
+    """The committed path figure must not call an RK4 trace a schematic."""
+    title = "Teaching-Model ZTCF Branch Paths, Not an UpstreamDrift Export"
+    svg = (FIGURES_DIR / "fig_ztcf_trajectory_divergence.svg").read_text(encoding="utf-8")
+    source = (REPO_ROOT / "scripts/core_theory_figures/ztcf.py").read_text(encoding="utf-8")
+    assert title in svg
+    assert title in source
+    assert "Schematic: ZTCF" not in svg

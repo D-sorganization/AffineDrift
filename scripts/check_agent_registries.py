@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate agent convention and canonical-parameter JSON registries (#5596).
+"""Validate agent convention, parameter, and symbol JSON registries (#5596).
 
 python3 -m scripts.check_agent_registries
 python3 -m scripts.check_agent_registries --check
@@ -18,6 +18,11 @@ from src.tools.agent_registries import (
     PARAMETERS_PATH,
     validate_registry_documents,
 )
+from src.tools.notation_symbol_registry import (
+    SYMBOL_REGISTRY_PATH,
+    assert_matches_notation,
+    load_symbol_registry,
+)
 
 logger = logging.getLogger(__name__)
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -25,6 +30,14 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 def _load(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _validate_symbol_registry() -> None:
+    """Load the reserved symbol registry and require NOTATION.md support."""
+    text = SYMBOL_REGISTRY_PATH.read_text(encoding="utf-8")
+    registry = load_symbol_registry(text)
+    notation = (REPO_ROOT / "NOTATION.md").read_text(encoding="utf-8")
+    assert_matches_notation(registry, notation)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -43,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
             parameters_payload=_load(PARAMETERS_PATH),
             root=REPO_ROOT,
         )
+        _validate_symbol_registry()
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         logger.error("%s", exc)
         return 1
@@ -51,6 +65,7 @@ def main(argv: list[str] | None = None) -> int:
         CONVENTIONS_PATH.relative_to(REPO_ROOT),
         PARAMETERS_PATH.relative_to(REPO_ROOT),
     )
+    logger.info("symbol registry valid: %s", SYMBOL_REGISTRY_PATH.relative_to(REPO_ROOT))
     return 0
 
 
