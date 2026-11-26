@@ -855,7 +855,7 @@ Quick lookup table for symbols used in the project:
 **Project-specific:**
 
 - Physics of Golf (Chapters 1-31) — Foundational reference
-- Geometry of Motion (Volumes 0–V) — Advanced mechanics and implementation companion
+- Geometry of Motion (Volumes 0-1) — Advanced mechanics
 - Articles on screw theory, Euler angles, quaternions
 
 ---
