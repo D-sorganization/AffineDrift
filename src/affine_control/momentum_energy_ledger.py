@@ -1,9 +1,4 @@
-"""Planar one-segment momentum and energy ledger.
-
-``js/momentum-energy-ledger.js`` is the mirror. Both use
-``tests/fixtures/momentum_energy_ledger_analytic.json``. y points up.
-``gravity`` is downward acceleration. External force acts at the centre of mass.
-"""
+"""Planar one-segment momentum and energy ledger. y is up; gravity is downward."""
 
 from __future__ import annotations
 
@@ -25,6 +20,7 @@ _HALF = 0.5
 
 
 def _finite(value: object, name: str) -> float:
+    """Return a finite float. Booleans and non-numbers are rejected."""
     if isinstance(value, bool) or not isinstance(value, int | float):
         raise ValueError(f"{name} must be a finite number")
     number = float(value)
@@ -34,16 +30,17 @@ def _finite(value: object, name: str) -> float:
 
 
 def _record(payload: object, fields: tuple[str, ...], label: str) -> dict[str, float]:
+    """Copy the named fields as finite floats."""
     if not isinstance(payload, Mapping):
         raise ValueError(f"{label} must be an object")
     for field in fields:
         if field not in payload:
             raise ValueError(f"{label} missing {field}")
-    values = payload
-    return {field: _finite(values[field], f"{label}.{field}") for field in fields}
+    return {field: _finite(payload[field], f"{label}.{field}") for field in fields}
 
 
 def _segment(payload: object) -> dict[str, float]:
+    """Validate positive mass and non-negative centre-of-mass inertia."""
     state = _record(payload, _STATE_FIELDS, "state")
     if state["mass"] <= 0.0:
         raise ValueError("mass must be positive")
@@ -53,6 +50,7 @@ def _segment(payload: object) -> dict[str, float]:
 
 
 def _gravity(gravity: object) -> float:
+    """Validate a non-negative downward gravitational acceleration."""
     value = _finite(gravity, "gravity")
     if value < 0.0:
         raise ValueError("gravity must be non-negative")
@@ -60,6 +58,7 @@ def _gravity(gravity: object) -> float:
 
 
 def _alpha(inertia: float, torque: float) -> float:
+    """Return angular acceleration. A point mass accepts only zero torque."""
     if inertia == 0.0:
         if torque != 0.0:
             raise ValueError("torque_about_com requires positive inertia")
@@ -68,11 +67,7 @@ def _alpha(inertia: float, torque: float) -> float:
 
 
 def segment_ledger(state: object, gravity: object) -> dict[str, float]:
-    """Ledger for one segment: mass > 0, inertia >= 0, gravity >= 0.
-
-    Mechanical energy is kinetic plus potential. Origin angular momentum is
-    the centre-of-mass orbit plus spin. Kinetic energy uses König's split.
-    """
+    """Ledger for one segment. Kinetic energy uses König's split."""
     segment = _segment(state)
     weight = _gravity(gravity)
     mass = segment["mass"]
@@ -101,6 +96,7 @@ def segment_ledger(state: object, gravity: object) -> dict[str, float]:
 def _motion(
     state: dict[str, float], wrench: dict[str, float], gravity: float, duration: float
 ) -> dict[str, float]:
+    """Integrate constant linear and angular acceleration in closed form."""
     acceleration_x = wrench["force_x"] / state["mass"]
     acceleration_y = wrench["force_y"] / state["mass"] - gravity
     alpha = _alpha(state["inertia_about_com"], wrench["torque_about_com"])
@@ -119,6 +115,7 @@ def _motion(
 
 
 def _integral(origin: float, rate: float, acceleration: float, duration: float) -> float:
+    """Integrate origin + rate*t + acceleration*t^2/2 from zero to duration."""
     half_dt2 = _HALF * duration * duration
     return origin * duration + rate * half_dt2 + acceleration * duration * half_dt2 / 3.0
 
@@ -126,6 +123,7 @@ def _integral(origin: float, rate: float, acceleration: float, duration: float) 
 def _balance(
     state: dict[str, float], wrench: dict[str, float], gravity: float, motion: dict[str, float]
 ) -> dict[str, float]:
+    """Return the origin impulse and the work of the non-gravitational wrench."""
     duration = motion["duration"]
     total_force_x = wrench["force_x"]
     total_force_y = wrench["force_y"] - state["mass"] * gravity
@@ -145,6 +143,7 @@ def _balance(
 
 
 def _carried_state(state: dict[str, float], motion: dict[str, float]) -> dict[str, float]:
+    """Copy the integrated kinematics onto the original mass and inertia."""
     carried = {field: motion[field] for field in _STATE_FIELDS if field in motion}
     carried["mass"] = state["mass"]
     carried["inertia_about_com"] = state["inertia_about_com"]
@@ -154,10 +153,7 @@ def _carried_state(state: dict[str, float], motion: dict[str, float]) -> dict[st
 def advance_constant_wrench(
     state: object, wrench: object, gravity: object, duration: object
 ) -> dict[str, dict[str, float]]:
-    """Advance under a constant COM wrench. Duration > 0; a point mass has zero torque.
-
-    Postcondition: reported impulses and work equal the ledger change.
-    """
+    """Advance under a constant centre-of-mass wrench. Duration must be positive."""
     segment = _segment(state)
     loads = _record(wrench, _WRENCH_FIELDS, "wrench")
     weight = _gravity(gravity)
