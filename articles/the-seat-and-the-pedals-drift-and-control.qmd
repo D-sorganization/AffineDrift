@@ -1,0 +1,119 @@
+---
+title: "The Seat and the Pedals: A Layman's Guide to Drift and Control in the Golf Swing"
+subtitle: "Why Chasing Inverse-Dynamics Forces Is Like Trying to Drive by Pushing on the Seatback"
+description: "A plain-language introduction to drift and control in the golf swing, built on a car-seat and pedals analogy, and to why separating them takes a forward model."
+author: "Dieter Olson"
+date: "2026-11-26"
+date-source: "initial-publication-record"
+date-modified: "2026-11-26"
+last-reviewed: "2026-11-26"
+canonical: "/articles/the-seat-and-the-pedals-drift-and-control.html"
+status: "available"
+audience-level: "intro"
+evidence-rung: "mathematical-identity"
+summary-plain: "Inverse dynamics measures how hard the swing pushes on the body, like pressure on a car seat. It does not show the pedals. A forward physics model splits each instant into drift, what momentum and gravity do anyway, and control, what the declared torques add."
+abstract: "A layman's introduction to drift and control in the golf swing. Seatback pressure in a car is a real, measurable consequence of the ride, not the lever that drives it. Inverse dynamics estimates net joint torques in the same spirit, and many muscle combinations can produce the same estimate. A forward model of the golfer and club allows two counterfactual checks at one instant, which separate momentum-driven drift from declared control, within the stated model."
+key-takeaways:
+  - "Seatback pressure is a real consequence of the ride, not the control you drive with; net joint torque from inverse dynamics plays the same role."
+  - "Many different muscle combinations can produce the same estimated net joint torque, so that estimate alone cannot reveal muscle recruitment or intent."
+  - "At one instant, in a stated model, acceleration is drift (what momentum, gravity, and passive loads do anyway) plus control (what declared torques add); whole swings cannot be added this way."
+  - "Finding the pedals requires a forward model of the car, and the split is a model-conditioned diagnostic, not a direct measurement of the golfer."
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    number-sections: false
+categories:
+  - foundations
+  - layman-guide
+---
+
+The light turns green. You feel the seatback press you forward. How far did the driver press the gas?
+
+You cannot tell from the seat alone. A light touch on a steep downhill could give the same push as a hard press on a flat road. The pressure on your back is real, and you can measure it with a pad. It still does not tell you what the driver's foot did.
+
+Now suppose someone coached you to drive better by watching only that pad. "At the two-second mark, your seatback force is too low. Push harder into the seat!" You would know at once that something was backwards. Leaning into the seat does not speed up the car. The force on the seat is what the car's motion does to you. It is not the control you drive with.
+
+Much of golf biomechanics looks at the seatback. It records the swing, computes the forces and torques consistent with it, and then asks players to produce more of them. The numbers are useful, and this article does not dismiss them. It asks a plainer question: what do they tell us, and what is still missing?
+
+The founding picture for this article is simple. When you drive, you are pressed against the back of the seat. Press the gas and you are pushed harder into it. Press the brake and the push eases. Looking at the forces between your back and the seat is like looking at inverse dynamics. What we want to look at instead is the gas pedal and the brake. To do that we need a model of the car and how it moves energy around.
+
+## The Feeling in the Seat
+
+Picture the seat first. A pad between you and the cushion reads a number every millisecond. When the car surges, the number rises. When you brake, it falls. When you coast at a steady speed on a flat road, it settles to something small and steady.
+
+That pad measures contact, and the contact is a consequence. The engine, the road, the slope, and the driver's foot all shaped how the car moved. The seat merely reports how your body was pushed along with it.
+
+This is the first thing to hold on to. A measured force can be perfectly real and still not be the thing you control. If you want to change how the car moves, you work the pedals and the wheel, not the seatback.
+
+## What Inverse Dynamics Estimates
+
+Golf researchers record a swing with cameras and force plates. They then run a calculation called inverse dynamics [@winter2009biomechanics; @zatsiorsky2002kinetics]. It starts from what was observed, adds the external loads such as the ground push, and uses a model of the body's segments to work backward. The output is an estimated net torque at each joint: the overall turning effect that would be needed to produce the motion that was seen.
+
+For a first look at how to read those curves, see [Interpreting Inverse Dynamics](inverse-dynamics.html). For what can and cannot be inferred from them in a nonlinear system, see [Inference From Inverse Dynamics](inverse-dynamics-inference.html).
+
+Two cautions follow, and both come straight from the car.
+
+First, the estimate is a blend. Different hill slopes, speeds, and pedal pressures can produce the same pressure on your back. In the same way, different swing mechanics can produce similar net-torque curves. The calculation tells you the total turning effect at that instant. It does not tell you how much came from momentum and gravity already in the system and how much came from effort applied right now.
+
+Second, many muscle combinations produce the same net torque. At a joint, several muscles can pull in different directions at once, and some pairs can trade off against each other. The same net turning effect can be reached by quite different recruitment patterns [@zajac1993muscle]. So a net torque cannot tell you which muscles fired, how hard, or what the golfer intended.
+
+None of this makes the estimate useless. It can feed a forward model, as later sections show. Muscle recruitment and intent remain unknown from that calculation alone.
+
+## Drift and Control at One Instant
+
+To move from the seat to the pedals, split the physics into two ideas.
+
+**Drift** is what the car does when your feet are off the pedals. You are at sixty miles an hour, you lift off both gas and brake, and the car does not freeze. Momentum carries it. Gravity speeds it downhill and slows it uphill. The road and suspension keep guiding it.
+
+In a golf swing, drift is a "what-if" diagnostic, not a claim that the golfer goes limp. It asks: if the modeled driving torques were switched off at this exact instant of the downswing, where would the motion already built up in torso, arms, and club, plus gravity, carry the swing next? Near impact a large share of how the clubhead whips can be drift, because energy stored earlier is flowing outward along the chain of body segments.
+
+**Control** is what the feet and hands do. It is the active input added on top of drift to speed up, slow down, or redirect the motion. In the swing it is the declared torque across the joints. Gas, brake, and steering are all driver inputs. The companion article [Drift Is the Past, Control Is the Present](drift-is-the-past-control-is-the-present.html) follows the steering wheel on a mountain road. This one follows the pedals, so we will not repeat that road.
+
+At a single instant, in a stated model, the total acceleration is the sum of the two:
+
+::: {.callout-note collapse="true" title="In symbols"}
+At one state, the acceleration splits as $a_{\text{total}} = a_{\text{drift}} + a_{\text{control}}$. Here $a_{\text{drift}}$ comes from the model's autonomous terms (gravity, motion-dependent coupling, and any passive loads kept out of the torque), and $a_{\text{control}}$ comes from the declared joint torques. This is the pointwise form of $\dot{x}=f(x)+G(x)u$.
+:::
+
+Two what-if checks make the split concrete. Both are covered in detail in [The Zero-Torque Counterfactual Family](zero-torque-counterfactual.html), and the underlying framework is laid out in [Control-Affine Foundations](theory-part1.html).
+
+- **The coasting check (zero-torque counterfactual, or ZTCF).** Set the declared torque to zero at this instant and keep everything else: gravity, the motion-dependent coupling between segments, and any passive loads that are retained in the model. How much clubhead acceleration do you get "for free"?
+- **The pedal check (zero-velocity counterfactual, or ZVCF).** Keep the posture and the specified torque, set every velocity to zero, and switch gravity off so that it is counted once and not twice. Where are the active inputs pushing right now?
+
+Three warnings keep this honest.
+
+- The addition holds at one state only. You cannot add the drift curve and the control curve over a whole swing to get the swing, because every control input changes the posture and speed that tomorrow's drift grows from.
+- Control is posture-dependent. The same torque can produce a different acceleration of the club in a different posture, just as the same pedal pressure does different things in a different gear.
+- The arrows add at an instant. They are a bookkeeping device for a model, not a movie of cause and effect.
+
+## Why Finding the Pedals Requires a Model of the Car
+
+With only a pressure pad on the seat, you cannot say how much of the push came from the engine and how much from the slope. To connect pedals to motion you need a model of the car: how pressing the gas becomes engine torque, how the transmission and axles deliver it to the tires, how the tires push on the road, and how the car's mass and momentum carry energy forward when you coast.
+
+The golf swing works the same way. To separate drift from control you need a forward physics model of the golfer and club [@sprigings2000insight; @nesbit2005three]. It encodes the segments, their masses and joints, the club's inertia, and how energy moves from the ground up through torso, arms, and hands into the clubhead. Run forward, it makes the two checks above computable at every millisecond, and it makes questions testable that the seat pad alone cannot even pose.
+
+A model is only as good as its parts. A car simulator with a poor engine or tire model gives a confident but wrong answer, and so does a swing model with poor segment masses or a poor club. The split is a model-conditioned diagnostic. It must be checked against real swing measurements before anyone leans on it.
+
+::: {.callout-caution title="Where the Analogy Stops"}
+A car has a single driver and a few pedals, and its seat is outside the engine. A golfer is a chain of linked body parts, and the one who "pushes" is the same body that is being pushed. In the model, a torque at one joint also accelerates the other links, so the same torque can do different things in different postures. Declared torque in the model is not the same as measured muscle effort. And "zero torque" means the model's declared input is set to zero. It does not mean any real muscle goes quiet, so no one can run the check on a living golfer. The counterfactual is a calculation inside a stated model.
+:::
+
+The formal limits of that claim are stated once, here:
+
+{{< include ../_includes/control-affine-attribution-boundary.qmd >}}
+
+For the full registry of what this site claims and at what evidence level, see [the Core Theses Registry](core-theses-registry.html). For the whole story from foundations to application, the series begins with [Theory Series: Consolidated Edition](affine-nature-golf-swing.html).
+
+## What a Golfer or Coach Can Ask Next
+
+Once you stop confusing the seatback with the pedals, the useful questions change.
+
+1. **Is this force spike something to produce, or something to understand?** A large torque or force peak on a graph does not tell you to push harder there. It may simply be what good drift set up earlier, like a seat pressing back as the car surges.
+2. **How much of the clubhead's acceleration here is coming "for free"?** If drift supplies most of it at a given moment, extra effort at that moment may be spent fighting the system's own motion.
+3. **When does the gas pedal actually work?** In some postures a torque accelerates the clubhead strongly. In others, pressing harder mostly loads the seat. A model can show which is which, for that model.
+4. **What did the earlier control do for the later drift?** What happens now is not independent of what was done a moment ago, because drift is built from earlier positions and speeds.
+
+These are questions to investigate, not verdicts. Each answer depends on the model and on how well it matches the golfer in front of you.
+
+Inverse dynamics showed how hard our back is pressed into the seat. A forward model of drift and control lets us start to look at the pedals. And that leaves a question a coach can actually go and investigate: what would the club do at this instant if the modeled wrist torque vanished?
