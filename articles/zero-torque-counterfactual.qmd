@@ -349,7 +349,7 @@ For an unconstrained second-order mechanical model with generalized coordinates 
 
 $$a_{\mathrm{ZVCF}}(q,\tau)=M(q)^{-1}\tau.$$
 
-This evaluates the acceleration produced when velocities and gravity are turned off, matching the original MATLAB `SCRIPT_ZVCF_GENERATOR.m` definition. Concurrently, the **Zero-Torque Counterfactual (ZTCF)** isolates autonomous drift:
+This is the control-only operand: the acceleration the applied control alone produces at the state, matching the original MATLAB `SCRIPT_ZVCF_GENERATOR.m` definition, whose zero-velocity, no-gravity run was only a way to compute that operand. Velocity coupling, gravity and any shaft elastic preload belong to drift (ZTCF), never to ZVCF. Concurrently, the **Zero-Torque Counterfactual (ZTCF)** isolates autonomous drift:
 
 $$a_{\mathrm{ZTCF}}(q,\dot q)=M(q)^{-1}\left(-C(q,\dot q)\dot q - g(q) - \tau_{\mathrm{passive}}\right).$$
 
@@ -362,7 +362,7 @@ $$a(q,\dot q,\tau)=a_{\mathrm{ZTCF}}(q,\dot q)+a_{\mathrm{ZVCF}}(q,\tau).$$
 1. **Pointwise Exactness**: The decomposition $a = a_{\mathrm{ZTCF}} + a_{\mathrm{ZVCF}}$ is an exact linear identity at any instantaneous state $(q, \dot q)$ because inverse inertia linearly distributes generalized forces: $M(q)^{-1}(\tau_{\mathrm{drift}} + \tau) = M(q)^{-1}\tau_{\mathrm{drift}} + M(q)^{-1}\tau$.
 2. **Trajectories Do Not Add**: Forward-integrated counterfactual trajectories do **not** generally sum: $x(t) \neq x_{\mathrm{ZTCF}}(t) + x_{\mathrm{ZVCF}}(t)$. Because nonlinear dynamics couple position, velocity, and torque over time ($\dot x = f(x) + G(x)u$), counterfactual states diverge onto different trajectories where Coriolis, centrifugal, and gravitational forces are evaluated at different configurations.
 3. **Control-Affine Mapping and IAA**: In first-order state-space form $\dot x = f(x) + G(x)u$, $a_{\mathrm{ZTCF}}$ maps to the autonomous drift vector field $f(x)$ while $a_{\mathrm{ZVCF}}$ maps to the control vector field $G(x)u$. In biomechanical Induced Acceleration Analysis (IAA), this corresponds to partitioning total instantaneous acceleration into autonomous contributions (inertial velocity coupling and gravity) and actuator-induced accelerations without double-counting static biases.
-4. **Historical Naming Note**: Earlier AffineDrift revisions (notably AD Decision 4 / UD #11553) and some literature applied the label "ZVCF" to the static gravity-and-configuration-only slice ($u=0, \dot q=0$). Under the restored canonical convention matching MATLAB `SCRIPT_ZVCF_GENERATOR.m`, ZVCF designates the control component ($M(q)^{-1}\tau$), while the gravity-only evaluation is termed the static or zero-velocity zero-torque acceleration.
+4. **Historical Naming Note**: Earlier AffineDrift revisions (notably AD Decision 4 / UD #11553) and some literature applied the label "ZVCF" to the static gravity-and-configuration-only slice ($u=0, \dot q=0$). Under the restored canonical convention matching MATLAB `SCRIPT_ZVCF_GENERATOR.m`, ZVCF designates the control component ($M(q)^{-1}\tau$), while the gravity-only evaluation is termed the **gravity-only static acceleration**, $-M(q)^{-1}g(q)$ at $\dot q=0$, $\tau=0$ (also called the zero-velocity zero-torque acceleration). It is not ZVCF. Shaft elastic preload is excluded from ZVCF in the same way: it is part of drift. See the [counterfactual taxonomy table](/articles/proximal-distal-a-journey-through-the-swing.html#tbl-counterfactual-taxonomy) for how these comparisons differ.
 :::
 
 ### Practical Considerations
