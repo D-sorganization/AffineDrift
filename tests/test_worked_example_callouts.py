@@ -121,6 +121,12 @@ def test_theory_part1_spatial_inertia():
 
 
 def test_theory_part2_pointwise_ztcf_sample():
+    """The published triple is the 3D block ``a_d(x(t_b))``, recomputed from src.
+
+    Preconditions: the callout states a configuration and a result triple.
+    Postcondition: that triple matches ``drift_acceleration`` and is labeled
+    ``a_d``, the acceleration block of the 6D field ``f(x)``.
+    """
     block = _callout_block("theory-part2.qmd")
     given = _field(block, "Given")
     result = _field(block, "Result")
@@ -130,8 +136,10 @@ def test_theory_part2_pointwise_ztcf_sample():
 
     computed = SEGMENTS.drift_acceleration(np.deg2rad(q_deg), np.array(qd))
 
-    result_tokens = _numbers(_capture(r"f\(x\(t_b\)\)\\approx\(([^)]*)\)", result))
+    result_tokens = _numbers(_capture(r"a_d\(x\(t_b\)\)\\approx\(([^)]*)\)", result))
     _assert_tokens_match(computed, result_tokens)
+    assert "exactly the pointwise sample $f(x(t_b))$" not in block
+    assert "$a_d(x(t_b))$" in block
 
 
 def test_theory_part3_constrained_acceleration_map():

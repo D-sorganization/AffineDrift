@@ -175,6 +175,10 @@ CH31 = (
     POG / "quarto" / "ch31_swing_plane_launch.qmd",
     POG / "chapters" / "ch31_swing_plane_launch.tex",
 )
+CH23 = (
+    POG / "quarto" / "ch23_dof_urdf_models.qmd",
+    POG / "chapters" / "ch23_dof_urdf_models.tex",
+)
 
 
 @pytest.mark.parametrize("path", CH18)
@@ -231,3 +235,25 @@ def test_ch31_sensitivity_example_and_exercises_use_w_face(path: Path) -> None:
     assert r"constant $w_{\mathrm{face}}$" in text
     for bare in (r"$w=0.76$", "constant $w$", r"\,w,", r"(1-w)"):
         assert bare not in text, bare
+
+
+@pytest.mark.parametrize("path", CH23)
+def test_ch23_mass_metric_projector_is_not_a_null_basis(path: Path) -> None:
+    """The square projector onto ker J is P_M; N stays a null basis."""
+    text = path.read_text(encoding="utf-8")
+    assert r"P_M=I-\bar J J" in text
+    assert r"JP_M=0" in text
+    assert r"P_M^T\tau_0" in text
+    assert r"JM^{-1}P_M^T=0" in text
+    assert "mass-metric projector" in text
+    assert "null-space basis" in text
+    assert r"N=I-\bar J J" not in text
+    assert r"Construct $\bar J$, $N$ and $N^T$" not in text
+    assert r"Construct $\bar J$, $P_M$ and $P_M^T$" in text
+
+
+def test_notation_names_the_ch23_mass_metric_projector() -> None:
+    """NOTATION.md records the Chapter 23 mass-metric projector."""
+    text = NOTATION.read_text(encoding="utf-8")
+    assert "Physics of Golf Mass-Metric Projector" in text
+    assert "**$P_M$**" in text

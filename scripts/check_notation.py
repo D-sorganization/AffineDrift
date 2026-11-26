@@ -42,6 +42,11 @@ BANNED: tuple[tuple[str, str, str], ...] = (
         "equation of motion uses uppercase G for the gravity load",
         "lowercase g or g(q) for the gravity generalized-force vector per NOTATION.md",
     ),
+    (
+        r"N=I-\\bar J J",
+        "dynamically consistent projector is written as null basis N",
+        "P_M=I-\\bar J J, the mass-metric projector P_W with W=M (NOTATION.md)",
+    ),
 )
 
 COMPILED = tuple((re.compile(pattern), rule, fix) for pattern, rule, fix in BANNED)

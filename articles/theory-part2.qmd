@@ -19,7 +19,7 @@ summary-plain: "This article sets up two test baselines: zero torque and zero sp
 abstract: "This article develops the Zero Torque Counterfactual (ZTCF) family and Zero Velocity Counterfactual (ZVCF) as model-conditioned diagnostic tools. By evaluating instantaneous vector fields under zero torque (drift) versus control actuation (ZVCF), it attributes acceleration outcomes to drift versus control without biological overclaims."
 key-takeaways:
   - "The ZTCF family simulates system evolution when all actuator inputs are set to zero."
-  - "ZVCF isolates the control component ($M(q)^{-1}\tau$) with velocity and gravity off, matching the control-affine input channel."
+  - "ZVCF isolates the control component ($M(q)^{-1}\\tau$) with velocity and gravity off, matching the control-affine input channel."
   - "Counterfactual trajectories reveal control attribution while remaining bounded by model authority."
 caveats:
   evidence-level: "Theory (Mathematical Identity)"
@@ -114,9 +114,9 @@ A time-dependent retained load or stiffness schedule requires $f(t,x)$ and a two
 **Steps:**
 
 1. Call `SEGMENTS.drift_acceleration(q, qd)` with `q = deg2rad((60, -30, -20))` and `qd = (12, -18, -25)`.
-2. This solves $M(q)\ddot q=-h(q,\dot q)$ for the retained bias load $h$ (Coriolis plus gravity) — exactly the pointwise sample $f(x(t_b))$ defined above.
+2. This solves $M(q)\ddot q=-h(q,\dot q)$ for the retained bias load $h$ (Coriolis plus gravity). The returned 3-vector is the acceleration block $a_d(x(t_b))$ of the 6D pointwise sample $f(x)=(\dot q,\ a_d)$.
 
-**Result:** $f(x(t_b))\approx(-118.58,\ 70.47,\ 134.83)$ rad/s$^2$ — the zero-torque acceleration at this one achieved state, not a forecast of subsequent motion.
+**Result:** $a_d(x(t_b))\approx(-118.58,\ 70.47,\ 134.83)$ rad/s$^2$ — the zero-torque acceleration at this one achieved state, not a forecast of subsequent motion.
 
 Computed by `src/affine_control/golf_model.py::GolfModel.drift_acceleration` (documented as "the pointwise ZTCF acceleration"); checked against this page by `tests/test_worked_example_callouts.py::test_theory_part2_pointwise_ztcf_sample`.
 :::
