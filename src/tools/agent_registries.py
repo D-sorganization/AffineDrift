@@ -55,7 +55,7 @@ def _load_schema(path: Path) -> dict[str, Any]:
     return cast(dict[str, Any], json.loads(path.read_text(encoding="utf-8")))
 
 
-def _validate_schema(instance: object, schema_path: Path, label: str) -> None:
+def validate_json_schema(instance: object, schema_path: Path, label: str) -> None:
     """Reject registry documents that violate the supplied JSON Schema."""
     validator = Draft202012Validator(_load_schema(schema_path), format_checker=FormatChecker())
     errors = sorted(validator.iter_errors(instance), key=lambda err: list(err.absolute_path))
@@ -144,8 +144,8 @@ def validate_registry_documents(
     """Validate both registries against JSON Schema and semantic contracts."""
     conv_schema = root / "schemas/agent-conventions-v1.schema.json"
     param_schema = root / "schemas/canonical-parameters-v1.schema.json"
-    _validate_schema(conventions_payload, conv_schema, "conventions.json")
-    _validate_schema(parameters_payload, param_schema, "canonical_parameters.json")
+    validate_json_schema(conventions_payload, conv_schema, "conventions.json")
+    validate_json_schema(parameters_payload, param_schema, "canonical_parameters.json")
     registry = load_conventions(json.dumps(conventions_payload))
     notation = (root / "NOTATION.md").read_text(encoding="utf-8")
     validate_conventions_against_notation(registry, notation)
