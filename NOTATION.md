@@ -763,6 +763,14 @@ $\sigma_j\in\mathbb{R}^n$ denotes a diffusion direction associated with
 Brownian component $W_j$; it is not the gravity vector $g(q)$ and not an
 unindexed input map $g(x)$.
 
+**Manipulator Bias (Volume II).** The equation-of-motion bias is
+$h(q,v)$ (equivalently $h(q,\dot q)$), the same load as in
+[Canonical Control-Affine Terminology](#canonical-control-affine-terminology).
+When a section also uses $h(q)$ as a configuration output, write that load
+$h_{\mathrm{dyn}}$. The output-acceleration drift is $b_y$, not an unindexed
+$b$. A declared split $h(q,v)=c(q,v)+g(q)$ uses $c$ only for Christoffel
+velocity terms and lowercase $g(q)$ only for gravity.
+
 ---
 
 ## Component Notation

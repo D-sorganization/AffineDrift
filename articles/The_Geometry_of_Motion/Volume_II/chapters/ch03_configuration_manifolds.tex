@@ -132,14 +132,16 @@ but it does not remove joint stops, loss of task authority, or input bounds.
 For the specific ZYX convention $R=R_z(\psi)R_y(\theta)R_x(\phi)$, body
 angular velocity is related to roll, pitch, and yaw rates by
 \begin{equation}\label{eq:manifold_euler_rates}
- \omega=
+ \omega=E_{\mathrm{ZYX}}(\phi,\theta)
+ \begin{pmatrix}\dot\phi\\\dot\theta\\\dot\psi\end{pmatrix},
+ \qquad
+ E_{\mathrm{ZYX}}(\phi,\theta)=
  \begin{pmatrix}
  1&0&-\sin\theta\\
  0&\cos\phi&\sin\phi\cos\theta\\
  0&-\sin\phi&\cos\phi\cos\theta
- \end{pmatrix}
- \begin{pmatrix}\dot\phi\\\dot\theta\\\dot\psi\end{pmatrix},
- \qquad \det E=\cos\theta.
+ \end{pmatrix},
+ \qquad \det E_{\mathrm{ZYX}}=\cos\theta.
 \end{equation}
 At $\theta=\pm\pi/2$ the rate map loses rank. Recovering arbitrary angle
 rates from a physical angular velocity is then impossible or nonunique, and
