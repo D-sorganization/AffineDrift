@@ -183,3 +183,83 @@ def test_notation_md_documents_volume2_sigma_diffusion() -> None:
     text = _read("NOTATION.md")
     assert "stochastic diffusion" in text.lower() or "diffusion direction" in text.lower()
     assert r"\sigma_j" in text
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+        "articles/The_Geometry_of_Motion/Volume_II/chapters/ch06_trajectory_optimization.tex",
+    ],
+)
+def test_volume2_underactuation_bias_uses_notation_h(rel: str) -> None:
+    """The clubhead-speed equation uses NOTATION.md's bias load h, not b."""
+    text = _read(rel)
+    assert r"M(q)\dot v+h(q,v)=B(q)u+F_{\rm ext}" in text
+    assert r"M\dot v+h-F_{\rm ext}" in text
+    assert "The bias $h$ includes" in text
+    assert r"M(q)\dot v+b(q,v)" not in text
+    assert "The bias $b$ includes" not in text
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+        "articles/The_Geometry_of_Motion/Volume_II/chapters/ch08_phase_variable_control.tex",
+    ],
+)
+def test_volume2_virtual_constraint_bias_is_not_the_output_map(rel: str) -> None:
+    """Bias h_dyn stays distinct from output h(q); drift is b_y, not b."""
+    text = _read(rel)
+    assert r"M(q)\ddot q+h_{\mathrm{dyn}}(q,\dot q)=B(q)u" in text
+    assert r"b_y&=D^2h[v,v]-Dh\,M^{-1}h_{\mathrm{dyn}}" in text
+    assert r"\bigl[-b_y-K_d" in text
+    assert r"u^\star=-A^{-1}b_y" in text
+    assert "subscripted because $h(q)$ below is a configuration output" in text
+    assert r"M(q)\ddot q+c(q,\dot q)" not in text
+    assert r",&b&=D^2h[v,v]-Dh\,M^{-1}c" not in text
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+        "articles/The_Geometry_of_Motion/Volume_II/chapters/ch11_case_study_the_complete_golf_s.tex",
+    ],
+)
+def test_volume2_case_study_names_the_bias_split(rel: str) -> None:
+    """Case-study dynamics use h, with c+g only as a declared split of h."""
+    text = _read(rel)
+    assert r"M(q)\dot v+h(q,v)" in text
+    assert r"h(q,v)=c(q,v)+g(q)" in text
+    assert r"M(q)\dot v+c(q,v)+g(q)" not in text
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+        "articles/The_Geometry_of_Motion/Volume_II/chapters/ch03_configuration_manifolds.tex",
+    ],
+)
+def test_volume2_euler_rate_matrix_is_named(rel: str) -> None:
+    """det E refers to the named ZYX rate matrix, not an undefined E."""
+    text = _read(rel)
+    assert r"E_{\mathrm{ZYX}}(\phi,\theta)" in text
+    assert r"\det E_{\mathrm{ZYX}}=\cos\theta" in text
+    assert r"\det E=\cos\theta" not in text
+
+
+def test_notation_md_records_volume2_bias_aliases() -> None:
+    """NOTATION.md names h_dyn and b_y so Volume II can follow one bias load."""
+    text = _read("NOTATION.md")
+    assert r"h_{\mathrm{dyn}}" in text
+    assert r"b_y" in text
+    assert r"h(q,v)=c(q,v)+g(q)" in text
+    note = _read(
+        "articles/The_Geometry_of_Motion/quarto/_includes/"
+        "gom_volume2_control_affine_notation_note.qmd"
+    )
+    assert r"h_{\mathrm{dyn}}" in note
+    assert r"b_y" in note
