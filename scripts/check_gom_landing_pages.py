@@ -10,7 +10,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.tools.gom_landing_page_contract import collect_violations  # noqa: E402
+from src.tools.gom_landing_page_contract import (  # noqa: E402  # reason: sys.path bootstrap
+    collect_violations,
+)
 
 
 def main() -> int:
