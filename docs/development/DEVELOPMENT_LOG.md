@@ -845,12 +845,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5590
 - **Branch:** cursor/core-theory-figures-5590-f840
-- **PR:** #5666, #5687, #5770
+- **PR:** #5666, #5687, #5770, #5892
 - **Paths:** see #5666
 - **Started:** 2026-11-13
-- **Last verified:** 2026-11-17 (`12e984ea`; collated from changes/5590-pointwise-drift-reachability.md)
+- **Last verified:** 2026-11-26 (`bb228e84`; collated from changes/5590-reaudit-figure-provenance.md)
 - **Summary:** Replace hand-drawn core-theory ZTCF and superposition figures with pinned model simulations.
-- **Next step:** Merge after CI green; close #5590 when acceptance checklist is verified on main.
+- **Next step:** Replace the teaching-model panels when an admitted UpstreamDrift two-handed export exists.
 
 ### DL-#5589 · DgCR Restitution (Not Aerodynamic); COR Passive-Impact Qualifier
 
