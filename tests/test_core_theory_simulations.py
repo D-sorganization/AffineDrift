@@ -55,6 +55,14 @@ def test_superposition_error_scales_like_t4_at_short_horizons() -> None:
     assert 3.5 < slope < 4.6
 
 
+def test_superposition_velocity_error_scales_like_t3() -> None:
+    """Velocity residual is O(t^3); the figure plots position only."""
+    series = superposition_breakdown_series(pin_path=SUP_PIN)
+    mask = (series.time_s > 0.005) & (series.velocity_error_norm > 1e-8)
+    slope, _ = np.polyfit(np.log(series.time_s[mask]), np.log(series.velocity_error_norm[mask]), 1)
+    assert 2.7 < slope < 3.6
+
+
 def test_superposition_instantaneous_vectors_close_parallelogram() -> None:
     """Instantaneous acceleration increments from two inputs sum exactly."""
     vectors = superposition_instantaneous_vectors()
