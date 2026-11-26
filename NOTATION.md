@@ -504,7 +504,7 @@ Second-order equations of motion in this block use $M(q)\ddot q + h(q,\dot q;\,p
 
 | Symbol                | Meaning                                                                    | Rule                                                                        |
 | --------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| **$Q\_{\mathrm{p}}$** | Passive or other constitutive generalized loads on the EOM right-hand side | Not linear momentum $p$ nor the parameter set in $h(q,\dot q;\,p)$          |
+| **$Q_{\mathrm{p}}$** | Passive or other constitutive generalized loads on the EOM right-hand side | Not linear momentum $p$ nor the parameter set in $h(q,\dot q;\,p)$          |
 | **$\varrho$**         | Known model residual in underdetermined inverse dynamics (Ch. 18)          | $\varrho=M\ddot q+h-Q_{\mathrm{p}}-Q_e$; not a position vector $\mathbf{r}$ |
 | **$m$**               | Applied-input dimension in $u\in\mathbb{R}^m$ (Ch. 18)                     | Not mass nor momentum                                                       |
 
@@ -514,7 +514,7 @@ Second-order equations of motion in this block use $M(q)\ddot q + h(q,\dot q;\,p
 | ------------------------ | -------------------------------------------------------------- | ------------------------------------------- |
 | **$\psi$**               | Contact event function $\psi(x,t)=0$                           | Not the gravity load $g(q)$                 |
 | **$\sigma_L$**           | Spin loft angle                                                | Not the state-transition matrix $\Phi(T,s)$ |
-| **$w\_{\mathrm{face}}$** | Empirical face/path weight in horizontal launch-direction laws | Not wind velocity                           |
+| **$w_{\mathrm{face}}$** | Empirical face/path weight in horizontal launch-direction laws | Not wind velocity                           |
 | **$v_w$**                | Wind velocity field                                            | $v_r=v_B-v_w$ is air-relative velocity      |
 
 ### J, J^+, P, N and Z (Constraint Jacobian, Pseudo-Inverse, Projector, Null Basis)
