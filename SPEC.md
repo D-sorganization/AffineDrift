@@ -232,6 +232,11 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-26 | #5759 | Define handedness-signed golf turn separately from raw ISB axial rotation and document lead/trail angle mappings. |
+| 2026-11-26 | #5892 | Re-audit #5590: cite teaching-model figure sources and label the lay schematic. |
+| 2026-11-26 | #5901 | Pin planar momentum-energy ledger parity to one analytic fixture |
+| 2026-11-26 | #5900 | Add a reserved notation symbol registry checked against NOTATION.md. |
+| 2026-11-26 | #5891 | State the two-handed null-space account in layman and scientist registers, with figures pending verified exports. |
 | 2026-11-26 | #5879 | Document backend sample/control alignment and executable single/batched HDF5 round-trips |
 | 2026-11-25 | #5888 | Close-out #5593: pin frames to notation + UpstreamDrift conventions with CI gate |
 | 2026-11-24 | #5843 | Complete canonical agent model-map discovery and reject duplicate page routes |
