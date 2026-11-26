@@ -44,6 +44,7 @@ CANONICAL_JS_NAMES = (
     "home.js",
     "main.js",
     "metrics.js",
+    "momentum-energy-ledger.js",
     "navigation.js",
     "notes-workspace.js",
     "page-feedback.js",

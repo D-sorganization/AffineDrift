@@ -1,0 +1,141 @@
+{
+  "schema": "affinedrift/notation-symbol-registry/v1",
+  "scope_note": "Reserved glyphs from NOTATION.md for later Physics of Golf and Geometry of Motion checks. The hover catalog remains data/symbol_references.json.",
+  "symbols": [
+    {
+      "id": "drift-f",
+      "symbol": "f",
+      "tex": "f(x)",
+      "shape": "vector field",
+      "meaning": "Complete autonomous drift of the declared effective plant.",
+      "frame": "state",
+      "source_anchor": "/pages/notation.html#drift-and-control",
+      "notation_heading": "drift-and-control",
+      "notation_witness": "Complete autonomous drift of the declared effective plant"
+    },
+    {
+      "id": "input-map-g",
+      "symbol": "G",
+      "tex": "G(x)",
+      "shape": "matrix",
+      "meaning": "Control-affine input map multiplying the declared control.",
+      "frame": "state",
+      "sign": "uppercase",
+      "source_anchor": "/pages/notation.html#drift-and-control",
+      "notation_heading": "drift-and-control",
+      "notation_witness": "use uppercase $G(q)$ for gravity.",
+      "forbidden_roles": ["gravity-load"]
+    },
+    {
+      "id": "gravity-g",
+      "symbol": "g",
+      "tex": "g(q)",
+      "shape": "vector",
+      "meaning": "Gravity generalized-force vector.",
+      "unit": "N or N·m",
+      "frame": "generalized",
+      "sign": "lowercase reserved",
+      "source_anchor": "/pages/notation.html#drift-and-control",
+      "notation_heading": "drift-and-control",
+      "notation_witness": "Do not use lowercase $g(x)$ for the input map.",
+      "forbidden_roles": ["input-map"]
+    },
+    {
+      "id": "control-u",
+      "symbol": "u",
+      "tex": "u",
+      "shape": "vector",
+      "meaning": "Declared control input zeroed by a counterfactual.",
+      "unit": "model-specific",
+      "frame": "control",
+      "source_anchor": "/pages/notation.html#drift-and-control",
+      "notation_heading": "drift-and-control",
+      "notation_witness": "Declared control input"
+    },
+    {
+      "id": "mass-matrix-m",
+      "symbol": "M",
+      "tex": "M(q)",
+      "shape": "matrix",
+      "meaning": "Generalized inertia matrix in the chosen coordinates.",
+      "frame": "generalized",
+      "sign": "SPD",
+      "source_anchor": "/pages/notation.html#term-zvcf",
+      "notation_heading": "term-zvcf",
+      "notation_witness": "Generalized inertia matrix"
+    },
+    {
+      "id": "bias-load-h",
+      "symbol": "h",
+      "tex": "h(q,\\dot q,z;p)",
+      "shape": "vector",
+      "meaning": "Velocity, gravity, passive, and constraint loads in the equation of motion.",
+      "unit": "N or N·m",
+      "frame": "generalized",
+      "source_anchor": "/pages/notation.html#term-zvcf",
+      "notation_heading": "term-zvcf",
+      "notation_witness": "Velocity-dependent, gravity, passive, and constraint loads"
+    },
+    {
+      "id": "actuation-b",
+      "symbol": "B",
+      "tex": "B(q)",
+      "shape": "matrix",
+      "meaning": "Maps declared control to generalized forces.",
+      "frame": "generalized",
+      "source_anchor": "/pages/notation.html#equation-symbol-definitions",
+      "notation_witness": "Maps the declared control input to generalized forces"
+    },
+    {
+      "id": "coriolis-c",
+      "symbol": "C",
+      "tex": "C(q,\\dot q)",
+      "shape": "matrix",
+      "meaning": "Velocity-product matrix of the kinetic model.",
+      "frame": "generalized",
+      "source_anchor": "/pages/notation.html#equation-symbol-definitions",
+      "notation_witness": "Velocity-product matrix of the kinetic model"
+    },
+    {
+      "id": "constraint-jacobian-j",
+      "symbol": "J",
+      "tex": "J",
+      "shape": "matrix",
+      "meaning": "Constraint or task Jacobian whose rows are constraints.",
+      "frame": "model-defined",
+      "source_anchor": "/pages/notation.html#j-j-p-n-and-z",
+      "notation_witness": "Constraint (or task) Jacobian, rows are constraints"
+    },
+    {
+      "id": "metric-projector-pw",
+      "symbol": "P_W",
+      "tex": "P_W",
+      "shape": "projector",
+      "meaning": "Projector onto the kernel of J in the W metric.",
+      "frame": "generalized",
+      "sign": "W-self-adjoint",
+      "source_anchor": "/pages/notation.html#j-j-p-n-and-z",
+      "notation_witness": "Projector onto $\\ker J$"
+    },
+    {
+      "id": "null-basis-n",
+      "symbol": "N",
+      "tex": "N",
+      "shape": "matrix",
+      "meaning": "Matrix whose columns are a basis of the kernel of J.",
+      "source_anchor": "/pages/notation.html#j-j-p-n-and-z",
+      "notation_witness": "$N$ is not $P_W$",
+      "forbidden_roles": ["metric-projector"]
+    },
+    {
+      "id": "parameters-p",
+      "symbol": "p",
+      "tex": "p",
+      "shape": "parameter set",
+      "meaning": "Declared frozen parameters, contact mode, and impedance.",
+      "source_anchor": "/pages/notation.html#drift-and-control",
+      "notation_heading": "drift-and-control",
+      "notation_witness": "declared frozen parameters"
+    }
+  ]
+}
