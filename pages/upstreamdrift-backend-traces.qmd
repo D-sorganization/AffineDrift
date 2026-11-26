@@ -1,0 +1,143 @@
+---
+title: "UpstreamDrift Backend Traces"
+description: "Run, inspect, and save the planar backend's time-aligned controls and single or batched traces."
+categories:
+  - reference
+  - tools
+toc: true
+---
+
+The [Engine Protocol Reference](upstreamdrift-engine-protocol.html) describes
+engine calls. This guide follows the **simulation backend** output: how many
+samples a rollout records, which interval each control drives, and what survives
+an HDF5 round-trip. Sources and examples are checked against UpstreamDrift
+[`2867049f33`](https://github.com/D-sorganization/UpstreamDrift/tree/2867049f33a57637ee766b351538cc8f96e62cd6).
+
+::: {.callout-note title="Scope of the Example"}
+The example uses the analytical `ode` backend's planar shoulder–wrist model,
+with two angles and two applied joint torques. It does not load a humanoid URDF.
+`SimulationBackend` and `PhysicsEngine` are separate interfaces; do not transfer
+this model's coordinate counts to a floating-base engine.
+:::
+
+## Samples and Controls {#sec-backend-trace-layout}
+
+Let `H = horizon`, `T = H + 1`, and `N` be the batch size. The
+[`Trace` and `BatchTrace` definitions](https://github.com/D-sorganization/UpstreamDrift/blob/2867049f33a57637ee766b351538cc8f96e62cd6/src/shared/python/simulation_backends/protocol.py)
+declare these layouts:
+
+| Field | Single `Trace` | `BatchTrace` | Planar Reference Units |
+|---|---|---|---|
+| `t` | `(T,)` | `(T,)`, shared by all environments | s |
+| `q` | `(T, nq)` | `(N, T, nq)` | rad |
+| `v` | `(T, nv)` | `(N, T, nv)` | rad/s |
+| `u`, when present | `(T, nu)` | `(N, T, nu)` | N·m |
+| `dt` | scalar | scalar | s |
+
+The planar `ode` model has `nq = nv = nu = 2`, with
+`q = [theta1, theta2]` (shoulder, wrist), `v = [omega1, omega2]`, and
+`u = [tau_shoulder, tau_wrist]`, as defined in
+[`ode_backend.py`](https://github.com/D-sorganization/UpstreamDrift/blob/2867049f33a57637ee766b351538cc8f96e62cd6/src/shared/python/simulation_backends/ode_backend.py).
+For mixed scalar full-body producers, check the ordered `coordinate_units_json`
+and `effort_units_json` metadata instead of assuming every column is rotational.
+The `Trace` definition explicitly requires those unit declarations.
+
+`ode.rollout` accepts **`(H, 2)` input controls**, but returns **`(H + 1, 2)`
+recorded controls**. Sample zero is the initial state; `u[k]` drives the interval
+from sample `k` to `k + 1`. The terminal row is **zero-padded**, since no step
+leaves the final sample. It is not an extra zero-torque integration step.
+`controls=None` requests a passive rollout and records `u=None`.
+Despite its name, `trace.num_steps` counts **samples**, hence `horizon + 1`.
+
+The ODE implementation constructs `trace.t` **relative to the rollout**:
+`[0, dt, ..., H*dt]`. It starts from the backend's current state and advances
+the live clock. After a nonzero-time reset or a previous rollout, `trace.t[-1]`
+therefore need not equal `backend.get_time()`. Reset explicitly for independent
+trials; do not concatenate relative time vectors without an offset.
+
+## Run and Save a Controlled Rollout {#sec-backend-trace-example}
+
+Run the following Python blocks in order from an UpstreamDrift checkout at the
+revision above, with its Python dependencies and `h5py` installed. All code is
+ordinary Python; AffineDrift does not execute it during the site build.
+The assertions verify layout and persistence, not cross-engine agreement.
+
+```python
+from pathlib import Path
+
+import h5py
+import numpy as np
+
+from src.shared.python.simulation_backends import GolfModelParams, SimState, make_backend
+from src.shared.python.simulation_backends.trace_io import read_trace, write_trace
+
+backend = make_backend("ode", GolfModelParams.default())
+backend.reset(SimState(q=[0.2, -0.1], v=[0.0, 0.0], time=3.0))
+H, dt = 4, 0.005
+controls = np.tile([0.1, -0.05], (H, 1))
+trace = backend.rollout(controls=controls, horizon=H, dt=dt)
+assert trace.q.shape == trace.v.shape == trace.u.shape == (H + 1, 2)
+np.testing.assert_allclose(trace.t, np.arange(H + 1) * dt)
+np.testing.assert_allclose(backend.get_time(), 3.0 + H * dt)
+np.testing.assert_array_equal(trace.u[:-1], controls)
+np.testing.assert_array_equal(trace.u[-1], [0.0, 0.0])
+
+path = Path("controlled-rollout.h5")
+write_trace(trace, path)
+restored = read_trace(path)
+np.testing.assert_array_equal(restored.q, trace.q)
+np.testing.assert_array_equal(restored.v, trace.v)
+np.testing.assert_array_equal(restored.u, trace.u)
+with h5py.File(path, "r") as saved:
+    assert saved.attrs["schema_version"] == "2.1.0"
+    assert saved.attrs["kind"] == "single"
+    assert saved["u"].shape == (H + 1, 2)
+```
+
+[`trace_io.py`](https://github.com/D-sorganization/UpstreamDrift/blob/2867049f33a57637ee766b351538cc8f96e62cd6/src/shared/python/simulation_backends/trace_io.py)
+writes root attributes `schema_version`, `backend`, `dt`, and `kind`, plus
+datasets `t`, `q`, `v` and optional `u`. **An existing destination is overwritten.**
+Optional histories (`torques`, `wrench`, `markers`, `contacts`, and muscle
+outputs) are written only when supplied; an ODE rollout does not populate them.
+An absent dataset is not evidence of a measured zero.
+
+Only scalar string, Boolean, integer, and float metadata survive as
+`meta_<key>` root attributes. Richer objects are **silently skipped**; encode
+structured metadata as a scalar string when the producer's contract requires it.
+At this pin the schema is `2.1.0`; the reader accepts major versions 1 and 2,
+defaulting missing legacy optional histories to `None`, and rejects other majors.
+That compatibility check does not validate a model identity or prove replay parity.
+
+## Inspect a Batch Without a GPU {#sec-backend-batch-example}
+
+[`cpu_batch_rollout`](https://github.com/D-sorganization/UpstreamDrift/blob/2867049f33a57637ee766b351538cc8f96e62cd6/src/shared/python/simulation_backends/batched.py)
+constructs a fresh backend per environment and stacks its traces. Here two
+identical inputs demonstrate the axis layout, not a performance claim:
+
+```python
+from src.shared.python.simulation_backends.batched import cpu_batch_rollout
+
+batch_controls = np.stack([controls, controls])
+batch = cpu_batch_rollout(
+    lambda index: make_backend("ode", GolfModelParams.default()),
+    controls_batch=batch_controls, horizon=H, dt=dt,
+)
+assert batch.q.shape == batch.v.shape == batch.u.shape == (2, H + 1, 2)
+assert batch.num_envs == 2 and batch.num_steps == H + 1
+np.testing.assert_array_equal(batch.env(0).u[:-1], controls)
+write_trace(batch, "batch-rollouts.h5")
+restored_batch = read_trace("batch-rollouts.h5")
+assert restored_batch.num_envs == 2
+np.testing.assert_array_equal(restored_batch.q, batch.q)
+```
+
+`batch.env(i)` extracts one environment as a `Trace`; the environment axis
+comes before the time axis. The CPU helper labels the result `cpu-batch`.
+Its passive form takes `controls_batch=None` and an explicit `num_envs`.
+This example exercises neither CUDA nor differentiable rollout execution.
+
+## Related Articles
+
+- [Engine Protocol Reference](upstreamdrift-engine-protocol.html) — engine methods and solver semantics.
+- [UpstreamDrift Conventions](upstreamdrift-conventions.html) — state and frame conventions.
+- [Golf Model Maps](../models/golf-model-maps.html) — humanoid coordinate maps.
