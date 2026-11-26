@@ -42,6 +42,17 @@ class TestScan:
         assert len(findings) == 1
         assert "uppercase G for the gravity load" in findings[0]["rule"]
 
+    def test_mass_metric_projector_written_as_n_is_detected(self, tmp_path: Path) -> None:
+        """N is a null basis; the mass-metric projector is P_M."""
+        write(tmp_path, "articles/ch.qmd", r"\bar J&=M^{-1}J^T\Lambda,\qquad N=I-\bar J J." + "\n")
+        findings = scan(tmp_path)
+        assert len(findings) == 1
+        assert "null basis N" in str(findings[0]["rule"])
+        write(
+            tmp_path, "articles/ch.qmd", r"\bar J&=M^{-1}J^T\Lambda,\qquad P_M=I-\bar J J." + "\n"
+        )
+        assert scan(tmp_path) == []
+
     def test_detects_in_tex_and_md_as_well_as_qmd(self, tmp_path: Path) -> None:
         write(tmp_path, "articles/ch.tex", "g(x)u\n")
         write(tmp_path, "critiques/c.md", "g(x)u\n")

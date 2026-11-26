@@ -282,17 +282,17 @@ When $J$ has full row rank, define
 \begin{equation}
 \begin{aligned}
 \Lambda&=(JM^{-1}J^T)^{-1},\\
-\bar J&=M^{-1}J^T\Lambda,\qquad N=I-\bar J J.
+\bar J&=M^{-1}J^T\Lambda,\qquad P_M=I-\bar J J.
 \end{aligned}
 \end{equation}
-Then $J\bar J=I$ and $JN=0$. The velocity $\bar J\dot y$ minimizes instantaneous kinetic energy among velocities realizing $\dot y$, under this unconstrained model. The corresponding torque decomposition uses the transpose projector:
+Then $J\bar J=I$ and $JP_M=0$. $P_M$ is the mass-metric projector onto $\ker J$ ($P_W$ with weight $W=M$). It is not a null-space basis $N$. The velocity $\bar J\dot y$ minimizes instantaneous kinetic energy among velocities realizing $\dot y$, under this unconstrained model. The corresponding torque decomposition uses the transpose projector:
 \begin{equation}
-\tau=J^TF+N^T\tau_0,\qquad JM^{-1}N^T=0.
+\tau=J^TF+P_M^T\tau_0,\qquad JM^{-1}P_M^T=0.
 \label{eq:ch23_control_decomposition}
 \end{equation}
-Indeed $JM^{-1}N^T=JM^{-1}-JM^{-1}J^T\bar J^T=0$ because $\bar J^T=\Lambda JM^{-1}$. This is instantaneous dynamic consistency, as developed in \href{https://khatib.stanford.edu/publications/pdfs/Khatib_1990_2.pdf}{Khatib's operational-space analysis}. $F$ still must account for drift and the desired task acceleration. A projection does not automatically construct the complete tracking controller.
+Indeed $JM^{-1}P_M^T=JM^{-1}-JM^{-1}J^T\bar J^T=0$ because $\bar J^T=\Lambda JM^{-1}$. This is instantaneous dynamic consistency, as developed in \href{https://khatib.stanford.edu/publications/pdfs/Khatib_1990_2.pdf}{Khatib's operational-space analysis}. $F$ still must account for drift and the desired task acceleration. A projection does not automatically construct the complete tracking controller.
 
-For the numerical example above, $\bar J=(1/3,2/3)^T$. $N$ maps velocities into $\ker J$, while $N^T$ maps torques into $\ker(JM^{-1})$. Interchanging them would erase the distinction the derivation was meant to capture. Neither null torque nor null velocity implies zero internal energy change. Power remains $\tau^Tv$, and a null input can alter subsequent state, limits and task sensitivity.
+For the numerical example above, $\bar J=(1/3,2/3)^T$. $P_M$ maps velocities into $\ker J$, while $P_M^T$ maps torques into $\ker(JM^{-1})$. Interchanging them would erase the distinction the derivation was meant to capture. Neither null torque nor null velocity implies zero internal energy change. Power remains $\tau^Tv$, and a null input can alter subsequent state, limits and task sensitivity.
 
 \subsection{Contact, Underactuation and Internal Grip Forces}
 
@@ -594,6 +594,6 @@ The next step is to ask how control works with limited information, delay and no
 \item \textbf{URDF Construction:} Starting from the complete two-link file, verify every COM, cylinder orientation and principal inertia. Design a kinematic spine/arm tree with two three-axis compound joints. Count the intermediate virtual links needed for six serial revolutes and identify the reference body. Describe the selected engine's treatment of massless frames or native multi-DOF joints before claiming a valid dynamic model; do not assign undocumented artificial tissue mass.
 \item \textbf{Anthropometric Scaling:} Scale a 70 kg model to 80 kg with unchanged segment geometry, then repeat with an independent uniform length factor $s_L$. Derive the inertia factors in both cases and under fixed-density geometrical similarity. Explain why changing trunk partitions requires recomputing COM and inertia, not only multiplying masses.
 \item \textbf{Sensitivity Calculation:} Use the hypothetical derivative $-0.05$ (m/s)/kg with mass perturbation $\pm0.2$ kg to calculate the local speed change and its fraction of 45 m/s. State what additional evidence is needed to call this a confidence interval. Derive how a differentiable impact-time condition modifies the output derivative and identify the grazing-event failure condition.
-\item \textbf{Loop Constraints and Forces:} Contrast a point grip, rigid grip and compliant grip. For $M=\operatorname{diag}(2,1)$ and $J=[1\ 1]$, show that $(1,-1)^T$ is velocity-null but not torque-null. Construct $\bar J$, $N$ and $N^T$ and verify their respective identities. Explain how two opposing grip forces can alter hand loads without altering the net club wrench.
+\item \textbf{Loop Constraints and Forces:} Contrast a point grip, rigid grip and compliant grip. For $M=\operatorname{diag}(2,1)$ and $J=[1\ 1]$, show that $(1,-1)^T$ is velocity-null but not torque-null. Construct $\bar J$, $P_M$ and $P_M^T$ and verify their respective identities. Explain how two opposing grip forces can alter hand loads without altering the net club wrench.
 \item \textbf{Redundancy in Golf:} Formulate two dynamically feasible candidate swings that agree in a declared club task but differ internally. Specify whether the agreement is at one impact pose, impact state or the entire trajectory. Identify an observable that could distinguish the candidates and a perturbation that tests their predicted future behavior. Explain why a fitted trajectory alone does not identify the brain's unique objective or prove reduced injury risk.
 \end{enumerate}
