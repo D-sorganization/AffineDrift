@@ -475,6 +475,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             "/pages/upstreamdrift-headless-and-agents.html",
             "/articles/slack-management-linked-systems.html",
             "/articles/upstreamdrift-physics-models.html",
+            "/articles/firm-lead-wrist-preload.html",
         }
         and (
             record["route"] == "/"
@@ -608,6 +609,10 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     headless_agents = _find_route(inventory, "/pages/upstreamdrift-headless-and-agents.html")
     assert headless_agents["status"] == "reviewed"
     assert headless_agents["review"]["source_path"] == "pages/upstreamdrift-headless-and-agents.qmd"
+    # Firm lead-wrist preload (#5134) is a draft, outside the original census.
+    preload = _find_route(inventory, "/articles/firm-lead-wrist-preload.html")
+    assert preload["status"] == "reviewed"
+    assert preload["review"]["source_path"] == "articles/firm-lead-wrist-preload.qmd"
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()
     )
