@@ -377,12 +377,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** unassigned
 - **Issue:** #5620
 - **Branch:** cursor/engine-protocol-reference-5620-615e
-- **PR:** #5654
+- **PR:** #5654, #5879
 - **Paths:** see #5654
 - **Started:** 2026-11-14
-- **Last verified:** 2026-11-14 (`4ed17bf2`; collated from changes/5620-upstreamdrift-engine-protocol-reference.md)
+- **Last verified:** 2026-11-26 (`ffd7cf72`; collated from changes/5620-backend-trace-guide.md)
 - **Summary:** UpstreamDrift engine protocol reference page (drift/control, defaults, validation).
-- **Next step:** Merge after CI green; branch reconciled with main.
+- **Next step:** Review the unarmed PR; remaining engine-protocol acceptance stays open.
 
 ### DL-#5602 · Harmonise Geometry of Motion Notation With NOTATION.md: Constrained Symbols, Transverse Coordinates, Chapter Notation Notes.
 
