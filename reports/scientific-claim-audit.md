@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 299
+- Reviewed: 300
 - Deferred: 0
 - Exempt: 3
 
@@ -278,6 +278,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
+| `/pages/upstreamdrift-backend-traces.html` | `pages/upstreamdrift-backend-traces.qmd` | 1 |
 | `/pages/upstreamdrift-capture-to-model-pipeline.html` | `pages/upstreamdrift-capture-to-model-pipeline.qmd` | 3 |
 | `/pages/upstreamdrift-conventions.html` | `pages/upstreamdrift-conventions.qmd` | 3 |
 | `/pages/upstreamdrift-engine-protocol.html` | `pages/upstreamdrift-engine-protocol.qmd` | 3 |
@@ -584,6 +585,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
+| `ad-route-019342f89679` | `/pages/upstreamdrift-backend-traces.html` | Reviewed | — | None | None | 0 |
 | `ad-route-4b6f24957b8f` | `/pages/upstreamdrift-capture-to-model-pipeline.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b17914b25e54` | `/pages/upstreamdrift-conventions.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8c492a8af56b` | `/pages/upstreamdrift-engine-protocol.html` | Reviewed | — | None | None | 0 |
