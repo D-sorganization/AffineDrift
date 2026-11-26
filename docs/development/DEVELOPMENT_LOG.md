@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5895 · Escape Tau and Label the Worked Example
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #5895
+- **Branch:** cursor/theory-part2-tau-ad-label-ff56
+- **PR:** #5897
+- **Paths:** articles/theory-part2.qmd
+- **Started:** 2026-11-26
+- **Last verified:** 2026-11-26 (`f42fc8a0`; collated from changes/5895-theory-part2-tau-ad.md)
+- **Summary:** Escape YAML tau in Theory Part 2 key-takeaways and label the worked example a_d(x).
+- **Next step:** Publication gate: await Dieter sign-off before merge. Do not arm.
+
 ### DL-#5886 · Pin Planar Momentum-Energy Ledger Parity to One Analytic Fixture
 
 - **State:** in_review
