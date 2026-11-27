@@ -19,10 +19,48 @@ J0 = PIVOT_INERTIA + DENSITY * LENGTH**3 / 3 + HEAD_MASS * LENGTH**2
 P = DENSITY * LENGTH**2 / 2 + HEAD_MASS * LENGTH
 Q = DENSITY * LENGTH / 3 + HEAD_MASS
 
-# Quadrature-verified foreshortening corrections (φ = (s/L)², u = ½∫φ'² η²).
-CROSS_MASS_ETA2 = 0.3969696969696956
-MODAL_MASS_ETA2 = 0.31693558966287
+# φ=(s/L)² and u_ax(s)=½ η² ∫ φ'². Cross factor 3/2 times ∫φ f ds=2/9 is μ/3.
+_SHAFT_CROSS_DENSITY = 1.0 / 3.0
+_HEAD_CROSS_DENSITY = 2.0  # (3/2) f(L) L, with f(L)=4/(3L)
+# ∫_0^L f² ds = 16/(63 L) and f(L)² = 16/(9 L²).
+_MODAL_INTEGRAL_NUMERATOR = 16.0
+_SHAFT_MODAL_DENOMINATOR = 63.0
+_HEAD_MODAL_DENOMINATOR = 9.0
 GEOMETRIC_STIFFENING_RATIO = 1.0 / 3.0
+
+
+def _require_shaft_geometry(length: float, density: float, head_mass: float) -> None:
+    """Reject a non-physical shaft length or mass."""
+    if length <= 0.0:
+        raise ValueError(f"length must be positive, got {length}")
+    if density < 0.0:
+        raise ValueError(f"density must be non-negative, got {density}")
+    if head_mass < 0.0:
+        raise ValueError(f"head_mass must be non-negative, got {head_mass}")
+
+
+def foreshortening_inertia_coefficients(
+    length: float, density: float, head_mass: float
+) -> tuple[float, float]:
+    """Return ``(β_B, β_A)`` for the assumed shape φ=(s/L)².
+
+    β_B multiplies η² in the cross inertia and has units of linear density
+    (mass per length). β_A multiplies η² in the modal inertia and has units of
+    mass per length squared. Both are exact for ``u_ax(s) = ½ η² ∫ φ'²``.
+
+    Preconditions:
+        ``length`` > 0 and ``density``, ``head_mass`` >= 0.
+    """
+    _require_shaft_geometry(length, density, head_mass)
+    cross = _SHAFT_CROSS_DENSITY * density + _HEAD_CROSS_DENSITY * head_mass / length
+    modal = _MODAL_INTEGRAL_NUMERATOR * (
+        density / (_SHAFT_MODAL_DENOMINATOR * length)
+        + head_mass / (_HEAD_MODAL_DENOMINATOR * length**2)
+    )
+    return cross, modal
+
+
+CROSS_MASS_ETA2, MODAL_MASS_ETA2 = foreshortening_inertia_coefficients(LENGTH, DENSITY, HEAD_MASS)
 
 
 def phi(arc: float) -> float:
@@ -31,7 +69,7 @@ def phi(arc: float) -> float:
 
 
 def foreshorten_density(arc: float) -> float:
-    """Return φ'(s)² weight in u(s) = ½∫₀ˢ φ'(ξ)² dξ η²."""
+    """Return the φ'² weight in ``u_ax(s) = ½ ∫₀ˢ φ'(ξ)² dξ η²``."""
     return 4.0 * arc**3 / (3.0 * LENGTH**4)
 
 
