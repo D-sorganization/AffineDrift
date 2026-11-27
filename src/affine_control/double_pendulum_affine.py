@@ -17,7 +17,10 @@ The split is a **same-state** decomposition. Along a driven trajectory the
 drift is evaluated at states the input helped to reach, so the drift samples
 are not the zero-torque trajectory; that counterfactual has to be integrated
 separately from the initial condition (theory Part 1, "Structural
-Consequences").
+Consequences"). The swing viewer on ``models/model-ladder.qmd`` colours each
+link by this instantaneous drift share at the current torque-driven state
+(issue #5590); core-theory figure provenance is checked via
+``data/core_theory/figure_provenance_manifest.json``.
 """
 
 from __future__ import annotations
