@@ -92,24 +92,43 @@ $$ {#eq-ztcf}
 
 $$
 \ddot q_{\mathrm{ZVCF}}
-  \;=\; M(q)^{-1}\,\bigl(-b(q,\mathbf{0})\bigr)
-  \;=\; M(q)^{-1}\,\bigl(-g(q)\bigr),
+  \;=\; M(q)^{-1}\,\tau,
 $$ {#eq-zvcf}
 
-where the simplification in @eq-zvcf holds for the implemented
-double-pendulum bias convention because its Coriolis term (quadratic in
-velocity) and viscous dissipation (linear in velocity) vanish at
-$\dot q = \mathbf 0$, leaving the declared gravity term. A different engine
-may include other velocity-independent terms and must be checked rather than
-assuming this reduction. The ZTCF (@eq-ztcf) answers *"what would the declared
+where $\tau$ is the measured or declared applied generalized control. This is
+the canonical, control-only convention of `NOTATION.md` (matching the original
+`SCRIPT_ZVCF_GENERATOR.m` pipeline): velocities and gravity are excluded from
+the ZVCF operand so that they are counted once, in drift. The ZTCF
+(@eq-ztcf) answers *"what would the declared
 model do right now if every included actuator switched off while the state and
 constraint set stayed fixed?"* — it is the
-**drift** field of the affine control system, containing gravity plus
-all retained autonomous plant dynamics. The ZVCF (@eq-zvcf) answers
-*"what instantaneous acceleration remains at this pose when velocity and the
-declared applied control are both zero?"* It is not the pure control
-contribution. The separately named zero-velocity control-preserved evaluation
-is $M^{-1}(\tau-b(q,0))$. Because @eq-eom is affine in $\tau$ at a fixed state and unchanged
+**drift** field of the affine control system, containing gravity, velocity
+coupling, passive loads and any retained elastic terms such as **shaft elastic
+preload**. The ZVCF (@eq-zvcf) answers *"what instantaneous acceleration does
+the applied control alone produce at this state?"* Shaft elastic preload is
+never part of ZVCF; it stays in drift.
+
+**Gravity-only static acceleration (not ZVCF).** The acceleration that
+gravity alone gives at a pose, with velocity and applied control both zero, is
+
+$$
+\ddot q_{\mathrm{grav}}
+  \;=\; M(q)^{-1}\,\bigl(-g(q)\bigr)
+  \;=\; M(q)^{-1}\,\bigl(-b(q,\mathbf{0})\bigr),
+$$ {#eq-gravity-only}
+
+where the second equality holds for the implemented double-pendulum bias
+convention because its Coriolis term (quadratic in velocity) and viscous
+dissipation (linear in velocity) vanish at $\dot q = \mathbf 0$. A different
+engine may include other velocity-independent terms and must be checked rather
+than assuming this reduction. Earlier drafts of this chapter used the
+label ZVCF for @eq-gravity-only; that quantity is not called ZVCF here. It is
+a static diagnostic, not a control contribution. A zero-velocity evaluation
+that preserves applied control is a further, explicitly named diagnostic,
+$M^{-1}(\tau-b(q,0))$. The counterfactual taxonomy table in the
+[companion chapter](/articles/proximal-distal-a-journey-through-the-swing.html#tbl-counterfactual-taxonomy)
+contrasts these comparisons side by side.
+Because @eq-eom is affine in $\tau$ at a fixed state and unchanged
 constraint set, the actual acceleration superposes exactly:
 
 $$
@@ -153,7 +172,7 @@ torques to the
 same pose with velocities zeroed
 ([`SCRIPT_ZVCF_GENERATOR.m`](https://github.com/D-sorganization/UpstreamDrift/blob/b700e58941205af6f673f13ebbffcd30f8cca9d8/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab/Model%20Output/Scripts/SCRIPT_ZVCF_GENERATOR.m));
 the ZVCF model may be run without gravity under its documented convention so
-gravity is not counted in both operands. This convention must be checked
+gravity is counted once, in drift, and not in both operands. This convention must be checked
 against the model configuration; the script's statement that the complete
 multibody system is a series of linear differential equations is not correct.
 The acceleration split is meaningful *pointwise*, at matched states, in the

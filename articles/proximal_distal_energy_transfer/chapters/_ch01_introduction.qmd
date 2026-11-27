@@ -57,10 +57,10 @@ Two decompositions are evaluated: the
 would exhibit at the current instant if all applied joint torques were
 removed, isolating what accumulated motion, gravity, and inter-segment
 coupling produce on their own — and the **zero-velocity counterfactual
-(ZVCF)** — the instantaneous acceleration at the fixed pose and retained
-internal state after both generalized velocity and the declared applied
-control are set to zero. A zero-velocity evaluation that preserves applied
-control is a separate, explicitly named diagnostic. Preliminary
+(ZVCF)** — the control-only operand, the instantaneous acceleration
+$M(q)^{-1}\tau$ that the applied control alone produces at the same state.
+The gravity-only static acceleration is a separate named diagnostic, not ZVCF
+(see @sec-ztcf-defs). Preliminary
 torque-removal analyses motivated
 the hypothesis examined throughout
 this document: that *restraining* the P→D handoff early in the downswing

@@ -39,10 +39,14 @@ modeled effect; the comparison no longer isolates an instantaneous term.
 | Comparison | What Is Held Fixed or Copied? | What Question Does It Answer? |
 |---|---|---|
 | Pointwise input change | Complete state and declared model mode | How does this input change the current acceleration or reaction? |
+| Pointwise ZTCF/ZVCF split (ZVCF = control only) | Complete state; ZTCF removes control, ZVCF keeps only the control term, so shaft elastic preload and gravity stay in drift | How much of this instant's acceleration is drift, and how much is the applied control? |
+| Gravity-only static acceleration (not ZVCF) | Pose; velocity and control set to zero | What acceleration does gravity alone give at this pose? |
 | Copied-state forward branch | Complete initial state; declared future policies | What follows over the stated horizon? |
 | Changed preparation | Initial conditions and task contract as specified | What trajectory follows from a different whole-swing program? |
 | Mechanism ablation | Declared remaining model, with compatible states | Does this specified effect survive this removal? |
 | Compensated optimization | Task, admissible controls and constraints | Can another feasible policy recover the selected outcome? |
+
+: Counterfactual taxonomy: each comparison holds different things fixed and answers a different question. {#tbl-counterfactual-taxonomy}
 
 A human manipulation adds adaptation, feedback and measurement uncertainty.
 It tests a biological prediction under an experimental design; it does not
