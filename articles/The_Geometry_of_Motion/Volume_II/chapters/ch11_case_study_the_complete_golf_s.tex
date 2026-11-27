@@ -31,10 +31,10 @@ List the body segments, joint models, club flexibility if retained, hand/grip cl
 
 For a simple local-coordinate model with $\dot q=v$, one possible smooth-mode equation is
 \begin{equation}
-M(q)\dot v+c(q,v)+g(q)
+M(q)\dot v+h(q,v)
 =B(q)u+J_{\mathrm{ext}}(q)^\top F_{\mathrm{ext}}-D(q)v .
 \end{equation}
-Here $c$ denotes the inertial velocity terms, $g$ the conservative gravity load, and $D$ a positive-semidefinite viscous model. Other passive forces, actuator dynamics, or state variables must be added when used. Minimal-coordinate elimination and redundant-coordinate constraints require different implementations; do not count a constrained coordinate as independent actuation.
+Here $h(q,v)=c(q,v)+g(q)$, with $c$ the inertial velocity terms, $g$ the conservative gravity load, and $D$ a positive-semidefinite viscous model. Other passive forces, actuator dynamics, or state variables must be added when used. Minimal-coordinate elimination and redundant-coordinate constraints require different implementations; do not count a constrained coordinate as independent actuation.
 
 Setting a wrist torque channel to zero is a model intervention. It does not show that a golfer's wrist is an anatomical passive pin joint. Holding a joint angle fixed is a different intervention requiring a constraint or a maintaining torque. Compare passive, actively driven, and constrained alternatives using the same declared plant and initial state.
 

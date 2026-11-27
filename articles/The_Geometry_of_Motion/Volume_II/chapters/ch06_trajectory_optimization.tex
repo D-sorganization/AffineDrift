@@ -239,13 +239,13 @@ trajectory for an infeasible problem.
 
 For minimal mechanical coordinates $q$, write
 \begin{equation}\label{eq:ocp_underactuation}
- \dot q=v,\qquad M(q)\dot v+b(q,v)=B(q)u+F_{\rm ext}(q,v,t).
+ \dot q=v,\qquad M(q)\dot v+h(q,v)=B(q)u+F_{\rm ext}(q,v,t).
 \end{equation}
-The bias $b$ includes the chosen velocity, potential, and passive terms once.
+The bias $h$ includes the chosen velocity, potential, and passive terms once.
 The state is $x=(q,v)$, possibly augmented; $M$ acts on configuration
 accelerations, not on a second derivative of the entire state. On a regular
 patch, a left annihilator $N_BB=0$ gives
-$N_B(M\dot v+b-F_{\rm ext})=0$. This tests membership in the unrestricted
+$N_B(M\dot v+h-F_{\rm ext})=0$. This tests membership in the unrestricted
 actuation image. Input magnitude/rate limits and actuator states remain
 separate constraints. A correct first-order transcription already enforces
 these passive equations, so adding a redundant annihilator constraint is

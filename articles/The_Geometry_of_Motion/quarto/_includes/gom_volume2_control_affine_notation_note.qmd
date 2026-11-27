@@ -5,5 +5,9 @@ State dynamics follow $\dot x=f(x)+G(x)u$ with uppercase **$G$** for the input
 map, per [NOTATION.md](../../../NOTATION.md). Columns are **$G_j=G(x)e_j$** (or
 the constant column in a linear example). Lowercase **$g$** is reserved for the
 gravity generalized-force vector in mechanics equations. Stochastic diffusion
-directions are written **$\sigma_j$**, not $g_j$.
+directions are written **$\sigma_j$**, not $g_j$. The manipulator bias is
+**$h(q,v)$**. Where a section also uses $h(q)$ as a configuration output, that
+load is **$h_{\mathrm{dyn}}$**. The output-acceleration drift is **$b_y$**. A
+declared split $h(q,v)=c(q,v)+g(q)$ keeps $c$ for Christoffel velocity terms
+and $g(q)$ for gravity.
 :::
