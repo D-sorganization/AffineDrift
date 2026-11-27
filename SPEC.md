@@ -232,6 +232,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-11-27 | #5899 | Correct flexible-pendulum inertia units to kg/m and kg/m^2, the O(eta^2) axial potential, and the u_ax symbol. |
 | 2026-11-26 | #5902 | Name the Chapter 23 mass-metric projector P_M instead of the null basis N. |
 | 2026-11-26 | #5897 | Escape YAML tau in Theory Part 2 key-takeaways and label the worked example a_d(x). |
 | 2026-11-26 | #5759 | Define handedness-signed golf turn separately from raw ISB axial rotation and document lead/trail angle mappings. |

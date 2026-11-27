@@ -241,6 +241,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#5894 · Correct Flexible-Pendulum Inertia Units and Axial Symbol
+
+- **State:** in_review
+- **Owner:** d-sorggeneralagent[bot]
+- **Issue:** #5894
+- **Branch:** cursor/theory-part4-inertia-units-e2a1
+- **PR:** #5899
+- **Paths:** articles/theory-part4.qmd, src/tools/modal_pendulum_foreshortening.py, tests/test_modal_pendulum_inertia_units.py
+- **Started:** 2026-11-27
+- **Last verified:** 2026-11-27 (`49232e57`; collated from changes/5894-flexible-pendulum-inertia-units.md)
+- **Summary:** Correct flexible-pendulum inertia units to kg/m and kg/m^2, the O(eta^2) axial potential, and the u_ax symbol.
+- **Next step:** Publication-gate sign-off is required before merge because articles/ changed. Do not arm this PR.
+
 ### DL-#5895 · Escape Tau and Label the Worked Example
 
 - **State:** in_review
