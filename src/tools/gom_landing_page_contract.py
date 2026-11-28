@@ -20,6 +20,14 @@ _VOLUME1_CHAPTER_HTML = (
     "ch08_applications.html",
     "ch09_parallel_mechanisms_constrained_dynamics.html",
 )
+_INDEX_CANONICAL_ROW = re.compile(
+    r"^\|\s*Volume\s+([0IV]+)\s*\|\s*(Volume\s+[0IV]+:\s*.+?)\s*\|",
+    re.MULTILINE,
+)
+_README_CANONICAL_ROW = re.compile(
+    r"^\|\s*\*\*([0IV]+)\*\*\s*\|\s*(Volume\s+[0IV]+:\s*.+?)\s*\|",
+    re.MULTILINE,
+)
 _STALE_AUDIT_FILES = (
     "AUDIT_INDEX.md",
     "QUICK_REFERENCE.md",
@@ -128,6 +136,46 @@ def _volume2_violations(repo_root: Path) -> list[str]:
     return violations
 
 
+def _canonical_title_rows(repo_root: Path) -> dict[str, str]:
+    """Parse the books hub concordance table (authoritative website titles)."""
+    index_text = _read(repo_root / "books/index.qmd")
+    rows = _INDEX_CANONICAL_ROW.findall(index_text)
+    if len(rows) < 6:
+        raise ValueError(
+            f"Expected at least six concordance rows in books/index.qmd, found {len(rows)}"
+        )
+    return {volume_key: title.strip() for volume_key, title in rows}
+
+
+def _readme_concordance_violations(repo_root: Path) -> list[str]:
+    """README volume titles must match books/index.qmd (issue #5606 F10)."""
+    readme_path = repo_root / "articles/The_Geometry_of_Motion/README.md"
+    violations: list[str] = []
+    expected = _canonical_title_rows(repo_root)
+    readme_rows = dict(_README_CANONICAL_ROW.findall(_read(readme_path)))
+    for volume_key, canonical in expected.items():
+        readme_title = readme_rows.get(volume_key)
+        if readme_title is None:
+            violations.append(f"{_rel(repo_root, readme_path)}: missing volume {volume_key} row")
+            continue
+        if readme_title != canonical:
+            violations.append(
+                f"{_rel(repo_root, readme_path)}: volume {volume_key} title "
+                f"{readme_title!r} != books/index {canonical!r}"
+            )
+    vol5_tex = repo_root / "articles/The_Geometry_of_Motion/Volume_V/main.tex"
+    tex = _read(vol5_tex)
+    if "Tangent-Space Methods for Nonlinear Control and Biomechanics" in tex:
+        violations.append(
+            f"{_rel(repo_root, vol5_tex)}: title page must use series name, not Volume I canonical title"
+        )
+    if "The Geometry of Motion" not in tex:
+        violations.append(
+            f"{_rel(repo_root, vol5_tex)}: missing series title on Volume V title page"
+        )
+    return violations
+
+
 def _stale_audit_violations(repo_root: Path) -> list[str]:
     """Keep archived audit instructions out of the published manuscript tree."""
     gom_root = repo_root / "articles/The_Geometry_of_Motion"
@@ -148,4 +196,5 @@ def collect_violations(repo_root: Path) -> list[str]:
     violations.extend(_volume1_violations(repo_root))
     violations.extend(_volume2_violations(repo_root))
     violations.extend(_stale_audit_violations(repo_root))
+    violations.extend(_readme_concordance_violations(repo_root))
     return violations
